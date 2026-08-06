@@ -7,6 +7,8 @@ permissions:
   actions: write
 
 on:
+  release:
+    types: [published]
   push:
     branches: [dev]
     tags:
@@ -22,6 +24,24 @@ env:
   BUN_INSTALL_REGISTRY: 'https://registry.npmjs.org/'
 
 jobs:
+  verify-published-updater:
+    name: Verify Published Updater Metadata
+    if: github.event_name == 'release'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Verify published channel manifests
+        shell: bash
+        env:
+          RELEASE_TAG: ${{ github.event.release.tag_name }}
+          REPOSITORY: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          for manifest in latest.yml latest-win-arm64.yml latest-mac.yml latest-arm64-mac.yml latest-linux.yml latest-linux-arm64.yml; do
+            url="https://github.com/${REPOSITORY}/releases/download/${RELEASE_TAG}/${manifest}"
+            curl --fail --location --silent --show-error --retry 3 --output "$manifest" "$url"
+            test -s "$manifest"
+          done
+
   # 独立 code-quality job,供桌面构建和 web-cli 打包共用,避免重复跑
   code-quality:
     name: Code Quality
@@ -327,6 +347,26 @@ jobs:
         shell: bash
         run: bash scripts/prepare-release-assets.sh build-artifacts release-assets
 
+      - name: Sign manifests for the internal HTTP mirror
+        shell: bash
+        env:
+          UPDATE_MANIFEST_ED25519_PRIVATE_KEY: ${{ secrets.UPDATE_MANIFEST_ED25519_PRIVATE_KEY }}
+        run: |
+          node <<'NODE'
+          const fs = require('fs');
+          const path = require('path');
+          const { sign } = require('crypto');
+          const privateKey = process.env.UPDATE_MANIFEST_ED25519_PRIVATE_KEY?.replace(/\\n/g, '\n').trim();
+          if (!privateKey) {
+            console.log('Internal manifest signing key is not configured; GitHub-only release will continue.');
+            process.exit(0);
+          }
+          for (const name of fs.readdirSync('release-assets').filter((entry) => /^latest.*\.yml$/.test(entry))) {
+            const manifest = fs.readFileSync(path.join('release-assets', name));
+            fs.writeFileSync(path.join('release-assets', `${name}.sig`), sign(null, manifest, privateKey).toString('base64'));
+          }
+          NODE
+
       - name: Create Release
         uses: softprops/action-gh-release@v2
         with:
@@ -339,6 +379,7 @@ jobs:
             release-assets/**/*.deb
             release-assets/**/*.zip
             release-assets/**/*.yml
+            release-assets/**/*.sig
             release-assets/**/*.tar.gz
             release-assets/**/*.sha256
             release-assets/install-web.sh

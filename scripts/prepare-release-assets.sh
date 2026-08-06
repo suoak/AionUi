@@ -119,12 +119,32 @@ echo "==> Validating required metadata ..."
 
 VERSION="${MOCK_VERSION:-$(node -p "require('./package.json').version")}"
 MISSING=0
-for required in latest.yml latest-mac.yml latest-linux.yml latest-linux-arm64.yml; do
+for required in latest.yml latest-win-arm64.yml latest-mac.yml latest-arm64-mac.yml latest-linux.yml latest-linux-arm64.yml; do
   if [ ! -f "$OUTPUT_DIR/$required" ]; then
     echo "::error::Missing required updater metadata: $required"
     MISSING=1
   fi
 done
+
+node - "$OUTPUT_DIR" <<'NODE'
+const fs = require('fs');
+const path = require('path');
+const yaml = require('js-yaml');
+const outputDir = process.argv[2];
+const manifests = fs.readdirSync(outputDir).filter((name) => /^latest.*\.yml$/.test(name));
+let invalid = false;
+for (const manifestName of manifests) {
+  const manifest = yaml.load(fs.readFileSync(path.join(outputDir, manifestName), 'utf8'));
+  for (const file of manifest?.files || []) {
+    const assetName = path.basename(file.url || '');
+    if (!assetName || !fs.existsSync(path.join(outputDir, assetName))) {
+      console.error(`::error::${manifestName} references missing asset: ${assetName || file.url}`);
+      invalid = true;
+    }
+  }
+}
+if (invalid) process.exit(1);
+NODE
 
 # ---------------------------------------------------------------------------
 # 5b) Hard validation for desktop release assets
