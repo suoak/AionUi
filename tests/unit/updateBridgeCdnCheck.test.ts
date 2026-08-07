@@ -7,6 +7,11 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 const checkForUpdatesMock = vi.hoisted(() => vi.fn());
+const originalPlatform = process.platform;
+
+const setPlatform = (platform: NodeJS.Platform): void => {
+  Object.defineProperty(process, 'platform', { configurable: true, value: platform });
+};
 
 vi.mock('@/common/platform/bridge', () => ({
   bridge: {
@@ -80,11 +85,15 @@ const getCheckHandler = async () => {
 
 describe('unified update check', () => {
   beforeEach(() => {
+    setPlatform('win32');
     vi.clearAllMocks();
     checkForUpdatesMock.mockResolvedValue({ success: true });
   });
 
-  afterEach(() => vi.unstubAllGlobals());
+  afterEach(() => {
+    vi.unstubAllGlobals();
+    setPlatform(originalPlatform);
+  });
 
   it('registers update IPC providers only once', async () => {
     vi.resetModules();
