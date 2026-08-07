@@ -31,6 +31,14 @@ on:
         description: 'Optional AionCore Manual Build workflow run id to bundle instead of the pinned release'
         type: string
         default: ''
+      run_windows_installer_smoke:
+        description: 'Run Windows installer smoke tests in clean downstream runners'
+        type: boolean
+        default: false
+      windows_installer_smoke_matrix:
+        description: 'Windows installer smoke matrix as JSON'
+        type: string
+        default: '{"include":[{"platform":"windows-x64","os":"windows-2022","artifact-name":"windows-build-x64","arch":"x64"}]}'
 env:
   BUN_INSTALL_REGISTRY: 'https://registry.npmjs.org/'
   CSBU_WORKMATE_HUB_TAG: 'dist-ebc6a2b'
@@ -563,7 +571,7 @@ jobs:
 
       - name: Download registry-free Windows migration fixture
         if: >-
-          startsWith(matrix.platform, 'windows') &&
+          false && startsWith(matrix.platform, 'windows') &&
           steps.windows-build.outputs.result == 'success'
         shell: pwsh
         env:
@@ -607,7 +615,7 @@ jobs:
 
       - name: Verify Windows installation and registry-free migration
         if: >-
-          startsWith(matrix.platform, 'windows') &&
+          false && startsWith(matrix.platform, 'windows') &&
           steps.windows-build.outputs.result == 'success'
         shell: pwsh
         run: |
@@ -869,7 +877,7 @@ jobs:
       - name: Upload Windows installer smoke diagnostics
         uses: actions/upload-artifact@v6
         if: >-
-          always() && startsWith(matrix.platform, 'windows') &&
+          false && always() && startsWith(matrix.platform, 'windows') &&
           steps.windows-build.outputs.result == 'success'
         with:
           name: windows-installer-diagnostics-${{ matrix.arch }}-${{ steps.commit.outputs.short }}
@@ -1102,10 +1110,100 @@ jobs:
           if-no-files-found: warn
           retention-days: 7
 
+  windows-installer-smoke:
+    name: Installer Smoke ${{ matrix.platform }}
+    runs-on: ${{ matrix.os }}
+    needs: build
+    if: ${{ inputs.run_windows_installer_smoke && needs.build.result == 'success' }}
+
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJSON(inputs.windows_installer_smoke_matrix) }}
+
+    steps:
+      - name: Checkout smoke test support
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ inputs.ref }}
+
+      - name: Get commit hash
+        id: commit
+        shell: bash
+        run: echo "short=$(git rev-parse --short HEAD)" >> "$GITHUB_OUTPUT"
+
+      - name: Download current Windows installer
+        uses: actions/download-artifact@v7
+        with:
+          name: ${{ inputs.append_commit_hash && format('{0}-{1}', matrix.artifact-name, steps.commit.outputs.short) || matrix.artifact-name }}
+          path: ${{ runner.temp }}/current-installer
+
+      - name: Download registry-free Windows migration fixture
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $fixtureDirectory = Join-Path $env:RUNNER_TEMP 'legacy-installer'
+          New-Item -ItemType Directory -Path $fixtureDirectory -Force | Out-Null
+          $assetName = 'CSBU-WorkMate-2.1.51-win-${{ matrix.arch }}.exe'
+          $downloaded = $false
+          foreach ($attempt in 1..3) {
+            gh release download $env:CSBU_WORKMATE_LEGACY_INSTALLER_TAG `
+              --repo $env:GITHUB_REPOSITORY `
+              --pattern $assetName `
+              --dir $fixtureDirectory `
+              --clobber
+            if ($LASTEXITCODE -eq 0) {
+              $downloaded = $true
+              break
+            }
+            Write-Warning "Legacy fixture download attempt $attempt failed"
+            Start-Sleep -Seconds 10
+          }
+          if (-not $downloaded) {
+            throw "Failed to download legacy migration fixture: $assetName"
+          }
+          $expectedSha256 = if ('${{ matrix.arch }}' -eq 'arm64') {
+            '293ad6adcbac19c4bff9623a5b036e7ce8eee76e67d1da73afe04507fb0f7d56'
+          } else {
+            'f94dc03c88e01aa5af8062532b2b789c1216a26e53a571a0e416f906e0eba476'
+          }
+          $fixturePath = Join-Path $fixtureDirectory $assetName
+          $actualSha256 = (Get-FileHash -LiteralPath $fixturePath -Algorithm SHA256).Hash.ToLowerInvariant()
+          if ($actualSha256 -ne $expectedSha256) {
+            throw "Legacy migration fixture checksum mismatch: $actualSha256"
+          }
+
+      - name: Verify Windows installation and registry-free migration
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $currentInstaller = Get-ChildItem -LiteralPath (Join-Path $env:RUNNER_TEMP 'current-installer') -File -Filter '*.exe' |
+            Sort-Object LastWriteTime -Descending |
+            Select-Object -First 1
+          if (-not $currentInstaller) {
+            throw 'Current Windows installer artifact was not found'
+          }
+          $legacyInstaller = Join-Path $env:RUNNER_TEMP 'legacy-installer\CSBU-WorkMate-2.1.51-win-${{ matrix.arch }}.exe'
+          & 'resources/windows/support/verify-installer-migration.ps1' `
+            -CurrentInstaller $currentInstaller.FullName `
+            -LegacyInstaller $legacyInstaller `
+            -Arch '${{ matrix.arch }}' `
+            -DiagnosticsDirectory (Join-Path $env:RUNNER_TEMP 'installer-diagnostics')
+
+      - name: Upload Windows installer smoke diagnostics
+        uses: actions/upload-artifact@v6
+        if: always()
+        with:
+          name: windows-installer-diagnostics-${{ matrix.arch }}-${{ steps.commit.outputs.short }}
+          path: ${{ runner.temp }}/installer-diagnostics/
+          if-no-files-found: warn
+          retention-days: 7
+
   build-summary:
     name: Build Summary
     runs-on: ubuntu-latest
-    needs: [code-quality, build]
+    needs: [code-quality, build, windows-installer-smoke]
     if: always()
 
     steps:
@@ -1124,3 +1222,4 @@ jobs:
           echo "| Platforms | $PLATFORMS |" >> $GITHUB_STEP_SUMMARY
           echo "| Code Quality | ${{ needs.code-quality.result }} |" >> $GITHUB_STEP_SUMMARY
           echo "| Build | ${{ needs.build.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Windows installer smoke | ${{ needs.windows-installer-smoke.result }} |" >> $GITHUB_STEP_SUMMARY

@@ -163,28 +163,43 @@ describe('release packaging configuration', () => {
 
   it('bounds Windows installer smoke phases and preserves diagnostics', () => {
     const reusableWorkflow = readProjectFile('.github/workflows/_build-reusable.yml');
+    const smokeScript = readProjectFile('resources/windows/support/verify-installer-migration.ps1');
 
     expect(reusableWorkflow).toContain('Verify Windows installation and registry-free migration');
-    expect(reusableWorkflow).toContain("-Filter 'Uninstall*.exe'");
-    expect(reusableWorkflow).toContain('Required installed VERSIONINFO is missing');
-    expect(reusableWorkflow).toContain('$process.WaitForExit($TimeoutSeconds * 1000)');
-    expect(reusableWorkflow).toContain('& taskkill.exe /PID $process.Id /T /F');
-    expect(reusableWorkflow).toContain('function Wait-ForUninstallCompletion');
-    expect(reusableWorkflow).toContain('Waiting for the detached NSIS uninstaller');
-    expect(reusableWorkflow).toContain("-Phase 'fresh-install'");
-    expect(reusableWorkflow).toContain("-Phase 'fresh-uninstall'");
-    expect(reusableWorkflow).toContain("-Phase 'migrated-uninstall'");
-    expect(reusableWorkflow).toContain("'smoke-status.txt'");
+    expect(reusableWorkflow).toContain('windows-installer-smoke:');
+    expect(reusableWorkflow).toContain('needs: build');
+    expect(reusableWorkflow).toContain('actions/download-artifact@v7');
+    expect(reusableWorkflow).toContain("& 'resources/windows/support/verify-installer-migration.ps1'");
+    expect(smokeScript).toContain("-Filter 'Uninstall*.exe'");
+    expect(smokeScript).toContain('$process.WaitForExit($TimeoutSeconds * 1000)');
+    expect(smokeScript).toContain('& taskkill.exe /PID $process.Id /T /F');
+    expect(smokeScript).toContain('function Wait-ForUninstallCompletion');
+    expect(smokeScript).toContain("-Phase 'fresh-install'");
+    expect(smokeScript).toContain("-Phase 'fresh-uninstall'");
+    expect(smokeScript).toContain("-Phase 'migrated-uninstall'");
+    expect(smokeScript).toContain("'smoke-status.txt'");
     expect(reusableWorkflow).toContain('Upload Windows installer smoke diagnostics');
   });
 
   it('uploads Windows builds before running installer smoke tests', () => {
     const reusableWorkflow = readProjectFile('.github/workflows/_build-reusable.yml');
     const uploadIndex = reusableWorkflow.indexOf('Upload Windows build artifacts before installer smoke tests');
-    const smokeIndex = reusableWorkflow.indexOf('Verify Windows installation and registry-free migration');
+    const smokeIndex = reusableWorkflow.lastIndexOf('Verify Windows installation and registry-free migration');
 
     expect(uploadIndex).toBeGreaterThan(-1);
     expect(smokeIndex).toBeGreaterThan(uploadIndex);
+  });
+
+  it('runs installer smoke tests on clean downstream Windows runners', () => {
+    const releaseWorkflow = readProjectFile('.github/workflows/build-and-release.yml');
+    const manualWorkflow = readProjectFile('.github/workflows/build-manual.yml');
+
+    expect(releaseWorkflow).toContain('run_windows_installer_smoke: true');
+    expect(releaseWorkflow).toContain('"platform":"windows-arm64"');
+    expect(manualWorkflow).toContain('run-windows-installer-smoke');
+    expect(manualWorkflow).toContain(
+      "run_windows_installer_smoke: ${{ needs.prepare-matrix.outputs.run-windows-installer-smoke == 'true' }}"
+    );
   });
 
   it('uses standard current-user registry entries and retains a one-time legacy migration reader', () => {
@@ -203,7 +218,9 @@ describe('release packaging configuration', () => {
     expect(reusableWorkflow).toContain("CSBU_WORKMATE_LEGACY_INSTALLER_TAG: 'v2.1.51'");
     expect(reusableWorkflow).toContain('gh release download $env:CSBU_WORKMATE_LEGACY_INSTALLER_TAG');
     expect(reusableWorkflow).toContain('Get-FileHash -LiteralPath $fixturePath -Algorithm SHA256');
-    expect(reusableWorkflow).toContain("-Phase 'registry-free-migration'");
+    expect(readProjectFile('resources/windows/support/verify-installer-migration.ps1')).toContain(
+      "-Phase 'registry-free-migration'"
+    );
     expect(reusableWorkflow).not.toContain('-Action write');
   });
 
