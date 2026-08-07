@@ -221,12 +221,17 @@ describe('release packaging configuration', () => {
     const reusableWorkflow = readProjectFile('.github/workflows/_build-reusable.yml');
     const installerState = readProjectFile('resources/windows/support/installer-state.ps1');
     const installerMigration = readProjectFile('resources/windows/installer-repair-heal.nsh');
+    const installerProcessControl = readProjectFile('resources/windows/installer-process-control.nsh');
 
     expect(config).toContain('allowElevation: false');
     expect(config).toContain('perMachine: false');
     expect(installerState).toContain("'installer-state.ini'");
     expect(installerMigration).toContain('$CsbuWorkMateLegacyMigrationPending == "1"');
     expect(installerMigration).toContain('StrCpy $CsbuWorkMateLegacyMigrationPending "1"');
+    expect(installerMigration).toContain('-Action prepare-migration');
+    expect(installerMigration).toContain('-Action rollback-migration');
+    expect(installerMigration).toContain('-Action commit-migration');
+    expect(installerProcessControl).toContain('!insertmacro CSBU_WORKMATE_PREPARE_LEGACY_MIGRATION');
     expect(reusableWorkflow).toContain('Standard Windows installation registration is missing');
     expect(reusableWorkflow).toContain('Legacy registry-free installer state remains after installation');
     expect(reusableWorkflow).toContain("CSBU_WORKMATE_LEGACY_INSTALLER_TAG: 'v2.1.51'");
