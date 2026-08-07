@@ -97,6 +97,7 @@ describe('AutoUpdaterService', () => {
     delete process.env.CSBU_WORKMATE_UPDATE_SOURCE;
     delete process.env.CSBU_WORKMATE_UPDATE_BASE_URL;
     delete process.env.CSBU_WORKMATE_UPDATE_MANIFEST_PUBLIC_KEY;
+    process.env.CSBU_WORKMATE_UPDATE_MANIFEST_PUBLIC_KEY = 'public-key';
     nativeAutoUpdaterMock.on.mockReset();
     nativeAutoUpdaterMock.removeListener.mockReset();
     Object.defineProperty(autoUpdaterMock, 'currentVersion', {
@@ -134,15 +135,18 @@ describe('AutoUpdaterService', () => {
     expect(autoUpdaterMock.checkForUpdates).not.toHaveBeenCalled();
   });
 
-  it('configures electron-updater to read stable metadata from GitHub Releases', async () => {
+  it('configures electron-updater to verify signed metadata from GitHub Releases', async () => {
     const { autoUpdaterService } = await import('@/process/services/autoUpdaterService');
 
     autoUpdaterService.resetForTest();
 
     expect(autoUpdaterMock.setFeedURL).toHaveBeenCalledWith({
-      provider: 'github',
-      owner: 'suoak',
-      repo: 'AionUi',
+      provider: 'custom',
+      url: 'https://github.com/suoak/AionUi/releases/latest/download',
+      sourceKind: 'github',
+      artifactPathMode: 'release-root',
+      manifestPublicKey: 'public-key',
+      updateProvider: expect.any(Function),
     });
   });
 
@@ -160,9 +164,12 @@ describe('AutoUpdaterService', () => {
     await expect(autoUpdaterService.checkForUpdates()).resolves.toEqual({ success: true });
     expect(autoUpdaterMock.checkForUpdates).toHaveBeenCalledTimes(2);
     expect(autoUpdaterMock.setFeedURL).toHaveBeenLastCalledWith({
-      provider: 'github',
-      owner: 'suoak',
-      repo: 'AionUi',
+      provider: 'custom',
+      url: 'https://github.com/suoak/AionUi/releases/latest/download',
+      sourceKind: 'github',
+      artifactPathMode: 'release-root',
+      manifestPublicKey: 'public-key',
+      updateProvider: expect.any(Function),
     });
   });
 
@@ -182,11 +189,7 @@ describe('AutoUpdaterService', () => {
     const result = await autoUpdaterService.checkForUpdates();
     expect(result.success).toBe(false);
     expect(autoUpdaterMock.checkForUpdates).toHaveBeenCalledTimes(1);
-    expect(autoUpdaterMock.setFeedURL).not.toHaveBeenCalledWith({
-      provider: 'github',
-      owner: 'suoak',
-      repo: 'AionUi',
-    });
+    expect(autoUpdaterMock.setFeedURL).toHaveBeenCalledTimes(1);
   });
 
   it('leaves the standard NSIS install directory under electron-updater control', async () => {

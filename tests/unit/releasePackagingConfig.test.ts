@@ -186,17 +186,17 @@ describe('release packaging configuration', () => {
     expect(reusableWorkflow).toContain('Registry-free in-place migration failed');
   });
 
-  it('configures GitHub Releases and derives the updater publisher from the signing certificate', () => {
+  it('configures GitHub Releases without requiring Windows Authenticode signing', () => {
     const config = readProjectFile('packages/desktop/electron-builder.yml');
     const reusableWorkflow = readProjectFile('.github/workflows/_build-reusable.yml');
 
     expect(config).toContain('provider: github');
     expect(config).toContain('owner: suoak');
     expect(config).toContain('repo: AionUi');
-    expect(config).toContain('publisherName: ${env.WIN_CSC_PUBLISHER_NAME}');
-    expect(reusableWorkflow).toContain('Resolve Windows signing certificate subject');
-    expect(reusableWorkflow).toContain('$certificate.Subject');
-    expect(reusableWorkflow).toContain('Invalid installed Authenticode signature');
+    expect(config).not.toContain('publisherName:');
+    expect(reusableWorkflow).not.toContain('WIN_CSC_LINK');
+    expect(reusableWorkflow).not.toContain('Authenticode');
+    expect(reusableWorkflow).toContain('UPDATE_MANIFEST_ED25519_PUBLIC_KEY');
   });
 
   it('runs push checks for every branch and cancels stale branch runs', () => {

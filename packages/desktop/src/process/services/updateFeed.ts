@@ -12,16 +12,20 @@ import type { CdnGenericProviderConfiguration } from './cdnGenericProvider';
 export const GITHUB_UPDATE_OWNER = 'suoak';
 export const GITHUB_UPDATE_REPO = 'AionUi';
 export const DEFAULT_GITHUB_REPO = `${GITHUB_UPDATE_OWNER}/${GITHUB_UPDATE_REPO}`;
+export const GITHUB_UPDATE_BASE_URL = `https://github.com/${DEFAULT_GITHUB_REPO}/releases/latest/download`;
 export const UPDATE_POLICY_REGISTRY_KEY = String.raw`HKLM\Software\Policies\CSBU\CSBU WorkMate`;
 const EMBEDDED_MANIFEST_PUBLIC_KEY = process.env.CSBU_WORKMATE_UPDATE_MANIFEST_PUBLIC_KEY ?? '';
 
 export type UpdateSourceConfig =
-  | { kind: 'github'; owner: typeof GITHUB_UPDATE_OWNER; repo: typeof GITHUB_UPDATE_REPO }
+  | {
+      kind: 'github';
+      owner: typeof GITHUB_UPDATE_OWNER;
+      repo: typeof GITHUB_UPDATE_REPO;
+      manifestPublicKey: string;
+    }
   | { kind: 'internal-http'; baseUrl: string; fallback: 'github'; manifestPublicKey: string };
 
-export type UpdateFeedOptions =
-  | { provider: 'github'; owner: string; repo: string }
-  | (CdnGenericProviderConfiguration & { updateProvider: typeof CdnGenericProvider });
+export type UpdateFeedOptions = CdnGenericProviderConfiguration & { updateProvider: typeof CdnGenericProvider };
 
 type ResolveUpdateSourceOptions = {
   isPackaged: boolean;
@@ -106,19 +110,19 @@ export const resolveUpdateSourceConfig = (options: ResolveUpdateSourceOptions): 
   if (requestedSource && requestedSource !== 'github' && requestedSource !== 'internal-http') {
     throw new Error(`Unsupported update source policy: ${requestedSource}`);
   }
-  if (requestedSource !== 'internal-http') {
-    return { kind: 'github', owner: GITHUB_UPDATE_OWNER, repo: GITHUB_UPDATE_REPO };
-  }
-
-  const rawBaseUrl = allowEnvironmentOverride ? env.CSBU_WORKMATE_UPDATE_BASE_URL : readPolicy('UpdateBaseUrl');
-  if (!rawBaseUrl) throw new Error('Internal update policy is missing UpdateBaseUrl');
-
   const manifestPublicKey = (
     options.manifestPublicKey ??
     (options.isPackaged ? EMBEDDED_MANIFEST_PUBLIC_KEY : env.CSBU_WORKMATE_UPDATE_MANIFEST_PUBLIC_KEY) ??
     ''
   ).trim();
-  if (!manifestPublicKey) throw new Error('Internal update manifest public key is not configured');
+  if (!manifestPublicKey) throw new Error('Update manifest public key is not configured');
+
+  if (requestedSource !== 'internal-http') {
+    return { kind: 'github', owner: GITHUB_UPDATE_OWNER, repo: GITHUB_UPDATE_REPO, manifestPublicKey };
+  }
+
+  const rawBaseUrl = allowEnvironmentOverride ? env.CSBU_WORKMATE_UPDATE_BASE_URL : readPolicy('UpdateBaseUrl');
+  if (!rawBaseUrl) throw new Error('Internal update policy is missing UpdateBaseUrl');
 
   return {
     kind: 'internal-http',
@@ -130,11 +134,20 @@ export const resolveUpdateSourceConfig = (options: ResolveUpdateSourceOptions): 
 
 export const buildUpdateFeedOptions = (source: UpdateSourceConfig): UpdateFeedOptions => {
   if (source.kind === 'github') {
-    return { provider: 'github', owner: source.owner, repo: source.repo };
+    return {
+      provider: 'custom',
+      url: GITHUB_UPDATE_BASE_URL,
+      sourceKind: 'github',
+      artifactPathMode: 'release-root',
+      manifestPublicKey: source.manifestPublicKey,
+      updateProvider: CdnGenericProvider,
+    };
   }
   return {
     provider: 'custom',
     url: source.baseUrl,
+    sourceKind: 'internal-http',
+    artifactPathMode: 'version-directory',
     manifestPublicKey: source.manifestPublicKey,
     updateProvider: CdnGenericProvider,
   };

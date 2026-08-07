@@ -128,7 +128,9 @@ class AutoUpdaterService extends EventEmitter {
     kind: 'github',
     owner: GITHUB_UPDATE_OWNER,
     repo: GITHUB_UPDATE_REPO,
+    manifestPublicKey: '',
   };
+  private _githubManifestPublicKey = '';
   private _updateConfigurationError: string | undefined;
   /** Stores registered autoUpdater event handlers for cleanup and test access */
   private readonly _autoUpdaterHandlers = new Map<string, (...args: unknown[]) => void>();
@@ -154,6 +156,7 @@ class AutoUpdaterService extends EventEmitter {
     }
     try {
       this._updateSource = resolveUpdateSourceConfig({ isPackaged: app.isPackaged });
+      this._githubManifestPublicKey = this._updateSource.manifestPublicKey;
     } catch (error) {
       this._updateConfigurationError = error instanceof Error ? error.message : String(error);
       log.error('[auto-update] Update source policy rejected:', this._updateConfigurationError);
@@ -178,7 +181,12 @@ class AutoUpdaterService extends EventEmitter {
 
   private useGitHubFallback(): void {
     log.warn('[auto-update] Internal update source unavailable; switching to GitHub fallback');
-    this.applyUpdateSource({ kind: 'github', owner: GITHUB_UPDATE_OWNER, repo: GITHUB_UPDATE_REPO });
+    this.applyUpdateSource({
+      kind: 'github',
+      owner: GITHUB_UPDATE_OWNER,
+      repo: GITHUB_UPDATE_REPO,
+      manifestPublicKey: this._githubManifestPublicKey,
+    });
   }
 
   private configureDevAutoUpdateDebug(): void {
