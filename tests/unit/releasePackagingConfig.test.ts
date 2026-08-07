@@ -191,11 +191,15 @@ describe('release packaging configuration', () => {
   });
 
   it('runs installer smoke tests on clean downstream Windows runners', () => {
+    const reusableWorkflow = readProjectFile('.github/workflows/_build-reusable.yml');
     const releaseWorkflow = readProjectFile('.github/workflows/build-and-release.yml');
     const manualWorkflow = readProjectFile('.github/workflows/build-manual.yml');
 
     expect(releaseWorkflow).toContain('run_windows_installer_smoke: true');
     expect(releaseWorkflow).toContain('"platform":"windows-arm64"');
+    expect(reusableWorkflow).toContain(
+      "if: ${{ always() && inputs.run_windows_installer_smoke && needs.build.result == 'success' }}"
+    );
     expect(manualWorkflow).toContain(
       'run_windows_installer_smoke: ${{ steps.set-matrix.outputs.run_windows_installer_smoke }}'
     );

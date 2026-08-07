@@ -1114,7 +1114,7 @@ jobs:
     name: Installer Smoke ${{ matrix.platform }}
     runs-on: ${{ matrix.os }}
     needs: build
-    if: ${{ inputs.run_windows_installer_smoke && needs.build.result == 'success' }}
+    if: ${{ always() && inputs.run_windows_installer_smoke && needs.build.result == 'success' }}
 
     strategy:
       fail-fast: false
