@@ -129,16 +129,22 @@ done
 node - "$OUTPUT_DIR" <<'NODE'
 const fs = require('fs');
 const path = require('path');
-const yaml = require('js-yaml');
 const outputDir = process.argv[2];
 const manifests = fs.readdirSync(outputDir).filter((name) => /^latest.*\.yml$/.test(name));
 let invalid = false;
 for (const manifestName of manifests) {
-  const manifest = yaml.load(fs.readFileSync(path.join(outputDir, manifestName), 'utf8'));
-  for (const file of manifest?.files || []) {
-    const assetName = path.basename(file.url || '');
+  const manifest = fs.readFileSync(path.join(outputDir, manifestName), 'utf8');
+  const assetUrls = [...manifest.matchAll(/^\s*-\s+url:\s*(?:"([^"]+)"|'([^']+)'|([^#\r\n]+?))\s*$/gm)].map(
+    (match) => (match[1] || match[2] || match[3] || '').trim(),
+  );
+  if (assetUrls.length === 0) {
+    console.error(`::error::${manifestName} does not contain any updater asset URLs`);
+    invalid = true;
+  }
+  for (const assetUrl of assetUrls) {
+    const assetName = path.basename(assetUrl);
     if (!assetName || !fs.existsSync(path.join(outputDir, assetName))) {
-      console.error(`::error::${manifestName} references missing asset: ${assetName || file.url}`);
+      console.error(`::error::${manifestName} references missing asset: ${assetName || assetUrl}`);
       invalid = true;
     }
   }
