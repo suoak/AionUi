@@ -196,9 +196,14 @@ describe('release packaging configuration', () => {
 
     expect(releaseWorkflow).toContain('run_windows_installer_smoke: true');
     expect(releaseWorkflow).toContain('"platform":"windows-arm64"');
-    expect(manualWorkflow).toContain('run-windows-installer-smoke');
     expect(manualWorkflow).toContain(
-      "run_windows_installer_smoke: ${{ needs.prepare-matrix.outputs.run-windows-installer-smoke == 'true' }}"
+      'run_windows_installer_smoke: ${{ steps.set-matrix.outputs.run_windows_installer_smoke }}'
+    );
+    expect(manualWorkflow).toContain(
+      'run_windows_installer_smoke: ${{ fromJSON(needs.prepare-matrix.outputs.run_windows_installer_smoke) }}'
+    );
+    expect(manualWorkflow).toContain(
+      'windows_installer_smoke_matrix: ${{ needs.prepare-matrix.outputs.windows_installer_smoke_matrix }}'
     );
   });
 
