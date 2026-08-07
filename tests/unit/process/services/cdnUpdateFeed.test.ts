@@ -26,11 +26,17 @@ const makeRuntimeOptions = (): ProviderRuntimeOptions => ({
 describe('update source policy', () => {
   it('uses GitHub Releases by default', () => {
     expect(
-      resolveUpdateSourceConfig({ isPackaged: true, platform: 'win32', readPolicyValue: () => undefined })
+      resolveUpdateSourceConfig({
+        isPackaged: true,
+        platform: 'win32',
+        manifestPublicKey: 'public-key',
+        readPolicyValue: () => undefined,
+      })
     ).toEqual({
       kind: 'github',
       owner: 'suoak',
       repo: 'AionUi',
+      manifestPublicKey: 'public-key',
     });
   });
 
@@ -43,9 +49,10 @@ describe('update source policy', () => {
           CSBU_WORKMATE_UPDATE_SOURCE: 'internal-http',
           CSBU_WORKMATE_UPDATE_BASE_URL: 'http://10.20.30.40/releases',
         },
+        manifestPublicKey: 'public-key',
         readPolicyValue: () => undefined,
       })
-    ).toEqual({ kind: 'github', owner: 'suoak', repo: 'AionUi' });
+    ).toEqual({ kind: 'github', owner: 'suoak', repo: 'AionUi', manifestPublicKey: 'public-key' });
   });
 
   it('accepts an internal RFC1918 HTTP policy with a fixed path', () => {
@@ -97,7 +104,7 @@ describe('update source policy', () => {
     ).toBe('http://192.168.1.20/releases');
   });
 
-  it('builds the custom signed provider only for an internal source', () => {
+  it('builds the signed provider for an internal source', () => {
     const options = buildUpdateFeedOptions({
       kind: 'internal-http',
       baseUrl: 'http://172.16.0.5/releases',
@@ -106,6 +113,30 @@ describe('update source policy', () => {
     });
     expect(options.provider).toBe('custom');
     expect(options.updateProvider).toBe(CdnGenericProvider);
+  });
+
+  it('builds the signed provider against the GitHub release root', () => {
+    const options = buildUpdateFeedOptions({
+      kind: 'github',
+      owner: 'suoak',
+      repo: 'AionUi',
+      manifestPublicKey: 'public-key',
+    });
+
+    expect(options).toMatchObject({
+      provider: 'custom',
+      url: 'https://github.com/suoak/AionUi/releases/latest/download',
+      sourceKind: 'github',
+      artifactPathMode: 'release-root',
+      manifestPublicKey: 'public-key',
+      updateProvider: CdnGenericProvider,
+    });
+  });
+
+  it('rejects every update source when the manifest verification key is missing', () => {
+    expect(() =>
+      resolveUpdateSourceConfig({ isPackaged: true, platform: 'win32', readPolicyValue: () => undefined })
+    ).toThrow('Update manifest public key is not configured');
   });
 
   it('falls back only for unavailable internal sources, never integrity failures', () => {
@@ -140,7 +171,33 @@ describe('signed internal update provider', () => {
   class TestProvider extends CdnGenericProvider {
     constructor(private readonly signature: string) {
       super(
-        { provider: 'custom', url: 'http://10.0.0.5/releases', manifestPublicKey: publicKeyPem },
+        {
+          provider: 'custom',
+          url: 'http://10.0.0.5/releases',
+          sourceKind: 'internal-http',
+          artifactPathMode: 'version-directory',
+          manifestPublicKey: publicKeyPem,
+        },
+        { channel: 'latest' } as AppUpdater,
+        makeRuntimeOptions()
+      );
+    }
+
+    protected override requestInternalResource(url: URL): Promise<string> {
+      return Promise.resolve(url.pathname.endsWith('.sig') ? this.signature : manifest);
+    }
+  }
+
+  class TestGitHubProvider extends CdnGenericProvider {
+    constructor(private readonly signature: string) {
+      super(
+        {
+          provider: 'custom',
+          url: 'https://github.com/suoak/AionUi/releases/latest/download',
+          sourceKind: 'github',
+          artifactPathMode: 'release-root',
+          manifestPublicKey: publicKeyPem,
+        },
         { channel: 'latest' } as AppUpdater,
         makeRuntimeOptions()
       );
@@ -168,6 +225,17 @@ describe('signed internal update provider', () => {
     });
   });
 
+  it('verifies GitHub metadata and resolves artifacts from the release root', async () => {
+    const signature = sign(null, Buffer.from(manifest), privateKey).toString('base64');
+    const provider = new TestGitHubProvider(signature);
+    const updateInfo = await provider.getLatestVersion();
+    const files = provider.resolveFiles(updateInfo);
+
+    expect(files[0]?.url.href).toBe(
+      'https://github.com/suoak/AionUi/releases/latest/download/CSBU-WorkMate-2.1.52-win-x64.exe'
+    );
+  });
+
   it('rejects a manifest redirect to another origin', async () => {
     const signature = sign(null, Buffer.from(manifest), privateKey).toString('base64');
     vi.stubGlobal(
@@ -184,7 +252,13 @@ describe('signed internal update provider', () => {
 
     try {
       const provider = new CdnGenericProvider(
-        { provider: 'custom', url: 'http://10.0.0.5/releases', manifestPublicKey: publicKeyPem },
+        {
+          provider: 'custom',
+          url: 'http://10.0.0.5/releases',
+          sourceKind: 'internal-http',
+          artifactPathMode: 'version-directory',
+          manifestPublicKey: publicKeyPem,
+        },
         { channel: 'latest' } as AppUpdater,
         makeRuntimeOptions()
       );

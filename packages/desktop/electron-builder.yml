@@ -120,7 +120,6 @@ win:
     #    - msi
   icon: resources/app.ico # Use the checked-in Windows icon resource for executable metadata/icon patching
   artifactName: CSBU-WorkMate-${version}-${os}-${arch}.${ext}
-  publisherName: ${env.WIN_CSC_PUBLISHER_NAME}
 
 publish:
   provider: github

@@ -408,41 +408,18 @@ jobs:
           GH_TOKEN: ${{ secrets.GH_TOKEN || secrets.GITHUB_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Resolve Windows signing certificate subject
+      - name: Require the update verification key for stable Windows releases
         if: startsWith(matrix.platform, 'windows')
-        id: windows-signing
-        shell: pwsh
+        shell: bash
         env:
-          CSC_LINK: ${{ secrets.WIN_CSC_LINK }}
-          CSC_KEY_PASSWORD: ${{ secrets.WIN_CSC_KEY_PASSWORD }}
           RELEASE_REF: ${{ inputs.ref || github.ref }}
+          UPDATE_MANIFEST_ED25519_PUBLIC_KEY: ${{ secrets.UPDATE_MANIFEST_ED25519_PUBLIC_KEY }}
         run: |
-          $ErrorActionPreference = 'Stop'
-          $isStableRelease = $env:RELEASE_REF -match '(^|/)v\d+\.\d+\.\d+$'
-          if ([string]::IsNullOrWhiteSpace($env:CSC_LINK)) {
-            if ($isStableRelease) {
-              throw 'WIN_CSC_LINK is required for stable Windows releases'
-            }
-            'publisher=' | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
-            exit 0
-          }
-
-          $certificateBytes = if (Test-Path -LiteralPath $env:CSC_LINK) {
-            [IO.File]::ReadAllBytes((Resolve-Path -LiteralPath $env:CSC_LINK))
-          } else {
-            $encoded = $env:CSC_LINK -replace '^data:application/x-pkcs12;base64,', ''
-            [Convert]::FromBase64String($encoded)
-          }
-          $certificate = [Security.Cryptography.X509Certificates.X509Certificate2]::new(
-            $certificateBytes,
-            $env:CSC_KEY_PASSWORD,
-            [Security.Cryptography.X509Certificates.X509KeyStorageFlags]::EphemeralKeySet
-          )
-          if ([string]::IsNullOrWhiteSpace($certificate.Subject)) {
-            throw 'Windows signing certificate Subject is empty'
-          }
-          "publisher=$($certificate.Subject)" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
-          Write-Host "Windows signing publisher: $($certificate.Subject)"
+          set -euo pipefail
+          if [[ "${RELEASE_REF}" =~ (^|/)v[0-9]+\.[0-9]+\.[0-9]+$ ]] && [ -z "${UPDATE_MANIFEST_ED25519_PUBLIC_KEY:-}" ]; then
+            echo "UPDATE_MANIFEST_ED25519_PUBLIC_KEY is required for stable Windows releases"
+            exit 1
+          fi
 
       - name: Build with electron-builder (Windows)
         if: startsWith(matrix.platform, 'windows')
@@ -490,10 +467,6 @@ jobs:
           appleIdPassword: ${{ secrets.APPLE_ID_PASSWORD }}
           teamId: ${{ secrets.TEAM_ID }}
           identity: ${{ secrets.IDENTITY }}
-          CSC_LINK: ${{ secrets.WIN_CSC_LINK }}
-          CSC_KEY_PASSWORD: ${{ secrets.WIN_CSC_KEY_PASSWORD }}
-          WIN_CSC_PUBLISHER_NAME: ${{ steps.windows-signing.outputs.publisher }}
-          CSC_IDENTITY_AUTO_DISCOVERY: true
           CSBU_WORKMATE_UPDATE_MANIFEST_PUBLIC_KEY: ${{ secrets.UPDATE_MANIFEST_ED25519_PUBLIC_KEY }}
           # Windows build flags / Windows 构建参数
           MSVS_VERSION: 2022
@@ -560,51 +533,11 @@ jobs:
             Write-Host "Verified executable metadata: $($target.FullName)"
           }
 
-      - name: Verify Windows Authenticode for stable releases
-        if: >-
-          startsWith(matrix.platform, 'windows') &&
-          steps.windows-build.outputs.result == 'success'
-        shell: pwsh
-        env:
-          RELEASE_REF: ${{ inputs.ref || github.ref }}
-          EXPECTED_PUBLISHER: ${{ steps.windows-signing.outputs.publisher }}
-        run: |
-          $ErrorActionPreference = 'Stop'
-          $isStableRelease = $env:RELEASE_REF -match '(^|/)v\d+\.\d+\.\d+$'
-          if (-not $isStableRelease) {
-            Write-Host 'Skipping mandatory Authenticode gate for non-stable build'
-            exit 0
-          }
-          if ([string]::IsNullOrWhiteSpace($env:EXPECTED_PUBLISHER)) {
-            throw 'The Windows signing certificate Subject is required for stable Windows releases'
-          }
-
-          $targets = @(
-            Get-ChildItem -LiteralPath 'out' -Recurse -File -Filter '*.exe' |
-              Where-Object { $_.Name -eq 'CSBU WorkMate.exe' -or $_.DirectoryName -eq (Resolve-Path 'out').Path }
-          )
-          if ($targets.Count -eq 0) {
-            throw 'No Windows executables were found for Authenticode verification'
-          }
-          foreach ($target in $targets) {
-            $signature = Get-AuthenticodeSignature -LiteralPath $target.FullName
-            if ($signature.Status -ne 'Valid') {
-              throw "Invalid Authenticode signature on $($target.FullName): $($signature.Status)"
-            }
-            if ($signature.SignerCertificate.Subject -notlike "*$($env:EXPECTED_PUBLISHER)*") {
-              throw "Unexpected signer on $($target.FullName): $($signature.SignerCertificate.Subject)"
-            }
-            Write-Host "Verified Authenticode signature: $($target.FullName)"
-          }
-
       - name: Verify installed Windows uninstaller metadata
         if: >-
           startsWith(matrix.platform, 'windows') &&
           steps.windows-build.outputs.result == 'success'
         shell: pwsh
-        env:
-          RELEASE_REF: ${{ inputs.ref || github.ref }}
-          EXPECTED_PUBLISHER: ${{ steps.windows-signing.outputs.publisher }}
         run: |
           $ErrorActionPreference = 'Stop'
           $installer = Get-ChildItem -LiteralPath 'out' -File -Filter '*.exe' |
@@ -718,16 +651,6 @@ jobs:
               }
               Write-Host "Verified installed executable metadata: $($target.FullName)"
 
-              $isStableRelease = $env:RELEASE_REF -match '(^|/)v\d+\.\d+\.\d+$'
-              if ($isStableRelease) {
-                $signature = Get-AuthenticodeSignature -LiteralPath $target.FullName
-                if ($signature.Status -ne 'Valid') {
-                  throw "Invalid installed Authenticode signature on $($target.FullName): $($signature.Status)"
-                }
-                if ($signature.SignerCertificate.Subject -notlike "*$($env:EXPECTED_PUBLISHER)*") {
-                  throw "Unexpected installed signer on $($target.FullName): $($signature.SignerCertificate.Subject)"
-                }
-              }
             }
 
             $uninstallProcess = Start-Process `

@@ -17,6 +17,8 @@ type GenericProviderRuntimeOptions = ConstructorParameters<typeof GenericProvide
 
 export type CdnGenericProviderConfiguration = Omit<GenericProviderConfiguration, 'provider'> & {
   provider: 'custom';
+  sourceKind: 'github' | 'internal-http';
+  artifactPathMode: 'release-root' | 'version-directory';
   manifestPublicKey: string;
   updateProvider?: unknown;
 };
@@ -29,17 +31,29 @@ export class CdnGenericProvider extends GenericProvider {
   // channel-file URL for logging (the base `channel` getter is also private).
   private readonly _updater: GenericProviderUpdater;
   private readonly _manifestPublicKey: string;
+  private readonly _sourceKind: CdnGenericProviderConfiguration['sourceKind'];
+  private readonly _artifactPathMode: CdnGenericProviderConfiguration['artifactPathMode'];
+
+  private isAllowedRequestUrl(url: URL): boolean {
+    if (url.username || url.password) return false;
+    if (this._sourceKind === 'github') {
+      return (
+        url.protocol === 'https:' && (url.hostname === 'github.com' || url.hostname.endsWith('.githubusercontent.com'))
+      );
+    }
+    const basePath = this._cdnBaseUrl.pathname.replace(/\/$/, '');
+    return url.origin === this._cdnBaseUrl.origin && url.pathname.startsWith(`${basePath}/`);
+  }
 
   protected async requestInternalResource(url: URL, method: 'GET' | 'HEAD' = 'GET'): Promise<string> {
     let currentUrl = url;
-    const basePath = this._cdnBaseUrl.pathname.replace(/\/$/, '');
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 30_000);
 
     try {
       for (let redirectCount = 0; redirectCount <= 8; redirectCount += 1) {
-        if (currentUrl.origin !== this._cdnBaseUrl.origin || !currentUrl.pathname.startsWith(`${basePath}/`)) {
-          const error = new Error('Internal update redirect left the configured origin or release path') as Error & {
+        if (!this.isAllowedRequestUrl(currentUrl)) {
+          const error = new Error('Update redirect left the allowed source') as Error & {
             code?: string;
           };
           error.code = 'ERR_UPDATER_REDIRECT_REJECTED';
@@ -64,7 +78,7 @@ export class CdnGenericProvider extends GenericProvider {
         if (response.status >= 300 && response.status < 400) {
           const location = response.headers.get('location');
           if (!location) {
-            const error = new Error('Internal update redirect has no Location header') as Error & { code?: string };
+            const error = new Error('Update redirect has no Location header') as Error & { code?: string };
             error.code = 'ERR_UPDATER_REDIRECT_REJECTED';
             throw error;
           }
@@ -72,7 +86,7 @@ export class CdnGenericProvider extends GenericProvider {
           continue;
         }
         if (!response.ok) {
-          const error = new Error(`Internal update request failed with HTTP ${response.status}`) as Error & {
+          const error = new Error(`Update request failed with HTTP ${response.status}`) as Error & {
             statusCode?: number;
           };
           error.statusCode = response.status;
@@ -81,7 +95,7 @@ export class CdnGenericProvider extends GenericProvider {
         return method === 'HEAD' ? '' : response.text();
       }
 
-      const error = new Error('Internal update source returned too many redirects') as Error & { code?: string };
+      const error = new Error('Update source returned too many redirects') as Error & { code?: string };
       error.code = 'ERR_UPDATER_REDIRECT_REJECTED';
       throw error;
     } finally {
@@ -101,6 +115,8 @@ export class CdnGenericProvider extends GenericProvider {
     super(genericConfiguration, updater, runtimeOptions);
     this._updater = updater;
     this._manifestPublicKey = configuration.manifestPublicKey.replace(/\\n/g, '\n');
+    this._sourceKind = configuration.sourceKind;
+    this._artifactPathMode = configuration.artifactPathMode;
     this._cdnBaseUrl = new URL(withTrailingSlash(configuration.url));
     log.debug('[auto-update] CDN provider initialized', {
       baseUrl: this._cdnBaseUrl.href,
@@ -133,7 +149,7 @@ export class CdnGenericProvider extends GenericProvider {
       this.requestInternalResource(signatureUrl),
     ]);
     if (!rawManifest || !rawSignature) {
-      throw new Error('Internal update manifest or signature is empty');
+      throw new Error('Update manifest or signature is empty');
     }
 
     let signature: Buffer;
@@ -143,33 +159,31 @@ export class CdnGenericProvider extends GenericProvider {
       signature = Buffer.alloc(0);
     }
     if (!signature.length || !verify(null, Buffer.from(rawManifest, 'utf8'), this._manifestPublicKey, signature)) {
-      const error = new Error('Internal update manifest signature verification failed') as Error & { code?: string };
+      const error = new Error('Update manifest signature verification failed') as Error & { code?: string };
       error.code = 'ERR_UPDATER_MANIFEST_SIGNATURE_INVALID';
       throw error;
     }
 
     const channelFile = manifestUrl.pathname.split('/').pop() || 'latest.yml';
     const updateInfo = parseUpdateInfo(rawManifest, channelFile, manifestUrl);
-    const artifactFiles = resolveProviderFiles(
-      updateInfo,
-      this._cdnBaseUrl,
-      (filePath) => `${updateInfo.version}/${filePath}`
-    );
+    const artifactFiles = this.resolveSignedFiles(updateInfo);
     await Promise.all(artifactFiles.map((file) => this.requestInternalResource(file.url, 'HEAD')));
     return updateInfo;
   }
 
   override resolveFiles(updateInfo: UpdateInfo): ReturnType<GenericProvider['resolveFiles']> {
-    const resolved = resolveProviderFiles(
-      updateInfo,
-      this._cdnBaseUrl,
-      (filePath) => `${updateInfo.version}/${filePath}`
-    );
+    const resolved = this.resolveSignedFiles(updateInfo);
     log.info('[auto-update] Update download URL(s) resolved:', {
       version: updateInfo.version,
       files: resolved.map((file) => file.url.href),
       packages: resolved.map((file) => file.packageInfo?.path).filter(Boolean),
     });
     return resolved;
+  }
+
+  private resolveSignedFiles(updateInfo: UpdateInfo): ReturnType<GenericProvider['resolveFiles']> {
+    return resolveProviderFiles(updateInfo, this._cdnBaseUrl, (filePath) =>
+      this._artifactPathMode === 'version-directory' ? `${updateInfo.version}/${filePath}` : filePath
+    );
   }
 }
