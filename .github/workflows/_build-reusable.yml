@@ -627,6 +627,9 @@ jobs:
           $diagnosticsDirectory = Join-Path $env:RUNNER_TEMP "csbu-workmate-installer-diagnostics-${{ matrix.arch }}"
           $legacyInstaller = Join-Path $env:RUNNER_TEMP 'csbu-workmate-legacy-installer\CSBU-WorkMate-2.1.51-win-${{ matrix.arch }}.exe'
           New-Item -ItemType Directory -Path $diagnosticsDirectory -Force | Out-Null
+          Set-Content `
+            -LiteralPath (Join-Path $diagnosticsDirectory 'smoke-status.txt') `
+            -Value "Installer smoke started at $(Get-Date -Format o)"
 
           function Invoke-BoundedInstallerProcess {
             param(
@@ -657,6 +660,46 @@ jobs:
             if ($process.ExitCode -ne 0) {
               throw "$Phase failed with exit code $($process.ExitCode)"
             }
+          }
+
+          function Wait-ForUninstallCompletion {
+            param(
+              [Parameter(Mandatory)] [string] $Phase,
+              [Parameter(Mandatory)] [string] $InstallDirectory,
+              [int] $TimeoutSeconds = 600
+            )
+
+            Write-Host "Waiting for the detached NSIS uninstaller during $Phase"
+            $deadline = (Get-Date).AddSeconds($TimeoutSeconds)
+            $lastProgressAt = Get-Date
+            while ((Get-Date) -lt $deadline) {
+              $directoryExists = Test-Path -LiteralPath $InstallDirectory
+              $registrationExists = @($installRegistryPath, $uninstallRegistryPath) |
+                Where-Object { Test-Path -LiteralPath $_ } |
+                Select-Object -First 1
+              if (-not $directoryExists -and -not $registrationExists) {
+                Write-Host "$Phase completed and removed its directory and registration"
+                return
+              }
+              if (((Get-Date) - $lastProgressAt).TotalSeconds -ge 15) {
+                Write-Host "$Phase still running: directoryExists=$directoryExists registrationExists=$([bool]$registrationExists)"
+                $lastProgressAt = Get-Date
+              }
+              Start-Sleep -Seconds 1
+            }
+
+            $stuckProcesses = @(Get-CimInstance Win32_Process |
+              Where-Object {
+                $_.Name -match '^Un_' -or
+                ([string]$_.CommandLine).Contains($InstallDirectory, [StringComparison]::OrdinalIgnoreCase)
+              })
+            ConvertTo-Json -InputObject $stuckProcesses -Depth 4 -AsArray |
+              Set-Content -LiteralPath (Join-Path $diagnosticsDirectory "$Phase-stuck-processes.json")
+            foreach ($stuckProcess in $stuckProcesses) {
+              & taskkill.exe /PID $stuckProcess.ProcessId /T /F 2>&1 |
+                Out-File -LiteralPath (Join-Path $diagnosticsDirectory "$Phase-taskkill.txt") -Append
+            }
+            throw "$Phase did not finish cleanup within ${TimeoutSeconds}s"
           }
           foreach ($directory in @($freshInstallDirectory, $installDirectory)) {
             if (Test-Path -LiteralPath $directory) {
@@ -696,9 +739,9 @@ jobs:
               -Phase 'fresh-uninstall' `
               -FilePath $freshUninstaller.FullName `
               -ArgumentList @('/S', "--installer-log=$freshLog")
-            if (Test-Path -LiteralPath $freshInstallDirectory) {
-              Remove-Item -LiteralPath $freshInstallDirectory -Recurse -Force -ErrorAction Continue
-            }
+            Wait-ForUninstallCompletion `
+              -Phase 'fresh-uninstall' `
+              -InstallDirectory $freshInstallDirectory
             foreach ($registryPath in @($installRegistryPath, $uninstallRegistryPath)) {
               if (Test-Path -LiteralPath $registryPath) {
                 throw "Fresh uninstall registration remains after uninstallation: $registryPath"
@@ -786,6 +829,9 @@ jobs:
               -Phase 'migrated-uninstall' `
               -FilePath $uninstaller.FullName `
               -ArgumentList @('/S', "--installer-log=$migrationLog")
+            Wait-ForUninstallCompletion `
+              -Phase 'migrated-uninstall' `
+              -InstallDirectory $installDirectory
             if (Test-Path -LiteralPath $installStatePath) {
               throw "Installer state remains after uninstallation: $installStatePath"
             }
@@ -795,11 +841,14 @@ jobs:
               }
             }
           } finally {
-            Get-CimInstance Win32_Process |
+            $processSnapshot = @(Get-CimInstance Win32_Process |
               Where-Object { $_.Name -match 'CSBU|Uninstall|nsis' } |
-              Select-Object ProcessId, ParentProcessId, Name, ExecutablePath, CommandLine |
-              ConvertTo-Json -Depth 4 |
+              Select-Object ProcessId, ParentProcessId, Name, ExecutablePath, CommandLine)
+            ConvertTo-Json -InputObject $processSnapshot -Depth 4 -AsArray |
               Set-Content -LiteralPath (Join-Path $diagnosticsDirectory 'processes.json')
+            Add-Content `
+              -LiteralPath (Join-Path $diagnosticsDirectory 'smoke-status.txt') `
+              -Value "Installer smoke finished at $(Get-Date -Format o)"
             Get-ChildItem -LiteralPath $env:TEMP -File -Filter 'csbu-workmate-installer-*-log.jsonl' -ErrorAction SilentlyContinue |
               Copy-Item -Destination $diagnosticsDirectory -Force -ErrorAction Continue
             foreach ($directory in @($freshInstallDirectory, $installDirectory)) {

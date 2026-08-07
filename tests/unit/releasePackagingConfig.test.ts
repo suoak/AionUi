@@ -169,9 +169,12 @@ describe('release packaging configuration', () => {
     expect(reusableWorkflow).toContain('Required installed VERSIONINFO is missing');
     expect(reusableWorkflow).toContain('$process.WaitForExit($TimeoutSeconds * 1000)');
     expect(reusableWorkflow).toContain('& taskkill.exe /PID $process.Id /T /F');
+    expect(reusableWorkflow).toContain('function Wait-ForUninstallCompletion');
+    expect(reusableWorkflow).toContain('Waiting for the detached NSIS uninstaller');
     expect(reusableWorkflow).toContain("-Phase 'fresh-install'");
     expect(reusableWorkflow).toContain("-Phase 'fresh-uninstall'");
     expect(reusableWorkflow).toContain("-Phase 'migrated-uninstall'");
+    expect(reusableWorkflow).toContain("'smoke-status.txt'");
     expect(reusableWorkflow).toContain('Upload Windows installer smoke diagnostics');
   });
 
