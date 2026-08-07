@@ -170,7 +170,12 @@ describe('release packaging configuration', () => {
     expect(reusableWorkflow).toContain('needs: build');
     expect(reusableWorkflow).toContain('actions/download-artifact@v7');
     expect(reusableWorkflow).toContain("& 'resources/windows/support/verify-installer-migration.ps1'");
+    expect(reusableWorkflow).toContain('scenario: [fresh, migration]');
+    expect(reusableWorkflow).toContain("if: matrix.scenario == 'migration'");
+    expect(reusableWorkflow).toContain("Mode = '${{ matrix.scenario }}'");
     expect(smokeScript).toContain("-Filter 'Uninstall*.exe'");
+    expect(smokeScript).toContain("[ValidateSet('fresh', 'migration')]");
+    expect(smokeScript).toContain("if ($Mode -eq 'fresh')");
     expect(smokeScript).toContain('$process.WaitForExit($TimeoutSeconds * 1000)');
     expect(smokeScript).toContain('& taskkill.exe /PID $process.Id /T /F');
     expect(smokeScript).toContain('function Wait-ForUninstallCompletion');

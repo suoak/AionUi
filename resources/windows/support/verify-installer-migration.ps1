@@ -2,7 +2,6 @@ param(
   [Parameter(Mandatory = $true)]
   [string]$CurrentInstaller,
 
-  [Parameter(Mandatory = $true)]
   [string]$LegacyInstaller,
 
   [Parameter(Mandatory = $true)]
@@ -11,6 +10,10 @@ param(
 
   [Parameter(Mandatory = $true)]
   [string]$DiagnosticsDirectory,
+
+  [Parameter(Mandatory = $true)]
+  [ValidateSet('fresh', 'migration')]
+  [string]$Mode,
 
   [string]$TemporaryDirectory = $env:RUNNER_TEMP
 )
@@ -25,6 +28,7 @@ $registryPaths = @($installRegistryPath, $uninstallRegistryPath)
 
 New-Item -ItemType Directory -Path $DiagnosticsDirectory -Force | Out-Null
 Set-Content -LiteralPath (Join-Path $DiagnosticsDirectory 'smoke-status.txt') -Value "Started at $(Get-Date -Format o)"
+Add-Content -LiteralPath (Join-Path $DiagnosticsDirectory 'smoke-status.txt') -Value "Mode: $Mode"
 
 function Invoke-BoundedProcess {
   param(
@@ -156,36 +160,42 @@ function Clear-SmokeState {
 
 Clear-SmokeState
 try {
-  $freshLog = Join-Path $DiagnosticsDirectory 'fresh-install.jsonl'
-  Invoke-BoundedProcess -Phase 'fresh-install' -FilePath $CurrentInstaller -ArgumentList @('/S', "--installer-log=$freshLog", "/D=$freshInstallDirectory")
-  $freshTargets = Get-InstalledTargets -InstallDirectory $freshInstallDirectory
-  Assert-Registration -ExpectedInstallDirectory $freshInstallDirectory
-  Assert-Metadata -Targets $freshTargets
-  Invoke-BoundedProcess -Phase 'fresh-uninstall' -FilePath $freshTargets[1].FullName -ArgumentList @('/S', "--installer-log=$freshLog")
-  Wait-ForUninstallCompletion -Phase 'fresh-uninstall' -InstallDirectory $freshInstallDirectory
-
-  $legacyLog = Join-Path $DiagnosticsDirectory 'legacy-install.jsonl'
-  Invoke-BoundedProcess -Phase 'legacy-install' -FilePath $LegacyInstaller -ArgumentList @('/S', "--installer-log=$legacyLog", "/D=$migrationInstallDirectory")
-  $null = Get-InstalledTargets -InstallDirectory $migrationInstallDirectory
-  if (-not (Test-Path -LiteralPath $installStatePath)) {
-    throw "Legacy registry-free installer did not create migration state: $installStatePath"
-  }
-  foreach ($registryPath in $registryPaths) {
-    if (Test-Path -LiteralPath $registryPath) {
-      throw "Legacy registry-free installer unexpectedly registered: $registryPath"
+  if ($Mode -eq 'fresh') {
+    $freshLog = Join-Path $DiagnosticsDirectory 'fresh-install.jsonl'
+    Invoke-BoundedProcess -Phase 'fresh-install' -FilePath $CurrentInstaller -ArgumentList @('/S', "--installer-log=$freshLog", "/D=$freshInstallDirectory")
+    $freshTargets = Get-InstalledTargets -InstallDirectory $freshInstallDirectory
+    Assert-Registration -ExpectedInstallDirectory $freshInstallDirectory
+    Assert-Metadata -Targets $freshTargets
+    Invoke-BoundedProcess -Phase 'fresh-uninstall' -FilePath $freshTargets[1].FullName -ArgumentList @('/S', "--installer-log=$freshLog")
+    Wait-ForUninstallCompletion -Phase 'fresh-uninstall' -InstallDirectory $freshInstallDirectory
+  } else {
+    if ([string]::IsNullOrWhiteSpace($LegacyInstaller) -or -not (Test-Path -LiteralPath $LegacyInstaller -PathType Leaf)) {
+      throw 'Legacy installer is required for migration smoke tests'
     }
-  }
 
-  $migrationLog = Join-Path $DiagnosticsDirectory 'migration-install.jsonl'
-  Invoke-BoundedProcess -Phase 'registry-free-migration' -FilePath $CurrentInstaller -ArgumentList @('/S', "--installer-log=$migrationLog")
-  if (Test-Path -LiteralPath $installStatePath) {
-    throw "Legacy registry-free installer state remains after installation: $installStatePath"
+    $legacyLog = Join-Path $DiagnosticsDirectory 'legacy-install.jsonl'
+    Invoke-BoundedProcess -Phase 'legacy-install' -FilePath $LegacyInstaller -ArgumentList @('/S', "--installer-log=$legacyLog", "/D=$migrationInstallDirectory")
+    $null = Get-InstalledTargets -InstallDirectory $migrationInstallDirectory
+    if (-not (Test-Path -LiteralPath $installStatePath)) {
+      throw "Legacy registry-free installer did not create migration state: $installStatePath"
+    }
+    foreach ($registryPath in $registryPaths) {
+      if (Test-Path -LiteralPath $registryPath) {
+        throw "Legacy registry-free installer unexpectedly registered: $registryPath"
+      }
+    }
+
+    $migrationLog = Join-Path $DiagnosticsDirectory 'migration-install.jsonl'
+    Invoke-BoundedProcess -Phase 'registry-free-migration' -FilePath $CurrentInstaller -ArgumentList @('/S', "--installer-log=$migrationLog")
+    if (Test-Path -LiteralPath $installStatePath) {
+      throw "Legacy registry-free installer state remains after installation: $installStatePath"
+    }
+    Assert-Registration -ExpectedInstallDirectory $migrationInstallDirectory
+    $migratedTargets = Get-InstalledTargets -InstallDirectory $migrationInstallDirectory
+    Assert-Metadata -Targets $migratedTargets
+    Invoke-BoundedProcess -Phase 'migrated-uninstall' -FilePath $migratedTargets[1].FullName -ArgumentList @('/S', "--installer-log=$migrationLog")
+    Wait-ForUninstallCompletion -Phase 'migrated-uninstall' -InstallDirectory $migrationInstallDirectory
   }
-  Assert-Registration -ExpectedInstallDirectory $migrationInstallDirectory
-  $migratedTargets = Get-InstalledTargets -InstallDirectory $migrationInstallDirectory
-  Assert-Metadata -Targets $migratedTargets
-  Invoke-BoundedProcess -Phase 'migrated-uninstall' -FilePath $migratedTargets[1].FullName -ArgumentList @('/S', "--installer-log=$migrationLog")
-  Wait-ForUninstallCompletion -Phase 'migrated-uninstall' -InstallDirectory $migrationInstallDirectory
 } finally {
   $processSnapshot = @(Get-CimInstance Win32_Process | Where-Object { $_.Name -match 'CSBU|Uninstall|nsis|^Un_' } |
       Select-Object ProcessId, ParentProcessId, Name, ExecutablePath, CommandLine)
