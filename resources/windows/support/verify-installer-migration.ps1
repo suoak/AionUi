@@ -38,17 +38,37 @@ function Invoke-BoundedProcess {
     [string]$FilePath,
     [Parameter(Mandatory = $true)]
     [string[]]$ArgumentList,
+    [string]$ProgressLogPath = '',
     [int]$TimeoutSeconds = 600
   )
 
   Write-Host "::group::Installer smoke phase: $Phase"
   $startedAt = Get-Date
   $process = Start-Process -FilePath $FilePath -ArgumentList $ArgumentList -PassThru -NoNewWindow
-  if (-not $process.WaitForExit($TimeoutSeconds * 1000)) {
-    & taskkill.exe /PID $process.Id /T /F 2>&1 |
-      Out-File -LiteralPath (Join-Path $DiagnosticsDirectory "$Phase-taskkill.txt")
-    Write-Host '::endgroup::'
-    throw "$Phase timed out after ${TimeoutSeconds}s"
+  $deadline = $startedAt.AddSeconds($TimeoutSeconds)
+  $reportedLogLineCount = 0
+  while (-not $process.WaitForExit(5000)) {
+    $elapsedSeconds = [math]::Round(((Get-Date) - $startedAt).TotalSeconds, 1)
+    $installDirectoryExists = Test-Path -LiteralPath $migrationInstallDirectory
+    $stagingDirectoryExists = Test-Path -LiteralPath "$migrationInstallDirectory.__csbu-migration"
+    Write-Host "$Phase heartbeat: pid=$($process.Id) elapsed=${elapsedSeconds}s installDirectoryExists=$installDirectoryExists stagingDirectoryExists=$stagingDirectoryExists"
+    if ($ProgressLogPath -and (Test-Path -LiteralPath $ProgressLogPath -PathType Leaf)) {
+      $logLines = @(Get-Content -LiteralPath $ProgressLogPath -ErrorAction SilentlyContinue)
+      if ($logLines.Count -gt $reportedLogLineCount) {
+        $logLines | Select-Object -Skip $reportedLogLineCount | ForEach-Object { Write-Host "[$Phase] $_" }
+        $reportedLogLineCount = $logLines.Count
+      }
+    }
+    if ((Get-Date) -ge $deadline) {
+      & taskkill.exe /PID $process.Id /T /F 2>&1 |
+        Out-File -LiteralPath (Join-Path $DiagnosticsDirectory "$Phase-taskkill.txt")
+      Write-Host '::endgroup::'
+      throw "$Phase timed out after ${TimeoutSeconds}s"
+    }
+  }
+  if ($ProgressLogPath -and (Test-Path -LiteralPath $ProgressLogPath -PathType Leaf)) {
+    $logLines = @(Get-Content -LiteralPath $ProgressLogPath -ErrorAction SilentlyContinue)
+    $logLines | Select-Object -Skip $reportedLogLineCount | ForEach-Object { Write-Host "[$Phase] $_" }
   }
   $duration = [math]::Round(((Get-Date) - $startedAt).TotalSeconds, 1)
   Write-Host "$Phase finished with exit code $($process.ExitCode) after ${duration}s"
@@ -242,11 +262,11 @@ if ($shouldCleanBefore) {
 try {
   if ($Mode -eq 'fresh') {
     $freshLog = Join-Path $DiagnosticsDirectory 'fresh-install.jsonl'
-    Invoke-BoundedProcess -Phase 'fresh-install' -FilePath $CurrentInstaller -ArgumentList @('/S', "--installer-log=$freshLog", "/D=$freshInstallDirectory")
+    Invoke-BoundedProcess -Phase 'fresh-install' -FilePath $CurrentInstaller -ArgumentList @('/S', "--installer-log=$freshLog", "/D=$freshInstallDirectory") -ProgressLogPath $freshLog
     $freshTargets = Get-InstalledTargets -InstallDirectory $freshInstallDirectory
     Assert-Registration -ExpectedInstallDirectory $freshInstallDirectory
     Assert-Metadata -Targets $freshTargets
-    Invoke-BoundedProcess -Phase 'fresh-uninstall' -FilePath $freshTargets[1].FullName -ArgumentList @('/S', "--installer-log=$freshLog")
+    Invoke-BoundedProcess -Phase 'fresh-uninstall' -FilePath $freshTargets[1].FullName -ArgumentList @('/S', "--installer-log=$freshLog") -ProgressLogPath $freshLog
     Wait-ForUninstallCompletion -Phase 'fresh-uninstall' -InstallDirectory $freshInstallDirectory
   } elseif ($Mode -eq 'migration-prepare') {
     if ([string]::IsNullOrWhiteSpace($LegacyInstaller) -or -not (Test-Path -LiteralPath $LegacyInstaller -PathType Leaf)) {
@@ -254,7 +274,7 @@ try {
     }
 
     $legacyLog = Join-Path $DiagnosticsDirectory 'legacy-install.jsonl'
-    Invoke-BoundedProcess -Phase 'legacy-install' -FilePath $LegacyInstaller -ArgumentList @('/S', "--installer-log=$legacyLog", "/D=$migrationInstallDirectory")
+    Invoke-BoundedProcess -Phase 'legacy-install' -FilePath $LegacyInstaller -ArgumentList @('/S', "--installer-log=$legacyLog", "/D=$migrationInstallDirectory") -ProgressLogPath $legacyLog
     $null = Get-InstalledTargets -InstallDirectory $migrationInstallDirectory
     Assert-LegacyMigrationState
     foreach ($registryPath in $registryPaths) {
@@ -268,14 +288,14 @@ try {
     Assert-LegacyMigrationState
     Save-DiagnosticsSnapshot -Phase 'upgrade-start'
     $migrationLog = Join-Path $DiagnosticsDirectory 'migration-install.jsonl'
-    Invoke-BoundedProcess -Phase 'registry-free-migration' -FilePath $CurrentInstaller -ArgumentList @('/S', "--installer-log=$migrationLog")
+    Invoke-BoundedProcess -Phase 'registry-free-migration' -FilePath $CurrentInstaller -ArgumentList @('/S', "--installer-log=$migrationLog") -ProgressLogPath $migrationLog
     if (Test-Path -LiteralPath $installStatePath) {
       throw "Legacy registry-free installer state remains after installation: $installStatePath"
     }
     Assert-Registration -ExpectedInstallDirectory $migrationInstallDirectory
     $migratedTargets = Get-InstalledTargets -InstallDirectory $migrationInstallDirectory
     Assert-Metadata -Targets $migratedTargets
-    Invoke-BoundedProcess -Phase 'migrated-uninstall' -FilePath $migratedTargets[1].FullName -ArgumentList @('/S', "--installer-log=$migrationLog")
+    Invoke-BoundedProcess -Phase 'migrated-uninstall' -FilePath $migratedTargets[1].FullName -ArgumentList @('/S', "--installer-log=$migrationLog") -ProgressLogPath $migrationLog
     Wait-ForUninstallCompletion -Phase 'migrated-uninstall' -InstallDirectory $migrationInstallDirectory
   }
 } finally {

@@ -180,7 +180,9 @@ describe('release packaging configuration', () => {
     expect(smokeScript).toContain("-Filter 'Uninstall*.exe'");
     expect(smokeScript).toContain("[ValidateSet('fresh', 'migration-prepare', 'migration-upgrade')]");
     expect(smokeScript).toContain("if ($Mode -eq 'fresh')");
-    expect(smokeScript).toContain('$process.WaitForExit($TimeoutSeconds * 1000)');
+    expect(smokeScript).toContain('$process.WaitForExit(5000)');
+    expect(smokeScript).toContain('heartbeat: pid=$($process.Id)');
+    expect(smokeScript).toContain('Select-Object -Skip $reportedLogLineCount');
     expect(smokeScript).toContain('& taskkill.exe /PID $process.Id /T /F');
     expect(smokeScript).toContain('function Wait-ForUninstallCompletion');
     expect(smokeScript).toContain("-Phase 'fresh-install'");
