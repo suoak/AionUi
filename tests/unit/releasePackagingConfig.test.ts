@@ -173,7 +173,10 @@ describe('release packaging configuration', () => {
     expect(reusableWorkflow).toContain('needs: build');
     expect(reusableWorkflow).toContain('actions/download-artifact@v7');
     expect(reusableWorkflow).toContain("& 'resources/windows/support/verify-installer-migration.ps1'");
-    expect(reusableWorkflow).toContain('scenario: [fresh, migration]');
+    expect(reusableWorkflow).toContain('run_windows_registry_free_migration_smoke:');
+    expect(reusableWorkflow).toContain(
+      'scenario: ${{ fromJSON(inputs.run_windows_registry_free_migration_smoke && \'["fresh","migration"]\' || \'["fresh"]\') }}'
+    );
     expect(reusableWorkflow).toContain("if: matrix.scenario == 'migration'");
     expect(reusableWorkflow).toContain("-Mode 'migration-prepare'");
     expect(reusableWorkflow).toContain("-Mode 'migration-upgrade'");
@@ -210,6 +213,7 @@ describe('release packaging configuration', () => {
     const manualWorkflow = readProjectFile('.github/workflows/build-manual.yml');
 
     expect(releaseWorkflow).toContain('run_windows_installer_smoke: true');
+    expect(releaseWorkflow).not.toContain('run_windows_registry_free_migration_smoke: true');
     expect(releaseWorkflow).toContain('"platform":"windows-arm64"');
     expect(reusableWorkflow).toContain(
       "if: ${{ always() && inputs.run_windows_installer_smoke && needs.build.result == 'success' }}"

@@ -35,6 +35,10 @@ on:
         description: 'Run Windows installer smoke tests in clean downstream runners'
         type: boolean
         default: false
+      run_windows_registry_free_migration_smoke:
+        description: 'Run the destructive two-installer migration smoke only on an isolated Windows runner'
+        type: boolean
+        default: false
       windows_installer_smoke_matrix:
         description: 'Windows installer smoke matrix as JSON'
         type: string
@@ -1119,7 +1123,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        scenario: [fresh, migration]
+        scenario: ${{ fromJSON(inputs.run_windows_registry_free_migration_smoke && '["fresh","migration"]' || '["fresh"]') }}
         target: ${{ fromJSON(inputs.windows_installer_smoke_matrix).include }}
 
     steps:
