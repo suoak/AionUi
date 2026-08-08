@@ -1177,7 +1177,8 @@ jobs:
             throw "Legacy migration fixture checksum mismatch: $actualSha256"
           }
 
-      - name: Verify Windows installation and registry-free migration
+      - name: Verify fresh Windows installation
+        if: matrix.scenario == 'fresh'
         shell: pwsh
         run: |
           $ErrorActionPreference = 'Stop'
@@ -1191,12 +1192,48 @@ jobs:
             CurrentInstaller = $currentInstaller.FullName
             Arch = '${{ matrix.target.arch }}'
             DiagnosticsDirectory = (Join-Path $env:RUNNER_TEMP 'installer-diagnostics')
-            Mode = '${{ matrix.scenario }}'
-          }
-          if ('${{ matrix.scenario }}' -eq 'migration') {
-            $smokeArguments.LegacyInstaller = Join-Path $env:RUNNER_TEMP 'legacy-installer\CSBU-WorkMate-2.1.51-win-${{ matrix.target.arch }}.exe'
+            Mode = 'fresh'
           }
           & 'resources/windows/support/verify-installer-migration.ps1' @smokeArguments
+
+      - name: Prepare registry-free migration fixture
+        if: matrix.scenario == 'migration'
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $currentInstaller = Get-ChildItem -LiteralPath (Join-Path $env:RUNNER_TEMP 'current-installer') -File -Filter '*.exe' |
+            Sort-Object LastWriteTime -Descending |
+            Select-Object -First 1
+          & 'resources/windows/support/verify-installer-migration.ps1' `
+            -CurrentInstaller $currentInstaller.FullName `
+            -LegacyInstaller (Join-Path $env:RUNNER_TEMP 'legacy-installer\CSBU-WorkMate-2.1.51-win-${{ matrix.target.arch }}.exe') `
+            -Arch '${{ matrix.target.arch }}' `
+            -DiagnosticsDirectory (Join-Path $env:RUNNER_TEMP 'installer-diagnostics') `
+            -Mode 'migration-prepare'
+
+      - name: Upload pre-upgrade migration diagnostics
+        uses: actions/upload-artifact@v6
+        if: ${{ always() && matrix.scenario == 'migration' }}
+        with:
+          name: windows-installer-pre-upgrade-${{ matrix.target.arch }}-${{ steps.commit.outputs.short }}
+          path: ${{ runner.temp }}/installer-diagnostics/
+          if-no-files-found: warn
+          retention-days: 7
+
+      - name: Verify registry-free migration upgrade
+        if: matrix.scenario == 'migration'
+        timeout-minutes: 15
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $currentInstaller = Get-ChildItem -LiteralPath (Join-Path $env:RUNNER_TEMP 'current-installer') -File -Filter '*.exe' |
+            Sort-Object LastWriteTime -Descending |
+            Select-Object -First 1
+          & 'resources/windows/support/verify-installer-migration.ps1' `
+            -CurrentInstaller $currentInstaller.FullName `
+            -Arch '${{ matrix.target.arch }}' `
+            -DiagnosticsDirectory (Join-Path $env:RUNNER_TEMP 'installer-diagnostics') `
+            -Mode 'migration-upgrade'
 
       - name: Upload Windows installer smoke diagnostics
         uses: actions/upload-artifact@v6

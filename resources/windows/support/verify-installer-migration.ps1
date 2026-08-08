@@ -12,7 +12,7 @@ param(
   [string]$DiagnosticsDirectory,
 
   [Parameter(Mandatory = $true)]
-  [ValidateSet('fresh', 'migration')]
+  [ValidateSet('fresh', 'migration-prepare', 'migration-upgrade')]
   [string]$Mode,
 
   [string]$TemporaryDirectory = $env:RUNNER_TEMP
@@ -20,7 +20,7 @@ param(
 
 $ErrorActionPreference = 'Stop'
 $freshInstallDirectory = Join-Path $TemporaryDirectory "csbu-workmate-fresh-smoke-$Arch"
-$migrationInstallDirectory = Join-Path $TemporaryDirectory "csbu-workmate-migration-smoke-$Arch"
+$migrationInstallDirectory = Join-Path $env:LOCALAPPDATA "Programs\csbu-workmate-migration-smoke-$Arch"
 $installStatePath = Join-Path $env:LOCALAPPDATA 'CSBU WorkMate\installer-state.ini'
 $installRegistryPath = 'HKCU:\Software\d1c5b48c-1cbe-5096-9ab3-71e40b612193'
 $uninstallRegistryPath = 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall\d1c5b48c-1cbe-5096-9ab3-71e40b612193'
@@ -142,6 +142,82 @@ function Assert-Metadata {
   }
 }
 
+function Get-InstallState {
+  if (-not (Test-Path -LiteralPath $installStatePath -PathType Leaf)) {
+    throw "Legacy registry-free installer did not create migration state: $installStatePath"
+  }
+
+  $state = @{}
+  $inInstallSection = $false
+  foreach ($line in Get-Content -LiteralPath $installStatePath -Encoding UTF8) {
+    $trimmed = $line.Trim()
+    if ($trimmed -match '^\[(.+)\]$') {
+      $inInstallSection = $Matches[1] -eq 'Install'
+      continue
+    }
+    if ($inInstallSection -and $trimmed -match '^([^=]+)=(.*)$') {
+      $state[$Matches[1].Trim()] = $Matches[2].Trim()
+    }
+  }
+  return $state
+}
+
+function Assert-LegacyMigrationState {
+  $state = Get-InstallState
+  foreach ($requiredKey in @('InstallLocation', 'UninstallerPath', 'Arch')) {
+    if ([string]::IsNullOrWhiteSpace([string]$state[$requiredKey])) {
+      throw "Legacy migration state is missing required value: $requiredKey"
+    }
+  }
+  $expectedInstallDirectory = [IO.Path]::GetFullPath($migrationInstallDirectory)
+  $actualInstallDirectory = [IO.Path]::GetFullPath([string]$state.InstallLocation)
+  if ($actualInstallDirectory -ine $expectedInstallDirectory) {
+    throw "Legacy migration state install directory mismatch: $actualInstallDirectory"
+  }
+  if ([string]$state.Arch -ne $Arch) {
+    throw "Legacy migration state architecture mismatch: $($state.Arch)"
+  }
+  $expectedUninstaller = Join-Path $expectedInstallDirectory 'Uninstall CSBU WorkMate.exe'
+  $actualUninstaller = [IO.Path]::GetFullPath([string]$state.UninstallerPath)
+  if ($actualUninstaller -ine $expectedUninstaller) {
+    throw "Legacy migration state uninstaller mismatch: $actualUninstaller"
+  }
+}
+
+function Save-DiagnosticsSnapshot {
+  param([Parameter(Mandatory = $true)][string]$Phase)
+
+  $snapshotDirectory = Join-Path $DiagnosticsDirectory $Phase
+  New-Item -ItemType Directory -Path $snapshotDirectory -Force | Out-Null
+  if (Test-Path -LiteralPath $installStatePath -PathType Leaf) {
+    Copy-Item -LiteralPath $installStatePath -Destination (Join-Path $snapshotDirectory 'installer-state.ini') -Force
+  }
+  try {
+    Get-Volume | Select-Object DriveLetter, FileSystemLabel, Size, SizeRemaining |
+      ConvertTo-Json -Depth 3 -AsArray |
+      Set-Content -LiteralPath (Join-Path $snapshotDirectory 'volumes.json')
+    if (Test-Path -LiteralPath $migrationInstallDirectory) {
+      Get-ChildItem -LiteralPath $migrationInstallDirectory -Force -Recurse |
+        Select-Object FullName, Length, LastWriteTimeUtc |
+        ConvertTo-Json -Depth 3 -AsArray |
+        Set-Content -LiteralPath (Join-Path $snapshotDirectory 'install-directory.json')
+    }
+  } catch {
+    Set-Content -LiteralPath (Join-Path $snapshotDirectory 'filesystem-error.txt') -Value $_.Exception.Message
+  }
+  try {
+    $processSnapshot = @(Get-CimInstance Win32_Process | Where-Object {
+        $_.Name -match 'CSBU|Uninstall|nsis|^Un_' -or
+        ([string]$_.CommandLine).Contains($migrationInstallDirectory, [StringComparison]::OrdinalIgnoreCase)
+      } | Select-Object ProcessId, ParentProcessId, Name, ExecutablePath, CommandLine)
+    ConvertTo-Json -InputObject $processSnapshot -Depth 4 -AsArray |
+      Set-Content -LiteralPath (Join-Path $snapshotDirectory 'processes.json')
+  } catch {
+    Set-Content -LiteralPath (Join-Path $snapshotDirectory 'process-error.txt') -Value $_.Exception.Message
+  }
+  Add-Content -LiteralPath (Join-Path $DiagnosticsDirectory 'smoke-status.txt') -Value "$Phase snapshot saved at $(Get-Date -Format o)"
+}
+
 function Clear-SmokeState {
   foreach ($directory in @($freshInstallDirectory, $migrationInstallDirectory)) {
     if (Test-Path -LiteralPath $directory) {
@@ -158,7 +234,11 @@ function Clear-SmokeState {
   }
 }
 
-Clear-SmokeState
+$shouldCleanBefore = $Mode -in @('fresh', 'migration-prepare')
+$shouldCleanAfter = $Mode -in @('fresh', 'migration-upgrade')
+if ($shouldCleanBefore) {
+  Clear-SmokeState
+}
 try {
   if ($Mode -eq 'fresh') {
     $freshLog = Join-Path $DiagnosticsDirectory 'fresh-install.jsonl'
@@ -168,7 +248,7 @@ try {
     Assert-Metadata -Targets $freshTargets
     Invoke-BoundedProcess -Phase 'fresh-uninstall' -FilePath $freshTargets[1].FullName -ArgumentList @('/S', "--installer-log=$freshLog")
     Wait-ForUninstallCompletion -Phase 'fresh-uninstall' -InstallDirectory $freshInstallDirectory
-  } else {
+  } elseif ($Mode -eq 'migration-prepare') {
     if ([string]::IsNullOrWhiteSpace($LegacyInstaller) -or -not (Test-Path -LiteralPath $LegacyInstaller -PathType Leaf)) {
       throw 'Legacy installer is required for migration smoke tests'
     }
@@ -176,15 +256,17 @@ try {
     $legacyLog = Join-Path $DiagnosticsDirectory 'legacy-install.jsonl'
     Invoke-BoundedProcess -Phase 'legacy-install' -FilePath $LegacyInstaller -ArgumentList @('/S', "--installer-log=$legacyLog", "/D=$migrationInstallDirectory")
     $null = Get-InstalledTargets -InstallDirectory $migrationInstallDirectory
-    if (-not (Test-Path -LiteralPath $installStatePath)) {
-      throw "Legacy registry-free installer did not create migration state: $installStatePath"
-    }
+    Assert-LegacyMigrationState
     foreach ($registryPath in $registryPaths) {
       if (Test-Path -LiteralPath $registryPath) {
         throw "Legacy registry-free installer unexpectedly registered: $registryPath"
       }
     }
-
+    Save-DiagnosticsSnapshot -Phase 'before-upgrade'
+  } else {
+    $null = Get-InstalledTargets -InstallDirectory $migrationInstallDirectory
+    Assert-LegacyMigrationState
+    Save-DiagnosticsSnapshot -Phase 'upgrade-start'
     $migrationLog = Join-Path $DiagnosticsDirectory 'migration-install.jsonl'
     Invoke-BoundedProcess -Phase 'registry-free-migration' -FilePath $CurrentInstaller -ArgumentList @('/S', "--installer-log=$migrationLog")
     if (Test-Path -LiteralPath $installStatePath) {
@@ -197,10 +279,9 @@ try {
     Wait-ForUninstallCompletion -Phase 'migrated-uninstall' -InstallDirectory $migrationInstallDirectory
   }
 } finally {
-  $processSnapshot = @(Get-CimInstance Win32_Process | Where-Object { $_.Name -match 'CSBU|Uninstall|nsis|^Un_' } |
-      Select-Object ProcessId, ParentProcessId, Name, ExecutablePath, CommandLine)
-  ConvertTo-Json -InputObject $processSnapshot -Depth 4 -AsArray |
-    Set-Content -LiteralPath (Join-Path $DiagnosticsDirectory 'processes.json')
+  Save-DiagnosticsSnapshot -Phase "after-$Mode"
   Add-Content -LiteralPath (Join-Path $DiagnosticsDirectory 'smoke-status.txt') -Value "Finished at $(Get-Date -Format o)"
-  Clear-SmokeState
+  if ($shouldCleanAfter) {
+    Clear-SmokeState
+  }
 }

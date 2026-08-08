@@ -165,16 +165,20 @@ describe('release packaging configuration', () => {
     const reusableWorkflow = readProjectFile('.github/workflows/_build-reusable.yml');
     const smokeScript = readProjectFile('resources/windows/support/verify-installer-migration.ps1');
 
-    expect(reusableWorkflow).toContain('Verify Windows installation and registry-free migration');
+    expect(reusableWorkflow).toContain('Verify fresh Windows installation');
+    expect(reusableWorkflow).toContain('Prepare registry-free migration fixture');
+    expect(reusableWorkflow).toContain('Upload pre-upgrade migration diagnostics');
+    expect(reusableWorkflow).toContain('Verify registry-free migration upgrade');
     expect(reusableWorkflow).toContain('windows-installer-smoke:');
     expect(reusableWorkflow).toContain('needs: build');
     expect(reusableWorkflow).toContain('actions/download-artifact@v7');
     expect(reusableWorkflow).toContain("& 'resources/windows/support/verify-installer-migration.ps1'");
     expect(reusableWorkflow).toContain('scenario: [fresh, migration]');
     expect(reusableWorkflow).toContain("if: matrix.scenario == 'migration'");
-    expect(reusableWorkflow).toContain("Mode = '${{ matrix.scenario }}'");
+    expect(reusableWorkflow).toContain("-Mode 'migration-prepare'");
+    expect(reusableWorkflow).toContain("-Mode 'migration-upgrade'");
     expect(smokeScript).toContain("-Filter 'Uninstall*.exe'");
-    expect(smokeScript).toContain("[ValidateSet('fresh', 'migration')]");
+    expect(smokeScript).toContain("[ValidateSet('fresh', 'migration-prepare', 'migration-upgrade')]");
     expect(smokeScript).toContain("if ($Mode -eq 'fresh')");
     expect(smokeScript).toContain('$process.WaitForExit($TimeoutSeconds * 1000)');
     expect(smokeScript).toContain('& taskkill.exe /PID $process.Id /T /F');
@@ -182,6 +186,9 @@ describe('release packaging configuration', () => {
     expect(smokeScript).toContain("-Phase 'fresh-install'");
     expect(smokeScript).toContain("-Phase 'fresh-uninstall'");
     expect(smokeScript).toContain("-Phase 'migrated-uninstall'");
+    expect(smokeScript).toContain('function Assert-LegacyMigrationState');
+    expect(smokeScript).toContain("Save-DiagnosticsSnapshot -Phase 'before-upgrade'");
+    expect(smokeScript).toContain('$migrationInstallDirectory = Join-Path $env:LOCALAPPDATA');
     expect(smokeScript).toContain("'smoke-status.txt'");
     expect(reusableWorkflow).toContain('Upload Windows installer smoke diagnostics');
   });
@@ -189,7 +196,7 @@ describe('release packaging configuration', () => {
   it('uploads Windows builds before running installer smoke tests', () => {
     const reusableWorkflow = readProjectFile('.github/workflows/_build-reusable.yml');
     const uploadIndex = reusableWorkflow.indexOf('Upload Windows build artifacts before installer smoke tests');
-    const smokeIndex = reusableWorkflow.lastIndexOf('Verify Windows installation and registry-free migration');
+    const smokeIndex = reusableWorkflow.lastIndexOf('Verify registry-free migration upgrade');
 
     expect(uploadIndex).toBeGreaterThan(-1);
     expect(smokeIndex).toBeGreaterThan(uploadIndex);
