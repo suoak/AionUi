@@ -232,6 +232,7 @@ describe('release packaging configuration', () => {
     expect(installerMigration).toContain('-Action rollback-migration');
     expect(installerMigration).toContain('-Action commit-migration');
     expect(installerProcessControl).toContain('!insertmacro CSBU_WORKMATE_PREPARE_LEGACY_MIGRATION');
+    expect(readProjectFile('scripts/build-with-builder.js')).toContain('CSBU WorkMate migration direct extraction');
     expect(reusableWorkflow).toContain('Standard Windows installation registration is missing');
     expect(reusableWorkflow).toContain('Legacy registry-free installer state remains after installation');
     expect(reusableWorkflow).toContain("CSBU_WORKMATE_LEGACY_INSTALLER_TAG: 'v2.1.51'");
