@@ -9,6 +9,15 @@
 - **updater:** improve update guidance and release policy (#32)
 - **about:** refine the product attribution as developed and maintained by the Cybersecurity Operations Management Department (#32)
 
+#### Upstream Sync
+
+- **browser:** add agent-controlled in-app browsing through a token-protected, single-target CDP bridge
+- **conversation:** add message-level conversation forks, first-class questions, terminal output cards, and detached command handling
+- **preview:** adopt reference-based preview I/O, refresh/watch signaling, file-size gates, stable tab identity, and browser tabs
+- **scm:** add multi-repository source-control discovery and changes panels
+- **team:** add the activity board and task/mailbox activity feed
+- **security:** reject image-generation workspace path traversal and clear browser session data through the main-process bridge
+
 #### 内网更新说明
 
 <!-- internal-release-notes:start -->

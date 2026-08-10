@@ -6,6 +6,7 @@ import { BackendHttpError } from '@/common/adapter/httpBridge';
 import AionrsSendBox from '@/renderer/pages/conversation/platforms/aionrs/AionrsSendBox';
 import type { AionrsModelSelection } from '@/renderer/pages/conversation/platforms/aionrs/useAionrsModelSelection';
 import type { SendBoxRetryRequest } from '@/renderer/utils/emitter';
+import type { TeamSendBoxRuntime } from '@/renderer/pages/team/components/teamSendRuntime';
 
 const {
   ensureConversationRuntimeMock,
@@ -17,6 +18,7 @@ const {
   markSendStartedMock,
   markSendAcceptedMock,
   retryHandler,
+  sendBoxPropsSpy,
 } = vi.hoisted(() => ({
   ensureConversationRuntimeMock: vi.fn().mockResolvedValue({ recovered: false, config_options: [], runtime: null }),
   sendMessageInvokeMock: vi.fn().mockResolvedValue(undefined),
@@ -27,6 +29,7 @@ const {
   markSendStartedMock: vi.fn(),
   markSendAcceptedMock: vi.fn(),
   retryHandler: { current: null as ((request: SendBoxRetryRequest) => void) | null },
+  sendBoxPropsSpy: vi.fn(),
 }));
 
 vi.mock('@/common', () => ({
@@ -46,19 +49,26 @@ vi.mock('@/renderer/components/chat/SendBox', () => ({
   default: ({
     onSend,
     onChange,
+    active,
+    onFocused,
   }: {
     onSend: (message: string) => Promise<void>;
     onChange?: (value: string) => void;
-  }) => (
-    <div>
-      <button type='button' onClick={() => onChange?.('hello')}>
-        change
-      </button>
-      <button type='button' onClick={() => void onSend('Hello').catch(() => {})}>
-        send
-      </button>
-    </div>
-  ),
+    active?: boolean;
+    onFocused?: () => void;
+  }) => {
+    sendBoxPropsSpy({ active, onFocused });
+    return (
+      <div>
+        <button type='button' onClick={() => onChange?.('hello')}>
+          change
+        </button>
+        <button type='button' onClick={() => void onSend('Hello').catch(() => {})}>
+          send
+        </button>
+      </div>
+    );
+  },
 }));
 
 vi.mock('@/renderer/components/agent/AgentModeSelector', () => ({ default: () => null }));
@@ -378,5 +388,20 @@ describe('AionrsSendBox', () => {
       expect.objectContaining({ kind: 'busy_conflict', busyKind: 'active_turn' })
     );
     expect(Message.error).not.toHaveBeenCalled();
+  });
+
+  it('passes teamRuntime.isActive and onFocus down to SendBox as active/onFocused', () => {
+    const onFocus = vi.fn();
+    render(
+      <AionrsSendBox
+        conversation_id='conv-1'
+        modelSelection={modelSelection}
+        teamRuntime={{ loading: false, startedAtMs: null, isActive: true, onFocus } as unknown as TeamSendBoxRuntime}
+      />
+    );
+    const props = sendBoxPropsSpy.mock.calls.at(-1)?.[0] as { active?: boolean; onFocused?: () => void };
+    expect(props.active).toBe(true);
+    props.onFocused?.();
+    expect(onFocus).toHaveBeenCalledTimes(1);
   });
 });
