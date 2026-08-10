@@ -9,6 +9,16 @@
 - **updater:** improve update guidance and release policy (#32)
 - **about:** refine the product attribution as developed and maintained by the Cybersecurity Operations Management Department (#32)
 
+#### 内网更新说明
+
+<!-- internal-release-notes:start -->
+
+**由运营管理部提供**
+
+- 优化版本更新提示、更新策略和更新入口。
+- 明确产品由网络安全运营管理部开发和维护。
+<!-- internal-release-notes:end -->
+
 ---
 
 ## [2.1.55](https://github.com/suoak/AionUi/compare/v2.1.54...v2.1.55) (2026-08-09)

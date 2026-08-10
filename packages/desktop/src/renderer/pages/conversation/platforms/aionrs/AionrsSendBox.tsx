@@ -395,6 +395,30 @@ const AionrsSendBox: React.FC<{
     await executeCommand({ input: message, files: filesToSend });
   };
 
+  useAddEventListener(
+    'sendbox.retry',
+    (request) => {
+      if (request.conversationType !== 'aionrs' || request.conversationId !== conversation_id) return;
+
+      request.claimed = true;
+      const command: Pick<ConversationCommandQueueItem, 'input' | 'files'> = { input: request.input, files: [] };
+      if (
+        shouldEnqueueConversationCommand({
+          enabled: true,
+          isBusy,
+          hasPendingCommands,
+        })
+      ) {
+        enqueue(command);
+        request.onAccepted();
+        return;
+      }
+
+      void executeCommand(command).then(request.onAccepted).catch(request.onRejected);
+    },
+    [conversation_id, enqueue, executeCommand, hasPendingCommands, isBusy]
+  );
+
   const handleEditQueuedCommand = useCallback(
     (item: ConversationCommandQueueItem) => {
       remove(item.id);

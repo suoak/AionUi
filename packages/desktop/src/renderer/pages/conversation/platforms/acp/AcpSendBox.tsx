@@ -423,6 +423,30 @@ Please check your local CLI tool authentication status`,
     await executeCommand({ input: message, files: allFiles });
   };
 
+  useAddEventListener(
+    'sendbox.retry',
+    (request) => {
+      if (request.conversationType !== 'acp' || request.conversationId !== conversation_id) return;
+
+      request.claimed = true;
+      const command: Pick<ConversationCommandQueueItem, 'input' | 'files'> = { input: request.input, files: [] };
+      if (
+        shouldEnqueueConversationCommand({
+          enabled: true,
+          isBusy,
+          hasPendingCommands,
+        })
+      ) {
+        enqueue(command);
+        request.onAccepted();
+        return;
+      }
+
+      void executeCommand(command).then(request.onAccepted).catch(request.onRejected);
+    },
+    [conversation_id, enqueue, executeCommand, hasPendingCommands, isBusy]
+  );
+
   const handleEditQueuedCommand = useCallback(
     (item: ConversationCommandQueueItem) => {
       remove(item.id);

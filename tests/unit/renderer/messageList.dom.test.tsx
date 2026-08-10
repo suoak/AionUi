@@ -276,6 +276,9 @@ describe('MessageList', () => {
     expect(screen.getByTestId('message-list-scroller')).toBeInTheDocument();
     expect(screen.getByTestId('message-list-content')).toBeInTheDocument();
 
+    const scroller = screen.getByTestId('message-list-scroller');
+    expect(scroller).toHaveStyle({ scrollbarGutter: 'stable' });
+
     const messageRow = screen.getByTestId('message-text-left');
     expect(messageRow.className).toContain('m-t-10px');
     expect(messageRow.className).not.toContain('pt-10px');

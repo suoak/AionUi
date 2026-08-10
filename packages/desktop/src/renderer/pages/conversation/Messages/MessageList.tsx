@@ -724,7 +724,10 @@ const MessageList: React.FC<{ className?: string; emptySlot?: React.ReactNode }>
             // Break out of the parent's 20px horizontal padding so the scrollbar hugs the
             // window edge, while re-applying that padding inside to keep message content inset.
             className='flex-1 h-full overflow-y-auto pb-10px box-border -mx-20px px-20px'
-            style={{ overflowAnchor: 'none' }}
+            // Keep the content width fixed when the send box changes the available height.
+            // Otherwise the vertical scrollbar can resize responsive images, feeding another
+            // content resize back into auto-follow and making the conversation jump while typing.
+            style={{ overflowAnchor: 'none', scrollbarGutter: 'stable' }}
             onPointerDown={handlePointerDown}
             onScroll={handleMessageListScroll}
             onWheel={handleWheel}

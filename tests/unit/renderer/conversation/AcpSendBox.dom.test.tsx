@@ -10,6 +10,7 @@ import React from 'react';
 import { BackendHttpError } from '@/common/adapter/httpBridge';
 import AcpSendBox from '@/renderer/pages/conversation/platforms/acp/AcpSendBox';
 import type { UseAcpMessageReturn } from '@/renderer/pages/conversation/platforms/acp/useAcpMessage';
+import type { SendBoxRetryRequest } from '@/renderer/utils/emitter';
 
 const {
   sendMessageInvokeMock,
@@ -21,6 +22,7 @@ const {
   useTeamPermissionMock,
   isMobileMock,
   mobileActionSheetEntries,
+  retryHandler,
 } = vi.hoisted(() => ({
   sendMessageInvokeMock: vi.fn(),
   addOrUpdateMessageMock: vi.fn(),
@@ -38,6 +40,7 @@ const {
       };
     }>,
   },
+  retryHandler: { current: null as ((request: SendBoxRetryRequest) => void) | null },
 }));
 
 vi.mock('@/common', () => ({
@@ -193,7 +196,11 @@ vi.mock('@/renderer/utils/emitter', () => ({
   emitter: {
     emit: emitterEmitMock,
   },
-  useAddEventListener: vi.fn(),
+  useAddEventListener: (event: string, handler: (...args: unknown[]) => void) => {
+    if (event === 'sendbox.retry') {
+      retryHandler.current = handler as (request: SendBoxRetryRequest) => void;
+    }
+  },
 }));
 vi.mock('@/renderer/utils/file/fileSelection', () => ({
   mergeFileSelectionItems: vi.fn(),
@@ -235,6 +242,7 @@ describe('AcpSendBox', () => {
     vi.clearAllMocks();
     isMobileMock.current = false;
     mobileActionSheetEntries.current = [];
+    retryHandler.current = null;
     useTeamPermissionMock.mockReturnValue(null);
     useAcpConfigOptionsMock.mockReturnValue({
       setStatus: { state: 'idle' },
@@ -244,6 +252,64 @@ describe('AcpSendBox', () => {
       reload: vi.fn(),
       setConfigOption: vi.fn(),
     });
+  });
+
+  it('retries text through the matching ACP conversation without attachments', async () => {
+    sendMessageInvokeMock.mockResolvedValue({
+      turn_id: 'turn-retry',
+      msg_id: 'message-retry',
+      runtime: {
+        state: 'running',
+        can_send_message: false,
+        has_task: true,
+        is_processing: true,
+        pending_confirmations: 0,
+        turn_id: 'turn-retry',
+      },
+    });
+    const onAccepted = vi.fn();
+    const onRejected = vi.fn();
+
+    render(<AcpSendBox conversation_id='conv-1' backend='claude' messageState={makeMessageState()} />);
+    const request: SendBoxRetryRequest = {
+      conversationId: 'conv-1',
+      conversationType: 'acp',
+      input: 'Retry this text',
+      claimed: false,
+      onAccepted,
+      onRejected,
+    };
+
+    act(() => retryHandler.current?.(request));
+
+    await waitFor(() => expect(onAccepted).toHaveBeenCalledOnce());
+    expect(sendMessageInvokeMock).toHaveBeenCalledWith({
+      input: 'Retry this text',
+      conversation_id: 'conv-1',
+      files: [],
+    });
+    expect(request.claimed).toBe(true);
+    expect(onRejected).not.toHaveBeenCalled();
+  });
+
+  it('ignores text retry requests for another conversation', () => {
+    const onAccepted = vi.fn();
+    const onRejected = vi.fn();
+
+    render(<AcpSendBox conversation_id='conv-1' backend='claude' messageState={makeMessageState()} />);
+    const request: SendBoxRetryRequest = {
+      conversationId: 'conv-2',
+      conversationType: 'acp',
+      input: 'Do not send this',
+      claimed: false,
+      onAccepted,
+      onRejected,
+    };
+
+    act(() => retryHandler.current?.(request));
+
+    expect(request.claimed).toBe(false);
+    expect(sendMessageInvokeMock).not.toHaveBeenCalled();
   });
 
   it('resets ACP loading state when sendMessage fails before any stream error arrives', async () => {
