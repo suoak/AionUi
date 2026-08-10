@@ -37,6 +37,7 @@ import {
   usePreviewContext,
   type PreviewContextValue,
 } from '@/renderer/pages/conversation/Preview/context/PreviewContext';
+import { previewScopeStorageKey } from '@/renderer/pages/conversation/Preview/context/previewScope';
 
 let ctx: PreviewContextValue;
 const Probe: React.FC = () => {
@@ -53,7 +54,7 @@ const mount = (): void => {
 };
 
 const SCOPE = '/ws/legacy';
-const storageKey = (scope: string) => `preview-ui:${scope}`;
+const storageKey = (scope: string) => previewScopeStorageKey(scope);
 
 /** A persisted tab as an older build would have written it. */
 const legacyTab = (over: Record<string, unknown> = {}) => ({

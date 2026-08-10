@@ -120,12 +120,12 @@ describe('port_report_timeout and startup_failed dialog wiring (Sentry 136646113
     expect(actions.recoverText).toBeUndefined();
   });
 
-  it('regression: incomplete_installation keeps the reinstall copy and the download action', () => {
+  it('keeps incomplete-installation recovery guidance in-product without a public download action', () => {
     expect(getInstallationIntegrityTitle(echoT, 'incomplete_installation')).toBe(
       'common.backendStartup.incompleteInstallation.title'
     );
 
     const actions = getInstallationIntegrityModalActions(echoT, { diagnosticsKind: 'incomplete_installation' });
-    expect(actions.downloadText).toBe('common.backendStartup.incompleteInstallation.downloadLatest');
+    expect(actions.downloadText).toBeUndefined();
   });
 });
