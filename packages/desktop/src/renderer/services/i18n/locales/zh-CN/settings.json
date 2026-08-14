@@ -1194,7 +1194,7 @@
     "runtimeInstallFailed": "Runtime 安装失败，请在 Agent 设置中重试。",
     "deepseekHarnessLimitations": "首版暂不支持 Resume、Fork、Team、MCP 和多模态。workspace-write 只限制文件写入，不提供网络隔离或完整读取隔离。",
     "modelRebuildTitle": "切换模型并重启 Agent？",
-    "modelRebuildDescription": "AionCore 会话记录会保留，但 Agent 内部上下文将在新进程中重新开始。",
+    "modelRebuildDescription": "当前会话记录会保留，但 Agent 内部上下文将在新进程中重新开始。",
     "localAgents": "本地 Agents",
     "remoteAgents": "远端 Agents",
     "localAgentsDescription": "管理本机可用的 AI 编程 Agent。CSBU WorkMate 为内置，App 自带、无需安装；其它 Agent 需先在本地安装对应 CLI 才能被识别。",

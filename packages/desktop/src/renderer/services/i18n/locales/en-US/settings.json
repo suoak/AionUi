@@ -1193,7 +1193,7 @@
     "runtimeInstallFailed": "Runtime installation failed. Retry from Agent settings.",
     "deepseekHarnessLimitations": "First release: Resume, Fork, Team, MCP and multimodal input are unavailable. Workspace-write limits file writes only; it does not provide network or complete read isolation.",
     "modelRebuildTitle": "Switch model and restart Agent?",
-    "modelRebuildDescription": "The AionCore conversation remains, but the Agent's internal context will restart in a new process.",
+    "modelRebuildDescription": "The conversation remains, but the Agent's internal context will restart in a new process.",
     "localAgents": "Local Agents",
     "remoteAgents": "Remote Agents",
     "localAgentsDescription": "Manage the AI coding agents available on this device. CSBU WorkMate is built in and ships with the app — no install needed; other agents are detected only after their CLI is installed locally.",
