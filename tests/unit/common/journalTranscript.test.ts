@@ -17,6 +17,22 @@ describe('transcriptItemText', () => {
     ).toBe('please list files in the workspace');
   });
 
+  it('uses the summary when the host compacted an older tool result', () => {
+    expect(
+      transcriptItemText({
+        sequence: 1,
+        event_id: 'evt-tool',
+        journal_kind: 'ToolCall',
+        transcript_kind: 'tool/call',
+        visibility: 'model',
+        summary: 'full output 1',
+        content: 'stale leftover payload that must not be shown',
+        compacted: true,
+        source_sequences: [1],
+      })
+    ).toBe('full output 1');
+  });
+
   it('falls back to the summary when content is missing or blank', () => {
     expect(
       transcriptItemText({
