@@ -202,5 +202,10 @@
     "openReportsFailed": "پوشه خرابی‌ها باز نشد",
     "actionFailed": "عملیات بازیابی ناموفق بود. دوباره تلاش کنید.",
     "restartFailed": "راه‌اندازی مجدد خودکار در حالت توسعه در دسترس نیست. با --safe-mode به‌صورت دستی اجرا کنید."
+  },
+  "appCrash": {
+    "title": "Something went wrong",
+    "description": "The page hit an unexpected error. Your conversation history is still saved. Reload to continue.",
+    "reload": "Reload"
   }
 }

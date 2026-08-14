@@ -200,5 +200,10 @@
     "openReportsFailed": "Impossible d’ouvrir le dossier des plantages",
     "actionFailed": "L’action de récupération a échoué. Veuillez réessayer.",
     "restartFailed": "Le redémarrage automatique n’est pas disponible en mode développement. Démarrez manuellement avec --safe-mode."
+  },
+  "appCrash": {
+    "title": "Something went wrong",
+    "description": "The page hit an unexpected error. Your conversation history is still saved. Reload to continue.",
+    "reload": "Reload"
   }
 }

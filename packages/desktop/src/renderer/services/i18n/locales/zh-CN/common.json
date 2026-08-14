@@ -202,5 +202,10 @@
     "openReportsFailed": "无法打开崩溃目录",
     "actionFailed": "恢复操作失败，请重试",
     "restartFailed": "开发模式无法自动重启，请手动使用 --safe-mode 启动"
+  },
+  "appCrash": {
+    "title": "页面出现异常",
+    "description": "渲染过程遇到意外错误。会话历史已保存，刷新页面即可继续。",
+    "reload": "刷新页面"
   }
 }
