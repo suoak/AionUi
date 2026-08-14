@@ -11,7 +11,10 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
 import { ipcBridge } from '@/common';
 import { useManagedAgents } from '@/renderer/hooks/agent/useManagedAgents';
-import { formatManagedAgentDiagnosticMessage } from '@/renderer/utils/model/agentTypes';
+import {
+  formatManagedAgentDiagnosticMessage,
+  shouldShowManagedPreviewLimitations,
+} from '@/renderer/utils/model/agentTypes';
 import AgentRepairPanel from './AgentRepairPanel';
 import { BoundAssistantList, getBoundAssistants, useAssistantsForAgents } from './BoundAssistants';
 
@@ -133,7 +136,7 @@ const AgentRepairPage: React.FC = () => {
 
       <div data-testid='agent-repair-body' className='relative min-h-0 flex-1 overflow-auto px-18px py-18px pb-24px'>
         <div className='mx-auto w-full max-w-760px'>
-          {agent.agent_source_info?.managed_runtime?.runtime_id === 'deepseek-harness' ? (
+          {shouldShowManagedPreviewLimitations(agent) ? (
             <Alert
               className='mb-14px'
               type='info'

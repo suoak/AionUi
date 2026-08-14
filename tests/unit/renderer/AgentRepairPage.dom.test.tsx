@@ -83,4 +83,35 @@ describe('AgentRepairPage', () => {
     expect(screen.queryByTestId('agent-repair-panel-stub')).toBeNull();
     expect(navigate).toHaveBeenCalledWith('/settings/agent', { replace: true });
   });
+
+  it('shows declared preview limitations for a managed runtime', () => {
+    useManagedAgents.mockReturnValue({
+      agents: [
+        {
+          ...agent,
+          agent_source_info: { managed_runtime: { runtime_id: 'deepseek-harness', release: '2026.08.14-1' } },
+          behavior_policy: { session_lifetime: 'connection_scoped' },
+          team_capable: false,
+        },
+      ],
+      isRefreshing: false,
+      refreshCatalog: vi.fn(),
+    });
+
+    render(<AgentRepairPage />);
+
+    expect(screen.getByText('settings.agentManagement.deepseekHarnessLimitations')).toBeInTheDocument();
+  });
+
+  it('does not show preview limitations for a vendor-named agent without a managed runtime', () => {
+    useManagedAgents.mockReturnValue({
+      agents: [{ ...agent, backend: 'deepseek-harness', behavior_policy: { session_lifetime: 'connection_scoped' } }],
+      isRefreshing: false,
+      refreshCatalog: vi.fn(),
+    });
+
+    render(<AgentRepairPage />);
+
+    expect(screen.queryByText('settings.agentManagement.deepseekHarnessLimitations')).toBeNull();
+  });
 });
