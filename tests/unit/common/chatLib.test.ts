@@ -8,6 +8,7 @@ import { describe, expect, it } from 'vitest';
 import type { IResponseMessage } from '@/common/adapter/ipcBridge';
 import {
   composeMessage,
+  joinPath,
   normalizeAgentStreamError,
   normalizeTextMessageContent,
   transformMessage,
@@ -583,5 +584,20 @@ describe('transformMessage', () => {
         command_count: 3,
       },
     });
+  });
+});
+
+describe('joinPath', () => {
+  it('does not prefix a Windows absolute path with the workspace root', () => {
+    expect(joinPath('E:/code/AionUi', 'E:/code/project/README.md')).toBe('E:/code/project/README.md');
+    expect(joinPath('E:\\code\\AionUi', 'E:\\code\\project\\README.md')).toBe('E:/code/project/README.md');
+  });
+
+  it('still joins a relative file onto the workspace root', () => {
+    expect(joinPath('E:/code/AionUi', 'docs/readme.md')).toBe('E:/code/AionUi/docs/readme.md');
+  });
+
+  it('does not treat a drive-looking relative name as a Windows root', () => {
+    expect(joinPath('E:/code/AionUi', 'notes/E:not-a-drive.md')).toBe('E:/code/AionUi/notes/E:not-a-drive.md');
   });
 });
