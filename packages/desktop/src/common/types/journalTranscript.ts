@@ -17,10 +17,15 @@ export type JournalTranscriptItem = {
   summary: string;
   /** Reconstructible model-visible payload. Absent on older AionCore builds. */
   content?: string;
+  /** True when an older tool result was collapsed to its summary. */
+  compacted?: boolean;
   source_sequences: number[];
 };
 
 export function transcriptItemText(item: JournalTranscriptItem): string {
+  if (item.compacted) {
+    return item.summary;
+  }
   return item.content?.trim() ? item.content : item.summary;
 }
 
