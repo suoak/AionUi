@@ -274,6 +274,43 @@ export function formatManagedAgentDiagnosticMessage(t: TFunction, agent: Managed
   }
 }
 
+export type HostPreviewLimitations = {
+  connectionScoped: boolean;
+  teamCapable: boolean;
+  imagePrompt: boolean;
+  audioPrompt: boolean;
+};
+
+/**
+ * Project host-visible preview limits from declared catalog fields.
+ * Do not key this off a vendor backend string.
+ */
+export function hostPreviewLimitationsFromAgent(
+  agent: Pick<AgentMetadata, 'behavior_policy' | 'team_capable' | 'handshake'>
+): HostPreviewLimitations {
+  const caps = agent.handshake?.agent_capabilities;
+  const prompt =
+    caps && typeof caps === 'object'
+      ? (caps as { prompt_capabilities?: { image?: unknown; audio?: unknown } }).prompt_capabilities
+      : undefined;
+  return {
+    connectionScoped: agent.behavior_policy?.session_lifetime === 'connection_scoped',
+    teamCapable: agent.team_capable === true,
+    imagePrompt: prompt?.image === true,
+    audioPrompt: prompt?.audio === true,
+  };
+}
+
+export function shouldShowManagedPreviewLimitations(
+  agent: Pick<AgentMetadata, 'agent_source_info' | 'behavior_policy' | 'team_capable' | 'handshake'>
+): boolean {
+  if (!agent.agent_source_info?.managed_runtime) {
+    return false;
+  }
+  const limits = hostPreviewLimitationsFromAgent(agent);
+  return limits.connectionScoped || !limits.teamCapable || !limits.imagePrompt || !limits.audioPrompt;
+}
+
 /**
  * Extract the list of MCP transport types an agent supports.
  *

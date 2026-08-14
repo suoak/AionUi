@@ -15,8 +15,14 @@ export type JournalTranscriptItem = {
   transcript_kind: string;
   visibility: 'model' | 'host';
   summary: string;
+  /** Reconstructible model-visible payload. Absent on older AionCore builds. */
+  content?: string;
   source_sequences: number[];
 };
+
+export function transcriptItemText(item: JournalTranscriptItem): string {
+  return item.content?.trim() ? item.content : item.summary;
+}
 
 export type JournalTranscript = {
   schema_version: number;

@@ -1,14 +1,19 @@
 /**
- * Reconstruct model-visible chat messages from the AionCore journal transcript
- * when the DB projection is empty or missing assistant/tool rows.
+ * Reconstruct model-visible chat messages from the AionCore journal transcript.
  *
  * This is WorkMate's consume path for DeepSeek Harness `deriveMessages()`:
- * the host journal is the fallback source of truth after a crash or incomplete persist.
+ * when the journal can reconstruct the turn (including user/message), it is
+ * the source of truth. Older AionCore builds without UserPrompt fall back to
+ * DB user bubbles plus journal assistant/tool rows.
  */
 
 import { ipcBridge } from '@/common';
 import type { TMessage } from '@/common/chat/chatLib';
-import type { JournalTranscript, JournalTranscriptItem } from '@/common/types/journalTranscript';
+import {
+  transcriptItemText,
+  type JournalTranscript,
+  type JournalTranscriptItem,
+} from '@/common/types/journalTranscript';
 
 export function isModelVisibleMessage(message: TMessage): boolean {
   if (message.type === 'text') {
@@ -27,6 +32,17 @@ export function messagesFromJournalTranscript(conversationId: string, transcript
     .map((item) => transcriptItemToMessage(conversationId, item));
 }
 
+export function mergeDbWithJournalTranscript(messages: TMessage[], recovered: TMessage[]): TMessage[] {
+  if (!recovered.length) {
+    return messages;
+  }
+  const journalHasUser = recovered.some((message) => message.type === 'text' && message.position === 'right');
+  if (journalHasUser) {
+    return recovered;
+  }
+  return [...messages, ...recovered];
+}
+
 export async function hydrateConversationMessagesFromJournal(
   conversationId: string,
   messages: TMessage[]
@@ -43,7 +59,7 @@ export async function hydrateConversationMessagesFromJournal(
       return messages;
     }
     const recovered = messagesFromJournalTranscript(conversationId, transcript);
-    return recovered.length ? [...messages, ...recovered] : messages;
+    return mergeDbWithJournalTranscript(messages, recovered);
   } catch {
     // Older AionCore builds do not expose /transcript; keep the DB projection.
     return messages;
@@ -52,6 +68,7 @@ export async function hydrateConversationMessagesFromJournal(
 
 function transcriptItemToMessage(conversationId: string, item: JournalTranscriptItem): TMessage {
   const id = `journal:${item.event_id}`;
+  const text = transcriptItemText(item);
   if (item.transcript_kind === 'tool/call') {
     return {
       id,
@@ -66,7 +83,7 @@ function transcriptItemToMessage(conversationId: string, item: JournalTranscript
         name: item.summary || item.journal_kind,
         args: {},
         status: 'completed',
-        description: item.summary,
+        description: text,
       },
     };
   }
@@ -79,7 +96,7 @@ function transcriptItemToMessage(conversationId: string, item: JournalTranscript
     status: 'finish',
     created_at: item.sequence,
     content: {
-      content: item.summary,
+      content: text,
     },
   };
 }

@@ -1,7 +1,12 @@
 import type { TFunction } from 'i18next';
 import { describe, expect, it } from 'vitest';
 import type { ManagedAgent } from '@/renderer/utils/model/agentTypes';
-import { formatManagedAgentDiagnosticMessage, managedAgentSearchText } from '@/renderer/utils/model/agentTypes';
+import {
+  formatManagedAgentDiagnosticMessage,
+  hostPreviewLimitationsFromAgent,
+  managedAgentSearchText,
+  shouldShowManagedPreviewLimitations,
+} from '@/renderer/utils/model/agentTypes';
 
 const t = ((key: string, options?: Record<string, unknown>) => {
   switch (key) {
@@ -92,5 +97,56 @@ describe('formatManagedAgentDiagnosticMessage', () => {
     );
 
     expect(message).toBe('raw backend message');
+  });
+});
+
+describe('hostPreviewLimitationsFromAgent', () => {
+  it('reads connection lifetime and prompt flags from declared catalog fields', () => {
+    const limits = hostPreviewLimitationsFromAgent(
+      managedAgent({
+        behavior_policy: { session_lifetime: 'connection_scoped' },
+        team_capable: false,
+        handshake: {
+          agent_capabilities: { prompt_capabilities: { image: false, audio: false } },
+        },
+      })
+    );
+
+    expect(limits.connectionScoped).toBe(true);
+    expect(limits.teamCapable).toBe(false);
+    expect(limits.imagePrompt).toBe(false);
+    expect(limits.audioPrompt).toBe(false);
+  });
+
+  it('does not treat a missing handshake as multimodal support', () => {
+    const limits = hostPreviewLimitationsFromAgent(managedAgent({ team_capable: true }));
+    expect(limits.imagePrompt).toBe(false);
+    expect(limits.audioPrompt).toBe(false);
+  });
+});
+
+describe('shouldShowManagedPreviewLimitations', () => {
+  it('shows the preview banner for a managed runtime with declared limits', () => {
+    expect(
+      shouldShowManagedPreviewLimitations(
+        managedAgent({
+          agent_source_info: { managed_runtime: { runtime_id: 'deepseek-harness', release: '2026.08.14-1' } },
+          behavior_policy: { session_lifetime: 'connection_scoped' },
+          team_capable: false,
+        })
+      )
+    ).toBe(true);
+  });
+
+  it('hides the banner when the agent is not a managed runtime', () => {
+    expect(
+      shouldShowManagedPreviewLimitations(
+        managedAgent({
+          backend: 'deepseek-harness',
+          behavior_policy: { session_lifetime: 'connection_scoped' },
+          team_capable: false,
+        })
+      )
+    ).toBe(false);
   });
 });
