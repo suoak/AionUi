@@ -202,5 +202,10 @@
     "openReportsFailed": "Не удалось открыть папку с отчётами",
     "actionFailed": "Не удалось выполнить восстановление. Повторите попытку.",
     "restartFailed": "Автоматический перезапуск недоступен в режиме разработки. Запустите вручную с --safe-mode."
+  },
+  "appCrash": {
+    "title": "Something went wrong",
+    "description": "The page hit an unexpected error. Your conversation history is still saved. Reload to continue.",
+    "reload": "Reload"
   }
 }

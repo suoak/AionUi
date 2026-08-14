@@ -202,5 +202,10 @@
     "openReportsFailed": "Der Absturzordner konnte nicht geöffnet werden",
     "actionFailed": "Die Wiederherstellungsaktion ist fehlgeschlagen. Bitte erneut versuchen.",
     "restartFailed": "Im Entwicklungsmodus ist kein automatischer Neustart möglich. Bitte manuell mit --safe-mode starten."
+  },
+  "appCrash": {
+    "title": "Something went wrong",
+    "description": "The page hit an unexpected error. Your conversation history is still saved. Reload to continue.",
+    "reload": "Reload"
   }
 }

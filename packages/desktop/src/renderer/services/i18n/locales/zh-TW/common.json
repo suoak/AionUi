@@ -202,5 +202,10 @@
     "openReportsFailed": "無法開啟崩潰目錄",
     "actionFailed": "復原操作失敗，請重試",
     "restartFailed": "開發模式無法自動重新啟動，請手動使用 --safe-mode 啟動"
+  },
+  "appCrash": {
+    "title": "頁面出現異常",
+    "description": "渲染過程遇到意外錯誤。會話歷史已儲存，重新整理頁面即可繼續。",
+    "reload": "重新整理"
   }
 }

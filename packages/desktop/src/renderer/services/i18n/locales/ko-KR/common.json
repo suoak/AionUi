@@ -202,5 +202,10 @@
     "openReportsFailed": "충돌 폴더를 열 수 없습니다",
     "actionFailed": "복구 작업에 실패했습니다. 다시 시도해 주세요.",
     "restartFailed": "개발 모드에서는 자동 재시작할 수 없습니다. --safe-mode로 수동 실행하세요."
+  },
+  "appCrash": {
+    "title": "문제가 발생했습니다",
+    "description": "페이지에서 예기치 않은 오류가 발생했습니다. 대화 기록은 저장되어 있습니다. 새로고침 후 계속하세요.",
+    "reload": "새로고침"
   }
 }

@@ -202,5 +202,10 @@
     "openReportsFailed": "Could not open the crash reports folder",
     "actionFailed": "The recovery action failed. Please try again.",
     "restartFailed": "Automatic restart is unavailable in development mode. Start manually with --safe-mode."
+  },
+  "appCrash": {
+    "title": "Something went wrong",
+    "description": "The page hit an unexpected error. Your conversation history is still saved. Reload to continue.",
+    "reload": "Reload"
   }
 }

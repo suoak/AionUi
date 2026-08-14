@@ -37,7 +37,8 @@ const serializedLength = (value: unknown): number => {
   }
 };
 
-const truncateToolString = (value: string, state: CompactState): string => {
+const truncateToolString = (value: string | undefined, state: CompactState): string | undefined => {
+  if (typeof value !== 'string') return value;
   if (value.length <= TOOL_FIELD_STRING_LIMIT) return value;
   state.truncated = true;
   let end = TOOL_FIELD_STRING_LIMIT - TOOL_STRING_TRUNCATED_MARKER.length;

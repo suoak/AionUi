@@ -395,4 +395,15 @@ describe('ACP tool call image output', () => {
   it('falls back to a generated image file name when the path has no file name', () => {
     expect(getAcpImageFileName('/')).toBe('generated-image.png');
   });
+
+  it('tolerates incremental ACP tool updates that omit title', () => {
+    const content = createAcpToolCall({ result: 'ok' }).content;
+    delete (content.update as { title?: string }).title;
+
+    expect(() => sanitizeAcpToolCallContent(content)).not.toThrow();
+    expect(sanitizeAcpToolCallContent(content).update.title).toBeUndefined();
+
+    const merged = mergeAcpToolCallContent(createAcpToolCall(undefined).content, content);
+    expect(merged.update.title).toBe('Image generation');
+  });
 });

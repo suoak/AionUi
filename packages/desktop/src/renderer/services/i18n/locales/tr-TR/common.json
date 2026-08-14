@@ -202,5 +202,10 @@
     "openReportsFailed": "Çökme klasörü açılamadı",
     "actionFailed": "Kurtarma işlemi başarısız oldu. Lütfen tekrar deneyin.",
     "restartFailed": "Geliştirme modunda otomatik yeniden başlatma kullanılamaz. --safe-mode ile elle başlatın."
+  },
+  "appCrash": {
+    "title": "Something went wrong",
+    "description": "The page hit an unexpected error. Your conversation history is still saved. Reload to continue.",
+    "reload": "Reload"
   }
 }
