@@ -38,7 +38,7 @@ const isDataOrRemoteUrl = (value?: string): boolean => {
 
 const isAbsoluteLocalPath = (value?: string): boolean => {
   if (!value) return false;
-  return /^([a-zA-Z]:\\|\\\\|\/)/.test(value);
+  return /^([a-zA-Z]:[\\/]|\\\\|\/\/|\/)/.test(value);
 };
 
 interface MarkdownImageProps extends React.ImgHTMLAttributes<HTMLImageElement> {

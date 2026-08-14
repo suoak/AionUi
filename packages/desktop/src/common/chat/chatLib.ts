@@ -18,12 +18,21 @@ export { sanitizeAcpToolCallContent } from './acpToolCallOutput';
  * @param relativePath 相对路径
  * @returns 拼接后的绝对路径
  */
+const isAbsoluteLocalPath = (normalizedPath: string): boolean =>
+  /^[A-Za-z]:\//.test(normalizedPath) || normalizedPath.startsWith('/') || normalizedPath.startsWith('//');
+
 export const joinPath = (basePath: string, relativePath: string): string => {
   // 标准化路径分隔符为 /
   const normalizePath = (path: string) => path.replace(/\\/g, '/');
 
   const base = normalizePath(basePath);
   const relative = normalizePath(relativePath);
+
+  // Windows absolute (`E:/foo`) and POSIX/UNC paths must not be joined onto the
+  // workspace root — that produced 404s like `E:/code/AionUi/E:/code/...`.
+  if (isAbsoluteLocalPath(relative)) {
+    return relative.replace(/\/+$/, '') || relative;
+  }
 
   // 去掉base路径末尾的斜杠
   const cleanBase = base.replace(/\/+$/, '');
