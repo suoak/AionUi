@@ -1,5 +1,46 @@
 # Changelog
 
+## [2.1.62](https://github.com/suoak/AionUi/compare/v2.1.61...v2.1.62) (2026-08-15)
+
+### Desktop
+
+#### Features
+
+- **chat:** load full retained tool output in the conversation UI (#49)
+- **chat:** consume the AionCore journal transcript as chat history (#50)
+- **chat:** reconstruct messages from journal content and declared limits (#52)
+- **chat:** honor compacted journal tool results (#53)
+
+#### Bug Fixes
+
+- **chat:** tolerate missing ACP tool titles and isolate render crashes (#51)
+- **chat:** do not join Windows absolute paths onto the workspace (#54)
+
+#### 内网更新说明
+
+<!-- internal-release-notes:start -->
+
+**由运营管理部提供**
+
+- 会话历史改为以服务端日志为准，刷新后仍能恢复完整对话和工具结果。
+- 超大工具输出可在界面中查看全文，过旧的结果会显示摘要。
+- 修复工具卡片缺少标题时可能白屏的问题。
+- 修复 Windows 下本地文件路径被错误拼接导致无法打开的问题。
+
+<!-- internal-release-notes:end -->
+
+### Core ([v0.1.70](https://github.com/suoak/AionCore/releases/tag/v0.1.70))
+
+#### Features
+
+- **conversation:** derive a host transcript from the canonical journal
+- **conversation:** host tool pre/post-execute pipeline around agent results
+- **agent:** drive lifecycle from declared handshake behavior policy
+- **conversation:** compact older tool results and replay surface tokens
+- **conversation:** fail-closed approval audit and model-visible journal invariant
+
+---
+
 ## [2.1.61](https://github.com/suoak/AionUi/compare/v2.1.60...v2.1.61) (2026-08-14)
 
 ### Desktop
