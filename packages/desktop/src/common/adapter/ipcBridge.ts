@@ -15,6 +15,11 @@
 import type { IConfirmation } from '@/common/chat/chatLib';
 import type { AcpSlashCommandApiItem } from '@/common/chat/slash/types';
 import { bridge } from '@/common/platform/bridge';
+import {
+  buildJournalTranscriptPath,
+  type JournalTranscript,
+  type JournalTranscriptVisibility,
+} from '@/common/types/journalTranscript';
 import { buildListTasksPath } from './teamTaskPath';
 import type { OpenDialogOptions } from 'electron';
 import type {
@@ -446,6 +451,10 @@ export const conversation = {
     { reference: string; sha256: string; size: number; content: string },
     { conversation_id: string; reference: string }
   >((p) => `/api/conversations/${p.conversation_id}/outputs/${encodeURIComponent(p.reference)}`),
+  getJournalTranscript: httpGet<
+    JournalTranscript,
+    { conversation_id: string; visibility?: JournalTranscriptVisibility }
+  >((p) => buildJournalTranscriptPath(p.conversation_id, p.visibility ?? 'host')),
   askSideQuestion: httpPost<ConversationSideQuestionResult, { conversation_id: string; question: string }>(
     (p) => `/api/conversations/${p.conversation_id}/side-question`,
     (p) => ({ question: p.question })

@@ -17,6 +17,7 @@ import {
 } from '@/common/chat/chatLib';
 import { useCallback, useEffect, useRef } from 'react';
 import { createContext } from '@renderer/utils/ui/createContext';
+import { hydrateConversationMessagesFromJournal } from '@/renderer/utils/chat/hydrateMessagesFromJournal';
 import {
   DEFAULT_MESSAGE_PAGE_LIMIT,
   loadConversationAnchorWindow,
@@ -938,7 +939,8 @@ export const useMessageLstCache = (key: string) => {
     });
     const messages = result?.items?.map(normalizeDbMessage);
     if (messages && Array.isArray(messages)) {
-      update((currentList) => mergeLoadedPageWithCurrent(key, messages, currentList));
+      const hydrated = await hydrateConversationMessagesFromJournal(key, messages);
+      update((currentList) => mergeLoadedPageWithCurrent(key, hydrated, currentList));
       setPagination({
         oldestCursor: result.oldest_cursor ?? undefined,
         newestCursor: result.newest_cursor ?? undefined,
@@ -947,7 +949,7 @@ export const useMessageLstCache = (key: string) => {
         isLoadingBefore: false,
         isLoadingAnchor: false,
       });
-      return messages;
+      return hydrated;
     }
     return [];
   }, [key, setPagination, update]);
