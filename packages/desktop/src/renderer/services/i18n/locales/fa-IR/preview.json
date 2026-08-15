@@ -1,161 +1,165 @@
 {
-  "loading": "در حال بارگذاری...",
-  "downloadFile": "دانلود فایل",
-  "closePreview": "بستن پیش‌نمایش",
-  "collapsePanel": "جمع کردن پنل",
-  "source": "منبع",
-  "code": "کد",
-  "preview": "پیش‌نمایش",
-  "editor": "ویرایشگر",
-  "previewEffect": "پیش‌نمایش",
-  "downloadMarkdown": "دانلود فایل Markdown",
-  "downloadCode": "دانلود فایل {{language}}",
-  "downloadDiff": "دانلود فایل Diff",
-  "addToChat": "افزودن به چت",
-  "openSplitScreen": "باز کردن صفحه تقسیم‌شده",
-  "closeSplitScreen": "بستن صفحه تقسیم‌شده",
-  "edit": "ویرایش",
-  "exitEdit": "خروج از ویرایش",
-  "unsavedChangesTitle": "تغییرات ذخیره‌نشده",
-  "unsavedChangesMessage": "تغییرات ذخیره‌نشده‌ای دارید. آیا مطمئن هستید که می‌خواهید از ویرایش خارج شوید؟",
-  "confirmExit": "تأیید خروج",
-  "continueEdit": "ادامه ویرایش",
-  "closeTabTitle": "بستن تب",
-  "closeTabMessage": "محتوای فعلی ذخیره نشده است. آیا می‌خواهید قبل از بستن ذخیره کنید؟",
-  "saveAndClose": "ذخیره و بستن",
-  "closeWithoutSave": "ذخیره نکن",
-  "pptTitle": "ارائه PowerPoint",
-  "pptOpenHint": "روی دکمه زیر کلیک کنید تا در برنامه سیستم باز شود و محتوای کامل را مشاهده کنید",
-  "pptOpenFile": "باز کردن فایل",
-  "pptShowLocation": "نمایش موقعیت",
-  "pptSystemAppHint": "با برنامه پیش‌فرض سیستم (PowerPoint، Keynote، یا WPS) باز خواهد شد",
-  "openWithApp": "باز کردن در {{app}}",
-  "openInSystemApp": "باز کردن در برنامه سیستم",
-  "openInSystemSuccess": "در برنامه پیش‌فرض سیستم باز شد",
-  "openInSystemFailed": "باز کردن با برنامه سیستم ناموفق بود",
-  "closeLeft": "بستن سمت چپ",
-  "closeRight": "بستن سمت راست",
-  "closeOthers": "بستن بقیه",
-  "closeAll": "بستن همه",
-  "readOnlyLabel": "پیش‌نمایش فقط‌خواندنی",
-  "pathLabel": "مسیر",
-  "missingFile": {
-    "title": "فایل یافت نشد",
-    "openInNewTab": "در تب جدید باز کنید"
-  },
   "noTabs": "تبی باز نیست",
-  "openInPanelTooltip": "مشاهده در پنل پیش‌نمایش",
-  "mermaidTitle": "نمودار Mermaid",
-  "aiWriting": "هوش مصنوعی در حال نوشتن…",
-  "errors": {
-    "missingFilePath": "مسیر فایل وجود ندارد",
-    "openWithoutPath": "باز کردن ممکن نیست: مسیر فایل ارائه نشده است",
-    "conversionFailed": "تبدیل ناموفق بود"
+  "ppt": {
+    "startFailed": "شروع پیش‌نمایش PPT ناموفق بود",
+    "installing": "در حال نصب مؤلفه پیش‌نمایش...",
+    "installHint": "OfficeCLI را از صفحه انتشار suoak/OfficeCLI نصب کنید",
+    "loading": "در حال شروع پیش‌نمایش PPT..."
   },
+  "pathLabel": "مسیر",
+  "pptTitle": "ارائه PowerPoint",
+  "closeOthers": "بستن بقیه",
   "office": {
+    "serverInstall": {
+      "icuNote": "اگر همچنان شروع نشد، کتابخانه ICU را روی سرور نصب کنید (Debian/Ubuntu: apt-get install -y libicu-dev).",
+      "hint": "CSBU WorkMate روی سرور اجرا می‌شود. مؤلفه پیش‌نمایش را روی همان سرور نصب کنید، سپس دوباره تلاش کنید:"
+    },
     "installLinkText": "باز کردن راهنمای نصب officecli",
     "errors": {
-      "officecliNotFound": "officecli نصب نشده است.",
-      "installFailed": "نصب خودکار officecli ناموفق بود. لاگ‌های بک‌اند را بررسی کنید و دوباره تلاش کنید.",
-      "portTimeout": "سرویس پیش‌نمایش شروع شد اما به‌موقع آماده نشد. دوباره تلاش کنید.",
       "startFailed": "شروع سرویس پیش‌نمایش Office ناموفق بود.",
-      "outsideSandbox": "این فایل خارج از سندباکس پروژه فعلی است."
-    },
-    "serverInstall": {
-      "hint": "CSBU WorkMate روی سرور اجرا می‌شود. مؤلفه پیش‌نمایش را روی همان سرور نصب کنید، سپس دوباره تلاش کنید:",
-      "icuNote": "اگر همچنان شروع نشد، کتابخانه ICU را روی سرور نصب کنید (Debian/Ubuntu: apt-get install -y libicu-dev)."
+      "installFailed": "نصب خودکار officecli ناموفق بود. لاگ‌های بک‌اند را بررسی کنید و دوباره تلاش کنید.",
+      "officecliNotFound": "officecli نصب نشده است.",
+      "outsideSandbox": "این فایل خارج از سندباکس پروژه فعلی است.",
+      "portTimeout": "سرویس پیش‌نمایش شروع شد اما به‌موقع آماده نشد. دوباره تلاش کنید."
     }
   },
-  "word": {
-    "title": "سند Word",
-    "loading": "در حال بارگذاری سند Word...",
-    "invalid": "لطفاً تأیید کنید که فایل یک سند Word معتبر است",
-    "loadFailed": "بارگذاری سند Word ناموفق بود",
-    "watch": {
-      "loading": "در حال بارگذاری سند Word...",
-      "installing": "در حال نصب officecli...",
-      "startFailed": "شروع پیش‌نمایش Word ناموفق بود",
-      "installHint": "نیاز به officecli دارد. به‌صورت خودکار نصب خواهد شد."
-    }
+  "browser": {
+    "addressPlaceholder": "نشانی اینترنتی را وارد کنید یا جست‌وجو کنید",
+    "agentFirstUseTitle": "عامل از مرورگر درون‌برنامه استفاده می‌کند",
+    "tabLimitReached": "به سقف تعداد زبانه‌ها ({{count}}) رسیدید. قدیمی‌ترین زبانه دوباره استفاده شد.",
+    "agentFirstUseContent": "می‌تواند در این پنل صفحه باز کند، کلیک کند و محتوا را بخواند. وضعیت ورود شما حفظ می‌شود.",
+    "newTab": "زبانه جدید",
+    "agentFirstUseAction": "باز کردن تنظیمات",
+    "agentActiveTooltip": "عامل در حال کار با این زبانه است"
   },
-  "excel": {
-    "title": "صفحه گسترده Excel",
-    "loading": "در حال بارگذاری workbook Excel...",
-    "invalid": "لطفاً تأیید کنید که فایل یک سند Excel معتبر است",
-    "noSheets": "ورک‌شیتی در این فایل Excel پیدا نشد",
-    "sheetCount": "{{count}} ورک‌شیت",
-    "convertFailed": "تبدیل Excel ناموفق بود",
-    "loadFailed": "بارگذاری workbook Excel ناموفق بود",
-    "emptySheet": "این ورک‌شیت داده‌ای ندارد",
-    "emptySheetHint": "بررسی کنید آیا شیت شامل داده یا تصویر است",
-    "watch": {
-      "loading": "در حال بارگذاری فایل Excel...",
-      "installing": "در حال نصب officecli...",
-      "startFailed": "شروع پیش‌نمایش Excel ناموفق بود",
-      "installHint": "نیاز به officecli دارد. به‌صورت خودکار نصب خواهد شد."
-    }
+  "closeTabsTitle": "بستن تب‌ها",
+  "pptOpenFile": "باز کردن فایل",
+  "oversized": {
+    "title": "حجم فایل برای پیش‌نمایش بیش از حد زیاد است",
+    "downloadUnavailable": "این فایل برای دانلود در اینجا بیش از حد بزرگ است. از «باز کردن در سیستم» استفاده کنید.",
+    "detail": "حجم فایل {{size}} از محدودیت {{threshold}} بیشتر است. لطفاً آن را در ویرایشگر سیستم باز کنید."
   },
   "pdf": {
     "title": "سند PDF",
-    "pathMissing": "مسیر فایل PDF وجود ندارد",
     "loadFailed": "بارگذاری سند PDF ناموفق بود",
-    "unableDisplay": "نمایش فایل PDF ممکن نیست"
+    "unableDisplay": "نمایش فایل PDF ممکن نیست",
+    "pathMissing": "مسیر فایل PDF وجود ندارد"
   },
-  "html": {
-    "elementSelected": "عنصر انتخاب‌شده: {{path}}",
-    "copySuccess": "قطعه HTML کپی شد",
-    "inspectorEnabled": "بازرس عنصر فعال شد. روی آیتم‌ها در پیش‌نمایش کلیک کنید تا هایلایت شوند.",
-    "inspectorButton": "بازرس عنصر",
-    "inspecting": "در حال بازرسی...",
-    "selectedLabel": "انتخاب‌شده:",
-    "inspectorTooltip": "روی عناصر پیش‌نمایش کلیک کنید تا HTML آن‌ها بازرسی شود",
-    "downloadHtml": "دانلود فایل HTML",
-    "copyElementHtml": "کپی HTML عنصر",
-    "viewElementInfo": "مشاهده اطلاعات عنصر",
-    "printedToConsole": "اطلاعات عنصر در کنسول ثبت شد",
-    "inspectElement": "بازرسی عنصر",
-    "inspectElementEnable": "فعال‌سازی بازرس عنصر",
-    "inspectElementDisable": "غیرفعال‌سازی بازرس عنصر"
-  },
-  "ppt": {
-    "loading": "در حال شروع پیش‌نمایش PPT...",
-    "installing": "در حال نصب مؤلفه پیش‌نمایش...",
-    "startFailed": "شروع پیش‌نمایش PPT ناموفق بود",
-    "installHint": "OfficeCLI را از صفحه انتشار suoak/OfficeCLI نصب کنید"
-  },
-  "closeTabsTitle": "بستن تب‌ها",
-  "closeTabsMessage": "{{count}} تب تغییرات ذخیره‌نشده دارند. پیش از بستن ذخیره شوند؟",
-  "oversized": {
-    "title": "حجم فایل برای پیش‌نمایش بیش از حد زیاد است",
-    "detail": "حجم فایل {{size}} از محدودیت {{threshold}} بیشتر است. لطفاً آن را در ویرایشگر سیستم باز کنید.",
-    "downloadUnavailable": "این فایل برای دانلود در اینجا بیش از حد بزرگ است. از «باز کردن در سیستم» استفاده کنید."
-  },
-  "unsupported": {
-    "title": "پیش‌نمایش این قالب پشتیبانی نمی‌شود",
-    "detail": "فایل‌های {{format}} را نمی‌توان اینجا پیش‌نمایش کرد. آن را در یک برنامه سیستمی باز کنید.",
-    "downloadUnavailable": "این فایل را نمی‌توان اینجا دانلود کرد. از «باز کردن در سیستم» استفاده کنید."
-  },
-  "browser": {
-    "newTab": "زبانه جدید",
-    "addressPlaceholder": "نشانی اینترنتی را وارد کنید یا جست‌وجو کنید",
-    "agentActiveTooltip": "عامل در حال کار با این زبانه است",
-    "tabLimitReached": "به سقف تعداد زبانه‌ها ({{count}}) رسیدید. قدیمی‌ترین زبانه دوباره استفاده شد.",
-    "agentFirstUseTitle": "عامل از مرورگر درون‌برنامه استفاده می‌کند",
-    "agentFirstUseContent": "می‌تواند در این پنل صفحه باز کند، کلیک کند و محتوا را بخواند. وضعیت ورود شما حفظ می‌شود.",
-    "agentFirstUseAction": "باز کردن تنظیمات"
-  },
+  "source": "منبع",
+  "loading": "در حال بارگذاری...",
+  "unsavedChangesMessage": "تغییرات ذخیره‌نشده‌ای دارید. آیا مطمئن هستید که می‌خواهید از ویرایش خارج شوید؟",
+  "saveAndClose": "ذخیره و بستن",
+  "openSplitScreen": "باز کردن صفحه تقسیم‌شده",
+  "openInSystemSuccess": "در برنامه پیش‌فرض سیستم باز شد",
+  "aiWriting": "هوش مصنوعی در حال نوشتن…",
   "saveConflict": "ذخیره نشد: این فایل پس از باز کردن شما روی دیسک تغییر کرده است. برای دیدن تغییرات دیگر دوباره بارگیری کنید — ویرایش‌های شما همچنان ذخیره‌نشده باقی مانده است.",
-  "persistQuotaExceeded": "حافظه محلی پر است، بنابراین تب‌های باز این پروژه دیگر به خاطر سپرده نمی‌شوند. چند تب را ببندید یا داده‌های سایت را پاک کنید.",
+  "preview": "پیش‌نمایش",
   "refresh": {
-    "label": "بازخوانی",
+    "discardAndRefresh": "صرف‌نظر از تغییرات و بازخوانی",
+    "unavailable": "نمی‌توان این فایل را پیدا کرد",
+    "confirmTitle": "بازخوانی شود و تغییرات ذخیره‌نشده از دست برود؟",
     "tooltip": "بارگیری مجدد از دیسک",
+    "label": "بازخوانی",
+    "officeNotWired": "بازخوانی اسناد Office هنوز فراهم نیست — برای دیدن تغییرات فایل را ببندید و دوباره باز کنید.",
+    "failed": "بارگیری مجدد این فایل ممکن نشد",
     "hasUpdate": "این فایل روی دیسک تغییر کرده است — برای بارگیری مجدد کلیک کنید",
     "noSignalSource": "این فایل در پروژه نیست، بنابراین تغییرات اعلام نمی‌شود",
-    "unavailable": "نمی‌توان این فایل را پیدا کرد",
-    "failed": "بارگیری مجدد این فایل ممکن نشد",
-    "confirmTitle": "بازخوانی شود و تغییرات ذخیره‌نشده از دست برود؟",
-    "confirmMessage": "این تب تغییرات ذخیره‌نشده دارد. بازخوانی آن‌ها را با محتوای دیسک جایگزین می‌کند.",
-    "discardAndRefresh": "صرف‌نظر از تغییرات و بازخوانی",
-    "officeNotWired": "بازخوانی اسناد Office هنوز فراهم نیست — برای دیدن تغییرات فایل را ببندید و دوباره باز کنید."
-  }
+    "confirmMessage": "این تب تغییرات ذخیره‌نشده دارد. بازخوانی آن‌ها را با محتوای دیسک جایگزین می‌کند."
+  },
+  "collapsePanel": "جمع کردن پنل",
+  "code": "کد",
+  "closePreview": "بستن پیش‌نمایش",
+  "mermaidTitle": "نمودار Mermaid",
+  "excel": {
+    "title": "صفحه گسترده Excel",
+    "loadFailed": "بارگذاری workbook Excel ناموفق بود",
+    "convertFailed": "تبدیل Excel ناموفق بود",
+    "invalid": "لطفاً تأیید کنید که فایل یک سند Excel معتبر است",
+    "emptySheet": "این ورک‌شیت داده‌ای ندارد",
+    "sheetCount": "{{count}} ورک‌شیت",
+    "watch": {
+      "startFailed": "شروع پیش‌نمایش Excel ناموفق بود",
+      "installing": "در حال نصب officecli...",
+      "installHint": "نیاز به officecli دارد. به‌صورت خودکار نصب خواهد شد.",
+      "loading": "در حال بارگذاری فایل Excel..."
+    },
+    "noSheets": "ورک‌شیتی در این فایل Excel پیدا نشد",
+    "emptySheetHint": "بررسی کنید آیا شیت شامل داده یا تصویر است",
+    "loading": "در حال بارگذاری workbook Excel..."
+  },
+  "closeWithoutSave": "ذخیره نکن",
+  "errors": {
+    "openWithoutPath": "باز کردن ممکن نیست: مسیر فایل ارائه نشده است",
+    "conversionFailed": "تبدیل ناموفق بود",
+    "missingFilePath": "مسیر فایل وجود ندارد"
+  },
+  "downloadCode": "دانلود فایل {{language}}",
+  "closeAll": "بستن همه",
+  "unsupported": {
+    "title": "پیش‌نمایش این قالب پشتیبانی نمی‌شود",
+    "downloadUnavailable": "این فایل را نمی‌توان اینجا دانلود کرد. از «باز کردن در سیستم» استفاده کنید.",
+    "detail": "فایل‌های {{format}} را نمی‌توان اینجا پیش‌نمایش کرد. آن را در یک برنامه سیستمی باز کنید."
+  },
+  "closeLeft": "بستن سمت چپ",
+  "html": {
+    "copyElementHtml": "کپی HTML عنصر",
+    "elementSelected": "عنصر انتخاب‌شده: {{path}}",
+    "inspecting": "در حال بازرسی...",
+    "printedToConsole": "اطلاعات عنصر در کنسول ثبت شد",
+    "inspectorButton": "بازرس عنصر",
+    "selectedLabel": "انتخاب‌شده:",
+    "copySuccess": "قطعه HTML کپی شد",
+    "inspectElementDisable": "غیرفعال‌سازی بازرس عنصر",
+    "viewElementInfo": "مشاهده اطلاعات عنصر",
+    "inspectElementEnable": "فعال‌سازی بازرس عنصر",
+    "inspectorEnabled": "بازرس عنصر فعال شد. روی آیتم‌ها در پیش‌نمایش کلیک کنید تا هایلایت شوند.",
+    "downloadHtml": "دانلود فایل HTML",
+    "inspectElement": "بازرسی عنصر",
+    "inspectorTooltip": "روی عناصر پیش‌نمایش کلیک کنید تا HTML آن‌ها بازرسی شود"
+  },
+  "openInSystemApp": "باز کردن در برنامه سیستم",
+  "confirmExit": "تأیید خروج",
+  "editor": "ویرایشگر",
+  "pptSystemAppHint": "با برنامه پیش‌فرض سیستم (PowerPoint، Keynote، یا WPS) باز خواهد شد",
+  "downloadMarkdown": "دانلود فایل Markdown",
+  "closeRight": "بستن سمت راست",
+  "closeSplitScreen": "بستن صفحه تقسیم‌شده",
+  "exitEdit": "خروج از ویرایش",
+  "addToChat": "افزودن به چت",
+  "openInPanelTooltip": "مشاهده در پنل پیش‌نمایش",
+  "save": {
+    "tooltip": "ذخیره تغییرات (Ctrl/Cmd+S)",
+    "clean": "تغییر ذخیره‌نشده‌ای وجود ندارد"
+  },
+  "edit": "ویرایش",
+  "downloadFile": "دانلود فایل",
+  "closeTabMessage": "محتوای فعلی ذخیره نشده است. آیا می‌خواهید قبل از بستن ذخیره کنید؟",
+  "word": {
+    "watch": {
+      "startFailed": "شروع پیش‌نمایش Word ناموفق بود",
+      "installing": "در حال نصب officecli...",
+      "installHint": "نیاز به officecli دارد. به‌صورت خودکار نصب خواهد شد.",
+      "loading": "در حال بارگذاری سند Word..."
+    },
+    "title": "سند Word",
+    "loadFailed": "بارگذاری سند Word ناموفق بود",
+    "invalid": "لطفاً تأیید کنید که فایل یک سند Word معتبر است",
+    "loading": "در حال بارگذاری سند Word..."
+  },
+  "pptShowLocation": "نمایش موقعیت",
+  "persistQuotaExceeded": "حافظه محلی پر است، بنابراین تب‌های باز این پروژه دیگر به خاطر سپرده نمی‌شوند. چند تب را ببندید یا داده‌های سایت را پاک کنید.",
+  "pptOpenHint": "روی دکمه زیر کلیک کنید تا در برنامه سیستم باز شود و محتوای کامل را مشاهده کنید",
+  "readOnlyLabel": "پیش‌نمایش فقط‌خواندنی",
+  "openWithApp": "باز کردن در {{app}}",
+  "previewEffect": "پیش‌نمایش",
+  "missingFile": {
+    "openInNewTab": "در تب جدید باز کنید",
+    "title": "فایل یافت نشد"
+  },
+  "continueEdit": "ادامه ویرایش",
+  "unsavedChangesTitle": "تغییرات ذخیره‌نشده",
+  "closeTabTitle": "بستن تب",
+  "closeTabsMessage": "{{count}} تب تغییرات ذخیره‌نشده دارند. پیش از بستن ذخیره شوند؟",
+  "openInSystemFailed": "باز کردن با برنامه سیستم ناموفق بود",
+  "downloadDiff": "دانلود فایل Diff"
 }

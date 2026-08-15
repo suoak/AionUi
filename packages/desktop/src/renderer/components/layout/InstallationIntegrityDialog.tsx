@@ -2,15 +2,15 @@ import { Button, Message, Modal, Space, Typography } from '@arco-design/web-reac
 import type { TFunction } from 'i18next';
 import React, { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ipcBridge } from '@/common';
-import type { CrashRecoveryState } from '@/common/adapter/ipcBridge';
 import { type FeedbackEventTags, submitFeedbackReport } from '@/renderer/services/feedback/submitFeedbackReport';
 
+const AIONUI_DOWNLOAD_URL = 'https://www.aionui.com/';
 const INSTALLATION_INTEGRITY_REPORT_FLUSH_TIMEOUT_MS = 2000;
 
 type InstallationIntegrityDialogKind =
   | 'incomplete_installation'
   | 'data_migration'
+  | 'database_newer_than_app'
   | 'local_data_repair'
   | 'recoverable_database_corruption'
   | 'transient_concurrent_startup'
@@ -34,24 +34,59 @@ export type InstallationIntegrityDiagnostics = {
   backendStartupFailure?: Record<string, unknown> | null;
 };
 
+export function openDownloadLatest(): void {
+  window.open(AIONUI_DOWNLOAD_URL, '_blank', 'noopener,noreferrer');
+}
+
+/**
+ * Per-kind dialog configuration: which `common.backendStartup.*` section the
+ * copy lives in, and which footer actions the dialog offers. One row per kind
+ * replaces the previous per-suffix ternary chains.
+ *
+ * `showDiagnostics: false` kinds (the downgrade dialog) have no diagnostics
+ * button at all: the root cause is fully understood and the only remedy is
+ * updating, so the single download action stays unambiguous.
+ */
+const DIALOG_KIND_CONFIG: Record<
+  InstallationIntegrityDialogKind,
+  {
+    i18nSection: string;
+    showDiagnostics: boolean;
+    showDiagnosticsHint?: boolean;
+    showDownloadLatest?: boolean;
+    showRecover?: boolean;
+  }
+> = {
+  incomplete_installation: { i18nSection: 'incompleteInstallation', showDiagnostics: true, showDownloadLatest: true },
+  data_migration: { i18nSection: 'dataMigration', showDiagnostics: true },
+  database_newer_than_app: { i18nSection: 'databaseNewerThanApp', showDiagnostics: false, showDownloadLatest: true },
+  local_data_repair: { i18nSection: 'localDataRepair', showDiagnostics: true },
+  recoverable_database_corruption: {
+    i18nSection: 'recoverableDatabaseCorruption',
+    showDiagnostics: true,
+    showDiagnosticsHint: true,
+    showRecover: true,
+  },
+  transient_concurrent_startup: {
+    i18nSection: 'transientConcurrentStartup',
+    showDiagnostics: true,
+    showDiagnosticsHint: true,
+  },
+  startup_directory: { i18nSection: 'startupDirectory', showDiagnostics: true },
+  backend_exited: { i18nSection: 'exited', showDiagnostics: true },
+  port_report_timeout: { i18nSection: 'portReportTimeout', showDiagnostics: true },
+  startup_failed: { i18nSection: 'startupFailed', showDiagnostics: true },
+};
+
+function dialogKindText(t: TFunction, diagnosticsKind: InstallationIntegrityDialogKind, suffix: string): string {
+  return t(`common.backendStartup.${DIALOG_KIND_CONFIG[diagnosticsKind].i18nSection}.${suffix}`);
+}
+
 export function getInstallationIntegrityTitle(
   t: TFunction,
   diagnosticsKind: InstallationIntegrityDialogKind = 'incomplete_installation'
 ): string {
-  if (diagnosticsKind === 'recoverable_database_corruption') {
-    return t('common.backendStartup.recoverableDatabaseCorruption.title');
-  }
-  if (diagnosticsKind === 'transient_concurrent_startup') {
-    return t('common.backendStartup.transientConcurrentStartup.title');
-  }
-  if (diagnosticsKind === 'startup_directory') return t('common.backendStartup.startupDirectory.title');
-  if (diagnosticsKind === 'local_data_repair') return t('common.backendStartup.localDataRepair.title');
-  if (diagnosticsKind === 'backend_exited') return t('common.backendStartup.exited.title');
-  if (diagnosticsKind === 'port_report_timeout') return t('common.backendStartup.portReportTimeout.title');
-  if (diagnosticsKind === 'startup_failed') return t('common.backendStartup.startupFailed.title');
-  return diagnosticsKind === 'data_migration'
-    ? t('common.backendStartup.dataMigration.title')
-    : t('common.backendStartup.incompleteInstallation.title');
+  return dialogKindText(t, diagnosticsKind, 'title');
 }
 
 export function getBackendStartupInstallationDescription(t: TFunction): string {
@@ -62,60 +97,50 @@ export function getRuntimeComponentInstallationDescription(t: TFunction, resourc
   return t('common.backendStartup.incompleteInstallation.runtimeComponentDescription', { resource });
 }
 
-export function getInstallationIntegritySendDiagnosticsText(t: TFunction): string {
-  return t('common.backendStartup.incompleteInstallation.sendDiagnostics');
+export function getInstallationIntegrityDownloadText(t: TFunction): string {
+  return t('common.backendStartup.incompleteInstallation.downloadLatest');
 }
 
 export function getInstallationIntegrityDiagnosticsSentText(
   t: TFunction,
   diagnosticsKind: InstallationIntegrityDialogKind = 'incomplete_installation'
 ): string {
-  if (diagnosticsKind === 'recoverable_database_corruption') {
-    return t('common.backendStartup.recoverableDatabaseCorruption.diagnosticsSent');
-  }
-  if (diagnosticsKind === 'transient_concurrent_startup') {
-    return t('common.backendStartup.transientConcurrentStartup.diagnosticsSent');
-  }
-  if (diagnosticsKind === 'startup_directory') return t('common.backendStartup.startupDirectory.diagnosticsSent');
-  if (diagnosticsKind === 'local_data_repair') return t('common.backendStartup.localDataRepair.diagnosticsSent');
-  if (diagnosticsKind === 'backend_exited') return t('common.backendStartup.exited.diagnosticsSent');
-  if (diagnosticsKind === 'port_report_timeout') return t('common.backendStartup.portReportTimeout.diagnosticsSent');
-  if (diagnosticsKind === 'startup_failed') return t('common.backendStartup.startupFailed.diagnosticsSent');
-  return diagnosticsKind === 'data_migration'
-    ? t('common.backendStartup.dataMigration.diagnosticsSent')
-    : t('common.backendStartup.incompleteInstallation.diagnosticsSent');
+  // Kinds without a diagnostics button have no diagnosticsSent copy of their
+  // own; fall back to the generic text (unreachable from the dialog footer).
+  const kind = DIALOG_KIND_CONFIG[diagnosticsKind].showDiagnostics ? diagnosticsKind : 'incomplete_installation';
+  return dialogKindText(t, kind, 'diagnosticsSent');
 }
 
 function buildInstallationIntegrityTags(diagnostics: InstallationIntegrityDiagnostics): FeedbackEventTags {
   const tags: FeedbackEventTags = {
-    'csbu-workmate.installation_integrity.user_report': 'true',
-    'csbu-workmate.installation_integrity.report_source': diagnostics.source,
+    'aionui.installation_integrity.user_report': 'true',
+    'aionui.installation_integrity.report_source': diagnostics.source,
   };
 
   if (diagnostics.runtime?.failureKind) {
-    tags['csbu-workmate.installation_integrity.failure_kind'] = diagnostics.runtime.failureKind;
+    tags['aionui.installation_integrity.failure_kind'] = diagnostics.runtime.failureKind;
   }
   if (diagnostics.runtime?.resource) {
-    tags['csbu-workmate.runtime_resource'] = diagnostics.runtime.resource;
+    tags['aionui.runtime_resource'] = diagnostics.runtime.resource;
   }
   if (diagnostics.runtime?.resourceId) {
-    tags['csbu-workmate.runtime_resource_id'] = diagnostics.runtime.resourceId;
+    tags['aionui.runtime_resource_id'] = diagnostics.runtime.resourceId;
   }
   if (diagnostics.runtime?.scopeKind) {
-    tags['csbu-workmate.runtime_scope'] = diagnostics.runtime.scopeKind;
+    tags['aionui.runtime_scope'] = diagnostics.runtime.scopeKind;
   }
 
   const reason = diagnostics.backendStartupFailure?.reason;
   if (typeof reason === 'string') {
-    tags['csbu-workmate.backend_startup_failure.reason'] = reason;
+    tags['aionui.backend_startup_failure.reason'] = reason;
   }
   const backendBoundaryCode = diagnostics.backendStartupFailure?.backendBoundaryCode;
   if (typeof backendBoundaryCode === 'string') {
-    tags['csbu-workmate.backend_startup_failure.backend_boundary_code'] = backendBoundaryCode;
+    tags['aionui.backend_startup_failure.backend_boundary_code'] = backendBoundaryCode;
   }
   const backendBoundaryStage = diagnostics.backendStartupFailure?.backendBoundaryStage;
   if (typeof backendBoundaryStage === 'string') {
-    tags['csbu-workmate.backend_startup_failure.backend_boundary_stage'] = backendBoundaryStage;
+    tags['aionui.backend_startup_failure.backend_boundary_stage'] = backendBoundaryStage;
   }
 
   return tags;
@@ -138,7 +163,7 @@ export async function reportInstallationIntegrityDiagnostics(
     tags: buildInstallationIntegrityTags(diagnostics),
   });
 
-  if (typeof window !== 'undefined' && window.__workMateE2ETest) {
+  if (typeof window !== 'undefined' && window.__aionuiE2ETest) {
     window.__installationIntegrityReportCount = (window.__installationIntegrityReportCount ?? 0) + 1;
     window.__lastInstallationIntegrityReportMessage = 'installation-integrity-user-report';
   }
@@ -148,42 +173,47 @@ export function getInstallationIntegrityModalActions(
   t: TFunction,
   options: {
     diagnosticsKind?: InstallationIntegrityDialogKind;
+    onDownloadLatest?: () => void;
     onRecoverCorruptedDatabase?: () => Promise<unknown> | void;
     onReportDiagnostics?: () => Promise<unknown> | void;
   } = {}
 ): {
   downloadText?: string;
+  onDownloadLatest: () => void;
   onRecoverCorruptedDatabase: () => Promise<unknown> | void;
   onReportDiagnostics: () => Promise<unknown> | void;
   recoverText?: string;
-  reportText: string;
+  reportText?: string;
 } {
   const diagnosticsKind = options.diagnosticsKind ?? 'incomplete_installation';
+  const config = DIALOG_KIND_CONFIG[diagnosticsKind];
   return {
+    downloadText: config.showDownloadLatest ? getInstallationIntegrityDownloadText(t) : undefined,
+    onDownloadLatest: options.onDownloadLatest ?? openDownloadLatest,
     onRecoverCorruptedDatabase: options.onRecoverCorruptedDatabase ?? (() => Promise.resolve()),
     onReportDiagnostics: options.onReportDiagnostics ?? (() => Promise.resolve()),
-    recoverText:
-      diagnosticsKind === 'recoverable_database_corruption'
-        ? t('common.backendStartup.recoverableDatabaseCorruption.confirmRebuild')
-        : undefined,
-    reportText:
-      diagnosticsKind === 'recoverable_database_corruption'
-        ? t('common.backendStartup.recoverableDatabaseCorruption.sendDiagnostics')
-        : diagnosticsKind === 'transient_concurrent_startup'
-          ? t('common.backendStartup.transientConcurrentStartup.sendDiagnostics')
-          : diagnosticsKind === 'startup_directory'
-            ? t('common.backendStartup.startupDirectory.sendDiagnostics')
-            : diagnosticsKind === 'local_data_repair'
-              ? t('common.backendStartup.localDataRepair.sendDiagnostics')
-              : diagnosticsKind === 'data_migration'
-                ? t('common.backendStartup.dataMigration.sendDiagnostics')
-                : diagnosticsKind === 'backend_exited'
-                  ? t('common.backendStartup.exited.sendDiagnostics')
-                  : diagnosticsKind === 'port_report_timeout'
-                    ? t('common.backendStartup.portReportTimeout.sendDiagnostics')
-                    : diagnosticsKind === 'startup_failed'
-                      ? t('common.backendStartup.startupFailed.sendDiagnostics')
-                      : getInstallationIntegritySendDiagnosticsText(t),
+    recoverText: config.showRecover ? dialogKindText(t, diagnosticsKind, 'confirmRebuild') : undefined,
+    reportText: config.showDiagnostics ? dialogKindText(t, diagnosticsKind, 'sendDiagnostics') : undefined,
+  };
+}
+
+export function getDownloadLatestModalActionProps(t: TFunction): {
+  cancelButtonProps: {
+    style: {
+      display: 'none';
+    };
+  };
+  okText: string;
+  onOk: () => void;
+} {
+  return {
+    okText: getInstallationIntegrityDownloadText(t),
+    onOk: openDownloadLatest,
+    cancelButtonProps: {
+      style: {
+        display: 'none',
+      },
+    },
   };
 }
 
@@ -223,41 +253,9 @@ export const InstallationIntegrityFooter: React.FC<{
     try {
       await actions.onReportDiagnostics();
       setReported(true);
-      Message.success(
-        diagnosticsKind === 'recoverable_database_corruption'
-          ? t('common.backendStartup.recoverableDatabaseCorruption.diagnosticsReportSuccess')
-          : diagnosticsKind === 'transient_concurrent_startup'
-            ? t('common.backendStartup.transientConcurrentStartup.diagnosticsReportSuccess')
-            : diagnosticsKind === 'local_data_repair'
-              ? t('common.backendStartup.localDataRepair.diagnosticsReportSuccess')
-              : diagnosticsKind === 'data_migration'
-                ? t('common.backendStartup.dataMigration.diagnosticsReportSuccess')
-                : diagnosticsKind === 'backend_exited'
-                  ? t('common.backendStartup.exited.diagnosticsReportSuccess')
-                  : diagnosticsKind === 'port_report_timeout'
-                    ? t('common.backendStartup.portReportTimeout.diagnosticsReportSuccess')
-                    : diagnosticsKind === 'startup_failed'
-                      ? t('common.backendStartup.startupFailed.diagnosticsReportSuccess')
-                      : t('common.backendStartup.incompleteInstallation.diagnosticsReportSuccess')
-      );
+      Message.success(dialogKindText(t, diagnosticsKind, 'diagnosticsReportSuccess'));
     } catch {
-      Message.error(
-        diagnosticsKind === 'recoverable_database_corruption'
-          ? t('common.backendStartup.recoverableDatabaseCorruption.diagnosticsReportFailed')
-          : diagnosticsKind === 'transient_concurrent_startup'
-            ? t('common.backendStartup.transientConcurrentStartup.diagnosticsReportFailed')
-            : diagnosticsKind === 'local_data_repair'
-              ? t('common.backendStartup.localDataRepair.diagnosticsReportFailed')
-              : diagnosticsKind === 'data_migration'
-                ? t('common.backendStartup.dataMigration.diagnosticsReportFailed')
-                : diagnosticsKind === 'backend_exited'
-                  ? t('common.backendStartup.exited.diagnosticsReportFailed')
-                  : diagnosticsKind === 'port_report_timeout'
-                    ? t('common.backendStartup.portReportTimeout.diagnosticsReportFailed')
-                    : diagnosticsKind === 'startup_failed'
-                      ? t('common.backendStartup.startupFailed.diagnosticsReportFailed')
-                      : t('common.backendStartup.incompleteInstallation.diagnosticsReportFailed')
-      );
+      Message.error(dialogKindText(t, diagnosticsKind, 'diagnosticsReportFailed'));
     } finally {
       setReporting(false);
     }
@@ -286,14 +284,21 @@ export const InstallationIntegrityFooter: React.FC<{
 
   return (
     <Space>
-      <Button
-        data-testid='installation-integrity-report'
-        disabled={!diagnostics || reported}
-        loading={reporting}
-        onClick={handleReportDiagnostics}
-      >
-        {reported ? getInstallationIntegrityDiagnosticsSentText(t, diagnosticsKind) : actions.reportText}
-      </Button>
+      {actions.reportText ? (
+        <Button
+          data-testid='installation-integrity-report'
+          disabled={!diagnostics || reported}
+          loading={reporting}
+          onClick={handleReportDiagnostics}
+        >
+          {reported ? getInstallationIntegrityDiagnosticsSentText(t, diagnosticsKind) : actions.reportText}
+        </Button>
+      ) : null}
+      {actions.downloadText ? (
+        <Button data-testid='installation-integrity-download' type='primary' onClick={actions.onDownloadLatest}>
+          {actions.downloadText}
+        </Button>
+      ) : null}
       {actions.recoverText ? (
         <Button
           data-testid='recoverable-database-corruption-rebuild'
@@ -318,12 +323,9 @@ export function showInstallationIntegrityModal(
   diagnostics?: InstallationIntegrityDiagnostics,
   diagnosticsKind: InstallationIntegrityDialogKind = 'incomplete_installation'
 ): ReturnType<InstallationIntegrityModalController['error']> {
-  const diagnosticsHint =
-    diagnosticsKind === 'recoverable_database_corruption'
-      ? t('common.backendStartup.recoverableDatabaseCorruption.diagnosticsHint')
-      : diagnosticsKind === 'transient_concurrent_startup'
-        ? t('common.backendStartup.transientConcurrentStartup.diagnosticsHint')
-        : undefined;
+  const diagnosticsHint = DIALOG_KIND_CONFIG[diagnosticsKind].showDiagnosticsHint
+    ? dialogKindText(t, diagnosticsKind, 'diagnosticsHint')
+    : undefined;
 
   return modal.error({
     title: getInstallationIntegrityTitle(t, diagnosticsKind),
@@ -350,93 +352,4 @@ export const InstallationIntegrityModalHost: React.FC<{
   }, [description, diagnostics, diagnosticsKind, modal, t]);
 
   return <>{modalContextHolder}</>;
-};
-
-export const CrashRecoveryModalHost: React.FC = () => {
-  const { t } = useTranslation();
-  const [recoveryState, setRecoveryState] = useState<CrashRecoveryState | null>(null);
-  const [restarting, setRestarting] = useState(false);
-
-  useEffect(() => {
-    const getCrashRecoveryState = ipcBridge.application.getCrashRecoveryState;
-    if (!getCrashRecoveryState) return;
-    getCrashRecoveryState
-      .invoke()
-      .then((state) => {
-        if (state.detected && state.reportId) setRecoveryState(state);
-      })
-      .catch((error: unknown) => {
-        console.warn('[CrashRecovery] Failed to query recovery state:', error);
-      });
-  }, []);
-
-  if (!recoveryState?.reportId) return null;
-  const reportId = recoveryState.reportId;
-
-  const continueNormally = async () => {
-    try {
-      await ipcBridge.application.dismissCrashRecovery.invoke({ reportId });
-      setRecoveryState(null);
-    } catch (error) {
-      console.warn('[CrashRecovery] Failed to dismiss recovery report:', error);
-      Message.error(t('common.crashRecovery.actionFailed'));
-    }
-  };
-
-  const openReports = async () => {
-    try {
-      await ipcBridge.application.openCrashReports.invoke();
-    } catch (error) {
-      console.warn('[CrashRecovery] Failed to open crash reports:', error);
-      Message.error(t('common.crashRecovery.openReportsFailed'));
-    }
-  };
-
-  const restartInSafeMode = async () => {
-    if (restarting) return;
-    setRestarting(true);
-    try {
-      await ipcBridge.application.dismissCrashRecovery.invoke({ reportId });
-      const result = await ipcBridge.application.restartInSafeMode.invoke();
-      if (result.manualRestartRequired) {
-        Message.error(t('common.crashRecovery.restartFailed'));
-        setRestarting(false);
-      }
-    } catch (error) {
-      console.warn('[CrashRecovery] Failed to restart in safe mode:', error);
-      Message.error(t('common.crashRecovery.actionFailed'));
-      setRestarting(false);
-    }
-  };
-
-  return (
-    <Modal
-      visible
-      closable={false}
-      maskClosable={false}
-      title={t('common.crashRecovery.title')}
-      footer={
-        <Space>
-          <Button data-testid='crash-recovery-open-reports' onClick={openReports}>
-            {t('common.crashRecovery.openReports')}
-          </Button>
-          <Button data-testid='crash-recovery-continue' onClick={continueNormally}>
-            {t('common.crashRecovery.continueNormally')}
-          </Button>
-          <Button
-            data-testid='crash-recovery-safe-mode'
-            loading={restarting}
-            type='primary'
-            onClick={restartInSafeMode}
-          >
-            {t('common.crashRecovery.restartSafeMode')}
-          </Button>
-        </Space>
-      }
-    >
-      <Typography.Paragraph className='mb-0 text-t-secondary'>
-        {t('common.crashRecovery.description')}
-      </Typography.Paragraph>
-    </Modal>
-  );
 };

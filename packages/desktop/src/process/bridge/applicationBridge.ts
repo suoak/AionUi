@@ -5,7 +5,7 @@
  */
 
 import type { BrowserWindow } from 'electron';
-import { app, session, shell } from 'electron';
+import { app, session } from 'electron';
 import { ipcBridge } from '@/common';
 import { BROWSER_SESSION_PARTITION } from '@/common/config/constants';
 import { ProcessConfig } from '@process/utils/initStorage';
@@ -15,11 +15,7 @@ import { getCdpBridgeHandle } from '@process/utils/cdpBridgeRegistry';
 import { getGpuStatus, setGpuUserOverride } from '@process/utils/gpuRecovery';
 import { initApplicationBridgeCore } from './applicationBridgeCore';
 import type { IStartOnBootStatus } from '@/common/adapter/ipcBridge';
-import { LarkCliManager } from '@/process/services/skills';
 import { restartApplication } from './restartApplication';
-import { getCrashRecoveryService } from '@process/services/CrashRecoveryService';
-import { SAFE_MODE_SWITCH } from '@process/startup/mainProcessDiagnostics';
-import { getWindowsStartOnBootEnabled, setWindowsStartOnBootEnabled } from '@process/services/StartOnBootService';
 
 let mainWindowRef: BrowserWindow | null = null;
 
@@ -32,13 +28,19 @@ const isStartOnBootSupported = (): boolean => {
 
 const getStartOnBootWindowsArgs = (): string[] => [START_ON_BOOT_WINDOWS_ARG];
 
+const getLoginItemSettings = () => {
+  return process.platform === 'win32'
+    ? app.getLoginItemSettings({ args: getStartOnBootWindowsArgs() })
+    : app.getLoginItemSettings();
+};
+
 export function wasLaunchedAtLogin(): boolean {
   if (!app.isPackaged) {
     return false;
   }
 
   if (process.platform === 'darwin') {
-    return Boolean(app.getLoginItemSettings().wasOpenedAtLogin);
+    return Boolean(getLoginItemSettings().wasOpenedAtLogin);
   }
 
   if (process.platform === 'win32') {
@@ -48,7 +50,7 @@ export function wasLaunchedAtLogin(): boolean {
   return false;
 }
 
-export async function getStartOnBootStatus(): Promise<IStartOnBootStatus> {
+export function getStartOnBootStatus(): IStartOnBootStatus {
   if (!isStartOnBootSupported()) {
     return {
       supported: false,
@@ -58,10 +60,11 @@ export async function getStartOnBootStatus(): Promise<IStartOnBootStatus> {
     };
   }
 
+  const settings = getLoginItemSettings();
   const enabled =
     process.platform === 'win32'
-      ? await getWindowsStartOnBootEnabled(process.execPath)
-      : Boolean(app.getLoginItemSettings().openAtLogin);
+      ? Boolean(settings.openAtLogin || settings.executableWillLaunchAtLogin)
+      : Boolean(settings.openAtLogin);
 
   return {
     supported: true,
@@ -71,19 +74,23 @@ export async function getStartOnBootStatus(): Promise<IStartOnBootStatus> {
   };
 }
 
-export async function setStartOnBootEnabled(enabled: boolean): Promise<IStartOnBootStatus> {
-  const currentStatus = await getStartOnBootStatus();
+export function setStartOnBootEnabled(enabled: boolean): IStartOnBootStatus {
+  const currentStatus = getStartOnBootStatus();
   if (!currentStatus.supported) {
     return currentStatus;
   }
 
-  if (process.platform === 'win32') {
-    await setWindowsStartOnBootEnabled(enabled, process.execPath, getStartOnBootWindowsArgs());
-  } else {
-    app.setLoginItemSettings({ openAtLogin: enabled });
-  }
+  app.setLoginItemSettings({
+    openAtLogin: enabled,
+    ...(process.platform === 'win32'
+      ? {
+          args: getStartOnBootWindowsArgs(),
+          enabled: true,
+        }
+      : {}),
+  });
 
-  return await getStartOnBootStatus();
+  return getStartOnBootStatus();
 }
 
 export function setApplicationMainWindow(win: BrowserWindow): void {
@@ -94,72 +101,11 @@ export function initApplicationBridge(): void {
   // Platform-agnostic handlers: systemInfo, updateSystemInfo, getPath
   initApplicationBridgeCore();
 
-  const larkCliManager = new LarkCliManager({
-    userDataPath: app.getPath('userData'),
-    resourcesPath: process.resourcesPath,
-    cwd: process.cwd(),
-    isPackaged: app.isPackaged,
-    platform: process.platform,
-    arch: process.arch,
-    env: process.env,
-  });
-
-  ipcBridge.larkCli.status.provider(async () => {
-    try {
-      return { success: true, data: await larkCliManager.getStatus() };
-    } catch (error) {
-      return { success: false, msg: error instanceof Error ? error.message : String(error) };
-    }
-  });
-
-  ipcBridge.larkCli.check.provider(async () => {
-    try {
-      return { success: true, data: await larkCliManager.checkForUpdates() };
-    } catch (error) {
-      return { success: false, msg: error instanceof Error ? error.message : String(error) };
-    }
-  });
-
-  ipcBridge.larkCli.install.provider(async ({ version }) => {
-    try {
-      return { success: true, data: await larkCliManager.install(version) };
-    } catch (error) {
-      return { success: false, msg: error instanceof Error ? error.message : String(error) };
-    }
-  });
-
-  ipcBridge.larkCli.restoreBundled.provider(async () => {
-    try {
-      return { success: true, data: await larkCliManager.restoreBundled() };
-    } catch (error) {
-      return { success: false, msg: error instanceof Error ? error.message : String(error) };
-    }
-  });
-
   ipcBridge.application.restart.provider(async () => {
     // Backend subprocess shutdown is handled by backendManager.stop() in the
     // main window's before-quit hook; agent children are killed transitively
     // when backend exits.
     return restartApplication(app);
-  });
-
-  ipcBridge.application.getCrashRecoveryState.provider(async () => {
-    return getCrashRecoveryService()?.getRecoveryState() ?? { detected: false, safeMode: false };
-  });
-
-  ipcBridge.application.dismissCrashRecovery.provider(async ({ reportId }) => {
-    getCrashRecoveryService()?.dismiss(reportId);
-  });
-
-  ipcBridge.application.openCrashReports.provider(async () => {
-    const error = await shell.openPath(app.getPath('crashDumps'));
-    if (error) throw new Error(error);
-  });
-
-  ipcBridge.application.restartInSafeMode.provider(async () => {
-    const args = process.argv.slice(1).filter((argument) => argument !== SAFE_MODE_SWITCH);
-    args.push(SAFE_MODE_SWITCH);
-    return restartApplication(app, args);
   });
 
   ipcBridge.application.isDevToolsOpened.provider(() => {
@@ -303,7 +249,7 @@ export function initApplicationBridge(): void {
 
   ipcBridge.application.getStartOnBootStatus.provider(async () => {
     try {
-      return { success: true, data: await getStartOnBootStatus() };
+      return { success: true, data: getStartOnBootStatus() };
     } catch (e) {
       return { success: false, msg: e.message || e.toString() };
     }
@@ -311,7 +257,7 @@ export function initApplicationBridge(): void {
 
   ipcBridge.application.setStartOnBoot.provider(async ({ enabled }) => {
     try {
-      const status = await setStartOnBootEnabled(enabled);
+      const status = setStartOnBootEnabled(enabled);
       if (!status.supported) {
         return { success: false, msg: START_ON_BOOT_UNSUPPORTED_MESSAGE, data: status };
       }

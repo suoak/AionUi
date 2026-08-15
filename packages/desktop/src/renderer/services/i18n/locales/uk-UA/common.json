@@ -24,6 +24,8 @@
   "loading": "Будь ласка, зачекайте...",
   "copy": "Копіювати",
   "reply": "Відповісти",
+  "openInBuiltinBrowser": "Відкрити у вбудованому браузері",
+  "openInSystemBrowser": "Відкрити в системному браузері",
   "copySuccess": "Скопійовано",
   "copyFailed": "Не вдалося скопіювати",
   "download": "Завантажити",
@@ -100,6 +102,11 @@
       "diagnosticsReportSuccess": "Diagnostics report sent",
       "diagnosticsReportFailed": "Failed to send diagnostics report"
     },
+    "databaseNewerThanApp": {
+      "title": "Потрібна новіша версія CSBU WorkMate",
+      "description": "Ваші локальні дані створено новішою версією CSBU WorkMate, і ця версія не може їх відкрити. Оновіть CSBU WorkMate до останньої версії, щоб продовжити — дані цілі, перевстановлення чи скидання не потрібні.",
+      "descriptionWithVersion": "Ваші локальні дані створено версією CSBU WorkMate, новішою за встановлену зараз (v{{currentVersion}}), тому ця версія не може їх відкрити. Оновіть CSBU WorkMate до останньої версії, щоб продовжити — дані цілі, перевстановлення чи скидання не потрібні."
+    },
     "localDataRepair": {
       "title": "Local data repair failed",
       "description": "CSBU WorkMate відкрився, але CSBU WorkMate backend зупинився під час підготовки локальних даних запуску, як-от записи assistants або агентів. Повторне встановлення CSBU WorkMate може не вирішити проблему. Надішліть діагностичний звіт або зверніться до підтримки, щоб можна було перевірити локальну базу даних.",
@@ -165,6 +172,22 @@
     "startupFailed": {
       "title": "Не вдалося запустити",
       "description": "CSBU WorkMate ??Core не вдалося запустити. Перезапустіть застосунок; якщо це повторюється, надішліть діагностику.",
+      "sendDiagnostics": "Надіслати діагностику",
+      "diagnosticsSent": "Діагностику надіслано",
+      "diagnosticsReportSuccess": "Діагностику надіслано",
+      "diagnosticsReportFailed": "Не вдалося надіслати діагностику, повторіть спробу пізніше"
+    },
+    "portReportTimeout": {
+      "title": "Час запуску вичерпано",
+      "description": "CSBU WorkMate backend не завершив запуск за очікуваний час. Перезапустіть застосунок; якщо це повторюється, надішліть діагностику.",
+      "sendDiagnostics": "Надіслати діагностику",
+      "diagnosticsSent": "Діагностику надіслано",
+      "diagnosticsReportSuccess": "Діагностику надіслано",
+      "diagnosticsReportFailed": "Не вдалося надіслати діагностику, повторіть спробу пізніше"
+    },
+    "startupFailed": {
+      "title": "Не вдалося запустити",
+      "description": "CSBU WorkMate backend не вдалося запустити. Перезапустіть застосунок; якщо це повторюється, надішліть діагностику.",
       "sendDiagnostics": "Надіслати діагностику",
       "diagnosticsSent": "Діагностику надіслано",
       "diagnosticsReportSuccess": "Діагностику надіслано",

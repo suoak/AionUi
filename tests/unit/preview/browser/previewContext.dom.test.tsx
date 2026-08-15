@@ -38,7 +38,6 @@ import {
   type PreviewContextValue,
 } from '@/renderer/pages/conversation/Preview/context/PreviewContext';
 import { MAX_BROWSER_TABS } from '@/renderer/pages/conversation/Preview/browser/constants';
-import { previewScopeStorageKey } from '@/renderer/pages/conversation/Preview/context/previewScope';
 
 let ctx: PreviewContextValue;
 
@@ -137,7 +136,7 @@ describe('PreviewContext browser tabs', () => {
 });
 
 describe('PreviewContext browser tab persistence', () => {
-  const readScope = (scope: string) => JSON.parse(localStorage.getItem(previewScopeStorageKey(scope)) ?? '{}');
+  const readScope = (scope: string) => JSON.parse(localStorage.getItem(`preview-ui:${scope}`) ?? '{}');
 
   it('persists browser tabs per project so switching projects restores the right pages', async () => {
     renderProvider();

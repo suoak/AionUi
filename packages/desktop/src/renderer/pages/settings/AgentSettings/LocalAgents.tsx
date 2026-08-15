@@ -11,13 +11,14 @@ import {
   managedAgentSearchText,
   type ManagedAgent,
 } from '@/renderer/utils/model/agentTypes';
-import WorkMateModal from '@/renderer/components/base/WorkMateModal';
-import { WorkMateSearchInput } from '@/renderer/components/base';
+import AionModal from '@/renderer/components/base/AionModal';
+import { AionSearchInput } from '@/renderer/components/base';
 import { useLayoutContext } from '@/renderer/hooks/context/LayoutContext';
 import { useManagedAgents } from '@/renderer/hooks/agent/useManagedAgents';
-import { Message, Typography } from '@arco-design/web-react';
+import { openExternalUrl } from '@/renderer/utils/platform';
+import { Button, Message, Typography } from '@arco-design/web-react';
 import TalkToButlerButton from '@/renderer/components/base/TalkToButlerButton';
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import AgentCard from './AgentCard';
 import { isDeprecatedRuntimeAgentType } from '@/renderer/utils/model/agentTypeSupportPolicy';
@@ -31,10 +32,7 @@ import {
   type AgentAvailabilityFilter,
 } from './agentFilters';
 
-const getConnectionDisplayName = (agent: ManagedAgent, internalCliName: string): string =>
-  agent.agent_source === 'internal' && (agent.agent_type === 'aionrs' || agent.backend === 'aionrs')
-    ? internalCliName
-    : agent.name;
+const LOCAL_AGENT_SETUP_GUIDE_URL = 'https://github.com/iOfficeAI/AionUi/wiki/ACP-Setup';
 
 const LocalAgents: React.FC = () => {
   const { t, i18n } = useTranslation();
@@ -44,15 +42,7 @@ const LocalAgents: React.FC = () => {
   const [testingAgentId, setTestingAgentId] = useState<string | null>(null);
   const [agentFilter, setAgentFilter] = useState<AgentAvailabilityFilter>('all');
   const [searchQuery, setSearchQuery] = useState('');
-  const mountedRef = useRef(true);
   const { assistants } = useAssistantsForAgents();
-
-  useEffect(() => {
-    mountedRef.current = true;
-    return () => {
-      mountedRef.current = false;
-    };
-  }, []);
 
   // Management view: includes user-disabled custom agents so they stay
   // listed (greyed) with a working re-enable toggle. `refreshCatalog`
@@ -180,13 +170,12 @@ const LocalAgents: React.FC = () => {
         setTestingAgentId(agentId);
         const result = await ipcBridge.acpConversation.checkManagedAgentHealthById.invoke({ id: agentId });
         await refreshCatalog();
-        const connectionDisplayName = getConnectionDisplayName(result, t('settings.agentManagement.internalCliName'));
         switch (result.status) {
           case 'online':
-            Message.success(t('settings.agentManagement.testConnectionOnline', { name: connectionDisplayName }));
+            Message.success(t('settings.agentManagement.testConnectionOnline', { name: result.name }));
             break;
           case 'missing':
-            Message.warning(t('settings.agentManagement.testConnectionMissing', { name: connectionDisplayName }));
+            Message.warning(t('settings.agentManagement.testConnectionMissing', { name: result.name }));
             break;
           case 'offline':
             // auth_required is offline-with-a-reason: surface the diagnostic
@@ -194,8 +183,8 @@ const LocalAgents: React.FC = () => {
             Message.warning(
               formatManagedAgentDiagnosticMessage(t, result) ||
                 (result.last_check_error_code === 'auth_required'
-                  ? t('settings.agentManagement.testConnectionAuth', { name: connectionDisplayName })
-                  : t('settings.agentManagement.testConnectionOffline', { name: connectionDisplayName }))
+                  ? t('settings.agentManagement.testConnectionAuth', { name: result.name })
+                  : t('settings.agentManagement.testConnectionOffline', { name: result.name }))
             );
             break;
           default:
@@ -211,47 +200,30 @@ const LocalAgents: React.FC = () => {
     [refreshCatalog, t]
   );
 
-  const handlePrepareRuntime = useCallback(
-    async (agentId: string) => {
-      try {
-        setTestingAgentId(agentId);
-        await ipcBridge.acpConversation.prepareManagedAgentRuntime.invoke({ id: agentId });
-        const waitForRuntime = async (): Promise<void> => {
-          await new Promise((resolve) => setTimeout(resolve, 1000));
-          if (!mountedRef.current) return;
-          const agents = await refreshCatalog();
-          const runtimeAgent = agents?.find((item) => item.id === agentId);
-          if (runtimeAgent?.runtime?.state === 'failed') {
-            Message.error(runtimeAgent.runtime.error_message || t('settings.agentManagement.runtimeInstallFailed'));
-            return;
-          }
-          if (runtimeAgent?.runtime?.state === 'ready') {
-            await handleTestConnection(agentId);
-            return;
-          }
-          await waitForRuntime();
-        };
-        await waitForRuntime();
-      } catch (error) {
-        console.error('prepare managed agent runtime failed:', error);
-        Message.error(t('settings.agentManagement.runtimeInstallFailed'));
-      } finally {
-        if (mountedRef.current) setTestingAgentId(null);
-      }
-    },
-    [handleTestConnection, refreshCatalog, t]
-  );
-
   return (
     <div data-testid='agent-management-page' className='flex flex-col gap-16px'>
       <SettingsPageHeader
         data-testid='agent-management-header'
         title={t('settings.agents', { defaultValue: 'Agents' })}
-        description={t('settings.agentManagement.localAgentsDescription')}
+        description={
+          <>
+            <span>{t('settings.agentManagement.localAgentsDescription')} </span>
+            <Button
+              type='text'
+              size='mini'
+              className='!h-auto !p-0 !align-baseline !text-13px !font-normal !text-primary-6 hover:!text-primary-7 hover:!underline underline-offset-2'
+              onClick={() => {
+                void openExternalUrl(LOCAL_AGENT_SETUP_GUIDE_URL).catch(console.error);
+              }}
+            >
+              {t('settings.agentManagement.localAgentsSetupLink')}
+            </Button>
+          </>
+        }
         actions={
           <>
             {!isMobile && (
-              <WorkMateSearchInput
+              <AionSearchInput
                 className='shrink-0 w-[200px] hidden md:flex'
                 data-testid='input-search-agents'
                 placeholder={t('settings.agentManagement.searchPlaceholder', { defaultValue: 'Search agents...' })}
@@ -308,7 +280,6 @@ const LocalAgents: React.FC = () => {
               onTestConnection={() => void handleTestConnection(agent.id)}
               onConfigure={() => openAgentConfig(agent.id)}
               isTesting={testingAgentId === agent.id}
-              onPrepareRuntime={() => void handlePrepareRuntime(agent.id)}
             />
           ))}
           {visibleOfficialAgents.length === 0 && (
@@ -331,7 +302,7 @@ const LocalAgents: React.FC = () => {
         </Typography.Text>
       </div>
 
-      <WorkMateModal
+      <AionModal
         visible={editorVisible}
         onCancel={() => {
           setEditorVisible(false);
@@ -368,7 +339,7 @@ const LocalAgents: React.FC = () => {
             }}
           />
         )}
-      </WorkMateModal>
+      </AionModal>
 
       <div data-testid='agent-management-custom-section'>
         <div className='flex flex-col gap-8px rounded-12px border border-border-2 bg-2 p-8px md:rounded-16px md:p-10px'>

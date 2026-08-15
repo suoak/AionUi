@@ -7,8 +7,7 @@
 import { ipcBridge } from '@/common';
 import type { IGpuStatus, IStartOnBootStatus } from '@/common/adapter/ipcBridge';
 import { configService } from '@/common/config/configService';
-import { CLOSE_TO_TRAY_DEFAULT_ENABLED } from '@/common/config/constants';
-import WorkMateScrollArea from '@/renderer/components/base/WorkMateScrollArea';
+import AionScrollArea from '@/renderer/components/base/AionScrollArea';
 import FeedbackButton from '@/renderer/components/base/FeedbackButton';
 import LanguageSwitcher from '@/renderer/components/settings/LanguageSwitcher';
 import { getClientBusinessSetting, setClientBusinessSetting } from '@/renderer/services/clientBusinessSettings';
@@ -32,10 +31,6 @@ import DirInputItem from './DirInputItem';
 import PreferenceRow from './PreferenceRow';
 import VoiceInputSection from './VoiceInputSection';
 
-const writeSystemSettingsLog = (level: 'info' | 'warn', message: string, data?: unknown): void => {
-  void ipcBridge.application.writeRendererLog.invoke({ level, tag: 'system-settings', message, data }).catch(() => {});
-};
-
 /**
  * System settings content component
  *
@@ -47,7 +42,7 @@ const SystemModalContent: React.FC = () => {
   const isDesktop = isElectronDesktop();
   const [form] = Form.useForm();
   const [modal, modalContextHolder] = Modal.useModal();
-  const [directoryUpdateError, setDirectoryUpdateError] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
   const viewMode = useSettingsViewMode();
   const isPageMode = viewMode === 'page';
   const initializingRef = useRef(true);
@@ -58,7 +53,7 @@ const SystemModalContent: React.FC = () => {
     isPackaged: false,
     platform: 'web',
   });
-  const [closeToTray, setCloseToTray] = useState(CLOSE_TO_TRAY_DEFAULT_ENABLED);
+  const [closeToTray, setCloseToTray] = useState(false);
   const [gpuStatus, setGpuStatus] = useState<IGpuStatus | null>(null);
   const [notificationEnabled, setNotificationEnabled] = useState(true);
   const [cronNotificationEnabled, setCronNotificationEnabled] = useState(false);
@@ -81,11 +76,6 @@ const SystemModalContent: React.FC = () => {
   const [saveUploadToWorkspace, setSaveUploadToWorkspace] = useState(false);
 
   useEffect(() => {
-    writeSystemSettingsLog('info', 'mounted', { isDesktop, isDev: process.env.NODE_ENV !== 'production' });
-    return () => writeSystemSettingsLog('info', 'unmounted');
-  }, [isDesktop]);
-
-  useEffect(() => {
     if (!isDesktop) {
       return;
     }
@@ -96,9 +86,8 @@ const SystemModalContent: React.FC = () => {
         if (result.success && result.data) {
           setStartOnBoot(result.data);
         }
-        writeSystemSettingsLog('info', 'start-on-boot status loaded', { success: result.success });
       })
-      .catch((error: unknown) => writeSystemSettingsLog('warn', 'start-on-boot status failed', String(error)));
+      .catch(() => {});
 
     ipcBridge.application.getGpuStatus
       .invoke()
@@ -106,22 +95,20 @@ const SystemModalContent: React.FC = () => {
         if (result.success && result.data) {
           setGpuStatus(result.data);
         }
-        writeSystemSettingsLog('info', 'gpu status loaded', { success: result.success });
       })
-      .catch((error: unknown) => writeSystemSettingsLog('warn', 'gpu status failed', String(error)));
+      .catch(() => {});
   }, [isDesktop]);
 
   useEffect(() => {
-    setCloseToTray(configService.get('system.closeToTray') ?? CLOSE_TO_TRAY_DEFAULT_ENABLED);
+    setCloseToTray(configService.get('system.closeToTray') ?? false);
     if (isDesktop) {
       ipcBridge.systemSettings.getCloseToTray
         .invoke()
         .then((enabled) => {
           setCloseToTray(enabled);
           configService.setLocal('system.closeToTray', enabled);
-          writeSystemSettingsLog('info', 'close-to-tray status loaded');
         })
-        .catch((error: unknown) => writeSystemSettingsLog('warn', 'close-to-tray status failed', String(error)));
+        .catch(() => {});
     }
     setNotificationEnabled(configService.get('system.notificationEnabled') ?? true);
     setCronNotificationEnabled(configService.get('system.cronNotificationEnabled') ?? false);
@@ -156,10 +143,8 @@ const SystemModalContent: React.FC = () => {
           setPreviewLimitMb(stored);
           previewLimitDraftRef.current = String(stored);
         }
-        writeSystemSettingsLog('info', 'ACP timeout settings loaded');
-      } catch (error: unknown) {
+      } catch {
         // Keep the in-memory defaults when backend settings are unavailable.
-        writeSystemSettingsLog('warn', 'ACP timeout settings failed', String(error));
       }
     };
 
@@ -339,20 +324,7 @@ const SystemModalContent: React.FC = () => {
   }, []);
 
   // Get system directory info
-  const { data: systemInfo } = useSWR('system.dir.info', async () => {
-    writeSystemSettingsLog('info', 'system info request started');
-    try {
-      const info = await ipcBridge.application.systemInfo.invoke();
-      writeSystemSettingsLog('info', 'system info request completed', {
-        platform: info.platform,
-        arch: info.arch,
-      });
-      return info;
-    } catch (error: unknown) {
-      writeSystemSettingsLog('warn', 'system info request failed', String(error));
-      throw error;
-    }
-  });
+  const { data: systemInfo } = useSWR('system.dir.info', () => ipcBridge.application.systemInfo.invoke());
 
   // Initialize form data
   useEffect(() => {
@@ -361,7 +333,6 @@ const SystemModalContent: React.FC = () => {
       form.setFieldsValue({ workDir: systemInfo.workDir, logDir: systemInfo.logDir });
       requestAnimationFrame(() => {
         initializingRef.current = false;
-        writeSystemSettingsLog('info', 'directory form initialized');
       });
     }
   }, [systemInfo, form]);
@@ -475,7 +446,7 @@ const SystemModalContent: React.FC = () => {
       if (!needsRestart) return;
 
       savingRef.current = true;
-      setDirectoryUpdateError(null);
+      setError(null);
       try {
         await saveDirConfigValidate({ workDir, logDir });
         // Pass systemInfo.cacheDir as-is: cacheDir is no longer user-editable
@@ -487,7 +458,7 @@ const SystemModalContent: React.FC = () => {
       } catch (caughtError: unknown) {
         form.setFieldsValue({ workDir: systemInfo.workDir, logDir: systemInfo.logDir });
         if (caughtError) {
-          setDirectoryUpdateError(caughtError instanceof Error ? caughtError.message : String(caughtError));
+          setError(caughtError instanceof Error ? caughtError.message : String(caughtError));
         }
       } finally {
         savingRef.current = false;
@@ -500,7 +471,7 @@ const SystemModalContent: React.FC = () => {
     <div className='flex flex-col h-full w-full'>
       {modalContextHolder}
 
-      <WorkMateScrollArea className='flex-1 min-h-0 pb-16px' disableOverflow={isPageMode}>
+      <AionScrollArea className='flex-1 min-h-0 pb-16px' disableOverflow={isPageMode}>
         <div className='space-y-16px'>
           <div className='px-[12px] md:px-[32px] py-16px bg-2 rd-16px space-y-12px'>
             <div className='w-full flex flex-col divide-y divide-border-2'>
@@ -556,13 +527,13 @@ const SystemModalContent: React.FC = () => {
             <Form form={form} layout='vertical' className='!mt-32px space-y-16px' onValuesChange={handleValuesChange}>
               <DirInputItem label={t('settings.workDir')} field='workDir' />
               <DirInputItem label={t('settings.logDir')} field='logDir' />
-              {directoryUpdateError && (
+              {error && (
                 <Alert
                   className='mt-16px'
                   type='error'
                   content={
                     <span>
-                      {directoryUpdateError}
+                      {typeof error === 'string' ? error : JSON.stringify(error)}
                       <FeedbackButton module='system-settings' className='ml-6px' />
                     </span>
                   }
@@ -577,10 +548,10 @@ const SystemModalContent: React.FC = () => {
           {/* In-app browser: sign-in state and cache */}
           <BrowserDataSection />
 
-          {/* Developer settings must not mount in packaged builds. Its status probe is main-process-only. */}
-          {process.env.NODE_ENV !== 'production' && <DevSettings />}
+          {/* Developer settings: DevTools + CDP (only visible in dev mode) */}
+          <DevSettings />
         </div>
-      </WorkMateScrollArea>
+      </AionScrollArea>
     </div>
   );
 };

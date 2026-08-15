@@ -11,7 +11,6 @@ import * as path from 'path';
 import os from 'os';
 import { getDevAppName } from '@/common/platform';
 import { applyGpuRecoveryFlags } from './gpuRecovery';
-import { isSafeModeLaunch } from '../startup/mainProcessDiagnostics';
 
 // ============ E2E test isolation ============
 // When running under E2E with an explicit sandbox dir, redirect userData there
@@ -25,7 +24,6 @@ const e2eUserDataDir =
 if (e2eUserDataDir && e2eUserDataDir.trim() !== '') {
   fs.mkdirSync(e2eUserDataDir, { recursive: true });
   app.setPath('userData', e2eUserDataDir);
-  app.setPath('crashDumps', path.join(e2eUserDataDir, 'Crashpad'));
 }
 
 // ============ Environment Separation ============
@@ -44,7 +42,7 @@ if (!app.isPackaged && !e2eUserDataDir) {
 }
 
 // app.disableHardwareAcceleration() must run before app is ready.
-applyGpuRecoveryFlags(isSafeModeLaunch());
+applyGpuRecoveryFlags();
 
 // Configure Chromium command-line flags for WebUI and CLI modes
 // 为 WebUI 和 CLI 模式配置 Chromium 命令行参数
@@ -97,7 +95,7 @@ if (isWebUI || isResetPassword) {
 // - enabled: boolean - whether agent browser control is enabled (default: on)
 // - port: number - legacy preferred-port field, retained for config compatibility
 //
-// Override via CSBU_WORKMATE_CDP_PORT. Set to "0" or "false" to disable.
+// Override via CSBU_WORKMATE_CDP_PORT env variable. Set to "0" or "false" to disable.
 // ---------------------------------------------------------------------------
 
 const CDP_CONFIG_FILE = 'cdp.config.json';
@@ -146,12 +144,9 @@ export interface CdpStatus {
  */
 function removeLegacyCdpRegistryFile(): void {
   try {
-    const legacyRegistries = ['.aionui-cdp-registry.json', '.csbu-workmate-cdp-registry.json'];
-    for (const registryName of legacyRegistries) {
-      const legacyRegistry = path.join(os.homedir(), registryName);
-      if (fs.existsSync(legacyRegistry)) {
-        fs.unlinkSync(legacyRegistry);
-      }
+    const legacyRegistry = path.join(os.homedir(), '.aionui-cdp-registry.json');
+    if (fs.existsSync(legacyRegistry)) {
+      fs.unlinkSync(legacyRegistry);
     }
   } catch {
     // Nothing depends on this succeeding.

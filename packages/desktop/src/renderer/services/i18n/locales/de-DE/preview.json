@@ -1,161 +1,165 @@
 {
-  "loading": "Wird geladen...",
-  "downloadFile": "Datei herunterladen",
-  "closePreview": "Vorschau schließen",
-  "collapsePanel": "Panel einklappen",
-  "source": "Quelle",
-  "code": "Code",
-  "preview": "Vorschau",
-  "editor": "Editor",
-  "previewEffect": "Vorschau",
-  "downloadMarkdown": "Markdown-Datei herunterladen",
-  "downloadCode": "{{language}}-Datei herunterladen",
-  "downloadDiff": "Diff-Datei herunterladen",
-  "addToChat": "Zum Chat hinzufügen",
-  "openSplitScreen": "Geteilte Ansicht öffnen",
-  "closeSplitScreen": "Geteilte Ansicht schließen",
-  "edit": "Bearbeiten",
-  "exitEdit": "Bearbeitung beenden",
-  "unsavedChangesTitle": "Ungespeicherte Änderungen",
-  "unsavedChangesMessage": "Es gibt ungespeicherte Änderungen. Bearbeitung wirklich beenden?",
-  "confirmExit": "Beenden bestätigen",
-  "continueEdit": "Weiter bearbeiten",
-  "closeTabTitle": "Tab schließen",
-  "closeTabMessage": "Der aktuelle Inhalt wurde nicht gespeichert. Vor dem Schließen speichern?",
-  "saveAndClose": "Speichern und schließen",
-  "closeWithoutSave": "Nicht speichern",
-  "pptTitle": "PowerPoint-Präsentation",
-  "pptOpenHint": "Klicke auf die Schaltfläche unten, um es in der Systemanwendung zu öffnen und den vollständigen Inhalt anzuzeigen",
-  "pptOpenFile": "Datei öffnen",
-  "pptShowLocation": "Speicherort anzeigen",
-  "pptSystemAppHint": "Wird mit der Standard-Systemanwendung geöffnet (PowerPoint, Keynote oder WPS)",
-  "openWithApp": "In {{app}} öffnen",
-  "openInSystemApp": "In Systemanwendung öffnen",
-  "openInSystemSuccess": "In Standard-Systemanwendung geöffnet",
-  "openInSystemFailed": "Öffnen mit Systemanwendung fehlgeschlagen",
-  "closeLeft": "Links schließen",
-  "closeRight": "Rechts schließen",
-  "closeOthers": "Andere schließen",
-  "closeAll": "Alle schließen",
-  "readOnlyLabel": "Schreibgeschützte Vorschau",
-  "pathLabel": "Pfad",
-  "missingFile": {
-    "title": "Datei nicht gefunden",
-    "openInNewTab": "In neuem Tab öffnen versuchen"
-  },
   "noTabs": "Keine Tabs geöffnet",
-  "openInPanelTooltip": "Im Vorschau-Panel anzeigen",
-  "mermaidTitle": "Mermaid-Diagramm",
-  "aiWriting": "KI schreibt…",
-  "errors": {
-    "missingFilePath": "Dateipfad fehlt",
-    "openWithoutPath": "Öffnen nicht möglich: Dateipfad ist nicht angegeben",
-    "conversionFailed": "Konvertierung fehlgeschlagen"
+  "ppt": {
+    "startFailed": "PPT-Vorschau konnte nicht gestartet werden",
+    "installing": "Vorschau-Komponente wird installiert...",
+    "installHint": "Installiere OfficeCLI über die suoak/OfficeCLI-Releases-Seite",
+    "loading": "PPT-Vorschau wird gestartet..."
   },
+  "pathLabel": "Pfad",
+  "pptTitle": "PowerPoint-Präsentation",
+  "closeOthers": "Andere schließen",
   "office": {
+    "serverInstall": {
+      "icuNote": "Falls es immer noch nicht startet, installiere die ICU-Bibliothek auf dem Server (Debian/Ubuntu: apt-get install -y libicu-dev).",
+      "hint": "CSBU WorkMate läuft auf einem Server. Installiere die Vorschau-Komponente auf diesem Server und versuche es erneut:"
+    },
     "installLinkText": "officecli-Installationsanleitung öffnen",
     "errors": {
-      "officecliNotFound": "officecli ist nicht installiert.",
-      "installFailed": "Automatische Installation von officecli fehlgeschlagen. Überprüfe Backend-Logs und versuche es erneut.",
-      "portTimeout": "Vorschau-Dienst gestartet, wurde aber nicht rechtzeitig bereit. Versuche es erneut.",
       "startFailed": "Office-Vorschau-Dienst konnte nicht gestartet werden.",
-      "outsideSandbox": "Diese Datei befindet sich außerhalb der aktuellen Projekt-Sandbox."
-    },
-    "serverInstall": {
-      "hint": "CSBU WorkMate läuft auf einem Server. Installiere die Vorschau-Komponente auf diesem Server und versuche es erneut:",
-      "icuNote": "Falls es immer noch nicht startet, installiere die ICU-Bibliothek auf dem Server (Debian/Ubuntu: apt-get install -y libicu-dev)."
+      "installFailed": "Automatische Installation von officecli fehlgeschlagen. Überprüfe Backend-Logs und versuche es erneut.",
+      "officecliNotFound": "officecli ist nicht installiert.",
+      "outsideSandbox": "Diese Datei befindet sich außerhalb der aktuellen Projekt-Sandbox.",
+      "portTimeout": "Vorschau-Dienst gestartet, wurde aber nicht rechtzeitig bereit. Versuche es erneut."
     }
   },
-  "word": {
-    "title": "Word-Dokument",
-    "loading": "Word-Dokument wird geladen...",
-    "invalid": "Bitte bestätige, dass die Datei ein gültiges Word-Dokument ist",
-    "loadFailed": "Word-Dokument konnte nicht geladen werden",
-    "watch": {
-      "loading": "Word-Dokument wird geladen...",
-      "installing": "officecli wird installiert...",
-      "startFailed": "Word-Vorschau konnte nicht gestartet werden",
-      "installHint": "Erfordert officecli. Wird automatisch installiert."
-    }
+  "browser": {
+    "addressPlaceholder": "URL eingeben oder suchen",
+    "agentFirstUseTitle": "Der Agent nutzt den integrierten Browser",
+    "tabLimitReached": "Tab-Limit erreicht ({{count}}). Der älteste Tab wurde wiederverwendet.",
+    "agentFirstUseContent": "Er kann in diesem Bereich Seiten öffnen, klicken und Inhalte lesen. Deine Anmeldung bleibt erhalten.",
+    "newTab": "Neuer Tab",
+    "agentFirstUseAction": "Einstellungen öffnen",
+    "agentActiveTooltip": "Der Agent bedient diesen Tab"
   },
-  "excel": {
-    "title": "Excel-Tabelle",
-    "loading": "Excel-Arbeitsmappe wird geladen...",
-    "invalid": "Bitte bestätige, dass die Datei ein gültiges Excel-Dokument ist",
-    "noSheets": "Keine Arbeitsblätter in dieser Excel-Datei gefunden",
-    "sheetCount": "{{count}} Arbeitsblatt/Arbeitsblätter",
-    "convertFailed": "Excel-Konvertierung fehlgeschlagen",
-    "loadFailed": "Excel-Arbeitsmappe konnte nicht geladen werden",
-    "emptySheet": "Dieses Arbeitsblatt enthält keine Daten",
-    "emptySheetHint": "Prüfe ob das Blatt Daten oder Bilder enthält",
-    "watch": {
-      "loading": "Excel-Datei wird geladen...",
-      "installing": "officecli wird installiert...",
-      "startFailed": "Excel-Vorschau konnte nicht gestartet werden",
-      "installHint": "Erfordert officecli. Wird automatisch installiert."
-    }
+  "closeTabsTitle": "Tabs schließen",
+  "pptOpenFile": "Datei öffnen",
+  "oversized": {
+    "title": "Datei zu groß für die Vorschau",
+    "downloadUnavailable": "Diese Datei ist zu groß für den Download hier. Verwenden Sie stattdessen „Im System öffnen“.",
+    "detail": "Die Dateigröße {{size}} überschreitet das Limit von {{threshold}}. Bitte in einem Systemeditor öffnen."
   },
   "pdf": {
     "title": "PDF-Dokument",
-    "pathMissing": "PDF-Dateipfad fehlt",
     "loadFailed": "PDF-Dokument konnte nicht geladen werden",
-    "unableDisplay": "PDF-Datei kann nicht angezeigt werden"
+    "unableDisplay": "PDF-Datei kann nicht angezeigt werden",
+    "pathMissing": "PDF-Dateipfad fehlt"
   },
-  "html": {
-    "elementSelected": "Ausgewähltes Element: {{path}}",
-    "copySuccess": "HTML-Snippet kopiert",
-    "inspectorEnabled": "Element-Inspektor aktiviert. Klicke auf Elemente in der Vorschau, um sie hervorzuheben.",
-    "inspectorButton": "Element-Inspektor",
-    "inspecting": "Wird inspiziert...",
-    "selectedLabel": "Ausgewählt:",
-    "inspectorTooltip": "Klicke auf Vorschau-Elemente, um deren HTML zu inspizieren",
-    "downloadHtml": "HTML-Datei herunterladen",
-    "copyElementHtml": "Element-HTML kopieren",
-    "viewElementInfo": "Element-Info anzeigen",
-    "printedToConsole": "Element-Info in der Konsole ausgegeben",
-    "inspectElement": "Element inspizieren",
-    "inspectElementEnable": "Element-Inspektor aktivieren",
-    "inspectElementDisable": "Element-Inspektor deaktivieren"
-  },
-  "ppt": {
-    "loading": "PPT-Vorschau wird gestartet...",
-    "installing": "Vorschau-Komponente wird installiert...",
-    "startFailed": "PPT-Vorschau konnte nicht gestartet werden",
-    "installHint": "Installiere OfficeCLI über die suoak/OfficeCLI-Releases-Seite"
-  },
-  "closeTabsTitle": "Tabs schließen",
-  "closeTabsMessage": "{{count}} Tabs haben ungespeicherte Änderungen. Vor dem Schließen speichern?",
-  "oversized": {
-    "title": "Datei zu groß für die Vorschau",
-    "detail": "Die Dateigröße {{size}} überschreitet das Limit von {{threshold}}. Bitte in einem Systemeditor öffnen.",
-    "downloadUnavailable": "Diese Datei ist zu groß für den Download hier. Verwenden Sie stattdessen „Im System öffnen“."
-  },
-  "unsupported": {
-    "title": "Vorschau für dieses Format nicht unterstützt",
-    "detail": "{{format}}-Dateien können hier nicht angezeigt werden. Öffnen Sie sie in einer Systemanwendung.",
-    "downloadUnavailable": "Diese Datei kann hier nicht heruntergeladen werden. Verwenden Sie „Im System öffnen“."
-  },
-  "browser": {
-    "newTab": "Neuer Tab",
-    "addressPlaceholder": "URL eingeben oder suchen",
-    "agentActiveTooltip": "Der Agent bedient diesen Tab",
-    "tabLimitReached": "Tab-Limit erreicht ({{count}}). Der älteste Tab wurde wiederverwendet.",
-    "agentFirstUseTitle": "Der Agent nutzt den integrierten Browser",
-    "agentFirstUseContent": "Er kann in diesem Bereich Seiten öffnen, klicken und Inhalte lesen. Deine Anmeldung bleibt erhalten.",
-    "agentFirstUseAction": "Einstellungen öffnen"
-  },
+  "source": "Quelle",
+  "loading": "Wird geladen...",
+  "unsavedChangesMessage": "Es gibt ungespeicherte Änderungen. Bearbeitung wirklich beenden?",
+  "saveAndClose": "Speichern und schließen",
+  "openSplitScreen": "Geteilte Ansicht öffnen",
+  "openInSystemSuccess": "In Standard-Systemanwendung geöffnet",
+  "aiWriting": "KI schreibt…",
   "saveConflict": "Speichern fehlgeschlagen: Diese Datei wurde auf der Festplatte geändert, nachdem Sie sie geöffnet haben. Neu laden, um die anderen Änderungen zu sehen — Ihre Bearbeitungen sind noch da, ungespeichert.",
-  "persistQuotaExceeded": "Der lokale Speicher ist voll, offene Tabs dieses Projekts können nicht mehr gemerkt werden. Schließen Sie einige Tabs oder löschen Sie die Websitedaten.",
+  "preview": "Vorschau",
   "refresh": {
-    "label": "Aktualisieren",
+    "discardAndRefresh": "Änderungen verwerfen und aktualisieren",
+    "unavailable": "Diese Datei kann nicht gefunden werden",
+    "confirmTitle": "Neu laden und ungespeicherte Änderungen verlieren?",
     "tooltip": "Von der Festplatte neu laden",
+    "label": "Aktualisieren",
+    "officeNotWired": "Das Neuladen von Office-Dokumenten ist noch nicht verfügbar — schließen Sie die Datei und öffnen Sie sie erneut.",
+    "failed": "Diese Datei konnte nicht neu geladen werden",
     "hasUpdate": "Diese Datei wurde auf der Festplatte geändert — zum Neuladen klicken",
     "noSignalSource": "Diese Datei liegt außerhalb des Projekts, Änderungen werden nicht gemeldet",
-    "unavailable": "Diese Datei kann nicht gefunden werden",
-    "failed": "Diese Datei konnte nicht neu geladen werden",
-    "confirmTitle": "Neu laden und ungespeicherte Änderungen verlieren?",
-    "confirmMessage": "Dieser Tab hat ungespeicherte Änderungen. Neuladen ersetzt sie durch den Inhalt der Festplatte.",
-    "discardAndRefresh": "Änderungen verwerfen und aktualisieren",
-    "officeNotWired": "Das Neuladen von Office-Dokumenten ist noch nicht verfügbar — schließen Sie die Datei und öffnen Sie sie erneut."
-  }
+    "confirmMessage": "Dieser Tab hat ungespeicherte Änderungen. Neuladen ersetzt sie durch den Inhalt der Festplatte."
+  },
+  "collapsePanel": "Panel einklappen",
+  "code": "Code",
+  "closePreview": "Vorschau schließen",
+  "mermaidTitle": "Mermaid-Diagramm",
+  "excel": {
+    "title": "Excel-Tabelle",
+    "loadFailed": "Excel-Arbeitsmappe konnte nicht geladen werden",
+    "convertFailed": "Excel-Konvertierung fehlgeschlagen",
+    "invalid": "Bitte bestätige, dass die Datei ein gültiges Excel-Dokument ist",
+    "emptySheet": "Dieses Arbeitsblatt enthält keine Daten",
+    "sheetCount": "{{count}} Arbeitsblatt/Arbeitsblätter",
+    "watch": {
+      "startFailed": "Excel-Vorschau konnte nicht gestartet werden",
+      "installing": "officecli wird installiert...",
+      "installHint": "Erfordert officecli. Wird automatisch installiert.",
+      "loading": "Excel-Datei wird geladen..."
+    },
+    "noSheets": "Keine Arbeitsblätter in dieser Excel-Datei gefunden",
+    "emptySheetHint": "Prüfe ob das Blatt Daten oder Bilder enthält",
+    "loading": "Excel-Arbeitsmappe wird geladen..."
+  },
+  "closeWithoutSave": "Nicht speichern",
+  "errors": {
+    "openWithoutPath": "Öffnen nicht möglich: Dateipfad ist nicht angegeben",
+    "conversionFailed": "Konvertierung fehlgeschlagen",
+    "missingFilePath": "Dateipfad fehlt"
+  },
+  "downloadCode": "{{language}}-Datei herunterladen",
+  "closeAll": "Alle schließen",
+  "unsupported": {
+    "title": "Vorschau für dieses Format nicht unterstützt",
+    "downloadUnavailable": "Diese Datei kann hier nicht heruntergeladen werden. Verwenden Sie „Im System öffnen“.",
+    "detail": "{{format}}-Dateien können hier nicht angezeigt werden. Öffnen Sie sie in einer Systemanwendung."
+  },
+  "closeLeft": "Links schließen",
+  "html": {
+    "copyElementHtml": "Element-HTML kopieren",
+    "elementSelected": "Ausgewähltes Element: {{path}}",
+    "inspecting": "Wird inspiziert...",
+    "printedToConsole": "Element-Info in der Konsole ausgegeben",
+    "inspectorButton": "Element-Inspektor",
+    "selectedLabel": "Ausgewählt:",
+    "copySuccess": "HTML-Snippet kopiert",
+    "inspectElementDisable": "Element-Inspektor deaktivieren",
+    "viewElementInfo": "Element-Info anzeigen",
+    "inspectElementEnable": "Element-Inspektor aktivieren",
+    "inspectorEnabled": "Element-Inspektor aktiviert. Klicke auf Elemente in der Vorschau, um sie hervorzuheben.",
+    "downloadHtml": "HTML-Datei herunterladen",
+    "inspectElement": "Element inspizieren",
+    "inspectorTooltip": "Klicke auf Vorschau-Elemente, um deren HTML zu inspizieren"
+  },
+  "openInSystemApp": "In Systemanwendung öffnen",
+  "confirmExit": "Beenden bestätigen",
+  "editor": "Editor",
+  "pptSystemAppHint": "Wird mit der Standard-Systemanwendung geöffnet (PowerPoint, Keynote oder WPS)",
+  "downloadMarkdown": "Markdown-Datei herunterladen",
+  "closeRight": "Rechts schließen",
+  "closeSplitScreen": "Geteilte Ansicht schließen",
+  "exitEdit": "Bearbeitung beenden",
+  "addToChat": "Zum Chat hinzufügen",
+  "openInPanelTooltip": "Im Vorschau-Panel anzeigen",
+  "save": {
+    "tooltip": "Änderungen speichern (Strg/Cmd+S)",
+    "clean": "Keine ungespeicherten Änderungen"
+  },
+  "edit": "Bearbeiten",
+  "downloadFile": "Datei herunterladen",
+  "closeTabMessage": "Der aktuelle Inhalt wurde nicht gespeichert. Vor dem Schließen speichern?",
+  "word": {
+    "watch": {
+      "startFailed": "Word-Vorschau konnte nicht gestartet werden",
+      "installing": "officecli wird installiert...",
+      "installHint": "Erfordert officecli. Wird automatisch installiert.",
+      "loading": "Word-Dokument wird geladen..."
+    },
+    "title": "Word-Dokument",
+    "loadFailed": "Word-Dokument konnte nicht geladen werden",
+    "invalid": "Bitte bestätige, dass die Datei ein gültiges Word-Dokument ist",
+    "loading": "Word-Dokument wird geladen..."
+  },
+  "pptShowLocation": "Speicherort anzeigen",
+  "persistQuotaExceeded": "Der lokale Speicher ist voll, offene Tabs dieses Projekts können nicht mehr gemerkt werden. Schließen Sie einige Tabs oder löschen Sie die Websitedaten.",
+  "pptOpenHint": "Klicke auf die Schaltfläche unten, um es in der Systemanwendung zu öffnen und den vollständigen Inhalt anzuzeigen",
+  "readOnlyLabel": "Schreibgeschützte Vorschau",
+  "openWithApp": "In {{app}} öffnen",
+  "previewEffect": "Vorschau",
+  "missingFile": {
+    "openInNewTab": "In neuem Tab öffnen versuchen",
+    "title": "Datei nicht gefunden"
+  },
+  "continueEdit": "Weiter bearbeiten",
+  "unsavedChangesTitle": "Ungespeicherte Änderungen",
+  "closeTabTitle": "Tab schließen",
+  "closeTabsMessage": "{{count}} Tabs haben ungespeicherte Änderungen. Vor dem Schließen speichern?",
+  "openInSystemFailed": "Öffnen mit Systemanwendung fehlgeschlagen",
+  "downloadDiff": "Diff-Datei herunterladen"
 }

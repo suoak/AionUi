@@ -36,10 +36,7 @@ import {
   usePreviewContext,
   type PreviewContextValue,
 } from '@/renderer/pages/conversation/Preview/context/PreviewContext';
-import {
-  listPersistedPreviewScopeKeys,
-  PREVIEW_SCOPE_KEY_PREFIX,
-} from '@/renderer/pages/conversation/Preview/context/previewScope';
+import { listPersistedPreviewScopeKeys } from '@/renderer/pages/conversation/Preview/context/previewScope';
 
 let ctx: PreviewContextValue;
 const Probe: React.FC = () => {
@@ -100,7 +97,7 @@ describe('persisted scope count is bounded', () => {
 
     // The scope written last must survive — evicting it would drop the tabs the
     // user is looking at right now.
-    expect(listPersistedPreviewScopeKeys()).toContain(`${PREVIEW_SCOPE_KEY_PREFIX}proj-19`);
+    expect(listPersistedPreviewScopeKeys()).toContain('preview-ui:proj-19');
   });
 
   it('evicts the coldest scope, not an arbitrary one', () => {
@@ -112,7 +109,7 @@ describe('persisted scope count is bounded', () => {
     }
 
     // proj-0 is the oldest write, so it should be gone well before proj-19.
-    expect(listPersistedPreviewScopeKeys()).not.toContain(`${PREVIEW_SCOPE_KEY_PREFIX}proj-0`);
+    expect(listPersistedPreviewScopeKeys()).not.toContain('preview-ui:proj-0');
   });
 
   it('does not evict anything while under the cap', () => {

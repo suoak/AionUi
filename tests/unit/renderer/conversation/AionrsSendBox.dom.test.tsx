@@ -5,7 +5,6 @@ import { Message } from '@arco-design/web-react';
 import { BackendHttpError } from '@/common/adapter/httpBridge';
 import AionrsSendBox from '@/renderer/pages/conversation/platforms/aionrs/AionrsSendBox';
 import type { AionrsModelSelection } from '@/renderer/pages/conversation/platforms/aionrs/useAionrsModelSelection';
-import type { SendBoxRetryRequest } from '@/renderer/utils/emitter';
 import type { TeamSendBoxRuntime } from '@/renderer/pages/team/components/teamSendRuntime';
 
 const {
@@ -17,7 +16,6 @@ const {
   markSendFailedMock,
   markSendStartedMock,
   markSendAcceptedMock,
-  retryHandler,
   sendBoxPropsSpy,
 } = vi.hoisted(() => ({
   ensureConversationRuntimeMock: vi.fn().mockResolvedValue({ recovered: false, config_options: [], runtime: null }),
@@ -28,7 +26,6 @@ const {
   markSendFailedMock: vi.fn(),
   markSendStartedMock: vi.fn(),
   markSendAcceptedMock: vi.fn(),
-  retryHandler: { current: null as ((request: SendBoxRetryRequest) => void) | null },
   sendBoxPropsSpy: vi.fn(),
 }));
 
@@ -194,11 +191,7 @@ vi.mock('@/renderer/utils/emitter', () => ({
   emitter: {
     emit: vi.fn(),
   },
-  useAddEventListener: (event: string, handler: (...args: unknown[]) => void) => {
-    if (event === 'sendbox.retry') {
-      retryHandler.current = handler as (request: SendBoxRetryRequest) => void;
-    }
-  },
+  useAddEventListener: vi.fn(),
 }));
 vi.mock('@/renderer/utils/file/fileSelection', () => ({
   mergeFileSelectionItems: vi.fn((items: unknown[]) => items),
@@ -246,45 +239,6 @@ describe('AionrsSendBox', () => {
     vi.clearAllMocks();
     ensureConversationRuntimeMock.mockResolvedValue({ recovered: false, config_options: [], runtime: null });
     useTeamPermissionMock.mockReturnValue(null);
-    retryHandler.current = null;
-  });
-
-  it('retries text through the matching AionRS conversation without attachments', async () => {
-    sendMessageInvokeMock.mockResolvedValue({
-      turn_id: 'turn-retry',
-      msg_id: 'message-retry',
-      runtime: {
-        state: 'running',
-        can_send_message: false,
-        has_task: true,
-        is_processing: true,
-        pending_confirmations: 0,
-        turn_id: 'turn-retry',
-      },
-    });
-    const onAccepted = vi.fn();
-    const onRejected = vi.fn();
-
-    render(<AionrsSendBox conversation_id='conv-1' modelSelection={modelSelection} />);
-    const request: SendBoxRetryRequest = {
-      conversationId: 'conv-1',
-      conversationType: 'aionrs',
-      input: 'Retry this text',
-      claimed: false,
-      onAccepted,
-      onRejected,
-    };
-
-    act(() => retryHandler.current?.(request));
-
-    await waitFor(() => expect(onAccepted).toHaveBeenCalledOnce());
-    expect(sendMessageInvokeMock).toHaveBeenCalledWith({
-      input: 'Retry this text',
-      conversation_id: 'conv-1',
-      files: [],
-    });
-    expect(request.claimed).toBe(true);
-    expect(onRejected).not.toHaveBeenCalled();
   });
 
   it('does not warm up team session when draft content changes', async () => {

@@ -46,7 +46,7 @@ export function previewScopeKey(
  * case, this change would have needed a read-time migration — a bare rename would
  * otherwise strand every existing user's open tabs under a key nothing reads.
  */
-export const PREVIEW_SCOPE_KEY_PREFIX = 'csbu_workmate_preview:';
+export const PREVIEW_SCOPE_KEY_PREFIX = 'preview-ui:';
 
 /** Storage key holding the persisted state for one preview scope. */
 export const previewScopeStorageKey = (scope: string): string => `${PREVIEW_SCOPE_KEY_PREFIX}${scope}`;

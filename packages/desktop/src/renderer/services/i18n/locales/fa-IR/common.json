@@ -24,6 +24,8 @@
   "loading": "لطفاً صبر کنید...",
   "copy": "کپی",
   "reply": "پاسخ",
+  "openInBuiltinBrowser": "باز کردن در مرورگر داخلی",
+  "openInSystemBrowser": "باز کردن در مرورگر سیستم",
   "copySuccess": "کپی شد",
   "copyFailed": "کپی ناموفق بود",
   "download": "دانلود",
@@ -100,6 +102,11 @@
       "diagnosticsReportSuccess": "گزارش تشخیصی ارسال شد",
       "diagnosticsReportFailed": "ارسال گزارش تشخیصی ناموفق بود"
     },
+    "databaseNewerThanApp": {
+      "title": "به نسخه جدیدتر CSBU WorkMate نیاز است",
+      "description": "داده‌های محلی شما توسط نسخه جدیدتری از CSBU WorkMate ایجاد شده‌اند و این نسخه نمی‌تواند آن‌ها را باز کند. برای ادامه، CSBU WorkMate را به آخرین نسخه به‌روزرسانی کنید؛ داده‌های شما سالم هستند و نیازی به نصب مجدد یا بازنشانی نیست.",
+      "descriptionWithVersion": "داده‌های محلی شما توسط نسخه‌ای از CSBU WorkMate جدیدتر از نسخه فعلی (v{{currentVersion}}) ایجاد شده‌اند و این نسخه نمی‌تواند آن‌ها را باز کند. برای ادامه، CSBU WorkMate را به آخرین نسخه به‌روزرسانی کنید؛ داده‌های شما سالم هستند و نیازی به نصب مجدد یا بازنشانی نیست."
+    },
     "localDataRepair": {
       "title": "ترمیم داده‌های محلی ناموفق بود",
       "description": "CSBU WorkMate باز شد، اما CSBU WorkMate backend هنگام آماده‌سازی داده‌های محلی راه‌اندازی مانند رکوردهای assistant یا ایجنت متوقف شد. نصب مجدد CSBU WorkMate ممکن است این مشکل را رفع نکند. گزارش تشخیصی بفرستید یا با پشتیبانی تماس بگیرید تا پایگاه داده محلی بررسی شود.",
@@ -165,6 +172,22 @@
     "startupFailed": {
       "title": "راه‌اندازی ناموفق بود",
       "description": "CSBU WorkMate ??Core نتوانست راه‌اندازی شود. لطفاً برنامه را دوباره راه‌اندازی کنید؛ اگر این مشکل تکرار شد، اطلاعات تشخیصی را ارسال کنید.",
+      "sendDiagnostics": "ارسال تشخیص",
+      "diagnosticsSent": "تشخیص ارسال شد",
+      "diagnosticsReportSuccess": "تشخیص گزارش شد",
+      "diagnosticsReportFailed": "ارسال تشخیص ناموفق بود، لطفاً بعداً دوباره تلاش کنید"
+    },
+    "portReportTimeout": {
+      "title": "مهلت راه‌اندازی به پایان رسید",
+      "description": "CSBU WorkMate backend نتوانست راه‌اندازی را در زمان مورد انتظار کامل کند. لطفاً برنامه را دوباره راه‌اندازی کنید؛ اگر این مشکل تکرار شد، اطلاعات تشخیصی را ارسال کنید.",
+      "sendDiagnostics": "ارسال تشخیص",
+      "diagnosticsSent": "تشخیص ارسال شد",
+      "diagnosticsReportSuccess": "تشخیص گزارش شد",
+      "diagnosticsReportFailed": "ارسال تشخیص ناموفق بود، لطفاً بعداً دوباره تلاش کنید"
+    },
+    "startupFailed": {
+      "title": "راه‌اندازی ناموفق بود",
+      "description": "CSBU WorkMate backend نتوانست راه‌اندازی شود. لطفاً برنامه را دوباره راه‌اندازی کنید؛ اگر این مشکل تکرار شد، اطلاعات تشخیصی را ارسال کنید.",
       "sendDiagnostics": "ارسال تشخیص",
       "diagnosticsSent": "تشخیص ارسال شد",
       "diagnosticsReportSuccess": "تشخیص گزارش شد",

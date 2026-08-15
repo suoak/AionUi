@@ -24,6 +24,8 @@
   "loading": "Lütfen bekleyin...",
   "copy": "Kopyala",
   "reply": "Alıntı",
+  "openInBuiltinBrowser": "Yerleşik tarayıcıda aç",
+  "openInSystemBrowser": "Sistem tarayıcısında aç",
   "copySuccess": "Kopyalandı",
   "copyFailed": "Kopyalama başarısız",
   "download": "İndir",
@@ -100,6 +102,11 @@
       "diagnosticsReportSuccess": "Diagnostics report sent",
       "diagnosticsReportFailed": "Failed to send diagnostics report"
     },
+    "databaseNewerThanApp": {
+      "title": "Daha yeni bir CSBU WorkMate sürümü gerekli",
+      "description": "Yerel verileriniz CSBU WorkMate'nin daha yeni bir sürümü tarafından oluşturuldu ve bu sürüm bunları açamıyor. Devam etmek için CSBU WorkMate'yi en son sürüme güncelleyin; verileriniz sağlam, yeniden yükleme veya sıfırlama gerekmez.",
+      "descriptionWithVersion": "Yerel verileriniz şu an yüklü olandan (v{{currentVersion}}) daha yeni bir CSBU WorkMate sürümü tarafından oluşturuldu; bu sürüm bunları açamıyor. Devam etmek için CSBU WorkMate'yi en son sürüme güncelleyin; verileriniz sağlam, yeniden yükleme veya sıfırlama gerekmez."
+    },
     "localDataRepair": {
       "title": "Local data repair failed",
       "description": "CSBU WorkMate açıldı, ancak CSBU WorkMate backend assistant veya agent kayıtları gibi yerel başlangıç verilerini hazırlarken durdu. CSBU WorkMate'yi yeniden yüklemek bu sorunu çözmeyebilir. Yerel veritabanının incelenebilmesi için tanılama raporu gönderin veya destek ekibiyle iletişime geçin.",
@@ -165,6 +172,22 @@
     "startupFailed": {
       "title": "Başlatma başarısız oldu",
       "description": "CSBU WorkMate ??Core başlatılamadı. Lütfen uygulamayı yeniden başlatın; sorun devam ederse tanılama gönderin.",
+      "sendDiagnostics": "Tanılama gönder",
+      "diagnosticsSent": "Tanılama gönderildi",
+      "diagnosticsReportSuccess": "Tanılama bildirildi",
+      "diagnosticsReportFailed": "Tanılama gönderilemedi, lütfen tekrar deneyin"
+    },
+    "portReportTimeout": {
+      "title": "Başlatma zaman aşımına uğradı",
+      "description": "CSBU WorkMate backend beklenen süre içinde başlatmayı tamamlayamadı. Lütfen uygulamayı yeniden başlatın; sorun devam ederse tanılama gönderin.",
+      "sendDiagnostics": "Tanılama gönder",
+      "diagnosticsSent": "Tanılama gönderildi",
+      "diagnosticsReportSuccess": "Tanılama bildirildi",
+      "diagnosticsReportFailed": "Tanılama gönderilemedi, lütfen tekrar deneyin"
+    },
+    "startupFailed": {
+      "title": "Başlatma başarısız oldu",
+      "description": "CSBU WorkMate backend başlatılamadı. Lütfen uygulamayı yeniden başlatın; sorun devam ederse tanılama gönderin.",
       "sendDiagnostics": "Tanılama gönder",
       "diagnosticsSent": "Tanılama gönderildi",
       "diagnosticsReportSuccess": "Tanılama bildirildi",

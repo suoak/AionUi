@@ -10,6 +10,11 @@
 - **chat:** consume the AionCore journal transcript as chat history (#50)
 - **chat:** reconstruct messages from journal content and declared limits (#52)
 - **chat:** honor compacted journal tool results (#53)
+- **conversation:** surface session fork and deferred mode-switch pending state
+- **channel:** add Slack and Discord configuration UI
+- **preview:** add save, mermaid pan/zoom, and Office download improvements
+- **scm:** add Changes panel with multi-repo switching
+- **sidebar:** add unread marking and keep branded community themes
 
 #### Bug Fixes
 

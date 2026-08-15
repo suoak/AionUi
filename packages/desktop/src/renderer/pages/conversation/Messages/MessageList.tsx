@@ -12,6 +12,7 @@ import { useConversationRuntimeView } from '@/renderer/pages/conversation/runtim
 import { getChatSurfaceWidthClass } from '@/renderer/pages/conversation/utils/chatSurfaceWidth';
 import { iconColors } from '@/renderer/styles/colors';
 import { CHAT_MESSAGE_JUMP_EVENT, type ChatMessageJumpDetail } from '@/renderer/utils/chat/chatMinimapEvents';
+import { collectAiCopyRows, type TurnCopyItem } from '@/renderer/utils/chat/turnCopy';
 import { Image } from '@arco-design/web-react';
 import { Down } from '@icon-park/react';
 import MessageAcpPermission from '@renderer/pages/conversation/Messages/acp/MessageAcpPermission';
@@ -228,6 +229,7 @@ const MessageItem: React.FC<{
   localFileAliases?: Readonly<Record<string, string>>;
   isLastMessage?: boolean;
   hasForkAnchor?: boolean;
+  turnTexts?: string[];
 }> = React.memo(
   HOC((props) => {
     const { message, highlighted, rowWidthClass } = props as {
@@ -263,6 +265,7 @@ const MessageItem: React.FC<{
       localFileAliases,
       isLastMessage,
       hasForkAnchor,
+      turnTexts,
     }: {
       message: TMessage;
       highlighted?: boolean;
@@ -271,6 +274,7 @@ const MessageItem: React.FC<{
       localFileAliases?: Readonly<Record<string, string>>;
       isLastMessage?: boolean;
       hasForkAnchor?: boolean;
+      turnTexts?: string[];
     }) => {
       const { t } = useTranslation();
       switch (message.type) {
@@ -282,6 +286,7 @@ const MessageItem: React.FC<{
               localFileAliases={localFileAliases}
               isLastMessage={isLastMessage}
               hasForkAnchor={hasForkAnchor}
+              turnTexts={turnTexts}
             ></MessageText>
           );
         case 'tips':
@@ -323,7 +328,10 @@ const MessageItem: React.FC<{
     prev.showCopyRow === next.showCopyRow &&
     prev.localFileAliases === next.localFileAliases &&
     prev.isLastMessage === next.isLastMessage &&
-    prev.hasForkAnchor === next.hasForkAnchor
+    prev.hasForkAnchor === next.hasForkAnchor &&
+    (prev.turnTexts === next.turnTexts ||
+      (prev.turnTexts?.length === next.turnTexts?.length &&
+        (prev.turnTexts ?? []).every((segment, i) => segment === next.turnTexts?.[i])))
 );
 
 const MessageList: React.FC<{ className?: string; emptySlot?: React.ReactNode }> = ({ emptySlot }) => {
@@ -478,14 +486,35 @@ const MessageList: React.FC<{ className?: string; emptySlot?: React.ReactNode }>
   // by tool blocks. While the conversation is still streaming, the final turn's
   // row is withheld (it would otherwise appear then shift down as more text
   // streams in); earlier, already-finished turns always keep their row.
-  const aiCopyRowTextIds = useMemo(() => {
+  const { copyRowIds: aiCopyRowTextIds, turnTextsById: aiTurnTextsById } = useMemo(
+    () => collectAiCopyRows(processedList as TurnCopyItem[], isProcessing),
+    [processedList, isProcessing]
+  );
+
+  // The last REAL message in the visible timeline (pseudo entries like
+  // file/tool summaries don't count). HEAD-fork backends (claude/ACP) only
+  // show the fork entry point here — see `isForkEnabled`.
+  const lastMessageId = useMemo(() => {
+    for (let i = processedList.length - 1; i >= 0; i--) {
+      const item = processedList[i];
+      if (
+        'type' in item &&
+        (item.type === 'file_summary' || item.type === 'tool_summary' || item.type === 'artifact')
+      ) {
+        continue;
+      }
+      return (item as TMessage).id;
+    }
+    return undefined;
+  }, [processedList]);
+
+  // Mirror of the server's fork-anchor resolution ("nearest backend_turn_id at
+  // or before the message"): a message is mid-history forkable once ANY message
+  // at-or-before it carries a turn anchor. Legacy/copied rows before the first
+  // anchor stay un-forkable and their entry is hidden instead of 422-ing.
+  const forkAnchoredIds = useMemo(() => {
     const ids = new Set<string>();
-    let pendingTextId: string | undefined;
-    let lastTurnTextId: string | undefined;
-    const flush = () => {
-      if (pendingTextId) ids.add(pendingTextId);
-      pendingTextId = undefined;
-    };
+    let seenAnchor = false;
     for (const item of processedList) {
       if (
         'type' in item &&
@@ -494,20 +523,11 @@ const MessageList: React.FC<{ className?: string; emptySlot?: React.ReactNode }>
         continue;
       }
       const message = item as TMessage;
-      if (message.position === 'right') {
-        flush();
-        continue;
-      }
-      if (message.type === 'text') {
-        pendingTextId = message.id;
-      }
+      if (message.backend_turn_id) seenAnchor = true;
+      if (seenAnchor) ids.add(message.id);
     }
-    lastTurnTextId = pendingTextId;
-    flush();
-    // The final turn is the one that may still be streaming; hide its row until done.
-    if (isProcessing && lastTurnTextId) ids.delete(lastTurnTextId);
     return ids;
-  }, [processedList, isProcessing]);
+  }, [processedList]);
 
   // The last REAL message in the visible timeline (pseudo entries like
   // file/tool summaries don't count). HEAD-fork backends (claude/ACP) only
@@ -757,6 +777,7 @@ const MessageList: React.FC<{ className?: string; emptySlot?: React.ReactNode }>
         localFileAliases={message.type === 'text' ? localFileAliasesByMessageId[message.id] : undefined}
         isLastMessage={message.id === lastMessageId}
         hasForkAnchor={forkAnchoredIds.has(message.id)}
+        turnTexts={aiTurnTextsById.get(message.id)}
       ></MessageItem>
     );
   };

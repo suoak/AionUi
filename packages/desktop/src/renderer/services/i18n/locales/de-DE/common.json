@@ -23,6 +23,8 @@
   "loading": "Bitte warten...",
   "copy": "Kopieren",
   "reply": "Antworten",
+  "openInBuiltinBrowser": "Im integrierten Browser öffnen",
+  "openInSystemBrowser": "Im Systembrowser öffnen",
   "copySuccess": "Kopiert",
   "copyFailed": "Kopieren fehlgeschlagen",
   "download": "Herunterladen",
@@ -99,6 +101,11 @@
       "diagnosticsReportSuccess": "Diagnostics report sent",
       "diagnosticsReportFailed": "Failed to send diagnostics report"
     },
+    "databaseNewerThanApp": {
+      "title": "Neuere CSBU WorkMate-Version erforderlich",
+      "description": "Ihre lokalen Daten wurden von einer neueren CSBU WorkMate-Version erstellt und können von dieser Version nicht geöffnet werden. Aktualisieren Sie CSBU WorkMate auf die neueste Version — Ihre Daten bleiben erhalten, eine Neuinstallation oder ein Zurücksetzen ist nicht nötig.",
+      "descriptionWithVersion": "Ihre lokalen Daten wurden von einer CSBU WorkMate-Version erstellt, die neuer ist als die aktuell installierte (v{{currentVersion}}), daher kann diese Version sie nicht öffnen. Aktualisieren Sie CSBU WorkMate auf die neueste Version — Ihre Daten bleiben erhalten, eine Neuinstallation oder ein Zurücksetzen ist nicht nötig."
+    },
     "localDataRepair": {
       "title": "Local data repair failed",
       "description": "CSBU WorkMate wurde geöffnet, aber CSBU WorkMate backend wurde beim Vorbereiten lokaler Startdaten wie Assistant- oder Agent-Datensätzen beendet. Eine Neuinstallation von CSBU WorkMate behebt dies möglicherweise nicht. Senden Sie einen Diagnosebericht oder wenden Sie sich an den Support, damit die lokale Datenbank geprüft werden kann.",
@@ -164,6 +171,22 @@
     "startupFailed": {
       "title": "Start fehlgeschlagen",
       "description": "CSBU WorkMate ??Core konnte nicht gestartet werden. Bitte starten Sie die App neu; wenn dies wiederholt auftritt, senden Sie bitte eine Diagnose.",
+      "sendDiagnostics": "Diagnose senden",
+      "diagnosticsSent": "Diagnose gesendet",
+      "diagnosticsReportSuccess": "Diagnose gemeldet",
+      "diagnosticsReportFailed": "Diagnose konnte nicht gesendet werden, bitte erneut versuchen"
+    },
+    "portReportTimeout": {
+      "title": "Zeitüberschreitung beim Start",
+      "description": "CSBU WorkMate backend konnte den Start nicht innerhalb der erwarteten Zeit abschließen. Bitte starten Sie die App neu; wenn dies wiederholt auftritt, senden Sie bitte eine Diagnose.",
+      "sendDiagnostics": "Diagnose senden",
+      "diagnosticsSent": "Diagnose gesendet",
+      "diagnosticsReportSuccess": "Diagnose gemeldet",
+      "diagnosticsReportFailed": "Diagnose konnte nicht gesendet werden, bitte erneut versuchen"
+    },
+    "startupFailed": {
+      "title": "Start fehlgeschlagen",
+      "description": "CSBU WorkMate backend konnte nicht gestartet werden. Bitte starten Sie die App neu; wenn dies wiederholt auftritt, senden Sie bitte eine Diagnose.",
       "sendDiagnostics": "Diagnose senden",
       "diagnosticsSent": "Diagnose gesendet",
       "diagnosticsReportSuccess": "Diagnose gemeldet",

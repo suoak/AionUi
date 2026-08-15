@@ -1,161 +1,165 @@
 {
-  "loading": "Loading...",
-  "downloadFile": "Download file",
-  "closePreview": "Close preview",
-  "collapsePanel": "Collapse panel",
-  "source": "Source",
-  "code": "Code",
-  "preview": "Preview",
-  "editor": "Editor",
-  "previewEffect": "Preview",
-  "downloadMarkdown": "Download Markdown file",
-  "downloadCode": "Download {{language}} file",
-  "downloadDiff": "Download Diff file",
-  "addToChat": "Add to chat",
-  "openSplitScreen": "Open split screen",
-  "closeSplitScreen": "Close split screen",
-  "edit": "Edit",
-  "exitEdit": "Exit Edit",
-  "unsavedChangesTitle": "Unsaved Changes",
-  "unsavedChangesMessage": "You have unsaved changes. Are you sure you want to exit editing?",
-  "confirmExit": "Confirm Exit",
-  "continueEdit": "Continue Editing",
-  "closeTabTitle": "Close Tab",
-  "closeTabMessage": "The current content has not been saved. Do you want to save before closing?",
-  "saveAndClose": "Save and Close",
-  "closeWithoutSave": "Don't Save",
-  "pptTitle": "PowerPoint Presentation",
-  "pptOpenHint": "Click the button below to open in system application to view full content",
-  "pptOpenFile": "Open File",
-  "pptShowLocation": "Show Location",
-  "pptSystemAppHint": "Will be opened with default system app (PowerPoint, Keynote, or WPS)",
-  "openWithApp": "Open in {{app}}",
-  "openInSystemApp": "Open in system app",
-  "openInSystemSuccess": "Opened in system default app",
-  "openInSystemFailed": "Failed to open with system app",
-  "closeLeft": "Close Left",
-  "closeRight": "Close Right",
-  "closeOthers": "Close Others",
-  "closeAll": "Close All",
-  "readOnlyLabel": "Read-only preview",
-  "pathLabel": "Path",
-  "missingFile": {
-    "title": "File not found",
-    "openInNewTab": "Try opening in a new tab"
-  },
   "noTabs": "No tabs open",
-  "openInPanelTooltip": "View in preview panel",
-  "mermaidTitle": "Mermaid Diagram",
-  "aiWriting": "AI is writing…",
-  "errors": {
-    "missingFilePath": "File path is missing",
-    "openWithoutPath": "Unable to open: file path is not provided",
-    "conversionFailed": "Conversion failed"
+  "ppt": {
+    "startFailed": "Failed to start PPT preview",
+    "installing": "Installing preview component...",
+    "installHint": "Install OfficeCLI from the suoak/OfficeCLI releases page",
+    "loading": "Starting PPT preview..."
   },
+  "pathLabel": "Path",
+  "pptTitle": "PowerPoint Presentation",
+  "closeOthers": "Close Others",
   "office": {
+    "serverInstall": {
+      "icuNote": "If it still fails to start, install the ICU library on the server (Debian/Ubuntu: apt-get install -y libicu-dev).",
+      "hint": "CSBU WorkMate is running on a server. Install the preview component on that server, then retry:"
+    },
     "installLinkText": "Open officecli install guide",
     "errors": {
-      "officecliNotFound": "officecli is not installed.",
-      "installFailed": "Failed to install officecli automatically. Check backend logs and retry.",
-      "portTimeout": "Preview service started but did not become ready in time. Retry.",
       "startFailed": "Failed to start the Office preview service.",
-      "outsideSandbox": "This file is outside the current project sandbox."
-    },
-    "serverInstall": {
-      "hint": "CSBU WorkMate is running on a server. Install the preview component on that server, then retry:",
-      "icuNote": "If it still fails to start, install the ICU library on the server (Debian/Ubuntu: apt-get install -y libicu-dev)."
+      "installFailed": "Failed to install officecli automatically. Check backend logs and retry.",
+      "officecliNotFound": "officecli is not installed.",
+      "outsideSandbox": "This file is outside the current project sandbox.",
+      "portTimeout": "Preview service started but did not become ready in time. Retry."
     }
   },
-  "word": {
-    "title": "Word Document",
-    "loading": "Loading Word document...",
-    "invalid": "Please confirm the file is a valid Word document",
-    "loadFailed": "Failed to load Word document",
-    "watch": {
-      "loading": "Loading Word document...",
-      "installing": "Installing officecli...",
-      "startFailed": "Failed to start Word preview",
-      "installHint": "Requires officecli. It will be installed automatically."
-    }
+  "browser": {
+    "addressPlaceholder": "Enter a URL or search",
+    "agentFirstUseTitle": "The agent is using the in-app browser",
+    "tabLimitReached": "Browser tab limit reached ({{count}}). The oldest tab was reused.",
+    "agentFirstUseContent": "It can open pages, click and read content in this panel. Your sign-in state is kept between sessions.",
+    "newTab": "New tab",
+    "agentFirstUseAction": "Open settings",
+    "agentActiveTooltip": "The agent is operating this tab"
   },
-  "excel": {
-    "title": "Excel Spreadsheet",
-    "loading": "Loading Excel workbook...",
-    "invalid": "Please confirm the file is a valid Excel document",
-    "noSheets": "No worksheets found in this Excel file",
-    "sheetCount": "{{count}} worksheet(s)",
-    "convertFailed": "Excel conversion failed",
-    "loadFailed": "Failed to load Excel workbook",
-    "emptySheet": "This worksheet has no data",
-    "emptySheetHint": "Check whether the sheet contains data or images",
-    "watch": {
-      "loading": "Loading Excel file...",
-      "installing": "Installing officecli...",
-      "startFailed": "Failed to start Excel preview",
-      "installHint": "Requires officecli. It will be installed automatically."
-    }
+  "closeTabsTitle": "Close Tabs",
+  "pptOpenFile": "Open File",
+  "oversized": {
+    "title": "File too large to preview",
+    "downloadUnavailable": "This file is too large to download here. Use “Open in system” instead.",
+    "detail": "File size {{size}} exceeds the {{threshold}} limit. Please open it in a system editor."
   },
   "pdf": {
     "title": "PDF Document",
-    "pathMissing": "PDF file path is missing",
     "loadFailed": "Failed to load PDF document",
-    "unableDisplay": "Unable to display PDF file"
+    "unableDisplay": "Unable to display PDF file",
+    "pathMissing": "PDF file path is missing"
   },
-  "html": {
-    "elementSelected": "Selected element: {{path}}",
-    "copySuccess": "Copied HTML snippet",
-    "inspectorEnabled": "Element inspector enabled. Click items in the preview to highlight them.",
-    "inspectorButton": "Element inspector",
-    "inspecting": "Inspecting...",
-    "selectedLabel": "Selected:",
-    "inspectorTooltip": "Click preview elements to inspect their HTML",
-    "downloadHtml": "Download HTML file",
-    "copyElementHtml": "Copy element HTML",
-    "viewElementInfo": "View element info",
-    "printedToConsole": "Element info logged to console",
-    "inspectElement": "Inspect element",
-    "inspectElementEnable": "Enable element inspector",
-    "inspectElementDisable": "Disable element inspector"
-  },
-  "ppt": {
-    "loading": "Starting PPT preview...",
-    "installing": "Installing preview component...",
-    "startFailed": "Failed to start PPT preview",
-    "installHint": "Install OfficeCLI from the suoak/OfficeCLI releases page"
-  },
-  "closeTabsTitle": "Close Tabs",
-  "closeTabsMessage": "{{count}} tabs have unsaved changes. Save them before closing?",
-  "oversized": {
-    "title": "File too large to preview",
-    "detail": "File size {{size}} exceeds the {{threshold}} limit. Please open it in a system editor.",
-    "downloadUnavailable": "This file is too large to download here. Use “Open in system” instead."
-  },
-  "unsupported": {
-    "title": "Preview not supported for this format",
-    "detail": "{{format}} files cannot be previewed here. Open it in a system application instead.",
-    "downloadUnavailable": "This file cannot be downloaded here. Use “Open in system” instead."
-  },
-  "browser": {
-    "newTab": "New tab",
-    "addressPlaceholder": "Enter a URL or search",
-    "agentActiveTooltip": "The agent is operating this tab",
-    "tabLimitReached": "Browser tab limit reached ({{count}}). The oldest tab was reused.",
-    "agentFirstUseTitle": "The agent is using the in-app browser",
-    "agentFirstUseContent": "It can open pages, click and read content in this panel. Your sign-in state is kept between sessions.",
-    "agentFirstUseAction": "Open settings"
-  },
+  "source": "Source",
+  "loading": "Loading...",
+  "unsavedChangesMessage": "You have unsaved changes. Are you sure you want to exit editing?",
+  "saveAndClose": "Save and Close",
+  "openSplitScreen": "Open split screen",
+  "openInSystemSuccess": "Opened in system default app",
+  "aiWriting": "AI is writing…",
   "saveConflict": "Could not save: this file changed on disk since you opened it. Reload to see the other changes — your edits are still here, unsaved.",
-  "persistQuotaExceeded": "Local storage is full, so open tabs can no longer be remembered for this project. Close some tabs or clear site data.",
+  "preview": "Preview",
   "refresh": {
-    "label": "Refresh",
+    "discardAndRefresh": "Discard changes and reload",
+    "unavailable": "This file cannot be located",
+    "confirmTitle": "Reload and lose unsaved changes?",
     "tooltip": "Reload from disk",
+    "label": "Refresh",
+    "officeNotWired": "Refreshing Office documents is not available yet — close and reopen the file to see changes.",
+    "failed": "Could not reload this file",
     "hasUpdate": "This file changed on disk — reload to see it",
     "noSignalSource": "This file is not in the project, so changes will not be announced",
-    "unavailable": "This file cannot be located",
-    "failed": "Could not reload this file",
-    "confirmTitle": "Reload and lose unsaved changes?",
-    "confirmMessage": "This tab has unsaved changes. Reloading replaces them with what is on disk.",
-    "discardAndRefresh": "Discard changes and reload",
-    "officeNotWired": "Refreshing Office documents is not available yet — close and reopen the file to see changes."
-  }
+    "confirmMessage": "This tab has unsaved changes. Reloading replaces them with what is on disk."
+  },
+  "collapsePanel": "Collapse panel",
+  "code": "Code",
+  "closePreview": "Close preview",
+  "mermaidTitle": "Mermaid Diagram",
+  "excel": {
+    "title": "Excel Spreadsheet",
+    "loadFailed": "Failed to load Excel workbook",
+    "convertFailed": "Excel conversion failed",
+    "invalid": "Please confirm the file is a valid Excel document",
+    "emptySheet": "This worksheet has no data",
+    "sheetCount": "{{count}} worksheet(s)",
+    "watch": {
+      "startFailed": "Failed to start Excel preview",
+      "installing": "Installing officecli...",
+      "installHint": "Requires officecli. It will be installed automatically.",
+      "loading": "Loading Excel file..."
+    },
+    "noSheets": "No worksheets found in this Excel file",
+    "emptySheetHint": "Check whether the sheet contains data or images",
+    "loading": "Loading Excel workbook..."
+  },
+  "closeWithoutSave": "Don't Save",
+  "errors": {
+    "openWithoutPath": "Unable to open: file path is not provided",
+    "conversionFailed": "Conversion failed",
+    "missingFilePath": "File path is missing"
+  },
+  "downloadCode": "Download {{language}} file",
+  "closeAll": "Close All",
+  "unsupported": {
+    "title": "Preview not supported for this format",
+    "downloadUnavailable": "This file cannot be downloaded here. Use “Open in system” instead.",
+    "detail": "{{format}} files cannot be previewed here. Open it in a system application instead."
+  },
+  "closeLeft": "Close Left",
+  "html": {
+    "copyElementHtml": "Copy element HTML",
+    "elementSelected": "Selected element: {{path}}",
+    "inspecting": "Inspecting...",
+    "printedToConsole": "Element info logged to console",
+    "inspectorButton": "Element inspector",
+    "selectedLabel": "Selected:",
+    "copySuccess": "Copied HTML snippet",
+    "inspectElementDisable": "Disable element inspector",
+    "viewElementInfo": "View element info",
+    "inspectElementEnable": "Enable element inspector",
+    "inspectorEnabled": "Element inspector enabled. Click items in the preview to highlight them.",
+    "downloadHtml": "Download HTML file",
+    "inspectElement": "Inspect element",
+    "inspectorTooltip": "Click preview elements to inspect their HTML"
+  },
+  "openInSystemApp": "Open in system app",
+  "confirmExit": "Confirm Exit",
+  "editor": "Editor",
+  "pptSystemAppHint": "Will be opened with default system app (PowerPoint, Keynote, or WPS)",
+  "downloadMarkdown": "Download Markdown file",
+  "closeRight": "Close Right",
+  "closeSplitScreen": "Close split screen",
+  "exitEdit": "Exit Edit",
+  "addToChat": "Add to chat",
+  "openInPanelTooltip": "View in preview panel",
+  "save": {
+    "tooltip": "Save changes (Ctrl/Cmd+S)",
+    "clean": "No unsaved changes"
+  },
+  "edit": "Edit",
+  "downloadFile": "Download file",
+  "closeTabMessage": "The current content has not been saved. Do you want to save before closing?",
+  "word": {
+    "watch": {
+      "startFailed": "Failed to start Word preview",
+      "installing": "Installing officecli...",
+      "installHint": "Requires officecli. It will be installed automatically.",
+      "loading": "Loading Word document..."
+    },
+    "title": "Word Document",
+    "loadFailed": "Failed to load Word document",
+    "invalid": "Please confirm the file is a valid Word document",
+    "loading": "Loading Word document..."
+  },
+  "pptShowLocation": "Show Location",
+  "persistQuotaExceeded": "Local storage is full, so open tabs can no longer be remembered for this project. Close some tabs or clear site data.",
+  "pptOpenHint": "Click the button below to open in system application to view full content",
+  "readOnlyLabel": "Read-only preview",
+  "openWithApp": "Open in {{app}}",
+  "previewEffect": "Preview",
+  "missingFile": {
+    "openInNewTab": "Try opening in a new tab",
+    "title": "File not found"
+  },
+  "continueEdit": "Continue Editing",
+  "unsavedChangesTitle": "Unsaved Changes",
+  "closeTabTitle": "Close Tab",
+  "closeTabsMessage": "{{count}} tabs have unsaved changes. Save them before closing?",
+  "openInSystemFailed": "Failed to open with system app",
+  "downloadDiff": "Download Diff file"
 }

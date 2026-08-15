@@ -24,6 +24,8 @@
   "loading": "请稍候...",
   "copy": "复制",
   "reply": "引用",
+  "openInBuiltinBrowser": "内置浏览器打开",
+  "openInSystemBrowser": "系统浏览器打开",
   "copySuccess": "已复制",
   "copyFailed": "Copy failed",
   "download": "下载",
@@ -100,6 +102,11 @@
       "diagnosticsReportSuccess": "诊断报告已发送",
       "diagnosticsReportFailed": "诊断报告发送失败"
     },
+    "databaseNewerThanApp": {
+      "title": "需要更新 CSBU WorkMate",
+      "description": "本地数据由更高版本的 CSBU WorkMate 创建，当前版本无法打开。请将 CSBU WorkMate 更新到最新版本即可继续使用，数据完好无损，无需重装或重置数据。",
+      "descriptionWithVersion": "本地数据由比当前版本 v{{currentVersion}} 更新的 CSBU WorkMate 创建，当前版本无法打开。请将 CSBU WorkMate 更新到最新版本即可继续使用，数据完好无损，无需重装或重置数据。"
+    },
     "localDataRepair": {
       "title": "本地数据修复失败",
       "description": "CSBU WorkMate 已打开，但 CSBU WorkMate backend 在准备本地启动数据时停止，例如 assistant 或智能体记录。重新安装 CSBU WorkMate 可能无法解决此问题。请发送诊断报告或联系支持，以便检查本地数据库。",
@@ -165,6 +172,22 @@
     "startupFailed": {
       "title": "启动失败",
       "description": "CSBU WorkMate ??Core 启动失败。请重启应用；若反复出现，请发送诊断。",
+      "sendDiagnostics": "发送诊断",
+      "diagnosticsSent": "诊断已发送",
+      "diagnosticsReportSuccess": "诊断信息已上报",
+      "diagnosticsReportFailed": "诊断上报失败，请稍后重试"
+    },
+    "portReportTimeout": {
+      "title": "启动超时",
+      "description": "CSBU WorkMate backend 未在预期时间内完成启动。请重启应用；若反复出现，请发送诊断。",
+      "sendDiagnostics": "发送诊断",
+      "diagnosticsSent": "诊断已发送",
+      "diagnosticsReportSuccess": "诊断信息已上报",
+      "diagnosticsReportFailed": "诊断上报失败，请稍后重试"
+    },
+    "startupFailed": {
+      "title": "启动失败",
+      "description": "CSBU WorkMate backend 启动失败。请重启应用；若反复出现，请发送诊断。",
       "sendDiagnostics": "发送诊断",
       "diagnosticsSent": "诊断已发送",
       "diagnosticsReportSuccess": "诊断信息已上报",

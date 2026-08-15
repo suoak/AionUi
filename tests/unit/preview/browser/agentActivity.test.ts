@@ -29,7 +29,6 @@ describe('isBrowserMcpActivity', () => {
   });
 
   it('detects in-flight calls to the built-in browser MCP', () => {
-    expect(BUILTIN_BROWSER_MCP_NAME).toBe('workmate-browser');
     expect(isBrowserMcpActivity('tool_group', [mcpEntry('Executing')])).toBe(true);
     expect(isBrowserMcpActivity('tool_group', [mcpEntry('Pending')])).toBe(true);
   });
@@ -52,13 +51,6 @@ describe('isBrowserMcpActivity', () => {
     expect(
       isBrowserMcpActivity('tool_group', [{ name: `${BUILTIN_BROWSER_MCP_NAME}__navigate_page`, status: 'Executing' }])
     ).toBe(true);
-  });
-
-  it('recognises legacy browser MCP calls while historical messages are still visible', () => {
-    expect(isBrowserMcpActivity('tool_group', [mcpEntry('Executing', 'aionui-browser')])).toBe(true);
-    expect(isBrowserMcpActivity('tool_group', [{ name: 'aionui-browser__navigate_page', status: 'Executing' }])).toBe(
-      true
-    );
   });
 
   it('detects activity when the browser call is mixed with unrelated tools', () => {
