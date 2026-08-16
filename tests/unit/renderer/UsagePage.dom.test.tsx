@@ -118,6 +118,64 @@ describe('UsagePage', () => {
     expect(screen.getByText('Harness preview chat')).toBeTruthy();
   });
 
+  it('scopes the model breakdown to the selected model while keeping all filter chips', () => {
+    writeUsageLedger({
+      ...createEmptyUsageLedger(),
+      events: [
+        {
+          id: 'e1',
+          recorded_at: Date.now(),
+          conversation_id: 'conv-1',
+          fingerprint: 'turn:1',
+          backend: 'deepseek-harness',
+          assistant_name: 'DeepSeek Preview',
+          conversation_name: 'Harness preview chat',
+          model_id: 'deepseek-chat',
+          input_tokens: 1200,
+          output_tokens: 300,
+          thought_tokens: 0,
+          cached_read_tokens: 0,
+          cached_write_tokens: 0,
+          cost_delta: 0,
+          source: 'acp',
+        },
+        {
+          id: 'e2',
+          recorded_at: Date.now(),
+          conversation_id: 'conv-2',
+          fingerprint: 'turn:2',
+          backend: 'gemini',
+          assistant_name: 'Gemini',
+          conversation_name: 'Gemini chat',
+          model_id: 'gemini-2.5-pro',
+          input_tokens: 400,
+          output_tokens: 100,
+          thought_tokens: 0,
+          cached_read_tokens: 0,
+          cached_write_tokens: 0,
+          cost_delta: 0,
+          source: 'acp',
+        },
+      ],
+    });
+
+    render(<UsagePage />);
+
+    expect(screen.getByTestId('usage-model-filter-deepseek-chat')).toBeTruthy();
+    expect(screen.getByTestId('usage-model-filter-gemini-2.5-pro')).toBeTruthy();
+    expect(screen.getByText('Harness preview chat')).toBeTruthy();
+    expect(screen.getByText('Gemini chat')).toBeTruthy();
+
+    fireEvent.click(screen.getByTestId('usage-model-filter-deepseek-chat'));
+
+    expect(screen.getByText('Harness preview chat')).toBeTruthy();
+    expect(screen.queryByText('Gemini chat')).toBeNull();
+    expect(screen.queryByText('Gemini')).toBeNull();
+    expect(screen.getByTestId('usage-model-filter-gemini-2.5-pro')).toBeTruthy();
+    expect(screen.getAllByText('deepseek-chat').length).toBeGreaterThan(0);
+    expect(screen.queryByText('gemini-2.5-pro')).toBeNull();
+  });
+
   it('clears the ledger after confirmation', () => {
     writeUsageLedger({
       ...createEmptyUsageLedger(),

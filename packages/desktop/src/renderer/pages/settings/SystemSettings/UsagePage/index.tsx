@@ -77,12 +77,20 @@ const UsagePage: React.FC = () => {
     [t, visibleEvents]
   );
   const activeModelFilter = useMemo(
-    () => resolveUsageModelFilter(modelFilter, byModel.map((row) => row.key)),
+    () =>
+      resolveUsageModelFilter(
+        modelFilter,
+        byModel.map((row) => row.key)
+      ),
     [byModel, modelFilter]
   );
   const scopedEvents = useMemo(
     () => filterUsageEventsByModel(visibleEvents, activeModelFilter),
     [activeModelFilter, visibleEvents]
+  );
+  const scopedByModel = useMemo(
+    () => breakdownUsageByModel(scopedEvents, t('settings.usage.unknownModel')),
+    [scopedEvents, t]
   );
   const totals = useMemo(() => summarizeUsageEvents(scopedEvents), [scopedEvents]);
   const todayTotals = useMemo(
@@ -251,7 +259,7 @@ const UsagePage: React.FC = () => {
               <Typography.Text className='mb-12px block text-13px font-medium text-t-primary'>
                 {t('settings.usage.byModelTitle')}
               </Typography.Text>
-              <UsageBreakdownList rows={byModel} emptyLabel={t('settings.usage.emptyTitle')} />
+              <UsageBreakdownList rows={scopedByModel} emptyLabel={t('settings.usage.emptyTitle')} />
             </div>
             <div className='rounded-12px border border-solid border-transparent bg-base px-16px py-16px md:col-span-2'>
               <Typography.Text className='mb-12px block text-13px font-medium text-t-primary'>

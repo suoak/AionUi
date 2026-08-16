@@ -502,6 +502,11 @@ export const useAcpMessage = (
           };
           if (usageData && typeof usageData.used === 'number') {
             const next = tokenUsageFromAcpUsage(usageData);
+            // Capture before setState: the updater may copy the previous
+            // turn's breakdown onto `next` for the context meter. Spend
+            // recording must only use counters from this payload.
+            const incomingBreakdown = next.breakdown;
+            const incomingCost = next.cost;
             setTokenUsage((prev) => {
               // Mid-turn UsageUpdate notifications carry no per-turn
               // breakdown; keep the last end-of-turn one until replaced.
@@ -512,7 +517,7 @@ export const useAcpMessage = (
             if (usageData.size > 0) {
               setContextLimit(usageData.size);
             }
-            if (next.breakdown) {
+            if (incomingBreakdown) {
               const meta = conversationUsageMetaRef.current;
               const tracedModel = requestTraceRef.current?.model_id;
               const metaModel =
@@ -525,11 +530,9 @@ export const useAcpMessage = (
                 assistant_name: meta.assistant_name,
                 conversation_name: meta.conversation_name,
                 model_id:
-                  (tracedModel && tracedModel !== 'unknown' ? tracedModel : undefined) ||
-                  metaModel ||
-                  meta.model_id,
-                breakdown: next.breakdown,
-                cost: next.cost,
+                  (tracedModel && tracedModel !== 'unknown' ? tracedModel : undefined) || metaModel || meta.model_id,
+                breakdown: incomingBreakdown,
+                cost: incomingCost,
                 source: 'acp',
               });
               if (recorded) {

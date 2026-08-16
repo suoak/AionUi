@@ -554,6 +554,56 @@ describe('useAcpMessage', () => {
     });
   });
 
+  it('does not re-record leftover occupancy after a completed turn', async () => {
+    vi.mocked(getConversationOrNull).mockResolvedValue({
+      type: 'acp',
+      extra: { backend: 'deepseek-harness', current_model_id: 'deepseek-chat' },
+      assistant: { id: 'asst-1', name: 'DeepSeek Preview', backend: 'deepseek-harness' },
+    } as never);
+
+    const { result } = renderHook(() => useAcpMessage('conv-1'));
+    await waitFor(() => {
+      expect(result.current.hasHydratedRunningState).toBe(true);
+    });
+
+    act(() => {
+      responseStreamHandlerRef.current?.({
+        type: 'acp_context_usage',
+        data: {
+          used: 12_400,
+          size: 200_000,
+          _meta: { input_tokens: 900, output_tokens: 80 },
+        },
+        msg_id: 'usage-end',
+        turn_id: 'turn-9',
+        conversation_id: 'conv-1',
+      } as unknown as IResponseMessage);
+    });
+    expect(parseUsageLedger(localStorage.getItem(STORAGE_KEYS.TOKEN_USAGE_LEDGER)).events).toHaveLength(1);
+    expect(result.current.tokenUsage?.breakdown).toEqual({ input_tokens: 900, output_tokens: 80 });
+
+    act(() => {
+      responseStreamHandlerRef.current?.({
+        type: 'acp_context_usage',
+        data: { used: 12_800, size: 200_000 },
+        msg_id: 'usage-mid-2',
+        conversation_id: 'conv-1',
+      } as unknown as IResponseMessage);
+    });
+
+    const events = parseUsageLedger(localStorage.getItem(STORAGE_KEYS.TOKEN_USAGE_LEDGER)).events;
+    expect(events).toHaveLength(1);
+    expect(events[0]).toMatchObject({
+      fingerprint: 'turn:turn-9',
+      input_tokens: 900,
+      output_tokens: 80,
+    });
+    expect(result.current.tokenUsage).toMatchObject({
+      total_tokens: 12_800,
+      breakdown: { input_tokens: 900, output_tokens: 80 },
+    });
+  });
+
   it('survives a failing usage snapshot request without touching indicator state', async () => {
     vi.mocked(getConversationOrNull).mockResolvedValue(null);
     getUsageInvokeMock.mockRejectedValue(new Error('no active task'));
