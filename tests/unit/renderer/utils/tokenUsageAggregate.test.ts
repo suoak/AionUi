@@ -80,11 +80,7 @@ describe('tokenUsageAggregate', () => {
 
   it('builds a daily series covering the selected window', () => {
     const now = Date.parse('2026-08-16T18:00:00');
-    const series = buildUsageDailySeries(
-      [event({ recorded_at: now, input_tokens: 12, output_tokens: 3 })],
-      '7d',
-      now
-    );
+    const series = buildUsageDailySeries([event({ recorded_at: now, input_tokens: 12, output_tokens: 3 })], '7d', now);
 
     expect(series).toHaveLength(7);
     expect(series.at(-1)).toMatchObject({ date: '2026-08-16', total_tokens: 15, input_tokens: 12, output_tokens: 3 });

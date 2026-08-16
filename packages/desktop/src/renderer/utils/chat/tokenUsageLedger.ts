@@ -205,8 +205,7 @@ export function recordTurnUsage(
   const cachedReadTokens = toNonNegativeInt(input.breakdown?.cached_read_tokens);
   const cachedWriteTokens = toNonNegativeInt(input.breakdown?.cached_write_tokens);
   const hasSpend =
-    inputTokens + outputTokens + thoughtTokens > 0 ||
-    (typeof input.cost?.amount === 'number' && input.cost.amount > 0);
+    inputTokens + outputTokens + thoughtTokens > 0 || (typeof input.cost?.amount === 'number' && input.cost.amount > 0);
   if (!hasSpend) {
     return null;
   }

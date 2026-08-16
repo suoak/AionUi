@@ -43,7 +43,9 @@ export const USAGE_RANGE_DAYS: Record<Exclude<UsageRange, 'all'>, number> = {
   '90d': 90,
 };
 
-export function usageEventTotalTokens(event: Pick<UsageEvent, 'input_tokens' | 'output_tokens' | 'thought_tokens'>): number {
+export function usageEventTotalTokens(
+  event: Pick<UsageEvent, 'input_tokens' | 'output_tokens' | 'thought_tokens'>
+): number {
   return event.input_tokens + event.output_tokens + event.thought_tokens;
 }
 
@@ -59,7 +61,9 @@ export function filterUsageEvents(events: UsageEvent[], range: UsageRange, now =
   if (start === null) {
     return [...events].toSorted((left, right) => left.recorded_at - right.recorded_at);
   }
-  return events.filter((event) => event.recorded_at >= start).toSorted((left, right) => left.recorded_at - right.recorded_at);
+  return events
+    .filter((event) => event.recorded_at >= start)
+    .toSorted((left, right) => left.recorded_at - right.recorded_at);
 }
 
 export function summarizeUsageEvents(events: UsageEvent[]): UsageTotals {
@@ -172,12 +176,7 @@ export function buildUsageDailySeries(events: UsageEvent[], range: UsageRange, n
   return [...points.values()];
 }
 
-const addBreakdownRow = (
-  rows: Map<string, UsageBreakdownRow>,
-  key: string,
-  label: string,
-  event: UsageEvent
-): void => {
+const addBreakdownRow = (rows: Map<string, UsageBreakdownRow>, key: string, label: string, event: UsageEvent): void => {
   const existing = rows.get(key);
   if (existing) {
     existing.total_tokens += usageEventTotalTokens(event);
@@ -195,7 +194,9 @@ const addBreakdownRow = (
 };
 
 const sortBreakdown = (rows: Map<string, UsageBreakdownRow>): UsageBreakdownRow[] =>
-  [...rows.values()].toSorted((left, right) => right.total_tokens - left.total_tokens || right.turn_count - left.turn_count);
+  [...rows.values()].toSorted(
+    (left, right) => right.total_tokens - left.total_tokens || right.turn_count - left.turn_count
+  );
 
 export function breakdownUsageByAgent(events: UsageEvent[], unknownLabel: string): UsageBreakdownRow[] {
   const rows = new Map<string, UsageBreakdownRow>();

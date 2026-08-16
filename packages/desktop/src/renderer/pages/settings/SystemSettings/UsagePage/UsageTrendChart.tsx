@@ -19,7 +19,10 @@ const UsageTrendChart: React.FC<UsageTrendChartProps> = ({ points, emptyLabel, i
   const max = Math.max(0, ...points.map((point) => point.total_tokens));
   if (max <= 0) {
     return (
-      <div className='flex h-140px items-center justify-center text-12px text-t-tertiary' data-testid='usage-trend-empty'>
+      <div
+        className='flex h-140px items-center justify-center text-12px text-t-tertiary'
+        data-testid='usage-trend-empty'
+      >
         {emptyLabel}
       </div>
     );

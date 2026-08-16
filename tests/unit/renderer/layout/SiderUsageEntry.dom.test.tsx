@@ -52,13 +52,7 @@ describe('SiderUsageEntry', () => {
 
     const onClick = vi.fn();
     render(
-      <SiderUsageEntry
-        isMobile={false}
-        isActive={false}
-        collapsed={false}
-        siderTooltipProps={{}}
-        onClick={onClick}
-      />
+      <SiderUsageEntry isMobile={false} isActive={false} collapsed={false} siderTooltipProps={{}} onClick={onClick} />
     );
 
     expect(screen.getByTestId('sider-usage-today').textContent).toBe('1.5K');
@@ -68,13 +62,7 @@ describe('SiderUsageEntry', () => {
 
   it('still offers the usage entry when nothing has been spent today', () => {
     render(
-      <SiderUsageEntry
-        isMobile={false}
-        isActive={false}
-        collapsed={false}
-        siderTooltipProps={{}}
-        onClick={vi.fn()}
-      />
+      <SiderUsageEntry isMobile={false} isActive={false} collapsed={false} siderTooltipProps={{}} onClick={vi.fn()} />
     );
 
     expect(screen.getByTestId('sider-usage-today').textContent).toBe('0');

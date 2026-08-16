@@ -6,15 +6,8 @@
 
 import { useCallback, useMemo, useState } from 'react';
 import { useAddEventListener } from '@/renderer/utils/emitter';
-import {
-  filterUsageEvents,
-  type UsageRange,
-} from '@/renderer/utils/chat/tokenUsageAggregate';
-import {
-  clearUsageLedger,
-  readUsageLedger,
-  type UsageEvent,
-} from '@/renderer/utils/chat/tokenUsageLedger';
+import { filterUsageEvents, type UsageRange } from '@/renderer/utils/chat/tokenUsageAggregate';
+import { clearUsageLedger, readUsageLedger, type UsageEvent } from '@/renderer/utils/chat/tokenUsageLedger';
 
 export const useTokenUsageStats = (range: UsageRange) => {
   const [revision, setRevision] = useState(0);

@@ -75,11 +75,7 @@ export function usageInputFromConversation(conversation: TChatConversation): Rec
     assistant_name: conversation.assistant?.name,
     conversation_name: conversation.name,
     model_id: conversationModelId(conversation),
-    breakdown: hasBreakdown
-      ? breakdown
-      : isAionrsSpend
-        ? { input_tokens: usage.total_tokens }
-        : undefined,
+    breakdown: hasBreakdown ? breakdown : isAionrsSpend ? { input_tokens: usage.total_tokens } : undefined,
     cost: usage.cost,
     source: conversation.type === 'aionrs' ? 'aionrs' : 'acp',
     recorded_at: conversation.modified_at || conversation.created_at,
