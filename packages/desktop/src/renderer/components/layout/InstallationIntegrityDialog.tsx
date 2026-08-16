@@ -427,7 +427,12 @@ export const CrashRecoveryModalHost: React.FC = () => {
           <Button data-testid='crash-recovery-continue' onClick={continueNormally}>
             {t('common.crashRecovery.continueNormally')}
           </Button>
-          <Button data-testid='crash-recovery-safe-mode' loading={restarting} type='primary' onClick={restartInSafeMode}>
+          <Button
+            data-testid='crash-recovery-safe-mode'
+            loading={restarting}
+            type='primary'
+            onClick={restartInSafeMode}
+          >
             {t('common.crashRecovery.restartSafeMode')}
           </Button>
         </Space>
