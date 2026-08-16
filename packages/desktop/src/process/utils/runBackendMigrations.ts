@@ -4,12 +4,11 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { execFile } from 'node:child_process';
 import { migrateConfigStorage, migrateLegacyMcpConfigToDb, migrateProviders } from '@/common/config/configMigration';
 import { httpRequest } from '@/common/adapter/httpBridge';
 import { mcpService } from '@/common/adapter/ipcBridge';
 import type { ImageGenerationModelSetting } from '@/common/config/clientSettings';
-import { BUILTIN_BROWSER_MCP_NAME } from '@/common/config/constants';
+import { BUILTIN_BROWSER_MCP_NAME, LEGACY_BUILTIN_BROWSER_MCP_NAMES } from '@/common/config/constants';
 import {
   removeImageGenerationEnvKeys,
   resolveImageGenerationMcpEnv,
@@ -185,7 +184,7 @@ function buildBuiltinBrowserServer(): McpImportServer {
   return {
     name: BUILTIN_BROWSER_MCP_NAME,
     description:
-      "Control AionUi's built-in browser (the side preview panel): open pages, click, type and read content. " +
+      "Control WorkMate's built-in browser (the side preview panel): open pages, click, type and read content. " +
       'Sign-in state is shared across tabs and preserved between sessions.',
     // 默认开启：用户装好即可用，无需任何配置
     // Enabled by default: works out of the box with zero configuration.
@@ -201,95 +200,7 @@ function buildBuiltinBrowserServer(): McpImportServer {
 }
 
 function buildDefaultMcpServers(): McpImportServer[] {
-  const chromeConfig = {
-    command: 'npx',
-    args: ['-y', 'chrome-devtools-mcp@latest'],
-  };
-
-  return [
-    {
-      name: BUILTIN_CHROME_DEVTOOLS_NAME,
-      description: 'Default MCP server: chrome-devtools',
-      enabled: false,
-      builtin: true,
-      transport: {
-        type: 'stdio',
-        command: chromeConfig.command,
-        args: chromeConfig.args,
-      },
-      original_json: JSON.stringify({ mcpServers: { [BUILTIN_CHROME_DEVTOOLS_NAME]: chromeConfig } }, null, 2),
-    },
-    buildBuiltinBrowserServer(),
-  ];
-}
-
-async function isCommandAvailable(command: string): Promise<boolean> {
-  return await new Promise((resolve) => {
-    execFile(command, ['--version'], { timeout: 3000 }, (error) => {
-      if (!error) {
-        resolve(true);
-        return;
-      }
-
-      const err = error as NodeJS.ErrnoException;
-      if (err.code === 'ENOENT') {
-        resolve(false);
-        return;
-      }
-
-      resolve(true);
-    });
-  });
-}
-
-async function ensureBuiltinChromeDevtoolsAvailability(server?: IMcpServer): Promise<void> {
-  if (
-    !server ||
-    server.name !== BUILTIN_CHROME_DEVTOOLS_NAME ||
-    server.transport.type !== 'stdio' ||
-    server.transport.command !== 'npx'
-  ) {
-    return;
-  }
-
-  const hasNpx = await isCommandAvailable(server.transport.command);
-  if (hasNpx) {
-    return;
-  }
-
-  try {
-    await mcpService.testMcpConnection.invoke(server);
-  } catch (error) {
-    console.warn('[Migration] chrome-devtools MCP preflight failed', error);
-  }
-}
-
-function buildOriginalJsonFromTransport(server: Pick<IMcpServer, 'name' | 'description' | 'transport'>): string {
-  const transport_config =
-    server.transport.type === 'stdio'
-      ? {
-          command: server.transport.command,
-          args: server.transport.args || [],
-          env: server.transport.env || {},
-        }
-      : {
-          type: server.transport.type,
-          url: server.transport.url,
-          ...(server.transport.headers ? { headers: server.transport.headers } : {}),
-        };
-
-  return JSON.stringify(
-    {
-      mcpServers: {
-        [server.name]: {
-          ...(server.description ? { description: server.description } : {}),
-          ...transport_config,
-        },
-      },
-    },
-    null,
-    2
-  );
+  return [buildBuiltinBrowserServer()];
 }
 
 async function ensureBootstrapMcpServersInDb(configFile: ConfigFile): Promise<void> {
@@ -300,7 +211,58 @@ async function ensureBootstrapMcpServersInDb(configFile: ConfigFile): Promise<vo
   ]);
   const imageConfig = resolveImageGenerationMigrationConfig(backendPrefs, fileImageConfig);
   const imageConfigSource = resolveImageGenerationMigrationConfigSource(backendPrefs, fileImageConfig);
-  const existing = await mcpService.listServers.invoke();
+  let existing = await mcpService.listServers.invoke();
+  const redundantBuiltinChromeServers = existing.filter(
+    (server) =>
+      server.builtin === true &&
+      server.name === BUILTIN_CHROME_DEVTOOLS_NAME &&
+      server.transport.type === 'stdio' &&
+      server.transport.command === 'npx' &&
+      areStringArraysEqual(server.transport.args, ['-y', 'chrome-devtools-mcp@latest'])
+  );
+  if (redundantBuiltinChromeServers.length > 0) {
+    await Promise.all(redundantBuiltinChromeServers.map((server) => mcpService.deleteServer.invoke({ id: server.id })));
+    const redundantIds = new Set(redundantBuiltinChromeServers.map((server) => server.id));
+    existing = existing.filter((server) => !redundantIds.has(server.id));
+    console.info('[Migration] removed %d redundant built-in chrome-devtools records', redundantIds.size);
+  }
+  const desiredBrowserServer = buildBuiltinBrowserServer();
+  const currentBrowserServer = existing.find((server) => server.name === BUILTIN_BROWSER_MCP_NAME);
+  const legacyBrowserServers = existing.filter(
+    (server) =>
+      server.builtin === true && LEGACY_BUILTIN_BROWSER_MCP_NAMES.some((legacyName) => server.name === legacyName)
+  );
+
+  if (!currentBrowserServer && legacyBrowserServers.length > 0) {
+    const [legacyBrowserServer, ...duplicates] = legacyBrowserServers;
+    const renamedBrowserServer = await mcpService.updateServer.invoke({
+      id: legacyBrowserServer.id,
+      data: {
+        name: BUILTIN_BROWSER_MCP_NAME,
+        description: desiredBrowserServer.description,
+        builtin: true,
+        transport: desiredBrowserServer.transport,
+        original_json: desiredBrowserServer.original_json,
+      },
+    });
+    await Promise.all(duplicates.map((server) => mcpService.deleteServer.invoke({ id: server.id })));
+    const duplicateIds = new Set(duplicates.map((server) => server.id));
+    existing = existing
+      .filter((server) => server.id !== legacyBrowserServer.id && !duplicateIds.has(server.id))
+      .concat(renamedBrowserServer);
+    console.info(
+      '[Migration] renamed legacy browser MCP from %s to %s, removed %d duplicate legacy records',
+      legacyBrowserServer.name,
+      BUILTIN_BROWSER_MCP_NAME,
+      duplicates.length
+    );
+  } else if (legacyBrowserServers.length > 0) {
+    await Promise.all(legacyBrowserServers.map((server) => mcpService.deleteServer.invoke({ id: server.id })));
+    const legacyIds = new Set(legacyBrowserServers.map((server) => server.id));
+    existing = existing.filter((server) => !legacyIds.has(server.id));
+    console.info('[Migration] removed %d legacy browser MCP records', legacyBrowserServers.length);
+  }
+
   const existingByName = new Map((existing ?? []).map((server) => [server.name, server]));
   const existingImageServer = existingByName.get(BUILTIN_IMAGE_GEN_NAME);
   const existingImageEnv =
@@ -315,27 +277,6 @@ async function ensureBootstrapMcpServersInDb(configFile: ConfigFile): Promise<vo
   if (missing.length > 0) {
     await mcpService.batchImportServers.invoke({ servers: missing });
   }
-
-  const existingChromeDevtools = existingByName.get(BUILTIN_CHROME_DEVTOOLS_NAME);
-  if (
-    existingChromeDevtools &&
-    (existingChromeDevtools.builtin !== true ||
-      !existingChromeDevtools.original_json ||
-      existingChromeDevtools.original_json.trim() === '' ||
-      existingChromeDevtools.original_json.trim() === '{}')
-  ) {
-    await mcpService.updateServer.invoke({
-      id: existingChromeDevtools.id,
-      data: {
-        builtin: true,
-        original_json: buildOriginalJsonFromTransport(existingChromeDevtools),
-      },
-    });
-  }
-
-  const refreshedServers = await mcpService.listServers.invoke();
-  const chromeDevtoolsServer = refreshedServers.find((server) => server.name === BUILTIN_CHROME_DEVTOOLS_NAME);
-  await ensureBuiltinChromeDevtoolsAvailability(chromeDevtoolsServer);
 
   if (
     imageEnvResolution.ok === true &&

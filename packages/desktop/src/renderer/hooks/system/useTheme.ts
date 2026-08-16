@@ -25,14 +25,6 @@ function cacheAppearance(theme: Theme): void {
   }
 }
 
-function cacheAppearance(theme: Theme): void {
-  try {
-    localStorage.setItem(APPEARANCE_CACHE_KEY, theme.appearance);
-  } catch {
-    /* noop */
-  }
-}
-
 function getPersistedActiveId(): string {
   return (configService.get('theme.activeId') as string) || LIGHT_THEME_ID;
 }

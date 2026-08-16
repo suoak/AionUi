@@ -6,6 +6,19 @@
 
 import { ipcBridge } from '@/common';
 import type { UpdateCheckResult, UpdateReleaseInfo } from '@/common/update/updateTypes';
+import semver from 'semver';
+
+/**
+ * True only when `candidate` is a strictly greater version than `current`.
+ * Guards against downgrade offers (e.g. installed 2.1.54, feed reports 2.1.53)
+ * that a rolled-back channel or drifted allowDowngrade can surface.
+ */
+const isNewerVersion = (candidate: string | null | undefined, current: string): boolean => {
+  if (!candidate) return false;
+  const currentSemver = semver.valid(current) || semver.coerce(current)?.version;
+  const candidateSemver = semver.valid(candidate) || semver.coerce(candidate)?.version;
+  return Boolean(currentSemver && candidateSemver && semver.gt(candidateSemver, currentSemver));
+};
 
 /**
  * Discriminated outcome of an update check. The `available`/`upToDate` field
@@ -47,6 +60,19 @@ export const runUpdateCheck = async (opts: {
   checkFailedLabel: string;
 }): Promise<CheckUpdateOutcome> => {
   try {
+    let autoUpdateInfo: { version: string; releaseNotes?: string } | null = null;
+    try {
+      const autoRes = await ipcBridge.autoUpdate.check.invoke({ includePrerelease: opts.includePrerelease });
+      if (autoRes?.success && autoRes.data?.updateInfo) {
+        autoUpdateInfo = {
+          version: autoRes.data.updateInfo.version,
+          releaseNotes: autoRes.data.updateInfo.releaseNotes,
+        };
+      }
+    } catch (error) {
+      console.warn('Auto-update check error, using manual mode:', error);
+    }
+
     const res = await ipcBridge.update.check.invoke({ includePrerelease: opts.includePrerelease });
     if (!res?.success) {
       throw new Error(res?.msg || opts.checkFailedLabel);
@@ -55,21 +81,20 @@ export const runUpdateCheck = async (opts: {
     const currentVersion = res.data?.currentVersion || opts.fallbackVersion;
     const latest = res.data?.latest ?? null;
     const releasePageUrl = latest?.htmlUrl || '';
+    const autoUpdateAvailable = isNewerVersion(autoUpdateInfo?.version, currentVersion);
+    const manualUpdateAvailable = Boolean(
+      res.data?.updateAvailable && latest && isNewerVersion(latest.version, currentVersion)
+    );
 
-    if (res.data?.updateAvailable && latest) {
+    if (autoUpdateAvailable || manualUpdateAvailable) {
       return {
         kind: 'available',
         currentVersion,
         updateInfo: latest,
         releasePageUrl,
-        autoUpdateAvailable: Boolean(res.data.autoUpdateAvailable),
+        autoUpdateAvailable,
         updatePolicy: res.data.updatePolicy ?? { mode: 'optional' },
-        autoUpdateInfo: res.data.autoUpdateInfo
-          ? {
-              version: res.data.autoUpdateInfo.version,
-              releaseNotes: res.data.autoUpdateInfo.releaseNotes,
-            }
-          : null,
+        autoUpdateInfo,
       };
     }
 
