@@ -2,9 +2,11 @@ import { Button, Message, Modal, Space, Typography } from '@arco-design/web-reac
 import type { TFunction } from 'i18next';
 import React, { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { ipcBridge } from '@/common';
+import type { CrashRecoveryState } from '@/common/adapter/ipcBridge';
 import { type FeedbackEventTags, submitFeedbackReport } from '@/renderer/services/feedback/submitFeedbackReport';
 
-const AIONUI_DOWNLOAD_URL = 'https://www.aionui.com/';
+const WORKMATE_DOWNLOAD_URL = 'https://github.com/suoak/AionUi/releases';
 const INSTALLATION_INTEGRITY_REPORT_FLUSH_TIMEOUT_MS = 2000;
 
 type InstallationIntegrityDialogKind =
@@ -35,7 +37,7 @@ export type InstallationIntegrityDiagnostics = {
 };
 
 export function openDownloadLatest(): void {
-  window.open(AIONUI_DOWNLOAD_URL, '_blank', 'noopener,noreferrer');
+  window.open(WORKMATE_DOWNLOAD_URL, '_blank', 'noopener,noreferrer');
 }
 
 /**
@@ -57,7 +59,7 @@ const DIALOG_KIND_CONFIG: Record<
     showRecover?: boolean;
   }
 > = {
-  incomplete_installation: { i18nSection: 'incompleteInstallation', showDiagnostics: true, showDownloadLatest: true },
+  incomplete_installation: { i18nSection: 'incompleteInstallation', showDiagnostics: true },
   data_migration: { i18nSection: 'dataMigration', showDiagnostics: true },
   database_newer_than_app: { i18nSection: 'databaseNewerThanApp', showDiagnostics: false, showDownloadLatest: true },
   local_data_repair: { i18nSection: 'localDataRepair', showDiagnostics: true },
@@ -163,7 +165,7 @@ export async function reportInstallationIntegrityDiagnostics(
     tags: buildInstallationIntegrityTags(diagnostics),
   });
 
-  if (typeof window !== 'undefined' && window.__aionuiE2ETest) {
+  if (typeof window !== 'undefined' && window.__workMateE2ETest) {
     window.__installationIntegrityReportCount = (window.__installationIntegrityReportCount ?? 0) + 1;
     window.__lastInstallationIntegrityReportMessage = 'installation-integrity-user-report';
   }
@@ -352,4 +354,88 @@ export const InstallationIntegrityModalHost: React.FC<{
   }, [description, diagnostics, diagnosticsKind, modal, t]);
 
   return <>{modalContextHolder}</>;
+};
+
+export const CrashRecoveryModalHost: React.FC = () => {
+  const { t } = useTranslation();
+  const [recoveryState, setRecoveryState] = useState<CrashRecoveryState | null>(null);
+  const [restarting, setRestarting] = useState(false);
+
+  useEffect(() => {
+    const getCrashRecoveryState = ipcBridge.application.getCrashRecoveryState;
+    if (!getCrashRecoveryState) return;
+    getCrashRecoveryState
+      .invoke()
+      .then((state) => {
+        if (state.detected && state.reportId) setRecoveryState(state);
+      })
+      .catch((error: unknown) => {
+        console.warn('[CrashRecovery] Failed to query recovery state:', error);
+      });
+  }, []);
+
+  if (!recoveryState?.reportId) return null;
+  const reportId = recoveryState.reportId;
+
+  const continueNormally = async () => {
+    try {
+      await ipcBridge.application.dismissCrashRecovery.invoke({ reportId });
+      setRecoveryState(null);
+    } catch (error) {
+      console.warn('[CrashRecovery] Failed to dismiss recovery report:', error);
+      Message.error(t('common.crashRecovery.actionFailed'));
+    }
+  };
+
+  const openReports = async () => {
+    try {
+      await ipcBridge.application.openCrashReports.invoke();
+    } catch (error) {
+      console.warn('[CrashRecovery] Failed to open crash reports:', error);
+      Message.error(t('common.crashRecovery.openReportsFailed'));
+    }
+  };
+
+  const restartInSafeMode = async () => {
+    if (restarting) return;
+    setRestarting(true);
+    try {
+      await ipcBridge.application.dismissCrashRecovery.invoke({ reportId });
+      const result = await ipcBridge.application.restartInSafeMode.invoke();
+      if (result.manualRestartRequired) {
+        Message.error(t('common.crashRecovery.restartFailed'));
+        setRestarting(false);
+      }
+    } catch (error) {
+      console.warn('[CrashRecovery] Failed to restart in safe mode:', error);
+      Message.error(t('common.crashRecovery.actionFailed'));
+      setRestarting(false);
+    }
+  };
+
+  return (
+    <Modal
+      visible
+      closable={false}
+      maskClosable={false}
+      title={t('common.crashRecovery.title')}
+      footer={
+        <Space>
+          <Button data-testid='crash-recovery-open-reports' onClick={openReports}>
+            {t('common.crashRecovery.openReports')}
+          </Button>
+          <Button data-testid='crash-recovery-continue' onClick={continueNormally}>
+            {t('common.crashRecovery.continueNormally')}
+          </Button>
+          <Button data-testid='crash-recovery-safe-mode' loading={restarting} type='primary' onClick={restartInSafeMode}>
+            {t('common.crashRecovery.restartSafeMode')}
+          </Button>
+        </Space>
+      }
+    >
+      <Typography.Paragraph className='mb-0 text-t-secondary'>
+        {t('common.crashRecovery.description')}
+      </Typography.Paragraph>
+    </Modal>
+  );
 };

@@ -8,6 +8,7 @@ import { ipcBridge } from '@/common';
 import type { ChatFileRef } from '@/common/types/chatFile';
 import { buildFileStreamUrl } from './fileUrls';
 import { base64ToBlob, BINARY_MIME_MAP } from './base64';
+import { resolveLocalFileReadRoot } from './fileSelection';
 
 function triggerBlobDownload(blob: Blob, file_name: string): void {
   const url = URL.createObjectURL(blob);
@@ -25,7 +26,8 @@ function triggerBlobDownload(blob: Blob, file_name: string): void {
  * Uses getImageBase64 + in-memory atob decode to bypass CSP connect-src restrictions.
  */
 export async function downloadFileFromPath(file_path: string, file_name: string, workspace?: string): Promise<void> {
-  const dataUrl = await ipcBridge.fs.getImageBase64.invoke({ path: file_path, workspace });
+  const readRoot = resolveLocalFileReadRoot(file_path, workspace);
+  const dataUrl = await ipcBridge.fs.getImageBase64.invoke({ path: file_path, workspace: readRoot });
   if (!dataUrl) {
     throw new Error('File data not found');
   }
@@ -33,6 +35,17 @@ export async function downloadFileFromPath(file_path: string, file_name: string,
   const mimeType = BINARY_MIME_MAP[ext] ?? 'application/octet-stream';
   const blob = base64ToBlob(dataUrl, mimeType);
   triggerBlobDownload(blob, file_name);
+}
+
+/**
+ * Download an image that is already available to the renderer as a remote or data URL.
+ */
+export async function downloadFileFromUrl(file_url: string, file_name: string): Promise<void> {
+  const response = await fetch(file_url);
+  if (!response.ok) {
+    throw new Error(`Failed to fetch file: ${response.status}`);
+  }
+  triggerBlobDownload(await response.blob(), file_name);
 }
 
 /**

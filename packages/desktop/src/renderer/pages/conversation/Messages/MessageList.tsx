@@ -529,44 +529,6 @@ const MessageList: React.FC<{ className?: string; emptySlot?: React.ReactNode }>
     return ids;
   }, [processedList]);
 
-  // The last REAL message in the visible timeline (pseudo entries like
-  // file/tool summaries don't count). HEAD-fork backends (claude/ACP) only
-  // show the fork entry point here — see `isForkEnabled`.
-  const lastMessageId = useMemo(() => {
-    for (let i = processedList.length - 1; i >= 0; i--) {
-      const item = processedList[i];
-      if (
-        'type' in item &&
-        (item.type === 'file_summary' || item.type === 'tool_summary' || item.type === 'artifact')
-      ) {
-        continue;
-      }
-      return (item as TMessage).id;
-    }
-    return undefined;
-  }, [processedList]);
-
-  // Mirror of the server's fork-anchor resolution ("nearest backend_turn_id at
-  // or before the message"): a message is mid-history forkable once ANY message
-  // at-or-before it carries a turn anchor. Legacy/copied rows before the first
-  // anchor stay un-forkable and their entry is hidden instead of 422-ing.
-  const forkAnchoredIds = useMemo(() => {
-    const ids = new Set<string>();
-    let seenAnchor = false;
-    for (const item of processedList) {
-      if (
-        'type' in item &&
-        (item.type === 'file_summary' || item.type === 'tool_summary' || item.type === 'artifact')
-      ) {
-        continue;
-      }
-      const message = item as TMessage;
-      if (message.backend_turn_id) seenAnchor = true;
-      if (seenAnchor) ids.add(message.id);
-    }
-    return ids;
-  }, [processedList]);
-
   // Use auto-scroll hook
   const {
     handleScrollerRef,

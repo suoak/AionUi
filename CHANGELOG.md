@@ -1,5 +1,70 @@
 # Changelog
 
+## [2.1.63](https://github.com/suoak/AionUi/compare/v2.1.62...v2.1.63) (2026-08-16)
+
+### Desktop
+
+#### Features
+
+- **conversation:** surface session fork and deferred mode-switch pending state
+- **channel:** add Slack and Discord configuration UI
+- **preview:** add save, mermaid pan/zoom, and Office download improvements
+- **scm:** add Changes panel with multi-repo switching
+- **sidebar:** allow marking a conversation as unread
+- **startup:** dedicated dialog for a database created by a newer app
+- **chat:** copy the whole AI turn, not just the last text segment
+- **explorer:** add copy relative/absolute path actions
+
+#### Bug Fixes
+
+- **preview:** download PDF, DOCX, XLSX, and PPTX
+- **explorer:** stop the loadMore loop and re-subscribe rejected watches
+- **theme:** parse custom CSS via postcss and keep branded community themes
+- **security:** prevent path traversal in image generation MCP tool
+- **update:** reject downgrade offers in update check
+- **chat:** keep branded update sources and WorkMate identity after the upstream sync
+- **branding:** keep WorkMate components, crash recovery, and branded download source after the upstream sync
+
+#### 内网更新说明
+
+<!-- internal-release-notes:start -->
+
+**由运营管理部提供**
+
+- 支持将会话分叉为新对话，切换工作模式时会显示“待生效”而不是立即切换。
+- 新增飞书之外的 Slack 和 Discord 通道配置。
+- 预览支持保存、Mermaid 缩放，以及 PDF/Office 文档下载。
+- 源码管理面板支持多仓库切换；会话列表可标记未读。
+- 新版本创建的本地数据在旧版本打开时会给出明确提示。
+- 复制按钮会复制整轮回复；资源管理器可复制相对或绝对路径。
+- 保持 CSBU WorkMate 品牌和内网更新通道，未引入停更或外部推广内容。
+
+<!-- internal-release-notes:end -->
+
+### Core ([v0.1.72](https://github.com/suoak/AionCore/releases/tag/v0.1.72))
+
+#### Features
+
+- **aionrs:** update the branded runtime dependency to v0.2.14
+- **conversation:** support forking aionrs conversations
+- **session:** report a deferred mode switch as pending instead of observed
+- **channel:** add Slack Socket Mode and Discord Gateway plugins
+- **db:** dedicated startup stage for a database created by a newer app
+- **sidebar:** add user_order ordering base and sidebar grouping API
+
+#### Bug Fixes
+
+- restore direct CLI Team MCP capabilities
+- **session:** retry claude session-title generation with timeout and observability
+- **antigravity:** parse TSV output from `agy models`
+- **conversation:** tell the client when a turn is cancelled before its agent exists
+- **cli-version:** deliver the version-drift notice, and stop it reading as an error
+- **agent:** stop the idle scanner from killing agents with live background tasks
+- **runtime:** bump verified ACP registry pins and CLI versions
+- **cli:** bump verified Claude Code to 2.1.233
+
+---
+
 ## [2.1.62](https://github.com/suoak/AionUi/compare/v2.1.61...v2.1.62) (2026-08-15)
 
 ### Desktop
