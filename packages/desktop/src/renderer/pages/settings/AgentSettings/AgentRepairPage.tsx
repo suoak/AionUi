@@ -10,9 +10,10 @@ import { ArrowLeft, Connection } from '@icon-park/react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
 import { ipcBridge } from '@/common';
-import { useManagedAgents } from '@/renderer/hooks/agent/useManagedAgents';
+import { prepareManagedAgentRuntimeUntilSettled, useManagedAgents } from '@/renderer/hooks/agent/useManagedAgents';
 import {
   formatManagedAgentDiagnosticMessage,
+  managedRuntimeNeedsInstall,
   shouldShowManagedPreviewLimitations,
 } from '@/renderer/utils/model/agentTypes';
 import AgentRepairPanel from './AgentRepairPanel';
@@ -68,6 +69,24 @@ const AgentRepairPage: React.FC = () => {
     }
   }, [agent, refreshCatalog, t]);
 
+  const handlePrepareRuntime = useCallback(async () => {
+    if (!agent) return;
+    try {
+      setIsTesting(true);
+      const prepared = await prepareManagedAgentRuntimeUntilSettled(agent.id);
+      if (prepared.runtime?.state !== 'ready') {
+        Message.error(t('settings.agentManagement.runtimeInstallFailed'));
+        return;
+      }
+      await handleTestConnection();
+    } catch (error) {
+      console.error('prepare managed agent runtime failed:', error);
+      Message.error(t('settings.agentManagement.runtimeInstallFailed'));
+    } finally {
+      setIsTesting(false);
+    }
+  }, [agent, handleTestConnection, t]);
+
   // Open the target assistant's detail/editor by handing the intent to the
   // assistant settings page (which mounts its split-view editor on this key),
   // mirroring how other surfaces jump into a specific assistant.
@@ -102,6 +121,7 @@ const AgentRepairPage: React.FC = () => {
   };
 
   const boundAssistants = getBoundAssistants(agent, assistants);
+  const runtimeNeedsInstall = managedRuntimeNeedsInstall(agent);
 
   return (
     <div data-testid='agent-repair-page' className='flex h-full min-h-0 flex-col overflow-hidden bg-transparent'>
@@ -124,13 +144,17 @@ const AgentRepairPage: React.FC = () => {
         <Button
           type='outline'
           size='small'
-          loading={isTesting}
+          loading={isTesting || agent.runtime?.state === 'installing'}
           icon={<Connection theme='outline' size='14' />}
-          onClick={() => void handleTestConnection()}
+          onClick={() => void (runtimeNeedsInstall ? handlePrepareRuntime() : handleTestConnection())}
           data-testid='btn-test-connection-agent-repair'
           className='!h-30px !rounded-8px !border-border-2 !bg-base !px-10px !text-12px !font-500 !text-t-primary hover:!border-border-1 hover:!bg-fill-1'
         >
-          {t('settings.agentManagement.testConnection')}
+          {runtimeNeedsInstall
+            ? agent.runtime?.state === 'installing'
+              ? t('settings.agentManagement.runtimeInstalling', { progress: agent.runtime.progress ?? 0 })
+              : t('settings.agentManagement.installAndCheck')
+            : t('settings.agentManagement.testConnection')}
         </Button>
       </div>
 

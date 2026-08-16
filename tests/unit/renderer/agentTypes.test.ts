@@ -5,6 +5,7 @@ import {
   formatManagedAgentDiagnosticMessage,
   hostPreviewLimitationsFromAgent,
   managedAgentSearchText,
+  managedRuntimeNeedsInstall,
   shouldShowManagedPreviewLimitations,
 } from '@/renderer/utils/model/agentTypes';
 
@@ -148,5 +149,49 @@ describe('shouldShowManagedPreviewLimitations', () => {
         })
       )
     ).toBe(false);
+  });
+});
+
+describe('managedRuntimeNeedsInstall', () => {
+  it('requires install for an uninstalled DeepSeek Harness runtime', () => {
+    expect(
+      managedRuntimeNeedsInstall(
+        managedAgent({
+          agent_source_info: { managed_runtime: { runtime_id: 'deepseek-harness', release: '2026.08.14-1' } },
+          runtime: { runtime_id: 'deepseek-harness', release: '2026.08.14-1', state: 'not_installed' },
+        })
+      )
+    ).toBe(true);
+  });
+
+  it('does not require install when the managed runtime is ready', () => {
+    expect(
+      managedRuntimeNeedsInstall(
+        managedAgent({
+          agent_source_info: { managed_runtime: { runtime_id: 'deepseek-harness', release: '2026.08.14-1' } },
+          runtime: { runtime_id: 'deepseek-harness', release: '2026.08.14-1', state: 'ready', phase: 'ready' },
+        })
+      )
+    ).toBe(false);
+  });
+
+  it('requires install again when a ready runtime is waiting to update', () => {
+    expect(
+      managedRuntimeNeedsInstall(
+        managedAgent({
+          agent_source_info: { managed_runtime: { runtime_id: 'deepseek-harness', release: '2026.08.14-1' } },
+          runtime: {
+            runtime_id: 'deepseek-harness',
+            release: '2026.08.14-1',
+            state: 'ready',
+            phase: 'update_available',
+          },
+        })
+      )
+    ).toBe(true);
+  });
+
+  it('ignores agents that do not use the managed DeepSeek Harness runtime', () => {
+    expect(managedRuntimeNeedsInstall(managedAgent({ backend: 'claude', installed: false }))).toBe(false);
   });
 });

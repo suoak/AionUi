@@ -14,6 +14,7 @@ import {
   type AgentManagementStatus,
   type ManagedAgent,
   formatManagedAgentDiagnosticMessage,
+  managedRuntimeNeedsInstall,
 } from '@/renderer/utils/model/agentTypes';
 import { BoundAssistantStack } from './BoundAssistants';
 
@@ -113,9 +114,7 @@ const AgentCard: React.FC<AgentCardProps> = (props) => {
   const diagnostics = formatManagedAgentDiagnosticMessage(t, agent);
   const displayStatus = resolveDisplayStatus(agent.status, agent.last_check_error_code);
   const isPreview = agent.agent_source_info?.managed_runtime?.runtime_id === 'deepseek-harness';
-  const runtimeNeedsInstall =
-    isPreview &&
-    (agent.runtime?.state !== 'ready' || ['update_available', 'rollback'].includes(agent.runtime?.phase ?? ''));
+  const runtimeNeedsInstall = managedRuntimeNeedsInstall(agent);
   const onPrepareRuntime = props.type === 'official' ? props.onPrepareRuntime : undefined;
 
   const avatar = resolveAgentAvatar(logos, {

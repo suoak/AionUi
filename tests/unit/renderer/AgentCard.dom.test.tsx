@@ -129,6 +129,31 @@ describe('AgentCard (official variant)', () => {
     expect(onPrepareRuntime).toHaveBeenCalledOnce();
   });
 
+  it('disables install-and-check when no prepare handler is wired', () => {
+    renderOfficial({
+      id: 'deepseek-harness',
+      name: 'DeepSeek Harness',
+      agent_type: 'acp',
+      agent_source: 'builtin',
+      backend: 'deepseek-harness',
+      enabled: true,
+      installed: false,
+      status: 'missing',
+      agent_source_info: {
+        managed_runtime: { runtime_id: 'deepseek-harness', release: '2026.08.14-1' },
+      },
+      runtime: {
+        runtime_id: 'deepseek-harness',
+        release: '2026.08.14-1',
+        state: 'not_installed',
+      },
+    });
+
+    const installButton = screen.getByText('settings.agentManagement.installAndCheck').closest('button');
+    expect(installButton).toBeTruthy();
+    expect(installButton).toBeDisabled();
+  });
+
   it('uses the CSBU WorkMate app icon for the internal agent instead of the legacy Aion logo', () => {
     renderOfficial({
       id: 'aionrs',
