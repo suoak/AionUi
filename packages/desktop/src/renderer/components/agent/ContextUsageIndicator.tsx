@@ -4,11 +4,14 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Popover } from '@arco-design/web-react';
+import { Button, Popover } from '@arco-design/web-react';
 import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 
 import type { TokenUsageCost, TokenUsageData } from '@/common/config/storage';
+import { conversationSpendTokens } from '@/renderer/utils/chat/tokenUsageAggregate';
+import { readUsageLedger } from '@/renderer/utils/chat/tokenUsageLedger';
 
 interface ContextUsageIndicatorProps {
   tokenUsage: TokenUsageData | null;
@@ -18,6 +21,7 @@ interface ContextUsageIndicatorProps {
    * percentage — never a percentage against a guessed denominator.
    */
   context_limit: number;
+  conversation_id?: string;
   className?: string;
   size?: number;
 }
@@ -25,10 +29,12 @@ interface ContextUsageIndicatorProps {
 const ContextUsageIndicator: React.FC<ContextUsageIndicatorProps> = ({
   tokenUsage,
   context_limit,
+  conversation_id,
   className = '',
   size = 20,
 }) => {
   const { t } = useTranslation();
+  const navigate = useNavigate();
 
   const hasWindow = context_limit > 0;
 
@@ -117,8 +123,20 @@ const ContextUsageIndicator: React.FC<ContextUsageIndicatorProps> = ({
     }
   }
 
+  const conversationSpend = useMemo(() => {
+    if (!conversation_id) {
+      return 0;
+    }
+    return conversationSpendTokens(readUsageLedger().events, conversation_id);
+  }, [conversation_id, tokenUsage]);
+
   const details = (
     <>
+      {conversationSpend > 0 && (
+        <div className='text-12px text-t-secondary mt-4px'>
+          {t('conversation.contextUsage.sessionSpend', 'Session spend')} {formatTokenCount(conversationSpend)}
+        </div>
+      )}
       {tokenUsage.cost && (
         <div className='text-12px text-t-secondary mt-4px'>
           {t('conversation.contextUsage.sessionCost', 'Session cost')} ≈ {formatCostAmount(tokenUsage.cost)}
@@ -127,6 +145,16 @@ const ContextUsageIndicator: React.FC<ContextUsageIndicatorProps> = ({
       {breakdownParts.length > 0 && (
         <div className='text-12px text-t-secondary mt-4px'>{breakdownParts.join(' · ')}</div>
       )}
+      <Button
+        type='text'
+        size='mini'
+        className='!mt-6px !h-auto !px-0 !text-12px'
+        onClick={() => {
+          void navigate('/settings/usage');
+        }}
+      >
+        {t('conversation.contextUsage.viewStats', 'View usage stats')}
+      </Button>
     </>
   );
 

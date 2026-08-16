@@ -25,6 +25,9 @@ export const STORAGE_KEYS = {
 
   /** Language preference / 语言偏好 */
   LANGUAGE: 'csbu_workmate_language',
+
+  /** Local token-usage ledger for settings usage trends */
+  TOKEN_USAGE_LEDGER: 'csbu_workmate_token_usage_ledger',
 } as const;
 
 export type StorageKey = (typeof STORAGE_KEYS)[keyof typeof STORAGE_KEYS];

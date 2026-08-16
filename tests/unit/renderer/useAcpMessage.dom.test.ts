@@ -6,7 +6,9 @@
 
 import { act, renderHook, waitFor } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { STORAGE_KEYS } from '@/common/config/storageKeys';
 import { tokenUsageFromAcpUsage, useAcpMessage } from '@/renderer/pages/conversation/platforms/acp/useAcpMessage';
+import { parseUsageLedger } from '@/renderer/utils/chat/tokenUsageLedger';
 import { getConversationOrNull } from '@/renderer/pages/conversation/utils/conversationCache';
 import { resetConversationTurnClockForTests } from '@/renderer/pages/conversation/utils/conversationTurnClock';
 import { resetEnsureConversationRuntimeStateForTests } from '@/renderer/pages/conversation/utils/ensureConversationRuntime';
@@ -59,6 +61,9 @@ vi.mock('@/common', () => ({
       getUsage: {
         invoke: getUsageInvokeMock,
       },
+      update: {
+        invoke: vi.fn().mockResolvedValue(true),
+      },
     },
   },
 }));
@@ -82,6 +87,7 @@ describe('useAcpMessage', () => {
     getSlashCommandsInvokeMock.mockResolvedValue([]);
     getUsageInvokeMock.mockResolvedValue(null);
     responseStreamHandlerRef.current = undefined;
+    localStorage.removeItem(STORAGE_KEYS.TOKEN_USAGE_LEDGER);
   });
 
   it('completes hydration when the conversation lookup fails', async () => {
@@ -496,6 +502,56 @@ describe('useAcpMessage', () => {
       expect(result.current.context_limit).toBe(200_000);
     });
     expect(result.current.tokenUsage).toEqual({ total_tokens: 90_000 });
+  });
+
+  it('records completed-turn token spend and ignores mid-turn occupancy snapshots', async () => {
+    vi.mocked(getConversationOrNull).mockResolvedValue({
+      type: 'acp',
+      extra: { backend: 'deepseek-harness', current_model_id: 'deepseek-chat' },
+      assistant: { id: 'asst-1', name: 'DeepSeek Preview', backend: 'deepseek-harness' },
+    } as never);
+
+    const { result } = renderHook(() => useAcpMessage('conv-1'));
+    await waitFor(() => {
+      expect(result.current.hasHydratedRunningState).toBe(true);
+    });
+
+    act(() => {
+      responseStreamHandlerRef.current?.({
+        type: 'acp_context_usage',
+        data: { used: 12_000, size: 200_000 },
+        msg_id: 'usage-mid',
+        conversation_id: 'conv-1',
+      } as unknown as IResponseMessage);
+    });
+    expect(parseUsageLedger(localStorage.getItem(STORAGE_KEYS.TOKEN_USAGE_LEDGER)).events).toEqual([]);
+
+    act(() => {
+      responseStreamHandlerRef.current?.({
+        type: 'acp_context_usage',
+        data: {
+          used: 12_400,
+          size: 200_000,
+          cost: { amount: 0.2, currency: 'USD' },
+          _meta: { input_tokens: 900, output_tokens: 80 },
+        },
+        msg_id: 'usage-end',
+        turn_id: 'turn-9',
+        conversation_id: 'conv-1',
+      } as unknown as IResponseMessage);
+    });
+
+    const events = parseUsageLedger(localStorage.getItem(STORAGE_KEYS.TOKEN_USAGE_LEDGER)).events;
+    expect(events).toHaveLength(1);
+    expect(events[0]).toMatchObject({
+      conversation_id: 'conv-1',
+      backend: 'deepseek-harness',
+      assistant_id: 'asst-1',
+      model_id: 'deepseek-chat',
+      input_tokens: 900,
+      output_tokens: 80,
+      cost_delta: 0.2,
+    });
   });
 
   it('survives a failing usage snapshot request without touching indicator state', async () => {

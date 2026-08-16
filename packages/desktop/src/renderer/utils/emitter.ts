@@ -54,6 +54,7 @@ interface EventTypes {
   'sendbox.reply': [ReplyQuote]; // reply/quote a message
   'sendbox.reply.clear': void; // clear reply quote
   'sendbox.retry': [SendBoxRetryRequest]; // retry a previous text-only user message
+  'token.usage.recorded': void;
 }
 
 export const emitter = new EventEmitter<EventTypes>();

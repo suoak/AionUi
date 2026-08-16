@@ -58,6 +58,18 @@ vi.mock('@/common', () => ({
   },
 }));
 
+vi.mock('@/renderer/components/agent/ContextUsageIndicator', () => ({
+  default: ({ context_limit }: { context_limit: number }) => (
+    <div className='context-usage-indicator'>
+      <svg>
+        <circle />
+        {context_limit > 0 ? <circle /> : null}
+      </svg>
+    </div>
+  ),
+  formatTokenCount: (count: number) => String(count),
+}));
+
 vi.mock('@/renderer/components/chat/SendBox', () => ({
   default: ({
     onSend,

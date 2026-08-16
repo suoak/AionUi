@@ -20,6 +20,7 @@ export const ROUTES = {
     tools: '#/settings/tools',
     display: '#/settings/appearance',
     webui: '#/settings/webui',
+    usage: '#/settings/usage',
     system: '#/settings/system',
     about: '#/settings/about',
   },

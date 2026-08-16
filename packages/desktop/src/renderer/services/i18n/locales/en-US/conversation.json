@@ -412,7 +412,9 @@
     "sessionCost": "Session cost",
     "thought": "Thinking",
     "cachedRead": "Cache read",
-    "tokensUsed": "{{tokens}} tokens used"
+    "tokensUsed": "{{tokens}} tokens used",
+    "viewStats": "View usage stats",
+    "sessionSpend": "Session spend"
   },
   "noModelConfigured": "No model configured. Please configure in settings.",
   "runtimePreparing": {

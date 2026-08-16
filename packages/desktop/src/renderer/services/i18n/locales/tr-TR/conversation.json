@@ -412,7 +412,9 @@
     "sessionCost": "Oturum maliyeti",
     "thought": "Düşünme",
     "cachedRead": "Önbellek okuma",
-    "tokensUsed": "{{tokens}} jeton kullanıldı"
+    "tokensUsed": "{{tokens}} jeton kullanıldı",
+    "viewStats": "Kullanımı gör",
+    "sessionSpend": "Oturum tüketimi"
   },
   "noModelConfigured": "No model configured. Please configure in settings.",
   "runtimePreparing": {
