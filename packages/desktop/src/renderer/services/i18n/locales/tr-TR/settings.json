@@ -1467,6 +1467,8 @@
     "siderTooltip": "Kullanım · Bugün {{tokens}}",
     "export": "CSV dışa aktar",
     "exportSuccess": "Kullanım dışa aktarıldı",
-    "filterAllModels": "Tüm modeller"
+    "filterAllModels": "Tüm modeller",
+    "byChannelTitle": "Kanala göre",
+    "unknownChannel": "Bilinmeyen kanal"
   }
 }

@@ -32,6 +32,13 @@ vi.mock('@/common', () => ({
     database: {
       getUserConversations: { invoke: vi.fn().mockResolvedValue({ items: [] }) },
     },
+    usage: {
+      list: { invoke: vi.fn().mockRejectedValue(new Error('offline')) },
+      clear: { invoke: vi.fn().mockResolvedValue(0) },
+    },
+    conversation: {
+      responseStream: { on: vi.fn(() => vi.fn()) },
+    },
   },
 }));
 

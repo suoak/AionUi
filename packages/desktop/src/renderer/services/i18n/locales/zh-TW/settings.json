@@ -1469,6 +1469,8 @@
     "siderTooltip": "用量 · 今日 {{tokens}}",
     "export": "匯出 CSV",
     "exportSuccess": "用量已匯出",
-    "filterAllModels": "全部模型"
+    "filterAllModels": "全部模型",
+    "byChannelTitle": "依渠道",
+    "unknownChannel": "未知渠道"
   }
 }

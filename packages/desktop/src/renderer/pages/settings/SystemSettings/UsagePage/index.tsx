@@ -15,6 +15,7 @@ import { useTokenUsageStats } from '@/renderer/hooks/chat/useTokenUsageStats';
 import {
   breakdownUsageByAgent,
   breakdownUsageByAssistant,
+  breakdownUsageByChannel,
   breakdownUsageByConversation,
   breakdownUsageByModel,
   buildUsageDailySeries,
@@ -50,9 +51,12 @@ const UsagePage: React.FC = () => {
   const [range, setRange] = useState<UsageRange>('30d');
   const [modelFilter, setModelFilter] = useState('all');
   const [clearVisible, setClearVisible] = useState(false);
-  const { events, visibleEvents, refresh, clear } = useTokenUsageStats(range);
+  const { events, visibleEvents, refresh, clear, usesBackend } = useTokenUsageStats(range);
 
   useEffect(() => {
+    if (usesBackend) {
+      return;
+    }
     let cancelled = false;
     void ipcBridge.database.getUserConversations
       .invoke({ limit: 100 })
@@ -70,7 +74,7 @@ const UsagePage: React.FC = () => {
     return () => {
       cancelled = true;
     };
-  }, [refresh]);
+  }, [refresh, usesBackend]);
 
   const byModel = useMemo(
     () => breakdownUsageByModel(visibleEvents, t('settings.usage.unknownModel')),
@@ -104,6 +108,10 @@ const UsagePage: React.FC = () => {
   );
   const byAssistant = useMemo(
     () => breakdownUsageByAssistant(scopedEvents, t('settings.usage.unknownAssistant')),
+    [scopedEvents, t]
+  );
+  const byChannel = useMemo(
+    () => breakdownUsageByChannel(scopedEvents, t('settings.usage.unknownChannel')),
     [scopedEvents, t]
   );
   const recentConversations = useMemo(
@@ -254,6 +262,12 @@ const UsagePage: React.FC = () => {
                 {t('settings.usage.byAssistantTitle')}
               </Typography.Text>
               <UsageBreakdownList rows={byAssistant} emptyLabel={t('settings.usage.emptyTitle')} />
+            </div>
+            <div className='rounded-12px border border-solid border-transparent bg-base px-16px py-16px md:col-span-2'>
+              <Typography.Text className='mb-12px block text-13px font-medium text-t-primary'>
+                {t('settings.usage.byChannelTitle')}
+              </Typography.Text>
+              <UsageBreakdownList rows={byChannel} emptyLabel={t('settings.usage.emptyTitle')} />
             </div>
             <div className='rounded-12px border border-solid border-transparent bg-base px-16px py-16px md:col-span-2'>
               <Typography.Text className='mb-12px block text-13px font-medium text-t-primary'>

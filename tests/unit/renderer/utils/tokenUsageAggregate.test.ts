@@ -9,6 +9,7 @@ import {
   breakdownUsageByAgent,
   breakdownUsageByAssistant,
   breakdownUsageByConversation,
+  breakdownUsageByChannel,
   breakdownUsageByModel,
   buildUsageDailySeries,
   conversationSpendTokens,
@@ -31,6 +32,7 @@ const event = (overrides: Partial<UsageEvent>): UsageEvent => ({
   assistant_id: overrides.assistant_id,
   assistant_name: overrides.assistant_name,
   conversation_name: overrides.conversation_name,
+  conversation_source: overrides.conversation_source,
   model_id: overrides.model_id,
   input_tokens: overrides.input_tokens ?? 0,
   output_tokens: overrides.output_tokens ?? 0,
@@ -170,6 +172,15 @@ describe('tokenUsageAggregate', () => {
       turn_count: 2,
     });
     expect(conversationSpendTokens(events, 'conv-b')).toBe(7);
+    expect(
+      breakdownUsageByChannel(
+        [
+          event({ conversation_source: 'lark', input_tokens: 5 }),
+          event({ conversation_source: 'lark', input_tokens: 2 }),
+        ],
+        'Unknown'
+      )[0]
+    ).toMatchObject({ key: 'lark', turn_count: 2, total_tokens: 7 });
   });
 
   it('returns empty totals for an empty event list', () => {

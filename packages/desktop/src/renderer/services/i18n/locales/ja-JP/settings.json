@@ -1469,6 +1469,8 @@
     "siderTooltip": "使用量 · 今日 {{tokens}}",
     "export": "CSV を書き出す",
     "exportSuccess": "使用量を書き出しました",
-    "filterAllModels": "すべてのモデル"
+    "filterAllModels": "すべてのモデル",
+    "byChannelTitle": "チャネル別",
+    "unknownChannel": "不明なチャネル"
   }
 }

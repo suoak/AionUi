@@ -22,6 +22,7 @@ export type UsageEvent = {
   assistant_id?: string;
   assistant_name?: string;
   conversation_name?: string;
+  conversation_source?: string;
   model_id?: string;
   input_tokens: number;
   output_tokens: number;

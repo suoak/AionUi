@@ -1467,6 +1467,8 @@
     "siderTooltip": "Использование · Сегодня {{tokens}}",
     "export": "Экспорт CSV",
     "exportSuccess": "Использование экспортировано",
-    "filterAllModels": "Все модели"
+    "filterAllModels": "Все модели",
+    "byChannelTitle": "По каналам",
+    "unknownChannel": "Неизвестный канал"
   }
 }

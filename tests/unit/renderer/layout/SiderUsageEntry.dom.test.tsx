@@ -11,6 +11,18 @@ import { STORAGE_KEYS } from '@/common/config/storageKeys';
 import { createEmptyUsageLedger, writeUsageLedger } from '@/renderer/utils/chat/tokenUsageLedger';
 import SiderUsageEntry from '@/renderer/components/layout/Sider/SiderNav/SiderUsageEntry';
 
+vi.mock('@/common', () => ({
+  ipcBridge: {
+    usage: {
+      list: { invoke: vi.fn().mockRejectedValue(new Error('offline')) },
+      clear: { invoke: vi.fn().mockResolvedValue(0) },
+    },
+    conversation: {
+      responseStream: { on: vi.fn(() => vi.fn()) },
+    },
+  },
+}));
+
 vi.mock('react-i18next', () => ({
   useTranslation: () => ({
     t: (key: string, options?: Record<string, unknown>) => {

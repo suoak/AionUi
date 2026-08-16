@@ -1467,6 +1467,8 @@
     "siderTooltip": "Nutzung · Heute {{tokens}}",
     "export": "CSV exportieren",
     "exportSuccess": "Nutzung exportiert",
-    "filterAllModels": "Alle Modelle"
+    "filterAllModels": "Alle Modelle",
+    "byChannelTitle": "Nach Kanal",
+    "unknownChannel": "Unbekannter Kanal"
   }
 }

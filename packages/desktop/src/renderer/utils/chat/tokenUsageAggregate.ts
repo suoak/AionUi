@@ -217,6 +217,15 @@ export function breakdownUsageByAssistant(events: UsageEvent[], unknownLabel: st
   return sortBreakdown(rows);
 }
 
+export function breakdownUsageByChannel(events: UsageEvent[], unknownLabel: string): UsageBreakdownRow[] {
+  const rows = new Map<string, UsageBreakdownRow>();
+  for (const event of events) {
+    const key = event.conversation_source?.trim() || 'aionui';
+    addBreakdownRow(rows, key, key === 'unknown' ? unknownLabel : key, event);
+  }
+  return sortBreakdown(rows);
+}
+
 export function breakdownUsageByModel(events: UsageEvent[], unknownLabel: string): UsageBreakdownRow[] {
   const rows = new Map<string, UsageBreakdownRow>();
   for (const event of events) {

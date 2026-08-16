@@ -1468,6 +1468,8 @@
     "siderTooltip": "Використання · Сьогодні {{tokens}}",
     "export": "Експорт CSV",
     "exportSuccess": "Використання експортовано",
-    "filterAllModels": "Усі моделі"
+    "filterAllModels": "Усі моделі",
+    "byChannelTitle": "За каналами",
+    "unknownChannel": "Невідомий канал"
   }
 }

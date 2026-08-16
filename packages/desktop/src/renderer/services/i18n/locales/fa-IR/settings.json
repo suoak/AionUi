@@ -1467,6 +1467,8 @@
     "siderTooltip": "مصرف · امروز {{tokens}}",
     "export": "خروجی CSV",
     "exportSuccess": "مصرف خروجی گرفته شد",
-    "filterAllModels": "همه مدل‌ها"
+    "filterAllModels": "همه مدل‌ها",
+    "byChannelTitle": "بر اساس کانال",
+    "unknownChannel": "کانال ناشناس"
   }
 }
