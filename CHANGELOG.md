@@ -1,5 +1,38 @@
 # Changelog
 
+## [2.1.69](https://github.com/suoak/AionUi/compare/v2.1.68...v2.1.69) (2026-08-17)
+
+### Desktop
+
+#### Features
+
+- **usage:** add token usage stats and model trends (#62)
+
+#### Bug Fixes
+
+- **agent:** enable DeepSeek Harness install-and-check (#62)
+
+#### 内网更新说明
+
+<!-- internal-release-notes:start -->
+
+**由运营管理部提供**
+
+- 新增用量统计，可查看 token 消耗、每日趋势，并按模型、Agent、助手和渠道拆分。
+- 修复 DeepSeek Harness 预览版无法点击安装并检测的问题。
+- 用量会统计桌面对话、团队、定时任务以及飞书等消息渠道的消耗。
+- 保持 CSBU WorkMate 品牌和内网更新通道，未引入停更或外部推广内容。
+
+<!-- internal-release-notes:end -->
+
+### Core ([v0.1.75](https://github.com/suoak/AionCore/releases/tag/v0.1.75))
+
+#### Features
+
+- **usage:** persist completed-turn spend across all sources
+
+---
+
 ## [2.1.68](https://github.com/suoak/AionUi/compare/v2.1.67...v2.1.68) (2026-08-16)
 
 ### Desktop
