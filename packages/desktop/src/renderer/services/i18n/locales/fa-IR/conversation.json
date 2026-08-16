@@ -412,7 +412,9 @@
     "sessionCost": "هزینه جلسه",
     "thought": "تفکر",
     "cachedRead": "خواندن حافظه پنهان",
-    "tokensUsed": "{{tokens}} توکن استفاده شده"
+    "tokensUsed": "{{tokens}} توکن استفاده شده",
+    "viewStats": "مشاهده آمار مصرف",
+    "sessionSpend": "مصرف این گفتگو"
   },
   "noModelConfigured": "مدلی پیکربندی نشده است. لطفاً در تنظیمات پیکربندی کنید.",
   "runtimePreparing": {

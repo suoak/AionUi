@@ -412,7 +412,9 @@
     "sessionCost": "Вартість сесії",
     "thought": "Міркування",
     "cachedRead": "Читання кешу",
-    "tokensUsed": "Використано токенів: {{tokens}}"
+    "tokensUsed": "Використано токенів: {{tokens}}",
+    "viewStats": "Переглянути використання",
+    "sessionSpend": "Витрата сесії"
   },
   "noModelConfigured": "Модель не налаштована. Будь ласка, налаштуйте в параметрах.",
   "runtimePreparing": {

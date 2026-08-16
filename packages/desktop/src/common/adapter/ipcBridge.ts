@@ -2295,6 +2295,37 @@ function toChannelSession(raw: RawSession): IChannelSession {
   };
 }
 
+export type UsageEventDto = {
+  id: string;
+  recorded_at: number;
+  conversation_id: string;
+  conversation_name?: string | null;
+  conversation_source: string;
+  backend: string;
+  assistant_id?: string | null;
+  assistant_name?: string | null;
+  model_id?: string | null;
+  input_tokens: number;
+  output_tokens: number;
+  thought_tokens: number;
+  cached_read_tokens: number;
+  cached_write_tokens: number;
+  cost_delta: number;
+  cost_currency?: string | null;
+  event_source: string;
+};
+
+export const usage = {
+  list: httpGet<{ events: UsageEventDto[] }, { since?: number; limit?: number }>((p) => {
+    const params = new URLSearchParams();
+    if (p.since) params.set('since', String(p.since));
+    if (p.limit) params.set('limit', String(p.limit));
+    const qs = params.toString();
+    return `/api/usage${qs ? `?${qs}` : ''}`;
+  }),
+  clear: httpDelete<number>('/api/usage'),
+};
+
 export const channel = {
   getPluginStatus: withResponseMap(httpGet<RawPluginStatus[], void>('/api/channel/plugins'), (raw) =>
     raw.map(toPluginStatus)

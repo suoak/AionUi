@@ -12,7 +12,7 @@
  */
 
 import { describe, expect, it, vi } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import React from 'react';
 
 vi.mock('react-i18next', () => ({
@@ -30,9 +30,27 @@ vi.mock('react-router-dom', async () => {
 });
 
 const useManagedAgents = vi.fn();
+const prepareManagedAgentRuntimeUntilSettled = vi.fn();
 vi.mock('@/renderer/hooks/agent/useManagedAgents', () => ({
   useManagedAgents: () => useManagedAgents(),
+  prepareManagedAgentRuntimeUntilSettled: (...args: unknown[]) => prepareManagedAgentRuntimeUntilSettled(...args),
 }));
+
+const { messageSuccess, messageError } = vi.hoisted(() => ({
+  messageSuccess: vi.fn(),
+  messageError: vi.fn(),
+}));
+vi.mock('@arco-design/web-react', async () => {
+  const actual = await vi.importActual<typeof import('@arco-design/web-react')>('@arco-design/web-react');
+  return {
+    ...actual,
+    Message: {
+      success: messageSuccess,
+      warning: vi.fn(),
+      error: messageError,
+    },
+  };
+});
 
 vi.mock('@/common', () => ({
   ipcBridge: {
@@ -54,6 +72,7 @@ vi.mock('@renderer/pages/settings/AgentSettings/BoundAssistants', () => ({
 }));
 
 import AgentRepairPage from '@renderer/pages/settings/AgentSettings/AgentRepairPage';
+import { ipcBridge } from '@/common';
 
 const agent = {
   id: 'agent-1',
@@ -101,6 +120,42 @@ describe('AgentRepairPage', () => {
     render(<AgentRepairPage />);
 
     expect(screen.getByText('settings.agentManagement.deepseekHarnessLimitations')).toBeInTheDocument();
+  });
+
+  it('installs an uninstalled managed runtime from the repair bar then probes health', async () => {
+    const refreshCatalog = vi.fn().mockResolvedValue(undefined);
+    const deepSeek = {
+      ...agent,
+      name: 'DeepSeek Harness',
+      agent_source: 'builtin',
+      agent_source_info: { managed_runtime: { runtime_id: 'deepseek-harness', release: '2026.08.14-1' } },
+      runtime: { runtime_id: 'deepseek-harness', release: '2026.08.14-1', state: 'not_installed' },
+      installed: false,
+      status: 'missing',
+    };
+    useManagedAgents.mockReturnValue({ agents: [deepSeek], isRefreshing: false, refreshCatalog });
+    prepareManagedAgentRuntimeUntilSettled.mockResolvedValue({
+      ...deepSeek,
+      runtime: { ...deepSeek.runtime, state: 'ready', phase: 'ready', progress: 100 },
+    });
+    vi.mocked(ipcBridge.acpConversation.checkManagedAgentHealthById.invoke).mockResolvedValue({
+      ...deepSeek,
+      status: 'online',
+    });
+
+    render(<AgentRepairPage />);
+
+    fireEvent.click(screen.getByText('settings.agentManagement.installAndCheck'));
+
+    await waitFor(() => {
+      expect(prepareManagedAgentRuntimeUntilSettled).toHaveBeenCalledWith('agent-1');
+    });
+    await waitFor(() => {
+      expect(ipcBridge.acpConversation.checkManagedAgentHealthById.invoke).toHaveBeenCalledWith({
+        id: 'agent-1',
+      });
+      expect(messageSuccess).toHaveBeenCalledWith('settings.agentManagement.testConnectionOnline');
+    });
   });
 
   it('does not show preview limitations for a vendor-named agent without a managed runtime', () => {

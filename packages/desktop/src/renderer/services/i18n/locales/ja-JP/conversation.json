@@ -412,7 +412,9 @@
     "sessionCost": "セッションコスト",
     "thought": "思考",
     "cachedRead": "キャッシュ読み取り",
-    "tokensUsed": "{{tokens}} トークン使用済み"
+    "tokensUsed": "{{tokens}} トークン使用済み",
+    "viewStats": "使用量を見る",
+    "sessionSpend": "この会話の消費"
   },
   "noModelConfigured": "モデルが設定されていません。設定ページで設定してください。",
   "runtimePreparing": {

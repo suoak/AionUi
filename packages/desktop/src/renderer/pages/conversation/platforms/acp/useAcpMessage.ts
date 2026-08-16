@@ -10,10 +10,12 @@ import type { AvailableCommand, TMessage } from '@/common/chat/chatLib';
 import { mapAcpCommandsToSlashCommands } from '@/common/chat/slash/acpMapping';
 import type { SlashCommandItem } from '@/common/chat/slash/types';
 import type { IResponseMessage } from '@/common/adapter/ipcBridge';
-import type { TokenUsageBreakdown, TokenUsageData } from '@/common/config/storage';
+import type { TChatConversation, TokenUsageBreakdown, TokenUsageData } from '@/common/config/storage';
 import { useMergeLiveMessage } from '@/renderer/pages/conversation/Messages/hooks';
 import { logStreamTerminalObserved } from '@/renderer/pages/conversation/runtime/useConversationRuntimeView';
 import { getConversationOrNull } from '@/renderer/pages/conversation/utils/conversationCache';
+import { emitter } from '@/renderer/utils/emitter';
+import { recordTurnUsage } from '@/renderer/utils/chat/tokenUsageLedger';
 import { isConversationProcessing } from '@/renderer/pages/conversation/utils/conversationRuntime';
 import { beginConversationTurn, endConversationTurn } from '@/renderer/pages/conversation/utils/conversationTurnClock';
 import { ensureConversationRuntime } from '@/renderer/pages/conversation/utils/ensureConversationRuntime';
@@ -145,6 +147,13 @@ export const useAcpMessage = (
     model_id: string;
     session_mode?: string;
   } | null>(null);
+  const conversationUsageMetaRef = useRef<{
+    backend?: string;
+    assistant_id?: string;
+    assistant_name?: string;
+    conversation_name?: string;
+    model_id?: string;
+  }>({});
 
   // Throttle thought updates to reduce render frequency
   const thoughtThrottleRef = useRef<{
@@ -492,8 +501,13 @@ export const useAcpMessage = (
             _meta?: Record<string, unknown>;
           };
           if (usageData && typeof usageData.used === 'number') {
+            const next = tokenUsageFromAcpUsage(usageData);
+            // Capture before setState: the updater may copy the previous
+            // turn's breakdown onto `next` for the context meter. Spend
+            // recording must only use counters from this payload.
+            const incomingBreakdown = next.breakdown;
+            const incomingCost = next.cost;
             setTokenUsage((prev) => {
-              const next = tokenUsageFromAcpUsage(usageData);
               // Mid-turn UsageUpdate notifications carry no per-turn
               // breakdown; keep the last end-of-turn one until replaced.
               if (!next.breakdown && prev?.breakdown) next.breakdown = prev.breakdown;
@@ -502,6 +516,38 @@ export const useAcpMessage = (
             });
             if (usageData.size > 0) {
               setContextLimit(usageData.size);
+            }
+            if (incomingBreakdown) {
+              const meta = conversationUsageMetaRef.current;
+              const tracedModel = requestTraceRef.current?.model_id;
+              const metaModel =
+                usageData._meta && typeof usageData._meta.model_id === 'string' ? usageData._meta.model_id : undefined;
+              const recorded = recordTurnUsage({
+                conversation_id,
+                turn_id: typeof message.turn_id === 'string' ? message.turn_id : undefined,
+                backend: requestTraceRef.current?.backend || meta.backend,
+                assistant_id: meta.assistant_id,
+                assistant_name: meta.assistant_name,
+                conversation_name: meta.conversation_name,
+                model_id:
+                  (tracedModel && tracedModel !== 'unknown' ? tracedModel : undefined) || metaModel || meta.model_id,
+                breakdown: incomingBreakdown,
+                cost: incomingCost,
+                source: 'acp',
+              });
+              if (recorded) {
+                emitter.emit('token.usage.recorded');
+              }
+              void ipcBridge.conversation.update.invoke({
+                id: conversation_id,
+                updates: {
+                  extra: {
+                    last_token_usage: next,
+                    last_context_limit: usageData.size > 0 ? usageData.size : undefined,
+                  } as TChatConversation['extra'],
+                },
+                merge_extra: true,
+              });
             }
           }
           break;
@@ -526,6 +572,9 @@ export const useAcpMessage = (
               model_id: String(trace.model_id || 'unknown'),
               session_mode: trace.session_mode as string | undefined,
             };
+            if (requestTraceRef.current.model_id && requestTraceRef.current.model_id !== 'unknown') {
+              conversationUsageMetaRef.current.model_id = requestTraceRef.current.model_id;
+            }
             console.log(
               `%c[RequestTrace]%c START | ${trace.backend} → ${trace.model_id} | ${new Date().toISOString()}`,
               'color: #1890ff; font-weight: bold',
@@ -619,6 +668,7 @@ export const useAcpMessage = (
         }
 
         if (!res) {
+          conversationUsageMetaRef.current = {};
           setRunning(false);
           runningRef.current = false;
           setAiProcessing(false);
@@ -627,6 +677,15 @@ export const useAcpMessage = (
           setHasHydratedRunningState(true);
           return;
         }
+        conversationUsageMetaRef.current = {
+          backend:
+            res.assistant?.backend ||
+            (res.type === 'acp' || res.type === 'antigravity' ? res.extra.backend : undefined),
+          assistant_id: res.assistant?.id,
+          assistant_name: res.assistant?.name,
+          conversation_name: res.name,
+          model_id: res.type === 'acp' || res.type === 'antigravity' ? res.extra.current_model_id : undefined,
+        };
         const isRunning = isConversationProcessing(res);
         setRunning(isRunning);
         runningRef.current = isRunning;

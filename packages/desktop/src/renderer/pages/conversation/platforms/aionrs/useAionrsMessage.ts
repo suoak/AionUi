@@ -13,6 +13,8 @@ import type { ThoughtData } from '@/renderer/components/chat/ThoughtDisplay';
 import { useMergeLiveMessage } from '@/renderer/pages/conversation/Messages/hooks';
 import { logStreamTerminalObserved } from '@/renderer/pages/conversation/runtime/useConversationRuntimeView';
 import { getConversationOrNull } from '@/renderer/pages/conversation/utils/conversationCache';
+import { emitter } from '@/renderer/utils/emitter';
+import { recordTurnUsage } from '@/renderer/utils/chat/tokenUsageLedger';
 import { isConversationProcessing } from '@/renderer/pages/conversation/utils/conversationRuntime';
 import { beginConversationTurn, endConversationTurn } from '@/renderer/pages/conversation/utils/conversationTurnClock';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
@@ -28,6 +30,7 @@ export const useAionrsMessage = (
   options?: {
     onError?: (message: IResponseMessage) => void;
     onConfigChanged?: (capabilities: Record<string, unknown>) => void;
+    currentModelId?: string;
   }
 ) => {
   const onError = options?.onError;
@@ -43,6 +46,20 @@ export const useAionrsMessage = (
     subject: '',
   });
   const [tokenUsage, setTokenUsage] = useState<TokenUsageData | null>(null);
+  const conversationUsageMetaRef = useRef<{
+    backend?: string;
+    assistant_id?: string;
+    assistant_name?: string;
+    conversation_name?: string;
+    model_id?: string;
+  }>({});
+
+  useEffect(() => {
+    const modelId = options?.currentModelId?.trim();
+    if (modelId) {
+      conversationUsageMetaRef.current.model_id = modelId;
+    }
+  }, [options?.currentModelId]);
   // Turn start origin for the elapsed indicator; backed by the module-level
   // conversation turn clock so it survives unmount on conversation switches.
   const [turnStartedAtMs, setTurnStartedAtMs] = useState<number | null>(null);
@@ -272,6 +289,10 @@ export const useAionrsMessage = (
             if (usageData && typeof usageData === 'object' && 'input_tokens' in usageData) {
               const newTokenUsage: TokenUsageData = {
                 total_tokens: (usageData.input_tokens || 0) + (usageData.output_tokens || 0),
+                breakdown: {
+                  input_tokens: usageData.input_tokens || 0,
+                  output_tokens: usageData.output_tokens || 0,
+                },
               };
               setTokenUsage(newTokenUsage);
               void ipcBridge.conversation.update.invoke({
@@ -281,6 +302,21 @@ export const useAionrsMessage = (
                 },
                 merge_extra: true,
               });
+              const meta = conversationUsageMetaRef.current;
+              const recorded = recordTurnUsage({
+                conversation_id,
+                turn_id: typeof message.turn_id === 'string' ? message.turn_id : message.msg_id,
+                backend: meta.backend || 'aionrs',
+                assistant_id: meta.assistant_id,
+                assistant_name: meta.assistant_name,
+                conversation_name: meta.conversation_name,
+                model_id: options?.currentModelId?.trim() || meta.model_id,
+                breakdown: newTokenUsage.breakdown,
+                source: 'aionrs',
+              });
+              if (recorded) {
+                emitter.emit('token.usage.recorded');
+              }
             }
             setStreamRunning(false);
             setWaitingResponse(false);
@@ -403,6 +439,7 @@ export const useAionrsMessage = (
       }
 
       if (!res) {
+        conversationUsageMetaRef.current = {};
         hydratedConversationRef.current = conversation_id;
         endConversationTurn(conversation_id);
         setStreamRunning(false);
@@ -414,6 +451,16 @@ export const useAionrsMessage = (
         setHasHydratedRunningState(true);
         return;
       }
+      conversationUsageMetaRef.current = {
+        backend: res.assistant?.backend || 'aionrs',
+        assistant_id: res.assistant?.id,
+        assistant_name: res.assistant?.name,
+        conversation_name: res.name,
+        model_id:
+          (res.type === 'aionrs' ? res.model?.use_model || res.model?.id : undefined) ||
+          options?.currentModelId?.trim() ||
+          conversationUsageMetaRef.current.model_id,
+      };
       const isRunning = isConversationProcessing(res);
       hydratedConversationRef.current = conversation_id;
       if (!isRunning) {

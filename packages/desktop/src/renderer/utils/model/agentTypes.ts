@@ -311,6 +311,20 @@ export function shouldShowManagedPreviewLimitations(
   return limits.connectionScoped || !limits.teamCapable || !limits.imagePrompt || !limits.audioPrompt;
 }
 
+const MANAGED_RUNTIME_UPDATE_PHASES = new Set(['update_available', 'rollback']);
+
+/**
+ * True when the Agent settings row should offer "Install & Check" instead of
+ * a regular health probe. DeepSeek Harness is the only managed npm runtime;
+ * it is not on $PATH until `POST /api/agents/{id}/runtime/prepare` finishes.
+ */
+export function managedRuntimeNeedsInstall(agent: Pick<AgentMetadata, 'agent_source_info' | 'runtime'>): boolean {
+  if (agent.agent_source_info?.managed_runtime?.runtime_id !== 'deepseek-harness') {
+    return false;
+  }
+  return agent.runtime?.state !== 'ready' || MANAGED_RUNTIME_UPDATE_PHASES.has(agent.runtime?.phase ?? '');
+}
+
 /**
  * Extract the list of MCP transport types an agent supports.
  *

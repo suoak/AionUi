@@ -412,7 +412,9 @@
     "sessionCost": "Стоимость сессии",
     "thought": "Размышление",
     "cachedRead": "Чтение кэша",
-    "tokensUsed": "Использовано токенов: {{tokens}}"
+    "tokensUsed": "Использовано токенов: {{tokens}}",
+    "viewStats": "Посмотреть использование",
+    "sessionSpend": "Расход сессии"
   },
   "noModelConfigured": "Модель не настроена. Настройте в параметрах.",
   "runtimePreparing": {

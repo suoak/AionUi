@@ -17,6 +17,7 @@ const {
   markSendStartedMock,
   markSendAcceptedMock,
   sendBoxPropsSpy,
+  aionrsMessageState,
 } = vi.hoisted(() => ({
   ensureConversationRuntimeMock: vi.fn().mockResolvedValue({ recovered: false, config_options: [], runtime: null }),
   sendMessageInvokeMock: vi.fn().mockResolvedValue(undefined),
@@ -27,6 +28,14 @@ const {
   markSendStartedMock: vi.fn(),
   markSendAcceptedMock: vi.fn(),
   sendBoxPropsSpy: vi.fn(),
+  aionrsMessageState: {
+    thought: { subject: '', description: '' },
+    running: false,
+    tokenUsage: null as { total_tokens: number } | null,
+    setActiveMsgId: vi.fn(),
+    setWaitingResponse: vi.fn(),
+    resetState: vi.fn(),
+  },
 }));
 
 vi.mock('@/common', () => ({
@@ -42,19 +51,26 @@ vi.mock('@/common', () => ({
   },
 }));
 
+vi.mock('@/renderer/components/agent/ContextUsageIndicator', () => ({
+  default: () => <div data-testid='context-usage-indicator' />,
+  formatTokenCount: (count: number) => String(count),
+}));
+
 vi.mock('@/renderer/components/chat/SendBox', () => ({
   default: ({
     onSend,
     onChange,
     active,
     onFocused,
+    sendButtonPrefix,
   }: {
     onSend: (message: string) => Promise<void>;
     onChange?: (value: string) => void;
     active?: boolean;
     onFocused?: () => void;
+    sendButtonPrefix?: React.ReactNode;
   }) => {
-    sendBoxPropsSpy({ active, onFocused });
+    sendBoxPropsSpy({ active, onFocused, sendButtonPrefix });
     return (
       <div>
         <button type='button' onClick={() => onChange?.('hello')}>
@@ -217,13 +233,7 @@ vi.mock('react-i18next', () => ({
   useTranslation: () => ({ t: translateMock }),
 }));
 vi.mock('@/renderer/pages/conversation/platforms/aionrs/useAionrsMessage', () => ({
-  useAionrsMessage: () => ({
-    thought: { subject: '', description: '' },
-    running: false,
-    setActiveMsgId: vi.fn(),
-    setWaitingResponse: vi.fn(),
-    resetState: vi.fn(),
-  }),
+  useAionrsMessage: () => aionrsMessageState,
 }));
 
 const modelSelection = {
@@ -237,6 +247,7 @@ const modelSelection = {
 describe('AionrsSendBox', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    aionrsMessageState.tokenUsage = null;
     ensureConversationRuntimeMock.mockResolvedValue({ recovered: false, config_options: [], runtime: null });
     useTeamPermissionMock.mockReturnValue(null);
   });
@@ -357,5 +368,14 @@ describe('AionrsSendBox', () => {
     expect(props.active).toBe(true);
     props.onFocused?.();
     expect(onFocus).toHaveBeenCalledTimes(1);
+  });
+
+  it('shows a usage ring after the builtin agent reports tokens', () => {
+    render(<AionrsSendBox conversation_id='conv-1' modelSelection={modelSelection} />);
+    expect(sendBoxPropsSpy.mock.calls.at(-1)?.[0]).toMatchObject({ sendButtonPrefix: undefined });
+
+    aionrsMessageState.tokenUsage = { total_tokens: 240 };
+    render(<AionrsSendBox conversation_id='conv-1' modelSelection={modelSelection} />);
+    expect(sendBoxPropsSpy.mock.calls.at(-1)?.[0].sendButtonPrefix).toBeTruthy();
   });
 });

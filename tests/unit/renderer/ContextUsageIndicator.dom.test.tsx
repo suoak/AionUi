@@ -25,6 +25,15 @@ vi.mock('@arco-design/web-react', () => ({
       <div data-testid='popover-content'>{content}</div>
     </>
   ),
+  Button: ({ children, onClick }: { children?: React.ReactNode; onClick?: () => void }) => (
+    <button type='button' onClick={onClick}>
+      {children}
+    </button>
+  ),
+}));
+
+vi.mock('react-router-dom', () => ({
+  useNavigate: () => vi.fn(),
 }));
 
 import ContextUsageIndicator, { formatTokenCount } from '@/renderer/components/agent/ContextUsageIndicator';

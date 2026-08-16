@@ -24,6 +24,7 @@ vi.mock('@/common', () => ({
   ipcBridge: {
     acpConversation: {
       refreshCustomAgents: { invoke: vi.fn().mockResolvedValue(undefined) },
+      prepareManagedAgentRuntime: { invoke: vi.fn() },
     },
   },
 }));
@@ -33,7 +34,11 @@ vi.mock('@/renderer/utils/model/agentTypes', () => ({
   fetchManagedAgents: vi.fn(),
 }));
 
-import { getManagedAgents, useManagedAgents } from '@/renderer/hooks/agent/useManagedAgents';
+import {
+  getManagedAgents,
+  prepareManagedAgentRuntimeUntilSettled,
+  useManagedAgents,
+} from '@/renderer/hooks/agent/useManagedAgents';
 import { ipcBridge } from '@/common';
 import useSWR, { mutate } from 'swr';
 import { fetchManagedAgents } from '@/renderer/utils/model/agentTypes';
@@ -122,5 +127,72 @@ describe('useManagedAgents', () => {
     expect(mutate).toHaveBeenCalledWith('agents.managed', managedAgents, { revalidate: false });
     expect(mutate).not.toHaveBeenCalledWith('agents.detected');
     expect(result).toEqual(managedAgents);
+  });
+});
+
+describe('prepareManagedAgentRuntimeUntilSettled', () => {
+  const installing = {
+    id: 'deepseek-harness',
+    name: 'DeepSeek Harness',
+    runtime: { runtime_id: 'deepseek-harness', release: '2026.08.14-1', state: 'installing' as const },
+  };
+  const ready = {
+    ...installing,
+    runtime: { ...installing.runtime, state: 'ready' as const, phase: 'ready', progress: 100 },
+  };
+
+  it('returns immediately when the catalog already reports ready', async () => {
+    vi.mocked(ipcBridge.acpConversation.prepareManagedAgentRuntime.invoke).mockResolvedValue(ready as never);
+    vi.mocked(mutate).mockResolvedValue(undefined);
+
+    await expect(prepareManagedAgentRuntimeUntilSettled('deepseek-harness')).resolves.toEqual(ready);
+    expect(ipcBridge.acpConversation.prepareManagedAgentRuntime.invoke).toHaveBeenCalledWith({
+      id: 'deepseek-harness',
+    });
+  });
+
+  it('polls the catalog until a background install becomes ready', async () => {
+    vi.mocked(ipcBridge.acpConversation.prepareManagedAgentRuntime.invoke).mockResolvedValue(installing as never);
+    vi.mocked(mutate)
+      .mockResolvedValueOnce([installing])
+      .mockResolvedValueOnce(undefined)
+      .mockResolvedValueOnce([ready])
+      .mockResolvedValueOnce(undefined);
+
+    await expect(
+      prepareManagedAgentRuntimeUntilSettled('deepseek-harness', {
+        sleep: async () => undefined,
+        pollIntervalMs: 1,
+        timeoutMs: 10_000,
+      })
+    ).resolves.toEqual(ready);
+  });
+
+  it('returns a failed runtime without treating it as a timeout', async () => {
+    const failed = {
+      ...installing,
+      runtime: { ...installing.runtime, state: 'failed' as const, phase: 'failed' },
+    };
+    vi.mocked(ipcBridge.acpConversation.prepareManagedAgentRuntime.invoke).mockResolvedValue(failed as never);
+    vi.mocked(mutate).mockResolvedValue([failed]);
+
+    await expect(prepareManagedAgentRuntimeUntilSettled('deepseek-harness')).resolves.toEqual(failed);
+  });
+
+  it('rejects when the installer is still running after the timeout', async () => {
+    vi.mocked(ipcBridge.acpConversation.prepareManagedAgentRuntime.invoke).mockResolvedValue(installing as never);
+    vi.mocked(mutate).mockResolvedValue([installing]);
+    let now = 0;
+
+    await expect(
+      prepareManagedAgentRuntimeUntilSettled('deepseek-harness', {
+        now: () => now,
+        sleep: async () => {
+          now += 10_000;
+        },
+        pollIntervalMs: 1,
+        timeoutMs: 5_000,
+      })
+    ).rejects.toThrow('Managed runtime installation timed out');
   });
 });

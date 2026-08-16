@@ -13,6 +13,7 @@ import MobileActionSheet, {
   type MobileActionSheetOption,
   useAttachEntry,
 } from '@/renderer/components/chat/MobileActionSheet';
+import ContextUsageIndicator from '@/renderer/components/agent/ContextUsageIndicator';
 import SendBox from '@/renderer/components/chat/SendBox';
 import ThoughtDisplay from '@/renderer/components/chat/ThoughtDisplay';
 import FileAttachButton from '@/renderer/components/media/FileAttachButton';
@@ -142,17 +143,16 @@ const AionrsSendBox: React.FC<{
   const teamPermission = useTeamPermission();
   const propagateMode = teamPermission?.propagateMode;
 
-  const { thought, running, turnStartedAtMs, setActiveMsgId, setWaitingResponse, resetState } = useAionrsMessage(
-    conversation_id,
-    {
+  const { thought, running, turnStartedAtMs, tokenUsage, setActiveMsgId, setWaitingResponse, resetState } =
+    useAionrsMessage(conversation_id, {
+      currentModelId: current_model?.use_model || current_model?.id,
       onConfigChanged: (capabilities) => {
         const modes = (capabilities as { modes?: string[] })?.modes;
         if (modes && modes.length > 0) {
           setDynamicModes(modeOptionsFromCapabilities(modes));
         }
       },
-    }
-  );
+    });
   const runtimeView = useConversationRuntimeView(conversation_id);
   const { markSendStarted, markSendAccepted, markSendFailed } = runtimeView;
 
@@ -824,6 +824,11 @@ const AionrsSendBox: React.FC<{
         slash_commands={slash_commands}
         onSlashBuiltinCommand={onSlashBuiltinCommand}
         allowSendWhileLoading
+        sendButtonPrefix={
+          tokenUsage ? (
+            <ContextUsageIndicator tokenUsage={tokenUsage} context_limit={0} conversation_id={conversation_id} />
+          ) : undefined
+        }
       />
       {isMobile && (
         <>
