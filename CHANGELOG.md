@@ -1,5 +1,35 @@
 # Changelog
 
+## [2.1.66](https://github.com/suoak/AionUi/compare/v2.1.65...v2.1.66) (2026-08-16)
+
+### Desktop
+
+#### Bug Fixes
+
+- **preview:** keep mermaid wheel tests on the WorkMate markdown class
+
+#### 内网更新说明
+
+<!-- internal-release-notes:start -->
+
+**由运营管理部提供**
+
+- 支持将会话分叉为新对话，切换工作模式时会显示“待生效”而不是立即切换。
+- 新增飞书之外的 Slack 和 Discord 通道配置。
+- 预览支持保存、Mermaid 缩放，以及 PDF/Office 文档下载。
+- 源码管理面板支持多仓库切换；会话列表可标记未读。
+- 新版本创建的本地数据在旧版本打开时会给出明确提示。
+- 复制按钮会复制整轮回复；资源管理器可复制相对或绝对路径。
+- 保持 CSBU WorkMate 品牌和内网更新通道，未引入停更或外部推广内容。
+
+<!-- internal-release-notes:end -->
+
+### Core ([v0.1.72](https://github.com/suoak/AionCore/releases/tag/v0.1.72))
+
+- Retains the session-fork, channel, and Claude 2.1.233 runtime fixes prepared for `2.1.63`.
+
+---
+
 ## [2.1.65](https://github.com/suoak/AionUi/compare/v2.1.64...v2.1.65) (2026-08-16)
 
 ### Desktop

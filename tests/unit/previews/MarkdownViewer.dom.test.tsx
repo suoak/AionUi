@@ -249,7 +249,7 @@ describe('MarkdownViewer', () => {
     const { container } = render(<MarkdownViewer content='# doc' />);
     // The scroll container (parent of .aionui-markdown) owns the capture-phase
     // wheel interceptor installed by MarkdownViewer.
-    const scroll = container.querySelector('.aionui-markdown')?.parentElement as HTMLElement;
+    const scroll = container.querySelector('.csbu-workmate-markdown')?.parentElement as HTMLElement;
     expect(scroll).toBeTruthy();
 
     // Simulate Streamdown's mermaid pan layer: a mermaid-block with a nested
@@ -273,7 +273,7 @@ describe('MarkdownViewer', () => {
 
   it('leaves wheel events outside a mermaid diagram untouched', () => {
     const { container } = render(<MarkdownViewer content='# doc' />);
-    const scroll = container.querySelector('.aionui-markdown')?.parentElement as HTMLElement;
+    const scroll = container.querySelector('.csbu-workmate-markdown')?.parentElement as HTMLElement;
     const plain = document.createElement('div');
     scroll.appendChild(plain);
     const spy = vi.fn();
