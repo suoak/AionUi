@@ -31,6 +31,15 @@ import DirInputItem from './DirInputItem';
 import PreferenceRow from './PreferenceRow';
 import VoiceInputSection from './VoiceInputSection';
 
+const writeSystemSettingsLog = (level: 'info' | 'warn', message: string, data?: unknown): void => {
+  void ipcBridge.application.writeRendererLog.invoke({
+    level,
+    tag: 'system-settings',
+    message,
+    data,
+  });
+};
+
 /**
  * System settings content component
  *
@@ -86,8 +95,9 @@ const SystemModalContent: React.FC = () => {
         if (result.success && result.data) {
           setStartOnBoot(result.data);
         }
+        writeSystemSettingsLog('info', 'start-on-boot status loaded', { success: result.success });
       })
-      .catch(() => {});
+      .catch((error: unknown) => writeSystemSettingsLog('warn', 'start-on-boot status failed', String(error)));
 
     ipcBridge.application.getGpuStatus
       .invoke()
@@ -95,8 +105,9 @@ const SystemModalContent: React.FC = () => {
         if (result.success && result.data) {
           setGpuStatus(result.data);
         }
+        writeSystemSettingsLog('info', 'gpu status loaded', { success: result.success });
       })
-      .catch(() => {});
+      .catch((error: unknown) => writeSystemSettingsLog('warn', 'gpu status failed', String(error)));
   }, [isDesktop]);
 
   useEffect(() => {
@@ -324,7 +335,20 @@ const SystemModalContent: React.FC = () => {
   }, []);
 
   // Get system directory info
-  const { data: systemInfo } = useSWR('system.dir.info', () => ipcBridge.application.systemInfo.invoke());
+  const { data: systemInfo } = useSWR('system.dir.info', async () => {
+    writeSystemSettingsLog('info', 'system info request started');
+    try {
+      const info = await ipcBridge.application.systemInfo.invoke();
+      writeSystemSettingsLog('info', 'system info request completed', {
+        platform: info.platform,
+        arch: info.arch,
+      });
+      return info;
+    } catch (error: unknown) {
+      writeSystemSettingsLog('warn', 'system info request failed', String(error));
+      throw error;
+    }
+  });
 
   // Initialize form data
   useEffect(() => {
@@ -333,6 +357,7 @@ const SystemModalContent: React.FC = () => {
       form.setFieldsValue({ workDir: systemInfo.workDir, logDir: systemInfo.logDir });
       requestAnimationFrame(() => {
         initializingRef.current = false;
+        writeSystemSettingsLog('info', 'directory form initialized');
       });
     }
   }, [systemInfo, form]);
