@@ -1,5 +1,32 @@
 # Changelog
 
+## [2.1.70](https://github.com/suoak/AionUi/compare/v2.1.69...v2.1.70) (2026-08-17)
+
+### Desktop
+
+#### Bug Fixes
+
+- **usage:** keep local stats when backend ledger is empty (#64)
+
+#### 内网更新说明
+
+<!-- internal-release-notes:start -->
+
+**由运营管理部提供**
+
+- 修复 Grok 对话完成后用量统计仍为空的问题。
+- 用量页在后端账本为空时会保留本机已有记录，避免把真实消耗盖掉。
+
+<!-- internal-release-notes:end -->
+
+### Core ([v0.1.76](https://github.com/suoak/AionCore/releases/tag/v0.1.76))
+
+#### Bug Fixes
+
+- **acp:** record Grok turn_completed usage into the ledger
+
+---
+
 ## [2.1.69](https://github.com/suoak/AionUi/compare/v2.1.68...v2.1.69) (2026-08-17)
 
 ### Desktop
