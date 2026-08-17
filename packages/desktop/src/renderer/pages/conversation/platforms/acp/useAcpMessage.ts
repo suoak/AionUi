@@ -52,10 +52,72 @@ const BREAKDOWN_KEYS = [
   'cached_write_tokens',
 ] as const;
 
+const GROK_USD_TICKS_PER_DOLLAR = 10_000_000_000;
+
+const CAMEL_BREAKDOWN_KEYS: Record<string, (typeof BREAKDOWN_KEYS)[number]> = {
+  inputTokens: 'input_tokens',
+  outputTokens: 'output_tokens',
+  reasoningTokens: 'thought_tokens',
+  thoughtTokens: 'thought_tokens',
+  cachedReadTokens: 'cached_read_tokens',
+  cacheCreationTokens: 'cached_write_tokens',
+  cachedWriteTokens: 'cached_write_tokens',
+};
+
+const asRecord = (value: unknown): Record<string, unknown> | undefined => {
+  if (!value || typeof value !== 'object' || Array.isArray(value)) {
+    return undefined;
+  }
+  return value as Record<string, unknown>;
+};
+
+const readNonNegativeNumber = (value: unknown): number | undefined => {
+  if (typeof value !== 'number' || !Number.isFinite(value) || value < 0) {
+    return undefined;
+  }
+  return value;
+};
+
+const breakdownFromUsageMeta = (meta: Record<string, unknown>): TokenUsageBreakdown | undefined => {
+  const nested = asRecord(meta.usage);
+  const sources = nested ? [meta, nested] : [meta];
+  const breakdown: TokenUsageBreakdown = {};
+  for (const source of sources) {
+    for (const key of BREAKDOWN_KEYS) {
+      const value = readNonNegativeNumber(source[key]);
+      if (value !== undefined && breakdown[key] === undefined) {
+        breakdown[key] = value;
+      }
+    }
+    for (const [camel, snake] of Object.entries(CAMEL_BREAKDOWN_KEYS)) {
+      const value = readNonNegativeNumber(source[camel]);
+      if (value !== undefined && breakdown[snake] === undefined) {
+        breakdown[snake] = value;
+      }
+    }
+  }
+  return Object.keys(breakdown).length > 0 ? breakdown : undefined;
+};
+
+const costFromUsageMeta = (
+  cost: { amount: number; currency: string } | undefined,
+  meta?: Record<string, unknown>
+): { amount: number; currency: string } | undefined => {
+  if (cost && typeof cost.amount === 'number' && cost.amount > 0) {
+    return { amount: cost.amount, currency: cost.currency || 'USD' };
+  }
+  const ticks = readNonNegativeNumber(asRecord(meta?.usage)?.costUsdTicks);
+  if (ticks && ticks > 0) {
+    return { amount: ticks / GROK_USD_TICKS_PER_DOLLAR, currency: 'USD' };
+  }
+  return undefined;
+};
+
 /**
  * Convert an ACP UsageUpdate payload (live acp_context_usage frame or
  * GET /usage snapshot — same shape) into TokenUsageData. Per-turn counters
- * ride under `_meta`; cost is the agent's cumulative session cost.
+ * ride under `_meta`; Grok also nests camelCase spend under `_meta.usage`.
+ * Cost is the agent's cumulative session cost.
  */
 export function tokenUsageFromAcpUsage(data: {
   used: number;
@@ -63,18 +125,13 @@ export function tokenUsageFromAcpUsage(data: {
   _meta?: Record<string, unknown>;
 }): TokenUsageData {
   const usage: TokenUsageData = { total_tokens: data.used };
-  if (data.cost && typeof data.cost.amount === 'number' && data.cost.amount > 0) {
-    usage.cost = { amount: data.cost.amount, currency: data.cost.currency || 'USD' };
+  const cost = costFromUsageMeta(data.cost, data._meta);
+  if (cost) {
+    usage.cost = cost;
   }
   if (data._meta) {
-    const breakdown: TokenUsageBreakdown = {};
-    for (const key of BREAKDOWN_KEYS) {
-      const value = data._meta[key];
-      if (typeof value === 'number' && value >= 0) {
-        breakdown[key] = value;
-      }
-    }
-    if (Object.keys(breakdown).length > 0) {
+    const breakdown = breakdownFromUsageMeta(data._meta);
+    if (breakdown) {
       usage.breakdown = breakdown;
     }
   }

@@ -760,4 +760,28 @@ describe('tokenUsageFromAcpUsage', () => {
     const usage = tokenUsageFromAcpUsage({ used: 10, cost: { amount: 0, currency: 'USD' } });
     expect(usage.cost).toBeUndefined();
   });
+
+  it('maps Grok nested _meta.usage camelCase spend and cost ticks', () => {
+    const usage = tokenUsageFromAcpUsage({
+      used: 14_794,
+      _meta: {
+        usage: {
+          inputTokens: 14_675,
+          outputTokens: 119,
+          reasoningTokens: 77,
+          cachedReadTokens: 11_648,
+          costUsdTicks: 21_406_400,
+        },
+      },
+    });
+
+    expect(usage.breakdown).toEqual({
+      input_tokens: 14_675,
+      output_tokens: 119,
+      thought_tokens: 77,
+      cached_read_tokens: 11_648,
+    });
+    expect(usage.cost?.currency).toBe('USD');
+    expect(usage.cost?.amount).toBeCloseTo(0.00214064);
+  });
 });

@@ -50,7 +50,14 @@ export const useTokenUsageStats = (range: UsageRange) => {
           throw new Error('usage list unavailable');
         }
         setUsesBackend(true);
-        setEvents(page.events.map(mapUsageDto));
+        // An empty backend ledger is not proof that nothing was spent —
+        // older cores return `{ events: [] }` for dialects they cannot
+        // persist (Grok `_x.ai/session/update`). Keep any local records.
+        if (page.events.length > 0) {
+          setEvents(page.events.map(mapUsageDto));
+          return;
+        }
+        setEvents(readUsageLedger().events);
       })
       .catch(() => {
         setUsesBackend(false);
