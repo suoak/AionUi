@@ -17,7 +17,11 @@ import {
 } from '@/common/chat/chatLib';
 import { useCallback, useEffect, useRef } from 'react';
 import { createContext } from '@renderer/utils/ui/createContext';
-import { hydrateConversationMessagesFromJournal } from '@/renderer/utils/chat/hydrateMessagesFromJournal';
+import {
+  hydrateConversationMessagesFromJournal,
+  isJournalDerivedMessage,
+  isLiveJournalUserClone,
+} from '@/renderer/utils/chat/hydrateMessagesFromJournal';
 import {
   DEFAULT_MESSAGE_PAGE_LIMIT,
   loadConversationAnchorWindow,
@@ -311,6 +315,13 @@ export function composeMessageWithIndex(
         content: mergeTextMessageContent(last.content, message.content),
       };
       return newList;
+    }
+
+    // New-conversation hydration rebuilds the first user prompt as
+    // `journal:<event_id>` while `message.userCreated` already inserted the
+    // server msg_id. Same text, different ids — keep the live row.
+    if (message.position === 'right' && list.some((item) => isLiveJournalUserClone(item, message))) {
+      return list;
     }
 
     const newIdx = list.length;
@@ -792,7 +803,14 @@ const preferPersistedOrLiveMessage = (persisted: TMessage, live: TMessage): TMes
   return persisted;
 };
 
-function mergeLoadedPageWithCurrent(conversationId: string, messages: TMessage[], currentList: TMessage[]): TMessage[] {
+const findLiveJournalUserClone = (candidates: TMessage[], message: TMessage): TMessage | undefined =>
+  candidates.find((candidate) => isLiveJournalUserClone(candidate, message));
+
+export function mergeLoadedPageWithCurrent(
+  conversationId: string,
+  messages: TMessage[],
+  currentList: TMessage[]
+): TMessage[] {
   if (!currentList.length) return foldSupersededTips(messages);
 
   const sameConversation = currentList.filter((message) => message.conversation_id === conversationId);
@@ -804,11 +822,23 @@ function mergeLoadedPageWithCurrent(conversationId: string, messages: TMessage[]
   const loadedKeys = new Set(messages.map(getMessageMergeKey));
 
   const mergedMessages = messages.map((message) => {
-    const live = currentById.get(message.id) ?? currentByKey.get(getMessageMergeKey(message));
-    return live ? preferPersistedOrLiveMessage(message, live) : message;
+    const live =
+      currentById.get(message.id) ??
+      currentByKey.get(getMessageMergeKey(message)) ??
+      findLiveJournalUserClone(sameConversation, message);
+    if (!live) return message;
+    // Prefer the server/live identity so a later userCreated frame can
+    // still match. Journal reconstruction only supplies the text.
+    if (isLiveJournalUserClone(message, live)) {
+      return isJournalDerivedMessage(message) ? live : message;
+    }
+    return preferPersistedOrLiveMessage(message, live);
   });
   const liveOnly = sameConversation.filter(
-    (message) => !loadedIds.has(message.id) && !loadedKeys.has(getMessageMergeKey(message))
+    (message) =>
+      !loadedIds.has(message.id) &&
+      !loadedKeys.has(getMessageMergeKey(message)) &&
+      !findLiveJournalUserClone(messages, message)
   );
 
   // Fold after the concat, not before: the live card and the persisted rows of

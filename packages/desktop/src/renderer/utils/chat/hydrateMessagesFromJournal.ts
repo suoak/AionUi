@@ -15,6 +15,31 @@ import {
   type JournalTranscriptItem,
 } from '@/common/types/journalTranscript';
 
+export function isUserTextMessage(message: Pick<TMessage, 'type' | 'position'>): boolean {
+  return message.type === 'text' && message.position === 'right';
+}
+
+export function userTextContent(message: TMessage): string | undefined {
+  if (!isUserTextMessage(message) || message.type !== 'text') {
+    return undefined;
+  }
+  return message.content.content ?? '';
+}
+
+export function isJournalDerivedMessage(message: Pick<TMessage, 'id'>): boolean {
+  return message.id.startsWith('journal:');
+}
+
+/** Live `message.userCreated` and a journal reconstruction of the same prompt. */
+export function isLiveJournalUserClone(left: TMessage, right: TMessage): boolean {
+  const leftText = userTextContent(left);
+  const rightText = userTextContent(right);
+  if (leftText === undefined || leftText !== rightText) {
+    return false;
+  }
+  return isJournalDerivedMessage(left) !== isJournalDerivedMessage(right);
+}
+
 export function isModelVisibleMessage(message: TMessage): boolean {
   if (message.type === 'text') {
     return message.position !== 'right' && Boolean(message.content.content?.trim());
@@ -36,11 +61,36 @@ export function mergeDbWithJournalTranscript(messages: TMessage[], recovered: TM
   if (!recovered.length) {
     return messages;
   }
-  const journalHasUser = recovered.some((message) => message.type === 'text' && message.position === 'right');
-  if (journalHasUser) {
+  const journalHasUser = recovered.some(isUserTextMessage);
+  if (!journalHasUser) {
+    return [...messages, ...recovered];
+  }
+
+  // Journal content is the reconstructible source of truth, but the DB row
+  // (and the live `message.userCreated` frame) share a server msg_id. Keep
+  // that identity or the first-turn user bubble renders twice.
+  const dbUsers = messages.filter(isUserTextMessage);
+  if (!dbUsers.length) {
     return recovered;
   }
-  return [...messages, ...recovered];
+
+  let dbUserIndex = 0;
+  return recovered.map((item) => {
+    if (!isUserTextMessage(item) || dbUserIndex >= dbUsers.length) {
+      return item;
+    }
+    const dbUser = dbUsers[dbUserIndex];
+    dbUserIndex += 1;
+    return {
+      ...item,
+      id: dbUser.id,
+      msg_id: dbUser.msg_id,
+      conversation_id: dbUser.conversation_id,
+      created_at: dbUser.created_at ?? item.created_at,
+      status: dbUser.status ?? item.status,
+      hidden: dbUser.hidden,
+    };
+  });
 }
 
 export async function hydrateConversationMessagesFromJournal(
