@@ -51,6 +51,10 @@ vi.mock('@/renderer/pages/cron', () => ({
   CronJobManager: () => <div>cron</div>,
 }));
 
+vi.mock('@/renderer/pages/conversation/components/Trajectory', () => ({
+  default: () => <div data-testid='conversation-trajectory-button'>trajectory</div>,
+}));
+
 vi.mock('@/renderer/hooks/agent/usePresetAssistantInfo', () => ({
   resolveAssistantConfigId: () => undefined,
   usePresetAssistantInfo: (...args: unknown[]) => usePresetAssistantInfoMock(...args),
@@ -132,6 +136,7 @@ describe('ChatConversation legacy runtime rendering', () => {
       />
     );
 
+    expect(screen.getByTestId('conversation-trajectory-button')).toBeInTheDocument();
     expect(screen.getByTestId('mock-acp-chat')).toBeInTheDocument();
     expect(acpChatMock).toHaveBeenCalled();
     expect(acpChatMock.mock.calls[0]?.[0]).toEqual(

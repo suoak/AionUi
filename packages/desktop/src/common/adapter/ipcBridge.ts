@@ -17,6 +17,9 @@ import type { AcpSlashCommandApiItem } from '@/common/chat/slash/types';
 import { bridge } from '@/common/platform/bridge';
 import {
   buildJournalTranscriptPath,
+  normalizeJournalTranscript,
+  type ConversationHostPolicy,
+  type JournalApprovalPolicy,
   type JournalTranscript,
   type JournalTranscriptVisibility,
 } from '@/common/types/journalTranscript';
@@ -455,10 +458,22 @@ export const conversation = {
     { reference: string; sha256: string; size: number; content: string },
     { conversation_id: string; reference: string }
   >((p) => `/api/conversations/${p.conversation_id}/outputs/${encodeURIComponent(p.reference)}`),
-  getJournalTranscript: httpGet<
-    JournalTranscript,
-    { conversation_id: string; visibility?: JournalTranscriptVisibility }
-  >((p) => buildJournalTranscriptPath(p.conversation_id, p.visibility ?? 'host')),
+  getJournalTranscript: withResponseMap(
+    httpGet<Partial<JournalTranscript> | null, { conversation_id: string; visibility?: JournalTranscriptVisibility }>(
+      (p) => buildJournalTranscriptPath(p.conversation_id, p.visibility ?? 'host')
+    ),
+    (raw) => normalizeJournalTranscript(raw, raw?.conversation_id ?? '')
+  ),
+  setHostPolicy: httpPut<
+    ConversationHostPolicy,
+    { conversation_id: string; approval?: JournalApprovalPolicy; compaction_keep_n?: number }
+  >(
+    (p) => `/api/conversations/${p.conversation_id}/host-policy`,
+    (p) => ({
+      approval: p.approval,
+      compaction_keep_n: p.compaction_keep_n,
+    })
+  ),
   askSideQuestion: httpPost<ConversationSideQuestionResult, { conversation_id: string; question: string }>(
     (p) => `/api/conversations/${p.conversation_id}/side-question`,
     (p) => ({ question: p.question })

@@ -6,6 +6,42 @@
     "empty": "Henüz soru-cevap içeriği yok",
     "count": "{{count}} dönüş"
   },
+  "trajectory": {
+    "title": "Yörünge",
+    "tooltip": "Sohbet yörüngesini görüntüle",
+    "empty": "Henüz günlük olayı yok",
+    "loadFailed": "Sohbet yörüngesi yüklenemedi",
+    "notReconstructible": "Bu tur günlükten yeniden oluşturulamaz",
+    "modelVisible": "Modele gösterilir",
+    "hostOnly": "Yalnızca ana makine",
+    "compacted": "Sıkıştırıldı",
+    "surfaceTokens": "{{count}} yüzey token",
+    "itemCount": "{{count}} olay",
+    "pairingBalanced": "Araç çağrıları eşleştirildi",
+    "pairingOpen": "Hâlâ açık bir araç çağrısı var",
+    "lock": {
+      "none": "Sıkıştırma yok",
+      "open": "Sıkıştırma sürüyor",
+      "closed": "Sıkıştırma bitti"
+    },
+    "kind": {
+      "assistant": "Asistan",
+      "user": "Siz",
+      "tool": "Araç",
+      "turnStart": "Tur başladı",
+      "turnEnd": "Tur bitti",
+      "turnError": "Hata",
+      "hostNotice": "Ana makine olayı"
+    },
+    "policy": {
+      "approvalLabel": "Onay politikası",
+      "approvalAsk": "Her seferinde sor",
+      "approvalNever": "Her zaman reddet",
+      "keepNLabel": "Son araç sonuçlarını tut",
+      "keepNOption": "Son {{count}} araç sonucu",
+      "saveFailed": "Ana makine politikası kaydedilemedi"
+    }
+  },
   "dropdown": {
     "presetAssistants": "Preset Assistants",
     "cliAgents": "CLI Agents"

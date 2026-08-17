@@ -24,6 +24,7 @@ import { emitter } from '../../../utils/emitter';
 import AcpChat from '../platforms/acp/AcpChat';
 import ChatLayout from './ChatLayout';
 import ChatSlider from './ChatSlider.tsx';
+import ConversationTrajectoryButton from './Trajectory';
 import AcpModelSelector from '@/renderer/components/agent/AcpModelSelector';
 import { getConversationOrNull } from '@/renderer/pages/conversation/utils/conversationCache';
 import { getConversationCreateErrorMessage } from '@/renderer/pages/conversation/utils/conversationCreateError';
@@ -206,6 +207,7 @@ const AionrsConversationPanel: React.FC<{ conversation: AionrsConversation; slid
     sider: <ChatSlider conversation={conversation} />,
     headerExtra: (
       <div className='flex items-center gap-8px'>
+        <ConversationTrajectoryButton conversationId={conversation.id} />
         <CronJobManager conversation_id={conversation.id} cron_job_id={cronJobId} />
         {!isMobile && (
           <AionrsModelSelector
@@ -379,9 +381,12 @@ const ChatConversation: React.FC<{
   const headerExtraNode = (
     <div className='flex items-center gap-8px'>
       {conversation && (
-        <div className='shrink-0'>
-          <CronJobManager conversation_id={conversation.id} cron_job_id={cronJobId} />
-        </div>
+        <>
+          <ConversationTrajectoryButton conversationId={conversation.id} />
+          <div className='shrink-0'>
+            <CronJobManager conversation_id={conversation.id} cron_job_id={cronJobId} />
+          </div>
+        </>
       )}
       {modelSelector && <div className='shrink-0'>{modelSelector}</div>}
     </div>

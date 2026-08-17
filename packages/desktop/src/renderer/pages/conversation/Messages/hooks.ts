@@ -19,6 +19,7 @@ import { useCallback, useEffect, useRef } from 'react';
 import { createContext } from '@renderer/utils/ui/createContext';
 import {
   hydrateConversationMessagesFromJournal,
+  isJournalMessageAlreadyShown,
   isJournalDerivedMessage,
   isLiveJournalUserClone,
 } from '@/renderer/utils/chat/hydrateMessagesFromJournal';
@@ -854,7 +855,10 @@ export function prependHistoryMessages(currentList: TMessage[], messages: TMessa
   const currentIds = new Set(currentList.map((message) => message.id));
   const currentKeys = new Set(currentList.map(getMessageMergeKey));
   const uniqueHistory = messages.filter(
-    (message) => !currentIds.has(message.id) && !currentKeys.has(getMessageMergeKey(message))
+    (message) =>
+      !currentIds.has(message.id) &&
+      !currentKeys.has(getMessageMergeKey(message)) &&
+      !findLiveJournalUserClone(currentList, message)
   );
   // Folding the combined list (not the page alone) also covers a retry run whose
   // attempts straddle a page boundary.
@@ -885,6 +889,7 @@ export const useLoadPreviousMessagePage = (conversationId?: string) => {
   const pagination = useMessagePaginationState();
   const setPagination = useUpdateMessagePaginationState();
   const prependHistoryPage = usePrependHistoryPage();
+  const currentList = useMessageList();
 
   return useCallback(async () => {
     if (!conversationId || !pagination.oldestCursor || !pagination.hasMoreBefore || pagination.isLoadingBefore) {
@@ -899,7 +904,9 @@ export const useLoadPreviousMessagePage = (conversationId?: string) => {
         contentMode: 'compact',
       });
       const messages = page.items.map(normalizeDbMessage);
-      prependHistoryPage(messages);
+      const hydrated = await hydrateConversationMessagesFromJournal(conversationId, messages);
+      const uniqueHistory = hydrated.filter((message) => !isJournalMessageAlreadyShown(currentList, message));
+      prependHistoryPage(uniqueHistory);
       setPagination((current) => ({
         ...current,
         oldestCursor: page.oldest_cursor ?? current.oldestCursor,
@@ -916,6 +923,7 @@ export const useLoadPreviousMessagePage = (conversationId?: string) => {
     }
   }, [
     conversationId,
+    currentList,
     pagination.hasMoreBefore,
     pagination.isLoadingBefore,
     pagination.oldestCursor,

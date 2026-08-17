@@ -6,6 +6,42 @@
     "empty": "Nenhum turno de perguntas e respostas ainda",
     "count": "{{count}} turnos"
   },
+  "trajectory": {
+    "title": "Trajetória",
+    "tooltip": "Ver a trajetória da conversa",
+    "empty": "Ainda não há eventos do diário",
+    "loadFailed": "Não foi possível carregar a trajetória da conversa",
+    "notReconstructible": "Este turno não pode ser reconstruído a partir do diário",
+    "modelVisible": "Visível para o modelo",
+    "hostOnly": "Somente host",
+    "compacted": "Compactado",
+    "surfaceTokens": "{{count}} tokens de superfície",
+    "itemCount": "{{count}} eventos",
+    "pairingBalanced": "As chamadas de ferramenta estão emparelhadas",
+    "pairingOpen": "Ainda há uma chamada de ferramenta aberta",
+    "lock": {
+      "none": "Sem compactação",
+      "open": "Compactação em andamento",
+      "closed": "Compactação concluída"
+    },
+    "kind": {
+      "assistant": "Assistente",
+      "user": "Você",
+      "tool": "Ferramenta",
+      "turnStart": "Turno iniciado",
+      "turnEnd": "Turno concluído",
+      "turnError": "Erro",
+      "hostNotice": "Evento do host"
+    },
+    "policy": {
+      "approvalLabel": "Política de aprovação",
+      "approvalAsk": "Perguntar sempre",
+      "approvalNever": "Sempre recusar",
+      "keepNLabel": "Manter resultados recentes de ferramentas",
+      "keepNOption": "{{count}} resultados recentes de ferramentas",
+      "saveFailed": "Não foi possível salvar a política do host"
+    }
+  },
   "dropdown": {
     "presetAssistants": "Assistentes Predefinidos",
     "cliAgents": "Agentes CLI"

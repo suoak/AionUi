@@ -6,6 +6,42 @@
     "empty": "暂无问答内容",
     "count": "{{count}} 条"
   },
+  "trajectory": {
+    "title": "轨迹",
+    "tooltip": "查看对话轨迹",
+    "empty": "暂无日志事件",
+    "loadFailed": "无法加载对话轨迹",
+    "notReconstructible": "这一回合无法从日志重建",
+    "modelVisible": "模型可见",
+    "hostOnly": "仅宿主",
+    "compacted": "已压缩",
+    "surfaceTokens": "{{count}} 个表面 token",
+    "itemCount": "{{count}} 个事件",
+    "pairingBalanced": "工具调用已配对",
+    "pairingOpen": "仍有未完成的工具调用",
+    "lock": {
+      "none": "未在压缩",
+      "open": "正在压缩",
+      "closed": "压缩已完成"
+    },
+    "kind": {
+      "assistant": "助手",
+      "user": "你",
+      "tool": "工具",
+      "turnStart": "回合开始",
+      "turnEnd": "回合结束",
+      "turnError": "错误",
+      "hostNotice": "宿主事件"
+    },
+    "policy": {
+      "approvalLabel": "审批策略",
+      "approvalAsk": "每次询问",
+      "approvalNever": "一律拒绝",
+      "keepNLabel": "保留最近的工具结果",
+      "keepNOption": "最近 {{count}} 条工具结果",
+      "saveFailed": "无法保存宿主策略"
+    }
+  },
   "dropdown": {
     "presetAssistants": "预设助手",
     "cliAgents": "CLI Agents"

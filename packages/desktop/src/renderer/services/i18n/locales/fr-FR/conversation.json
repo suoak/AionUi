@@ -6,6 +6,42 @@
     "empty": "Aucun échange Q&R pour l'instant",
     "count": "{{count}} échanges"
   },
+  "trajectory": {
+    "title": "Trajectoire",
+    "tooltip": "Voir la trajectoire de la conversation",
+    "empty": "Aucun événement de journal pour le moment",
+    "loadFailed": "Impossible de charger la trajectoire de la conversation",
+    "notReconstructible": "Ce tour n’est pas reconstructible à partir du journal",
+    "modelVisible": "Visible pour le modèle",
+    "hostOnly": "Hôte uniquement",
+    "compacted": "Compacté",
+    "surfaceTokens": "{{count}} jetons de surface",
+    "itemCount": "{{count}} événements",
+    "pairingBalanced": "Les appels d’outils sont appariés",
+    "pairingOpen": "Un appel d’outil est encore ouvert",
+    "lock": {
+      "none": "Pas de compactage",
+      "open": "Compactage en cours",
+      "closed": "Compactage terminé"
+    },
+    "kind": {
+      "assistant": "Assistant",
+      "user": "Vous",
+      "tool": "Outil",
+      "turnStart": "Tour commencé",
+      "turnEnd": "Tour terminé",
+      "turnError": "Erreur",
+      "hostNotice": "Événement hôte"
+    },
+    "policy": {
+      "approvalLabel": "Politique d’approbation",
+      "approvalAsk": "Demander à chaque fois",
+      "approvalNever": "Toujours refuser",
+      "keepNLabel": "Conserver les résultats d’outils récents",
+      "keepNOption": "{{count}} résultats d’outils récents",
+      "saveFailed": "Impossible d’enregistrer la politique hôte"
+    }
+  },
   "dropdown": {
     "presetAssistants": "Assistants prédéfinis",
     "cliAgents": "Agents CLI"
