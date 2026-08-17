@@ -51,9 +51,7 @@ export const USAGE_RANGE_DAYS: Record<Exclude<UsageRange, 'all'>, number> = {
  * cache in its own bucket (so `input < cached_read` on a cache-heavy turn).
  * Subtract only the inclusive shape.
  */
-export function usageEventSpendInput(
-  event: Pick<UsageEvent, 'input_tokens' | 'cached_read_tokens'>
-): number {
+export function usageEventSpendInput(event: Pick<UsageEvent, 'input_tokens' | 'cached_read_tokens'>): number {
   const input = event.input_tokens;
   const cached = event.cached_read_tokens;
   if (cached > 0 && input >= cached) {

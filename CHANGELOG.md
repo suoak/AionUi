@@ -1,5 +1,27 @@
 # Changelog
 
+## [2.1.72](https://github.com/suoak/AionUi/compare/v2.1.71...v2.1.72) (2026-08-17)
+
+### Desktop
+
+#### Bug Fixes
+
+- **chat:** first-turn user bubble dupes and WorkMate usage channel (#66)
+
+#### 内网更新说明
+
+<!-- internal-release-notes:start -->
+
+**由运营管理部提供**
+
+- 修复新开对话时用户消息显示两次的问题。
+- 用量统计的渠道改为显示 WorkMate，不再显示内部名称 aionui。
+- 用量按发给模型的完整请求统计，并避免把已命中缓存的输入重复算进消耗。
+
+<!-- internal-release-notes:end -->
+
+---
+
 ## [2.1.71](https://github.com/suoak/AionUi/compare/v2.1.70...v2.1.71) (2026-08-17)
 
 ### Desktop

@@ -184,11 +184,9 @@ describe('tokenUsageAggregate', () => {
       )[0]
     ).toMatchObject({ key: 'lark', label: 'lark', turn_count: 2, total_tokens: 7 });
     expect(
-      breakdownUsageByChannel(
-        [event({ conversation_source: undefined, input_tokens: 4 })],
-        'Unknown',
-        { workmate: 'WorkMate' }
-      )[0]
+      breakdownUsageByChannel([event({ conversation_source: undefined, input_tokens: 4 })], 'Unknown', {
+        workmate: 'WorkMate',
+      })[0]
     ).toMatchObject({ key: 'workmate', label: 'WorkMate', total_tokens: 4 });
     expect(resolveUsageChannelLabel('aionui', { workmate: 'WorkMate' }, 'Unknown')).toBe('WorkMate');
   });
