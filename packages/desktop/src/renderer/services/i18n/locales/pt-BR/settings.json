@@ -1440,7 +1440,7 @@
   "mcpNoDescription": "Nenhuma descrição",
   "usage": {
     "title": "Uso",
-    "description": "Consumo de tokens de turnos concluídos, agrupado por agente e assistente. O anel da conversa ainda mostra o contexto ocupado.",
+    "description": "Consumo de tokens de turnos concluídos — a solicitação completa ao modelo, incluindo o prompt do sistema e as ferramentas, não só o texto digitado. Agrupado por modelo, agente, assistente e canal. O anel da conversa ainda mostra o contexto ocupado.",
     "range7d": "7 dias",
     "range30d": "30 dias",
     "range90d": "90 dias",
@@ -1472,6 +1472,15 @@
     "exportSuccess": "Uso exportado",
     "filterAllModels": "Todos os modelos",
     "byChannelTitle": "Por canal",
-    "unknownChannel": "Canal desconhecido"
+    "unknownChannel": "Canal desconhecido",
+    "channelWorkmate": "WorkMate",
+    "channelTelegram": "Telegram",
+    "channelLark": "Lark",
+    "channelDingtalk": "DingTalk",
+    "channelWeixin": "Weixin",
+    "channelWecom": "WeCom",
+    "channelSlack": "Slack",
+    "channelDiscord": "Discord",
+    "channelCron": "Tarefas agendadas"
   }
 }

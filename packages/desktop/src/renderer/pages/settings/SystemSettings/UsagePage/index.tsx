@@ -111,7 +111,18 @@ const UsagePage: React.FC = () => {
     [scopedEvents, t]
   );
   const byChannel = useMemo(
-    () => breakdownUsageByChannel(scopedEvents, t('settings.usage.unknownChannel')),
+    () =>
+      breakdownUsageByChannel(scopedEvents, t('settings.usage.unknownChannel'), {
+        workmate: t('settings.usage.channelWorkmate'),
+        telegram: t('settings.usage.channelTelegram'),
+        lark: t('settings.usage.channelLark'),
+        dingtalk: t('settings.usage.channelDingtalk'),
+        weixin: t('settings.usage.channelWeixin'),
+        wecom: t('settings.usage.channelWecom'),
+        slack: t('settings.usage.channelSlack'),
+        discord: t('settings.usage.channelDiscord'),
+        cron: t('settings.usage.channelCron'),
+      }),
     [scopedEvents, t]
   );
   const recentConversations = useMemo(

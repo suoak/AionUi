@@ -1439,7 +1439,7 @@
   "mcpNoDescription": "暫無描述",
   "usage": {
     "title": "用量統計",
-    "description": "統計已完成回合消耗的 token，並依 Agent / 助手拆分。會話中的圓環仍表示目前上下文佔用。",
+    "description": "統計已完成回合發給模型的 token（含系統提示與工具定義，不是只算你輸入的幾個字），並依模型 / Agent / 助手 / 渠道拆分。會話中的圓環仍表示目前上下文佔用。",
     "range7d": "近 7 天",
     "range30d": "近 30 天",
     "range90d": "近 90 天",
@@ -1471,6 +1471,15 @@
     "exportSuccess": "用量已匯出",
     "filterAllModels": "全部模型",
     "byChannelTitle": "依渠道",
-    "unknownChannel": "未知渠道"
+    "unknownChannel": "未知渠道",
+    "channelWorkmate": "WorkMate",
+    "channelTelegram": "Telegram",
+    "channelLark": "飛書",
+    "channelDingtalk": "釘釘",
+    "channelWeixin": "微信",
+    "channelWecom": "企業微信",
+    "channelSlack": "Slack",
+    "channelDiscord": "Discord",
+    "channelCron": "定時任務"
   }
 }
