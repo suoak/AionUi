@@ -1437,7 +1437,7 @@
   "mcpNoDescription": "Нет описания",
   "usage": {
     "title": "Использование",
-    "description": "Расход токенов завершённых ходов, с группировкой по агенту и ассистенту. Кольцо в чате по-прежнему показывает занятость контекста.",
+    "description": "Расход токенов завершённых ходов — полный запрос к модели, включая системный промпт и инструменты, а не только введённый текст. Группировка по модели, агенту, ассистенту и каналу. Кольцо в чате по-прежнему показывает занятость контекста.",
     "range7d": "7 дней",
     "range30d": "30 дней",
     "range90d": "90 дней",
@@ -1469,6 +1469,15 @@
     "exportSuccess": "Использование экспортировано",
     "filterAllModels": "Все модели",
     "byChannelTitle": "По каналам",
-    "unknownChannel": "Неизвестный канал"
+    "unknownChannel": "Неизвестный канал",
+    "channelWorkmate": "WorkMate",
+    "channelTelegram": "Telegram",
+    "channelLark": "Lark",
+    "channelDingtalk": "DingTalk",
+    "channelWeixin": "Weixin",
+    "channelWecom": "WeCom",
+    "channelSlack": "Slack",
+    "channelDiscord": "Discord",
+    "channelCron": "Расписание"
   }
 }

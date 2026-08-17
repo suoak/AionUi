@@ -1439,7 +1439,7 @@
   "mcpNoDescription": "説明なし",
   "usage": {
     "title": "使用量",
-    "description": "完了したターンのトークン消費をエージェント／アシスタント別に集計します。会話のリングは引き続きコンテキスト占有量です。",
+    "description": "完了したターンでモデルに送ったトークン（システムプロンプトとツール定義を含む。入力した数文字だけではありません）を、モデル／エージェント／アシスタント／チャネル別に集計します。会話のリングは引き続きコンテキスト占有量です。",
     "range7d": "7日間",
     "range30d": "30日間",
     "range90d": "90日間",
@@ -1471,6 +1471,15 @@
     "exportSuccess": "使用量を書き出しました",
     "filterAllModels": "すべてのモデル",
     "byChannelTitle": "チャネル別",
-    "unknownChannel": "不明なチャネル"
+    "unknownChannel": "不明なチャネル",
+    "channelWorkmate": "WorkMate",
+    "channelTelegram": "Telegram",
+    "channelLark": "Lark",
+    "channelDingtalk": "DingTalk",
+    "channelWeixin": "Weixin",
+    "channelWecom": "WeCom",
+    "channelSlack": "Slack",
+    "channelDiscord": "Discord",
+    "channelCron": "スケジュール"
   }
 }

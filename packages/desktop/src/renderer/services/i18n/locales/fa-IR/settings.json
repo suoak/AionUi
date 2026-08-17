@@ -1437,7 +1437,7 @@
   "mcpNoDescription": "بدون توضیحات",
   "usage": {
     "title": "مصرف",
-    "description": "مصرف توکن نوبت‌های تکمیل‌شده، گروه‌بندی‌شده بر اساس عامل و دستیار. حلقه گفتگو همچنان اشغال بافت را نشان می‌دهد.",
+    "description": "مصرف توکن نوبت‌های تکمیل‌شده — کل درخواست مدل، شامل پرامپت سیستم و تعریف ابزارها، نه فقط متنی که تایپ کردید. گروه‌بندی بر اساس مدل، عامل، دستیار و کانال. حلقه گفتگو همچنان اشغال بافت را نشان می‌دهد.",
     "range7d": "۷ روز",
     "range30d": "۳۰ روز",
     "range90d": "۹۰ روز",
@@ -1469,6 +1469,15 @@
     "exportSuccess": "مصرف خروجی گرفته شد",
     "filterAllModels": "همه مدل‌ها",
     "byChannelTitle": "بر اساس کانال",
-    "unknownChannel": "کانال ناشناس"
+    "unknownChannel": "کانال ناشناس",
+    "channelWorkmate": "WorkMate",
+    "channelTelegram": "Telegram",
+    "channelLark": "Lark",
+    "channelDingtalk": "DingTalk",
+    "channelWeixin": "Weixin",
+    "channelWecom": "WeCom",
+    "channelSlack": "Slack",
+    "channelDiscord": "Discord",
+    "channelCron": "وظایف زمان‌بندی‌شده"
   }
 }

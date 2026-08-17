@@ -43,10 +43,53 @@ export const USAGE_RANGE_DAYS: Record<Exclude<UsageRange, 'all'>, number> = {
   '90d': 90,
 };
 
-export function usageEventTotalTokens(
-  event: Pick<UsageEvent, 'input_tokens' | 'output_tokens' | 'thought_tokens'>
+/**
+ * Prompt tokens that count as spend.
+ *
+ * Codex `last.inputTokens` and Grok `inputTokens` are the full prompt and
+ * already include cache hits. Claude reports base input separately, with
+ * cache in its own bucket (so `input < cached_read` on a cache-heavy turn).
+ * Subtract only the inclusive shape.
+ */
+export function usageEventSpendInput(
+  event: Pick<UsageEvent, 'input_tokens' | 'cached_read_tokens'>
 ): number {
-  return event.input_tokens + event.output_tokens + event.thought_tokens;
+  const input = event.input_tokens;
+  const cached = event.cached_read_tokens;
+  if (cached > 0 && input >= cached) {
+    return input - cached;
+  }
+  return input;
+}
+
+export function usageEventTotalTokens(
+  event: Pick<UsageEvent, 'input_tokens' | 'output_tokens' | 'thought_tokens' | 'cached_read_tokens'>
+): number {
+  return usageEventSpendInput(event) + event.output_tokens + event.thought_tokens;
+}
+
+export const DEFAULT_USAGE_CHANNEL = 'workmate';
+
+const WORKMATE_CHANNEL_ALIASES = new Set(['aionui', 'workmate']);
+
+export function normalizeUsageChannelKey(source?: string): string {
+  const key = source?.trim();
+  if (!key || WORKMATE_CHANNEL_ALIASES.has(key)) {
+    return DEFAULT_USAGE_CHANNEL;
+  }
+  return key;
+}
+
+export function resolveUsageChannelLabel(
+  source: string | undefined,
+  labels: Record<string, string>,
+  unknownLabel: string
+): string {
+  const key = normalizeUsageChannelKey(source);
+  if (key === 'unknown') {
+    return unknownLabel;
+  }
+  return labels[key] || key;
 }
 
 export function usageRangeStart(range: UsageRange, now = Date.now()): number | null {
@@ -71,7 +114,7 @@ export function summarizeUsageEvents(events: UsageEvent[]): UsageTotals {
   const totals = events.reduce<UsageTotals>(
     (acc, event) => {
       conversationIds.add(event.conversation_id);
-      acc.input_tokens += event.input_tokens;
+      acc.input_tokens += usageEventSpendInput(event);
       acc.output_tokens += event.output_tokens;
       acc.thought_tokens += event.thought_tokens;
       acc.cached_read_tokens += event.cached_read_tokens;
@@ -167,7 +210,7 @@ export function buildUsageDailySeries(events: UsageEvent[], range: UsageRange, n
     if (!point) {
       continue;
     }
-    point.input_tokens += event.input_tokens;
+    point.input_tokens += usageEventSpendInput(event);
     point.output_tokens += event.output_tokens;
     point.total_tokens += usageEventTotalTokens(event);
     point.cost_amount += event.cost_delta;
@@ -217,11 +260,15 @@ export function breakdownUsageByAssistant(events: UsageEvent[], unknownLabel: st
   return sortBreakdown(rows);
 }
 
-export function breakdownUsageByChannel(events: UsageEvent[], unknownLabel: string): UsageBreakdownRow[] {
+export function breakdownUsageByChannel(
+  events: UsageEvent[],
+  unknownLabel: string,
+  channelLabels: Record<string, string> = {}
+): UsageBreakdownRow[] {
   const rows = new Map<string, UsageBreakdownRow>();
   for (const event of events) {
-    const key = event.conversation_source?.trim() || 'aionui';
-    addBreakdownRow(rows, key, key === 'unknown' ? unknownLabel : key, event);
+    const key = normalizeUsageChannelKey(event.conversation_source);
+    addBreakdownRow(rows, key, resolveUsageChannelLabel(key, channelLabels, unknownLabel), event);
   }
   return sortBreakdown(rows);
 }

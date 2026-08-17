@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import type { TMessage } from '@/common/chat/chatLib';
 import type { JournalTranscript } from '@/common/types/journalTranscript';
 import {
+  isLiveJournalUserClone,
   mergeDbWithJournalTranscript,
   messagesFromJournalTranscript,
   messagesNeedJournalHydration,
@@ -122,10 +123,11 @@ describe('mergeDbWithJournalTranscript', () => {
     expect(merged).toHaveLength(3);
   });
 
-  it('lets the journal replace the DB projection when it includes the user prompt', () => {
+  it('keeps the DB user identity when the journal reconstructs the same prompt', () => {
     const db = [
       {
         id: 'u1',
+        msg_id: 'u1',
         conversation_id: 'conv-1',
         type: 'text',
         position: 'right',
@@ -150,10 +152,34 @@ describe('mergeDbWithJournalTranscript', () => {
     const merged = mergeDbWithJournalTranscript(db, recovered);
     expect(merged).toHaveLength(2);
     expect(merged[0]).toMatchObject({
+      id: 'u1',
+      msg_id: 'u1',
       position: 'right',
       content: { content: 'please list files' },
     });
-    expect(merged.some((message) => message.id === 'u1')).toBe(false);
+  });
+
+  it('keeps journal user rows when the DB has no user bubble yet', () => {
+    const recovered = messagesFromJournalTranscript('conv-1', {
+      ...transcript,
+      items: [
+        {
+          sequence: 1,
+          event_id: 'evt-user',
+          journal_kind: 'UserPrompt',
+          transcript_kind: 'user/message',
+          visibility: 'model',
+          summary: 'hello',
+          source_sequences: [1],
+        },
+      ],
+    });
+    const merged = mergeDbWithJournalTranscript([], recovered);
+    expect(merged).toHaveLength(1);
+    expect(merged[0]).toMatchObject({
+      id: 'journal:evt-user',
+      position: 'right',
+    });
   });
 
   it('returns the DB list when the journal recovered nothing', () => {
@@ -167,5 +193,38 @@ describe('mergeDbWithJournalTranscript', () => {
       },
     ] as TMessage[];
     expect(mergeDbWithJournalTranscript(db, [])).toBe(db);
+  });
+});
+
+describe('isLiveJournalUserClone', () => {
+  const liveUser = {
+    id: 'u1',
+    msg_id: 'u1',
+    conversation_id: 'conv-1',
+    type: 'text',
+    position: 'right',
+    content: { content: '你好' },
+  } as TMessage;
+  const journalUser = {
+    id: 'journal:evt-user',
+    msg_id: 'evt-user',
+    conversation_id: 'conv-1',
+    type: 'text',
+    position: 'right',
+    content: { content: '你好' },
+  } as TMessage;
+
+  it('matches a live user bubble with its journal reconstruction', () => {
+    expect(isLiveJournalUserClone(liveUser, journalUser)).toBe(true);
+  });
+
+  it('does not collapse two real user turns with the same text', () => {
+    expect(
+      isLiveJournalUserClone(liveUser, {
+        ...liveUser,
+        id: 'u2',
+        msg_id: 'u2',
+      })
+    ).toBe(false);
   });
 });

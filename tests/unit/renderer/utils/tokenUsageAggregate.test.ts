@@ -13,6 +13,8 @@ import {
   breakdownUsageByModel,
   buildUsageDailySeries,
   conversationSpendTokens,
+  resolveUsageChannelLabel,
+  usageEventSpendInput,
   filterUsageEvents,
   filterUsageEventsByModel,
   filterUsageToday,
@@ -180,7 +182,32 @@ describe('tokenUsageAggregate', () => {
         ],
         'Unknown'
       )[0]
-    ).toMatchObject({ key: 'lark', turn_count: 2, total_tokens: 7 });
+    ).toMatchObject({ key: 'lark', label: 'lark', turn_count: 2, total_tokens: 7 });
+    expect(
+      breakdownUsageByChannel(
+        [event({ conversation_source: undefined, input_tokens: 4 })],
+        'Unknown',
+        { workmate: 'WorkMate' }
+      )[0]
+    ).toMatchObject({ key: 'workmate', label: 'WorkMate', total_tokens: 4 });
+    expect(resolveUsageChannelLabel('aionui', { workmate: 'WorkMate' }, 'Unknown')).toBe('WorkMate');
+  });
+
+  it('treats Codex-style input that already includes cache hits as spend minus cache', () => {
+    const inclusive = event({ input_tokens: 14_600, output_tokens: 15, cached_read_tokens: 14_000 });
+    expect(usageEventSpendInput(inclusive)).toBe(600);
+    expect(summarizeUsageEvents([inclusive])).toMatchObject({
+      input_tokens: 600,
+      output_tokens: 15,
+      total_tokens: 615,
+      cached_read_tokens: 14_000,
+    });
+  });
+
+  it('keeps Claude-style base input when cache lives in its own bucket', () => {
+    const exclusive = event({ input_tokens: 80, output_tokens: 15, cached_read_tokens: 14_000 });
+    expect(usageEventSpendInput(exclusive)).toBe(80);
+    expect(summarizeUsageEvents([exclusive]).total_tokens).toBe(95);
   });
 
   it('returns empty totals for an empty event list', () => {

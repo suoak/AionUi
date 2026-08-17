@@ -1437,7 +1437,7 @@
   "mcpNoDescription": "Açıklama yok",
   "usage": {
     "title": "Kullanım",
-    "description": "Tamamlanan turların token harcaması, ajan ve asistan bazında gruplanır. Sohbetteki halka hâlâ bağlam doluluğunu gösterir.",
+    "description": "Tamamlanan turların token harcaması — modele giden tam istek (sistem istemi ve araç tanımları dahil; yazdığınız birkaç karakter değil). Model, ajan, asistan ve kanala göre gruplanır. Sohbetteki halka hâlâ bağlam doluluğunu gösterir.",
     "range7d": "7 gün",
     "range30d": "30 gün",
     "range90d": "90 gün",
@@ -1469,6 +1469,15 @@
     "exportSuccess": "Kullanım dışa aktarıldı",
     "filterAllModels": "Tüm modeller",
     "byChannelTitle": "Kanala göre",
-    "unknownChannel": "Bilinmeyen kanal"
+    "unknownChannel": "Bilinmeyen kanal",
+    "channelWorkmate": "WorkMate",
+    "channelTelegram": "Telegram",
+    "channelLark": "Lark",
+    "channelDingtalk": "DingTalk",
+    "channelWeixin": "Weixin",
+    "channelWecom": "WeCom",
+    "channelSlack": "Slack",
+    "channelDiscord": "Discord",
+    "channelCron": "Zamanlanmış görevler"
   }
 }

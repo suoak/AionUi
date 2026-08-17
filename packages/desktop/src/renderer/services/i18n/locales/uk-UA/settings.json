@@ -1438,7 +1438,7 @@
   "mcpNoDescription": "Немає опису",
   "usage": {
     "title": "Використання",
-    "description": "Витрата токенів завершених ходів, згрупована за агентом і асистентом. Кільце в чаті й надалі показує зайнятість контексту.",
+    "description": "Витрата токенів завершених ходів — повний запит до моделі, включно із системним промптом і інструментами, а не лише введений текст. Групування за моделлю, агентом, асистентом і каналом. Кільце в чаті й надалі показує зайнятість контексту.",
     "range7d": "7 днів",
     "range30d": "30 днів",
     "range90d": "90 днів",
@@ -1470,6 +1470,15 @@
     "exportSuccess": "Використання експортовано",
     "filterAllModels": "Усі моделі",
     "byChannelTitle": "За каналами",
-    "unknownChannel": "Невідомий канал"
+    "unknownChannel": "Невідомий канал",
+    "channelWorkmate": "WorkMate",
+    "channelTelegram": "Telegram",
+    "channelLark": "Lark",
+    "channelDingtalk": "DingTalk",
+    "channelWeixin": "Weixin",
+    "channelWecom": "WeCom",
+    "channelSlack": "Slack",
+    "channelDiscord": "Discord",
+    "channelCron": "Розклад"
   }
 }

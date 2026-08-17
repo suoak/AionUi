@@ -1437,7 +1437,7 @@
   "mcpNoDescription": "Aucune description",
   "usage": {
     "title": "Utilisation",
-    "description": "Consommation de jetons des tours terminés, regroupée par agent et assistant. L’anneau de conversation indique toujours l’occupation du contexte.",
+    "description": "Consommation de jetons des tours terminés — la requête complète envoyée au modèle, y compris le prompt système et les outils, pas seulement le texte saisi. Regroupée par modèle, agent, assistant et canal. L’anneau de conversation indique toujours l’occupation du contexte.",
     "range7d": "7 jours",
     "range30d": "30 jours",
     "range90d": "90 jours",
@@ -1469,6 +1469,15 @@
     "exportSuccess": "Utilisation exportée",
     "filterAllModels": "Tous les modèles",
     "byChannelTitle": "Par canal",
-    "unknownChannel": "Canal inconnu"
+    "unknownChannel": "Canal inconnu",
+    "channelWorkmate": "WorkMate",
+    "channelTelegram": "Telegram",
+    "channelLark": "Lark",
+    "channelDingtalk": "DingTalk",
+    "channelWeixin": "Weixin",
+    "channelWecom": "WeCom",
+    "channelSlack": "Slack",
+    "channelDiscord": "Discord",
+    "channelCron": "Tâches planifiées"
   }
 }

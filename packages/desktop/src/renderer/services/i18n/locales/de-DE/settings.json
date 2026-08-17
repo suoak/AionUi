@@ -1437,7 +1437,7 @@
   "mcpNoDescription": "Keine Beschreibung",
   "usage": {
     "title": "Nutzung",
-    "description": "Tokenverbrauch abgeschlossener Runden, gruppiert nach Agent und Assistent. Der Ring im Chat zeigt weiterhin die Kontextbelegung.",
+    "description": "Tokenverbrauch abgeschlossener Runden – die vollständige Modellanfrage inklusive Systemprompt und Tool-Definitionen, nicht nur der eingegebene Text. Gruppiert nach Modell, Agent, Assistent und Kanal. Der Ring im Chat zeigt weiterhin die Kontextbelegung.",
     "range7d": "7 Tage",
     "range30d": "30 Tage",
     "range90d": "90 Tage",
@@ -1469,6 +1469,15 @@
     "exportSuccess": "Nutzung exportiert",
     "filterAllModels": "Alle Modelle",
     "byChannelTitle": "Nach Kanal",
-    "unknownChannel": "Unbekannter Kanal"
+    "unknownChannel": "Unbekannter Kanal",
+    "channelWorkmate": "WorkMate",
+    "channelTelegram": "Telegram",
+    "channelLark": "Lark",
+    "channelDingtalk": "DingTalk",
+    "channelWeixin": "Weixin",
+    "channelWecom": "WeCom",
+    "channelSlack": "Slack",
+    "channelDiscord": "Discord",
+    "channelCron": "Geplante Aufgaben"
   }
 }

@@ -1437,7 +1437,7 @@
   "mcpNoDescription": "No description",
   "usage": {
     "title": "Usage",
-    "description": "Token spend from completed turns, grouped by model, agent, and assistant. Context-window occupancy still appears on each conversation.",
+    "description": "Token spend from completed turns — the full model request, including system prompts and tool definitions, not just the text you typed. Grouped by model, agent, assistant, and channel. Context-window occupancy still appears on each conversation.",
     "range7d": "7 days",
     "range30d": "30 days",
     "range90d": "90 days",
@@ -1469,6 +1469,15 @@
     "exportSuccess": "Usage exported",
     "filterAllModels": "All models",
     "byChannelTitle": "By channel",
-    "unknownChannel": "Unknown channel"
+    "unknownChannel": "Unknown channel",
+    "channelWorkmate": "WorkMate",
+    "channelTelegram": "Telegram",
+    "channelLark": "Lark",
+    "channelDingtalk": "DingTalk",
+    "channelWeixin": "Weixin",
+    "channelWecom": "WeCom",
+    "channelSlack": "Slack",
+    "channelDiscord": "Discord",
+    "channelCron": "Scheduled tasks"
   }
 }
