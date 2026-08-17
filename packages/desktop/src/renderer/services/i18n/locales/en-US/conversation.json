@@ -6,6 +6,42 @@
     "empty": "No Q&A turns yet",
     "count": "{{count}} turns"
   },
+  "trajectory": {
+    "title": "Trajectory",
+    "tooltip": "View conversation trajectory",
+    "empty": "No journal events yet",
+    "loadFailed": "Could not load the conversation trajectory",
+    "notReconstructible": "This turn is not reconstructible from the journal",
+    "modelVisible": "Shown to the model",
+    "hostOnly": "Host only",
+    "compacted": "Compacted",
+    "surfaceTokens": "{{count}} surface tokens",
+    "itemCount": "{{count}} events",
+    "pairingBalanced": "Tool calls are paired",
+    "pairingOpen": "A tool call is still open",
+    "lock": {
+      "none": "Not compacting",
+      "open": "Compaction in progress",
+      "closed": "Compaction finished"
+    },
+    "kind": {
+      "assistant": "Assistant",
+      "user": "You",
+      "tool": "Tool",
+      "turnStart": "Turn started",
+      "turnEnd": "Turn finished",
+      "turnError": "Error",
+      "hostNotice": "Host event"
+    },
+    "policy": {
+      "approvalLabel": "Approval policy",
+      "approvalAsk": "Ask each time",
+      "approvalNever": "Never allow",
+      "keepNLabel": "Keep recent tool results",
+      "keepNOption": "{{count}} recent tool results",
+      "saveFailed": "Could not save host policy"
+    }
+  },
   "dropdown": {
     "presetAssistants": "Preset Assistants",
     "cliAgents": "CLI Agents"

@@ -6,6 +6,42 @@
     "empty": "暫無問答內容",
     "count": "{{count}} 條"
   },
+  "trajectory": {
+    "title": "軌跡",
+    "tooltip": "檢視對話軌跡",
+    "empty": "尚無日誌事件",
+    "loadFailed": "無法載入對話軌跡",
+    "notReconstructible": "這一回合無法從日誌重建",
+    "modelVisible": "模型可見",
+    "hostOnly": "僅主機",
+    "compacted": "已壓縮",
+    "surfaceTokens": "{{count}} 個表面 token",
+    "itemCount": "{{count}} 個事件",
+    "pairingBalanced": "工具呼叫已配對",
+    "pairingOpen": "仍有未完成的工具呼叫",
+    "lock": {
+      "none": "未在壓縮",
+      "open": "正在壓縮",
+      "closed": "壓縮已完成"
+    },
+    "kind": {
+      "assistant": "助手",
+      "user": "你",
+      "tool": "工具",
+      "turnStart": "回合開始",
+      "turnEnd": "回合結束",
+      "turnError": "錯誤",
+      "hostNotice": "主機事件"
+    },
+    "policy": {
+      "approvalLabel": "審批策略",
+      "approvalAsk": "每次詢問",
+      "approvalNever": "一律拒絕",
+      "keepNLabel": "保留最近的工具結果",
+      "keepNOption": "最近 {{count}} 條工具結果",
+      "saveFailed": "無法儲存主機策略"
+    }
+  },
   "dropdown": {
     "presetAssistants": "預設助手",
     "cliAgents": "CLI Agents"

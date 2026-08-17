@@ -10,6 +10,7 @@
 import { ipcBridge } from '@/common';
 import type { TMessage } from '@/common/chat/chatLib';
 import {
+  normalizeJournalTranscript,
   transcriptItemText,
   type JournalTranscript,
   type JournalTranscriptItem,
@@ -51,6 +52,108 @@ export function messagesNeedJournalHydration(messages: TMessage[]): boolean {
   return !messages.some(isModelVisibleMessage);
 }
 
+function isUnfinishedMessage(message: TMessage): boolean {
+  return message.status === 'pending' || message.status === 'work';
+}
+
+function assistantText(message: TMessage): string | undefined {
+  if (message.type !== 'text' || message.position === 'right') {
+    return undefined;
+  }
+  return message.content.content ?? '';
+}
+
+function toolCallId(message: TMessage): string | undefined {
+  if (message.type === 'tool_call') {
+    return message.content.call_id;
+  }
+  if (message.type === 'acp_tool_call') {
+    return message.content.update.tool_call_id;
+  }
+  if (message.type === 'tool_group') {
+    return message.content.find((item) => item.call_id)?.call_id;
+  }
+  return undefined;
+}
+
+function textsLooselyEqual(left: string, right: string): boolean {
+  if (left === right) {
+    return true;
+  }
+  if (!left || !right) {
+    return false;
+  }
+  return left.startsWith(right) || right.startsWith(left);
+}
+
+function overlayJournalMessage(recovered: TMessage, db: TMessage): TMessage {
+  if (isUnfinishedMessage(db)) {
+    return db;
+  }
+  return {
+    ...recovered,
+    id: db.id,
+    msg_id: db.msg_id ?? recovered.msg_id,
+    conversation_id: db.conversation_id,
+    created_at: db.created_at ?? recovered.created_at,
+    status: db.status ?? recovered.status,
+    hidden: db.hidden,
+    backend_turn_id: db.backend_turn_id ?? recovered.backend_turn_id,
+  };
+}
+
+function findMatchingDbMessage(messages: TMessage[], recovered: TMessage, usedIds: Set<string>): TMessage | undefined {
+  const candidates = messages.filter((message) => !usedIds.has(message.id));
+  const byIdentity = candidates.find(
+    (message) =>
+      message.id === recovered.id ||
+      Boolean(recovered.msg_id && (message.msg_id === recovered.msg_id || message.id === `journal:${recovered.msg_id}`))
+  );
+  if (byIdentity) {
+    return byIdentity;
+  }
+
+  const recoveredToolId = toolCallId(recovered);
+  if (recoveredToolId) {
+    return candidates.find((message) => toolCallId(message) === recoveredToolId);
+  }
+
+  const recoveredText = assistantText(recovered);
+  if (recoveredText === undefined) {
+    return undefined;
+  }
+  return candidates.find((message) => {
+    const text = assistantText(message);
+    return text !== undefined && textsLooselyEqual(text, recoveredText);
+  });
+}
+
+/** True when the live/DB list already shows this reconstructed model-visible row. */
+export function isJournalMessageAlreadyShown(existing: TMessage[], candidate: TMessage): boolean {
+  if (
+    existing.some(
+      (message) => message.id === candidate.id || Boolean(candidate.msg_id && message.msg_id === candidate.msg_id)
+    )
+  ) {
+    return true;
+  }
+  if (existing.some((message) => isLiveJournalUserClone(message, candidate))) {
+    return true;
+  }
+  const recoveredToolId = toolCallId(candidate);
+  if (recoveredToolId && existing.some((message) => toolCallId(message) === recoveredToolId)) {
+    return true;
+  }
+  const recoveredText = assistantText(candidate);
+  return (
+    recoveredText !== undefined &&
+    existing.some((message) => {
+      const text = assistantText(message);
+      return text !== undefined && textsLooselyEqual(text, recoveredText);
+    })
+  );
+}
+
 export function messagesFromJournalTranscript(conversationId: string, transcript: JournalTranscript): TMessage[] {
   return transcript.items
     .filter((item) => item.visibility === 'model')
@@ -61,51 +164,74 @@ export function mergeDbWithJournalTranscript(messages: TMessage[], recovered: TM
   if (!recovered.length) {
     return messages;
   }
-  const journalHasUser = recovered.some(isUserTextMessage);
-  if (!journalHasUser) {
-    return [...messages, ...recovered];
-  }
 
-  // Journal content is the reconstructible source of truth, but the DB row
-  // (and the live `message.userCreated` frame) share a server msg_id. Keep
-  // that identity or the first-turn user bubble renders twice.
+  const usedIds = new Set<string>();
   const dbUsers = messages.filter(isUserTextMessage);
-  if (!dbUsers.length) {
-    return recovered;
+  let dbUserIndex = 0;
+  const backbone: TMessage[] = [];
+
+  for (const item of recovered) {
+    if (isUserTextMessage(item) && dbUserIndex < dbUsers.length) {
+      const dbUser = dbUsers[dbUserIndex];
+      dbUserIndex += 1;
+      usedIds.add(dbUser.id);
+      backbone.push(overlayJournalMessage(item, dbUser));
+      continue;
+    }
+    const match = findMatchingDbMessage(messages, item, usedIds);
+    if (match) {
+      usedIds.add(match.id);
+      backbone.push(overlayJournalMessage(item, match));
+    } else {
+      backbone.push(item);
+    }
   }
 
-  let dbUserIndex = 0;
-  return recovered.map((item) => {
-    if (!isUserTextMessage(item) || dbUserIndex >= dbUsers.length) {
-      return item;
+  if (!messages.length) {
+    return backbone;
+  }
+
+  const result: TMessage[] = [];
+  let backboneIndex = 0;
+  for (const message of messages) {
+    if (!usedIds.has(message.id)) {
+      result.push(message);
+      continue;
     }
-    const dbUser = dbUsers[dbUserIndex];
-    dbUserIndex += 1;
-    return {
-      ...item,
-      id: dbUser.id,
-      msg_id: dbUser.msg_id,
-      conversation_id: dbUser.conversation_id,
-      created_at: dbUser.created_at ?? item.created_at,
-      status: dbUser.status ?? item.status,
-      hidden: dbUser.hidden,
-    };
-  });
+    while (backboneIndex < backbone.length && backbone[backboneIndex].id !== message.id) {
+      if (!usedIds.has(backbone[backboneIndex].id)) {
+        result.push(backbone[backboneIndex]);
+      }
+      backboneIndex += 1;
+    }
+    if (backboneIndex < backbone.length && backbone[backboneIndex].id === message.id) {
+      result.push(backbone[backboneIndex]);
+      backboneIndex += 1;
+    }
+  }
+  while (backboneIndex < backbone.length) {
+    result.push(backbone[backboneIndex]);
+    backboneIndex += 1;
+  }
+  return result;
 }
 
 export async function hydrateConversationMessagesFromJournal(
   conversationId: string,
   messages: TMessage[]
 ): Promise<TMessage[]> {
-  if (!conversationId || !messagesNeedJournalHydration(messages)) {
+  if (!conversationId) {
     return messages;
   }
   try {
-    const transcript = await ipcBridge.conversation.getJournalTranscript.invoke({
-      conversation_id: conversationId,
-      visibility: 'model',
-    });
-    if (!transcript?.items?.length) {
+    const transcript = normalizeJournalTranscript(
+      await ipcBridge.conversation.getJournalTranscript.invoke({
+        conversation_id: conversationId,
+        visibility: 'model',
+      }),
+      conversationId
+    );
+    if (!transcript.items.length) {
       return messages;
     }
     const recovered = messagesFromJournalTranscript(conversationId, transcript);

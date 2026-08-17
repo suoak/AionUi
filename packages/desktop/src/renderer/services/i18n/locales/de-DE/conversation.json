@@ -6,6 +6,42 @@
     "empty": "Noch keine Frage-Antwort-Runden",
     "count": "{{count}} Runden"
   },
+  "trajectory": {
+    "title": "Verlauf",
+    "tooltip": "Gesprächsverlauf anzeigen",
+    "empty": "Noch keine Journalereignisse",
+    "loadFailed": "Der Gesprächsverlauf konnte nicht geladen werden",
+    "notReconstructible": "Dieser Zug lässt sich aus dem Journal nicht rekonstruieren",
+    "modelVisible": "Für das Modell sichtbar",
+    "hostOnly": "Nur Host",
+    "compacted": "Komprimiert",
+    "surfaceTokens": "{{count}} Oberflächen-Token",
+    "itemCount": "{{count}} Ereignisse",
+    "pairingBalanced": "Tool-Aufrufe sind gepaart",
+    "pairingOpen": "Ein Tool-Aufruf ist noch offen",
+    "lock": {
+      "none": "Keine Komprimierung",
+      "open": "Komprimierung läuft",
+      "closed": "Komprimierung abgeschlossen"
+    },
+    "kind": {
+      "assistant": "Assistent",
+      "user": "Sie",
+      "tool": "Tool",
+      "turnStart": "Zug gestartet",
+      "turnEnd": "Zug beendet",
+      "turnError": "Fehler",
+      "hostNotice": "Host-Ereignis"
+    },
+    "policy": {
+      "approvalLabel": "Freigaberichtlinie",
+      "approvalAsk": "Jedes Mal fragen",
+      "approvalNever": "Immer ablehnen",
+      "keepNLabel": "Aktuelle Tool-Ergebnisse behalten",
+      "keepNOption": "{{count}} aktuelle Tool-Ergebnisse",
+      "saveFailed": "Host-Richtlinie konnte nicht gespeichert werden"
+    }
+  },
   "dropdown": {
     "presetAssistants": "Voreingestellte Assistenten",
     "cliAgents": "CLI-Agenten"

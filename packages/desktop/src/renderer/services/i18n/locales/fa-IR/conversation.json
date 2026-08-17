@@ -6,6 +6,42 @@
     "empty": "هنوز نوبت پرسش و پاسخی وجود ندارد",
     "count": "{{count}} نوبت"
   },
+  "trajectory": {
+    "title": "مسیر",
+    "tooltip": "مشاهده مسیر گفتگو",
+    "empty": "هنوز رویدادی در ژورنال نیست",
+    "loadFailed": "بارگذاری مسیر گفتگو ممکن نشد",
+    "notReconstructible": "این نوبت از ژورنال قابل بازسازی نیست",
+    "modelVisible": "نمایش‌داده‌شده به مدل",
+    "hostOnly": "فقط میزبان",
+    "compacted": "فشرده‌شده",
+    "surfaceTokens": "{{count}} توکن سطحی",
+    "itemCount": "{{count}} رویداد",
+    "pairingBalanced": "فراخوانی ابزارها جفت شده‌اند",
+    "pairingOpen": "یک فراخوانی ابزار هنوز باز است",
+    "lock": {
+      "none": "در حال فشرده‌سازی نیست",
+      "open": "فشرده‌سازی در جریان است",
+      "closed": "فشرده‌سازی تمام شد"
+    },
+    "kind": {
+      "assistant": "دستیار",
+      "user": "شما",
+      "tool": "ابزار",
+      "turnStart": "نوبت شروع شد",
+      "turnEnd": "نوبت تمام شد",
+      "turnError": "خطا",
+      "hostNotice": "رویداد میزبان"
+    },
+    "policy": {
+      "approvalLabel": "سیاست تأیید",
+      "approvalAsk": "هر بار بپرس",
+      "approvalNever": "همیشه رد کن",
+      "keepNLabel": "نتایج اخیر ابزار را نگه دار",
+      "keepNOption": "{{count}} نتیجه اخیر ابزار",
+      "saveFailed": "ذخیره سیاست میزبان ممکن نشد"
+    }
+  },
   "dropdown": {
     "presetAssistants": "دستیارهای پیش‌تنظیم",
     "cliAgents": "ایجنت‌های CLI"

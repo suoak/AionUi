@@ -6,6 +6,42 @@
     "empty": "まだQ&Aがありません",
     "count": "{{count}} 件"
   },
+  "trajectory": {
+    "title": "軌跡",
+    "tooltip": "会話の軌跡を表示",
+    "empty": "ジャーナルイベントはまだありません",
+    "loadFailed": "会話の軌跡を読み込めませんでした",
+    "notReconstructible": "このターンはジャーナルから再構築できません",
+    "modelVisible": "モデルに表示",
+    "hostOnly": "ホストのみ",
+    "compacted": "圧縮済み",
+    "surfaceTokens": "サーフェストークン {{count}}",
+    "itemCount": "{{count}} 件のイベント",
+    "pairingBalanced": "ツール呼び出しは対になっています",
+    "pairingOpen": "未完了のツール呼び出しがあります",
+    "lock": {
+      "none": "圧縮していません",
+      "open": "圧縮中",
+      "closed": "圧縮完了"
+    },
+    "kind": {
+      "assistant": "アシスタント",
+      "user": "あなた",
+      "tool": "ツール",
+      "turnStart": "ターン開始",
+      "turnEnd": "ターン終了",
+      "turnError": "エラー",
+      "hostNotice": "ホストイベント"
+    },
+    "policy": {
+      "approvalLabel": "承認ポリシー",
+      "approvalAsk": "毎回確認する",
+      "approvalNever": "常に拒否",
+      "keepNLabel": "直近のツール結果を保持",
+      "keepNOption": "直近 {{count}} 件のツール結果",
+      "saveFailed": "ホストポリシーを保存できませんでした"
+    }
+  },
   "dropdown": {
     "presetAssistants": "プリセットアシスタント",
     "cliAgents": "CLI Agents"

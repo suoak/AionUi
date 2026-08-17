@@ -6,6 +6,42 @@
     "empty": "아직 문답 내용이 없습니다",
     "count": "{{count}} 건"
   },
+  "trajectory": {
+    "title": "궤적",
+    "tooltip": "대화 궤적 보기",
+    "empty": "저널 이벤트가 없습니다",
+    "loadFailed": "대화 궤적을 불러올 수 없습니다",
+    "notReconstructible": "이 턴은 저널에서 재구성할 수 없습니다",
+    "modelVisible": "모델에 표시됨",
+    "hostOnly": "호스트 전용",
+    "compacted": "압축됨",
+    "surfaceTokens": "서피스 토큰 {{count}}개",
+    "itemCount": "이벤트 {{count}}개",
+    "pairingBalanced": "도구 호출이 짝을 이룹니다",
+    "pairingOpen": "아직 열린 도구 호출이 있습니다",
+    "lock": {
+      "none": "압축 중이 아님",
+      "open": "압축 진행 중",
+      "closed": "압축 완료"
+    },
+    "kind": {
+      "assistant": "어시스턴트",
+      "user": "나",
+      "tool": "도구",
+      "turnStart": "턴 시작",
+      "turnEnd": "턴 종료",
+      "turnError": "오류",
+      "hostNotice": "호스트 이벤트"
+    },
+    "policy": {
+      "approvalLabel": "승인 정책",
+      "approvalAsk": "매번 묻기",
+      "approvalNever": "항상 거부",
+      "keepNLabel": "최근 도구 결과 유지",
+      "keepNOption": "최근 도구 결과 {{count}}개",
+      "saveFailed": "호스트 정책을 저장할 수 없습니다"
+    }
+  },
   "dropdown": {
     "presetAssistants": "프리셋 어시스턴트",
     "cliAgents": "CLI Agents"
