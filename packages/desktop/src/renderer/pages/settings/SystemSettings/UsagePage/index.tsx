@@ -51,10 +51,10 @@ const UsagePage: React.FC = () => {
   const [range, setRange] = useState<UsageRange>('30d');
   const [modelFilter, setModelFilter] = useState('all');
   const [clearVisible, setClearVisible] = useState(false);
-  const { events, visibleEvents, refresh, clear, usesBackend } = useTokenUsageStats(range);
+  const { events, visibleEvents, refresh, clear } = useTokenUsageStats(range);
 
   useEffect(() => {
-    if (usesBackend) {
+    if (events.length > 0) {
       return;
     }
     let cancelled = false;
@@ -74,7 +74,7 @@ const UsagePage: React.FC = () => {
     return () => {
       cancelled = true;
     };
-  }, [refresh, usesBackend]);
+  }, [events.length, refresh]);
 
   const byModel = useMemo(
     () => breakdownUsageByModel(visibleEvents, t('settings.usage.unknownModel')),

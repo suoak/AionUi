@@ -5,10 +5,11 @@
  */
 
 import React from 'react';
-import { fireEvent, render, screen } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { STORAGE_KEYS } from '@/common/config/storageKeys';
 import { createEmptyUsageLedger, writeUsageLedger } from '@/renderer/utils/chat/tokenUsageLedger';
+import { ipcBridge } from '@/common';
 
 vi.mock('react-i18next', () => ({
   useTranslation: () => ({
@@ -77,6 +78,7 @@ import UsagePage from '@/renderer/pages/settings/SystemSettings/UsagePage';
 describe('UsagePage', () => {
   beforeEach(() => {
     localStorage.removeItem(STORAGE_KEYS.TOKEN_USAGE_LEDGER);
+    vi.mocked(ipcBridge.usage.list.invoke).mockRejectedValue(new Error('offline'));
   });
 
   it('shows an empty state when no usage has been recorded', () => {
@@ -209,5 +211,39 @@ describe('UsagePage', () => {
     fireEvent.click(screen.getByTestId('usage-clear-confirm'));
 
     expect(screen.getByTestId('usage-empty-state')).toBeTruthy();
+  });
+
+  it('keeps local records when the backend ledger is empty', async () => {
+    vi.mocked(ipcBridge.usage.list.invoke).mockResolvedValue({ events: [] });
+    writeUsageLedger({
+      ...createEmptyUsageLedger(),
+      events: [
+        {
+          id: 'e1',
+          recorded_at: Date.now(),
+          conversation_id: 'conv-1',
+          fingerprint: 'turn:1',
+          backend: 'grok',
+          conversation_name: 'Grok chat',
+          model_id: 'grok-4.6-build',
+          input_tokens: 14675,
+          output_tokens: 119,
+          thought_tokens: 77,
+          cached_read_tokens: 11648,
+          cached_write_tokens: 0,
+          cost_delta: 0.002,
+          cost_currency: 'USD',
+          source: 'acp',
+        },
+      ],
+    });
+
+    render(<UsagePage />);
+
+    await waitFor(() => {
+      expect(screen.queryByTestId('usage-empty-state')).toBeNull();
+    });
+    expect(screen.getByText('Grok chat')).toBeTruthy();
+    expect(screen.getAllByText('grok').length).toBeGreaterThan(0);
   });
 });
