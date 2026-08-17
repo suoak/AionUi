@@ -1,5 +1,34 @@
 # Changelog
 
+## [2.1.73](https://github.com/suoak/AionUi/compare/v2.1.72...v2.1.73) (2026-08-17)
+
+### Desktop
+
+#### Features
+
+- **conversation:** add trajectory panel and journal host policies (#69)
+
+#### 内网更新说明
+
+<!-- internal-release-notes:start -->
+
+**由运营管理部提供**
+
+- 对话页新增轨迹面板，可查看会话占用、工具配对、审批策略和压缩保留策略。
+- 可在对话内设置审批策略（询问/从不）和压缩保留条数，策略会写入会话记录。
+- 重新打开历史对话时，会用会话记录补全消息并合并分页内容。
+
+<!-- internal-release-notes:end -->
+
+### Core ([v0.1.77](https://github.com/suoak/AionCore/releases/tag/v0.1.77))
+
+#### Features
+
+- **conversation:** retire the DeepSeek Harness preview agent and persist journaled host approval/keep-N policies
+- **conversation:** expose reconstructible transcript metadata on `/transcript`
+
+---
+
 ## [2.1.72](https://github.com/suoak/AionUi/compare/v2.1.71...v2.1.72) (2026-08-17)
 
 ### Desktop
