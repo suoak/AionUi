@@ -4,7 +4,9 @@
     "searchHint": "點擊這裡搜尋關鍵詞",
     "noMatch": "未找到相符內容",
     "empty": "暫無問答內容",
-    "count": "{{count}} 條"
+    "count": "{{count}} 條",
+    "count_one": "{{count}} 條",
+    "count_other": "{{count}} 條"
   },
   "trajectory": {
     "searchPlaceholder": "搜索轨迹",
@@ -177,7 +179,13 @@
     "pinned": "Pinned",
     "pinnedSection": "Pinned",
     "deleteSuccess": "刪除成功",
-    "exportDialogHint": "Folder selection follows the same interaction as changing the project."
+    "exportDialogHint": "Folder selection follows the same interaction as changing the project.",
+    "batchDeleteConfirm_one": "Delete {{count}} selected topics?",
+    "batchDeleteConfirm_other": "Delete {{count}} selected topics?",
+    "batchDeleteSuccess_one": "{{count}} topics deleted",
+    "batchDeleteSuccess_other": "{{count}} topics deleted",
+    "removeProjectConfirm_one": "確定要移除專案「{{name}}」嗎？專案下的 {{count}} 個對話也會被一起移除。",
+    "removeProjectConfirm_other": "確定要移除專案「{{name}}」嗎？專案下的 {{count}} 個對話也會被一起移除。"
   },
   "noAgentsAvailable": "沒有可用的 Agent",
   "agentError": {
@@ -465,7 +473,16 @@
       "manual": "手動發送",
       "auto": "自動發送"
     },
-    "clearConfirmContent": "所有待發送的訊息都會被移除，且無法復原。"
+    "clearConfirmContent": "所有待發送的訊息都會被移除，且無法復原。",
+    "files_one": "{{count}} 個檔案",
+    "files_other": "{{count}} 個檔案",
+    "addToQueue": "存到草稿箱",
+    "addToQueueShortcut": "⌘ + Enter / Ctrl + Enter",
+    "midturnBlocked": "目前 Agent 正在處理，暫時不能直接傳送。可以先存到草稿箱，稍後傳送。",
+    "enterShortcut": "Enter",
+    "actionMode": "Choose send action",
+    "midturnBlockedSendHint": "目前 Agent 正在處理，暫時不能直接傳送。可以先存到草稿箱，稍後傳送。",
+    "addToQueueBusyHint": "先存到草稿箱，稍後傳送。"
   },
   "createFailed": "建立對話失敗",
   "agentTip": {
@@ -608,7 +625,8 @@
       "emptyTranscript": "未識別到語音內容",
       "unsupported": "目前環境不支援語音輸入",
       "genericError": "語音輸入失敗，請再試一次",
-      "transcriptionFailed": "音訊轉寫失敗"
+      "transcriptionFailed": "音訊轉寫失敗",
+      "recordTooltipWithShortcut": "語音輸入 cmd+M"
     },
     "confirmationLoadError": "確認對話框載入失敗",
     "apiErrorSwitched": "API 錯誤，已自動切換到 {{cli}} CLI",
@@ -760,7 +778,15 @@
         "rejectedFailed": "操作未能完成",
         "blockedHint": "請先在 CSBU WorkMate 之外解決衝突，然後再暫存或捨棄",
         "notSent": "請求沒有送達後端，未變動任何內容。可以重試。",
-        "partialDetail": "未完成：{{files}}"
+        "partialDetail": "未完成：{{files}}",
+        "okStage_one": "已暫存 {{count}} 個檔案",
+        "okStage_other": "已暫存 {{count}} 個檔案",
+        "okUnstage_one": "已取消暫存 {{count}} 個檔案",
+        "okUnstage_other": "已取消暫存 {{count}} 個檔案",
+        "okDiscard_one": "已捨棄 {{count}} 個檔案",
+        "okDiscard_other": "已捨棄 {{count}} 個檔案",
+        "allFailed_one": "{{count}} 個檔案都未能處理",
+        "allFailed_other": "{{count}} 個檔案都未能處理"
       },
       "viewAsTree": "以樹狀檢視顯示",
       "loadFailed": "無法載入變更",
@@ -821,7 +847,9 @@
       "copyAbsolutePath": "複製絕對路徑",
       "copyRelativePath": "複製相對路徑",
       "addToChat": "加入對話"
-    }
+    },
+    "copyNodeFailed": "複製失敗",
+    "moveNodeFailed": "移動失敗"
   },
   "thinking": {
     "complete": "思考完成",

@@ -4,7 +4,9 @@
     "searchHint": "Clique aqui para pesquisar palavras-chave",
     "noMatch": "Nenhum conteúdo correspondente encontrado",
     "empty": "Nenhum turno de perguntas e respostas ainda",
-    "count": "{{count}} turnos"
+    "count": "{{count}} turnos",
+    "count_one": "{{count}} turno",
+    "count_other": "{{count}} turnos"
   },
   "trajectory": {
     "searchPlaceholder": "Search trajectory",
@@ -177,7 +179,13 @@
     "today": "Hoje",
     "pinnedSection": "Fixados",
     "deleteSuccess": "Excluído com sucesso",
-    "exportDialogHint": "A seleção de pasta segue a mesma interação da troca do projeto."
+    "exportDialogHint": "A seleção de pasta segue a mesma interação da troca do projeto.",
+    "batchDeleteConfirm_one": "Excluir {{count}} tópico selecionado?",
+    "batchDeleteConfirm_other": "Excluir {{count}} tópicos selecionados?",
+    "batchDeleteSuccess_one": "{{count}} tópico excluído",
+    "batchDeleteSuccess_other": "{{count}} tópicos excluídos",
+    "removeProjectConfirm_one": "Remover o projeto \"{{name}}\"? Sua {{count}} conversa também será removida.",
+    "removeProjectConfirm_other": "Remover o projeto \"{{name}}\"? Suas {{count}} conversas também serão removidas."
   },
   "noAgentsAvailable": "Nenhum agente disponível",
   "agentError": {
@@ -471,7 +479,16 @@
       "manual": "Envio manual",
       "auto": "Envio automático"
     },
-    "clearConfirmContent": "Todas as mensagens pendentes serão removidas. Isso não pode ser desfeito."
+    "clearConfirmContent": "Todas as mensagens pendentes serão removidas. Isso não pode ser desfeito.",
+    "files_one": "{{count}} arquivo",
+    "files_other": "{{count}} arquivos",
+    "addToQueue": "Adicionar à caixa de rascunhos",
+    "addToQueueShortcut": "⌘ + Enter / Ctrl + Enter",
+    "midturnBlocked": "Não é possível interromper enquanto este agente está respondendo. Use Adicionar à caixa de rascunhos.",
+    "enterShortcut": "Enter",
+    "actionMode": "Choose send action",
+    "midturnBlockedSendHint": "This agent is still working, so the message can’t be sent directly. Save it to Draft box and send it later.",
+    "addToQueueBusyHint": "Save to Draft box and send it later."
   },
   "createFailed": "Falha ao criar a conversa",
   "agentTip": {
@@ -614,7 +631,8 @@
       "emptyTranscript": "Nenhuma fala foi detectada",
       "unsupported": "A entrada de voz não está disponível neste ambiente",
       "genericError": "Falha na entrada de voz. Por favor, tente novamente",
-      "transcriptionFailed": "A transcrição de áudio falhou"
+      "transcriptionFailed": "A transcrição de áudio falhou",
+      "recordTooltipWithShortcut": "Entrada de voz cmd+M"
     },
     "confirmationLoadError": "Falha ao carregar a caixa de diálogo de confirmação",
     "apiErrorSwitched": "Erro na API, mudou automaticamente para a CLI do {{cli}}",
@@ -766,7 +784,15 @@
         "rejectedFailed": "Não foi possível concluir a ação",
         "blockedHint": "Resolva o conflito fora do CSBU WorkMate antes de preparar ou descartar",
         "notSent": "A solicitação não chegou ao backend — nada foi alterado. Você pode tentar novamente.",
-        "partialDetail": "Não concluídos: {{files}}"
+        "partialDetail": "Não concluídos: {{files}}",
+        "okStage_one": "{{count}} arquivo preparado",
+        "okStage_other": "{{count}} arquivos preparados",
+        "okUnstage_one": "{{count}} arquivo retirado da preparação",
+        "okUnstage_other": "{{count}} arquivos retirados da preparação",
+        "okDiscard_one": "{{count}} arquivo descartado",
+        "okDiscard_other": "{{count}} arquivos descartados",
+        "allFailed_one": "Não foi possível processar {{count}} arquivo",
+        "allFailed_other": "Nenhum dos {{count}} arquivos pôde ser processado"
       },
       "viewAsTree": "Ver como árvore",
       "loadFailed": "Não foi possível carregar as alterações",
@@ -827,7 +853,9 @@
       "copyAbsolutePath": "Copiar caminho absoluto",
       "copyRelativePath": "Copiar caminho relativo",
       "addToChat": "Adicionar ao chat"
-    }
+    },
+    "copyNodeFailed": "Falha ao copiar",
+    "moveNodeFailed": "Falha ao mover"
   },
   "thinking": {
     "complete": "Pensamento completo",

@@ -4,7 +4,9 @@
     "searchHint": "Haz clic aquí para buscar palabras clave",
     "noMatch": "No se encontró contenido coincidente",
     "empty": "Sin turnos de preguntas y respuestas aún",
-    "count": "{{count}} turnos"
+    "count": "{{count}} turnos",
+    "count_one": "{{count}} turno",
+    "count_other": "{{count}} turnos"
   },
   "trajectory": {
     "searchPlaceholder": "Search trajectory",
@@ -177,7 +179,13 @@
     "today": "Hoy",
     "pinnedSection": "Fijados",
     "deleteSuccess": "Eliminado correctamente",
-    "exportDialogHint": "La selección de carpeta sigue la misma interacción que cambiar el proyecto."
+    "exportDialogHint": "La selección de carpeta sigue la misma interacción que cambiar el proyecto.",
+    "batchDeleteConfirm_one": "¿Eliminar {{count}} tema seleccionado?",
+    "batchDeleteConfirm_other": "¿Eliminar {{count}} temas seleccionados?",
+    "batchDeleteSuccess_one": "{{count}} tema eliminado",
+    "batchDeleteSuccess_other": "{{count}} temas eliminados",
+    "removeProjectConfirm_one": "¿Quitar el proyecto \"{{name}}\"? Su {{count}} conversación también se quitará.",
+    "removeProjectConfirm_other": "¿Quitar el proyecto \"{{name}}\"? Sus {{count}} conversaciones también se quitarán."
   },
   "noAgentsAvailable": "Sin agentes disponibles",
   "agentError": {
@@ -465,7 +473,16 @@
       "manual": "Envío manual",
       "auto": "Envío automático"
     },
-    "clearConfirmContent": "Se eliminarán todos los mensajes pendientes. Esta acción no se puede deshacer."
+    "clearConfirmContent": "Se eliminarán todos los mensajes pendientes. Esta acción no se puede deshacer.",
+    "files_one": "{{count}} archivo",
+    "files_other": "{{count}} archivos",
+    "addToQueue": "Añadir al buzón de borradores",
+    "addToQueueShortcut": "⌘ + Enter / Ctrl + Enter",
+    "midturnBlocked": "No se admite interrumpir mientras este agente está respondiendo. Usa Añadir al buzón de borradores en su lugar.",
+    "enterShortcut": "Enter",
+    "actionMode": "Choose send action",
+    "midturnBlockedSendHint": "This agent is still working, so the message can’t be sent directly. Save it to Draft box and send it later.",
+    "addToQueueBusyHint": "Save to Draft box and send it later."
   },
   "createFailed": "Error al crear la conversación",
   "agentTip": {
@@ -608,7 +625,8 @@
       "emptyTranscript": "No se detectó ningún discurso",
       "unsupported": "La entrada de voz no está disponible en este entorno",
       "genericError": "Error en la entrada de voz. Por favor intenta de nuevo",
-      "transcriptionFailed": "Error en la transcripción de audio"
+      "transcriptionFailed": "Error en la transcripción de audio",
+      "recordTooltipWithShortcut": "Entrada de voz cmd+M"
     },
     "confirmationLoadError": "Error al cargar el diálogo de confirmación",
     "apiErrorSwitched": "Error de API, cambiado automáticamente a {{cli}} CLI",
@@ -761,7 +779,15 @@
         "rejectedFailed": "No se pudo completar la acción",
         "blockedHint": "Resuelve el conflicto fuera de CSBU WorkMate antes de preparar o descartar",
         "notSent": "La solicitud no llegó al backend: no se cambió nada. Puedes volver a intentarlo.",
-        "partialDetail": "No completados: {{files}}"
+        "partialDetail": "No completados: {{files}}",
+        "okStage_one": "{{count}} archivo preparado",
+        "okStage_other": "{{count}} archivos preparados",
+        "okUnstage_one": "{{count}} archivo quitado de preparados",
+        "okUnstage_other": "{{count}} archivos quitados de preparados",
+        "okDiscard_one": "{{count}} archivo descartado",
+        "okDiscard_other": "{{count}} archivos descartados",
+        "allFailed_one": "No se pudo procesar {{count}} archivo",
+        "allFailed_other": "No se pudo procesar ninguno de los {{count}} archivos"
       },
       "viewAsTree": "Ver como árbol",
       "loadFailed": "No se pudieron cargar los cambios",
@@ -822,7 +848,9 @@
       "copyAbsolutePath": "Copiar ruta absoluta",
       "copyRelativePath": "Copiar ruta relativa",
       "addToChat": "Añadir al chat"
-    }
+    },
+    "copyNodeFailed": "Error al copiar",
+    "moveNodeFailed": "Error al mover"
   },
   "thinking": {
     "complete": "Pensamiento completado",

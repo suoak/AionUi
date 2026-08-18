@@ -4,7 +4,9 @@
     "searchHint": "برای جستجوی کلمات کلیدی اینجا کلیک کنید",
     "noMatch": "محتوای منطبقی یافت نشد",
     "empty": "هنوز نوبت پرسش و پاسخی وجود ندارد",
-    "count": "{{count}} نوبت"
+    "count": "{{count}} نوبت",
+    "count_one": "{{count}} نوبت",
+    "count_other": "{{count}} نوبت"
   },
   "trajectory": {
     "searchPlaceholder": "Search trajectory",
@@ -177,7 +179,13 @@
     "today": "امروز",
     "pinnedSection": "سنجاق‌شده",
     "deleteSuccess": "با موفقیت حذف شد",
-    "exportDialogHint": "انتخاب پوشه مانند تعویض پروژه است."
+    "exportDialogHint": "انتخاب پوشه مانند تعویض پروژه است.",
+    "batchDeleteConfirm_one": "{{count}} موضوع انتخاب‌شده حذف شود؟",
+    "batchDeleteConfirm_other": "{{count}} موضوع انتخاب‌شده حذف شود؟",
+    "batchDeleteSuccess_one": "{{count}} موضوع حذف شد",
+    "batchDeleteSuccess_other": "{{count}} موضوع حذف شد",
+    "removeProjectConfirm_one": "پروژه «{{name}}» حذف شود؟ {{count}} مکالمه مرتبط نیز حذف خواهند شد.",
+    "removeProjectConfirm_other": "پروژه «{{name}}» حذف شود؟ {{count}} مکالمه مرتبط نیز حذف خواهند شد."
   },
   "noAgentsAvailable": "ایجنتی در دسترس نیست",
   "agentError": {
@@ -465,7 +473,16 @@
       "manual": "ارسال دستی",
       "auto": "ارسال خودکار"
     },
-    "clearConfirmContent": "همه پیام‌های در انتظار حذف می‌شوند. این کار قابل بازگردانی نیست."
+    "clearConfirmContent": "همه پیام‌های در انتظار حذف می‌شوند. این کار قابل بازگردانی نیست.",
+    "files_one": "{{count}} فایل",
+    "files_other": "{{count}} فایل",
+    "addToQueue": "افزودن به جعبه پیش‌نویس",
+    "addToQueueShortcut": "⌘ + Enter / Ctrl + Enter",
+    "midturnBlocked": "وقتی این عامل در حال پاسخ‌دهی است، مداخله پشتیبانی نمی‌شود. در عوض از «افزودن به جعبه پیش‌نویس» استفاده کنید.",
+    "enterShortcut": "Enter",
+    "actionMode": "Choose send action",
+    "midturnBlockedSendHint": "This agent is still working, so the message can’t be sent directly. Save it to Draft box and send it later.",
+    "addToQueueBusyHint": "Save to Draft box and send it later."
   },
   "createFailed": "ایجاد مکالمه ناموفق بود",
   "agentTip": {
@@ -608,7 +625,8 @@
       "emptyTranscript": "صدایی شناسایی نشد",
       "unsupported": "ورودی صوتی در این محیط در دسترس نیست",
       "genericError": "ورودی صوتی ناموفق بود. لطفاً دوباره تلاش کنید",
-      "transcriptionFailed": "رونویسی صوت ناموفق بود"
+      "transcriptionFailed": "رونویسی صوت ناموفق بود",
+      "recordTooltipWithShortcut": "ورودی صوتی cmd+M"
     },
     "confirmationLoadError": "بارگذاری دیالوگ تأیید ناموفق بود",
     "apiErrorSwitched": "خطای API، خودکار به CLI {{cli}} تغییر یافت",
@@ -760,7 +778,15 @@
         "rejectedFailed": "انجام این عمل ممکن نشد",
         "blockedHint": "پیش از آماده‌سازی یا دور ریختن، تضاد را بیرون از CSBU WorkMate برطرف کنید",
         "notSent": "درخواست به بک‌اند نرسید و چیزی تغییر نکرد. می‌توانید دوباره تلاش کنید.",
-        "partialDetail": "کامل‌نشده: {{files}}"
+        "partialDetail": "کامل‌نشده: {{files}}",
+        "okStage_one": "{{count}} پرونده آماده شد",
+        "okStage_other": "{{count}} پرونده آماده شد",
+        "okUnstage_one": "آماده‌سازی {{count}} پرونده لغو شد",
+        "okUnstage_other": "آماده‌سازی {{count}} پرونده لغو شد",
+        "okDiscard_one": "{{count}} پرونده دور ریخته شد",
+        "okDiscard_other": "{{count}} پرونده دور ریخته شد",
+        "allFailed_one": "هیچ‌یک از {{count}} پرونده پردازش نشد",
+        "allFailed_other": "هیچ‌یک از {{count}} پرونده پردازش نشد"
       },
       "viewAsTree": "نمایش درختی",
       "loadFailed": "بارگیری تغییرات ممکن نشد",
@@ -821,7 +847,9 @@
       "copyAbsolutePath": "کپی کردن مسیر مطلق",
       "copyRelativePath": "کپی کردن مسیر نسبی",
       "addToChat": "افزودن به گفتگو"
-    }
+    },
+    "copyNodeFailed": "کپی ناموفق بود",
+    "moveNodeFailed": "انتقال ناموفق بود"
   },
   "thinking": {
     "complete": "تفکر کامل شد",

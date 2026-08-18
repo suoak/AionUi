@@ -4,7 +4,9 @@
     "searchHint": "ここをクリックしてキーワードを検索",
     "noMatch": "一致する内容が見つかりません",
     "empty": "まだQ&Aがありません",
-    "count": "{{count}} 件"
+    "count": "{{count}} 件",
+    "count_one": "{{count}} 件",
+    "count_other": "{{count}} 件"
   },
   "trajectory": {
     "searchPlaceholder": "Search trajectory",
@@ -177,7 +179,13 @@
     "pinned": "Pinned",
     "pinnedSection": "Pinned",
     "deleteSuccess": "削除しました",
-    "exportDialogHint": "Folder selection follows the same interaction as changing the project."
+    "exportDialogHint": "Folder selection follows the same interaction as changing the project.",
+    "batchDeleteConfirm_one": "Delete {{count}} selected topics?",
+    "batchDeleteConfirm_other": "Delete {{count}} selected topics?",
+    "batchDeleteSuccess_one": "{{count}} topics deleted",
+    "batchDeleteSuccess_other": "{{count}} topics deleted",
+    "removeProjectConfirm_one": "プロジェクト「{{name}}」を削除しますか？プロジェクト内の {{count}} 件の会話も削除されます。",
+    "removeProjectConfirm_other": "プロジェクト「{{name}}」を削除しますか？プロジェクト内の {{count}} 件の会話も削除されます。"
   },
   "noAgentsAvailable": "利用可能なエージェントはありません",
   "agentError": {
@@ -465,7 +473,16 @@
       "manual": "手動送信",
       "auto": "自動送信"
     },
-    "clearConfirmContent": "保留中のメッセージはすべて削除され、元に戻せません。"
+    "clearConfirmContent": "保留中のメッセージはすべて削除され、元に戻せません。",
+    "files_one": "{{count}} 個のファイル",
+    "files_other": "{{count}} 個のファイル",
+    "addToQueue": "下書きボックスに追加",
+    "addToQueueShortcut": "⌘ + Enter / Ctrl + Enter",
+    "midturnBlocked": "このエージェントが応答中は割り込みができません。「下書きボックスに追加」をご利用ください。",
+    "enterShortcut": "Enter",
+    "actionMode": "Choose send action",
+    "midturnBlockedSendHint": "This agent is still working, so the message can’t be sent directly. Save it to Draft box and send it later.",
+    "addToQueueBusyHint": "Save to Draft box and send it later."
   },
   "createFailed": "会話の作成に失敗しました",
   "agentTip": {
@@ -608,7 +625,8 @@
       "emptyTranscript": "音声内容を認識できませんでした",
       "unsupported": "この環境では音声入力を利用できません",
       "genericError": "音声入力に失敗しました。もう一度お試しください",
-      "transcriptionFailed": "音声の文字起こしに失敗しました"
+      "transcriptionFailed": "音声の文字起こしに失敗しました",
+      "recordTooltipWithShortcut": "音声入力 cmd+M"
     },
     "confirmationLoadError": "確認ダイアログの読み込みに失敗しました",
     "apiErrorSwitched": "APIエラー、{{cli}} CLIに自動切り替えしました",
@@ -760,7 +778,15 @@
         "rejectedFailed": "操作を完了できませんでした",
         "blockedHint": "ステージや破棄の前に、CSBU WorkMate の外で競合を解決してください",
         "notSent": "リクエストがバックエンドに届かず、何も変更されていません。再試行できます。",
-        "partialDetail": "未完了: {{files}}"
+        "partialDetail": "未完了: {{files}}",
+        "okStage_one": "{{count}} 個のファイルをステージしました",
+        "okStage_other": "{{count}} 個のファイルをステージしました",
+        "okUnstage_one": "{{count}} 個のファイルのステージを解除しました",
+        "okUnstage_other": "{{count}} 個のファイルのステージを解除しました",
+        "okDiscard_one": "{{count}} 個のファイルを破棄しました",
+        "okDiscard_other": "{{count}} 個のファイルを破棄しました",
+        "allFailed_one": "{{count}} 個のファイルはいずれも処理できませんでした",
+        "allFailed_other": "{{count}} 個のファイルはいずれも処理できませんでした"
       },
       "viewAsTree": "ツリー表示",
       "loadFailed": "変更を読み込めませんでした",
@@ -821,7 +847,9 @@
       "copyAbsolutePath": "絶対パスをコピー",
       "copyRelativePath": "相対パスをコピー",
       "addToChat": "チャットに追加"
-    }
+    },
+    "copyNodeFailed": "コピーに失敗しました",
+    "moveNodeFailed": "移動に失敗しました"
   },
   "thinking": {
     "complete": "思考完了",

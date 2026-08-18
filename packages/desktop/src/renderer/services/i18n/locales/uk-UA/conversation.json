@@ -4,7 +4,11 @@
     "searchHint": "Натисніть тут для пошуку за ключовими словами",
     "noMatch": "Відповідний контент не знайдено",
     "empty": "Поки немає запитань та відповідей",
-    "count": "{{count}} ходів"
+    "count": "{{count}} ходів",
+    "count_one": "{{count}} хід",
+    "count_other": "{{count}} ходів",
+    "count_few": "{{count}} ходи",
+    "count_many": "{{count}} ходів"
   },
   "trajectory": {
     "searchPlaceholder": "Search trajectory",
@@ -177,7 +181,19 @@
     "today": "Сьогодні",
     "pinnedSection": "Закріплені",
     "deleteSuccess": "Видалено успішно",
-    "exportDialogHint": "Вибір папки працює так само, як і при зміні проєкту."
+    "exportDialogHint": "Вибір папки працює так само, як і при зміні проєкту.",
+    "batchDeleteConfirm_one": "Видалити {{count}} вибрану тему?",
+    "batchDeleteConfirm_other": "Видалити {{count}} вибраних тем?",
+    "batchDeleteConfirm_few": "Видалити {{count}} вибрані теми?",
+    "batchDeleteConfirm_many": "Видалити {{count}} вибраних тем?",
+    "batchDeleteSuccess_one": "Видалено {{count}} тему",
+    "batchDeleteSuccess_other": "Видалено {{count}} тем",
+    "batchDeleteSuccess_few": "Видалено {{count}} теми",
+    "batchDeleteSuccess_many": "Видалено {{count}} тем",
+    "removeProjectConfirm_one": "Видалити проєкт «{{name}}»? Також буде видалено {{count}} розмову в ньому.",
+    "removeProjectConfirm_other": "Видалити проєкт «{{name}}»? Також буде видалено {{count}} розмов у ньому.",
+    "removeProjectConfirm_few": "Видалити проєкт «{{name}}»? Також буде видалено {{count}} розмови в ньому.",
+    "removeProjectConfirm_many": "Видалити проєкт «{{name}}»? Також буде видалено {{count}} розмов у ньому."
   },
   "noAgentsAvailable": "Немає доступних агентів",
   "agentError": {
@@ -465,7 +481,18 @@
       "manual": "Ручне надсилання",
       "auto": "Авто-надсилання"
     },
-    "clearConfirmContent": "Усі повідомлення в очікуванні буде видалено. Цю дію не можна скасувати."
+    "clearConfirmContent": "Усі повідомлення в очікуванні буде видалено. Цю дію не можна скасувати.",
+    "files_one": "{{count}} файл",
+    "files_other": "{{count}} файлів",
+    "files_few": "{{count}} файли",
+    "files_many": "{{count}} файлів",
+    "addToQueue": "Додати до чернеток",
+    "addToQueueShortcut": "⌘ + Enter / Ctrl + Enter",
+    "midturnBlocked": "Втручання не підтримується, поки цей агент відповідає. Використайте «Додати до чернеток».",
+    "enterShortcut": "Enter",
+    "actionMode": "Choose send action",
+    "midturnBlockedSendHint": "This agent is still working, so the message can’t be sent directly. Save it to Draft box and send it later.",
+    "addToQueueBusyHint": "Save to Draft box and send it later."
   },
   "createFailed": "Не вдалося створити діалог",
   "agentTip": {
@@ -608,7 +635,8 @@
       "emptyTranscript": "No speech was detected",
       "unsupported": "Голосове введення недоступне в цьому середовищі",
       "genericError": "Помилка голосового введення. Спробуйте ще раз",
-      "transcriptionFailed": "Не вдалося транскрибувати аудіо"
+      "transcriptionFailed": "Не вдалося транскрибувати аудіо",
+      "recordTooltipWithShortcut": "Голосове введення cmd+M"
     },
     "confirmationLoadError": "Не вдалося завантажити діалог підтвердження",
     "apiErrorSwitched": "Помилка API, автоматичне переключення на {{cli}} CLI",
@@ -760,7 +788,23 @@
         "rejectedFailed": "Не вдалося виконати дію",
         "blockedHint": "Спершу розв’яжіть конфлікт поза CSBU WorkMate, потім індексуйте або скасовуйте",
         "notSent": "Запит не дійшов до сервера, нічого не змінено. Можна повторити.",
-        "partialDetail": "Не виконано: {{files}}"
+        "partialDetail": "Не виконано: {{files}}",
+        "okStage_one": "Проіндексовано файлів: {{count}}",
+        "okStage_other": "Проіндексовано файлів: {{count}}",
+        "okStage_few": "Проіндексовано файлів: {{count}}",
+        "okStage_many": "Проіндексовано файлів: {{count}}",
+        "okUnstage_one": "Прибрано з індексу файлів: {{count}}",
+        "okUnstage_other": "Прибрано з індексу файлів: {{count}}",
+        "okUnstage_few": "Прибрано з індексу файлів: {{count}}",
+        "okUnstage_many": "Прибрано з індексу файлів: {{count}}",
+        "okDiscard_one": "Скасовано зміни у {{count}} файлі",
+        "okDiscard_other": "Скасовано зміни у {{count}} файлах",
+        "okDiscard_few": "Скасовано зміни у {{count}} файлах",
+        "okDiscard_many": "Скасовано зміни у {{count}} файлах",
+        "allFailed_one": "Не вдалося обробити {{count}} файл",
+        "allFailed_other": "Жоден із {{count}} файлів не вдалося обробити",
+        "allFailed_few": "Жоден із {{count}} файлів не вдалося обробити",
+        "allFailed_many": "Жоден із {{count}} файлів не вдалося обробити"
       },
       "viewAsTree": "Показати деревом",
       "loadFailed": "Не вдалося завантажити зміни",
@@ -821,7 +865,9 @@
       "copyAbsolutePath": "Копіювати абсолютний шлях",
       "copyRelativePath": "Копіювати відносний шлях",
       "addToChat": "Додати в чат"
-    }
+    },
+    "copyNodeFailed": "Не вдалося скопіювати",
+    "moveNodeFailed": "Не вдалося перемістити"
   },
   "thinking": {
     "complete": "Роздуми завершено",

@@ -4,7 +4,9 @@
     "searchHint": "Hier klicken, um nach Stichwörtern zu suchen",
     "noMatch": "Keine übereinstimmenden Inhalte gefunden",
     "empty": "Noch keine Frage-Antwort-Runden",
-    "count": "{{count}} Runden"
+    "count": "{{count}} Runden",
+    "count_one": "{{count}} Runde",
+    "count_other": "{{count}} Runden"
   },
   "trajectory": {
     "searchPlaceholder": "Search trajectory",
@@ -177,7 +179,13 @@
     "today": "Heute",
     "pinnedSection": "Angeheftet",
     "deleteSuccess": "Erfolgreich gelöscht",
-    "exportDialogHint": "Die Ordnerauswahl folgt dem gleichen Ablauf wie bei der Arbeitsbereichsmigration."
+    "exportDialogHint": "Die Ordnerauswahl folgt dem gleichen Ablauf wie bei der Arbeitsbereichsmigration.",
+    "batchDeleteConfirm_one": "{{count}} ausgewähltes Thema löschen?",
+    "batchDeleteConfirm_other": "{{count}} ausgewählte Themen löschen?",
+    "batchDeleteSuccess_one": "{{count}} Thema gelöscht",
+    "batchDeleteSuccess_other": "{{count}} Themen gelöscht",
+    "removeProjectConfirm_one": "Projekt \"{{name}}\" entfernen? Die {{count}} zugehörige Unterhaltung wird ebenfalls entfernt.",
+    "removeProjectConfirm_other": "Projekt \"{{name}}\" entfernen? Die {{count}} zugehörigen Unterhaltungen werden ebenfalls entfernt."
   },
   "noAgentsAvailable": "Keine Agenten verfügbar",
   "agentError": {
@@ -465,7 +473,16 @@
       "manual": "Manuell senden",
       "auto": "Auto senden"
     },
-    "clearConfirmContent": "Alle ausstehenden Nachrichten werden entfernt. Dies kann nicht rückgängig gemacht werden."
+    "clearConfirmContent": "Alle ausstehenden Nachrichten werden entfernt. Dies kann nicht rückgängig gemacht werden.",
+    "files_one": "{{count}} Datei",
+    "files_other": "{{count}} Dateien",
+    "addToQueue": "Zum Entwurfsfach hinzufügen",
+    "addToQueueShortcut": "⌘ + Enter / Ctrl + Enter",
+    "midturnBlocked": "Ein Einwurf wird nicht unterstützt, während dieser Agent antwortet. Verwende stattdessen „Zum Entwurfsfach hinzufügen“.",
+    "enterShortcut": "Enter",
+    "actionMode": "Choose send action",
+    "midturnBlockedSendHint": "This agent is still working, so the message can’t be sent directly. Save it to Draft box and send it later.",
+    "addToQueueBusyHint": "Save to Draft box and send it later."
   },
   "createFailed": "Gespräch konnte nicht erstellt werden",
   "agentTip": {
@@ -608,7 +625,8 @@
       "emptyTranscript": "Keine Sprache erkannt",
       "unsupported": "Spracheingabe ist in dieser Umgebung nicht verfügbar",
       "genericError": "Spracheingabe fehlgeschlagen. Bitte erneut versuchen",
-      "transcriptionFailed": "Audio-Transkription fehlgeschlagen"
+      "transcriptionFailed": "Audio-Transkription fehlgeschlagen",
+      "recordTooltipWithShortcut": "Spracheingabe cmd+M"
     },
     "confirmationLoadError": "Bestätigungsdialog konnte nicht geladen werden",
     "apiErrorSwitched": "API-Fehler, automatisch zu {{cli}} CLI gewechselt",
@@ -761,7 +779,15 @@
         "rejectedFailed": "Die Aktion konnte nicht abgeschlossen werden",
         "blockedHint": "Lösen Sie den Konflikt außerhalb von CSBU WorkMate, bevor Sie vormerken oder verwerfen",
         "notSent": "Die Anfrage hat das Backend nicht erreicht — es wurde nichts geändert. Sie können es erneut versuchen.",
-        "partialDetail": "Nicht abgeschlossen: {{files}}"
+        "partialDetail": "Nicht abgeschlossen: {{files}}",
+        "okStage_one": "{{count}} Datei vorgemerkt",
+        "okStage_other": "{{count}} Dateien vorgemerkt",
+        "okUnstage_one": "Vormerkung für {{count}} Datei aufgehoben",
+        "okUnstage_other": "Vormerkung für {{count}} Dateien aufgehoben",
+        "okDiscard_one": "{{count}} Datei verworfen",
+        "okDiscard_other": "{{count}} Dateien verworfen",
+        "allFailed_one": "{{count}} Datei konnte nicht verarbeitet werden",
+        "allFailed_other": "Keine der {{count}} Dateien konnte verarbeitet werden"
       },
       "viewAsTree": "Als Baum anzeigen",
       "loadFailed": "Änderungen konnten nicht geladen werden",
@@ -822,7 +848,9 @@
       "copyAbsolutePath": "Absoluten Pfad kopieren",
       "copyRelativePath": "Relativen Pfad kopieren",
       "addToChat": "Zum Chat hinzufügen"
-    }
+    },
+    "copyNodeFailed": "Kopieren fehlgeschlagen",
+    "moveNodeFailed": "Verschieben fehlgeschlagen"
   },
   "thinking": {
     "complete": "Denken abgeschlossen",
