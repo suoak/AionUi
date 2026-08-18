@@ -399,7 +399,7 @@ const WorkMateModal: React.FC<WorkMateModalProps> = ({
         {headerConfig.title && <h3 className={TITLE_BASE_CLASS}>{headerConfig.title}</h3>}
         {headerConfig.showClose && (
           <button onClick={onCancel} className={CLOSE_BUTTON_CLASS} aria-label='Close'>
-            {headerConfig.closeIcon || <Close size={20} fill='#86909c' />}
+            {headerConfig.closeIcon || <Close size={20} fill='var(--bg-6)' />}
           </button>
         )}
       </div>

@@ -24,7 +24,7 @@ const ModalWrapper: React.FC<ModalWrapperProps> = ({
           <div className='csbu-workmate-modal-header'>
             <h3 className='csbu-workmate-modal-title'>{title}</h3>
             <button onClick={onCancel} className='csbu-workmate-modal-close-btn'>
-              <Close size={20} fill='#86909c' />
+              <Close size={20} fill='var(--bg-6)' />
             </button>
           </div>
         )}
