@@ -757,7 +757,7 @@ export const useConversationCommandQueue = ({
     }
     migrationRunningRef.current = true;
     void (async () => {
-      for (const item of [...stateRef.current.items]) {
+      for (const item of stateRef.current.items) {
         try {
           await ipcBridge.conversation.submitInput.invoke({
             conversation_id,
