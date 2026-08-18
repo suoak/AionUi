@@ -18,7 +18,7 @@ type ConversationTrajectoryButtonProps = {
 
 const ConversationTrajectoryButton: React.FC<ConversationTrajectoryButtonProps> = ({ conversationId }) => {
   const { t } = useTranslation();
-  const { visible, setVisible, loading, error, transcript, savingPolicy, savePolicy, reload } =
+  const { visible, setVisible, loading, error, transcript, capabilities, savingPolicy, savePolicy, reload } =
     useConversationTrajectory(conversationId);
 
   return (
@@ -48,6 +48,7 @@ const ConversationTrajectoryButton: React.FC<ConversationTrajectoryButtonProps> 
         error={error}
         savingPolicy={savingPolicy}
         transcript={transcript}
+        capabilities={capabilities}
         onClose={() => setVisible(false)}
         onRetry={() => {
           void reload();

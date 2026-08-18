@@ -5,17 +5,13 @@
  */
 
 import React, { useCallback, useEffect, useState } from 'react';
-import { Alert, Button, Message, Typography } from '@arco-design/web-react';
+import { Button, Message, Typography } from '@arco-design/web-react';
 import { ArrowLeft, Connection } from '@icon-park/react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
 import { ipcBridge } from '@/common';
-import { prepareManagedAgentRuntimeUntilSettled, useManagedAgents } from '@/renderer/hooks/agent/useManagedAgents';
-import {
-  formatManagedAgentDiagnosticMessage,
-  managedRuntimeNeedsInstall,
-  shouldShowManagedPreviewLimitations,
-} from '@/renderer/utils/model/agentTypes';
+import { useManagedAgents } from '@/renderer/hooks/agent/useManagedAgents';
+import { formatManagedAgentDiagnosticMessage } from '@/renderer/utils/model/agentTypes';
 import AgentRepairPanel from './AgentRepairPanel';
 import { BoundAssistantList, getBoundAssistants, useAssistantsForAgents } from './BoundAssistants';
 
@@ -69,24 +65,6 @@ const AgentRepairPage: React.FC = () => {
     }
   }, [agent, refreshCatalog, t]);
 
-  const handlePrepareRuntime = useCallback(async () => {
-    if (!agent) return;
-    try {
-      setIsTesting(true);
-      const prepared = await prepareManagedAgentRuntimeUntilSettled(agent.id);
-      if (prepared.runtime?.state !== 'ready') {
-        Message.error(t('settings.agentManagement.runtimeInstallFailed'));
-        return;
-      }
-      await handleTestConnection();
-    } catch (error) {
-      console.error('prepare managed agent runtime failed:', error);
-      Message.error(t('settings.agentManagement.runtimeInstallFailed'));
-    } finally {
-      setIsTesting(false);
-    }
-  }, [agent, handleTestConnection, t]);
-
   // Open the target assistant's detail/editor by handing the intent to the
   // assistant settings page (which mounts its split-view editor on this key),
   // mirroring how other surfaces jump into a specific assistant.
@@ -121,8 +99,6 @@ const AgentRepairPage: React.FC = () => {
   };
 
   const boundAssistants = getBoundAssistants(agent, assistants);
-  const runtimeNeedsInstall = managedRuntimeNeedsInstall(agent);
-
   return (
     <div data-testid='agent-repair-page' className='flex h-full min-h-0 flex-col overflow-hidden bg-transparent'>
       <div
@@ -144,30 +120,18 @@ const AgentRepairPage: React.FC = () => {
         <Button
           type='outline'
           size='small'
-          loading={isTesting || agent.runtime?.state === 'installing'}
+          loading={isTesting}
           icon={<Connection theme='outline' size='14' />}
-          onClick={() => void (runtimeNeedsInstall ? handlePrepareRuntime() : handleTestConnection())}
+          onClick={() => void handleTestConnection()}
           data-testid='btn-test-connection-agent-repair'
           className='!h-30px !rounded-8px !border-border-2 !bg-base !px-10px !text-12px !font-500 !text-t-primary hover:!border-border-1 hover:!bg-fill-1'
         >
-          {runtimeNeedsInstall
-            ? agent.runtime?.state === 'installing'
-              ? t('settings.agentManagement.runtimeInstalling', { progress: agent.runtime.progress ?? 0 })
-              : t('settings.agentManagement.installAndCheck')
-            : t('settings.agentManagement.testConnection')}
+          {t('settings.agentManagement.testConnection')}
         </Button>
       </div>
 
       <div data-testid='agent-repair-body' className='relative min-h-0 flex-1 overflow-auto px-18px py-18px pb-24px'>
         <div className='mx-auto w-full max-w-760px'>
-          {shouldShowManagedPreviewLimitations(agent) ? (
-            <Alert
-              className='mb-14px'
-              type='info'
-              title={t('settings.agentManagement.previewTitle')}
-              content={t('settings.agentManagement.deepseekHarnessLimitations')}
-            />
-          ) : null}
           <AgentRepairPanel agent={agent} onSaved={handleSaved} />
 
           {/* Which assistants depend on this agent — clicking one jumps to its

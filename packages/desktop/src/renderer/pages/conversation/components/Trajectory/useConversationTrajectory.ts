@@ -5,6 +5,7 @@
  */
 
 import { ipcBridge } from '@/common';
+import type { IConversationCapabilities } from '@/common/adapter/ipcBridge';
 import {
   normalizeApprovalPolicy,
   normalizeCompactionKeepN,
@@ -24,6 +25,7 @@ export function useConversationTrajectory(conversationId: string | undefined) {
   const [savingPolicy, setSavingPolicy] = useState(false);
   const [error, setError] = useState(false);
   const [transcript, setTranscript] = useState<JournalTranscript | null>(null);
+  const [capabilities, setCapabilities] = useState<IConversationCapabilities | null>(null);
   const requestIdRef = useRef(0);
 
   const load = useCallback(async () => {
@@ -35,20 +37,29 @@ export function useConversationTrajectory(conversationId: string | undefined) {
     setLoading(true);
     setError(false);
     try {
-      const raw = await ipcBridge.conversation.getJournalTranscript.invoke({
-        conversation_id: conversationId,
-        visibility: 'host',
-      });
+      const getCapabilities = ipcBridge.conversation.getCapabilities;
+      const capabilityPromise: Promise<IConversationCapabilities | null> = getCapabilities
+        ? getCapabilities.invoke({ conversation_id: conversationId }).catch((): null => null)
+        : Promise.resolve(null);
+      const [raw, capabilitySnapshot] = await Promise.all([
+        ipcBridge.conversation.getJournalTranscript.invoke({
+          conversation_id: conversationId,
+          visibility: 'host',
+        }),
+        capabilityPromise,
+      ]);
       if (requestId !== requestIdRef.current) {
         return;
       }
       setTranscript(normalizeJournalTranscript(raw, conversationId));
+      setCapabilities(capabilitySnapshot);
     } catch {
       if (requestId !== requestIdRef.current) {
         return;
       }
       setError(true);
       setTranscript(null);
+      setCapabilities(null);
     } finally {
       if (requestId === requestIdRef.current) {
         setLoading(false);
@@ -93,6 +104,7 @@ export function useConversationTrajectory(conversationId: string | undefined) {
     setSavingPolicy(false);
     setError(false);
     setTranscript(null);
+    setCapabilities(null);
   }, [conversationId]);
 
   useEffect(() => {
@@ -108,6 +120,7 @@ export function useConversationTrajectory(conversationId: string | undefined) {
     loading,
     error,
     transcript,
+    capabilities,
     savingPolicy,
     savePolicy,
     reload: load,

@@ -10,6 +10,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { STORAGE_KEYS } from '@/common/config/storageKeys';
 import { createEmptyUsageLedger, writeUsageLedger } from '@/renderer/utils/chat/tokenUsageLedger';
 import { ipcBridge } from '@/common';
+import { Message } from '@arco-design/web-react';
 
 vi.mock('react-i18next', () => ({
   useTranslation: () => ({
@@ -77,8 +78,15 @@ import UsagePage from '@/renderer/pages/settings/SystemSettings/UsagePage';
 
 describe('UsagePage', () => {
   beforeEach(() => {
+    vi.clearAllMocks();
     localStorage.removeItem(STORAGE_KEYS.TOKEN_USAGE_LEDGER);
     vi.mocked(ipcBridge.usage.list.invoke).mockRejectedValue(new Error('offline'));
+    vi.mocked(ipcBridge.usage.clear.invoke).mockResolvedValue(0);
+    vi.mocked(ipcBridge.database.getUserConversations.invoke).mockResolvedValue({
+      items: [],
+      total: 0,
+      has_more: false,
+    });
   });
 
   it('shows an empty state when no usage has been recorded', () => {
@@ -86,6 +94,29 @@ describe('UsagePage', () => {
     expect(screen.getByTestId('usage-empty-state')).toBeTruthy();
     expect(screen.getByTestId('usage-clear-btn')).toBeDisabled();
     expect(screen.getByTestId('usage-export-btn')).toBeDisabled();
+  });
+
+  it('scans every conversation page for historical usage once', async () => {
+    vi.mocked(ipcBridge.database.getUserConversations.invoke)
+      .mockResolvedValueOnce({
+        items: [{ id: 'cursor-1', type: 'acp', name: 'First', created_at: 1, extra: {} }],
+        total: 2,
+        has_more: true,
+      })
+      .mockResolvedValueOnce({
+        items: [{ id: 'cursor-2', type: 'acp', name: 'Second', created_at: 2, extra: {} }],
+        total: 2,
+        has_more: false,
+      });
+
+    render(<UsagePage />);
+
+    await waitFor(() => {
+      expect(ipcBridge.database.getUserConversations.invoke).toHaveBeenNthCalledWith(2, {
+        cursor: 'cursor-1',
+        limit: 100,
+      });
+    });
   });
 
   it('renders totals, trend, and agent breakdown from the local ledger', () => {
@@ -185,7 +216,7 @@ describe('UsagePage', () => {
     expect(screen.queryByText('gemini-2.5-pro')).toBeNull();
   });
 
-  it('clears the ledger after confirmation', () => {
+  it('clears the ledger after backend confirmation', async () => {
     writeUsageLedger({
       ...createEmptyUsageLedger(),
       events: [
@@ -210,7 +241,42 @@ describe('UsagePage', () => {
     fireEvent.click(screen.getByTestId('usage-clear-btn'));
     fireEvent.click(screen.getByTestId('usage-clear-confirm'));
 
-    expect(screen.getByTestId('usage-empty-state')).toBeTruthy();
+    await waitFor(() => {
+      expect(screen.getByTestId('usage-empty-state')).toBeTruthy();
+      expect(Message.success).toHaveBeenCalledWith('settings.usage.clearSuccess');
+    });
+  });
+
+  it('reports a backend clear failure instead of showing false success', async () => {
+    vi.mocked(ipcBridge.usage.clear.invoke).mockRejectedValueOnce(new Error('offline'));
+    writeUsageLedger({
+      ...createEmptyUsageLedger(),
+      events: [
+        {
+          id: 'e1',
+          recorded_at: Date.now(),
+          conversation_id: 'conv-1',
+          fingerprint: 'turn:1',
+          backend: 'aionrs',
+          input_tokens: 10,
+          output_tokens: 4,
+          thought_tokens: 0,
+          cached_read_tokens: 0,
+          cached_write_tokens: 0,
+          cost_delta: 0,
+          source: 'aionrs',
+        },
+      ],
+    });
+
+    render(<UsagePage />);
+    fireEvent.click(screen.getByTestId('usage-clear-btn'));
+    fireEvent.click(screen.getByTestId('usage-clear-confirm'));
+
+    await waitFor(() => {
+      expect(Message.error).toHaveBeenCalledWith('common.deleteFailed');
+    });
+    expect(Message.success).not.toHaveBeenCalledWith('settings.usage.clearSuccess');
   });
 
   it('keeps local records when the backend ledger is empty', async () => {
@@ -245,5 +311,55 @@ describe('UsagePage', () => {
     });
     expect(screen.getByText('Grok chat')).toBeTruthy();
     expect(screen.getAllByText('grok').length).toBeGreaterThan(0);
+  });
+
+  it('keeps local-only protocol records when the backend ledger is partially populated', async () => {
+    vi.mocked(ipcBridge.usage.list.invoke).mockResolvedValue({
+      events: [
+        {
+          id: 'backend-1',
+          recorded_at: Date.now(),
+          conversation_id: 'conv-backend',
+          conversation_source: 'aionui',
+          backend: 'claude',
+          model_id: 'claude-sonnet',
+          input_tokens: 100,
+          output_tokens: 20,
+          thought_tokens: 0,
+          cached_read_tokens: 0,
+          cached_write_tokens: 0,
+          cost_delta: 0,
+          event_source: 'acp',
+        },
+      ],
+    });
+    writeUsageLedger({
+      ...createEmptyUsageLedger(),
+      events: [
+        {
+          id: 'local-1',
+          recorded_at: Date.now(),
+          conversation_id: 'conv-local',
+          fingerprint: 'turn:local',
+          backend: 'grok',
+          conversation_name: 'Local Grok chat',
+          model_id: 'grok-4.6-build',
+          input_tokens: 70,
+          output_tokens: 10,
+          thought_tokens: 0,
+          cached_read_tokens: 0,
+          cached_write_tokens: 0,
+          cost_delta: 0,
+          source: 'acp',
+        },
+      ],
+    });
+
+    render(<UsagePage />);
+
+    await waitFor(() => {
+      expect(screen.getByText('Local Grok chat')).toBeTruthy();
+    });
+    expect(screen.getAllByText('claude').length).toBeGreaterThan(0);
   });
 });

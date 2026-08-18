@@ -191,6 +191,8 @@ export interface TConversationForkLineage {
 
 // Token 使用统计数据类型
 export interface TokenUsageBreakdown {
+  /** Backend-normalized token total for this completed turn. */
+  total_tokens?: number;
   input_tokens?: number;
   output_tokens?: number;
   thought_tokens?: number;

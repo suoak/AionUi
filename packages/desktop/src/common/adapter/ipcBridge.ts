@@ -439,6 +439,26 @@ export const conversation = {
       inject_skills: p.inject_skills,
     })
   ),
+  submitInput: httpPost<IConversationInputReceipt, ISubmitConversationInputParams>(
+    (p) => `/api/conversations/${p.conversation_id}/inputs`,
+    (p) => ({
+      mode: p.mode,
+      content: p.input,
+      files: p.files,
+      inject_skills: p.inject_skills,
+      hidden: p.hidden,
+      client_key: p.client_key,
+    })
+  ),
+  listInputs: httpGet<IConversationInput[], { conversation_id: string }>(
+    (p) => `/api/conversations/${p.conversation_id}/inputs`
+  ),
+  cancelInput: httpDelete<IConversationInput, { conversation_id: string; input_id: string }>(
+    (p) => `/api/conversations/${p.conversation_id}/inputs/${encodeURIComponent(p.input_id)}`
+  ),
+  getCapabilities: httpGet<IConversationCapabilities, { conversation_id: string }>(
+    (p) => `/api/conversations/${p.conversation_id}/capabilities`
+  ),
   getSlashCommands: httpGet<AcpSlashCommandApiItem[], { conversation_id: string }>(
     (p) => `/api/conversations/${p.conversation_id}/slash-commands`
   ),
@@ -509,6 +529,7 @@ export const conversation = {
     hidden: boolean;
     created_at: number;
   }>('message.userCreated'),
+  inputChanged: wsEmitter<IConversationInputChangedEvent>('conversation.inputChanged'),
   artifactStream: wsEmitter<IConversationArtifact>('conversation.artifact'),
   turnCompleted: wsMappedEmitter<IConversationTurnCompletedEvent>('turn.completed', (raw) => {
     const r = raw as Record<string, unknown>;
@@ -1346,10 +1367,6 @@ export const acpConversation = {
     (p) => `/api/agents/${p.id}/health-check`,
     () => undefined
   ),
-  prepareManagedAgentRuntime: httpPost<import('@/renderer/utils/model/agentTypes').ManagedAgent, { id: string }>(
-    (p) => `/api/agents/${p.id}/runtime/prepare`,
-    () => undefined
-  ),
   checkProviderHealth: httpPost<ProviderHealthCheckResponse, ProviderHealthCheckRequest>(
     '/api/agents/provider-health-check'
   ),
@@ -1928,6 +1945,55 @@ interface ISendMessageParams {
   inject_skills?: string[];
 }
 
+export type ConversationInputMode = 'followup' | 'steer' | 'inject';
+export type ConversationInputStatus = 'held' | 'dispatching' | 'accepted' | 'applied' | 'canceled' | 'failed';
+export type ToolEnforcementLevel = 'native' | 'approval-gate' | 'observe-only';
+
+export interface IConversationCapabilities {
+  followup: boolean;
+  steer: boolean;
+  inject: boolean;
+  tool_enforcement: ToolEnforcementLevel;
+}
+
+export interface IConversationInput {
+  input_id: string;
+  conversation_id: string;
+  mode: ConversationInputMode;
+  status: ConversationInputStatus;
+  content: string;
+  files: ChatFileRef[];
+  inject_skills: string[];
+  hidden: boolean;
+  client_key: string;
+  turn_id?: string;
+  msg_id?: string;
+  error_code?: string;
+  created_at: number;
+  updated_at: number;
+}
+
+export interface IConversationInputReceipt {
+  input: IConversationInput;
+  runtime: TConversationRuntimeSummary;
+  capabilities: IConversationCapabilities;
+}
+
+export interface IConversationInputChangedEvent {
+  user_id: string;
+  input: IConversationInput;
+}
+
+interface ISubmitConversationInputParams {
+  conversation_id: string;
+  mode: ConversationInputMode;
+  input: string;
+  files?: ChatFileRef[];
+  inject_skills?: string[];
+  hidden?: boolean;
+  client_key: string;
+}
+
 // Server-assigned identifier for the newly created user message. Clients must
 // use this as the canonical msg_id when rendering an optimistic bubble so the
 // local state aligns with DB rows and WebSocket stream events.
@@ -1935,6 +2001,8 @@ export interface ISendMessageResult {
   msg_id: string;
   turn_id: string;
   runtime: TConversationRuntimeSummary;
+  input_id?: string;
+  input_status?: ConversationInputStatus;
 }
 
 export interface IAnswerAskParams {
@@ -2312,6 +2380,7 @@ function toChannelSession(raw: RawSession): IChannelSession {
 
 export type UsageEventDto = {
   id: string;
+  fingerprint?: string;
   recorded_at: number;
   conversation_id: string;
   conversation_name?: string | null;
@@ -2320,6 +2389,8 @@ export type UsageEventDto = {
   assistant_id?: string | null;
   assistant_name?: string | null;
   model_id?: string | null;
+  turn_id?: string | null;
+  total_tokens?: number;
   input_tokens: number;
   output_tokens: number;
   thought_tokens: number;

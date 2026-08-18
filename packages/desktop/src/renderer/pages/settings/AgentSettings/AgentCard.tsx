@@ -14,7 +14,6 @@ import {
   type AgentManagementStatus,
   type ManagedAgent,
   formatManagedAgentDiagnosticMessage,
-  managedRuntimeNeedsInstall,
 } from '@/renderer/utils/model/agentTypes';
 import { BoundAssistantStack } from './BoundAssistants';
 
@@ -26,7 +25,6 @@ type AgentCardProps =
       onTestConnection: () => void;
       onConfigure: () => void;
       isTesting?: boolean;
-      onPrepareRuntime?: () => void;
     }
   | {
       type: 'custom';
@@ -113,9 +111,6 @@ const AgentCard: React.FC<AgentCardProps> = (props) => {
   const isDisabled = isCustom && agent.enabled === false;
   const diagnostics = formatManagedAgentDiagnosticMessage(t, agent);
   const displayStatus = resolveDisplayStatus(agent.status, agent.last_check_error_code);
-  const isPreview = agent.agent_source_info?.managed_runtime?.runtime_id === 'deepseek-harness';
-  const runtimeNeedsInstall = managedRuntimeNeedsInstall(agent);
-  const onPrepareRuntime = props.type === 'official' ? props.onPrepareRuntime : undefined;
 
   const avatar = resolveAgentAvatar(logos, {
     icon: agent.avatar || agent.icon,
@@ -147,11 +142,6 @@ const AgentCard: React.FC<AgentCardProps> = (props) => {
         <div className='min-w-0 flex-1'>
           <div className='flex min-w-0 items-center gap-8px'>
             <Typography.Text className='truncate text-14px font-medium text-t-primary'>{agent.name}</Typography.Text>
-            {isPreview ? (
-              <Tag size='small' color='purple'>
-                {t('settings.agentManagement.preview')}
-              </Tag>
-            ) : null}
             <Tag
               data-testid={`agent-row-status-${agent.id}`}
               size='small'
@@ -175,16 +165,11 @@ const AgentCard: React.FC<AgentCardProps> = (props) => {
           data-testid={`agent-row-test-${agent.id}`}
           size='small'
           type='outline'
-          loading={isTesting || agent.runtime?.state === 'installing'}
-          onClick={runtimeNeedsInstall ? onPrepareRuntime : onTestConnection}
-          disabled={runtimeNeedsInstall && !onPrepareRuntime}
+          loading={isTesting}
+          onClick={onTestConnection}
           className='!h-30px !rounded-8px !border-border-2 !bg-base !px-10px !text-12px !font-500 !text-t-primary hover:!border-border-1 hover:!bg-fill-1'
         >
-          {runtimeNeedsInstall
-            ? agent.runtime?.state === 'installing'
-              ? t('settings.agentManagement.runtimeInstalling', { progress: agent.runtime.progress ?? 0 })
-              : t('settings.agentManagement.installAndCheck')
-            : t('settings.agentManagement.testConnection')}
+          {t('settings.agentManagement.testConnection')}
         </Button>
         {/* Both agent kinds get an explicit Edit button that opens the same
             configuration page the whole row links to (status, path/env

@@ -29,9 +29,6 @@ const isModelKeyAvailable = (key: string | null, providers?: IProvider[]) => {
   });
 };
 
-/** Provider-based agent keys that share the model list UI */
-type ProviderAgentKey = 'aionrs' | 'deepseek-harness';
-
 export type GuidModelSelectionResult = {
   modelList: IProvider[];
   isGoogleAuth: boolean;
@@ -45,25 +42,16 @@ export type GuidModelSelectionResult = {
  * Hook that manages the provider-backed model selection state for the Guid page.
  * Assistant-driven defaults are applied by the caller; this hook only owns the
  * transient in-page selection.
- * @param agentKey - current provider-based agent (currently only 'aionrs')
  */
-export const useGuidModelSelection = (agentKey: ProviderAgentKey = 'aionrs'): GuidModelSelectionResult => {
+export const useGuidModelSelection = (): GuidModelSelectionResult => {
   const { isGoogleAuth } = useGoogleAuthModels();
   const { data: modelConfig } = useProvidersQuery();
 
   const modelList = useMemo(() => {
     const allProviders: IProvider[] = (modelConfig || []).filter((platform) => !!platform.models.length);
-    if (agentKey === 'deepseek-harness') {
-      const defaultDeepSeek = allProviders.find(
-        (provider) => provider.enabled !== false && provider.platform?.toLowerCase() === 'deepseek'
-      );
-      if (!defaultDeepSeek) return [];
-      const enabledModels = defaultDeepSeek.models.filter((model) => defaultDeepSeek.model_enabled?.[model] !== false);
-      return enabledModels.length > 0 ? [{ ...defaultDeepSeek, models: enabledModels }] : [];
-    }
     const available = allProviders.filter(hasAvailableModels);
     return available;
-  }, [agentKey, modelConfig]);
+  }, [modelConfig]);
 
   const formatGeminiModelLabel = useCallback((_provider: { platform?: string } | undefined, modelName?: string) => {
     if (!modelName) return '';
@@ -124,7 +112,7 @@ export const useGuidModelSelection = (agentKey: ProviderAgentKey = 'aionrs'): Gu
     setDefaultModel().catch((error) => {
       console.error('Failed to set default model:', error);
     });
-  }, [agentKey, current_model?.id, current_model?.use_model, modelList, resetCurrentModel]);
+  }, [current_model?.id, current_model?.use_model, modelList, resetCurrentModel]);
   return {
     modelList,
     isGoogleAuth,

@@ -274,57 +274,6 @@ export function formatManagedAgentDiagnosticMessage(t: TFunction, agent: Managed
   }
 }
 
-export type HostPreviewLimitations = {
-  connectionScoped: boolean;
-  teamCapable: boolean;
-  imagePrompt: boolean;
-  audioPrompt: boolean;
-};
-
-/**
- * Project host-visible preview limits from declared catalog fields.
- * Do not key this off a vendor backend string.
- */
-export function hostPreviewLimitationsFromAgent(
-  agent: Pick<AgentMetadata, 'behavior_policy' | 'team_capable' | 'handshake'>
-): HostPreviewLimitations {
-  const caps = agent.handshake?.agent_capabilities;
-  const prompt =
-    caps && typeof caps === 'object'
-      ? (caps as { prompt_capabilities?: { image?: unknown; audio?: unknown } }).prompt_capabilities
-      : undefined;
-  return {
-    connectionScoped: agent.behavior_policy?.session_lifetime === 'connection_scoped',
-    teamCapable: agent.team_capable === true,
-    imagePrompt: prompt?.image === true,
-    audioPrompt: prompt?.audio === true,
-  };
-}
-
-export function shouldShowManagedPreviewLimitations(
-  agent: Pick<AgentMetadata, 'agent_source_info' | 'behavior_policy' | 'team_capable' | 'handshake'>
-): boolean {
-  if (!agent.agent_source_info?.managed_runtime) {
-    return false;
-  }
-  const limits = hostPreviewLimitationsFromAgent(agent);
-  return limits.connectionScoped || !limits.teamCapable || !limits.imagePrompt || !limits.audioPrompt;
-}
-
-const MANAGED_RUNTIME_UPDATE_PHASES = new Set(['update_available', 'rollback']);
-
-/**
- * True when the Agent settings row should offer "Install & Check" instead of
- * a regular health probe. DeepSeek Harness is the only managed npm runtime;
- * it is not on $PATH until `POST /api/agents/{id}/runtime/prepare` finishes.
- */
-export function managedRuntimeNeedsInstall(agent: Pick<AgentMetadata, 'agent_source_info' | 'runtime'>): boolean {
-  if (agent.agent_source_info?.managed_runtime?.runtime_id !== 'deepseek-harness') {
-    return false;
-  }
-  return agent.runtime?.state !== 'ready' || MANAGED_RUNTIME_UPDATE_PHASES.has(agent.runtime?.phase ?? '');
-}
-
 /**
  * Extract the list of MCP transport types an agent supports.
  *

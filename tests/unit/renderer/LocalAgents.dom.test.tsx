@@ -60,10 +60,8 @@ vi.mock('@arco-design/web-react', async () => {
 
 // Controlled management-view data; assert LocalAgents consumes THIS hook.
 const useManagedAgents = vi.fn();
-const prepareManagedAgentRuntimeUntilSettled = vi.fn();
 vi.mock('@renderer/hooks/agent/useManagedAgents', () => ({
   useManagedAgents: () => useManagedAgents(),
-  prepareManagedAgentRuntimeUntilSettled: (...args: unknown[]) => prepareManagedAgentRuntimeUntilSettled(...args),
 }));
 
 // Bridge is only touched by user-action handlers, not on render — stub the
@@ -434,74 +432,26 @@ describe('LocalAgents', () => {
     expect(screen.getByText('Claude Code')).toBeInTheDocument();
   });
 
-  const makeDeepSeekHarness = () => ({
-    id: 'deepseek-harness',
-    name: 'DeepSeek Harness',
-    agent_type: 'acp',
-    agent_source: 'builtin',
-    backend: 'deepseek-harness',
-    enabled: true,
-    available: false,
-    installed: false,
-    status: 'missing' as const,
-    agent_source_info: { managed_runtime: { runtime_id: 'deepseek-harness', release: '2026.08.14-1' } },
-    runtime: {
-      runtime_id: 'deepseek-harness',
-      release: '2026.08.14-1',
-      state: 'not_installed' as const,
-    },
-  });
-
-  it('installs a managed DeepSeek Harness runtime then runs the health probe', async () => {
-    const refreshCatalog = vi.fn().mockResolvedValue(undefined);
-    const deepSeek = makeDeepSeekHarness();
-    useManagedAgents.mockReturnValue({ agents: [deepSeek], revalidate: vi.fn(), refreshCatalog });
-    prepareManagedAgentRuntimeUntilSettled.mockResolvedValue({
-      ...deepSeek,
-      runtime: { ...deepSeek.runtime, state: 'ready', phase: 'ready', progress: 100 },
-    });
-    vi.mocked(ipcBridge.acpConversation.checkManagedAgentHealthById.invoke).mockResolvedValue({
-      ...deepSeek,
-      name: 'DeepSeek Harness',
-      status: 'online',
+  it('hides disabled builtin agents retired by the backend', () => {
+    useManagedAgents.mockReturnValue({
+      agents: [
+        {
+          id: 'retired-agent',
+          name: 'Retired Agent',
+          agent_type: 'acp',
+          agent_source: 'builtin',
+          enabled: false,
+          installed: false,
+          status: 'offline',
+        },
+      ],
+      revalidate: vi.fn(),
+      refreshCatalog: vi.fn(),
     });
 
     render(<LocalAgents />);
 
-    const installButton = screen.getByText('settings.agentManagement.installAndCheck').closest('button');
-    expect(installButton).not.toBeDisabled();
-    fireEvent.click(screen.getByText('settings.agentManagement.installAndCheck'));
-
-    await waitFor(() => {
-      expect(prepareManagedAgentRuntimeUntilSettled).toHaveBeenCalledWith('deepseek-harness');
-    });
-    await waitFor(() => {
-      expect(ipcBridge.acpConversation.checkManagedAgentHealthById.invoke).toHaveBeenCalledWith({
-        id: 'deepseek-harness',
-      });
-      expect(messageSuccess).toHaveBeenCalledWith('settings.agentManagement.testConnectionOnline:DeepSeek Harness');
-    });
-  });
-
-  it('surfaces a managed runtime install failure without probing health', async () => {
-    const refreshCatalog = vi.fn().mockResolvedValue(undefined);
-    const deepSeek = makeDeepSeekHarness();
-    useManagedAgents.mockReturnValue({ agents: [deepSeek], revalidate: vi.fn(), refreshCatalog });
-    prepareManagedAgentRuntimeUntilSettled.mockReset();
-    vi.mocked(ipcBridge.acpConversation.checkManagedAgentHealthById.invoke).mockReset();
-    prepareManagedAgentRuntimeUntilSettled.mockResolvedValue({
-      ...deepSeek,
-      runtime: { ...deepSeek.runtime, state: 'failed', phase: 'failed' },
-    });
-
-    render(<LocalAgents />);
-
-    fireEvent.click(screen.getByText('settings.agentManagement.installAndCheck'));
-
-    await waitFor(() => {
-      expect(prepareManagedAgentRuntimeUntilSettled).toHaveBeenCalledWith('deepseek-harness');
-      expect(messageError).toHaveBeenCalledWith('settings.agentManagement.runtimeInstallFailed');
-    });
-    expect(ipcBridge.acpConversation.checkManagedAgentHealthById.invoke).not.toHaveBeenCalled();
+    expect(screen.queryByText('Retired Agent')).toBeNull();
+    expect(screen.getByText('settings.agentManagement.localAgentsEmpty')).toBeInTheDocument();
   });
 });

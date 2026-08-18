@@ -14,7 +14,7 @@ import {
 import WorkMateModal from '@/renderer/components/base/WorkMateModal';
 import { WorkMateSearchInput } from '@/renderer/components/base';
 import { useLayoutContext } from '@/renderer/hooks/context/LayoutContext';
-import { prepareManagedAgentRuntimeUntilSettled, useManagedAgents } from '@/renderer/hooks/agent/useManagedAgents';
+import { useManagedAgents } from '@/renderer/hooks/agent/useManagedAgents';
 import { openExternalUrl } from '@/renderer/utils/platform';
 import { Button, Message, Typography } from '@arco-design/web-react';
 import TalkToButlerButton from '@/renderer/components/base/TalkToButlerButton';
@@ -53,7 +53,7 @@ const LocalAgents: React.FC = () => {
   // Hide deprecated runtime backends (nanobot / openclaw-gateway / remote / gemini)
   // — they are no longer offered as agents and shouldn't appear on the detection page.
   const officialAgents = allAgents.filter(
-    (a) => a.agent_source !== 'custom' && !isDeprecatedRuntimeAgentType(a.agent_type)
+    (a) => a.agent_source !== 'custom' && a.enabled !== false && !isDeprecatedRuntimeAgentType(a.agent_type)
   );
 
   const customAgents: ManagedAgent[] = allAgents.filter((a) => a.agent_source === 'custom');
@@ -200,30 +200,6 @@ const LocalAgents: React.FC = () => {
     [refreshCatalog, t]
   );
 
-  // DeepSeek Harness is not on PATH until the managed npm runtime is
-  // prepared. The list card's "Install & Check" action starts that
-  // installer, waits for ready/failed, then runs the same health probe
-  // as "Test Connection".
-  const handlePrepareRuntime = useCallback(
-    async (agentId: string) => {
-      try {
-        setTestingAgentId(agentId);
-        const prepared = await prepareManagedAgentRuntimeUntilSettled(agentId);
-        if (prepared.runtime?.state !== 'ready') {
-          Message.error(t('settings.agentManagement.runtimeInstallFailed'));
-          return;
-        }
-        await handleTestConnection(agentId);
-      } catch (error) {
-        console.error('prepare managed agent runtime failed:', error);
-        Message.error(t('settings.agentManagement.runtimeInstallFailed'));
-      } finally {
-        setTestingAgentId(null);
-      }
-    },
-    [handleTestConnection, t]
-  );
-
   return (
     <div data-testid='agent-management-page' className='flex flex-col gap-16px'>
       <SettingsPageHeader
@@ -302,7 +278,6 @@ const LocalAgents: React.FC = () => {
               agent={agent}
               boundAssistants={getBoundAssistants(agent, assistants)}
               onTestConnection={() => void handleTestConnection(agent.id)}
-              onPrepareRuntime={() => void handlePrepareRuntime(agent.id)}
               onConfigure={() => openAgentConfig(agent.id)}
               isTesting={testingAgentId === agent.id}
             />

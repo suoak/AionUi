@@ -108,6 +108,70 @@ describe('tokenUsageLedger', () => {
     expect(parseUsageLedger('[]')).toEqual(createEmptyUsageLedger());
   });
 
+  it('drops malformed events before they can poison totals with NaN', () => {
+    const malformed = {
+      ...createEmptyUsageLedger(),
+      events: [
+        {
+          id: 'broken',
+          recorded_at: Date.now(),
+          conversation_id: 'conv-1',
+          fingerprint: 'turn:1',
+          backend: 'acp',
+          source: 'acp',
+          input_tokens: 10,
+        },
+      ],
+    };
+
+    expect(parseUsageLedger(JSON.stringify(malformed)).events).toEqual([]);
+  });
+
+  it('drops malformed optional metadata and cached ledger indexes', () => {
+    const malformed = {
+      ...createEmptyUsageLedger(),
+      events: [
+        {
+          id: 'broken',
+          recorded_at: Date.now(),
+          conversation_id: 'conv-1',
+          fingerprint: 'turn:1',
+          backend: 'acp',
+          assistant_name: { unsafe: true },
+          source: 'acp',
+          input_tokens: 10,
+          output_tokens: 1,
+          thought_tokens: 0,
+          cached_read_tokens: 0,
+          cached_write_tokens: 0,
+          cost_delta: 0,
+        },
+      ],
+      last_cost_by_conversation: { 'conv-1': { amount: 'NaN', currency: [] } },
+      last_fingerprint_by_conversation: { 'conv-1': { bad: true } },
+    };
+
+    const parsed = parseUsageLedger(JSON.stringify(malformed));
+    expect(parsed.events).toEqual([]);
+    expect(parsed.last_cost_by_conversation).toEqual({});
+    expect(parsed.last_fingerprint_by_conversation).toEqual({});
+  });
+
+  it('survives unavailable local storage', () => {
+    const storage: UsageLedgerStorage = {
+      getItem: () => {
+        throw new Error('blocked');
+      },
+      setItem: () => {
+        throw new Error('quota');
+      },
+    };
+    expect(() => writeUsageLedger(createEmptyUsageLedger(), storage)).not.toThrow();
+    expect(
+      recordTurnUsage({ conversation_id: 'conv', breakdown: { input_tokens: 1 }, source: 'acp' }, storage)
+    ).not.toBeNull();
+  });
+
   it('clears recorded history', () => {
     const storage = memoryStorage();
     writeUsageLedger(

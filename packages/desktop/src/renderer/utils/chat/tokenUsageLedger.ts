@@ -18,12 +18,14 @@ export type UsageEvent = {
   recorded_at: number;
   conversation_id: string;
   fingerprint: string;
+  turn_id?: string;
   backend: string;
   assistant_id?: string;
   assistant_name?: string;
   conversation_name?: string;
   conversation_source?: string;
   model_id?: string;
+  total_tokens?: number;
   input_tokens: number;
   output_tokens: number;
   thought_tokens: number;
@@ -41,6 +43,8 @@ export type UsageLedger = {
   last_fingerprint_by_conversation: Record<string, string>;
   /** After an explicit clear, do not re-import last-turn snapshots. */
   backfill_suppressed: boolean;
+  /** Historical conversation snapshots have been scanned successfully. */
+  backfill_completed: boolean;
 };
 
 export type UsageLedgerStorage = {
@@ -57,6 +61,7 @@ export type RecordTurnUsageInput = {
   conversation_name?: string;
   model_id?: string;
   breakdown?: {
+    total_tokens?: number;
     input_tokens?: number;
     output_tokens?: number;
     thought_tokens?: number;
@@ -74,6 +79,7 @@ const emptyLedger = (): UsageLedger => ({
   last_cost_by_conversation: {},
   last_fingerprint_by_conversation: {},
   backfill_suppressed: false,
+  backfill_completed: false,
 });
 
 export function createEmptyUsageLedger(): UsageLedger {
@@ -110,6 +116,35 @@ export function usageEventFingerprint(input: RecordTurnUsageInput): string {
   ].join(':');
 }
 
+const parseCostByConversation = (value: unknown): UsageLedger['last_cost_by_conversation'] => {
+  if (!value || typeof value !== 'object' || Array.isArray(value)) {
+    return {};
+  }
+  return Object.fromEntries(
+    Object.entries(value).filter((entry): entry is [string, { amount: number; currency: string }] => {
+      const cost = entry[1];
+      return (
+        !!cost &&
+        typeof cost === 'object' &&
+        !Array.isArray(cost) &&
+        typeof (cost as { amount?: unknown }).amount === 'number' &&
+        Number.isFinite((cost as { amount: number }).amount) &&
+        (cost as { amount: number }).amount >= 0 &&
+        typeof (cost as { currency?: unknown }).currency === 'string'
+      );
+    })
+  );
+};
+
+const parseStringRecord = (value: unknown): Record<string, string> => {
+  if (!value || typeof value !== 'object' || Array.isArray(value)) {
+    return {};
+  }
+  return Object.fromEntries(
+    Object.entries(value).filter((entry): entry is [string, string] => typeof entry[1] === 'string')
+  );
+};
+
 export function parseUsageLedger(raw: string | null): UsageLedger {
   if (!raw) {
     return emptyLedger();
@@ -122,20 +157,21 @@ export function parseUsageLedger(raw: string | null): UsageLedger {
     return {
       version: USAGE_LEDGER_VERSION,
       events: parsed.events.filter(isUsageEvent),
-      last_cost_by_conversation:
-        parsed.last_cost_by_conversation && typeof parsed.last_cost_by_conversation === 'object'
-          ? parsed.last_cost_by_conversation
-          : {},
-      last_fingerprint_by_conversation:
-        parsed.last_fingerprint_by_conversation && typeof parsed.last_fingerprint_by_conversation === 'object'
-          ? parsed.last_fingerprint_by_conversation
-          : {},
+      last_cost_by_conversation: parseCostByConversation(parsed.last_cost_by_conversation),
+      last_fingerprint_by_conversation: parseStringRecord(parsed.last_fingerprint_by_conversation),
       backfill_suppressed: parsed.backfill_suppressed === true,
+      backfill_completed: parsed.backfill_completed === true,
     };
   } catch {
     return emptyLedger();
   }
 }
+
+const isNonNegativeFiniteNumber = (value: unknown): value is number =>
+  typeof value === 'number' && Number.isFinite(value) && value >= 0;
+
+const isOptionalString = (value: unknown): value is string | undefined =>
+  value === undefined || typeof value === 'string';
 
 const isUsageEvent = (value: unknown): value is UsageEvent => {
   if (!value || typeof value !== 'object' || Array.isArray(value)) {
@@ -145,10 +181,25 @@ const isUsageEvent = (value: unknown): value is UsageEvent => {
   return (
     typeof event.id === 'string' &&
     typeof event.recorded_at === 'number' &&
+    Number.isFinite(event.recorded_at) &&
     typeof event.conversation_id === 'string' &&
     typeof event.fingerprint === 'string' &&
     typeof event.backend === 'string' &&
-    typeof event.source === 'string'
+    isOptionalString(event.turn_id) &&
+    isOptionalString(event.assistant_id) &&
+    isOptionalString(event.assistant_name) &&
+    isOptionalString(event.conversation_name) &&
+    isOptionalString(event.conversation_source) &&
+    isOptionalString(event.model_id) &&
+    isOptionalString(event.cost_currency) &&
+    (event.source === 'acp' || event.source === 'aionrs') &&
+    isNonNegativeFiniteNumber(event.input_tokens) &&
+    isNonNegativeFiniteNumber(event.output_tokens) &&
+    isNonNegativeFiniteNumber(event.thought_tokens) &&
+    isNonNegativeFiniteNumber(event.cached_read_tokens) &&
+    isNonNegativeFiniteNumber(event.cached_write_tokens) &&
+    isNonNegativeFiniteNumber(event.cost_delta) &&
+    (event.total_tokens === undefined || isNonNegativeFiniteNumber(event.total_tokens))
   );
 };
 
@@ -166,20 +217,34 @@ export function readUsageLedger(storage: UsageLedgerStorage | null = defaultStor
   if (!storage) {
     return emptyLedger();
   }
-  return pruneUsageLedger(parseUsageLedger(storage.getItem(STORAGE_KEYS.TOKEN_USAGE_LEDGER)));
+  try {
+    return pruneUsageLedger(parseUsageLedger(storage.getItem(STORAGE_KEYS.TOKEN_USAGE_LEDGER)));
+  } catch {
+    return emptyLedger();
+  }
 }
 
 export function writeUsageLedger(ledger: UsageLedger, storage: UsageLedgerStorage | null = defaultStorage()): void {
   if (!storage) {
     return;
   }
-  storage.setItem(STORAGE_KEYS.TOKEN_USAGE_LEDGER, JSON.stringify(pruneUsageLedger(ledger)));
+  try {
+    storage.setItem(STORAGE_KEYS.TOKEN_USAGE_LEDGER, JSON.stringify(pruneUsageLedger(ledger)));
+  } catch {
+    // The durable backend remains authoritative when local storage is unavailable or full.
+  }
 }
 
 export function clearUsageLedger(storage: UsageLedgerStorage | null = defaultStorage()): UsageLedger {
-  const next = { ...emptyLedger(), backfill_suppressed: true };
+  const next = { ...emptyLedger(), backfill_suppressed: true, backfill_completed: true };
   writeUsageLedger(next, storage);
   return next;
+}
+
+export function completeUsageBackfill(storage: UsageLedgerStorage | null = defaultStorage()): void {
+  const ledger = readUsageLedger(storage);
+  ledger.backfill_completed = true;
+  writeUsageLedger(ledger, storage);
 }
 
 export function conversationHasUsageEvents(ledger: UsageLedger, conversationId: string): boolean {
@@ -205,6 +270,7 @@ export function recordTurnUsage(
   const thoughtTokens = toNonNegativeInt(input.breakdown?.thought_tokens);
   const cachedReadTokens = toNonNegativeInt(input.breakdown?.cached_read_tokens);
   const cachedWriteTokens = toNonNegativeInt(input.breakdown?.cached_write_tokens);
+  const totalTokens = toNonNegativeInt(input.breakdown?.total_tokens);
   const hasSpend =
     inputTokens + outputTokens + thoughtTokens > 0 || (typeof input.cost?.amount === 'number' && input.cost.amount > 0);
   if (!hasSpend) {
@@ -246,11 +312,13 @@ export function recordTurnUsage(
     recorded_at: input.recorded_at ?? Date.now(),
     conversation_id: conversationId,
     fingerprint,
+    turn_id: input.turn_id?.trim() || undefined,
     backend: input.backend?.trim() || 'unknown',
     assistant_id: input.assistant_id?.trim() || undefined,
     assistant_name: input.assistant_name?.trim() || undefined,
     conversation_name: input.conversation_name?.trim() || undefined,
     model_id: input.model_id?.trim() || undefined,
+    total_tokens: totalTokens || undefined,
     input_tokens: inputTokens,
     output_tokens: outputTokens,
     thought_tokens: thoughtTokens,
