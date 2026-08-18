@@ -1,9 +1,8 @@
 /**
  * Host transcript projected from AionCore's canonical event journal.
  *
- * This is WorkMate's consume path for the DeepSeek Harness `deriveMessages()`
- * idea: model-visible conversation content must be reconstructible from the
- * journal, not only from the live DB projection.
+ * Model-visible conversation content must be reconstructible from the journal,
+ * not only from the live DB projection.
  */
 
 export type JournalTranscriptVisibility = 'model' | 'host';

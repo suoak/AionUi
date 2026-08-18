@@ -14,6 +14,7 @@ import {
 } from '@/renderer/utils/chat/tokenUsageBackfill';
 import {
   clearUsageLedger,
+  completeUsageBackfill,
   parseUsageLedger,
   recordTurnUsage,
   type UsageLedgerStorage,
@@ -98,7 +99,7 @@ describe('tokenUsageBackfill', () => {
       extra: { last_token_usage: { total_tokens: 420 } },
     } as TChatConversation);
 
-    expect(input?.breakdown).toEqual({ input_tokens: 420 });
+    expect(input?.breakdown).toEqual({ total_tokens: 420, input_tokens: 420 });
     expect(input?.source).toBe('aionrs');
   });
 
@@ -163,5 +164,25 @@ describe('tokenUsageBackfill', () => {
     clearUsageLedger(storage);
     expect(backfillUsageFromConversations([conversation], storage)).toBe(0);
     expect(parseUsageLedger(storage.getItem(STORAGE_KEYS.TOKEN_USAGE_LEDGER)).events).toEqual([]);
+  });
+
+  it('does not repeat a completed historical scan', () => {
+    const storage = memoryStorage();
+    completeUsageBackfill(storage);
+    expect(
+      backfillUsageFromConversations(
+        [
+          {
+            id: 'conv-7',
+            type: 'aionrs',
+            name: 'Already scanned',
+            created_at: Date.now(),
+            extra: { last_token_usage: { total_tokens: 20 } },
+          } as TChatConversation,
+        ],
+        storage
+      )
+    ).toBe(0);
+    expect(parseUsageLedger(storage.getItem(STORAGE_KEYS.TOKEN_USAGE_LEDGER)).backfill_completed).toBe(true);
   });
 });

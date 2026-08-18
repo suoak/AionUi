@@ -290,6 +290,7 @@ export const useAionrsMessage = (
               const newTokenUsage: TokenUsageData = {
                 total_tokens: (usageData.input_tokens || 0) + (usageData.output_tokens || 0),
                 breakdown: {
+                  total_tokens: (usageData.input_tokens || 0) + (usageData.output_tokens || 0),
                   input_tokens: usageData.input_tokens || 0,
                   output_tokens: usageData.output_tokens || 0,
                 },

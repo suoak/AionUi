@@ -17,6 +17,7 @@ type UsageTrendChartProps = {
 
 const UsageTrendChart: React.FC<UsageTrendChartProps> = ({ points, emptyLabel, inputLabel, outputLabel }) => {
   const max = Math.max(0, ...points.map((point) => point.total_tokens));
+  const labelStep = Math.max(1, Math.ceil(points.length / 12));
   if (max <= 0) {
     return (
       <div
@@ -41,7 +42,7 @@ const UsageTrendChart: React.FC<UsageTrendChartProps> = ({ points, emptyLabel, i
         </span>
       </div>
       <div className='flex h-160px items-end gap-4px' data-testid='usage-trend-chart'>
-        {points.map((point) => {
+        {points.map((point, index) => {
           const height = Math.max(4, Math.round((point.total_tokens / max) * 100));
           const outputShare = point.total_tokens > 0 ? point.output_tokens / point.total_tokens : 0;
           return (
@@ -56,7 +57,9 @@ const UsageTrendChart: React.FC<UsageTrendChartProps> = ({ points, emptyLabel, i
                   <div className='min-h-2px w-full flex-1 bg-primary-3' />
                 </div>
               </div>
-              <div className='truncate text-10px text-t-quaternary'>{point.date.slice(5)}</div>
+              <div className='truncate text-10px text-t-quaternary'>
+                {index % labelStep === 0 || index === points.length - 1 ? point.date.slice(5) : '\u00a0'}
+              </div>
             </div>
           );
         })}

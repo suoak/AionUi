@@ -18,6 +18,7 @@ import {
   filterUsageEvents,
   filterUsageEventsByModel,
   filterUsageToday,
+  reconcileUsageEvents,
   resolveUsageModelFilter,
   resolveUsageTrendDays,
   summarizeUsageEvents,
@@ -36,6 +37,8 @@ const event = (overrides: Partial<UsageEvent>): UsageEvent => ({
   conversation_name: overrides.conversation_name,
   conversation_source: overrides.conversation_source,
   model_id: overrides.model_id,
+  turn_id: overrides.turn_id,
+  total_tokens: overrides.total_tokens,
   input_tokens: overrides.input_tokens ?? 0,
   output_tokens: overrides.output_tokens ?? 0,
   thought_tokens: overrides.thought_tokens ?? 0,
@@ -62,6 +65,57 @@ describe('tokenUsageAggregate', () => {
     ).toEqual(['today']);
   });
 
+  it('uses whole local calendar days so range totals match the trend dates', () => {
+    const now = Date.parse('2026-08-16T18:00:00');
+    const events = [
+      event({ id: 'first-visible', recorded_at: Date.parse('2026-08-10T00:00:00'), input_tokens: 3 }),
+      event({ id: 'previous', recorded_at: Date.parse('2026-08-09T23:59:59'), input_tokens: 7 }),
+    ];
+
+    expect(filterUsageEvents(events, '7d', now).map((item) => item.id)).toEqual(['first-visible']);
+    expect(buildUsageDailySeries(filterUsageEvents(events, '7d', now), '7d', now)[0]).toMatchObject({
+      date: '2026-08-10',
+      total_tokens: 3,
+    });
+  });
+
+  it('reconciles matching backend and local rows one-for-one without dropping identical real turns', () => {
+    const backend = [event({ id: 'backend-1', fingerprint: 'turn:first', turn_id: 'first' })];
+    const local = [
+      event({ id: 'local-copy', fingerprint: 'turn:first', turn_id: 'first' }),
+      event({ id: 'local-second-turn', fingerprint: 'turn:second', turn_id: 'second' }),
+    ];
+
+    expect(reconcileUsageEvents(backend, local).map((item) => item.id)).toEqual(['backend-1', 'local-second-turn']);
+  });
+
+  it('uses stable turn identity and enriches backend rows with local display metadata', () => {
+    const backend = event({
+      id: 'backend',
+      fingerprint: 'turn:shared',
+      turn_id: 'shared',
+      backend: 'claude',
+      model_id: undefined,
+    });
+    const local = event({
+      id: 'local',
+      fingerprint: 'turn:shared',
+      turn_id: 'shared',
+      backend: 'different-client-label',
+      model_id: 'claude-sonnet',
+      assistant_name: 'Research assistant',
+    });
+
+    expect(reconcileUsageEvents([backend], [local])).toEqual([
+      expect.objectContaining({
+        id: 'backend',
+        backend: 'claude',
+        model_id: 'claude-sonnet',
+        assistant_name: 'Research assistant',
+      }),
+    ]);
+  });
+
   it('summarizes tokens, turns, conversations, and cost', () => {
     const totals = summarizeUsageEvents([
       event({
@@ -75,11 +129,20 @@ describe('tokenUsageAggregate', () => {
       event({ conversation_id: 'b', input_tokens: 6, output_tokens: 3, cost_delta: 0.05, cost_currency: 'USD' }),
     ]);
 
-    expect(totals.total_tokens).toBe(25);
+    expect(totals.total_tokens).toBe(23);
     expect(totals.turn_count).toBe(2);
     expect(totals.conversation_count).toBe(2);
     expect(totals.cost_amount).toBeCloseTo(0.15);
     expect(totals.cost_currency).toBe('USD');
+    expect(totals.cost_by_currency).toEqual({ USD: 0.15000000000000002 });
+  });
+
+  it('keeps reported costs separated by currency', () => {
+    const totals = summarizeUsageEvents([
+      event({ cost_delta: 1.25, cost_currency: 'usd' }),
+      event({ cost_delta: 8, cost_currency: 'CNY' }),
+    ]);
+    expect(totals.cost_by_currency).toEqual({ USD: 1.25, CNY: 8 });
   });
 
   it('builds a daily series covering the selected window', () => {
@@ -99,16 +162,23 @@ describe('tokenUsageAggregate', () => {
     expect(buildUsageDailySeries(events, 'all', now)).toHaveLength(10);
   });
 
-  it('exports CSV with escaped conversation names', () => {
+  it('exports complete CSV rows with escaped and formula-safe text', () => {
     const csv = usageEventsToCsv([
       event({
+        fingerprint: '=formula',
+        turn_id: 'turn-1',
         conversation_name: 'Plan, "v2"',
+        cached_read_tokens: 7,
+        cached_write_tokens: 2,
         input_tokens: 3,
         output_tokens: 1,
         recorded_at: Date.parse('2026-08-16T00:00:00.000Z'),
       }),
     ]);
     expect(csv).toContain('"Plan, ""v2"""');
+    expect(csv).toContain("'=formula");
+    expect(csv).toContain('fingerprint,turn_id');
+    expect(csv).toContain('cached_read_tokens,cached_write_tokens');
     expect(csv.split('\n')).toHaveLength(2);
   });
 
@@ -191,21 +261,26 @@ describe('tokenUsageAggregate', () => {
     expect(resolveUsageChannelLabel('aionui', { workmate: 'WorkMate' }, 'Unknown')).toBe('WorkMate');
   });
 
-  it('treats Codex-style input that already includes cache hits as spend minus cache', () => {
+  it('preserves Codex-style input and uses its normalized turn total', () => {
     const inclusive = event({ input_tokens: 14_600, output_tokens: 15, cached_read_tokens: 14_000 });
-    expect(usageEventSpendInput(inclusive)).toBe(600);
+    expect(usageEventSpendInput(inclusive)).toBe(14_600);
     expect(summarizeUsageEvents([inclusive])).toMatchObject({
-      input_tokens: 600,
+      input_tokens: 14_600,
       output_tokens: 15,
-      total_tokens: 615,
+      total_tokens: 14_615,
       cached_read_tokens: 14_000,
     });
   });
 
-  it('keeps Claude-style base input when cache lives in its own bucket', () => {
-    const exclusive = event({ input_tokens: 80, output_tokens: 15, cached_read_tokens: 14_000 });
+  it('counts Claude-style cache buckets in the normalized total', () => {
+    const exclusive = event({
+      input_tokens: 80,
+      output_tokens: 15,
+      cached_read_tokens: 14_000,
+      total_tokens: 14_095,
+    });
     expect(usageEventSpendInput(exclusive)).toBe(80);
-    expect(summarizeUsageEvents([exclusive]).total_tokens).toBe(95);
+    expect(summarizeUsageEvents([exclusive]).total_tokens).toBe(14_095);
   });
 
   it('returns empty totals for an empty event list', () => {
@@ -217,6 +292,7 @@ describe('tokenUsageAggregate', () => {
       cached_write_tokens: 0,
       total_tokens: 0,
       cost_amount: 0,
+      cost_by_currency: {},
       turn_count: 0,
       conversation_count: 0,
     });

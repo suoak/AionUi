@@ -233,7 +233,8 @@ const QueueItemCard: React.FC<QueueItemCardProps> = ({
       <div className='flex items-center gap-0.5 shrink-0'>
         {renderQueueActionIconButton({
           ariaLabel: t('conversation.commandQueue.sendNow', { defaultValue: 'Send now' }),
-          onClick: () => onSendNow(item),
+          disabled: item.managed_by_server,
+          onClick: item.managed_by_server ? undefined : () => onSendNow(item),
           icon: <SendOne theme='outline' size='14' strokeWidth={2.5} />,
           accent: true,
         })}
@@ -548,7 +549,7 @@ const CommandQueuePanel: React.FC<CommandQueuePanelProps> = ({
                   <SortableQueueItem
                     key={item.id}
                     item={item}
-                    dragDisabled={false}
+                    dragDisabled={Boolean(item.managed_by_server)}
                     dragViaCard={isMobile}
                     dragHandleLabel={dragHandleLabel}
                     preview={preview}

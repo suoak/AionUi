@@ -1,8 +1,7 @@
 /**
  * Reconstruct model-visible chat messages from the AionCore journal transcript.
  *
- * This is WorkMate's consume path for DeepSeek Harness `deriveMessages()`:
- * when the journal can reconstruct the turn (including user/message), it is
+ * When the journal can reconstruct the turn (including user/message), it is
  * the source of truth. Older AionCore builds without UserPrompt fall back to
  * DB user bubbles plus journal assistant/tool rows.
  */

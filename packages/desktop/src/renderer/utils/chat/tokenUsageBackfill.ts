@@ -75,7 +75,11 @@ export function usageInputFromConversation(conversation: TChatConversation): Rec
     assistant_name: conversation.assistant?.name,
     conversation_name: conversation.name,
     model_id: conversationModelId(conversation),
-    breakdown: hasBreakdown ? breakdown : isAionrsSpend ? { input_tokens: usage.total_tokens } : undefined,
+    breakdown: hasBreakdown
+      ? { ...breakdown, total_tokens: breakdown?.total_tokens || usage.total_tokens }
+      : isAionrsSpend
+        ? { total_tokens: usage.total_tokens, input_tokens: usage.total_tokens }
+        : undefined,
     cost: usage.cost,
     source: conversation.type === 'aionrs' ? 'aionrs' : 'acp',
     recorded_at: conversation.modified_at || conversation.created_at,
@@ -87,7 +91,7 @@ export function backfillUsageFromConversations(
   storage?: UsageLedgerStorage | null
 ): number {
   const ledger = readUsageLedger(storage);
-  if (ledger.backfill_suppressed) {
+  if (ledger.backfill_suppressed || ledger.backfill_completed) {
     return 0;
   }
 

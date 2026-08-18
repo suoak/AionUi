@@ -27,6 +27,7 @@ import {
   type UsageRange,
 } from '@/renderer/utils/chat/tokenUsageAggregate';
 import { backfillUsageFromConversations } from '@/renderer/utils/chat/tokenUsageBackfill';
+import { completeUsageBackfill, readUsageLedger } from '@/renderer/utils/chat/tokenUsageLedger';
 import SettingsPageHeader from '../../components/SettingsPageHeader';
 import SettingsPageWrapper from '../../components/SettingsPageWrapper';
 import UsageBreakdownList from './UsageBreakdownList';
@@ -51,30 +52,43 @@ const UsagePage: React.FC = () => {
   const [range, setRange] = useState<UsageRange>('30d');
   const [modelFilter, setModelFilter] = useState('all');
   const [clearVisible, setClearVisible] = useState(false);
+  const [clearing, setClearing] = useState(false);
   const { events, visibleEvents, refresh, clear } = useTokenUsageStats(range);
 
   useEffect(() => {
-    if (events.length > 0) {
+    const ledger = readUsageLedger();
+    if (ledger.backfill_suppressed || ledger.backfill_completed) {
       return;
     }
     let cancelled = false;
-    void ipcBridge.database.getUserConversations
-      .invoke({ limit: 100 })
-      .then((page) => {
+    void (async () => {
+      let cursor: string | undefined;
+      let recorded = 0;
+      do {
+        // Pagination is cursor-dependent, so these requests must remain sequential.
+        // oxlint-disable-next-line eslint/no-await-in-loop
+        const page = await ipcBridge.database.getUserConversations.invoke({ cursor, limit: 100 });
         if (cancelled || !page?.items?.length) {
-          return;
+          break;
         }
-        if (backfillUsageFromConversations(page.items) > 0) {
-          refresh();
-        }
-      })
-      .catch(() => {
+        recorded += backfillUsageFromConversations(page.items);
+        cursor = page.has_more ? page.items.at(-1)?.id : undefined;
+      } while (cursor);
+      if (!cancelled) {
+        completeUsageBackfill();
+      }
+      if (!cancelled && recorded > 0) {
+        refresh();
+      }
+    })().catch(() => {
+      if (!cancelled) {
         // Historical backfill is best-effort; live recording still works.
-      });
+      }
+    });
     return () => {
       cancelled = true;
     };
-  }, [events.length, refresh]);
+  }, [refresh]);
 
   const byModel = useMemo(
     () => breakdownUsageByModel(visibleEvents, t('settings.usage.unknownModel')),
@@ -130,8 +144,14 @@ const UsagePage: React.FC = () => {
     [scopedEvents, t]
   );
 
-  const handleClear = () => {
-    clear();
+  const handleClear = async () => {
+    setClearing(true);
+    const cleared = await clear();
+    setClearing(false);
+    if (!cleared) {
+      Message.error(t('common.deleteFailed'));
+      return;
+    }
     setClearVisible(false);
     Message.success(t('settings.usage.clearSuccess'));
   };
@@ -229,14 +249,26 @@ const UsagePage: React.FC = () => {
           />
           <UsageSummaryCard label={t('settings.usage.inputTokens')} value={formatTokenCount(totals.input_tokens)} />
           <UsageSummaryCard label={t('settings.usage.outputTokens')} value={formatTokenCount(totals.output_tokens)} />
+          <UsageSummaryCard label={t('settings.usage.thoughtTokens')} value={formatTokenCount(totals.thought_tokens)} />
+          <UsageSummaryCard
+            label={t('conversation.contextUsage.cachedRead')}
+            value={formatTokenCount(totals.cached_read_tokens)}
+          />
+          <UsageSummaryCard
+            label={t('conversation.contextUsage.cachedWrite')}
+            value={formatTokenCount(totals.cached_write_tokens)}
+          />
         </div>
 
-        {totals.cost_amount > 0 ? (
+        {Object.keys(totals.cost_by_currency).length > 0 ? (
           <div className='rounded-12px border border-solid border-transparent bg-base px-16px py-12px text-13px text-t-secondary'>
             {t('settings.usage.estimatedCost')}{' '}
-            <span className='font-600 text-t-primary'>
-              {formatCostAmount({ amount: totals.cost_amount, currency: totals.cost_currency || 'USD' })}
-            </span>
+            {Object.entries(totals.cost_by_currency).map(([currency, amount], index) => (
+              <React.Fragment key={currency}>
+                {index > 0 ? ' · ' : null}
+                <span className='font-600 text-t-primary'>{formatCostAmount({ amount, currency })}</span>
+              </React.Fragment>
+            ))}
           </div>
         ) : null}
 
@@ -321,7 +353,13 @@ const UsagePage: React.FC = () => {
         footer={
           <div className='flex justify-end gap-8px'>
             <Button onClick={() => setClearVisible(false)}>{t('common.cancel')}</Button>
-            <Button type='primary' status='danger' onClick={handleClear} data-testid='usage-clear-confirm'>
+            <Button
+              type='primary'
+              status='danger'
+              loading={clearing}
+              onClick={() => void handleClear()}
+              data-testid='usage-clear-confirm'
+            >
               {t('settings.usage.clear')}
             </Button>
           </div>

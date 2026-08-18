@@ -9,52 +9,6 @@ import type { ManagedAgent } from '@/renderer/utils/model/agentTypes';
 import { MANAGED_AGENTS_SWR_KEY, fetchManagedAgents } from '@/renderer/utils/model/agentTypes';
 import useSWR, { mutate } from 'swr';
 
-export type PrepareManagedRuntimeClock = {
-  now?: () => number;
-  sleep?: (ms: number) => Promise<void>;
-  pollIntervalMs?: number;
-  timeoutMs?: number;
-};
-
-const DEFAULT_PREPARE_POLL_INTERVAL_MS = 1500;
-const DEFAULT_PREPARE_TIMEOUT_MS = 5 * 60 * 1000;
-
-const defaultSleep = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms));
-
-/**
- * Starts a managed-runtime install (`POST /runtime/prepare`) and waits until
- * the catalog reports ready/failed. The backend returns immediately after
- * spawning the installer, so the settings page must poll.
- */
-export async function prepareManagedAgentRuntimeUntilSettled(
-  agentId: string,
-  clock: PrepareManagedRuntimeClock = {}
-): Promise<ManagedAgent> {
-  const sleep = clock.sleep ?? defaultSleep;
-  const now = clock.now ?? Date.now;
-  const pollIntervalMs = clock.pollIntervalMs ?? DEFAULT_PREPARE_POLL_INTERVAL_MS;
-  const timeoutMs = clock.timeoutMs ?? DEFAULT_PREPARE_TIMEOUT_MS;
-
-  const prepared = await ipcBridge.acpConversation.prepareManagedAgentRuntime.invoke({ id: agentId });
-  const deadline = now() + timeoutMs;
-  const catalog = await refreshManagedAgentCatalogAndAssistants();
-  let current = catalog?.find((agent) => agent.id === agentId) ?? prepared;
-
-  while (current?.runtime?.state === 'installing' && now() < deadline) {
-    await sleep(pollIntervalMs);
-    const next = await refreshManagedAgentCatalogAndAssistants();
-    current = next?.find((agent) => agent.id === agentId) ?? current;
-  }
-
-  if (!current) {
-    throw new Error('Managed runtime prepare returned no agent');
-  }
-  if (current.runtime?.state === 'installing') {
-    throw new Error('Managed runtime installation timed out');
-  }
-  return current;
-}
-
 export type UseManagedAgentsResult = {
   agents: ManagedAgent[];
   isLoading: boolean;

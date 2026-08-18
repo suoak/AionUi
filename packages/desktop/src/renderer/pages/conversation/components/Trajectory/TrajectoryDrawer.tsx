@@ -5,6 +5,7 @@
  */
 
 import type { JournalApprovalPolicy, JournalTranscript } from '@/common/types/journalTranscript';
+import type { IConversationCapabilities } from '@/common/adapter/ipcBridge';
 import { Alert, Button, Drawer, Empty, Spin, Tag, Timeline } from '@arco-design/web-react';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
@@ -24,6 +25,7 @@ type TrajectoryDrawerProps = {
   error: boolean;
   savingPolicy: boolean;
   transcript: JournalTranscript | null;
+  capabilities: IConversationCapabilities | null;
   onClose: () => void;
   onRetry: () => void;
   onApprovalChange: (approval: JournalApprovalPolicy) => void;
@@ -36,6 +38,7 @@ const TrajectoryDrawer: React.FC<TrajectoryDrawerProps> = ({
   error,
   savingPolicy,
   transcript,
+  capabilities,
   onClose,
   onRetry,
   onApprovalChange,
@@ -63,6 +66,21 @@ const TrajectoryDrawer: React.FC<TrajectoryDrawerProps> = ({
               <span>{t('conversation.trajectory.surfaceTokens', { count: transcript.tokens.surface_tokens })}</span>
             </div>
             <div className='flex flex-wrap items-center gap-8px'>
+              {capabilities && (
+                <Tag
+                  data-testid='conversation-tool-enforcement'
+                  size='small'
+                  color={
+                    capabilities.tool_enforcement === 'native'
+                      ? 'green'
+                      : capabilities.tool_enforcement === 'approval-gate'
+                        ? 'orange'
+                        : 'gray'
+                  }
+                >
+                  {capabilities.tool_enforcement}
+                </Tag>
+              )}
               <Tag size='small' color={lockKey === 'open' ? 'orangered' : lockKey === 'closed' ? 'arcoblue' : 'gray'}>
                 {t(compactionLockI18nKey(lockKey))}
               </Tag>

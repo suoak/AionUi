@@ -45,6 +45,7 @@ export type UseAcpMessageReturn = {
 };
 
 const BREAKDOWN_KEYS = [
+  'total_tokens',
   'input_tokens',
   'output_tokens',
   'thought_tokens',
@@ -55,6 +56,7 @@ const BREAKDOWN_KEYS = [
 const GROK_USD_TICKS_PER_DOLLAR = 10_000_000_000;
 
 const CAMEL_BREAKDOWN_KEYS: Record<string, (typeof BREAKDOWN_KEYS)[number]> = {
+  totalTokens: 'total_tokens',
   inputTokens: 'input_tokens',
   outputTokens: 'output_tokens',
   reasoningTokens: 'thought_tokens',

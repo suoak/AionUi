@@ -1,4 +1,6 @@
 import { ipcBridge } from '@/common';
+import type { IConversationInput } from '@/common/adapter/ipcBridge';
+import { isBackendHttpError } from '@/common/adapter/httpBridge';
 import { type ChatFileRef, chatFileRefKey, isChatFileRef } from '@/common/types/chatFile';
 import { uuid } from '@/common/utils';
 import {
@@ -17,6 +19,7 @@ export type ConversationCommandQueueItem = {
   input: string;
   files: ChatFileRef[];
   created_at: number;
+  managed_by_server?: boolean;
 };
 
 export type ConversationCommandQueueMode = 'auto' | 'manual';
@@ -586,6 +589,34 @@ export const useConversationCommandQueue = ({
   const onExecuteRef = useRef(onExecute);
   const [isInteractionLocked, setIsInteractionLocked] = useState(false);
   const [executionGateVersion, setExecutionGateVersion] = useState(0);
+  const [serverInputs, setServerInputs] = useState<IConversationInput[]>([]);
+  const [serverSupported, setServerSupported] = useState(false);
+  const serverSupportedRef = useRef<boolean | null>(null);
+  const migrationRunningRef = useRef(false);
+
+  const refreshServerInputs = useCallback(async (): Promise<IConversationInput[] | null> => {
+    if (!ipcBridge.conversation.listInputs?.invoke) {
+      serverSupportedRef.current = false;
+      setServerSupported(false);
+      return null;
+    }
+    try {
+      const inputs = await ipcBridge.conversation.listInputs.invoke({ conversation_id });
+      serverSupportedRef.current = true;
+      setServerSupported(true);
+      setServerInputs(inputs);
+      return inputs;
+    } catch (error) {
+      if (isBackendHttpError(error) && error.status === 404) {
+        serverSupportedRef.current = false;
+        setServerSupported(false);
+        setServerInputs([]);
+        return null;
+      }
+      console.warn('[conversation-command-queue] Failed to refresh server queue:', error);
+      return null;
+    }
+  }, [conversation_id]);
 
   useEffect(() => {
     stateRef.current = data;
@@ -594,6 +625,21 @@ export const useConversationCommandQueue = ({
   useEffect(() => {
     onExecuteRef.current = onExecute;
   }, [onExecute]);
+
+  useEffect(() => {
+    if (!enabled) return;
+    void refreshServerInputs();
+    if (!ipcBridge.conversation.inputChanged?.on) return;
+    return ipcBridge.conversation.inputChanged.on((event) => {
+      if (event.input.conversation_id !== conversation_id) return;
+      setServerInputs((current) => {
+        const next = current.filter((input) => input.input_id !== event.input.input_id);
+        return event.input.status === 'held' || event.input.status === 'dispatching'
+          ? [...next, event.input].sort((left, right) => left.created_at - right.created_at)
+          : next;
+      });
+    });
+  }, [conversation_id, enabled, refreshServerInputs]);
 
   useEffect(() => {
     if (waitingForBusyReleaseRef.current) {
@@ -699,6 +745,43 @@ export const useConversationCommandQueue = ({
     [conversation_id, enabled, mutate]
   );
 
+  useEffect(() => {
+    if (
+      !enabled ||
+      !serverSupported ||
+      migrationRunningRef.current ||
+      data.mode !== 'auto' ||
+      data.items.length === 0
+    ) {
+      return;
+    }
+    migrationRunningRef.current = true;
+    void (async () => {
+      for (const item of stateRef.current.items) {
+        try {
+          await ipcBridge.conversation.submitInput.invoke({
+            conversation_id,
+            mode: 'followup',
+            input: item.input,
+            files: item.files,
+            client_key: item.id,
+          });
+          await updateState((state) => ({
+            ...state,
+            items: removeQueuedCommand(state.items, item.id),
+            isPaused: false,
+          }));
+        } catch (error) {
+          console.warn('[conversation-command-queue] Local queue migration paused:', error);
+          break;
+        }
+      }
+      await refreshServerInputs();
+    })().finally(() => {
+      migrationRunningRef.current = false;
+    });
+  }, [conversation_id, data.items.length, data.mode, enabled, refreshServerInputs, serverSupported, updateState]);
+
   const clear = useCallback(() => {
     waitingForTurnStartRef.current = false;
     waitingForTurnCompletionRef.current = false;
@@ -706,8 +789,15 @@ export const useConversationCommandQueue = ({
     observedBusyBlockedGateRef.current = false;
     pausedRef.current = false;
     logCommandQueue(conversation_id, 'cleared');
+    for (const input of serverInputs) {
+      if (input.status !== 'held' && input.status !== 'dispatching') continue;
+      void ipcBridge.conversation.cancelInput
+        .invoke({ conversation_id, input_id: input.input_id })
+        .catch((error) => console.warn('[conversation-command-queue] Failed to cancel server input:', error));
+    }
+    setServerInputs([]);
     void updateState(() => createDefaultQueueState());
-  }, [conversation_id, updateState]);
+  }, [conversation_id, serverInputs, updateState]);
 
   useAddEventListener(
     'conversation.deleted',
@@ -752,9 +842,30 @@ export const useConversationCommandQueue = ({
         currentItemCount: currentState.items.length,
       });
       void updateState(() => nextState);
+      if (serverSupportedRef.current === true && nextState.mode === 'auto') {
+        void ipcBridge.conversation.submitInput
+          .invoke({
+            conversation_id,
+            mode: 'followup',
+            input: item.input,
+            files: item.files,
+            client_key: item.id,
+          })
+          .then(async () => {
+            await updateState((state) => ({
+              ...state,
+              items: removeQueuedCommand(state.items, item.id),
+              isPaused: false,
+            }));
+            await refreshServerInputs();
+          })
+          .catch((error) => {
+            console.warn('[conversation-command-queue] Server enqueue failed; retaining local fallback:', error);
+          });
+      }
       return item;
     },
-    [conversation_id, enabled, t, updateState]
+    [conversation_id, enabled, refreshServerInputs, t, updateState]
   );
 
   const update = useCallback(
@@ -804,6 +915,14 @@ export const useConversationCommandQueue = ({
         return;
       }
 
+      const serverInput = serverInputs.find((input) => input.input_id === commandId);
+      if (serverInput) {
+        void ipcBridge.conversation.cancelInput
+          .invoke({ conversation_id, input_id: commandId })
+          .then(() => setServerInputs((current) => current.filter((input) => input.input_id !== commandId)))
+          .catch((error) => Message.warning(error instanceof Error ? error.message : String(error)));
+        return;
+      }
       logCommandQueue(conversation_id, 'removed', {
         commandId,
       });
@@ -816,7 +935,7 @@ export const useConversationCommandQueue = ({
         };
       });
     },
-    [conversation_id, enabled, updateState]
+    [conversation_id, enabled, serverInputs, updateState]
   );
 
   const prioritize = useCallback(
@@ -1117,12 +1236,23 @@ export const useConversationCommandQueue = ({
     updateState,
   ]);
 
+  const serverQueueItems: ConversationCommandQueueItem[] = serverInputs
+    .filter((input) => input.status === 'held' || input.status === 'dispatching')
+    .map((input) => ({
+      id: input.input_id,
+      input: input.content,
+      files: input.files,
+      created_at: input.created_at,
+      managed_by_server: true,
+    }));
+  const visibleItems = [...serverQueueItems, ...data.items];
+
   return {
-    items: enabled ? data.items : [],
+    items: enabled ? visibleItems : [],
     isPaused: enabled ? data.isPaused : false,
     mode: enabled ? data.mode : 'auto',
     isInteractionLocked,
-    hasPendingCommands: enabled ? data.items.length > 0 : false,
+    hasPendingCommands: enabled ? visibleItems.length > 0 : false,
     enqueue,
     update,
     remove,
