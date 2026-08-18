@@ -1,5 +1,41 @@
 # Changelog
 
+## [2.1.74](https://github.com/suoak/AionUi/compare/v2.1.73...v2.1.74) (2026-08-18)
+
+### Desktop
+
+#### Features
+
+- **ui:** project persistent inputs and runtime capabilities (#71)
+
+#### 内网更新说明
+
+<!-- internal-release-notes:start -->
+
+**由运营管理部提供**
+
+- 输入队列改为由服务端持久化，应用重启后仍可恢复待发送内容和原有顺序。
+- 输入框会根据会话能力显示可用模式，轨迹面板会显示工具管控级别和关联执行信息。
+- 移除不可用的预览运行时安装入口，历史记录仍可识别并显示为已退役运行时。
+
+<!-- internal-release-notes:end -->
+
+### Core ([v0.1.78](https://github.com/suoak/AionCore/releases/tag/v0.1.78))
+
+#### Features
+
+- **conversation:** add journal-backed persistent input queues and capability contracts
+- **conversation:** retire the DeepSeek Harness runtime while preserving historical session compatibility
+- **journal:** shard append locks and maintain incremental sequence cursors
+- **tools:** expose enforcement levels for native, approval-gate, and observe-only execution
+
+#### Bug Fixes
+
+- **conversation:** preserve team ownership and retired-runtime gates before queue persistence
+- **deps:** update aionrs to v0.2.15 and h2 to the patched 0.4.16 release
+
+---
+
 ## [2.1.73](https://github.com/suoak/AionUi/compare/v2.1.72...v2.1.73) (2026-08-17)
 
 ### Desktop
