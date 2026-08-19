@@ -190,7 +190,9 @@ export const createQueuedCommandItem = ({
   input,
   files,
   mode,
-}: Pick<ConversationCommandQueueItem, 'input' | 'files'> & { mode?: ConversationInputMode }): ConversationCommandQueueItem => ({
+}: Pick<ConversationCommandQueueItem, 'input' | 'files'> & {
+  mode?: ConversationInputMode;
+}): ConversationCommandQueueItem => ({
   id: uuid(),
   input,
   files: uniqueFiles(files),
