@@ -8,10 +8,38 @@ import { describe, expect, it } from 'vitest';
 import type { Assistant } from '@/common/types/agent/assistantTypes';
 import type { ICronJob } from '@/common/adapter/ipcBridge';
 import { getJobAgentMeta } from '@/renderer/pages/cron/ScheduledTasksPage/jobAgentMeta';
+import workMateLogo from '@/renderer/assets/logos/brand/app.png';
 
 const LOGOS = { codex: '/api/assets/logos/tools/coding/codex.svg' };
 
 describe('getJobAgentMeta', () => {
+  it('uses the current product logo for generated WorkMate assistants', () => {
+    const meta = getJobAgentMeta(
+      cronJob({
+        metadata: {
+          agent_type: 'aionrs',
+          agent_config: {
+            assistant_id: 'workmate',
+            name: 'CSBU WorkMate',
+          },
+        },
+      }),
+      [
+        assistant({
+          id: 'workmate',
+          source: 'generated',
+          name: 'CSBU WorkMate',
+          avatar: 'legacy-workmate.svg',
+          agent: { type: 'aionrs', source: 'internal' },
+        }),
+      ],
+      LOGOS
+    );
+
+    expect(meta.logo).toBe(workMateLogo);
+    expect(meta.emoji).toBeUndefined();
+  });
+
   it('prefers assistant catalog metadata for assistant-backed jobs', () => {
     const meta = getJobAgentMeta(
       cronJob({

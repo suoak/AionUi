@@ -1055,25 +1055,6 @@ const SendBox: React.FC<{
     supportedExts,
     onFilesAdded,
     conversation_id: conversationContext?.conversation_id,
-    onTextPaste: (text: string) => {
-      // 处理清理后的文本粘贴，在当前光标位置插入文本而不是替换整个内容
-      const textarea = document.activeElement as HTMLTextAreaElement;
-      if (textarea && textarea.tagName === 'TEXTAREA') {
-        const cursorPosition = textarea.selectionStart;
-        const current_value = textarea.value;
-        const start = textarea.selectionStart ?? textarea.value.length;
-        const end = textarea.selectionEnd ?? start;
-        const newValue = current_value.slice(0, start) + text + current_value.slice(end);
-        setInput(newValue);
-        // 设置光标到插入文本后的位置
-        setTimeout(() => {
-          textarea.setSelectionRange(cursorPosition + text.length, cursorPosition + text.length);
-        }, 0);
-      } else {
-        // 如果无法获取光标位置，回退到追加到末尾的行为
-        setInput(text);
-      }
-    },
   });
   const markMobileFocusIntent = useCallback(() => {
     if (!isMobile) return;

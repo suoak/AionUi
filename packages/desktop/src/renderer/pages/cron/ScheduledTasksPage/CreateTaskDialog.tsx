@@ -23,10 +23,10 @@ import { buildAssistantModelInfo } from '@renderer/pages/guid/hooks/useGuidAssis
 import { WorkspaceFolderSelect } from '@renderer/components/workspace';
 import { createCronSchedule } from '@renderer/pages/cron/cronUtils';
 import { getConversationCreateErrorMessage } from '@renderer/pages/conversation/utils/conversationCreateError';
-import { resolveAssistantAvatar } from '@renderer/utils/model/assistantAvatar';
 import { resolveAssistantName } from '@renderer/utils/model/assistantDisplay';
 import { resolveCronAgentConfig } from './resolveCronAgentConfig';
 import { assistantRuntimeKey, isAionrsAssistant } from '@/common/types/agent/assistantTypes';
+import { resolveCronAssistantAvatar } from './jobAgentMeta';
 
 const FormItem = Form.Item;
 const TextArea = Input.TextArea;
@@ -257,6 +257,7 @@ const CreateTaskDialog: React.FC<CreateTaskDialogProps> = ({
 
   // Advanced settings state
   const [model_id, setModelId] = useState<string | undefined>(undefined);
+  const [selectedAionrsProviderId, setSelectedAionrsProviderId] = useState<string | undefined>(undefined);
   const [config_options, setConfigOptions] = useState<Record<string, string> | undefined>(undefined);
   const [workspace, setWorkspace] = useState<string | undefined>(undefined);
   const [selectedAssistantId, setSelectedAssistantId] = useState<string | undefined>(undefined);
@@ -292,6 +293,7 @@ const CreateTaskDialog: React.FC<CreateTaskDialogProps> = ({
       });
       // Populate advanced settings from editJob
       setModelId(editJob.metadata.agent_config?.model_id ?? editJob.metadata.agent_config?.model?.model);
+      setSelectedAionrsProviderId(editJob.metadata.agent_config?.model?.provider_id);
       setConfigOptions(editJob.metadata.agent_config?.config_options);
       setWorkspace(editJob.metadata.agent_config?.workspace);
     } else {
@@ -304,6 +306,7 @@ const CreateTaskDialog: React.FC<CreateTaskDialogProps> = ({
       setQueueEnabled(false);
       setAdvancedOpen(false);
       setModelId(undefined);
+      setSelectedAionrsProviderId(undefined);
       setConfigOptions(undefined);
       setWorkspace(undefined);
       setSelectedAssistantId(undefined);
@@ -384,16 +387,14 @@ const CreateTaskDialog: React.FC<CreateTaskDialogProps> = ({
   );
 
   // Build Gemini current_model from model_id for GuidModelSelector.
-  // For aionrs edit mode, prefer the exact provider_id stored in model —
-  // the same model name may exist across multiple providers, so fuzzy match
-  // would pick the wrong provider.
+  // Keep provider and model as one selection. Model names are not globally
+  // unique, so retaining only model_id can silently snap an edit back to a
+  // different provider.
   const geminiCurrentModel = useMemo<TProviderWithModel | undefined>(() => {
     if (resolvedBackend !== 'aionrs' || !model_id) return undefined;
 
-    const editedProviderId =
-      resolvedBackend === 'aionrs' ? editJob?.metadata.agent_config?.model?.provider_id : undefined;
-    if (editedProviderId) {
-      const byId = filteredProviders.find((p) => p.id === editedProviderId);
+    if (selectedAionrsProviderId) {
+      const byId = filteredProviders.find((p) => p.id === selectedAionrsProviderId);
       if (byId && getAvailableModels(byId).includes(model_id)) {
         return { ...byId, use_model: model_id } as TProviderWithModel;
       }
@@ -405,9 +406,10 @@ const CreateTaskDialog: React.FC<CreateTaskDialogProps> = ({
       }
     }
     return undefined;
-  }, [resolvedBackend, model_id, filteredProviders, getAvailableModels, editJob]);
+  }, [resolvedBackend, model_id, selectedAionrsProviderId, filteredProviders, getAvailableModels]);
 
   const handleGeminiModelSelect = useCallback(async (model: TProviderWithModel) => {
+    setSelectedAionrsProviderId(model.id);
     setModelId(model.use_model);
   }, []);
 
@@ -434,6 +436,7 @@ const CreateTaskDialog: React.FC<CreateTaskDialogProps> = ({
     for (const provider of aionrsProviders) {
       const models = getAvailableModels(provider);
       if (models.length > 0) {
+        setSelectedAionrsProviderId(provider.id);
         setModelId(models[0]);
         return;
       }
@@ -511,6 +514,7 @@ const CreateTaskDialog: React.FC<CreateTaskDialogProps> = ({
       form.setFieldsValue({ assistant: value });
       // Reset model and config_options when agent changes
       setModelId(undefined);
+      setSelectedAionrsProviderId(undefined);
       setConfigOptions(undefined);
       // Workspace remains unchanged (agent-agnostic)
     },
@@ -648,7 +652,7 @@ const CreateTaskDialog: React.FC<CreateTaskDialogProps> = ({
 
                 const assistant = presetAssistants.find((item) => item.id === assistantId);
                 const name = resolveAssistantName(assistant, localeKey, assistantId);
-                const avatar = resolveAssistantAvatar(assistant?.avatar);
+                const avatar = resolveCronAssistantAvatar(assistant);
 
                 return (
                   <div className='flex items-center gap-8px'>
@@ -666,7 +670,7 @@ const CreateTaskDialog: React.FC<CreateTaskDialogProps> = ({
             >
               {presetAssistants.map((assistant) => {
                 const name = resolveAssistantName(assistant, localeKey, assistant.name);
-                const avatar = resolveAssistantAvatar(assistant.avatar);
+                const avatar = resolveCronAssistantAvatar(assistant);
                 const disabled = isAionrsAssistant(assistant) && !hasAionrsProvider;
                 return (
                   <Option key={assistant.id} value={assistant.id} disabled={disabled}>
@@ -972,6 +976,7 @@ const CreateTaskDialog: React.FC<CreateTaskDialogProps> = ({
                         currentAcpCachedModelInfo={acpCachedModelInfo}
                         selectedAcpModel={model_id ?? null}
                         setSelectedAcpModel={handleAcpModelSelect}
+                        providerDropdownTrigger='click'
                       />
                     </div>
                   )}

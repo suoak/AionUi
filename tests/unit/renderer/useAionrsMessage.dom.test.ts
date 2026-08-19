@@ -10,6 +10,8 @@ import { useAionrsMessage } from '@/renderer/pages/conversation/platforms/aionrs
 import { getConversationOrNull } from '@/renderer/pages/conversation/utils/conversationCache';
 import { resetConversationTurnClockForTests } from '@/renderer/pages/conversation/utils/conversationTurnClock';
 import type { IResponseMessage } from '@/common/adapter/ipcBridge';
+import { STORAGE_KEYS } from '@/common/config/storageKeys';
+import { parseUsageLedger } from '@/renderer/utils/chat/tokenUsageLedger';
 
 const { addOrUpdateMessageMock, conversationUpdateInvokeMock, responseStreamOnMock, responseStreamHandlerRef } =
   vi.hoisted(() => ({
@@ -52,6 +54,7 @@ describe('useAionrsMessage turn clock', () => {
     resetConversationTurnClockForTests();
     conversationUpdateInvokeMock.mockResolvedValue(undefined);
     responseStreamHandlerRef.current = undefined;
+    localStorage.removeItem(STORAGE_KEYS.TOKEN_USAGE_LEDGER);
   });
 
   it('preserves the turn start timestamp when switching away and back to a running conversation', async () => {
@@ -197,5 +200,51 @@ describe('useAionrsMessage turn clock', () => {
     });
     expect(result.current.turnStartedAtMs).toBe(300_000);
     nowSpy.mockRestore();
+  });
+
+  it('records WorkMate token usage carried by the finish event', async () => {
+    vi.mocked(getConversationOrNull).mockResolvedValue({
+      id: 'conv-usage',
+      type: 'aionrs',
+      name: 'WorkMate chat',
+      extra: {},
+      assistant: {
+        id: 'workmate',
+        source: 'generated',
+        name: 'CSBU WorkMate',
+        avatar: '',
+        backend: 'aionrs',
+      },
+    } as never);
+
+    const { result } = renderHook(() => useAionrsMessage('conv-usage'));
+    await waitFor(() => {
+      expect(result.current.hasHydratedRunningState).toBe(true);
+    });
+
+    act(() => {
+      responseStreamHandlerRef.current?.({
+        type: 'finish',
+        turn_id: 'turn-usage',
+        data: { input_tokens: 922, output_tokens: 182 },
+        conversation_id: 'conv-usage',
+      } as unknown as IResponseMessage);
+    });
+
+    expect(result.current.tokenUsage).toMatchObject({
+      total_tokens: 1_104,
+      breakdown: { input_tokens: 922, output_tokens: 182 },
+    });
+    expect(parseUsageLedger(localStorage.getItem(STORAGE_KEYS.TOKEN_USAGE_LEDGER)).events).toEqual([
+      expect.objectContaining({
+        conversation_id: 'conv-usage',
+        turn_id: 'turn-usage',
+        backend: 'aionrs',
+        assistant_name: 'CSBU WorkMate',
+        input_tokens: 922,
+        output_tokens: 182,
+        source: 'aionrs',
+      }),
+    ]);
   });
 });

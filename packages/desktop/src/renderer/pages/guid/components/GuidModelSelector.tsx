@@ -38,6 +38,7 @@ type GuidModelSelectorProps = {
   setSelectedAcpModel: React.Dispatch<React.SetStateAction<string | null>>;
   thoughtLevelOption?: AgentRuntimeDerivedOption | null;
   onThoughtLevelSelect?: (value: string) => void;
+  providerDropdownTrigger?: 'hover' | 'click';
 };
 
 /** Composite id for a provider+model pair, so the shared flat model list can track selection. */
@@ -53,6 +54,7 @@ const GuidModelSelector: React.FC<GuidModelSelectorProps> = ({
   setSelectedAcpModel,
   thoughtLevelOption,
   onThoughtLevelSelect,
+  providerDropdownTrigger = 'hover',
 }) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
@@ -142,7 +144,7 @@ const GuidModelSelector: React.FC<GuidModelSelectorProps> = ({
 
     return (
       <Dropdown
-        trigger='hover'
+        trigger={providerDropdownTrigger}
         droplist={
           <Menu selectedKeys={currentProviderModelId ? [currentProviderModelId] : []}>
             {providerModelGroups.length === 0
