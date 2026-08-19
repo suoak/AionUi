@@ -147,8 +147,11 @@ const AionrsSendBox: React.FC<{
   const propagateMode = teamPermission?.propagateMode;
 
   useEffect(() => {
+    const getCapabilities = ipcBridge.conversation.getCapabilities;
+    if (!getCapabilities) return;
+
     let active = true;
-    void ipcBridge.conversation.getCapabilities
+    void getCapabilities
       .invoke({ conversation_id })
       .then((capabilities) => {
         if (active) setConversationCapabilities(capabilities);
