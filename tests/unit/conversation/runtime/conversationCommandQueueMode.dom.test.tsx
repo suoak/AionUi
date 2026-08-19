@@ -5,6 +5,7 @@
  */
 
 import { act, renderHook, waitFor } from '@testing-library/react';
+import { BackendHttpError } from '@/common/adapter/httpBridge';
 import { createElement, type PropsWithChildren } from 'react';
 import { SWRConfig } from 'swr';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
@@ -12,6 +13,20 @@ import {
   type ConversationCommandQueueRuntimeGate,
   useConversationCommandQueue,
 } from '@/renderer/pages/conversation/platforms/useConversationCommandQueue';
+
+const serverQueueMocks = vi.hoisted(() => ({
+  listInputs: vi.fn(),
+}));
+
+vi.mock('@/common', () => ({
+  ipcBridge: {
+    application: {},
+    conversation: {
+      listInputs: { invoke: serverQueueMocks.listInputs },
+      turnCompleted: { on: vi.fn(() => () => {}) },
+    },
+  },
+}));
 
 vi.mock('react-i18next', () => ({
   useTranslation: () => ({
@@ -87,6 +102,14 @@ const renderQueue = ({
 describe('useConversationCommandQueue mode & send-now', () => {
   beforeEach(() => {
     sessionStorage.clear();
+    serverQueueMocks.listInputs.mockRejectedValue(
+      new BackendHttpError({
+        method: 'GET',
+        path: '/api/conversations/conv/inputs',
+        status: 404,
+        body: { success: false, code: 'NOT_FOUND', error: 'legacy core' },
+      })
+    );
     vi.spyOn(console, 'info').mockImplementation(() => {});
   });
 

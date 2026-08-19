@@ -599,6 +599,7 @@ export const useConversationCommandQueue = ({
   const [executionGateVersion, setExecutionGateVersion] = useState(0);
   const [serverInputs, setServerInputs] = useState<IConversationInput[]>([]);
   const [serverSupported, setServerSupported] = useState(false);
+  const [serverSupportResolved, setServerSupportResolved] = useState(false);
   const serverSupportedRef = useRef<boolean | null>(null);
   const migrationRunningRef = useRef(false);
 
@@ -606,18 +607,21 @@ export const useConversationCommandQueue = ({
     if (!ipcBridge.conversation.listInputs?.invoke) {
       serverSupportedRef.current = false;
       setServerSupported(false);
+      setServerSupportResolved(true);
       return null;
     }
     try {
       const inputs = await ipcBridge.conversation.listInputs.invoke({ conversation_id });
       serverSupportedRef.current = true;
       setServerSupported(true);
+      setServerSupportResolved(true);
       setServerInputs(inputs);
       return inputs;
     } catch (error) {
       if (isBackendHttpError(error) && error.status === 404) {
         serverSupportedRef.current = false;
         setServerSupported(false);
+        setServerSupportResolved(true);
         setServerInputs([]);
         return null;
       }
@@ -636,6 +640,8 @@ export const useConversationCommandQueue = ({
 
   useEffect(() => {
     if (!enabled) return;
+    serverSupportedRef.current = null;
+    setServerSupportResolved(false);
     void refreshServerInputs();
     if (!ipcBridge.conversation.inputChanged?.on) return;
     return ipcBridge.conversation.inputChanged.on((event) => {
@@ -1181,6 +1187,8 @@ export const useConversationCommandQueue = ({
   useEffect(() => {
     if (
       !enabled ||
+      !serverSupportResolved ||
+      serverSupported ||
       data.mode === 'manual' ||
       !executionGate.hydrated ||
       pausedRef.current ||
@@ -1260,6 +1268,8 @@ export const useConversationCommandQueue = ({
     executionGate.hydrated,
     executionGate.isProcessing,
     isInteractionLocked,
+    serverSupportResolved,
+    serverSupported,
     t,
     updateState,
   ]);

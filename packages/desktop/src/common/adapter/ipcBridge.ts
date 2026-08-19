@@ -533,6 +533,7 @@ export const conversation = {
     created_at: number;
   }>('message.userCreated'),
   inputChanged: wsEmitter<IConversationInputChangedEvent>('conversation.inputChanged'),
+  cancellationChanged: wsEmitter<IConversationCancellationChangedEvent>('conversation.cancellationChanged'),
   artifactStream: wsEmitter<IConversationArtifact>('conversation.artifact'),
   turnCompleted: wsMappedEmitter<IConversationTurnCompletedEvent>('turn.completed', (raw) => {
     const r = raw as Record<string, unknown>;
@@ -1986,6 +1987,13 @@ export interface IConversationInputReceipt {
 export interface IConversationInputChangedEvent {
   user_id: string;
   input: IConversationInput;
+}
+
+export interface IConversationCancellationChangedEvent {
+  user_id: string;
+  conversation_id: string;
+  turn_id: string;
+  state: CancellationState;
 }
 
 interface ISubmitConversationInputParams {

@@ -15,6 +15,7 @@ import {
   compactionLockKey,
   isHostOnlyItem,
   isTranscriptReconstructible,
+  toolExecutionMetadata,
   trajectoryItemPreview,
   trajectoryKindI18nKey,
 } from './trajectoryModel';
@@ -123,6 +124,7 @@ const TrajectoryDrawer: React.FC<TrajectoryDrawerProps> = ({
           <Timeline>
             {items.map((item) => {
               const preview = trajectoryItemPreview(item);
+              const execution = toolExecutionMetadata(item);
               return (
                 <Timeline.Item key={`${item.sequence}:${item.event_id}`} label={`#${item.sequence}`}>
                   <div data-testid='conversation-trajectory-item' className='flex flex-col gap-6px min-w-0'>
@@ -141,6 +143,21 @@ const TrajectoryDrawer: React.FC<TrajectoryDrawerProps> = ({
                         <Tag size='small' color='orange'>
                           {t('conversation.trajectory.compacted')}
                         </Tag>
+                      )}
+                      {execution && (
+                        <>
+                          <Tag data-testid='conversation-tool-phase' size='small' color='arcoblue'>
+                            {execution.phase}
+                          </Tag>
+                          {execution.enforcement && (
+                            <Tag data-testid='conversation-tool-item-enforcement' size='small' color='green'>
+                              {execution.enforcement}
+                            </Tag>
+                          )}
+                          <Tag data-testid='conversation-tool-execution-id' size='small' title={execution.execution_id}>
+                            {execution.execution_id}
+                          </Tag>
+                        </>
                       )}
                     </div>
                     {preview ? <p className='m-0 text-12px text-t-secondary break-words'>{preview}</p> : null}

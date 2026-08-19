@@ -9,6 +9,7 @@ import type { TConversationRuntimeSummary } from '@/common/config/storage';
 import { getConversationOrNull } from '@/renderer/pages/conversation/utils/conversationCache';
 import { useCallback, useEffect, useSyncExternalStore } from 'react';
 import {
+  cancellationStateChanged,
   conversationDeleted,
   getConversationRuntimeViewSnapshot,
   hydrateFailed,
@@ -105,8 +106,9 @@ export const useConversationRuntimeView = (conversation_id: string): UseConversa
     }
 
     const turnCompletedEmitter = ipcBridge.conversation.turnCompleted;
+    const cancellationChangedEmitter = ipcBridge.conversation.cancellationChanged;
     const listChangedEmitter = ipcBridge.conversation.listChanged;
-    if (!turnCompletedEmitter || !listChangedEmitter) {
+    if (!turnCompletedEmitter || !cancellationChangedEmitter || !listChangedEmitter) {
       return;
     }
 
@@ -124,9 +126,17 @@ export const useConversationRuntimeView = (conversation_id: string): UseConversa
       flushRuntimeViewLogs(conversationDeleted(conversation_id));
     });
 
+    const disposeCancellationChanged = cancellationChangedEmitter.on((event) => {
+      if (event.conversation_id !== conversation_id) {
+        return;
+      }
+      flushRuntimeViewLogs(cancellationStateChanged(conversation_id, event.turn_id, event.state));
+    });
+
     return () => {
       disposeTurnCompleted();
       disposeListChanged();
+      disposeCancellationChanged();
     };
   }, [conversation_id]);
 

@@ -14,6 +14,12 @@ export type TrajectoryKindKey = 'assistant' | 'user' | 'tool' | 'turnStart' | 't
 
 export type TrajectoryLockKey = 'none' | 'open' | 'closed';
 
+export type ToolExecutionMetadata = {
+  execution_id: string;
+  phase: string;
+  enforcement?: string;
+};
+
 const PREVIEW_CHAR_LIMIT = 160;
 
 export function trajectoryKindKey(kind: string): TrajectoryKindKey {
@@ -55,6 +61,29 @@ export function isTranscriptReconstructible(
   transcript: Pick<JournalTranscript, 'model_surface_reconstructible'>
 ): boolean {
   return transcript.model_surface_reconstructible !== false;
+}
+
+export function toolExecutionMetadata(item: JournalTranscriptItem): ToolExecutionMetadata | null {
+  if (item.transcript_kind !== 'tool/call') {
+    return null;
+  }
+  const source = transcriptItemText(item).trim();
+  if (!source.startsWith('{')) {
+    return null;
+  }
+  try {
+    const value = JSON.parse(source) as Record<string, unknown>;
+    if (typeof value.execution_id !== 'string' || typeof value.phase !== 'string') {
+      return null;
+    }
+    return {
+      execution_id: value.execution_id,
+      phase: value.phase,
+      enforcement: typeof value.enforcement === 'string' ? value.enforcement : undefined,
+    };
+  } catch {
+    return null;
+  }
 }
 
 export function trajectoryItemPreview(item: JournalTranscriptItem): string {
