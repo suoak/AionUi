@@ -154,11 +154,7 @@ const TrajectoryDrawer: React.FC<TrajectoryDrawerProps> = ({
                               {execution.enforcement}
                             </Tag>
                           )}
-                          <Tag
-                            data-testid='conversation-tool-execution-id'
-                            size='small'
-                            title={execution.execution_id}
-                          >
+                          <Tag data-testid='conversation-tool-execution-id' size='small' title={execution.execution_id}>
                             {execution.execution_id}
                           </Tag>
                         </>
