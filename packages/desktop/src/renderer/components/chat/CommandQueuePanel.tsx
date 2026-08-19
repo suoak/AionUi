@@ -21,6 +21,15 @@ import { useTranslation } from 'react-i18next';
 
 const getCommandPreview = (input: string): string => input.replace(/\s+/g, ' ').trim();
 
+const QUEUE_STATUS_KEYS = {
+  held: 'conversation.commandQueue.statusHeld',
+  dispatching: 'conversation.commandQueue.statusDispatching',
+  accepted: 'conversation.commandQueue.statusAccepted',
+  applied: 'conversation.commandQueue.statusApplied',
+  canceled: 'conversation.commandQueue.statusCanceled',
+  failed: 'conversation.commandQueue.statusFailed',
+} as const;
+
 const createRestrictToQueueContainerModifier = (
   queueContainerRef: React.RefObject<HTMLDivElement | null>
 ): Modifier => {
@@ -234,7 +243,7 @@ const QueueItemCard: React.FC<QueueItemCardProps> = ({
           ) : null}
           {item.status ? (
             <span className='shrink-0 text-9px text-t-secondary' title={item.error_code}>
-              {t(`conversation.commandQueue.status.${item.status}`, { defaultValue: item.status })}
+              {t(QUEUE_STATUS_KEYS[item.status], { defaultValue: item.status })}
             </span>
           ) : null}
         </div>

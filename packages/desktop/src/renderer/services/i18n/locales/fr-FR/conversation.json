@@ -376,6 +376,16 @@
     "help": "Aide",
     "modeToggle": "Basculer le mode d'envoi",
     "clear": "Vider la file",
+    "retry": "Retry",
+    "inputMode": "Input mode",
+    "followup": "Followup",
+    "inject": "Inject",
+    "statusHeld": "Queued",
+    "statusDispatching": "Dispatching",
+    "statusAccepted": "Accepted",
+    "statusApplied": "Applied",
+    "statusCanceled": "Canceled",
+    "statusFailed": "Failed",
     "mode": {
       "manual": "Envoi manuel",
       "auto": "Envoi automatique"

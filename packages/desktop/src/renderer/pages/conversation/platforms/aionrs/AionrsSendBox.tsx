@@ -790,10 +790,10 @@ const AionrsSendBox: React.FC<{
                 aria-label={t('conversation.commandQueue.inputMode', { defaultValue: 'Input mode' })}
               >
                 <Select.Option value='followup'>
-                  {t('conversation.commandQueue.mode.followup', { defaultValue: 'Followup' })}
+                  {t('conversation.commandQueue.followup', { defaultValue: 'Followup' })}
                 </Select.Option>
                 <Select.Option value='inject'>
-                  {t('conversation.commandQueue.mode.inject', { defaultValue: 'Inject' })}
+                  {t('conversation.commandQueue.inject', { defaultValue: 'Inject' })}
                 </Select.Option>
               </Select>
             ) : null}

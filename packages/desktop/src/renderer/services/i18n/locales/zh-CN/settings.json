@@ -1447,6 +1447,7 @@
     "emptyTitle": "还没有用量记录",
     "emptyDescription": "完成一轮对话后，输入/输出 token 会出现在这里。记录保存在本机。",
     "unknownAgent": "未知 Agent",
+    "retiredRuntime": "已退役运行时",
     "unknownAssistant": "未知助手",
     "clear": "清空记录",
     "clearConfirm": "清空本机保存的全部用量历史？此操作无法撤销。",

@@ -376,6 +376,16 @@
     "help": "راهنما",
     "modeToggle": "تغییر حالت ارسال",
     "clear": "پاک کردن پیش‌نویس‌ها",
+    "retry": "Retry",
+    "inputMode": "Input mode",
+    "followup": "Followup",
+    "inject": "Inject",
+    "statusHeld": "Queued",
+    "statusDispatching": "Dispatching",
+    "statusAccepted": "Accepted",
+    "statusApplied": "Applied",
+    "statusCanceled": "Canceled",
+    "statusFailed": "Failed",
     "mode": {
       "manual": "ارسال دستی",
       "auto": "ارسال خودکار"

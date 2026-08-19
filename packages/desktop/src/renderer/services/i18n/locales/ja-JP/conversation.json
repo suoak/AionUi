@@ -376,6 +376,16 @@
     "help": "使い方",
     "modeToggle": "送信モードを切り替え",
     "clear": "ドラフトボックスをクリア",
+    "retry": "Retry",
+    "inputMode": "Input mode",
+    "followup": "Followup",
+    "inject": "Inject",
+    "statusHeld": "Queued",
+    "statusDispatching": "Dispatching",
+    "statusAccepted": "Accepted",
+    "statusApplied": "Applied",
+    "statusCanceled": "Canceled",
+    "statusFailed": "Failed",
     "mode": {
       "manual": "手動送信",
       "auto": "自動送信"

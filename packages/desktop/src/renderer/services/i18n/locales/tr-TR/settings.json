@@ -1446,6 +1446,7 @@
     "emptyTitle": "Henüz kullanım kaydı yok",
     "emptyDescription": "Bir tur tamamlandığında girdi/çıktı tokenleri burada görünür. Geçmiş bu cihazda saklanır.",
     "unknownAgent": "Bilinmeyen ajan",
+    "retiredRuntime": "Kullanımdan kaldırılan çalışma zamanı",
     "unknownAssistant": "Bilinmeyen asistan",
     "clear": "Geçmişi temizle",
     "clearConfirm": "Yerel olarak kaydedilen tüm kullanım geçmişi silinsin mi? Bu işlem geri alınamaz.",

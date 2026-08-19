@@ -1446,6 +1446,7 @@
     "emptyTitle": "Aún no hay uso registrado",
     "emptyDescription": "Al completar un turno, los tokens de entrada/salida aparecerán aquí. El historial se guarda en este dispositivo.",
     "unknownAgent": "Agente desconocido",
+    "retiredRuntime": "Entorno de ejecución retirado",
     "unknownAssistant": "Asistente desconocido",
     "clear": "Borrar historial",
     "clearConfirm": "¿Borrar todo el historial de uso guardado localmente? Esta acción no se puede deshacer.",

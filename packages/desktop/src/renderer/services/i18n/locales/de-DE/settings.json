@@ -1446,6 +1446,7 @@
     "emptyTitle": "Noch keine Nutzung erfasst",
     "emptyDescription": "Nach einer abgeschlossenen Runde erscheinen Eingabe-/Ausgabetoken hier. Der Verlauf bleibt auf diesem Gerät.",
     "unknownAgent": "Unbekannter Agent",
+    "retiredRuntime": "Eingestellte Laufzeit",
     "unknownAssistant": "Unbekannter Assistent",
     "clear": "Verlauf löschen",
     "clearConfirm": "Den gesamten lokal gespeicherten Nutzungsverlauf löschen? Das kann nicht rückgängig gemacht werden.",

@@ -376,6 +376,16 @@
     "help": "사용 안내",
     "modeToggle": "전송 모드 전환",
     "clear": "임시함 비우기",
+    "retry": "Retry",
+    "inputMode": "Input mode",
+    "followup": "Followup",
+    "inject": "Inject",
+    "statusHeld": "Queued",
+    "statusDispatching": "Dispatching",
+    "statusAccepted": "Accepted",
+    "statusApplied": "Applied",
+    "statusCanceled": "Canceled",
+    "statusFailed": "Failed",
     "mode": {
       "manual": "수동 전송",
       "auto": "자동 전송"
