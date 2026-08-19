@@ -10,9 +10,10 @@ import React from 'react';
 import { beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import type { Assistant } from '@/common/types/agent/assistantTypes';
 import type { ICronJob } from '@/common/adapter/ipcBridge';
-import type { TChatConversation } from '@/common/config/storage';
+import type { IProvider, TChatConversation, TProviderWithModel } from '@/common/config/storage';
 
 let currentAssistants: Assistant[] = [];
+let currentProviders: IProvider[] = [];
 
 vi.mock('react-i18next', () => ({
   useTranslation: () => ({
@@ -66,15 +67,36 @@ vi.mock('@renderer/pages/conversation/hooks/useConversationAssistants', () => ({
 
 vi.mock('@renderer/hooks/agent/useModelProviderList', () => ({
   useModelProviderList: () => ({
-    providers: [],
-    getAvailableModels: () => [],
+    providers: currentProviders,
+    getAvailableModels: (provider: IProvider) => provider.models ?? [],
     formatModelLabel: (label: string) => label,
   }),
 }));
 
 vi.mock('@renderer/pages/guid/components/GuidModelSelector', () => ({
   __esModule: true,
-  default: () => <div data-testid='guid-model-selector' />,
+  default: ({
+    current_model,
+    setCurrentModel,
+    providerDropdownTrigger,
+  }: {
+    current_model?: TProviderWithModel;
+    setCurrentModel: (model: TProviderWithModel) => Promise<void>;
+    providerDropdownTrigger?: string;
+  }) => (
+    <div data-testid='guid-model-selector' data-trigger={providerDropdownTrigger}>
+      <span data-testid='selected-cron-model'>{current_model?.use_model}</span>
+      <button
+        type='button'
+        data-testid='select-deepseek-model'
+        onClick={() =>
+          void setCurrentModel({ ...currentProviders[1], use_model: 'deepseek-v4-pro' } as TProviderWithModel)
+        }
+      >
+        DeepSeek
+      </button>
+    </div>
+  ),
 }));
 
 vi.mock('@renderer/components/workspace', () => ({
@@ -141,6 +163,7 @@ describe('CreateTaskDialog', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     currentAssistants = assistants();
+    currentProviders = [];
     vi.mocked(ipcBridge.cron.addJob.invoke).mockResolvedValue(job());
     vi.mocked(ipcBridge.cron.updateJob.invoke).mockResolvedValue(job());
     vi.mocked(ipcBridge.cron.createJob.invoke).mockResolvedValue(job());
@@ -239,6 +262,26 @@ describe('CreateTaskDialog', () => {
     render(<CreateTaskDialog visible onClose={() => {}} editJob={job()} />);
 
     expect(await screen.findByText('问好助手')).toBeInTheDocument();
+  });
+
+  it('persists a model switch together with its provider when editing a task', async () => {
+    const user = userEvent.setup();
+    currentAssistants = [aionrsAssistant()];
+    currentProviders = aionrsProviders();
+
+    render(<CreateTaskDialog visible onClose={() => {}} editJob={aionrsJob()} />);
+
+    expect(await screen.findByTestId('selected-cron-model')).toHaveTextContent('Qwen3-27B');
+    expect(screen.getByTestId('guid-model-selector')).toHaveAttribute('data-trigger', 'click');
+    await user.click(screen.getByTestId('select-deepseek-model'));
+    expect(screen.getByTestId('selected-cron-model')).toHaveTextContent('deepseek-v4-pro');
+    await user.click(screen.getByTestId('modal-ok'));
+
+    await waitFor(() => expect(resolveCronAgentConfig).toHaveBeenCalledTimes(1));
+    expect(vi.mocked(resolveCronAgentConfig).mock.calls[0][0]).toMatchObject({
+      model_id: 'deepseek-v4-pro',
+      selectedAionrsProvider: { id: 'deepseek-provider', name: 'New API' },
+    });
   });
 
   it('does not infer assistant identity from legacy backend fields after migration ownership moved server-side', async () => {
@@ -503,4 +546,55 @@ function bareAssistant(): Assistant {
     prompts_i18n: {},
     models: [],
   } as Assistant;
+}
+
+function aionrsAssistant(): Assistant {
+  return {
+    ...bareAssistant(),
+    id: 'workmate',
+    source: 'generated',
+    name: 'CSBU WorkMate',
+    avatar: 'legacy-workmate.svg',
+    agent_id: 'agent-aionrs',
+    agent: { type: 'aionrs', source: 'internal' },
+  } as Assistant;
+}
+
+function aionrsJob(): ICronJob {
+  return {
+    ...job(),
+    metadata: {
+      ...job().metadata,
+      agent_type: 'aionrs',
+      agent_config: {
+        assistant_id: 'workmate',
+        name: 'CSBU WorkMate',
+        model_id: 'Qwen3-27B',
+        model: {
+          provider_id: 'qwen-provider',
+          model: 'Qwen3-27B',
+          use_model: 'Qwen3-27B',
+        },
+      },
+    },
+  } as ICronJob;
+}
+
+function aionrsProviders(): IProvider[] {
+  return [
+    {
+      id: 'qwen-provider',
+      name: 'Custom Qwen',
+      platform: 'custom',
+      models: ['Qwen3-27B'],
+      enabled: true,
+    } as IProvider,
+    {
+      id: 'deepseek-provider',
+      name: 'New API',
+      platform: 'new-api',
+      models: ['deepseek-v4-pro'],
+      enabled: true,
+    } as IProvider,
+  ];
 }

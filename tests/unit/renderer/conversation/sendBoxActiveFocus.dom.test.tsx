@@ -8,8 +8,9 @@ import { act, render, screen, waitFor } from '@testing-library/react';
 import React, { useState } from 'react';
 import { describe, expect, it, vi } from 'vitest';
 
-const { layoutState } = vi.hoisted(() => ({
+const { layoutState, usePasteServiceMock } = vi.hoisted(() => ({
   layoutState: { isMobile: false },
+  usePasteServiceMock: vi.fn(() => ({ onPaste: vi.fn(), onFocus: vi.fn() })),
 }));
 
 vi.mock('react-i18next', () => ({
@@ -95,7 +96,7 @@ vi.mock('@/renderer/hooks/file/useDragUpload', () => ({
 }));
 
 vi.mock('@/renderer/hooks/file/usePasteService', () => ({
-  usePasteService: () => ({ onPaste: vi.fn(), onFocus: vi.fn() }),
+  usePasteService: usePasteServiceMock,
 }));
 
 vi.mock('@/renderer/hooks/file/useUploadState', () => ({
@@ -150,6 +151,15 @@ const SendBoxHarness = ({
 };
 
 describe('SendBox active-controlled focus', () => {
+  it('delegates plain text paste to the native textarea undo history', () => {
+    layoutState.isMobile = false;
+    render(<SendBoxHarness active={false} />);
+
+    expect(usePasteServiceMock).toHaveBeenLastCalledWith(
+      expect.not.objectContaining({ onTextPaste: expect.any(Function) })
+    );
+  });
+
   it('focuses the textarea on mount when active is true (desktop)', async () => {
     layoutState.isMobile = false;
     render(<SendBoxHarness active={true} />);

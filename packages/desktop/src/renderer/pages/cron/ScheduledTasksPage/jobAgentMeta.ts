@@ -8,7 +8,16 @@ import type { ICronJob } from '@/common/adapter/ipcBridge';
 import type { AgentLogoMap } from '@renderer/utils/model/agentLogo';
 import { resolveAgentLogo } from '@renderer/utils/model/agentLogo';
 import { resolveAssistantAvatar } from '@renderer/utils/model/assistantAvatar';
-import type { Assistant } from '@/common/types/agent/assistantTypes';
+import workMateLogo from '@/renderer/assets/logos/brand/app.png';
+import { usesWorkMateBrand, type Assistant } from '@/common/types/agent/assistantTypes';
+
+/** Resolve a cron assistant avatar while enforcing the current product brand. */
+export function resolveCronAssistantAvatar(assistant: Assistant | undefined) {
+  if (usesWorkMateBrand(assistant)) {
+    return { kind: 'image', value: workMateLogo } as const;
+  }
+  return resolveAssistantAvatar(assistant?.avatar);
+}
 
 function normalizeAgentBackend(agent: string | undefined): string | undefined {
   if (!agent) return undefined;
@@ -40,7 +49,7 @@ export function getJobAgentMeta(
 
     const rawType = normalizeAgentBackend(job.metadata.agent_type);
     const displayName = assistant.name || rawType;
-    const avatar = resolveAssistantAvatar(assistant.avatar);
+    const avatar = resolveCronAssistantAvatar(assistant);
     if (avatar.kind === 'image') {
       return { name: displayName, logo: avatar.value };
     }
