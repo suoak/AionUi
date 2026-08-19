@@ -1448,6 +1448,7 @@
     "emptyTitle": "使用量はまだありません",
     "emptyDescription": "ターン完了後に入力／出力トークンがここに表示されます。履歴はこの端末に保存されます。",
     "unknownAgent": "不明なエージェント",
+    "retiredRuntime": "廃止済みランタイム",
     "unknownAssistant": "不明なアシスタント",
     "clear": "履歴を削除",
     "clearConfirm": "この端末に保存された使用量履歴をすべて削除しますか？元に戻せません。",

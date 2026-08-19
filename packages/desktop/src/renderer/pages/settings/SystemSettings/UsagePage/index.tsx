@@ -117,7 +117,7 @@ const UsagePage: React.FC = () => {
   );
   const daily = useMemo(() => buildUsageDailySeries(scopedEvents, range), [range, scopedEvents]);
   const byAgent = useMemo(
-    () => breakdownUsageByAgent(scopedEvents, t('settings.usage.unknownAgent')),
+    () => breakdownUsageByAgent(scopedEvents, t('settings.usage.unknownAgent'), t('settings.usage.retiredRuntime')),
     [scopedEvents, t]
   );
   const byAssistant = useMemo(

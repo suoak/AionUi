@@ -376,6 +376,16 @@
     "help": "使用說明",
     "modeToggle": "切換發送模式",
     "clear": "清空草稿箱",
+    "retry": "重試",
+    "inputMode": "輸入模式",
+    "followup": "後續訊息",
+    "inject": "注入目前輪次",
+    "statusHeld": "排隊中",
+    "statusDispatching": "派發中",
+    "statusAccepted": "已接受",
+    "statusApplied": "已套用",
+    "statusCanceled": "已取消",
+    "statusFailed": "失敗",
     "mode": {
       "manual": "手動發送",
       "auto": "自動發送"

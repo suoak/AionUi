@@ -1,5 +1,5 @@
 import { ipcBridge } from '@/common';
-import type { IConversationInput } from '@/common/adapter/ipcBridge';
+import type { ConversationInputMode, ConversationInputStatus, IConversationInput } from '@/common/adapter/ipcBridge';
 import { isBackendHttpError } from '@/common/adapter/httpBridge';
 import { type ChatFileRef, chatFileRefKey, isChatFileRef } from '@/common/types/chatFile';
 import { uuid } from '@/common/utils';
@@ -20,6 +20,9 @@ export type ConversationCommandQueueItem = {
   files: ChatFileRef[];
   created_at: number;
   managed_by_server?: boolean;
+  mode?: ConversationInputMode;
+  status?: ConversationInputStatus;
+  error_code?: string;
 };
 
 export type ConversationCommandQueueMode = 'auto' | 'manual';
@@ -132,6 +135,7 @@ const normalizeQueueItem = (item: unknown): ConversationCommandQueueItem | null 
     // narrow the array element type, so assert it here.
     files: uniqueFiles(candidate.files as ChatFileRef[]),
     created_at: candidate.created_at,
+    mode: candidate.mode === 'inject' || candidate.mode === 'steer' ? candidate.mode : 'followup',
   };
 
   if (
@@ -185,11 +189,15 @@ export const estimateQueueStateBytes = (state: ConversationCommandQueueState): n
 export const createQueuedCommandItem = ({
   input,
   files,
-}: Pick<ConversationCommandQueueItem, 'input' | 'files'>): ConversationCommandQueueItem => ({
+  mode,
+}: Pick<ConversationCommandQueueItem, 'input' | 'files'> & {
+  mode?: ConversationInputMode;
+}): ConversationCommandQueueItem => ({
   id: uuid(),
   input,
   files: uniqueFiles(files),
   created_at: Date.now(),
+  mode: mode ?? 'followup',
 });
 
 const getQueueValidationFailureReason = (state: ConversationCommandQueueState): QueueValidationFailureReason | null => {
@@ -392,7 +400,7 @@ type UseConversationCommandQueueOptions = {
   onExecute: (item: ConversationCommandQueueItem) => Promise<void>;
 };
 
-type EnqueueCommandInput = Pick<ConversationCommandQueueItem, 'input' | 'files'>;
+type EnqueueCommandInput = Pick<ConversationCommandQueueItem, 'input' | 'files'> & { mode?: ConversationInputMode };
 type UpdateCommandInput = Pick<ConversationCommandQueueItem, 'input'>;
 type BackgroundCommandQueueRunner = {
   conversation_id: string;
@@ -634,7 +642,7 @@ export const useConversationCommandQueue = ({
       if (event.input.conversation_id !== conversation_id) return;
       setServerInputs((current) => {
         const next = current.filter((input) => input.input_id !== event.input.input_id);
-        return event.input.status === 'held' || event.input.status === 'dispatching'
+        return ['held', 'dispatching', 'accepted', 'failed'].includes(event.input.status)
           ? [...next, event.input].sort((left, right) => left.created_at - right.created_at)
           : next;
       });
@@ -812,13 +820,13 @@ export const useConversationCommandQueue = ({
   );
 
   const enqueue = useCallback(
-    ({ input, files }: EnqueueCommandInput) => {
+    ({ input, files, mode }: EnqueueCommandInput) => {
       if (!enabled) {
         return null;
       }
 
       const currentState = normalizeQueueState(stateRef.current);
-      const item = createQueuedCommandItem({ input, files });
+      const item = createQueuedCommandItem({ input, files, mode });
       const validation = validateQueuedCommandItem(item, currentState);
 
       if (isQueueValidationFailure(validation)) {
@@ -846,7 +854,7 @@ export const useConversationCommandQueue = ({
         void ipcBridge.conversation.submitInput
           .invoke({
             conversation_id,
-            mode: 'followup',
+            mode: item.mode ?? 'followup',
             input: item.input,
             files: item.files,
             client_key: item.id,
@@ -936,6 +944,26 @@ export const useConversationCommandQueue = ({
       });
     },
     [conversation_id, enabled, serverInputs, updateState]
+  );
+
+  const retry = useCallback(
+    (commandId: string) => {
+      const input = serverInputs.find((candidate) => candidate.input_id === commandId && candidate.status === 'failed');
+      if (!input) return;
+      void ipcBridge.conversation.submitInput
+        .invoke({
+          conversation_id,
+          mode: input.mode,
+          input: input.content,
+          files: input.files,
+          inject_skills: input.inject_skills,
+          hidden: input.hidden,
+          client_key: input.client_key,
+        })
+        .then(() => refreshServerInputs())
+        .catch((error) => Message.warning(error instanceof Error ? error.message : String(error)));
+    },
+    [conversation_id, refreshServerInputs, serverInputs]
   );
 
   const prioritize = useCallback(
@@ -1237,13 +1265,17 @@ export const useConversationCommandQueue = ({
   ]);
 
   const serverQueueItems: ConversationCommandQueueItem[] = serverInputs
-    .filter((input) => input.status === 'held' || input.status === 'dispatching')
+    .filter((input) => ['held', 'dispatching', 'accepted', 'failed'].includes(input.status))
+    .slice(-MAX_QUEUED_COMMANDS)
     .map((input) => ({
       id: input.input_id,
       input: input.content,
       files: input.files,
       created_at: input.created_at,
       managed_by_server: true,
+      mode: input.mode,
+      status: input.status,
+      error_code: input.error_code,
     }));
   const visibleItems = [...serverQueueItems, ...data.items];
 
@@ -1256,6 +1288,7 @@ export const useConversationCommandQueue = ({
     enqueue,
     update,
     remove,
+    retry,
     prioritize,
     sendNow,
     clear,

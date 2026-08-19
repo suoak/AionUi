@@ -376,6 +376,16 @@
     "help": "Ayuda",
     "modeToggle": "Cambiar modo de envío",
     "clear": "Vaciar borradores",
+    "retry": "Retry",
+    "inputMode": "Input mode",
+    "followup": "Followup",
+    "inject": "Inject",
+    "statusHeld": "Queued",
+    "statusDispatching": "Dispatching",
+    "statusAccepted": "Accepted",
+    "statusApplied": "Applied",
+    "statusCanceled": "Canceled",
+    "statusFailed": "Failed",
     "mode": {
       "manual": "Envío manual",
       "auto": "Envío automático"

@@ -421,7 +421,10 @@ export const conversation = {
     (p) => `/api/conversations/${p.conversation_id}/active-lease`,
     () => undefined
   ),
-  stop: httpPost<{ runtime: TConversationRuntimeSummary }, { conversation_id: string; turn_id: string }>(
+  stop: httpPost<
+    { runtime: TConversationRuntimeSummary; cancellation_state?: CancellationState },
+    { conversation_id: string; turn_id: string }
+  >(
     (p) => `/api/conversations/${p.conversation_id}/cancel`,
     (p) => ({ turn_id: p.turn_id })
   ),
@@ -1948,6 +1951,7 @@ interface ISendMessageParams {
 export type ConversationInputMode = 'followup' | 'steer' | 'inject';
 export type ConversationInputStatus = 'held' | 'dispatching' | 'accepted' | 'applied' | 'canceled' | 'failed';
 export type ToolEnforcementLevel = 'native' | 'approval-gate' | 'observe-only';
+export type CancellationState = 'requested' | 'cancelling' | 'converged_idle' | 'force_terminated' | 'failed';
 
 export interface IConversationCapabilities {
   followup: boolean;

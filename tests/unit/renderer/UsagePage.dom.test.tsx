@@ -150,7 +150,7 @@ describe('UsagePage', () => {
     expect(screen.queryByTestId('usage-empty-state')).toBeNull();
     expect(screen.getByTestId('usage-trend-chart')).toBeTruthy();
     expect(screen.getAllByTestId('usage-breakdown-row').length).toBeGreaterThan(0);
-    expect(screen.getAllByText('deepseek-harness').length).toBeGreaterThan(0);
+    expect(screen.getAllByText('settings.usage.retiredRuntime').length).toBeGreaterThan(0);
     expect(screen.getByText('DeepSeek Preview')).toBeTruthy();
     expect(screen.getByText('Harness preview chat')).toBeTruthy();
     expect(screen.getByTestId('usage-model-filter')).toBeTruthy();

@@ -332,11 +332,16 @@ const sortBreakdown = (rows: Map<string, UsageBreakdownRow>): UsageBreakdownRow[
     (left, right) => right.total_tokens - left.total_tokens || right.turn_count - left.turn_count
   );
 
-export function breakdownUsageByAgent(events: UsageEvent[], unknownLabel: string): UsageBreakdownRow[] {
+export function breakdownUsageByAgent(
+  events: UsageEvent[],
+  unknownLabel: string,
+  retiredRuntimeLabel = 'Retired runtime'
+): UsageBreakdownRow[] {
   const rows = new Map<string, UsageBreakdownRow>();
   for (const event of events) {
     const key = event.backend.trim() || 'unknown';
-    addBreakdownRow(rows, key, key === 'unknown' ? unknownLabel : event.backend, event);
+    const label = key === 'deepseek-harness' ? retiredRuntimeLabel : key === 'unknown' ? unknownLabel : event.backend;
+    addBreakdownRow(rows, key, label, event);
   }
   return sortBreakdown(rows);
 }

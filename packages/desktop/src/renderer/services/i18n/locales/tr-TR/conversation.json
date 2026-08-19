@@ -365,6 +365,16 @@
     "help": "Yardım",
     "modeToggle": "Gönderim modunu değiştir",
     "clear": "Taslak kutusunu temizle",
+    "retry": "Retry",
+    "inputMode": "Input mode",
+    "followup": "Followup",
+    "inject": "Inject",
+    "statusHeld": "Queued",
+    "statusDispatching": "Dispatching",
+    "statusAccepted": "Accepted",
+    "statusApplied": "Applied",
+    "statusCanceled": "Canceled",
+    "statusFailed": "Failed",
     "mode": {
       "manual": "Elle gönder",
       "auto": "Otomatik gönder"

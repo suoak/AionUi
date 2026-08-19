@@ -15,11 +15,20 @@ import {
 import { SortableContext, useSortable, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { Button, Dropdown, Menu, Modal, Tooltip, Typography } from '@arco-design/web-react';
-import { CornerDownRight, Delete, Drag, Edit, Inbox, MoreOne, SendOne, SortTwo } from '@icon-park/react';
+import { CornerDownRight, Delete, Drag, Edit, Inbox, MoreOne, Refresh, SendOne, SortTwo } from '@icon-park/react';
 import React, { useMemo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 
 const getCommandPreview = (input: string): string => input.replace(/\s+/g, ' ').trim();
+
+const QUEUE_STATUS_KEYS = {
+  held: 'conversation.commandQueue.statusHeld',
+  dispatching: 'conversation.commandQueue.statusDispatching',
+  accepted: 'conversation.commandQueue.statusAccepted',
+  applied: 'conversation.commandQueue.statusApplied',
+  canceled: 'conversation.commandQueue.statusCanceled',
+  failed: 'conversation.commandQueue.statusFailed',
+} as const;
 
 const createRestrictToQueueContainerModifier = (
   queueContainerRef: React.RefObject<HTMLDivElement | null>
@@ -55,6 +64,7 @@ type CommandQueuePanelProps = {
   onToggleMode: () => void;
   onReorder: (activeCommandId: string, overCommandId: string) => void;
   onRemove: (commandId: string) => void;
+  onRetry?: (commandId: string) => void;
   onClear: () => void;
 };
 
@@ -78,6 +88,7 @@ type SortableQueueItemProps = {
   onEdit?: (item: ConversationCommandQueueItem) => void;
   onSendNow: (item: ConversationCommandQueueItem) => void;
   onRemove: (commandId: string) => void;
+  onRetry?: (commandId: string) => void;
   onDragHandlePointerDown: (event: React.PointerEvent<HTMLButtonElement>) => void;
 };
 
@@ -93,6 +104,7 @@ type QueueItemCardProps = {
   onEdit?: (item: ConversationCommandQueueItem) => void;
   onSendNow: (item: ConversationCommandQueueItem) => void;
   onRemove: (commandId: string) => void;
+  onRetry?: (commandId: string) => void;
   onDragHandlePointerDown: (event: React.PointerEvent<HTMLButtonElement>) => void;
   dragHandleButtonProps: React.ButtonHTMLAttributes<HTMLButtonElement>;
   dragHandleRef: (element: HTMLButtonElement | null) => void;
@@ -148,6 +160,7 @@ const QueueItemCard: React.FC<QueueItemCardProps> = ({
   onEdit,
   onSendNow,
   onRemove,
+  onRetry,
   onDragHandlePointerDown,
   dragHandleButtonProps,
   dragHandleRef,
@@ -228,9 +241,22 @@ const QueueItemCard: React.FC<QueueItemCardProps> = ({
               {fileCountLabel}
             </span>
           ) : null}
+          {item.status ? (
+            <span className='shrink-0 text-9px text-t-secondary' title={item.error_code}>
+              {t(QUEUE_STATUS_KEYS[item.status], { defaultValue: item.status })}
+            </span>
+          ) : null}
         </div>
       </div>
       <div className='flex items-center gap-0.5 shrink-0'>
+        {item.status === 'failed'
+          ? renderQueueActionIconButton({
+              ariaLabel: t('conversation.commandQueue.retry', { defaultValue: 'Retry' }),
+              onClick: () => onRetry?.(item.id),
+              icon: <Refresh theme='outline' size='14' strokeWidth={2.5} />,
+              accent: true,
+            })
+          : null}
         {renderQueueActionIconButton({
           ariaLabel: t('conversation.commandQueue.sendNow', { defaultValue: 'Send now' }),
           disabled: item.managed_by_server,
@@ -240,12 +266,14 @@ const QueueItemCard: React.FC<QueueItemCardProps> = ({
         })}
         {renderQueueActionIconButton({
           ariaLabel: t('conversation.commandQueue.edit', { defaultValue: 'Edit' }),
-          onClick: () => onEdit?.(item),
+          disabled: item.managed_by_server,
+          onClick: item.managed_by_server ? undefined : () => onEdit?.(item),
           icon: <Edit theme='outline' size='14' strokeWidth={2.5} />,
         })}
         {renderQueueActionIconButton({
           ariaLabel: t('conversation.commandQueue.remove', { defaultValue: 'Remove' }),
-          onClick: () => onRemove(item.id),
+          disabled: item.status === 'accepted' || item.status === 'failed',
+          onClick: item.status === 'accepted' || item.status === 'failed' ? undefined : () => onRemove(item.id),
           icon: <Delete theme='outline' size='14' strokeWidth={2.5} />,
           danger: true,
         })}
@@ -265,6 +293,7 @@ const SortableQueueItem: React.FC<SortableQueueItemProps> = ({
   onEdit,
   onSendNow,
   onRemove,
+  onRetry,
   onDragHandlePointerDown,
 }) => {
   const { attributes, listeners, setNodeRef, setActivatorNodeRef, transform, transition, isDragging } = useSortable({
@@ -294,6 +323,7 @@ const SortableQueueItem: React.FC<SortableQueueItemProps> = ({
         onEdit={onEdit}
         onSendNow={onSendNow}
         onRemove={onRemove}
+        onRetry={onRetry}
         onDragHandlePointerDown={onDragHandlePointerDown}
         dragHandleRef={dragViaCard ? undefined : setActivatorNodeRef}
         dragHandleButtonProps={
@@ -330,6 +360,7 @@ const CommandQueuePanel: React.FC<CommandQueuePanelProps> = ({
   onToggleMode,
   onReorder,
   onRemove,
+  onRetry,
   onClear,
 }) => {
   const { t } = useTranslation();
@@ -558,6 +589,7 @@ const CommandQueuePanel: React.FC<CommandQueuePanelProps> = ({
                     onEdit={onEdit}
                     onSendNow={onSendNow}
                     onRemove={onRemove}
+                    onRetry={onRetry}
                     onDragHandlePointerDown={(event) => {
                       activeDragHandleRef.current = event.currentTarget;
                     }}

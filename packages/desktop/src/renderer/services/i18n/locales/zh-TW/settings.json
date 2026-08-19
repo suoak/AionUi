@@ -1448,6 +1448,7 @@
     "emptyTitle": "尚無用量紀錄",
     "emptyDescription": "完成一輪對話後，輸入/輸出 token 會出現在這裡。紀錄保存在本機。",
     "unknownAgent": "未知 Agent",
+    "retiredRuntime": "已退役執行環境",
     "unknownAssistant": "未知助手",
     "clear": "清除紀錄",
     "clearConfirm": "清除本機儲存的全部用量歷史？此操作無法復原。",

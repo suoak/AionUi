@@ -1446,6 +1446,7 @@
     "emptyTitle": "No usage recorded yet",
     "emptyDescription": "After you complete a turn, input/output tokens land here. This history stays on this device.",
     "unknownAgent": "Unknown agent",
+    "retiredRuntime": "Retired runtime",
     "unknownAssistant": "Unknown assistant",
     "clear": "Clear history",
     "clearConfirm": "Clear all locally recorded usage history? This cannot be undone.",

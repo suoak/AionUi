@@ -406,6 +406,7 @@ Please check your local CLI tool authentication status`,
     hasPendingCommands,
     enqueue,
     remove,
+    retry,
     prioritize,
     sendNow,
     clear,
@@ -733,6 +734,7 @@ Please check your local CLI tool authentication status`,
         onToggleMode={toggleMode}
         onReorder={reorder}
         onRemove={remove}
+        onRetry={retry}
         onClear={clear}
       />
       <ThoughtDisplay

@@ -1449,6 +1449,7 @@
     "emptyTitle": "Nenhum uso registrado ainda",
     "emptyDescription": "Após concluir um turno, os tokens de entrada/saída aparecem aqui. O histórico fica neste dispositivo.",
     "unknownAgent": "Agente desconhecido",
+    "retiredRuntime": "Runtime descontinuado",
     "unknownAssistant": "Assistente desconhecido",
     "clear": "Limpar histórico",
     "clearConfirm": "Limpar todo o histórico de uso salvo localmente? Isso não pode ser desfeito.",

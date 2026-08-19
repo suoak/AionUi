@@ -376,6 +376,16 @@
     "help": "Hilfe",
     "modeToggle": "Sendemodus umschalten",
     "clear": "Entwurfsbox leeren",
+    "retry": "Retry",
+    "inputMode": "Input mode",
+    "followup": "Followup",
+    "inject": "Inject",
+    "statusHeld": "Queued",
+    "statusDispatching": "Dispatching",
+    "statusAccepted": "Accepted",
+    "statusApplied": "Applied",
+    "statusCanceled": "Canceled",
+    "statusFailed": "Failed",
     "mode": {
       "manual": "Manuell senden",
       "auto": "Auto senden"

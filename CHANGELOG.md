@@ -1,5 +1,32 @@
 # Changelog
 
+## [2.1.75](https://github.com/suoak/AionUi/compare/v2.1.74...v2.1.75) (2026-08-19)
+
+### Desktop
+
+#### Features
+
+- **conversation:** expose durable input modes, lifecycle states, retry actions, and native injection
+- **usage:** label historical DeepSeek Harness records as a retired runtime without an install action
+
+#### Bug Fixes
+
+- **conversation:** preserve model selection and editor focus across conversation workflows
+- **conversation:** remain compatible with clients that do not expose the capability bridge
+
+### Core ([v0.1.79](https://github.com/suoak/AionCore/releases/tag/v0.1.79))
+
+#### Features
+
+- **conversation:** recover durable input queues after restart and apply native aionrs injection
+- **conversation:** report typed input and cancellation lifecycle states
+
+#### Bug Fixes
+
+- **agent:** preserve terminal usage and completion state across runtime paths
+
+---
+
 ## [2.1.74](https://github.com/suoak/AionUi/compare/v2.1.73...v2.1.74) (2026-08-18)
 
 ### Desktop

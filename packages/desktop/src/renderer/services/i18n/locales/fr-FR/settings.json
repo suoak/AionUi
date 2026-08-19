@@ -1446,6 +1446,7 @@
     "emptyTitle": "Aucune utilisation enregistrée",
     "emptyDescription": "Après un tour terminé, les jetons d’entrée/sortie apparaissent ici. L’historique reste sur cet appareil.",
     "unknownAgent": "Agent inconnu",
+    "retiredRuntime": "Environnement d’exécution retiré",
     "unknownAssistant": "Assistant inconnu",
     "clear": "Effacer l’historique",
     "clearConfirm": "Effacer tout l’historique d’utilisation enregistré localement ? Cette action est irréversible.",

@@ -197,6 +197,7 @@ describe('tokenUsageAggregate', () => {
 
     expect(breakdownUsageByAgent(events, 'Unknown agent')[0]).toMatchObject({
       key: 'deepseek-harness',
+      label: 'Retired runtime',
       total_tokens: 44,
       turn_count: 2,
     });
