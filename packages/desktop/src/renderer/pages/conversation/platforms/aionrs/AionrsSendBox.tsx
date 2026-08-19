@@ -5,6 +5,7 @@
  */
 
 import { ipcBridge } from '@/common';
+import type { ConversationInputMode, IConversationCapabilities } from '@/common/adapter/ipcBridge';
 import type { IConversationMcpStatus } from '@/common/config/storage';
 import AgentModeSelector from '@/renderer/components/agent/AgentModeSelector';
 import CommandQueuePanel from '@/renderer/components/chat/CommandQueuePanel';
@@ -47,7 +48,7 @@ import { type ChatFileRef, isChatFileRef, uploadFileRef } from '@/common/types/c
 import { localSelectionItems, mergeFileSelectionItems } from '@/renderer/utils/file/fileSelection';
 import { collectChatFileRefs, splitChatFileRefs } from '@/renderer/utils/file/messageFiles';
 import type { AgentModeOption } from '@/renderer/utils/model/agentTypes';
-import { Message, Tag } from '@arco-design/web-react';
+import { Message, Select, Tag } from '@arco-design/web-react';
 import { Brain, MagicHat, Shield } from '@icon-park/react';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -138,10 +139,27 @@ const AionrsSendBox: React.FC<{
       status: 'loaded',
     }));
   const { t } = useTranslation();
+  const [conversationCapabilities, setConversationCapabilities] = useState<IConversationCapabilities | null>(null);
+  const [queuedInputMode, setQueuedInputMode] = useState<ConversationInputMode>('followup');
   const { checkAndUpdateTitle } = useAutoTitle();
   const { current_model } = modelSelection;
   const teamPermission = useTeamPermission();
   const propagateMode = teamPermission?.propagateMode;
+
+  useEffect(() => {
+    let active = true;
+    void ipcBridge.conversation.getCapabilities
+      .invoke({ conversation_id })
+      .then((capabilities) => {
+        if (active) setConversationCapabilities(capabilities);
+      })
+      .catch(() => {
+        if (active) setConversationCapabilities(null);
+      });
+    return () => {
+      active = false;
+    };
+  }, [conversation_id]);
 
   const { thought, running, turnStartedAtMs, tokenUsage, setActiveMsgId, setWaitingResponse, resetState } =
     useAionrsMessage(conversation_id, {
@@ -327,6 +345,7 @@ const AionrsSendBox: React.FC<{
     hasPendingCommands,
     enqueue,
     remove,
+    retry,
     prioritize,
     sendNow,
     clear,
@@ -388,7 +407,7 @@ const AionrsSendBox: React.FC<{
         hasPendingCommands,
       })
     ) {
-      enqueue({ input: message, files: filesToSend });
+      enqueue({ input: message, files: filesToSend, mode: queuedInputMode });
       return;
     }
 
@@ -711,6 +730,7 @@ const AionrsSendBox: React.FC<{
         onToggleMode={toggleMode}
         onReorder={reorder}
         onRemove={remove}
+        onRetry={retry}
         onClear={clear}
       />
       <ThoughtDisplay
@@ -761,6 +781,22 @@ const AionrsSendBox: React.FC<{
         }
         rightTools={
           <div className='flex items-center gap-8px min-w-0'>
+            {isBusy && conversationCapabilities?.inject ? (
+              <Select
+                size='mini'
+                value={queuedInputMode}
+                onChange={(value) => setQueuedInputMode(value as ConversationInputMode)}
+                className='w-92px'
+                aria-label={t('conversation.commandQueue.inputMode', { defaultValue: 'Input mode' })}
+              >
+                <Select.Option value='followup'>
+                  {t('conversation.commandQueue.mode.followup', { defaultValue: 'Followup' })}
+                </Select.Option>
+                <Select.Option value='inject'>
+                  {t('conversation.commandQueue.mode.inject', { defaultValue: 'Inject' })}
+                </Select.Option>
+              </Select>
+            ) : null}
             <AgentModeSelector
               backend='aionrs'
               conversation_id={conversation_id}
