@@ -1,5 +1,39 @@
 # Changelog
 
+## [2.1.76](https://github.com/CSBU/CSBU-WorkMate/compare/v2.1.75...v2.1.76) (2026-08-20)
+
+### Desktop
+
+#### Features
+
+- **conversation:** project server queue, cancellation state, and correlated tool execution phases (#75)
+
+#### 内网更新说明
+
+<!-- internal-release-notes:start -->
+
+**由运营管理部提供**
+
+- 对话输入队列改由服务端状态驱动，重启后仍可恢复排队顺序、取消和失败状态。
+- 工具轨迹新增执行阶段、管控等级和关联标识，便于定位拒绝、取消与执行结果。
+- 历史退役运行时继续保持只读兼容，不再提供安装或修复入口。
+
+<!-- internal-release-notes:end -->
+
+### Core ([v0.1.80](https://github.com/suoak/AionCore/releases/tag/v0.1.80))
+
+#### Features
+
+- **conversation:** harden journal recovery, fork boundaries, and typed cancellation events
+- **journal:** persist append cursors and runtime epochs for incremental recovery
+- **tools:** correlate native execution phases with trajectory events
+
+#### Bug Fixes
+
+- **journal:** validate cursor ownership before indexed recovery
+
+---
+
 ## [2.1.75](https://github.com/suoak/AionUi/compare/v2.1.74...v2.1.75) (2026-08-19)
 
 ### Desktop
