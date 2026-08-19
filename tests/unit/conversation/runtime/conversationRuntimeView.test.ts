@@ -7,6 +7,7 @@
 import type { TConversationRuntimeSummary } from '@/common/config/storage';
 import { describe, expect, it } from 'vitest';
 import {
+  cancellationStateChangedConversationRuntimeView,
   createDefaultConversationRuntimeView,
   getConversationRuntimeViewSnapshot,
   hydrateSucceededConversationRuntimeView,
@@ -385,6 +386,64 @@ describe('conversationRuntimeViewStore', () => {
       localSubmitting: false,
       localStopping: false,
     });
+  });
+
+  it('keeps cancellation gated until the server reports terminal convergence', () => {
+    const running = hydrateSucceededConversationRuntimeView(
+      undefined,
+      conversation_id,
+      runtime({
+        state: 'running',
+        can_send_message: false,
+        has_task: true,
+        task_status: 'running',
+        is_processing: true,
+        turn_id: 'turn-1',
+      })
+    ).view;
+    const cancelling = cancellationStateChangedConversationRuntimeView(
+      running,
+      conversation_id,
+      'turn-1',
+      'cancelling'
+    ).view;
+    expect(cancelling).toMatchObject({
+      state: 'cancelling',
+      isProcessing: true,
+      canSendMessage: false,
+      localStopping: true,
+    });
+
+    const converged = cancellationStateChangedConversationRuntimeView(
+      cancelling,
+      conversation_id,
+      'turn-1',
+      'converged_idle'
+    ).view;
+    expect(converged).toMatchObject({
+      activeTurnId: null,
+      state: 'idle',
+      isProcessing: false,
+      canSendMessage: true,
+      localStopping: false,
+    });
+  });
+
+  it('ignores cancellation events for another active turn', () => {
+    const running = hydrateSucceededConversationRuntimeView(
+      undefined,
+      conversation_id,
+      runtime({ state: 'running', is_processing: true, can_send_message: false, turn_id: 'turn-2' })
+    ).view;
+    const { view, logs } = cancellationStateChangedConversationRuntimeView(
+      running,
+      conversation_id,
+      'turn-1',
+      'force_terminated'
+    );
+
+    expect(view).toEqual(running);
+    expect(logs[0]?.data.ignored).toBe(true);
   });
 
   it('does not re-mark stopping after runtime has already released', () => {

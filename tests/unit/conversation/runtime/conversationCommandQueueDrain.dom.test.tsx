@@ -23,10 +23,18 @@ const turnCompletedListeners = vi.hoisted(() => ({
     (event: { session_id: string; turn_id: string; state: string; runtime: TConversationRuntimeSummary }) => void
   >,
 }));
+const serverQueueMocks = vi.hoisted(() => ({
+  listInputs: vi.fn(),
+  submitInput: vi.fn(),
+  cancelInput: vi.fn(),
+}));
 
 vi.mock('@/common', () => ({
   ipcBridge: {
     conversation: {
+      listInputs: { invoke: serverQueueMocks.listInputs },
+      submitInput: { invoke: serverQueueMocks.submitInput },
+      cancelInput: { invoke: serverQueueMocks.cancelInput },
       turnCompleted: {
         on: vi.fn((listener) => {
           turnCompletedListeners.current.push(listener);
@@ -166,6 +174,16 @@ describe('useConversationCommandQueue drain', () => {
     resetConversationRuntimeViewStoreForTest();
     resetConversationCommandQueueBackgroundRunnerForTest();
     vi.clearAllMocks();
+    serverQueueMocks.listInputs.mockRejectedValue(
+      new BackendHttpError({
+        method: 'GET',
+        path: '/api/conversations/conv/inputs',
+        status: 404,
+        body: { success: false, code: 'NOT_FOUND', error: 'legacy core' },
+      })
+    );
+    serverQueueMocks.submitInput.mockResolvedValue({});
+    serverQueueMocks.cancelInput.mockResolvedValue({});
     vi.spyOn(console, 'info').mockImplementation(() => {});
   });
 
@@ -174,6 +192,28 @@ describe('useConversationCommandQueue drain', () => {
     resetConversationCommandQueueBackgroundRunnerForTest();
     vi.restoreAllMocks();
     sessionStorage.clear();
+  });
+
+  it('does not execute a local item while server queue capability is still being probed', async () => {
+    let resolveProbe: ((inputs: []) => void) | undefined;
+    serverQueueMocks.listInputs.mockImplementation(
+      () =>
+        new Promise<[]>((resolve) => {
+          resolveProbe = resolve;
+        })
+    );
+    const onExecute = vi.fn().mockResolvedValue(undefined);
+    const { result } = renderQueue({ conversation_id: 'conv-probe', runtimeGate: idleGate, onExecute });
+
+    act(() => {
+      result.current.enqueue({ input: 'queued during probe', files: [], mode: 'followup' });
+    });
+    await waitFor(() => expect(result.current.items).toHaveLength(1));
+    expect(onExecute).not.toHaveBeenCalled();
+
+    act(() => resolveProbe?.([]));
+    await waitFor(() => expect(serverQueueMocks.submitInput).toHaveBeenCalledTimes(1));
+    expect(onExecute).not.toHaveBeenCalled();
   });
 
   it('drains a queued command when the runtime becomes idle', async () => {

@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import type { CancellationState } from '@/common/adapter/ipcBridge';
 import type { TConversationRuntimeStateKind, TConversationRuntimeSummary } from '@/common/config/storage';
 
 export type ConversationRuntimeView = {
@@ -32,6 +33,7 @@ export type ConversationRuntimeViewLogEvent =
   | 'local_send_busy'
   | 'local_stop_requested'
   | 'local_stop_acknowledged'
+  | 'cancellation_state_changed'
   | 'runtime_view_cleaned';
 
 export type ConversationRuntimeViewLogLevel = 'info' | 'warn';
@@ -367,6 +369,43 @@ export const localStopAcknowledgedConversationRuntimeView = (
   return withLogs(view, [createLog('info', 'local_stop_acknowledged', view, { turn_id })]);
 };
 
+export const cancellationStateChangedConversationRuntimeView = (
+  previous: ConversationRuntimeView | undefined,
+  conversation_id: string,
+  turn_id: string,
+  state: CancellationState
+): ConversationRuntimeSnapshot => {
+  const base = previous ?? createDefaultConversationRuntimeView(conversation_id);
+  if (base.activeTurnId !== null && base.activeTurnId !== turn_id) {
+    return withLogs(base, [createLog('info', 'cancellation_state_changed', base, { turn_id, state, ignored: true })]);
+  }
+
+  const terminal = state === 'converged_idle' || state === 'force_terminated';
+  const view: ConversationRuntimeView = terminal
+    ? {
+        ...base,
+        activeTurnId: null,
+        state: 'idle',
+        isProcessing: false,
+        canSendMessage: true,
+        pendingConfirmations: 0,
+        localStopping: false,
+        hydrated: true,
+      }
+    : state === 'failed'
+      ? { ...base, localStopping: false, hydrated: true }
+      : {
+          ...base,
+          activeTurnId: turn_id,
+          state: 'cancelling',
+          isProcessing: true,
+          canSendMessage: false,
+          localStopping: true,
+          hydrated: true,
+        };
+  return withLogs(view, [createLog('info', 'cancellation_state_changed', view, { turn_id, state })]);
+};
+
 export const resetLocalGateConversationRuntimeView = (
   previous: ConversationRuntimeView | undefined,
   conversation_id: string,
@@ -588,6 +627,21 @@ export const localStopAcknowledged = (
           runtime,
           metadata
         )
+  );
+};
+
+export const cancellationStateChanged = (
+  conversation_id: string,
+  turn_id: string,
+  state: CancellationState
+): ConversationRuntimeViewLogEntry[] => {
+  const metadata = getRuntimeMetadata(conversation_id);
+  if (state === 'converged_idle' || state === 'force_terminated' || state === 'failed') {
+    metadata.pendingStopTurnId = null;
+  }
+  return setConversationRuntimeSnapshot(
+    conversation_id,
+    cancellationStateChangedConversationRuntimeView(runtimeViews.get(conversation_id), conversation_id, turn_id, state)
   );
 };
 
