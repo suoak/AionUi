@@ -14,6 +14,19 @@
 - **conversation:** preserve model selection and editor focus across conversation workflows
 - **conversation:** remain compatible with clients that do not expose the capability bridge
 
+#### 内网更新说明
+
+<!-- internal-release-notes:start -->
+
+**由运营管理部提供**
+
+- 对话输入现由服务端持久化排队，应用重启后仍会按原顺序恢复；失败项可使用原幂等键安全重试。
+- 内置 Agent 在忙碌时可按能力选择 Followup 或 Inject，并展示排队、派发、接受、应用、取消和失败状态。
+- DeepSeek Harness 不再作为可安装 Agent 展示；旧会话和用量记录统一标记为“已退役运行时”。
+- 工具轨迹会展示宿主管控等级；外部 Agent 的观察模式不会误显示为已被强制策略保护。
+
+<!-- internal-release-notes:end -->
+
 ### Core ([v0.1.79](https://github.com/suoak/AionCore/releases/tag/v0.1.79))
 
 #### Features
