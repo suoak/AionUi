@@ -846,10 +846,14 @@
       "rename": "تغییر نام",
       "copyAbsolutePath": "کپی کردن مسیر مطلق",
       "copyRelativePath": "کپی کردن مسیر نسبی",
-      "addToChat": "افزودن به گفتگو"
+      "addToChat": "افزودن به گفتگو",
+      "newFile": "فایل جدید",
+      "newDir": "پوشه جدید"
     },
     "copyNodeFailed": "کپی ناموفق بود",
-    "moveNodeFailed": "انتقال ناموفق بود"
+    "moveNodeFailed": "انتقال ناموفق بود",
+    "newFileFailed": "ایجاد فایل ناموفق بود",
+    "newDirFailed": "ایجاد پوشه ناموفق بود"
   },
   "thinking": {
     "complete": "تفکر کامل شد",

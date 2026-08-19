@@ -846,10 +846,14 @@
       "rename": "重命名",
       "copyAbsolutePath": "复制绝对路径",
       "copyRelativePath": "复制相对路径",
-      "addToChat": "添加到聊天"
+      "addToChat": "添加到聊天",
+      "newFile": "新建文件",
+      "newDir": "新建目录"
     },
     "copyNodeFailed": "复制失败",
-    "moveNodeFailed": "移动失败"
+    "moveNodeFailed": "移动失败",
+    "newFileFailed": "新建文件失败",
+    "newDirFailed": "新建目录失败"
   },
   "thinking": {
     "complete": "思考完成",

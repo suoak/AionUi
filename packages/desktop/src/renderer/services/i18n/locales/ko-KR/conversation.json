@@ -846,10 +846,14 @@
       "rename": "이름 바꾸기",
       "copyAbsolutePath": "절대 경로 복사",
       "copyRelativePath": "상대 경로 복사",
-      "addToChat": "채팅에 추가"
+      "addToChat": "채팅에 추가",
+      "newFile": "새 파일",
+      "newDir": "새 폴더"
     },
     "copyNodeFailed": "복사에 실패했습니다",
-    "moveNodeFailed": "이동에 실패했습니다"
+    "moveNodeFailed": "이동에 실패했습니다",
+    "newFileFailed": "파일을 만들지 못했습니다",
+    "newDirFailed": "폴더를 만들지 못했습니다"
   },
   "thinking": {
     "complete": "사고 완료",

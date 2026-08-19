@@ -847,10 +847,14 @@
       "rename": "Umbenennen",
       "copyAbsolutePath": "Absoluten Pfad kopieren",
       "copyRelativePath": "Relativen Pfad kopieren",
-      "addToChat": "Zum Chat hinzufügen"
+      "addToChat": "Zum Chat hinzufügen",
+      "newFile": "Neue Datei",
+      "newDir": "Neuer Ordner"
     },
     "copyNodeFailed": "Kopieren fehlgeschlagen",
-    "moveNodeFailed": "Verschieben fehlgeschlagen"
+    "moveNodeFailed": "Verschieben fehlgeschlagen",
+    "newFileFailed": "Datei konnte nicht erstellt werden",
+    "newDirFailed": "Ordner konnte nicht erstellt werden"
   },
   "thinking": {
     "complete": "Denken abgeschlossen",

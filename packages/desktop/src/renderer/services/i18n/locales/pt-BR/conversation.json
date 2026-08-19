@@ -852,10 +852,14 @@
       "rename": "Renomear",
       "copyAbsolutePath": "Copiar caminho absoluto",
       "copyRelativePath": "Copiar caminho relativo",
-      "addToChat": "Adicionar ao chat"
+      "addToChat": "Adicionar ao chat",
+      "newFile": "Novo arquivo",
+      "newDir": "Nova pasta"
     },
     "copyNodeFailed": "Falha ao copiar",
-    "moveNodeFailed": "Falha ao mover"
+    "moveNodeFailed": "Falha ao mover",
+    "newFileFailed": "Não foi possível criar o arquivo",
+    "newDirFailed": "Não foi possível criar a pasta"
   },
   "thinking": {
     "complete": "Pensamento completo",

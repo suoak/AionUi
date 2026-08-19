@@ -848,10 +848,14 @@
       "rename": "Yeniden adlandır",
       "copyAbsolutePath": "Mutlak yolu kopyala",
       "copyRelativePath": "Göreli yolu kopyala",
-      "addToChat": "Sohbete ekle"
+      "addToChat": "Sohbete ekle",
+      "newFile": "Yeni dosya",
+      "newDir": "Yeni klasör"
     },
     "copyNodeFailed": "Kopyalanamadı",
-    "moveNodeFailed": "Taşınamadı"
+    "moveNodeFailed": "Taşınamadı",
+    "newFileFailed": "Dosya oluşturulamadı",
+    "newDirFailed": "Klasör oluşturulamadı"
   },
   "thinking": {
     "complete": "Düşünme tamamlandı",

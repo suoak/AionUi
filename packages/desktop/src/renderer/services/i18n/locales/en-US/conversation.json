@@ -846,10 +846,14 @@
       "rename": "Rename",
       "copyAbsolutePath": "Copy absolute path",
       "copyRelativePath": "Copy relative path",
-      "addToChat": "Add to chat"
+      "addToChat": "Add to chat",
+      "newFile": "New file",
+      "newDir": "New folder"
     },
     "copyNodeFailed": "Failed to copy",
-    "moveNodeFailed": "Failed to move"
+    "moveNodeFailed": "Failed to move",
+    "newFileFailed": "Couldn't create file",
+    "newDirFailed": "Couldn't create folder"
   },
   "thinking": {
     "complete": "Thought complete",

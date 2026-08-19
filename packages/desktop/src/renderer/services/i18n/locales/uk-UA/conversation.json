@@ -864,10 +864,14 @@
       "rename": "Перейменувати",
       "copyAbsolutePath": "Копіювати абсолютний шлях",
       "copyRelativePath": "Копіювати відносний шлях",
-      "addToChat": "Додати в чат"
+      "addToChat": "Додати в чат",
+      "newFile": "Новий файл",
+      "newDir": "Нова папка"
     },
     "copyNodeFailed": "Не вдалося скопіювати",
-    "moveNodeFailed": "Не вдалося перемістити"
+    "moveNodeFailed": "Не вдалося перемістити",
+    "newFileFailed": "Не вдалося створити файл",
+    "newDirFailed": "Не вдалося створити папку"
   },
   "thinking": {
     "complete": "Роздуми завершено",

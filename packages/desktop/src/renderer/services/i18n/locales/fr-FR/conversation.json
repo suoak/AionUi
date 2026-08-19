@@ -846,10 +846,14 @@
       "rename": "Renommer",
       "copyAbsolutePath": "Copier le chemin absolu",
       "copyRelativePath": "Copier le chemin relatif",
-      "addToChat": "Ajouter au chat"
+      "addToChat": "Ajouter au chat",
+      "newFile": "Nouveau fichier",
+      "newDir": "Nouveau dossier"
     },
     "copyNodeFailed": "Échec de la copie",
-    "moveNodeFailed": "Échec du déplacement"
+    "moveNodeFailed": "Échec du déplacement",
+    "newFileFailed": "Échec de la création du fichier",
+    "newDirFailed": "Échec de la création du dossier"
   },
   "thinking": {
     "complete": "Réflexion terminée",

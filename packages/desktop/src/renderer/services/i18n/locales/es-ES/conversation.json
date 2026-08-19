@@ -847,10 +847,14 @@
       "rename": "Cambiar nombre",
       "copyAbsolutePath": "Copiar ruta absoluta",
       "copyRelativePath": "Copiar ruta relativa",
-      "addToChat": "Añadir al chat"
+      "addToChat": "Añadir al chat",
+      "newFile": "Nuevo archivo",
+      "newDir": "Nueva carpeta"
     },
     "copyNodeFailed": "Error al copiar",
-    "moveNodeFailed": "Error al mover"
+    "moveNodeFailed": "Error al mover",
+    "newFileFailed": "No se pudo crear el archivo",
+    "newDirFailed": "No se pudo crear la carpeta"
   },
   "thinking": {
     "complete": "Pensamiento completado",

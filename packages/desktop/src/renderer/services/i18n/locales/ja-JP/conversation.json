@@ -846,10 +846,14 @@
       "rename": "名前を変更",
       "copyAbsolutePath": "絶対パスをコピー",
       "copyRelativePath": "相対パスをコピー",
-      "addToChat": "チャットに追加"
+      "addToChat": "チャットに追加",
+      "newFile": "新規ファイル",
+      "newDir": "新規フォルダー"
     },
     "copyNodeFailed": "コピーに失敗しました",
-    "moveNodeFailed": "移動に失敗しました"
+    "moveNodeFailed": "移動に失敗しました",
+    "newFileFailed": "ファイルの作成に失敗しました",
+    "newDirFailed": "フォルダーの作成に失敗しました"
   },
   "thinking": {
     "complete": "思考完了",

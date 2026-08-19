@@ -846,10 +846,14 @@
       "rename": "重新命名",
       "copyAbsolutePath": "複製絕對路徑",
       "copyRelativePath": "複製相對路徑",
-      "addToChat": "加入對話"
+      "addToChat": "加入對話",
+      "newFile": "新增檔案",
+      "newDir": "新增資料夾"
     },
     "copyNodeFailed": "複製失敗",
-    "moveNodeFailed": "移動失敗"
+    "moveNodeFailed": "移動失敗",
+    "newFileFailed": "建立檔案失敗",
+    "newDirFailed": "建立資料夾失敗"
   },
   "thinking": {
     "complete": "思考完成",
