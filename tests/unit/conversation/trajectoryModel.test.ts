@@ -4,6 +4,7 @@ import {
   compactionLockI18nKey,
   isHostOnlyItem,
   isTranscriptReconstructible,
+  toolExecutionMetadata,
   trajectoryItemPreview,
   trajectoryKindI18nKey,
 } from '@/renderer/pages/conversation/components/Trajectory/trajectoryModel';
@@ -94,5 +95,22 @@ describe('trajectoryItemPreview', () => {
     const preview = trajectoryItemPreview(item({ content: 'x'.repeat(200) }));
     expect(preview.endsWith('…')).toBe(true);
     expect(preview.length).toBe(161);
+  });
+});
+
+describe('toolExecutionMetadata', () => {
+  it('extracts correlated native tool lifecycle metadata', () => {
+    expect(
+      toolExecutionMetadata(
+        item({
+          transcript_kind: 'tool/call',
+          content: JSON.stringify({ execution_id: 'tool_exec_1', phase: 'execute', enforcement: 'native' }),
+        })
+      )
+    ).toEqual({ execution_id: 'tool_exec_1', phase: 'execute', enforcement: 'native' });
+  });
+
+  it('ignores ordinary tool output', () => {
+    expect(toolExecutionMetadata(item({ transcript_kind: 'tool/call', content: 'file contents' }))).toBeNull();
   });
 });
