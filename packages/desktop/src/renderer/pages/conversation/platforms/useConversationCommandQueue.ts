@@ -648,9 +648,9 @@ export const useConversationCommandQueue = ({
       if (event.input.conversation_id !== conversation_id) return;
       setServerInputs((current) => {
         const next = current.filter((input) => input.input_id !== event.input.input_id);
-        return ['held', 'dispatching', 'accepted', 'failed'].includes(event.input.status)
-          ? [...next, event.input].sort((left, right) => left.created_at - right.created_at)
-          : next;
+        return [...next, event.input].sort(
+          (left, right) => left.created_at - right.created_at || left.input_id.localeCompare(right.input_id)
+        );
       });
     });
   }, [conversation_id, enabled, refreshServerInputs]);
@@ -775,7 +775,7 @@ export const useConversationCommandQueue = ({
         try {
           await ipcBridge.conversation.submitInput.invoke({
             conversation_id,
-            mode: 'followup',
+            mode: item.mode ?? 'followup',
             input: item.input,
             files: item.files,
             client_key: item.id,
@@ -804,7 +804,7 @@ export const useConversationCommandQueue = ({
     pausedRef.current = false;
     logCommandQueue(conversation_id, 'cleared');
     for (const input of serverInputs) {
-      if (input.status !== 'held' && input.status !== 'dispatching') continue;
+      if (!['held', 'dispatching', 'accepted'].includes(input.status)) continue;
       void ipcBridge.conversation.cancelInput
         .invoke({ conversation_id, input_id: input.input_id })
         .catch((error) => console.warn('[conversation-command-queue] Failed to cancel server input:', error));
@@ -1274,19 +1274,16 @@ export const useConversationCommandQueue = ({
     updateState,
   ]);
 
-  const serverQueueItems: ConversationCommandQueueItem[] = serverInputs
-    .filter((input) => ['held', 'dispatching', 'accepted', 'failed'].includes(input.status))
-    .slice(-MAX_QUEUED_COMMANDS)
-    .map((input) => ({
-      id: input.input_id,
-      input: input.content,
-      files: input.files,
-      created_at: input.created_at,
-      managed_by_server: true,
-      mode: input.mode,
-      status: input.status,
-      error_code: input.error_code,
-    }));
+  const serverQueueItems: ConversationCommandQueueItem[] = serverInputs.slice(-MAX_QUEUED_COMMANDS).map((input) => ({
+    id: input.input_id,
+    input: input.content,
+    files: input.files,
+    created_at: input.created_at,
+    managed_by_server: true,
+    mode: input.mode,
+    status: input.status,
+    error_code: input.error_code,
+  }));
   const visibleItems = [...serverQueueItems, ...data.items];
 
   return {
@@ -1294,7 +1291,10 @@ export const useConversationCommandQueue = ({
     isPaused: enabled ? data.isPaused : false,
     mode: enabled ? data.mode : 'auto',
     isInteractionLocked,
-    hasPendingCommands: enabled ? visibleItems.length > 0 : false,
+    hasPendingCommands: enabled
+      ? data.items.length > 0 ||
+        serverInputs.some((input) => ['held', 'dispatching', 'accepted'].includes(input.status))
+      : false,
     enqueue,
     update,
     remove,

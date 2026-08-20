@@ -164,6 +164,27 @@ const AionrsSendBox: React.FC<{
     };
   }, [conversation_id]);
 
+  useEffect(() => {
+    if (!ipcBridge.conversation.capabilitiesChanged?.on) return;
+    return ipcBridge.conversation.capabilitiesChanged.on((event) => {
+      if (event.conversation_id !== conversation_id) return;
+      setConversationCapabilities(event.capabilities);
+      setQueuedInputMode((current) => {
+        const remainsSupported =
+          current === 'followup' ||
+          (current === 'steer' && event.capabilities.steer) ||
+          (current === 'inject' && event.capabilities.inject);
+        if (remainsSupported) return current;
+        Message.info(
+          t('conversation.commandQueue.capabilityChanged', {
+            defaultValue: 'The selected input mode is no longer supported. Switched to Followup.',
+          })
+        );
+        return 'followup';
+      });
+    });
+  }, [conversation_id, t]);
+
   const { thought, running, turnStartedAtMs, tokenUsage, setActiveMsgId, setWaitingResponse, resetState } =
     useAionrsMessage(conversation_id, {
       currentModelId: current_model?.use_model || current_model?.id,
@@ -784,7 +805,7 @@ const AionrsSendBox: React.FC<{
         }
         rightTools={
           <div className='flex items-center gap-8px min-w-0'>
-            {isBusy && conversationCapabilities?.inject ? (
+            {isBusy && (conversationCapabilities?.steer || conversationCapabilities?.inject) ? (
               <Select
                 size='mini'
                 value={queuedInputMode}
@@ -795,9 +816,16 @@ const AionrsSendBox: React.FC<{
                 <Select.Option value='followup'>
                   {t('conversation.commandQueue.followup', { defaultValue: 'Followup' })}
                 </Select.Option>
-                <Select.Option value='inject'>
-                  {t('conversation.commandQueue.inject', { defaultValue: 'Inject' })}
-                </Select.Option>
+                {conversationCapabilities.steer ? (
+                  <Select.Option value='steer'>
+                    {t('conversation.commandQueue.steer', { defaultValue: 'Steer' })}
+                  </Select.Option>
+                ) : null}
+                {conversationCapabilities.inject ? (
+                  <Select.Option value='inject'>
+                    {t('conversation.commandQueue.inject', { defaultValue: 'Inject' })}
+                  </Select.Option>
+                ) : null}
               </Select>
             ) : null}
             <AgentModeSelector

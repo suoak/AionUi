@@ -453,8 +453,9 @@ export const conversation = {
       client_key: p.client_key,
     })
   ),
-  listInputs: httpGet<IConversationInput[], { conversation_id: string }>(
-    (p) => `/api/conversations/${p.conversation_id}/inputs`
+  listInputs: httpGet<IConversationInput[], { conversation_id: string; terminal_limit?: number }>(
+    (p) =>
+      `/api/conversations/${p.conversation_id}/inputs${p.terminal_limit === undefined ? '' : `?terminal_limit=${p.terminal_limit}`}`
   ),
   cancelInput: httpDelete<IConversationInput, { conversation_id: string; input_id: string }>(
     (p) => `/api/conversations/${p.conversation_id}/inputs/${encodeURIComponent(p.input_id)}`
@@ -533,6 +534,7 @@ export const conversation = {
     created_at: number;
   }>('message.userCreated'),
   inputChanged: wsEmitter<IConversationInputChangedEvent>('conversation.inputChanged'),
+  capabilitiesChanged: wsEmitter<IConversationCapabilitiesChangedEvent>('conversation.capabilitiesChanged'),
   cancellationChanged: wsEmitter<IConversationCancellationChangedEvent>('conversation.cancellationChanged'),
   artifactStream: wsEmitter<IConversationArtifact>('conversation.artifact'),
   turnCompleted: wsMappedEmitter<IConversationTurnCompletedEvent>('turn.completed', (raw) => {
@@ -1959,6 +1961,8 @@ export interface IConversationCapabilities {
   steer: boolean;
   inject: boolean;
   tool_enforcement: ToolEnforcementLevel;
+  revision?: number;
+  negotiated_at?: number;
 }
 
 export interface IConversationInput {
@@ -1987,6 +1991,12 @@ export interface IConversationInputReceipt {
 export interface IConversationInputChangedEvent {
   user_id: string;
   input: IConversationInput;
+}
+
+export interface IConversationCapabilitiesChangedEvent {
+  user_id: string;
+  conversation_id: string;
+  capabilities: IConversationCapabilities;
 }
 
 export interface IConversationCancellationChangedEvent {
