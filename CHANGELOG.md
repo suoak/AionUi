@@ -1,5 +1,44 @@
 # Changelog
 
+## [2.1.77](https://github.com/suoak/AionUi/compare/v2.1.76...v2.1.77) (2026-08-20)
+
+### Desktop
+
+#### Features
+
+- **conversation:** react to persisted capability changes and preserve queued input modes (#79)
+
+#### Bug Fixes
+
+- **usage:** display the CSBU WorkMate brand for the internal agent and CSV exports (#77)
+
+#### 内网更新说明
+
+<!-- internal-release-notes:start -->
+
+**由运营管理部提供**
+
+- 用量统计中的内置 Agent 统一显示为 CSBU WorkMate，导出的统计名称保持一致。
+- 对话输入模式会随服务端能力即时更新，排队迁移保留 Followup、Steer 和 Inject 的原始语义。
+- 取消操作会等待会话、模型与工具任务全部收敛，并强化了异常重启后的输入和工具恢复。
+
+<!-- internal-release-notes:end -->
+
+### Core ([v0.1.81](https://github.com/suoak/AionCore/releases/tag/v0.1.81))
+
+#### Features
+
+- **conversation:** persist capability snapshots, dispatch native Codex steer, and converge cancellation strictly
+- **journal:** recover stale tools and checkpoint input projections incrementally
+- **tools:** consume structured cancellable tool events from aionrs v0.2.19
+
+#### Bug Fixes
+
+- **journal:** rebuild invalid projection cursors safely
+- **session:** correlate steer responses and map closed-turn races to stable errors
+
+---
+
 ## [2.1.76](https://github.com/CSBU/CSBU-WorkMate/compare/v2.1.75...v2.1.76) (2026-08-20)
 
 ### Desktop
