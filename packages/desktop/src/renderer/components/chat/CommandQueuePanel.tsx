@@ -272,8 +272,8 @@ const QueueItemCard: React.FC<QueueItemCardProps> = ({
         })}
         {renderQueueActionIconButton({
           ariaLabel: t('conversation.commandQueue.remove', { defaultValue: 'Remove' }),
-          disabled: item.status === 'accepted' || item.status === 'failed',
-          onClick: item.status === 'accepted' || item.status === 'failed' ? undefined : () => onRemove(item.id),
+          disabled: item.status === 'failed',
+          onClick: item.status === 'failed' ? undefined : () => onRemove(item.id),
           icon: <Delete theme='outline' size='14' strokeWidth={2.5} />,
           danger: true,
         })}

@@ -63,6 +63,7 @@ vi.mock('@icon-park/react', () => ({
   SortTwo: () => <span data-testid='sort-two-icon' />,
   MoreOne: () => <span data-testid='more-icon' />,
   SendOne: () => <span data-testid='send-icon' />,
+  Refresh: () => <span data-testid='refresh-icon' />,
 }));
 
 const item: ConversationCommandQueueItem = {
@@ -134,6 +135,32 @@ describe('CommandQueuePanel', () => {
   it('does not render a separate help button (help lives on the mode toggle)', () => {
     renderPanel();
     expect(screen.queryByRole('button', { name: 'Help' })).not.toBeInTheDocument();
+  });
+
+  it('lets the user cancel an accepted server input', () => {
+    const onRemove = vi.fn();
+    renderPanel({
+      items: [{ ...item, status: 'accepted', managed_by_server: true }],
+      onRemove,
+    });
+
+    const removeButton = screen.getByRole('button', { name: 'Remove' });
+    expect(removeButton).not.toBeDisabled();
+    fireEvent.click(removeButton);
+    expect(onRemove).toHaveBeenCalledExactlyOnceWith('queued-1');
+  });
+
+  it('does not let the user cancel a failed server input', () => {
+    const onRemove = vi.fn();
+    renderPanel({
+      items: [{ ...item, status: 'failed', managed_by_server: true }],
+      onRemove,
+    });
+
+    const removeButton = screen.getByRole('button', { name: 'Remove' });
+    expect(removeButton).toBeDisabled();
+    fireEvent.click(removeButton);
+    expect(onRemove).not.toHaveBeenCalled();
   });
 
   it('clears the draft box through a confirm dialog', () => {

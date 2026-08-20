@@ -391,6 +391,48 @@ export const getCommandQueueExecutionGate = ({
   };
 };
 
+/** Statuses that still belong in the send draft box. Applied/canceled already live in chat history. */
+const DRAFT_BOX_SERVER_STATUSES: ReadonlySet<ConversationInputStatus> = new Set([
+  'held',
+  'dispatching',
+  'accepted',
+  'failed',
+]);
+
+export const isDraftBoxServerInputStatus = (status: ConversationInputStatus): boolean =>
+  DRAFT_BOX_SERVER_STATUSES.has(status);
+
+const sortServerInputs = (left: IConversationInput, right: IConversationInput): number =>
+  left.created_at - right.created_at || left.input_id.localeCompare(right.input_id);
+
+export const mergeDraftBoxServerInput = (
+  current: IConversationInput[],
+  nextInput: IConversationInput
+): IConversationInput[] => {
+  const remaining = current.filter(
+    (input) => input.input_id !== nextInput.input_id && isDraftBoxServerInputStatus(input.status)
+  );
+  if (!isDraftBoxServerInputStatus(nextInput.status)) {
+    return remaining;
+  }
+  return [...remaining, nextInput].toSorted(sortServerInputs);
+};
+
+const toDraftBoxServerItems = (inputs: IConversationInput[]): ConversationCommandQueueItem[] =>
+  inputs
+    .filter((input) => isDraftBoxServerInputStatus(input.status))
+    .slice(-MAX_QUEUED_COMMANDS)
+    .map((input) => ({
+      id: input.input_id,
+      input: input.content,
+      files: input.files,
+      created_at: input.created_at,
+      managed_by_server: true,
+      mode: input.mode,
+      status: input.status,
+      error_code: input.error_code,
+    }));
+
 type UseConversationCommandQueueOptions = {
   conversation_id: string;
   enabled?: boolean;
@@ -615,8 +657,9 @@ export const useConversationCommandQueue = ({
       serverSupportedRef.current = true;
       setServerSupported(true);
       setServerSupportResolved(true);
-      setServerInputs(inputs);
-      return inputs;
+      const draftBoxInputs = inputs.filter((input) => isDraftBoxServerInputStatus(input.status));
+      setServerInputs(draftBoxInputs);
+      return draftBoxInputs;
     } catch (error) {
       if (isBackendHttpError(error) && error.status === 404) {
         serverSupportedRef.current = false;
@@ -646,12 +689,7 @@ export const useConversationCommandQueue = ({
     if (!ipcBridge.conversation.inputChanged?.on) return;
     return ipcBridge.conversation.inputChanged.on((event) => {
       if (event.input.conversation_id !== conversation_id) return;
-      setServerInputs((current) => {
-        const next = current.filter((input) => input.input_id !== event.input.input_id);
-        return [...next, event.input].sort(
-          (left, right) => left.created_at - right.created_at || left.input_id.localeCompare(right.input_id)
-        );
-      });
+      setServerInputs((current) => mergeDraftBoxServerInput(current, event.input));
     });
   }, [conversation_id, enabled, refreshServerInputs]);
 
@@ -1274,17 +1312,7 @@ export const useConversationCommandQueue = ({
     updateState,
   ]);
 
-  const serverQueueItems: ConversationCommandQueueItem[] = serverInputs.slice(-MAX_QUEUED_COMMANDS).map((input) => ({
-    id: input.input_id,
-    input: input.content,
-    files: input.files,
-    created_at: input.created_at,
-    managed_by_server: true,
-    mode: input.mode,
-    status: input.status,
-    error_code: input.error_code,
-  }));
-  const visibleItems = [...serverQueueItems, ...data.items];
+  const visibleItems = [...toDraftBoxServerItems(serverInputs), ...data.items];
 
   return {
     items: enabled ? visibleItems : [],
