@@ -7,6 +7,7 @@
 import { act, renderHook, waitFor } from '@testing-library/react';
 import { Message } from '@arco-design/web-react';
 import { BackendHttpError } from '@/common/adapter/httpBridge';
+import type { IConversationInput } from '@/common/adapter/ipcBridge';
 import type { TConversationRuntimeSummary } from '@/common/config/storage';
 import { createElement, type PropsWithChildren } from 'react';
 import { SWRConfig } from 'swr';
@@ -23,6 +24,9 @@ const turnCompletedListeners = vi.hoisted(() => ({
     (event: { session_id: string; turn_id: string; state: string; runtime: TConversationRuntimeSummary }) => void
   >,
 }));
+const inputChangedListeners = vi.hoisted(() => ({
+  current: [] as Array<(event: { input: IConversationInput }) => void>,
+}));
 const serverQueueMocks = vi.hoisted(() => ({
   listInputs: vi.fn(),
   submitInput: vi.fn(),
@@ -35,6 +39,14 @@ vi.mock('@/common', () => ({
       listInputs: { invoke: serverQueueMocks.listInputs },
       submitInput: { invoke: serverQueueMocks.submitInput },
       cancelInput: { invoke: serverQueueMocks.cancelInput },
+      inputChanged: {
+        on: vi.fn((listener: (event: { input: IConversationInput }) => void) => {
+          inputChangedListeners.current.push(listener);
+          return () => {
+            inputChangedListeners.current = inputChangedListeners.current.filter((item) => item !== listener);
+          };
+        }),
+      },
       turnCompleted: {
         on: vi.fn((listener) => {
           turnCompletedListeners.current.push(listener);
@@ -128,6 +140,21 @@ const runtimeUnavailableError = () =>
 
 const storageKey = (conversationId: string) => `conversation-command-queue/${conversationId}`;
 
+const serverInput = (overrides: Partial<IConversationInput> = {}): IConversationInput => ({
+  input_id: 'input-1',
+  conversation_id: 'conv-1',
+  mode: 'followup',
+  status: 'held',
+  content: 'queued follow-up',
+  files: [],
+  inject_skills: [],
+  hidden: false,
+  client_key: 'client-1',
+  created_at: 1,
+  updated_at: 1,
+  ...overrides,
+});
+
 const emitTurnCompleted = (conversationId: string): void => {
   act(() => {
     turnCompletedListeners.current.forEach((listener) => {
@@ -171,6 +198,7 @@ describe('useConversationCommandQueue drain', () => {
   beforeEach(() => {
     sessionStorage.clear();
     turnCompletedListeners.current = [];
+    inputChangedListeners.current = [];
     resetConversationRuntimeViewStoreForTest();
     resetConversationCommandQueueBackgroundRunnerForTest();
     vi.clearAllMocks();
@@ -252,21 +280,35 @@ describe('useConversationCommandQueue drain', () => {
     await waitFor(() => expect(sessionStorage.getItem(storageKey('conv-mode-migration'))).toBeNull());
   });
 
-  it('keeps recent terminal server inputs visible without treating them as pending', async () => {
+  it('hides applied and canceled server inputs from the draft box', async () => {
     serverQueueMocks.listInputs.mockResolvedValue([
-      {
+      serverInput({
         input_id: 'applied-1',
         conversation_id: 'conv-terminal',
-        mode: 'followup',
         status: 'applied',
         content: 'already applied',
-        files: [],
-        inject_skills: [],
-        hidden: false,
-        client_key: 'terminal-key',
+        client_key: 'applied-key',
         created_at: 1,
         updated_at: 2,
-      },
+      }),
+      serverInput({
+        input_id: 'canceled-1',
+        conversation_id: 'conv-terminal',
+        status: 'canceled',
+        content: 'was canceled',
+        client_key: 'canceled-key',
+        created_at: 2,
+        updated_at: 3,
+      }),
+      serverInput({
+        input_id: 'held-1',
+        conversation_id: 'conv-terminal',
+        status: 'held',
+        content: 'still waiting',
+        client_key: 'held-key',
+        created_at: 3,
+        updated_at: 3,
+      }),
     ]);
     const { result } = renderQueue({
       conversation_id: 'conv-terminal',
@@ -274,8 +316,97 @@ describe('useConversationCommandQueue drain', () => {
       onExecute: vi.fn(),
     });
 
-    await waitFor(() => expect(result.current.items).toEqual([expect.objectContaining({ status: 'applied' })]));
+    await waitFor(() =>
+      expect(result.current.items).toEqual([
+        expect.objectContaining({ id: 'held-1', status: 'held', input: 'still waiting' }),
+      ])
+    );
+    expect(result.current.hasPendingCommands).toBe(true);
+  });
+
+  it('keeps failed server inputs visible for retry without treating them as pending', async () => {
+    serverQueueMocks.listInputs.mockResolvedValue([
+      serverInput({
+        input_id: 'failed-1',
+        conversation_id: 'conv-failed',
+        status: 'failed',
+        content: 'send failed',
+        client_key: 'failed-key',
+        error_code: 'SEND_FAILED',
+      }),
+    ]);
+    const { result } = renderQueue({
+      conversation_id: 'conv-failed',
+      runtimeGate: idleGate,
+      onExecute: vi.fn(),
+    });
+
+    await waitFor(() =>
+      expect(result.current.items).toEqual([expect.objectContaining({ id: 'failed-1', status: 'failed' })])
+    );
     expect(result.current.hasPendingCommands).toBe(false);
+  });
+
+  it('drops a server input from the draft box once it is applied', async () => {
+    const held = serverInput({
+      input_id: 'held-1',
+      conversation_id: 'conv-apply',
+      status: 'held',
+      content: 'waiting to send',
+      client_key: 'held-key',
+    });
+    serverQueueMocks.listInputs.mockResolvedValue([held]);
+    const { result } = renderQueue({
+      conversation_id: 'conv-apply',
+      runtimeGate: processingGate,
+      onExecute: vi.fn(),
+    });
+
+    await waitFor(() =>
+      expect(result.current.items).toEqual([expect.objectContaining({ id: 'held-1', status: 'held' })])
+    );
+
+    act(() => {
+      inputChangedListeners.current.forEach((listener) => {
+        listener({ input: { ...held, status: 'applied', updated_at: 2 } });
+      });
+    });
+
+    await waitFor(() => expect(result.current.items).toEqual([]));
+    expect(result.current.hasPendingCommands).toBe(false);
+  });
+
+  it('retries a failed server input with the original client key', async () => {
+    const failed = serverInput({
+      input_id: 'failed-1',
+      conversation_id: 'conv-retry',
+      status: 'failed',
+      content: 'retry me',
+      client_key: 'original-client-key',
+      error_code: 'SEND_FAILED',
+    });
+    serverQueueMocks.listInputs.mockResolvedValue([failed]);
+    const { result } = renderQueue({
+      conversation_id: 'conv-retry',
+      runtimeGate: idleGate,
+      onExecute: vi.fn(),
+    });
+
+    await waitFor(() => expect(result.current.items).toEqual([expect.objectContaining({ id: 'failed-1' })]));
+
+    act(() => {
+      result.current.retry('failed-1');
+    });
+
+    await waitFor(() =>
+      expect(serverQueueMocks.submitInput).toHaveBeenCalledWith(
+        expect.objectContaining({
+          conversation_id: 'conv-retry',
+          client_key: 'original-client-key',
+          input: 'retry me',
+        })
+      )
+    );
   });
 
   it('drains a queued command when the runtime becomes idle', async () => {

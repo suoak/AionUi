@@ -5,7 +5,7 @@
  */
 
 import { ipcBridge } from '@/common';
-import type { ConversationInputMode, IConversationCapabilities } from '@/common/adapter/ipcBridge';
+import type { ConversationInputMode } from '@/common/adapter/ipcBridge';
 import type { IConversationMcpStatus } from '@/common/config/storage';
 import AgentModeSelector from '@/renderer/components/agent/AgentModeSelector';
 import CommandQueuePanel from '@/renderer/components/chat/CommandQueuePanel';
@@ -34,6 +34,7 @@ import {
   useConversationCommandQueue,
   type ConversationCommandQueueItem,
 } from '@/renderer/pages/conversation/platforms/useConversationCommandQueue';
+import { useConversationInputCapabilities } from '@/renderer/pages/conversation/platforms/useConversationInputCapabilities';
 import { useConversationRuntimeView } from '@/renderer/pages/conversation/runtime/useConversationRuntimeView';
 import { getConversationRuntimeWorkspaceErrorMessage } from '@/renderer/pages/conversation/utils/conversationCreateError';
 import { getChatSurfaceWidthClass } from '@/renderer/pages/conversation/utils/chatSurfaceWidth';
@@ -139,51 +140,16 @@ const AionrsSendBox: React.FC<{
       status: 'loaded',
     }));
   const { t } = useTranslation();
-  const [conversationCapabilities, setConversationCapabilities] = useState<IConversationCapabilities | null>(null);
-  const [queuedInputMode, setQueuedInputMode] = useState<ConversationInputMode>('followup');
+  const {
+    capabilities: conversationCapabilities,
+    inputMode: queuedInputMode,
+    setInputMode: setQueuedInputMode,
+    hasAlternateInputModes,
+  } = useConversationInputCapabilities(conversation_id);
   const { checkAndUpdateTitle } = useAutoTitle();
   const { current_model } = modelSelection;
   const teamPermission = useTeamPermission();
   const propagateMode = teamPermission?.propagateMode;
-
-  useEffect(() => {
-    const getCapabilities = ipcBridge.conversation.getCapabilities;
-    if (!getCapabilities) return;
-
-    let active = true;
-    void getCapabilities
-      .invoke({ conversation_id })
-      .then((capabilities) => {
-        if (active) setConversationCapabilities(capabilities);
-      })
-      .catch(() => {
-        if (active) setConversationCapabilities(null);
-      });
-    return () => {
-      active = false;
-    };
-  }, [conversation_id]);
-
-  useEffect(() => {
-    if (!ipcBridge.conversation.capabilitiesChanged?.on) return;
-    return ipcBridge.conversation.capabilitiesChanged.on((event) => {
-      if (event.conversation_id !== conversation_id) return;
-      setConversationCapabilities(event.capabilities);
-      setQueuedInputMode((current) => {
-        const remainsSupported =
-          current === 'followup' ||
-          (current === 'steer' && event.capabilities.steer) ||
-          (current === 'inject' && event.capabilities.inject);
-        if (remainsSupported) return current;
-        Message.info(
-          t('conversation.commandQueue.capabilityChanged', {
-            defaultValue: 'The selected input mode is no longer supported. Switched to Followup.',
-          })
-        );
-        return 'followup';
-      });
-    });
-  }, [conversation_id, t]);
 
   const { thought, running, turnStartedAtMs, tokenUsage, setActiveMsgId, setWaitingResponse, resetState } =
     useAionrsMessage(conversation_id, {
@@ -371,7 +337,6 @@ const AionrsSendBox: React.FC<{
     remove,
     retry,
     prioritize,
-    sendNow,
     clear,
     reorder,
     toggleMode,
@@ -805,7 +770,7 @@ const AionrsSendBox: React.FC<{
         }
         rightTools={
           <div className='flex items-center gap-8px min-w-0'>
-            {isBusy && (conversationCapabilities?.steer || conversationCapabilities?.inject) ? (
+            {isBusy && hasAlternateInputModes && conversationCapabilities ? (
               <Select
                 size='mini'
                 value={queuedInputMode}

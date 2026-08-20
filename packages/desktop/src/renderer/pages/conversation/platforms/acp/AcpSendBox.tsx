@@ -1,4 +1,5 @@
 import { ipcBridge } from '@/common';
+import type { ConversationInputMode } from '@/common/adapter/ipcBridge';
 import type { IConversationMcpStatus } from '@/common/config/storage';
 import { isBackendHttpError } from '@/common/adapter/httpBridge';
 import { isSideQuestionSupported } from '@/common/chat/sideQuestion';
@@ -32,6 +33,7 @@ import {
   useConversationCommandQueue,
   type ConversationCommandQueueItem,
 } from '@/renderer/pages/conversation/platforms/useConversationCommandQueue';
+import { useConversationInputCapabilities } from '@/renderer/pages/conversation/platforms/useConversationInputCapabilities';
 import { usePreviewContext } from '@/renderer/pages/conversation/Preview';
 import { useConversationRuntimeView } from '@/renderer/pages/conversation/runtime/useConversationRuntimeView';
 import { getConversationRuntimeWorkspaceErrorMessage } from '@/renderer/pages/conversation/utils/conversationCreateError';
@@ -44,7 +46,7 @@ import { emitter, useAddEventListener } from '@/renderer/utils/emitter';
 import { localSelectionItems, mergeFileSelectionItems } from '@/renderer/utils/file/fileSelection';
 import { collectChatFileRefs, splitChatFileRefs } from '@/renderer/utils/file/messageFiles';
 import type { ChatFileRef } from '@/common/types/chatFile';
-import { Message, Tag } from '@arco-design/web-react';
+import { Message, Select, Tag } from '@arco-design/web-react';
 import { Brain, MagicHat, Shield } from '@icon-park/react';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -123,6 +125,12 @@ const AcpSendBox: React.FC<{
     context_limit,
   } = messageState;
   const { t } = useTranslation();
+  const {
+    capabilities: conversationCapabilities,
+    inputMode: queuedInputMode,
+    setInputMode: setQueuedInputMode,
+    hasAlternateInputModes,
+  } = useConversationInputCapabilities(conversation_id);
   const teamPermission = useTeamPermission();
   // In team mode, all agents show the permission mode selector (members don't propagate)
   const showModeSelector = true;
@@ -408,7 +416,6 @@ Please check your local CLI tool authentication status`,
     remove,
     retry,
     prioritize,
-    sendNow,
     clear,
     reorder,
     toggleMode,
@@ -436,7 +443,7 @@ Please check your local CLI tool authentication status`,
         hasPendingCommands,
       })
     ) {
-      enqueue({ input: message, files: allFiles });
+      enqueue({ input: message, files: allFiles, mode: queuedInputMode });
       return;
     }
 
@@ -780,6 +787,29 @@ Please check your local CLI tool authentication status`,
         }
         rightTools={
           <div className='flex items-center gap-8px min-w-0'>
+            {isBusy && hasAlternateInputModes && conversationCapabilities ? (
+              <Select
+                size='mini'
+                value={queuedInputMode}
+                onChange={(value) => setQueuedInputMode(value as ConversationInputMode)}
+                className='w-92px'
+                aria-label={t('conversation.commandQueue.inputMode', { defaultValue: 'Input mode' })}
+              >
+                <Select.Option value='followup'>
+                  {t('conversation.commandQueue.followup', { defaultValue: 'Followup' })}
+                </Select.Option>
+                {conversationCapabilities.steer ? (
+                  <Select.Option value='steer'>
+                    {t('conversation.commandQueue.steer', { defaultValue: 'Steer' })}
+                  </Select.Option>
+                ) : null}
+                {conversationCapabilities.inject ? (
+                  <Select.Option value='inject'>
+                    {t('conversation.commandQueue.inject', { defaultValue: 'Inject' })}
+                  </Select.Option>
+                ) : null}
+              </Select>
+            ) : null}
             {showModeSelector && (
               <AgentModeSelector
                 backend={backend}
