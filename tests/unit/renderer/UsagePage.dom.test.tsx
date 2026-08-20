@@ -15,6 +15,9 @@ import { Message } from '@arco-design/web-react';
 vi.mock('react-i18next', () => ({
   useTranslation: () => ({
     t: (key: string, options?: Record<string, unknown>) => {
+      if (key === 'settings.agentManagement.internalCliName') {
+        return 'CSBU WorkMate';
+      }
       if (options && typeof options === 'object') {
         return Object.entries(options)
           .filter(([name]) => name !== 'defaultValue')
@@ -156,6 +159,32 @@ describe('UsagePage', () => {
     expect(screen.getByTestId('usage-model-filter')).toBeTruthy();
     fireEvent.click(screen.getByTestId('usage-model-filter-deepseek-chat'));
     expect(screen.getByText('Harness preview chat')).toBeTruthy();
+  });
+
+  it('shows the WorkMate brand instead of the internal aionrs backend id', () => {
+    writeUsageLedger({
+      ...createEmptyUsageLedger(),
+      events: [
+        {
+          id: 'workmate-event',
+          recorded_at: Date.now(),
+          conversation_id: 'conv-workmate',
+          fingerprint: 'turn:workmate',
+          backend: 'aionrs',
+          input_tokens: 10,
+          output_tokens: 2,
+          thought_tokens: 0,
+          cached_read_tokens: 0,
+          cached_write_tokens: 0,
+          cost_delta: 0,
+          source: 'aionrs',
+        },
+      ],
+    });
+
+    render(<UsagePage />);
+
+    expect(screen.getAllByText('CSBU WorkMate').length).toBeGreaterThan(0);
   });
 
   it('scopes the model breakdown to the selected model while keeping all filter chips', () => {

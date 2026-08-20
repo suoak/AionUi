@@ -116,9 +116,21 @@ const UsagePage: React.FC = () => {
     [activeModelFilter, events]
   );
   const daily = useMemo(() => buildUsageDailySeries(scopedEvents, range), [range, scopedEvents]);
+  const agentLabels = useMemo(
+    () => ({
+      aionrs: t('settings.agentManagement.internalCliName'),
+    }),
+    [t]
+  );
   const byAgent = useMemo(
-    () => breakdownUsageByAgent(scopedEvents, t('settings.usage.unknownAgent'), t('settings.usage.retiredRuntime')),
-    [scopedEvents, t]
+    () =>
+      breakdownUsageByAgent(
+        scopedEvents,
+        t('settings.usage.unknownAgent'),
+        t('settings.usage.retiredRuntime'),
+        agentLabels
+      ),
+    [agentLabels, scopedEvents, t]
   );
   const byAssistant = useMemo(
     () => breakdownUsageByAssistant(scopedEvents, t('settings.usage.unknownAssistant')),
@@ -160,7 +172,7 @@ const UsagePage: React.FC = () => {
     if (scopedEvents.length === 0) {
       return;
     }
-    const blob = new Blob([usageEventsToCsv(scopedEvents)], { type: 'text/csv;charset=utf-8' });
+    const blob = new Blob([usageEventsToCsv(scopedEvents, agentLabels)], { type: 'text/csv;charset=utf-8' });
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;

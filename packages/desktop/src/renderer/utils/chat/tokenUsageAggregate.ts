@@ -335,12 +335,18 @@ const sortBreakdown = (rows: Map<string, UsageBreakdownRow>): UsageBreakdownRow[
 export function breakdownUsageByAgent(
   events: UsageEvent[],
   unknownLabel: string,
-  retiredRuntimeLabel = 'Retired runtime'
+  retiredRuntimeLabel = 'Retired runtime',
+  agentLabels: Record<string, string> = {}
 ): UsageBreakdownRow[] {
   const rows = new Map<string, UsageBreakdownRow>();
   for (const event of events) {
     const key = event.backend.trim() || 'unknown';
-    const label = key === 'deepseek-harness' ? retiredRuntimeLabel : key === 'unknown' ? unknownLabel : event.backend;
+    const label =
+      key === 'deepseek-harness'
+        ? retiredRuntimeLabel
+        : key === 'unknown'
+          ? unknownLabel
+          : agentLabels[key] || event.backend;
     addBreakdownRow(rows, key, label, event);
   }
   return sortBreakdown(rows);
@@ -427,7 +433,7 @@ const csvEscape = (value: string | undefined): string => {
   return `"${text.replaceAll('"', '""')}"`;
 };
 
-export function usageEventsToCsv(events: UsageEvent[]): string {
+export function usageEventsToCsv(events: UsageEvent[], agentLabels: Record<string, string> = {}): string {
   const header = [
     'recorded_at',
     'fingerprint',
@@ -454,7 +460,7 @@ export function usageEventsToCsv(events: UsageEvent[]): string {
       csvEscape(event.turn_id),
       csvEscape(event.conversation_id),
       csvEscape(event.conversation_name),
-      csvEscape(event.backend),
+      csvEscape(agentLabels[event.backend.trim()] || event.backend),
       csvEscape(event.assistant_name),
       csvEscape(event.model_id),
       usageEventTotalTokens(event),
