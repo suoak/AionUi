@@ -1,5 +1,27 @@
 # Changelog
 
+## [2.1.78](https://github.com/suoak/AionUi/compare/v2.1.77...v2.1.78) (2026-08-20)
+
+### Desktop
+
+#### Bug Fixes
+
+- **conversation:** hide applied drafts and honor input capabilities (#81)
+
+#### 内网更新说明
+
+<!-- internal-release-notes:start -->
+
+**由运营管理部提供**
+
+- 已经发送成功的对话消息不再留在草稿箱中。
+- 忙碌时可根据会话能力选择后续消息、引导当前轮次或注入当前轮次，失效时自动回到后续消息。
+- 失败的排队消息可按原幂等键重试，已接受但尚未完成的排队消息仍可取消。
+
+<!-- internal-release-notes:end -->
+
+---
+
 ## [2.1.77](https://github.com/suoak/AionUi/compare/v2.1.76...v2.1.77) (2026-08-20)
 
 ### Desktop
