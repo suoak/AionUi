@@ -216,6 +216,68 @@ describe('useConversationCommandQueue drain', () => {
     expect(onExecute).not.toHaveBeenCalled();
   });
 
+  it('preserves the persisted input mode while migrating to the server queue', async () => {
+    serverQueueMocks.listInputs.mockResolvedValue([]);
+    sessionStorage.setItem(
+      storageKey('conv-mode-migration'),
+      JSON.stringify({
+        mode: 'auto',
+        isPaused: false,
+        items: [
+          {
+            id: 'stable-client-key',
+            input: 'adjust the active turn',
+            files: [],
+            mode: 'steer',
+            created_at: 1,
+          },
+        ],
+      })
+    );
+
+    renderQueue({
+      conversation_id: 'conv-mode-migration',
+      runtimeGate: processingGate,
+      onExecute: vi.fn(),
+    });
+
+    await waitFor(() =>
+      expect(serverQueueMocks.submitInput).toHaveBeenCalledWith(
+        expect.objectContaining({
+          mode: 'steer',
+          client_key: 'stable-client-key',
+        })
+      )
+    );
+    await waitFor(() => expect(sessionStorage.getItem(storageKey('conv-mode-migration'))).toBeNull());
+  });
+
+  it('keeps recent terminal server inputs visible without treating them as pending', async () => {
+    serverQueueMocks.listInputs.mockResolvedValue([
+      {
+        input_id: 'applied-1',
+        conversation_id: 'conv-terminal',
+        mode: 'followup',
+        status: 'applied',
+        content: 'already applied',
+        files: [],
+        inject_skills: [],
+        hidden: false,
+        client_key: 'terminal-key',
+        created_at: 1,
+        updated_at: 2,
+      },
+    ]);
+    const { result } = renderQueue({
+      conversation_id: 'conv-terminal',
+      runtimeGate: idleGate,
+      onExecute: vi.fn(),
+    });
+
+    await waitFor(() => expect(result.current.items).toEqual([expect.objectContaining({ status: 'applied' })]));
+    expect(result.current.hasPendingCommands).toBe(false);
+  });
+
   it('drains a queued command when the runtime becomes idle', async () => {
     const onExecute = vi.fn().mockResolvedValue(undefined);
     const { result, rerender } = renderQueue({
