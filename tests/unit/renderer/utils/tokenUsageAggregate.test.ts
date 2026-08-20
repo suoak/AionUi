@@ -201,12 +201,23 @@ describe('tokenUsageAggregate', () => {
       total_tokens: 44,
       turn_count: 2,
     });
+    expect(breakdownUsageByAgent(events, 'Unknown agent', 'Retired runtime', { aionrs: 'CSBU WorkMate' })).toEqual(
+      expect.arrayContaining([expect.objectContaining({ key: 'aionrs', label: 'CSBU WorkMate', total_tokens: 6 })])
+    );
     expect(breakdownUsageByAssistant(events, 'Unknown assistant')).toEqual(
       expect.arrayContaining([
         expect.objectContaining({ key: 'asst-1', label: 'Preview', total_tokens: 44 }),
         expect.objectContaining({ key: 'unknown', label: 'Unknown assistant', total_tokens: 6 }),
       ])
     );
+  });
+
+  it('exports the WorkMate display name without changing the stored backend key', () => {
+    const source = event({ backend: 'aionrs', input_tokens: 5 });
+    const csv = usageEventsToCsv([source], { aionrs: 'CSBU WorkMate' });
+
+    expect(csv).toContain(',CSBU WorkMate,');
+    expect(source.backend).toBe('aionrs');
   });
 
   it('groups spend by model and recent conversation', () => {
