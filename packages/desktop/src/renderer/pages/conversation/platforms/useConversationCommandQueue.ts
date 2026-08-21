@@ -1,6 +1,7 @@
 import { ipcBridge } from '@/common';
 import type { ConversationInputMode, ConversationInputStatus, IConversationInput } from '@/common/adapter/ipcBridge';
 import { isBackendHttpError } from '@/common/adapter/httpBridge';
+import type { SessionRef } from '@/common/adapter/ipcBridge';
 import { type ChatFileRef, chatFileRefKey, isChatFileRef } from '@/common/types/chatFile';
 import { uuid } from '@/common/utils';
 import {
@@ -18,6 +19,11 @@ export type ConversationCommandQueueItem = {
   id: string;
   input: string;
   files: ChatFileRef[];
+  /** `@@` session references. Must survive the draft box: a message that goes
+   *  through the queue and loses its references is a silent failure — the agent
+   *  simply never sees the session block. Ids only, so this adds a handful of
+   *  bytes to the persisted state. */
+  sessions?: SessionRef[];
   created_at: number;
   managed_by_server?: boolean;
   mode?: ConversationInputMode;
@@ -57,11 +63,25 @@ type QueueValidationFailure = {
 
 const COMMAND_QUEUE_LOG_PREFIX = '[conversation-command-queue]';
 
+/** Keep only well-formed `{ id }` refs from persisted state. Unknown shapes are
+ *  dropped rather than failing the whole item: losing a stale reference is
+ *  recoverable, losing the user's typed message is not. */
+const normalizeSessionRefs = (value: unknown): SessionRef[] | undefined => {
+  if (!Array.isArray(value)) return undefined;
+  const refs = value.filter(
+    (entry): entry is SessionRef =>
+      typeof (entry as SessionRef | undefined)?.id === 'string' && (entry as SessionRef).id.length > 0
+  );
+  return refs.length > 0 ? refs : undefined;
+};
+
 const summarizeQueuedCommand = (item: ConversationCommandQueueItem): Record<string, unknown> => ({
   id: item.id,
   created_at: item.created_at,
   inputLength: item.input.length,
   fileCount: item.files.length,
+  // Count only, matching `fileCount` — never the referenced ids or names.
+  sessionCount: item.sessions?.length ?? 0,
 });
 
 const logCommandQueue = (conversation_id: string, event: string, payload: Record<string, unknown> = {}): void => {
@@ -134,6 +154,9 @@ const normalizeQueueItem = (item: unknown): ConversationCommandQueueItem | null 
     // Elements validated by the isChatFileRef guard above; `.every` doesn't
     // narrow the array element type, so assert it here.
     files: uniqueFiles(candidate.files as ChatFileRef[]),
+    // Absent in state persisted before `@@` existed, so this must tolerate
+    // `undefined` rather than rejecting the whole item.
+    sessions: normalizeSessionRefs(candidate.sessions),
     created_at: candidate.created_at,
     mode: candidate.mode === 'inject' || candidate.mode === 'steer' ? candidate.mode : 'followup',
   };
@@ -190,12 +213,16 @@ export const createQueuedCommandItem = ({
   input,
   files,
   mode,
-}: Pick<ConversationCommandQueueItem, 'input' | 'files'> & {
+  sessions,
+}: Pick<ConversationCommandQueueItem, 'input' | 'files' | 'sessions'> & {
   mode?: ConversationInputMode;
 }): ConversationCommandQueueItem => ({
   id: uuid(),
   input,
   files: uniqueFiles(files),
+  // Normalised on the way in as well as on the way out of persistence, so an
+  // empty array never survives as `[]` and the state stays comparable.
+  sessions: normalizeSessionRefs(sessions),
   created_at: Date.now(),
   mode: mode ?? 'followup',
 });
@@ -333,7 +360,7 @@ export const restoreQueuedCommand = (
 export const updateQueuedCommand = (
   items: ConversationCommandQueueItem[],
   commandId: string,
-  updates: Partial<Pick<ConversationCommandQueueItem, 'input' | 'files'>>
+  updates: Partial<Pick<ConversationCommandQueueItem, 'input' | 'files' | 'sessions'>>
 ): ConversationCommandQueueItem[] =>
   items.map((item) =>
     item.id === commandId
@@ -341,6 +368,7 @@ export const updateQueuedCommand = (
           ...item,
           ...updates,
           files: updates.files ? uniqueFiles(updates.files) : item.files,
+          sessions: updates.sessions ?? item.sessions,
         }
       : item
   );
@@ -465,7 +493,12 @@ type UseConversationCommandQueueOptions = {
   onExecute: (item: ConversationCommandQueueItem) => Promise<void>;
 };
 
-type EnqueueCommandInput = Pick<ConversationCommandQueueItem, 'input' | 'files'> & { mode?: ConversationInputMode };
+/// `sessions` is part of the enqueue input, not just of the stored item: a
+/// message that reaches the draft box and loses its `@@` references fails
+/// silently — the send succeeds and the agent simply never sees the block.
+type EnqueueCommandInput = Pick<ConversationCommandQueueItem, 'input' | 'files' | 'sessions'> & {
+  mode?: ConversationInputMode;
+};
 type UpdateCommandInput = Pick<ConversationCommandQueueItem, 'input'>;
 type BackgroundCommandQueueRunner = {
   conversation_id: string;
@@ -890,13 +923,13 @@ export const useConversationCommandQueue = ({
   );
 
   const enqueue = useCallback(
-    ({ input, files, mode }: EnqueueCommandInput) => {
+    ({ input, files, mode, sessions }: EnqueueCommandInput) => {
       if (!enabled) {
         return null;
       }
 
       const currentState = normalizeQueueState(stateRef.current);
-      const item = createQueuedCommandItem({ input, files, mode });
+      const item = createQueuedCommandItem({ input, files, mode, sessions });
       const validation = validateQueuedCommandItem(item, currentState);
 
       if (isQueueValidationFailure(validation)) {

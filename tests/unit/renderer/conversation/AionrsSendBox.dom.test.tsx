@@ -63,14 +63,39 @@ vi.mock('@/renderer/components/chat/SendBox', () => ({
     active,
     onFocused,
     sendButtonPrefix,
+    topRightOverlay,
+    onAddToDraft,
+    addToDraftDisabled,
+    selectedSessions,
+    onSelectedSessionsChange,
+    crossSessionEnabled,
+    isTeamConversation,
   }: {
     onSend: (message: string) => Promise<void>;
     onChange?: (value: string) => void;
     active?: boolean;
     onFocused?: () => void;
     sendButtonPrefix?: React.ReactNode;
+    topRightOverlay?: React.ReactNode;
+    onAddToDraft?: () => void;
+    addToDraftDisabled?: boolean;
+    selectedSessions?: Array<{ id: string }>;
+    onSelectedSessionsChange?: (sessions: Array<{ id: string }>) => void;
+    crossSessionEnabled?: boolean;
+    isTeamConversation?: boolean;
   }) => {
-    sendBoxPropsSpy({ active, onFocused, sendButtonPrefix });
+    sendBoxPropsSpy({
+      active,
+      onFocused,
+      disabled,
+      sendDisabled,
+      onAddToDraft,
+      addToDraftDisabled,
+      selectedSessions,
+      onSelectedSessionsChange,
+      crossSessionEnabled,
+      isTeamConversation,
+    });
     return (
       <div>
         <button type='button' onClick={() => onChange?.('hello')}>

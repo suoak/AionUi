@@ -78,6 +78,14 @@ vi.mock('@/renderer/components/chat/SendBox', () => ({
     sendButtonPrefix,
     active,
     onFocused,
+    disabled,
+    sendDisabled,
+    onAddToDraft,
+    addToDraftDisabled,
+    selectedSessions,
+    onSelectedSessionsChange,
+    crossSessionEnabled,
+    isTeamConversation,
   }: {
     onSend: (message: string) => Promise<void>;
     onChange?: (value: string) => void;
@@ -85,14 +93,39 @@ vi.mock('@/renderer/components/chat/SendBox', () => ({
     sendButtonPrefix?: React.ReactNode;
     active?: boolean;
     onFocused?: () => void;
+    disabled?: boolean;
+    sendDisabled?: boolean;
+    onAddToDraft?: () => void;
+    addToDraftDisabled?: boolean;
+    selectedSessions?: Array<{ id: string }>;
+    onSelectedSessionsChange?: (sessions: Array<{ id: string }>) => void;
+    crossSessionEnabled?: boolean;
+    isTeamConversation?: boolean;
   }) => {
-    sendBoxPropsSpy({ active, onFocused });
+    sendBoxPropsSpy({
+      active,
+      onFocused,
+      disabled,
+      sendDisabled,
+      onAddToDraft,
+      addToDraftDisabled,
+      selectedSessions,
+      crossSessionEnabled,
+      isTeamConversation,
+    });
     return (
       <div>
         {rightTools}
         {sendButtonPrefix}
         <button type='button' onClick={() => onChange?.('hello')}>
           change
+        </button>
+        {/* Stands in for choosing a conversation in the `@@` picker. */}
+        <button type='button' onClick={() => onSelectedSessionsChange?.([{ id: 'conv_target' }])}>
+          pick-session
+        </button>
+        <button type='button' onClick={() => onAddToDraft?.()}>
+          add-to-draft
         </button>
         <button
           type='button'
