@@ -394,8 +394,12 @@ export const getCommandQueueExecutionGate = ({
 /** Pending server inputs that can still be cancelled from the draft box. */
 const PENDING_SERVER_STATUSES: ReadonlySet<ConversationInputStatus> = new Set(['held', 'dispatching', 'accepted']);
 
-/** Terminal records shown as recent status, not as editable drafts. */
-const RECENT_SERVER_STATUSES: ReadonlySet<ConversationInputStatus> = new Set(['applied', 'canceled', 'failed']);
+/** Terminal records shown as recent status, not as editable drafts.
+ *
+ * `applied` is omitted on purpose: a successful send already lives in the
+ * transcript. Listing it again in the draft box made the original user
+ * message look like an unsent draft after every turn. */
+const RECENT_SERVER_STATUSES: ReadonlySet<ConversationInputStatus> = new Set(['canceled', 'failed']);
 
 const VISIBLE_SERVER_STATUSES: ReadonlySet<ConversationInputStatus> = new Set([
   ...PENDING_SERVER_STATUSES,
