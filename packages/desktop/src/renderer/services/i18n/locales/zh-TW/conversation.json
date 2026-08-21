@@ -185,7 +185,17 @@
     "batchDeleteSuccess_one": "{{count}} topics deleted",
     "batchDeleteSuccess_other": "{{count}} topics deleted",
     "removeProjectConfirm_one": "確定要移除專案「{{name}}」嗎？專案下的 {{count}} 個對話也會被一起移除。",
-    "removeProjectConfirm_other": "確定要移除專案「{{name}}」嗎？專案下的 {{count}} 個對話也會被一起移除。"
+    "removeProjectConfirm_other": "確定要移除專案「{{name}}」嗎？專案下的 {{count}} 個對話也會被一起移除。",
+    "archive": "封存",
+    "archiveSuccess": "已封存",
+    "archiveFailed": "封存失敗",
+    "batchArchive": "批次歸檔",
+    "batchArchiveConfirm": "確定歸檔已選的 {{count}} 個話題嗎？歸檔後可在設定的歸檔頁恢復或刪除。",
+    "batchArchiveSuccess": "已歸檔 {{count}} 個話題",
+    "archiveProject": "歸檔專案",
+    "archiveProjectTitle": "歸檔專案",
+    "archiveProjectConfirm": "確定歸檔專案「{{name}}」嗎？專案下的 {{count}} 個對話也會一起歸檔。歸檔後可在設定的歸檔頁恢復或刪除。",
+    "archiving": "歸檔中..."
   },
   "noAgentsAvailable": "沒有可用的 Agent",
   "agentError": {

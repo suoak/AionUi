@@ -193,7 +193,17 @@
     "removeProjectConfirm_one": "Удалить проект «{{name}}»? Беседы в проекте тоже будут удалены: {{count}}.",
     "removeProjectConfirm_other": "Удалить проект «{{name}}»? Беседы в проекте тоже будут удалены: {{count}}.",
     "removeProjectConfirm_few": "Удалить проект «{{name}}»? Беседы в проекте тоже будут удалены: {{count}}.",
-    "removeProjectConfirm_many": "Удалить проект «{{name}}»? Беседы в проекте тоже будут удалены: {{count}}."
+    "removeProjectConfirm_many": "Удалить проект «{{name}}»? Беседы в проекте тоже будут удалены: {{count}}.",
+    "archive": "Архивировать",
+    "archiveSuccess": "Архивировано",
+    "archiveFailed": "Не удалось архивировать",
+    "batchArchive": "Batch archive",
+    "batchArchiveConfirm": "Archive {{count}} selected topics? You can restore or delete them from Archived in Settings.",
+    "batchArchiveSuccess": "Archived {{count}} topics",
+    "archiveProject": "Archive project",
+    "archiveProjectTitle": "Archive project",
+    "archiveProjectConfirm": "Archive project \"{{name}}\"? Its {{count}} conversation(s) will be archived too. You can restore or delete them from Archived in Settings.",
+    "archiving": "Archiving..."
   },
   "noAgentsAvailable": "Нет доступных агентов",
   "agentError": {

@@ -185,7 +185,17 @@
     "batchDeleteSuccess_one": "{{count}} topics deleted",
     "batchDeleteSuccess_other": "{{count}} topics deleted",
     "removeProjectConfirm_one": "プロジェクト「{{name}}」を削除しますか？プロジェクト内の {{count}} 件の会話も削除されます。",
-    "removeProjectConfirm_other": "プロジェクト「{{name}}」を削除しますか？プロジェクト内の {{count}} 件の会話も削除されます。"
+    "removeProjectConfirm_other": "プロジェクト「{{name}}」を削除しますか？プロジェクト内の {{count}} 件の会話も削除されます。",
+    "archive": "アーカイブ",
+    "archiveSuccess": "アーカイブしました",
+    "archiveFailed": "アーカイブに失敗しました",
+    "batchArchive": "Batch archive",
+    "batchArchiveConfirm": "Archive {{count}} selected topics? You can restore or delete them from Archived in Settings.",
+    "batchArchiveSuccess": "Archived {{count}} topics",
+    "archiveProject": "Archive project",
+    "archiveProjectTitle": "Archive project",
+    "archiveProjectConfirm": "Archive project \"{{name}}\"? Its {{count}} conversation(s) will be archived too. You can restore or delete them from Archived in Settings.",
+    "archiving": "Archiving..."
   },
   "noAgentsAvailable": "利用可能なエージェントはありません",
   "agentError": {
