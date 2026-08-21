@@ -1,5 +1,25 @@
 # Changelog
 
+## [2.1.79](https://github.com/suoak/AionUi/compare/v2.1.78...v2.1.79) (2026-08-21)
+
+### Desktop
+
+#### Bug Fixes
+
+- **conversation:** hide applied sends from the draft box (#87)
+
+#### 内网更新说明
+
+<!-- internal-release-notes:start -->
+
+**由运营管理部提供**
+
+- 已经发送成功并出现在会话记录中的消息，不再留在草稿箱的最近列表里。
+
+<!-- internal-release-notes:end -->
+
+---
+
 ## [2.1.78](https://github.com/suoak/AionUi/compare/v2.1.77...v2.1.78) (2026-08-21)
 
 ### Desktop
