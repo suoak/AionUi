@@ -321,7 +321,14 @@ describe('useConversationCommandQueue drain', () => {
         expect.objectContaining({ id: 'held-1', status: 'held', input: 'still waiting' }),
       ])
     );
+    expect(result.current.recentItems).toEqual([
+      expect.objectContaining({ id: 'applied-1', status: 'applied' }),
+      expect.objectContaining({ id: 'canceled-1', status: 'canceled' }),
+    ]);
     expect(result.current.hasPendingCommands).toBe(true);
+    expect(serverQueueMocks.listInputs).toHaveBeenCalledWith(
+      expect.objectContaining({ conversation_id: 'conv-terminal', terminal_limit: 20 })
+    );
   });
 
   it('keeps failed server inputs visible for retry without treating them as pending', async () => {
@@ -342,8 +349,9 @@ describe('useConversationCommandQueue drain', () => {
     });
 
     await waitFor(() =>
-      expect(result.current.items).toEqual([expect.objectContaining({ id: 'failed-1', status: 'failed' })])
+      expect(result.current.recentItems).toEqual([expect.objectContaining({ id: 'failed-1', status: 'failed' })])
     );
+    expect(result.current.items).toEqual([]);
     expect(result.current.hasPendingCommands).toBe(false);
   });
 
@@ -373,6 +381,7 @@ describe('useConversationCommandQueue drain', () => {
     });
 
     await waitFor(() => expect(result.current.items).toEqual([]));
+    expect(result.current.recentItems).toEqual([expect.objectContaining({ id: 'held-1', status: 'applied' })]);
     expect(result.current.hasPendingCommands).toBe(false);
   });
 
@@ -392,7 +401,7 @@ describe('useConversationCommandQueue drain', () => {
       onExecute: vi.fn(),
     });
 
-    await waitFor(() => expect(result.current.items).toEqual([expect.objectContaining({ id: 'failed-1' })]));
+    await waitFor(() => expect(result.current.recentItems).toEqual([expect.objectContaining({ id: 'failed-1' })]));
 
     act(() => {
       result.current.retry('failed-1');

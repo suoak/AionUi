@@ -388,6 +388,8 @@
     "statusApplied": "Applied",
     "statusCanceled": "Canceled",
     "statusFailed": "Failed",
+    "pendingSection": "대기 중",
+    "recentSection": "최근",
     "mode": {
       "manual": "수동 전송",
       "auto": "자동 전송"

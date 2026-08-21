@@ -153,14 +153,45 @@ describe('CommandQueuePanel', () => {
   it('does not let the user cancel a failed server input', () => {
     const onRemove = vi.fn();
     renderPanel({
-      items: [{ ...item, status: 'failed', managed_by_server: true }],
+      items: [],
+      recentItems: [{ ...item, status: 'failed', managed_by_server: true }],
       onRemove,
     });
 
-    const removeButton = screen.getByRole('button', { name: 'Remove' });
-    expect(removeButton).toBeDisabled();
-    fireEvent.click(removeButton);
+    expect(screen.getByRole('button', { name: 'Retry' })).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'Remove' })).toBeNull();
     expect(onRemove).not.toHaveBeenCalled();
+  });
+
+  it('retries a failed recent input without allowing cancel', () => {
+    const onRetry = vi.fn();
+    const onRemove = vi.fn();
+    renderPanel({
+      items: [],
+      recentItems: [{ ...item, status: 'failed', managed_by_server: true }],
+      onRetry,
+      onRemove,
+    });
+
+    fireEvent.click(screen.getByRole('button', { name: 'Retry' }));
+    expect(onRetry).toHaveBeenCalledExactlyOnceWith('queued-1');
+    expect(screen.queryByRole('button', { name: 'Remove' })).toBeNull();
+    expect(screen.queryByRole('button', { name: 'Send now' })).toBeNull();
+  });
+
+  it('shows applied and canceled records in the recent section', () => {
+    renderPanel({
+      items: [{ ...item, status: 'held', managed_by_server: true }],
+      recentItems: [
+        { ...item, id: 'applied-1', status: 'applied', managed_by_server: true, input: 'already applied' },
+        { ...item, id: 'canceled-1', status: 'canceled', managed_by_server: true, input: 'was canceled' },
+      ],
+    });
+
+    expect(screen.getByText('Pending')).toBeInTheDocument();
+    expect(screen.getByText('Recent')).toBeInTheDocument();
+    expect(screen.getByText('already applied')).toBeInTheDocument();
+    expect(screen.getByText('was canceled')).toBeInTheDocument();
   });
 
   it('clears the draft box through a confirm dialog', () => {

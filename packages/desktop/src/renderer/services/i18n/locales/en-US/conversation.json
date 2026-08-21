@@ -388,6 +388,8 @@
     "statusApplied": "Applied",
     "statusCanceled": "Canceled",
     "statusFailed": "Failed",
+    "pendingSection": "Pending",
+    "recentSection": "Recent",
     "mode": {
       "manual": "Manual send",
       "auto": "Auto send"

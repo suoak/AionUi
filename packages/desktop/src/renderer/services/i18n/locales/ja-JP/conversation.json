@@ -388,6 +388,8 @@
     "statusApplied": "Applied",
     "statusCanceled": "Canceled",
     "statusFailed": "Failed",
+    "pendingSection": "未処理",
+    "recentSection": "最近",
     "mode": {
       "manual": "手動送信",
       "auto": "自動送信"

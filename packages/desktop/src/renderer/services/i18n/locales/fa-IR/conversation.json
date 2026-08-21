@@ -388,6 +388,8 @@
     "statusApplied": "Applied",
     "statusCanceled": "Canceled",
     "statusFailed": "Failed",
+    "pendingSection": "در انتظار",
+    "recentSection": "اخیر",
     "mode": {
       "manual": "ارسال دستی",
       "auto": "ارسال خودکار"

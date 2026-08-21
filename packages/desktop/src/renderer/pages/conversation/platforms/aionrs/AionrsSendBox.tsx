@@ -330,6 +330,7 @@ const AionrsSendBox: React.FC<{
 
   const {
     items: queuedCommands,
+    recentItems: recentQueuedCommands,
     mode: queueMode,
     isInteractionLocked: isQueueInteractionLocked,
     hasPendingCommands,
@@ -709,6 +710,7 @@ const AionrsSendBox: React.FC<{
     <div className={`${sendBoxWidthClass} flex flex-col mt-auto mb-16px`}>
       <CommandQueuePanel
         items={queuedCommands}
+        recentItems={recentQueuedCommands}
         mode={queueMode}
         isMobile={isMobile}
         interactionLocked={isQueueInteractionLocked}
