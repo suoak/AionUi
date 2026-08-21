@@ -1548,5 +1548,14 @@
   "crossSessionMessageDesc": "Дозволяє агентам надсилати повідомлення до ваших інших розмов. Вимкнення також відключає згадку @@ у полі введення.",
   "crossSessionMessageDisabledBanner": "Повідомлення між розмовами вимкнено, згадка @@ недоступна.",
   "crossSessionMessageResume": "Увімкнути знову",
-  "crossSessionMessageUpdateFailed": "Не вдалося оновити налаштування повідомлень між розмовами"
+  "crossSessionMessageUpdateFailed": "Не вдалося оновити налаштування повідомлень між розмовами",
+  "fonts": "Шрифти",
+  "fontRegionApp": "Глобальний",
+  "fontRegionChat": "Чат",
+  "fontRegionMarkdown": "Markdown",
+  "fontRegionCode": "Код",
+  "fontFamilySystemDefault": "Системний за замовчуванням",
+  "fontFamilyLoading": "Завантаження шрифтів…",
+  "fontFamilyError": "Не вдалося отримати системні шрифти",
+  "fontFamilyNoResults": "Немає відповідних шрифтів"
 }

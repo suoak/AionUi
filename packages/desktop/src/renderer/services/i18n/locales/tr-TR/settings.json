@@ -1533,5 +1533,14 @@
   "crossSessionMessageDesc": "Aracıların diğer sohbetlerinize mesaj göndermesine izin verir. Kapatmak giriş alanındaki @@ sohbet etiketini de devre dışı bırakır.",
   "crossSessionMessageDisabledBanner": "Sohbetler arası mesajlar kapalı, @@ sohbet etiketi kullanılamıyor.",
   "crossSessionMessageResume": "Yeniden aç",
-  "crossSessionMessageUpdateFailed": "Sohbetler arası mesaj ayarı güncellenemedi"
+  "crossSessionMessageUpdateFailed": "Sohbetler arası mesaj ayarı güncellenemedi",
+  "fonts": "Yazı Tipleri",
+  "fontRegionApp": "Genel",
+  "fontRegionChat": "Sohbet",
+  "fontRegionMarkdown": "Markdown",
+  "fontRegionCode": "Kod",
+  "fontFamilySystemDefault": "Sistem varsayılanı",
+  "fontFamilyLoading": "Yazı tipleri yükleniyor…",
+  "fontFamilyError": "Sistem yazı tiplerine erişilemedi",
+  "fontFamilyNoResults": "Eşleşen yazı tipi yok"
 }

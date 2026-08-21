@@ -1547,5 +1547,14 @@
   "crossSessionMessageDesc": "Разрешить агентам отправлять сообщения в ваши другие беседы. При отключении также отключается упоминание @@ в поле ввода.",
   "crossSessionMessageDisabledBanner": "Сообщения между беседами отключены, упоминание @@ недоступно.",
   "crossSessionMessageResume": "Включить снова",
-  "crossSessionMessageUpdateFailed": "Не удалось обновить настройку сообщений между беседами"
+  "crossSessionMessageUpdateFailed": "Не удалось обновить настройку сообщений между беседами",
+  "fonts": "Шрифты",
+  "fontRegionApp": "Глобальный",
+  "fontRegionChat": "Чат",
+  "fontRegionMarkdown": "Markdown",
+  "fontRegionCode": "Код",
+  "fontFamilySystemDefault": "Системный по умолчанию",
+  "fontFamilyLoading": "Загрузка шрифтов…",
+  "fontFamilyError": "Не удалось получить системные шрифты",
+  "fontFamilyNoResults": "Нет подходящих шрифтов"
 }

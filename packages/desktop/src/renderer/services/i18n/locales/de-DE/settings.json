@@ -1533,5 +1533,14 @@
   "crossSessionMessageDesc": "Erlaubt Agenten, Nachrichten an Ihre anderen Unterhaltungen zu senden. Beim Ausschalten wird auch die @@-Erwähnung im Eingabefeld deaktiviert.",
   "crossSessionMessageDisabledBanner": "Nachrichten zwischen Unterhaltungen sind aus, die @@-Erwähnung ist nicht verfügbar.",
   "crossSessionMessageResume": "Wieder einschalten",
-  "crossSessionMessageUpdateFailed": "Einstellung konnte nicht aktualisiert werden"
+  "crossSessionMessageUpdateFailed": "Einstellung konnte nicht aktualisiert werden",
+  "fonts": "Schriftarten",
+  "fontRegionApp": "Global",
+  "fontRegionChat": "Chat",
+  "fontRegionMarkdown": "Markdown",
+  "fontRegionCode": "Code",
+  "fontFamilySystemDefault": "Systemstandard",
+  "fontFamilyLoading": "Schriftarten werden geladen…",
+  "fontFamilyError": "Zugriff auf Systemschriftarten nicht möglich",
+  "fontFamilyNoResults": "Keine passenden Schriftarten"
 }

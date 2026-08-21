@@ -1533,5 +1533,14 @@
   "crossSessionMessageDesc": "Permet aux agents d'envoyer des messages à vos autres conversations. La désactivation coupe aussi la mention @@ dans la zone de saisie.",
   "crossSessionMessageDisabledBanner": "Les messages entre conversations sont désactivés, la mention @@ est indisponible.",
   "crossSessionMessageResume": "Réactiver",
-  "crossSessionMessageUpdateFailed": "Échec de la mise à jour du réglage des messages entre conversations"
+  "crossSessionMessageUpdateFailed": "Échec de la mise à jour du réglage des messages entre conversations",
+  "fonts": "Polices",
+  "fontRegionApp": "Global",
+  "fontRegionChat": "Chat",
+  "fontRegionMarkdown": "Markdown",
+  "fontRegionCode": "Code",
+  "fontFamilySystemDefault": "Par défaut du système",
+  "fontFamilyLoading": "Chargement des polices…",
+  "fontFamilyError": "Impossible d'accéder aux polices système",
+  "fontFamilyNoResults": "Aucune police correspondante"
 }

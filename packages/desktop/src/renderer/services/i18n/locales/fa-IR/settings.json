@@ -1533,5 +1533,14 @@
   "crossSessionMessageDesc": "به عامل‌ها اجازه می‌دهد به گفتگوهای دیگر شما پیام بفرستند. با خاموش کردن، منشن @@ در کادر ورودی نیز غیرفعال می‌شود.",
   "crossSessionMessageDisabledBanner": "پیام‌های بین گفتگوها خاموش است، منشن @@ در دسترس نیست.",
   "crossSessionMessageResume": "روشن کردن دوباره",
-  "crossSessionMessageUpdateFailed": "به‌روزرسانی تنظیم پیام‌های بین گفتگوها ناموفق بود"
+  "crossSessionMessageUpdateFailed": "به‌روزرسانی تنظیم پیام‌های بین گفتگوها ناموفق بود",
+  "fonts": "فونت‌ها",
+  "fontRegionApp": "سراسری",
+  "fontRegionChat": "چت",
+  "fontRegionMarkdown": "Markdown",
+  "fontRegionCode": "کد",
+  "fontFamilySystemDefault": "پیش‌فرض سیستم",
+  "fontFamilyLoading": "در حال بارگذاری فونت‌ها…",
+  "fontFamilyError": "دسترسی به فونت‌های سیستم ممکن نشد",
+  "fontFamilyNoResults": "فونت منطبقی یافت نشد"
 }
