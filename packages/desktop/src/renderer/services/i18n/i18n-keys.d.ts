@@ -909,6 +909,8 @@ export type I18nKey =
   | 'conversation.workspace.pasteConfirm_paste'
   | 'conversation.workspace.pasteConfirm_targetFolder'
   | 'conversation.workspace.pasteConfirm_title'
+  | 'conversation.workspace.preview.errors.fileBusy'
+  | 'conversation.workspace.preview.errors.invalidEncoding'
   | 'conversation.workspace.preview.errors.notFound'
   | 'conversation.workspace.preview.errors.outsideSandbox'
   | 'conversation.workspace.preview.errors.timeout'

@@ -6,7 +6,7 @@
 
 import { LanguageDescription, type LanguageSupport } from '@codemirror/language';
 import { languages } from '@codemirror/language-data';
-import { LARGE_TEXT_VIEWER_THRESHOLD } from '../constants';
+import { LARGE_TEXT_VIEWER_THRESHOLD, LONG_LINE_HIGHLIGHT_THRESHOLD } from '../constants';
 
 /**
  * Resolve a CodeMirror language description by an explicit language name first,
@@ -45,9 +45,32 @@ export const loadLanguageSupport = async (
 };
 
 /**
- * Large-file guard for syntax highlighting. When content exceeds the viewer
- * threshold we disable highlighting to keep the editor responsive. This only
- * turns off highlighting — content is never truncated, because the editor
- * remains fully editable.
+ * CodeMirror cannot construct a document that contains U+0000. UTF-16 JSON
+ * mis-decoded as UTF-8 is ASCII interleaved with NULs; stripping them yields
+ * the original ASCII and lets the editor open instead of crashing the tab.
  */
-export const shouldDisableHighlighting = (length: number): boolean => length > LARGE_TEXT_VIEWER_THRESHOLD;
+export const sanitizeEditorDocument = (text: string): string => {
+  if (!text.includes('\0')) return text;
+  return text.replaceAll('\0', '');
+};
+
+const hasOverlongLine = (text: string, limit: number): boolean => {
+  let start = 0;
+  while (start < text.length) {
+    const nl = text.indexOf('\n', start);
+    const end = nl === -1 ? text.length : nl;
+    if (end - start > limit) return true;
+    start = end + 1;
+  }
+  return false;
+};
+
+/**
+ * Highlighting guard. Large documents and minified single-line JSON both make
+ * CodeMirror's JSON highlighter stall; we turn highlighting off and still
+ * show the full (editable) document.
+ */
+export const shouldDisableHighlighting = (length: number, text?: string): boolean => {
+  if (length > LARGE_TEXT_VIEWER_THRESHOLD) return true;
+  return typeof text === 'string' && hasOverlongLine(text, LONG_LINE_HIGHLIGHT_THRESHOLD);
+};

@@ -569,7 +569,9 @@
       "errors": {
         "timeout": "讀取檔案逾時，請稍後重試。",
         "outsideSandbox": "檔案不在專案範圍內，無法預覽。",
-        "notFound": "檔案不存在或已被刪除。"
+        "notFound": "檔案不存在或已被刪除。",
+        "invalidEncoding": "此檔案不是有效的 UTF-8 或 UTF-16 文字。",
+        "fileBusy": "檔案正在使用中，請關閉寫入程式後重試。"
       }
     },
     "refresh": "重新整理",

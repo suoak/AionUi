@@ -59,6 +59,13 @@ export const MAX_SPLIT_WIDTH = 80;
 export const LARGE_TEXT_VIEWER_THRESHOLD = 30_000;
 
 /**
+ * Per-line highlighting guard (chars). Minified JSON often sits under the
+ * document-size ceiling as a single huge line; CodeMirror's JSON highlighter
+ * stalls on that shape even when the file is small enough to edit.
+ */
+export const LONG_LINE_HIGHLIGHT_THRESHOLD = 8_000;
+
+/**
  * 具有内置打开按钮的文件类型
  * File types with built-in open buttons
  */

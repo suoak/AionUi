@@ -570,7 +570,9 @@
       "errors": {
         "timeout": "Tiempo de lectura del archivo agotado. Por favor reintenta.",
         "outsideSandbox": "El archivo está fuera del sandbox del proyecto, no se puede previsualizar.",
-        "notFound": "El archivo no existe o fue eliminado."
+        "notFound": "El archivo no existe o fue eliminado.",
+        "invalidEncoding": "Este archivo no es texto UTF-8 o UTF-16 válido.",
+        "fileBusy": "El archivo está en uso. Cierre el programa que lo está escribiendo e inténtelo de nuevo."
       }
     },
     "refresh": "Actualizar",

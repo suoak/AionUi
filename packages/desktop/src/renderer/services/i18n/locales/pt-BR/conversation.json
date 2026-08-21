@@ -575,7 +575,9 @@
       "errors": {
         "timeout": "A leitura do arquivo esgotou o tempo limite. Por favor, tente novamente.",
         "outsideSandbox": "Arquivo fora da sandbox do projeto, impossível pré-visualizar.",
-        "notFound": "O arquivo não existe ou foi excluído."
+        "notFound": "O arquivo não existe ou foi excluído.",
+        "invalidEncoding": "Este arquivo não é um texto UTF-8 ou UTF-16 válido.",
+        "fileBusy": "O arquivo está em uso. Feche o programa que o está gravando e tente novamente."
       }
     },
     "refresh": "Atualizar",

@@ -570,7 +570,9 @@
       "errors": {
         "timeout": "Das Lesen der Datei ist abgelaufen. Bitte versuche es erneut.",
         "outsideSandbox": "Datei befindet sich außerhalb der Projekt-Sandbox, kann nicht in der Vorschau angezeigt werden.",
-        "notFound": "Datei existiert nicht oder wurde gelöscht."
+        "notFound": "Datei existiert nicht oder wurde gelöscht.",
+        "invalidEncoding": "Diese Datei ist kein gültiger UTF-8- oder UTF-16-Text.",
+        "fileBusy": "Die Datei wird verwendet. Schließen Sie das schreibende Programm und versuchen Sie es erneut."
       }
     },
     "refresh": "Aktualisieren",

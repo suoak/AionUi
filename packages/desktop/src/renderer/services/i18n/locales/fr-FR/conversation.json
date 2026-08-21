@@ -568,7 +568,9 @@
       "errors": {
         "timeout": "Le délai de lecture du fichier a expiré. Veuillez réessayer.",
         "outsideSandbox": "Le fichier se trouve en dehors du bac à sable du projet et ne peut pas être prévisualisé.",
-        "notFound": "Le fichier n'existe pas ou a été supprimé."
+        "notFound": "Le fichier n'existe pas ou a été supprimé.",
+        "invalidEncoding": "Ce fichier n'est pas un texte UTF-8 ou UTF-16 valide.",
+        "fileBusy": "Le fichier est en cours d'utilisation. Fermez le programme qui l'écrit, puis réessayez."
       }
     },
     "refresh": "Actualiser",
