@@ -121,8 +121,8 @@ describe('draft box server input visibility', () => {
     expect(isDraftBoxServerInputStatus('failed')).toBe(false);
   });
 
-  it('treats applied, canceled, and failed as recent terminal records', () => {
-    expect(isRecentServerInputStatus('applied')).toBe(true);
+  it('treats canceled and failed as recent terminal records, not applied', () => {
+    expect(isRecentServerInputStatus('applied')).toBe(false);
     expect(isRecentServerInputStatus('canceled')).toBe(true);
     expect(isRecentServerInputStatus('failed')).toBe(true);
     expect(isDraftBoxServerInputStatus('applied')).toBe(false);
@@ -134,7 +134,7 @@ describe('draft box server input visibility', () => {
     expect(mergeDraftBoxServerInput([held], { ...held, status: 'applied', updated_at: 2 })).toEqual([]);
   });
 
-  it('keeps applied and failed records in the visible recent list', () => {
+  it('drops applied records and keeps failed records in the visible recent list', () => {
     const held = serverInput({ status: 'held' });
     const applied = serverInput({ status: 'applied', updated_at: 2 });
     const failed = serverInput({
@@ -145,7 +145,7 @@ describe('draft box server input visibility', () => {
       created_at: 2,
       updated_at: 2,
     });
-    expect(mergeVisibleServerInput([held], applied)).toEqual([applied]);
-    expect(mergeVisibleServerInput([applied], failed)).toEqual([applied, failed]);
+    expect(mergeVisibleServerInput([held], applied)).toEqual([]);
+    expect(mergeVisibleServerInput([applied], failed)).toEqual([failed]);
   });
 });

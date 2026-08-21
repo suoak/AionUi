@@ -179,7 +179,7 @@ describe('CommandQueuePanel', () => {
     expect(screen.queryByRole('button', { name: 'Send now' })).toBeNull();
   });
 
-  it('shows applied and canceled records in the recent section', () => {
+  it('shows canceled records in the recent section without applied sends', () => {
     renderPanel({
       items: [{ ...item, status: 'held', managed_by_server: true }],
       recentItems: [
@@ -190,8 +190,19 @@ describe('CommandQueuePanel', () => {
 
     expect(screen.getByText('Pending')).toBeInTheDocument();
     expect(screen.getByText('Recent')).toBeInTheDocument();
-    expect(screen.getByText('already applied')).toBeInTheDocument();
+    expect(screen.queryByText('already applied')).toBeNull();
     expect(screen.getByText('was canceled')).toBeInTheDocument();
+  });
+
+  it('hides the draft box when the only recent record is an applied send', () => {
+    renderPanel({
+      items: [],
+      recentItems: [{ ...item, status: 'applied', managed_by_server: true, input: 'already applied' }],
+    });
+
+    expect(screen.queryByText('Send draft box')).toBeNull();
+    expect(screen.queryByText('already applied')).toBeNull();
+    expect(screen.queryByTestId('command-queue-recent')).toBeNull();
   });
 
   it('clears the draft box through a confirm dialog', () => {

@@ -383,6 +383,9 @@ const CommandQueuePanel: React.FC<CommandQueuePanelProps> = ({
   onClear,
 }) => {
   const { t } = useTranslation();
+  // Applied inputs belong in the transcript, not the draft box. Filter here so a
+  // stale prop cannot resurrect a successfully sent message as a "recent" draft.
+  const visibleRecentItems = useMemo(() => recentItems.filter((item) => item.status !== 'applied'), [recentItems]);
   const queueContainerRef = useRef<HTMLDivElement | null>(null);
   const activeDragHandleRef = useRef<HTMLButtonElement | null>(null);
   // Desktop: drag starts after moving 8px from the handle.
@@ -471,7 +474,7 @@ const CommandQueuePanel: React.FC<CommandQueuePanelProps> = ({
     });
   };
 
-  if (items.length === 0 && recentItems.length === 0) {
+  if (items.length === 0 && visibleRecentItems.length === 0) {
     return null;
   }
 
@@ -525,7 +528,7 @@ const CommandQueuePanel: React.FC<CommandQueuePanelProps> = ({
               className='inline-flex items-center justify-center rd-999px px-6px h-16px text-10px leading-none font-600'
               style={{ background: 'var(--color-fill-3)', color: 'var(--color-text-2)' }}
             >
-              {items.length + recentItems.length}
+              {items.length + visibleRecentItems.length}
             </span>
           </div>
           <div className='flex items-center gap-4px shrink-0'>
@@ -573,7 +576,7 @@ const CommandQueuePanel: React.FC<CommandQueuePanelProps> = ({
         </div>
         {items.length > 0 ? (
           <div className='flex flex-col'>
-            {recentItems.length > 0 ? (
+            {visibleRecentItems.length > 0 ? (
               <div className='px-12px pb-2px text-10px font-600 text-t-tertiary'>
                 {t('conversation.commandQueue.pendingSection', { defaultValue: 'Pending' })}
               </div>
@@ -629,13 +632,13 @@ const CommandQueuePanel: React.FC<CommandQueuePanelProps> = ({
             </DndContext>
           </div>
         ) : null}
-        {recentItems.length > 0 ? (
+        {visibleRecentItems.length > 0 ? (
           <div data-testid='command-queue-recent' className='flex flex-col'>
             <div className='px-12px pb-2px text-10px font-600 text-t-tertiary'>
               {t('conversation.commandQueue.recentSection', { defaultValue: 'Recent' })}
             </div>
             <div className='p-6px flex flex-col gap-4px' data-command-queue-recent-list='true'>
-              {recentItems.map((item) => {
+              {visibleRecentItems.map((item) => {
                 const preview = getCommandPreview(item.input);
                 const fileCountLabel =
                   item.files.length > 0
