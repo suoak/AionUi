@@ -19,6 +19,11 @@
     "itemCount": "{{count}} eventos",
     "pairingBalanced": "As chamadas de ferramenta estão emparelhadas",
     "pairingOpen": "Ainda há uma chamada de ferramenta aberta",
+    "toolEnforcement": {
+      "native": "Nativo",
+      "approvalGate": "Porta de aprovação",
+      "observeOnly": "Somente observação"
+    },
     "lock": {
       "none": "Sem compactação",
       "open": "Compactação em andamento",

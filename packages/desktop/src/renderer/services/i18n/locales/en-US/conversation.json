@@ -19,6 +19,11 @@
     "itemCount": "{{count}} events",
     "pairingBalanced": "Tool calls are paired",
     "pairingOpen": "A tool call is still open",
+    "toolEnforcement": {
+      "native": "Native tools",
+      "approvalGate": "Approval gate",
+      "observeOnly": "Observe only"
+    },
     "lock": {
       "none": "Not compacting",
       "open": "Compaction in progress",

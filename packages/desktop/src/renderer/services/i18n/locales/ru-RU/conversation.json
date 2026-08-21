@@ -19,6 +19,11 @@
     "itemCount": "{{count}} событий",
     "pairingBalanced": "Вызовы инструментов спарены",
     "pairingOpen": "Вызов инструмента ещё открыт",
+    "toolEnforcement": {
+      "native": "Нативные",
+      "approvalGate": "Шлюз одобрения",
+      "observeOnly": "Только наблюдение"
+    },
     "lock": {
       "none": "Сжатие не выполняется",
       "open": "Идёт сжатие",

@@ -19,6 +19,11 @@
     "itemCount": "{{count}} Ereignisse",
     "pairingBalanced": "Tool-Aufrufe sind gepaart",
     "pairingOpen": "Ein Tool-Aufruf ist noch offen",
+    "toolEnforcement": {
+      "native": "Nativ",
+      "approvalGate": "Freigabe",
+      "observeOnly": "Nur beobachten"
+    },
     "lock": {
       "none": "Keine Komprimierung",
       "open": "Komprimierung läuft",

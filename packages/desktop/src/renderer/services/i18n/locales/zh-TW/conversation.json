@@ -19,6 +19,11 @@
     "itemCount": "{{count}} 個事件",
     "pairingBalanced": "工具呼叫已配對",
     "pairingOpen": "仍有未完成的工具呼叫",
+    "toolEnforcement": {
+      "native": "原生工具",
+      "approvalGate": "審批閘門",
+      "observeOnly": "僅觀察"
+    },
     "lock": {
       "none": "未在壓縮",
       "open": "正在壓縮",

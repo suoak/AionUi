@@ -4,6 +4,7 @@ import {
   compactionLockI18nKey,
   isHostOnlyItem,
   isTranscriptReconstructible,
+  toolEnforcementI18nKey,
   toolExecutionMetadata,
   trajectoryItemPreview,
   trajectoryKindI18nKey,
@@ -44,6 +45,19 @@ describe('compactionLockI18nKey', () => {
   it('treats missing or unknown locks as idle', () => {
     expect(compactionLockI18nKey('')).toBe('conversation.trajectory.lock.none');
     expect(compactionLockI18nKey('crashed')).toBe('conversation.trajectory.lock.none');
+  });
+});
+
+describe('toolEnforcementI18nKey', () => {
+  it('maps Core snapshot values onto conversation.trajectory labels', () => {
+    expect(toolEnforcementI18nKey('native')).toBe('conversation.trajectory.toolEnforcement.native');
+    expect(toolEnforcementI18nKey('approval-gate')).toBe('conversation.trajectory.toolEnforcement.approvalGate');
+    expect(toolEnforcementI18nKey('observe-only')).toBe('conversation.trajectory.toolEnforcement.observeOnly');
+  });
+
+  it('treats unknown enforcement levels as native', () => {
+    expect(toolEnforcementI18nKey('')).toBe('conversation.trajectory.toolEnforcement.native');
+    expect(toolEnforcementI18nKey('unknown')).toBe('conversation.trajectory.toolEnforcement.native');
   });
 });
 
