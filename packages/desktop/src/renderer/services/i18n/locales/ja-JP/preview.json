@@ -1,4 +1,8 @@
 {
+  "zoomIn": "拡大",
+  "zoomOut": "縮小",
+  "zoomReset": "表示をリセット",
+  "mermaidZoomHint": "スクロールでズーム • ドラッグで移動 • ESC で閉じる",
   "noTabs": "タブはありません",
   "ppt": {
     "startFailed": "PPTプレビューの起動に失敗しました",

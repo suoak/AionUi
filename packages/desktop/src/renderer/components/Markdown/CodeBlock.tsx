@@ -28,6 +28,8 @@ type CodeBlockProps = {
   node?: unknown;
   hiddenCodeCopyButton?: boolean;
   codeStyle?: React.CSSProperties;
+  /** Enable drag-to-pan and zoom controls for rendered Mermaid diagrams. */
+  mermaidPanZoom?: boolean;
   [key: string]: unknown;
 };
 
@@ -58,7 +60,15 @@ function CodeBlock(props: CodeBlockProps) {
     }
   };
 
-  const { children, className, node: _node, hiddenCodeCopyButton: _h, codeStyle: _c, ...rest } = props;
+  const {
+    children,
+    className,
+    node: _node,
+    hiddenCodeCopyButton: _h,
+    codeStyle: _c,
+    mermaidPanZoom: _mermaidPanZoom,
+    ...rest
+  } = props;
   const match = /language-(\w+)/.exec(className || '');
   const language = match?.[1] || 'text';
 
@@ -77,7 +87,7 @@ function CodeBlock(props: CodeBlockProps) {
   }
 
   if (language === 'mermaid') {
-    return <MermaidBlock code={formatCode(children)} style={props.codeStyle} />;
+    return <MermaidBlock code={formatCode(children)} style={props.codeStyle} enablePanZoom={props.mermaidPanZoom} />;
   }
 
   // Inline code (single line)

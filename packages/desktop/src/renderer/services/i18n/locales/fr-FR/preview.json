@@ -1,4 +1,8 @@
 {
+  "zoomIn": "Zoom avant",
+  "zoomOut": "Zoom arrière",
+  "zoomReset": "Réinitialiser la vue",
+  "mermaidZoomHint": "Molette pour zoomer • Glisser pour déplacer • Échap pour fermer",
   "noTabs": "Aucun onglet ouvert",
   "ppt": {
     "startFailed": "Échec du démarrage de l'aperçu PPT",

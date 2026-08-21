@@ -1,4 +1,8 @@
 {
+  "zoomIn": "放大",
+  "zoomOut": "縮小",
+  "zoomReset": "重設視圖",
+  "mermaidZoomHint": "滾輪縮放 • 拖曳平移 • ESC 關閉",
   "noTabs": "尚無標籤",
   "ppt": {
     "startFailed": "啟動 PPT 預覽失敗",

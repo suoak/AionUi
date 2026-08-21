@@ -1,4 +1,8 @@
 {
+  "zoomIn": "Yakınlaştır",
+  "zoomOut": "Uzaklaştır",
+  "zoomReset": "Görünümü sıfırla",
+  "mermaidZoomHint": "Yakınlaştırmak için kaydırın • Taşımak için sürükleyin • ESC ile kapatın",
   "noTabs": "Açık sekme yok",
   "ppt": {
     "startFailed": "PPT önizlemesi başlatılamadı",

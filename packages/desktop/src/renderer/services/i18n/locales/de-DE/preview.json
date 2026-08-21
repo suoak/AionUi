@@ -1,4 +1,8 @@
 {
+  "zoomIn": "Vergrößern",
+  "zoomOut": "Verkleinern",
+  "zoomReset": "Ansicht zurücksetzen",
+  "mermaidZoomHint": "Scrollen zum Zoomen • Ziehen zum Verschieben • ESC zum Schließen",
   "noTabs": "Keine Tabs geöffnet",
   "ppt": {
     "startFailed": "PPT-Vorschau konnte nicht gestartet werden",

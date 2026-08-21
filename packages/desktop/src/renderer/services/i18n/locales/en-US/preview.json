@@ -1,4 +1,8 @@
 {
+  "zoomIn": "Zoom in",
+  "zoomOut": "Zoom out",
+  "zoomReset": "Reset view",
+  "mermaidZoomHint": "Scroll to zoom • Drag to pan • ESC to close",
   "noTabs": "No tabs open",
   "ppt": {
     "startFailed": "Failed to start PPT preview",

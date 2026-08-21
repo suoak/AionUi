@@ -1,4 +1,8 @@
 {
+  "zoomIn": "Acercar",
+  "zoomOut": "Alejar",
+  "zoomReset": "Restablecer vista",
+  "mermaidZoomHint": "Desplazarse para ampliar • Arrastrar para mover • ESC para cerrar",
   "noTabs": "Sin pestañas abiertas",
   "ppt": {
     "startFailed": "Error al iniciar la vista previa de PPT",
