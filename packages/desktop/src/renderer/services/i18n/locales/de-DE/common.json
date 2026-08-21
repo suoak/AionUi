@@ -162,22 +162,6 @@
     },
     "portReportTimeout": {
       "title": "Zeitüberschreitung beim Start",
-      "description": "CSBU WorkMate ??Core konnte den Start nicht innerhalb der erwarteten Zeit abschließen. Bitte starten Sie die App neu; wenn dies wiederholt auftritt, senden Sie bitte eine Diagnose.",
-      "sendDiagnostics": "Diagnose senden",
-      "diagnosticsSent": "Diagnose gesendet",
-      "diagnosticsReportSuccess": "Diagnose gemeldet",
-      "diagnosticsReportFailed": "Diagnose konnte nicht gesendet werden, bitte erneut versuchen"
-    },
-    "startupFailed": {
-      "title": "Start fehlgeschlagen",
-      "description": "CSBU WorkMate ??Core konnte nicht gestartet werden. Bitte starten Sie die App neu; wenn dies wiederholt auftritt, senden Sie bitte eine Diagnose.",
-      "sendDiagnostics": "Diagnose senden",
-      "diagnosticsSent": "Diagnose gesendet",
-      "diagnosticsReportSuccess": "Diagnose gemeldet",
-      "diagnosticsReportFailed": "Diagnose konnte nicht gesendet werden, bitte erneut versuchen"
-    },
-    "portReportTimeout": {
-      "title": "Zeitüberschreitung beim Start",
       "description": "CSBU WorkMate backend konnte den Start nicht innerhalb der erwarteten Zeit abschließen. Bitte starten Sie die App neu; wenn dies wiederholt auftritt, senden Sie bitte eine Diagnose.",
       "sendDiagnostics": "Diagnose senden",
       "diagnosticsSent": "Diagnose gesendet",
@@ -230,5 +214,8 @@
     "title": "Something went wrong",
     "description": "The page hit an unexpected error. Your conversation history is still saved. Reload to continue.",
     "reload": "Reload"
-  }
+  },
+  "viewMoreLines_one": "Mehr anzeigen ({{count}} Zeile)",
+  "viewMoreLines_other": "Mehr anzeigen ({{count}} Zeilen)",
+  "aiAssistant": "KI-Assistent"
 }

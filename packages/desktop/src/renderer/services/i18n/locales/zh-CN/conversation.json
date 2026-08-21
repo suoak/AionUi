@@ -898,5 +898,8 @@
     "loading": "正在加载完整输出...",
     "loadFailed": "加载完整输出失败",
     "previewNote": "当前显示保留工具输出的预览（共 {{size}}）"
+  },
+  "emptyState": {
+    "greeting": "你好！说说你的需求，我这就开始。"
   }
 }

@@ -163,22 +163,6 @@
     },
     "portReportTimeout": {
       "title": "Tempo de inicialização esgotado",
-      "description": "O CSBU WorkMate ??Core não concluiu a inicialização dentro do tempo esperado. Reinicie o aplicativo; se isso continuar acontecendo, envie o diagnóstico.",
-      "sendDiagnostics": "Enviar diagnóstico",
-      "diagnosticsSent": "Diagnóstico enviado",
-      "diagnosticsReportSuccess": "Diagnóstico enviado",
-      "diagnosticsReportFailed": "Falha ao enviar o diagnóstico, tente novamente"
-    },
-    "startupFailed": {
-      "title": "Falha na inicialização",
-      "description": "O CSBU WorkMate ??Core não conseguiu iniciar. Reinicie o aplicativo; se isso continuar acontecendo, envie o diagnóstico.",
-      "sendDiagnostics": "Enviar diagnóstico",
-      "diagnosticsSent": "Diagnóstico enviado",
-      "diagnosticsReportSuccess": "Diagnóstico enviado",
-      "diagnosticsReportFailed": "Falha ao enviar o diagnóstico, tente novamente"
-    },
-    "portReportTimeout": {
-      "title": "Tempo de inicialização esgotado",
       "description": "O CSBU WorkMate backend não concluiu a inicialização dentro do tempo esperado. Reinicie o aplicativo; se isso continuar acontecendo, envie o diagnóstico.",
       "sendDiagnostics": "Enviar diagnóstico",
       "diagnosticsSent": "Diagnóstico enviado",
@@ -230,5 +214,8 @@
     "title": "Something went wrong",
     "description": "The page hit an unexpected error. Your conversation history is still saved. Reload to continue.",
     "reload": "Reload"
-  }
+  },
+  "viewMoreLines_one": "Ver Mais ({{count}} linha)",
+  "viewMoreLines_other": "Ver Mais ({{count}} linhas)",
+  "aiAssistant": "Assistente de IA"
 }

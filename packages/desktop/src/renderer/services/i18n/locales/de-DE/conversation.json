@@ -899,5 +899,8 @@
     "loading": "Loading full output...",
     "loadFailed": "Failed to load full output",
     "previewNote": "Showing a preview of the retained tool output ({{size}} total)"
+  },
+  "emptyState": {
+    "greeting": "Hallo! Sag mir, was du brauchst, und ich lege los."
   }
 }

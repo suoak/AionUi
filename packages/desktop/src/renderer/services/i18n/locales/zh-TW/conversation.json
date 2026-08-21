@@ -898,5 +898,8 @@
     "loading": "正在載入完整輸出...",
     "loadFailed": "載入完整輸出失敗",
     "previewNote": "目前顯示保留工具輸出的預覽（共 {{size}}）"
+  },
+  "emptyState": {
+    "greeting": "你好！說說你的需求，我這就開始。"
   }
 }
