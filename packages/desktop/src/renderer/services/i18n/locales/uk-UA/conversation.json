@@ -19,6 +19,11 @@
     "itemCount": "{{count}} подій",
     "pairingBalanced": "Виклики інструментів спарені",
     "pairingOpen": "Виклик інструмента ще відкритий",
+    "toolEnforcement": {
+      "native": "Нативні",
+      "approvalGate": "Шлюз схвалення",
+      "observeOnly": "Лише спостереження"
+    },
     "lock": {
       "none": "Стиснення не виконується",
       "open": "Триває стиснення",

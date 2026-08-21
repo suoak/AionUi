@@ -19,6 +19,11 @@
     "itemCount": "{{count}} événements",
     "pairingBalanced": "Les appels d’outils sont appariés",
     "pairingOpen": "Un appel d’outil est encore ouvert",
+    "toolEnforcement": {
+      "native": "Natif",
+      "approvalGate": "Porte d'approbation",
+      "observeOnly": "Observation seule"
+    },
     "lock": {
       "none": "Pas de compactage",
       "open": "Compactage en cours",

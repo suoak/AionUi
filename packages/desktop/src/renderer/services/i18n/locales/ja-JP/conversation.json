@@ -19,6 +19,11 @@
     "itemCount": "{{count}} 件のイベント",
     "pairingBalanced": "ツール呼び出しは対になっています",
     "pairingOpen": "未完了のツール呼び出しがあります",
+    "toolEnforcement": {
+      "native": "ネイティブ",
+      "approvalGate": "承認ゲート",
+      "observeOnly": "観察のみ"
+    },
     "lock": {
       "none": "圧縮していません",
       "open": "圧縮中",

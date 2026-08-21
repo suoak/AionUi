@@ -19,6 +19,11 @@
     "itemCount": "이벤트 {{count}}개",
     "pairingBalanced": "도구 호출이 짝을 이룹니다",
     "pairingOpen": "아직 열린 도구 호출이 있습니다",
+    "toolEnforcement": {
+      "native": "네이티브",
+      "approvalGate": "승인 게이트",
+      "observeOnly": "관찰 전용"
+    },
     "lock": {
       "none": "압축 중이 아님",
       "open": "압축 진행 중",

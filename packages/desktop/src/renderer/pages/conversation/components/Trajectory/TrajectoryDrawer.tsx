@@ -15,6 +15,7 @@ import {
   compactionLockKey,
   isHostOnlyItem,
   isTranscriptReconstructible,
+  toolEnforcementI18nKey,
   toolExecutionMetadata,
   trajectoryItemPreview,
   trajectoryKindI18nKey,
@@ -79,7 +80,7 @@ const TrajectoryDrawer: React.FC<TrajectoryDrawerProps> = ({
                         : 'gray'
                   }
                 >
-                  {capabilities.tool_enforcement}
+                  {t(toolEnforcementI18nKey(capabilities.tool_enforcement))}
                 </Tag>
               )}
               <Tag size='small' color={lockKey === 'open' ? 'orangered' : lockKey === 'closed' ? 'arcoblue' : 'gray'}>

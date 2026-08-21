@@ -14,6 +14,8 @@ export type TrajectoryKindKey = 'assistant' | 'user' | 'tool' | 'turnStart' | 't
 
 export type TrajectoryLockKey = 'none' | 'open' | 'closed';
 
+export type ToolEnforcementKey = 'native' | 'approvalGate' | 'observeOnly';
+
 export type ToolExecutionMetadata = {
   execution_id: string;
   phase: string;
@@ -51,6 +53,16 @@ export function compactionLockKey(lock: string): TrajectoryLockKey {
 
 export function compactionLockI18nKey(lock: string): `conversation.trajectory.lock.${TrajectoryLockKey}` {
   return `conversation.trajectory.lock.${compactionLockKey(lock)}`;
+}
+
+export function toolEnforcementKey(level: string): ToolEnforcementKey {
+  if (level === 'approval-gate') return 'approvalGate';
+  if (level === 'observe-only') return 'observeOnly';
+  return 'native';
+}
+
+export function toolEnforcementI18nKey(level: string): `conversation.trajectory.toolEnforcement.${ToolEnforcementKey}` {
+  return `conversation.trajectory.toolEnforcement.${toolEnforcementKey(level)}`;
 }
 
 export function isHostOnlyItem(item: Pick<JournalTranscriptItem, 'visibility'>): boolean {
