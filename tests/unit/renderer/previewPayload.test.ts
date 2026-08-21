@@ -24,7 +24,9 @@ vi.mock('@/common', () => ({
   },
 }));
 
+import { BackendHttpError } from '@/common/adapter/httpBridge';
 import { formatSizeAboveLimit, resolvePreviewPayload, upgradeFileRef } from '@/renderer/utils/file/previewPayload';
+import { classifyPreviewError, previewErrorToI18nKey } from '@/renderer/utils/previewError';
 
 const TEXT_CEILING = 1024 * 1024;
 const IMAGE_CEILING = 20 * 1024 * 1024;
@@ -271,5 +273,29 @@ describe('upgradeFileRef', () => {
     h.resolveRef.mockRejectedValue(new Error('offline'));
 
     await expect(upgradeFileRef(localRef, 'proj-1')).resolves.toEqual(localRef);
+  });
+});
+
+const backendError = (code: string, status = 422): BackendHttpError =>
+  new BackendHttpError({
+    method: 'POST',
+    path: '/api/fs/content',
+    status,
+    body: { success: false, code, error: code },
+  });
+
+describe('classifyPreviewError', () => {
+  it('maps PowerShell UTF-16 read failures to the encoding copy', () => {
+    expect(classifyPreviewError(backendError('INVALID_TEXT_ENCODING'))).toBe('encoding');
+    expect(previewErrorToI18nKey('encoding')).toBe('conversation.workspace.preview.errors.invalidEncoding');
+  });
+
+  it('maps a locked file to the busy copy instead of a generic failure', () => {
+    expect(classifyPreviewError(backendError('FILE_BUSY', 409))).toBe('busy');
+    expect(previewErrorToI18nKey('busy')).toBe('conversation.workspace.preview.errors.fileBusy');
+  });
+
+  it('still treats an unknown backend failure as a generic preview error', () => {
+    expect(classifyPreviewError(backendError('INTERNAL_ERROR', 500))).toBe('unknown');
   });
 });

@@ -577,7 +577,9 @@
       "errors": {
         "timeout": "读取文件超时，请稍后重试。",
         "outsideSandbox": "文件不在项目范围内，无法预览。",
-        "notFound": "文件不存在或已被删除。"
+        "notFound": "文件不存在或已被删除。",
+        "invalidEncoding": "该文件不是有效的 UTF-8 或 UTF-16 文本。",
+        "fileBusy": "文件正在被占用，请关闭写入程序后重试。"
       }
     },
     "refresh": "刷新",

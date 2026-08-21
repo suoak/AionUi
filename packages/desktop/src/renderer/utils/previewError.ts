@@ -1,6 +1,6 @@
 import { isBackendHttpError } from '@/common/adapter/httpBridge';
 
-export type PreviewErrorKind = 'sandbox' | 'not_found' | 'timeout' | 'too_large' | 'unknown';
+export type PreviewErrorKind = 'sandbox' | 'not_found' | 'timeout' | 'too_large' | 'encoding' | 'busy' | 'unknown';
 
 const BACKEND_ERROR_KIND_MAP: Record<string, PreviewErrorKind> = {
   PATH_OUTSIDE_SANDBOX: 'sandbox',
@@ -8,6 +8,8 @@ const BACKEND_ERROR_KIND_MAP: Record<string, PreviewErrorKind> = {
   NOT_FOUND: 'not_found',
   TIMEOUT: 'timeout',
   OFFICECLI_PORT_TIMEOUT: 'timeout',
+  INVALID_TEXT_ENCODING: 'encoding',
+  FILE_BUSY: 'busy',
 };
 
 const PREVIEW_ERROR_I18N_KEY_MAP: Record<PreviewErrorKind, string> = {
@@ -15,6 +17,8 @@ const PREVIEW_ERROR_I18N_KEY_MAP: Record<PreviewErrorKind, string> = {
   not_found: 'conversation.workspace.preview.errors.notFound',
   timeout: 'conversation.workspace.preview.errors.timeout',
   too_large: 'conversation.workspace.contextMenu.previewFailed',
+  encoding: 'conversation.workspace.preview.errors.invalidEncoding',
+  busy: 'conversation.workspace.preview.errors.fileBusy',
   unknown: 'conversation.workspace.contextMenu.previewFailed',
 };
 

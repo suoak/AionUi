@@ -577,7 +577,9 @@
       "errors": {
         "timeout": "Reading file timed out. Please retry.",
         "outsideSandbox": "File is outside the project sandbox, cannot preview.",
-        "notFound": "File does not exist or has been deleted."
+        "notFound": "File does not exist or has been deleted.",
+        "invalidEncoding": "This file is not valid UTF-8 or UTF-16 text.",
+        "fileBusy": "The file is in use. Close the program writing it and retry."
       }
     },
     "refresh": "Refresh",

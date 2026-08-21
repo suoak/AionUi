@@ -14,7 +14,7 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next';
 import { getCodeEditorConfig } from '../../theme/codeEditorConfig';
 import { codeEditorFontTheme, codeEditorSurfaceTheme, getCodeEditorBaseTheme } from '../../theme/codeEditorTheme';
-import { loadLanguageSupport, shouldDisableHighlighting } from '../../theme/languageLoader';
+import { loadLanguageSupport, sanitizeEditorDocument, shouldDisableHighlighting } from '../../theme/languageLoader';
 
 interface CodeEditorProps {
   value: string; // 编辑器内容 / Editor content
@@ -64,7 +64,8 @@ const CodeEditor: React.FC<CodeEditorProps> = ({
   const revealedTargetRef = useRef<string | null>(null);
   const streamingTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const disableHighlight = shouldDisableHighlighting(value.length);
+  const editorValue = useMemo(() => sanitizeEditorDocument(value), [value]);
+  const disableHighlight = shouldDisableHighlighting(editorValue.length, editorValue);
 
   // 语言切换时动态加载语法（大文件跳过）/ Load language support on change (skip for large files)
   useEffect(() => {
@@ -198,7 +199,7 @@ const CodeEditor: React.FC<CodeEditorProps> = ({
         </div>
       )}
       <CodeMirror
-        value={value}
+        value={editorValue}
         height='100%'
         theme={getCodeEditorBaseTheme(theme === 'dark' ? 'dark' : 'light')}
         extensions={extensions}
