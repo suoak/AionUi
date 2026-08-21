@@ -848,7 +848,8 @@
       "copyRelativePath": "کپی کردن مسیر نسبی",
       "addToChat": "افزودن به گفتگو",
       "newFile": "فایل جدید",
-      "newDir": "پوشه جدید"
+      "newDir": "پوشه جدید",
+      "refresh": "تازه‌سازی"
     },
     "copyNodeFailed": "کپی ناموفق بود",
     "moveNodeFailed": "انتقال ناموفق بود",

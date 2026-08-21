@@ -848,7 +848,8 @@
       "copyRelativePath": "相対パスをコピー",
       "addToChat": "チャットに追加",
       "newFile": "新規ファイル",
-      "newDir": "新規フォルダー"
+      "newDir": "新規フォルダー",
+      "refresh": "更新"
     },
     "copyNodeFailed": "コピーに失敗しました",
     "moveNodeFailed": "移動に失敗しました",

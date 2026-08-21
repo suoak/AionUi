@@ -848,7 +848,8 @@
       "copyRelativePath": "Copy relative path",
       "addToChat": "Add to chat",
       "newFile": "New file",
-      "newDir": "New folder"
+      "newDir": "New folder",
+      "refresh": "Refresh"
     },
     "copyNodeFailed": "Failed to copy",
     "moveNodeFailed": "Failed to move",

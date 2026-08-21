@@ -850,7 +850,8 @@
       "copyRelativePath": "Göreli yolu kopyala",
       "addToChat": "Sohbete ekle",
       "newFile": "Yeni dosya",
-      "newDir": "Yeni klasör"
+      "newDir": "Yeni klasör",
+      "refresh": "Yenile"
     },
     "copyNodeFailed": "Kopyalanamadı",
     "moveNodeFailed": "Taşınamadı",

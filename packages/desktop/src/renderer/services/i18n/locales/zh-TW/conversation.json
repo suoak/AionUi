@@ -848,7 +848,8 @@
       "copyRelativePath": "複製相對路徑",
       "addToChat": "加入對話",
       "newFile": "新增檔案",
-      "newDir": "新增資料夾"
+      "newDir": "新增資料夾",
+      "refresh": "重新整理"
     },
     "copyNodeFailed": "複製失敗",
     "moveNodeFailed": "移動失敗",

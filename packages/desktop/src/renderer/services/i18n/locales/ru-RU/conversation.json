@@ -866,7 +866,8 @@
       "copyRelativePath": "Копировать относительный путь",
       "addToChat": "Добавить в чат",
       "newFile": "Новый файл",
-      "newDir": "Новая папка"
+      "newDir": "Новая папка",
+      "refresh": "Обновить"
     },
     "copyNodeFailed": "Не удалось скопировать",
     "moveNodeFailed": "Не удалось переместить",

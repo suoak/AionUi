@@ -848,7 +848,8 @@
       "copyRelativePath": "상대 경로 복사",
       "addToChat": "채팅에 추가",
       "newFile": "새 파일",
-      "newDir": "새 폴더"
+      "newDir": "새 폴더",
+      "refresh": "새로 고침"
     },
     "copyNodeFailed": "복사에 실패했습니다",
     "moveNodeFailed": "이동에 실패했습니다",

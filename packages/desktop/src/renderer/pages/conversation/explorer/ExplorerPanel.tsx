@@ -48,6 +48,9 @@ export type ExplorerPanelProps = {
   workspacePeId?: string;
   /** Remove an attached root from the project. Omit to disable the action. */
   onRemoveRoot?: (peId: string) => void;
+  /** Manually refresh a pe root's subtree — re-fetch its visible directories'
+   * listings (and retry an unreachable root). Root-only; omit to hide the item. */
+  onRefreshRoot?: (peId: string) => void;
   /** Open a file (leaf) in the preview panel. Called when a file node is selected. */
   onOpenFile?: (peId: string, relativePath: string) => void;
   /** File operations (A): rename + delete on an entry, create-file / create-dir
@@ -93,6 +96,7 @@ export const ExplorerPanel: React.FC<ExplorerPanelProps> = ({
   roots,
   workspacePeId,
   onRemoveRoot,
+  onRefreshRoot,
   onOpenFile,
   onRename,
   onDelete,
@@ -319,6 +323,8 @@ export const ExplorerPanel: React.FC<ExplorerPanelProps> = ({
         revealInFolder: canReveal,
         copyRelativePath: Boolean(onCopyRelativePath),
         copyAbsolutePath: canCopyAbsolutePath,
+        // Refresh reloads a pe root's listings, so it is offered only on root nodes.
+        refresh: isRoot && Boolean(onRefreshRoot),
         newFile: !isFile && Boolean(onNewFile),
         newDir: !isFile && Boolean(onNewDir),
         rename: !isRoot && Boolean(onRename),
@@ -350,6 +356,7 @@ export const ExplorerPanel: React.FC<ExplorerPanelProps> = ({
         else if (menuKey === 'revealInFolder') onRevealInFolder?.(peId, rel);
         else if (menuKey === 'copyRelativePath') onCopyRelativePath?.(peId, rel, name);
         else if (menuKey === 'copyAbsolutePath') onCopyAbsolutePath?.(peId, rel);
+        else if (menuKey === 'refresh') onRefreshRoot?.(peId);
       };
 
       const renderMenuItem = (key: ExplorerMenuItemKey): React.ReactNode => {
@@ -366,6 +373,8 @@ export const ExplorerPanel: React.FC<ExplorerPanelProps> = ({
             return (
               <Menu.Item key='copyAbsolutePath'>{t('conversation.explorer.contextMenu.copyAbsolutePath')}</Menu.Item>
             );
+          case 'refresh':
+            return <Menu.Item key='refresh'>{t('conversation.explorer.contextMenu.refresh')}</Menu.Item>;
           case 'newFile':
             return <Menu.Item key='newFile'>{t('conversation.explorer.contextMenu.newFile')}</Menu.Item>;
           case 'newDir':
@@ -433,6 +442,7 @@ export const ExplorerPanel: React.FC<ExplorerPanelProps> = ({
     },
     [
       onRemoveRoot,
+      onRefreshRoot,
       onRename,
       onDelete,
       onNewFile,

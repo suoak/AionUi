@@ -854,7 +854,8 @@
       "copyRelativePath": "Copiar caminho relativo",
       "addToChat": "Adicionar ao chat",
       "newFile": "Novo arquivo",
-      "newDir": "Nova pasta"
+      "newDir": "Nova pasta",
+      "refresh": "Atualizar"
     },
     "copyNodeFailed": "Falha ao copiar",
     "moveNodeFailed": "Falha ao mover",

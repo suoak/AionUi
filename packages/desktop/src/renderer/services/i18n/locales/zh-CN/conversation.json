@@ -848,7 +848,8 @@
       "copyRelativePath": "复制相对路径",
       "addToChat": "添加到聊天",
       "newFile": "新建文件",
-      "newDir": "新建目录"
+      "newDir": "新建目录",
+      "refresh": "刷新"
     },
     "copyNodeFailed": "复制失败",
     "moveNodeFailed": "移动失败",
