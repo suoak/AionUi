@@ -1,5 +1,40 @@
 # Changelog
 
+## [2.1.78](https://github.com/suoak/AionUi/compare/v2.1.77...v2.1.78) (2026-08-21)
+
+### Desktop
+
+#### Features
+
+- **conversation:** split queue pending and recent statuses (#83)
+
+#### Bug Fixes
+
+- **preview:** open UTF-16 JSON and map encoding errors (#85)
+- **conversation:** i18n trajectory tool enforcement labels (#84)
+- **conversation:** hide applied drafts and honor input capabilities (#81)
+
+#### 内网更新说明
+
+<!-- internal-release-notes:start -->
+
+**由运营管理部提供**
+
+- 对话队列区分待处理与最近状态，失败的排队消息可按原幂等键重试。
+- JSON 等文本预览支持 UTF-16 文件，正在写入的文件会提示稍后重试。
+- 工具轨迹的管控等级改为本地化显示。
+- 已经发送成功的对话消息不再留在草稿箱中。
+
+<!-- internal-release-notes:end -->
+
+### Core ([v0.1.82](https://github.com/suoak/AionCore/releases/tag/v0.1.82))
+
+#### Bug Fixes
+
+- **file:** decode UTF-16 and UTF-8 BOM text and retry Windows locked reads
+
+---
+
 ## [2.1.77](https://github.com/suoak/AionUi/compare/v2.1.76...v2.1.77) (2026-08-20)
 
 ### Desktop
