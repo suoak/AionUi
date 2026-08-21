@@ -377,6 +377,8 @@
     "statusApplied": "Applied",
     "statusCanceled": "Canceled",
     "statusFailed": "Failed",
+    "pendingSection": "Bekleyen",
+    "recentSection": "Son",
     "mode": {
       "manual": "Elle gönder",
       "auto": "Otomatik gönder"

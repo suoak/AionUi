@@ -388,6 +388,8 @@
     "statusApplied": "Applied",
     "statusCanceled": "Canceled",
     "statusFailed": "Failed",
+    "pendingSection": "В очікуванні",
+    "recentSection": "Нещодавні",
     "mode": {
       "manual": "Ручне надсилання",
       "auto": "Авто-надсилання"

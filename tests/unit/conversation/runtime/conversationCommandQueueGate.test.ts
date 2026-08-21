@@ -9,7 +9,9 @@ import { describe, expect, it } from 'vitest';
 import {
   getCommandQueueExecutionGate,
   isDraftBoxServerInputStatus,
+  isRecentServerInputStatus,
   mergeDraftBoxServerInput,
+  mergeVisibleServerInput,
 } from '@/renderer/pages/conversation/platforms/useConversationCommandQueue';
 
 const serverInput = (overrides: Partial<IConversationInput> = {}): IConversationInput => ({
@@ -112,14 +114,17 @@ describe('getCommandQueueExecutionGate', () => {
 });
 
 describe('draft box server input visibility', () => {
-  it('keeps pending and failed inputs in the draft box', () => {
+  it('keeps only cancellable pending inputs in the draft box', () => {
     expect(isDraftBoxServerInputStatus('held')).toBe(true);
     expect(isDraftBoxServerInputStatus('dispatching')).toBe(true);
     expect(isDraftBoxServerInputStatus('accepted')).toBe(true);
-    expect(isDraftBoxServerInputStatus('failed')).toBe(true);
+    expect(isDraftBoxServerInputStatus('failed')).toBe(false);
   });
 
-  it('drops applied and canceled inputs that already left the send queue', () => {
+  it('treats applied, canceled, and failed as recent terminal records', () => {
+    expect(isRecentServerInputStatus('applied')).toBe(true);
+    expect(isRecentServerInputStatus('canceled')).toBe(true);
+    expect(isRecentServerInputStatus('failed')).toBe(true);
     expect(isDraftBoxServerInputStatus('applied')).toBe(false);
     expect(isDraftBoxServerInputStatus('canceled')).toBe(false);
   });
@@ -129,9 +134,18 @@ describe('draft box server input visibility', () => {
     expect(mergeDraftBoxServerInput([held], { ...held, status: 'applied', updated_at: 2 })).toEqual([]);
   });
 
-  it('keeps a failed replacement so the user can retry', () => {
+  it('keeps applied and failed records in the visible recent list', () => {
     const held = serverInput({ status: 'held' });
-    const failed = serverInput({ status: 'failed', error_code: 'SEND_FAILED', updated_at: 2 });
-    expect(mergeDraftBoxServerInput([held], failed)).toEqual([failed]);
+    const applied = serverInput({ status: 'applied', updated_at: 2 });
+    const failed = serverInput({
+      input_id: 'input-2',
+      status: 'failed',
+      error_code: 'SEND_FAILED',
+      client_key: 'client-2',
+      created_at: 2,
+      updated_at: 2,
+    });
+    expect(mergeVisibleServerInput([held], applied)).toEqual([applied]);
+    expect(mergeVisibleServerInput([applied], failed)).toEqual([applied, failed]);
   });
 });

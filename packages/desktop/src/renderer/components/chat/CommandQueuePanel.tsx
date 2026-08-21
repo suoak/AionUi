@@ -30,6 +30,9 @@ const QUEUE_STATUS_KEYS = {
   failed: 'conversation.commandQueue.statusFailed',
 } as const;
 
+const canCancelQueueItem = (item: ConversationCommandQueueItem): boolean =>
+  !item.status || item.status === 'held' || item.status === 'dispatching' || item.status === 'accepted';
+
 const createRestrictToQueueContainerModifier = (
   queueContainerRef: React.RefObject<HTMLDivElement | null>
 ): Modifier => {
@@ -51,8 +54,11 @@ const createRestrictToQueueContainerModifier = (
   };
 };
 
+type QueueItemVariant = 'pending' | 'recent';
+
 type CommandQueuePanelProps = {
   items: ConversationCommandQueueItem[];
+  recentItems?: ConversationCommandQueueItem[];
   mode: ConversationCommandQueueMode;
   interactionLocked: boolean;
   isMobile?: boolean;
@@ -94,6 +100,7 @@ type SortableQueueItemProps = {
 
 type QueueItemCardProps = {
   item: ConversationCommandQueueItem;
+  variant?: QueueItemVariant;
   isDragging: boolean;
   dragDisabled: boolean;
   dragViaCard: boolean;
@@ -105,9 +112,9 @@ type QueueItemCardProps = {
   onSendNow: (item: ConversationCommandQueueItem) => void;
   onRemove: (commandId: string) => void;
   onRetry?: (commandId: string) => void;
-  onDragHandlePointerDown: (event: React.PointerEvent<HTMLButtonElement>) => void;
-  dragHandleButtonProps: React.ButtonHTMLAttributes<HTMLButtonElement>;
-  dragHandleRef: (element: HTMLButtonElement | null) => void;
+  onDragHandlePointerDown?: (event: React.PointerEvent<HTMLButtonElement>) => void;
+  dragHandleButtonProps?: React.ButtonHTMLAttributes<HTMLButtonElement>;
+  dragHandleRef?: (element: HTMLButtonElement | null) => void;
   cardDragListeners?: React.HTMLAttributes<HTMLDivElement>;
   cardDragRef?: (element: HTMLElement | null) => void;
 };
@@ -150,6 +157,7 @@ const renderQueueActionIconButton = ({
 
 const QueueItemCard: React.FC<QueueItemCardProps> = ({
   item,
+  variant = 'pending',
   isDragging,
   dragDisabled,
   dragViaCard,
@@ -168,53 +176,57 @@ const QueueItemCard: React.FC<QueueItemCardProps> = ({
   cardDragRef,
 }) => {
   const { onPointerDown: onSortableDragHandlePointerDown, ...restDragHandleButtonProps } = dragHandleButtonProps ?? {};
+  const isRecent = variant === 'recent';
   return (
     <div
-      {...(dragViaCard ? cardDragListeners : {})}
-      ref={dragViaCard ? cardDragRef : undefined}
+      {...(dragViaCard && !isRecent ? cardDragListeners : {})}
+      ref={dragViaCard && !isRecent ? cardDragRef : undefined}
       className='group flex items-center justify-between gap-6px rd-10px px-8px py-5px transition-[background-color,opacity] duration-180 ease-out'
       data-command-id={item.id}
-      data-sortable={dragDisabled ? 'disabled' : 'enabled'}
+      data-queue-variant={variant}
+      data-sortable={isRecent || dragDisabled ? 'disabled' : 'enabled'}
       aria-grabbed={isDragging}
       aria-label={preview}
       style={{
         background: isDragging
           ? 'color-mix(in srgb, var(--color-fill-2) 88%, var(--color-bg-1))'
           : 'color-mix(in srgb, var(--color-fill-1) 76%, transparent)',
-        touchAction: dragViaCard && !dragDisabled ? 'none' : undefined,
+        touchAction: dragViaCard && !dragDisabled && !isRecent ? 'none' : undefined,
       }}
     >
       <div className='flex items-center gap-6px min-w-0 flex-1 relative pl-8px'>
         <div className='flex items-center gap-5px w-18px shrink-0 relative'>
-          <button
-            {...restDragHandleButtonProps}
-            ref={dragHandleRef}
-            type='button'
-            aria-label={dragHandleLabel}
-            disabled={dragDisabled}
-            data-drag-handle={dragDisabled ? 'disabled' : 'enabled'}
-            data-floating-handle='visible'
-            className={`absolute inline-flex h-16px w-12px items-center justify-center border-none bg-transparent p-0 outline-none transition-[opacity,color] duration-160 ease-out ${
-              dragDisabled
-                ? 'cursor-default opacity-0'
-                : isDragging
-                  ? 'cursor-grabbing opacity-100'
-                  : 'cursor-grab active:cursor-grabbing opacity-0 group-hover:opacity-100 focus-visible:opacity-100'
-            }`}
-            style={{
-              left: '-15px',
-              top: '50%',
-              transform: 'translateY(-50%)',
-              color: 'var(--color-text-3)',
-              touchAction: dragDisabled ? undefined : 'none',
-            }}
-            onPointerDown={(event) => {
-              onDragHandlePointerDown(event);
-              onSortableDragHandlePointerDown?.(event);
-            }}
-          >
-            <Drag theme='outline' size='12' strokeWidth={2.5} />
-          </button>
+          {isRecent ? null : (
+            <button
+              {...restDragHandleButtonProps}
+              ref={dragHandleRef}
+              type='button'
+              aria-label={dragHandleLabel}
+              disabled={dragDisabled}
+              data-drag-handle={dragDisabled ? 'disabled' : 'enabled'}
+              data-floating-handle='visible'
+              className={`absolute inline-flex h-16px w-12px items-center justify-center border-none bg-transparent p-0 outline-none transition-[opacity,color] duration-160 ease-out ${
+                dragDisabled
+                  ? 'cursor-default opacity-0'
+                  : isDragging
+                    ? 'cursor-grabbing opacity-100'
+                    : 'cursor-grab active:cursor-grabbing opacity-0 group-hover:opacity-100 focus-visible:opacity-100'
+              }`}
+              style={{
+                left: '-15px',
+                top: '50%',
+                transform: 'translateY(-50%)',
+                color: 'var(--color-text-3)',
+                touchAction: dragDisabled ? undefined : 'none',
+              }}
+              onPointerDown={(event) => {
+                onDragHandlePointerDown?.(event);
+                onSortableDragHandlePointerDown?.(event);
+              }}
+            >
+              <Drag theme='outline' size='12' strokeWidth={2.5} />
+            </button>
+          )}
           <span
             aria-hidden='true'
             data-queue-arrow='true'
@@ -257,26 +269,32 @@ const QueueItemCard: React.FC<QueueItemCardProps> = ({
               accent: true,
             })
           : null}
-        {renderQueueActionIconButton({
-          ariaLabel: t('conversation.commandQueue.sendNow', { defaultValue: 'Send now' }),
-          disabled: item.managed_by_server,
-          onClick: item.managed_by_server ? undefined : () => onSendNow(item),
-          icon: <SendOne theme='outline' size='14' strokeWidth={2.5} />,
-          accent: true,
-        })}
-        {renderQueueActionIconButton({
-          ariaLabel: t('conversation.commandQueue.edit', { defaultValue: 'Edit' }),
-          disabled: item.managed_by_server,
-          onClick: item.managed_by_server ? undefined : () => onEdit?.(item),
-          icon: <Edit theme='outline' size='14' strokeWidth={2.5} />,
-        })}
-        {renderQueueActionIconButton({
-          ariaLabel: t('conversation.commandQueue.remove', { defaultValue: 'Remove' }),
-          disabled: item.status === 'failed',
-          onClick: item.status === 'failed' ? undefined : () => onRemove(item.id),
-          icon: <Delete theme='outline' size='14' strokeWidth={2.5} />,
-          danger: true,
-        })}
+        {isRecent
+          ? null
+          : renderQueueActionIconButton({
+              ariaLabel: t('conversation.commandQueue.sendNow', { defaultValue: 'Send now' }),
+              disabled: item.managed_by_server,
+              onClick: item.managed_by_server ? undefined : () => onSendNow(item),
+              icon: <SendOne theme='outline' size='14' strokeWidth={2.5} />,
+              accent: true,
+            })}
+        {isRecent
+          ? null
+          : renderQueueActionIconButton({
+              ariaLabel: t('conversation.commandQueue.edit', { defaultValue: 'Edit' }),
+              disabled: item.managed_by_server,
+              onClick: item.managed_by_server ? undefined : () => onEdit?.(item),
+              icon: <Edit theme='outline' size='14' strokeWidth={2.5} />,
+            })}
+        {isRecent
+          ? null
+          : renderQueueActionIconButton({
+              ariaLabel: t('conversation.commandQueue.remove', { defaultValue: 'Remove' }),
+              disabled: !canCancelQueueItem(item),
+              onClick: canCancelQueueItem(item) ? () => onRemove(item.id) : undefined,
+              icon: <Delete theme='outline' size='14' strokeWidth={2.5} />,
+              danger: true,
+            })}
       </div>
     </div>
   );
@@ -350,6 +368,7 @@ const SortableQueueItem: React.FC<SortableQueueItemProps> = ({
 
 const CommandQueuePanel: React.FC<CommandQueuePanelProps> = ({
   items,
+  recentItems = [],
   mode,
   interactionLocked,
   isMobile = false,
@@ -452,7 +471,7 @@ const CommandQueuePanel: React.FC<CommandQueuePanelProps> = ({
     });
   };
 
-  if (items.length === 0) {
+  if (items.length === 0 && recentItems.length === 0) {
     return null;
   }
 
@@ -506,7 +525,7 @@ const CommandQueuePanel: React.FC<CommandQueuePanelProps> = ({
               className='inline-flex items-center justify-center rd-999px px-6px h-16px text-10px leading-none font-600'
               style={{ background: 'var(--color-fill-3)', color: 'var(--color-text-2)' }}
             >
-              {items.length}
+              {items.length + recentItems.length}
             </span>
           </div>
           <div className='flex items-center gap-4px shrink-0'>
@@ -532,41 +551,91 @@ const CommandQueuePanel: React.FC<CommandQueuePanelProps> = ({
                 </span>
               </Button>
             </Tooltip>
-            <Dropdown trigger='click' droplist={moreMenu} position='br'>
-              <Button
-                size='mini'
-                type='text'
-                shape='circle'
-                className='w-22px h-22px min-w-22px p-0 opacity-72 hover:opacity-100 flex items-center justify-center'
-                aria-label={t('conversation.commandQueue.moreActions', { defaultValue: 'More actions' })}
-              >
-                <span
-                  className='inline-flex items-center justify-center leading-none'
-                  style={{ color: 'var(--color-text-3)', fontSize: 0 }}
+            {items.length > 0 ? (
+              <Dropdown trigger='click' droplist={moreMenu} position='br'>
+                <Button
+                  size='mini'
+                  type='text'
+                  shape='circle'
+                  className='w-22px h-22px min-w-22px p-0 opacity-72 hover:opacity-100 flex items-center justify-center'
+                  aria-label={t('conversation.commandQueue.moreActions', { defaultValue: 'More actions' })}
                 >
-                  <MoreOne theme='outline' size='15' strokeWidth={2.5} />
-                </span>
-              </Button>
-            </Dropdown>
+                  <span
+                    className='inline-flex items-center justify-center leading-none'
+                    style={{ color: 'var(--color-text-3)', fontSize: 0 }}
+                  >
+                    <MoreOne theme='outline' size='15' strokeWidth={2.5} />
+                  </span>
+                </Button>
+              </Dropdown>
+            ) : null}
           </div>
         </div>
-        <DndContext
-          sensors={sensors}
-          collisionDetection={closestCenter}
-          onDragStart={handleDragStart}
-          onDragEnd={handleDragEnd}
-          onDragCancel={handleDragCancel}
-          modifiers={dragModifiers}
-        >
-          <SortableContext items={items.map((item) => item.id)} strategy={verticalListSortingStrategy}>
-            <div
-              ref={queueContainerRef}
-              data-command-queue-list='true'
-              data-drag-axis='vertical'
-              data-drag-bounds='queue'
-              className='p-6px flex flex-col gap-4px'
+        {items.length > 0 ? (
+          <div className='flex flex-col'>
+            {recentItems.length > 0 ? (
+              <div className='px-12px pb-2px text-10px font-600 text-t-tertiary'>
+                {t('conversation.commandQueue.pendingSection', { defaultValue: 'Pending' })}
+              </div>
+            ) : null}
+            <DndContext
+              sensors={sensors}
+              collisionDetection={closestCenter}
+              onDragStart={handleDragStart}
+              onDragEnd={handleDragEnd}
+              onDragCancel={handleDragCancel}
+              modifiers={dragModifiers}
             >
-              {items.map((item) => {
+              <SortableContext items={items.map((item) => item.id)} strategy={verticalListSortingStrategy}>
+                <div
+                  ref={queueContainerRef}
+                  data-command-queue-list='true'
+                  data-drag-axis='vertical'
+                  data-drag-bounds='queue'
+                  className='p-6px flex flex-col gap-4px'
+                >
+                  {items.map((item) => {
+                    const preview = getCommandPreview(item.input);
+                    const fileCountLabel =
+                      item.files.length > 0
+                        ? t('conversation.commandQueue.files', {
+                            count: item.files.length,
+                            defaultValue: `${item.files.length} files`,
+                          })
+                        : null;
+
+                    return (
+                      <SortableQueueItem
+                        key={item.id}
+                        item={item}
+                        dragDisabled={Boolean(item.managed_by_server)}
+                        dragViaCard={isMobile}
+                        dragHandleLabel={dragHandleLabel}
+                        preview={preview}
+                        fileCountLabel={fileCountLabel}
+                        t={t}
+                        onEdit={onEdit}
+                        onSendNow={onSendNow}
+                        onRemove={onRemove}
+                        onRetry={onRetry}
+                        onDragHandlePointerDown={(event) => {
+                          activeDragHandleRef.current = event.currentTarget;
+                        }}
+                      />
+                    );
+                  })}
+                </div>
+              </SortableContext>
+            </DndContext>
+          </div>
+        ) : null}
+        {recentItems.length > 0 ? (
+          <div data-testid='command-queue-recent' className='flex flex-col'>
+            <div className='px-12px pb-2px text-10px font-600 text-t-tertiary'>
+              {t('conversation.commandQueue.recentSection', { defaultValue: 'Recent' })}
+            </div>
+            <div className='p-6px flex flex-col gap-4px' data-command-queue-recent-list='true'>
+              {recentItems.map((item) => {
                 const preview = getCommandPreview(item.input);
                 const fileCountLabel =
                   item.files.length > 0
@@ -577,28 +646,26 @@ const CommandQueuePanel: React.FC<CommandQueuePanelProps> = ({
                     : null;
 
                 return (
-                  <SortableQueueItem
+                  <QueueItemCard
                     key={item.id}
                     item={item}
-                    dragDisabled={Boolean(item.managed_by_server)}
-                    dragViaCard={isMobile}
+                    variant='recent'
+                    isDragging={false}
+                    dragDisabled
+                    dragViaCard={false}
                     dragHandleLabel={dragHandleLabel}
                     preview={preview}
                     fileCountLabel={fileCountLabel}
                     t={t}
-                    onEdit={onEdit}
                     onSendNow={onSendNow}
                     onRemove={onRemove}
                     onRetry={onRetry}
-                    onDragHandlePointerDown={(event) => {
-                      activeDragHandleRef.current = event.currentTarget;
-                    }}
                   />
                 );
               })}
             </div>
-          </SortableContext>
-        </DndContext>
+          </div>
+        ) : null}
       </div>
     </div>
   );

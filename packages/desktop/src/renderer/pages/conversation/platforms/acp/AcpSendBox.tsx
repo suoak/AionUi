@@ -409,6 +409,7 @@ Please check your local CLI tool authentication status`,
 
   const {
     items: queuedCommands,
+    recentItems: recentQueuedCommands,
     mode: queueMode,
     isInteractionLocked: isQueueInteractionLocked,
     hasPendingCommands,
@@ -731,6 +732,7 @@ Please check your local CLI tool authentication status`,
     <div className={`${sendBoxWidthClass} flex flex-col mt-auto mb-16px`}>
       <CommandQueuePanel
         items={queuedCommands}
+        recentItems={recentQueuedCommands}
         mode={queueMode}
         isMobile={isMobile}
         interactionLocked={isQueueInteractionLocked}
