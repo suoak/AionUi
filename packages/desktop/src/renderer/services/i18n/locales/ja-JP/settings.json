@@ -1544,5 +1544,11 @@
   "fontFamilySystemDefault": "システムのデフォルト",
   "fontFamilyLoading": "フォントを取得中…",
   "fontFamilyError": "システムフォントを取得できません",
-  "fontFamilyNoResults": "一致するフォントがありません"
+  "fontFamilyNoResults": "一致するフォントがありません",
+  "fontWeightSystemDefault": "システムのデフォルト",
+  "fontWeightLight": "ライト",
+  "fontWeightRegular": "レギュラー",
+  "fontWeightMedium": "ミディアム",
+  "fontWeightSemibold": "セミボールド",
+  "fontWeightBold": "ボールド"
 }

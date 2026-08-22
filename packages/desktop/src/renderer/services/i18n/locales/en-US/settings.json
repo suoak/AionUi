@@ -1542,5 +1542,11 @@
   "fontFamilySystemDefault": "System default",
   "fontFamilyLoading": "Loading fonts…",
   "fontFamilyError": "Couldn't access system fonts",
-  "fontFamilyNoResults": "No matching fonts"
+  "fontFamilyNoResults": "No matching fonts",
+  "fontWeightSystemDefault": "System default",
+  "fontWeightLight": "Light",
+  "fontWeightRegular": "Regular",
+  "fontWeightMedium": "Medium",
+  "fontWeightSemibold": "Semibold",
+  "fontWeightBold": "Bold"
 }

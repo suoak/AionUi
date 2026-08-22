@@ -1542,5 +1542,11 @@
   "fontFamilySystemDefault": "Par défaut du système",
   "fontFamilyLoading": "Chargement des polices…",
   "fontFamilyError": "Impossible d'accéder aux polices système",
-  "fontFamilyNoResults": "Aucune police correspondante"
+  "fontFamilyNoResults": "Aucune police correspondante",
+  "fontWeightSystemDefault": "Par défaut du système",
+  "fontWeightLight": "Fin",
+  "fontWeightRegular": "Normal",
+  "fontWeightMedium": "Moyen",
+  "fontWeightSemibold": "Demi-gras",
+  "fontWeightBold": "Gras"
 }

@@ -1557,5 +1557,11 @@
   "fontFamilySystemDefault": "Системний за замовчуванням",
   "fontFamilyLoading": "Завантаження шрифтів…",
   "fontFamilyError": "Не вдалося отримати системні шрифти",
-  "fontFamilyNoResults": "Немає відповідних шрифтів"
+  "fontFamilyNoResults": "Немає відповідних шрифтів",
+  "fontWeightSystemDefault": "Системний за замовчуванням",
+  "fontWeightLight": "Тонкий",
+  "fontWeightRegular": "Звичайний",
+  "fontWeightMedium": "Середній",
+  "fontWeightSemibold": "Напівжирний",
+  "fontWeightBold": "Жирний"
 }

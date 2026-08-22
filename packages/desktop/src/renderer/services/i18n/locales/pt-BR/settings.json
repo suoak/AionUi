@@ -1545,5 +1545,11 @@
   "fontFamilySystemDefault": "Padrão do sistema",
   "fontFamilyLoading": "Carregando fontes…",
   "fontFamilyError": "Não foi possível acessar as fontes do sistema",
-  "fontFamilyNoResults": "Nenhuma fonte correspondente"
+  "fontFamilyNoResults": "Nenhuma fonte correspondente",
+  "fontWeightSystemDefault": "Padrão do sistema",
+  "fontWeightLight": "Fina",
+  "fontWeightRegular": "Normal",
+  "fontWeightMedium": "Média",
+  "fontWeightSemibold": "Seminegrito",
+  "fontWeightBold": "Negrito"
 }

@@ -1544,5 +1544,11 @@
   "fontFamilySystemDefault": "系統預設",
   "fontFamilyLoading": "正在取得字型…",
   "fontFamilyError": "無法取得系統字型",
-  "fontFamilyNoResults": "沒有符合的字型"
+  "fontFamilyNoResults": "沒有符合的字型",
+  "fontWeightSystemDefault": "系統預設",
+  "fontWeightLight": "細體",
+  "fontWeightRegular": "標準",
+  "fontWeightMedium": "中等",
+  "fontWeightSemibold": "半粗",
+  "fontWeightBold": "粗體"
 }

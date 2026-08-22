@@ -1542,5 +1542,11 @@
   "fontFamilySystemDefault": "پیش‌فرض سیستم",
   "fontFamilyLoading": "در حال بارگذاری فونت‌ها…",
   "fontFamilyError": "دسترسی به فونت‌های سیستم ممکن نشد",
-  "fontFamilyNoResults": "فونت منطبقی یافت نشد"
+  "fontFamilyNoResults": "فونت منطبقی یافت نشد",
+  "fontWeightSystemDefault": "پیش‌فرض سیستم",
+  "fontWeightLight": "نازک",
+  "fontWeightRegular": "معمولی",
+  "fontWeightMedium": "متوسط",
+  "fontWeightSemibold": "نیمه‌ضخیم",
+  "fontWeightBold": "ضخیم"
 }

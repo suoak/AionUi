@@ -1542,5 +1542,11 @@
   "fontFamilySystemDefault": "Systemstandard",
   "fontFamilyLoading": "Schriftarten werden geladen…",
   "fontFamilyError": "Zugriff auf Systemschriftarten nicht möglich",
-  "fontFamilyNoResults": "Keine passenden Schriftarten"
+  "fontFamilyNoResults": "Keine passenden Schriftarten",
+  "fontWeightSystemDefault": "Systemstandard",
+  "fontWeightLight": "Leicht",
+  "fontWeightRegular": "Normal",
+  "fontWeightMedium": "Mittel",
+  "fontWeightSemibold": "Halbfett",
+  "fontWeightBold": "Fett"
 }
