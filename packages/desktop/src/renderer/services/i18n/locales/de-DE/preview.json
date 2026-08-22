@@ -167,5 +167,10 @@
   "closeTabTitle": "Tab schließen",
   "closeTabsMessage": "{{count}} Tabs haben ungespeicherte Änderungen. Vor dem Schließen speichern?",
   "openInSystemFailed": "Öffnen mit Systemanwendung fehlgeschlagen",
-  "downloadDiff": "Diff-Datei herunterladen"
+  "downloadDiff": "Diff-Datei herunterladen",
+  "maximizePanel": "Maximieren",
+  "restorePanel": "Wiederherstellen",
+  "closeTabsMessage_one": "{{count}} Tab hat ungespeicherte Änderungen. Vor dem Schließen speichern?",
+  "closeTabsMessage_other": "{{count}} Tabs haben ungespeicherte Änderungen. Vor dem Schließen speichern?",
+  "mermaidZoomHint": "Scrollen zum Zoomen • Ziehen zum Verschieben • ESC zum Schließen"
 }

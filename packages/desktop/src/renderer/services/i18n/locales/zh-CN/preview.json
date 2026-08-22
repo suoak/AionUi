@@ -167,5 +167,10 @@
   "closeTabTitle": "关闭标签页",
   "closeTabsMessage": "有 {{count}} 个标签页未保存，是否保存后再关闭？",
   "openInSystemFailed": "打开文件失败",
-  "downloadDiff": "下载 Diff 文件"
+  "downloadDiff": "下载 Diff 文件",
+  "maximizePanel": "最大化",
+  "restorePanel": "还原",
+  "closeTabsMessage_one": "有 {{count}} 个标签页未保存，是否保存后再关闭？",
+  "closeTabsMessage_other": "有 {{count}} 个标签页未保存，是否保存后再关闭？",
+  "mermaidZoomHint": "滚轮缩放 • 拖拽平移 • ESC 关闭"
 }

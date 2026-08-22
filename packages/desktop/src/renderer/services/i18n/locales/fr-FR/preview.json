@@ -167,5 +167,10 @@
   "closeTabTitle": "Fermer l'onglet",
   "closeTabsMessage": "{{count}} onglets contiennent des modifications non enregistrées. Les enregistrer avant de fermer ?",
   "openInSystemFailed": "Échec de l'ouverture avec l'application système",
-  "downloadDiff": "Télécharger le fichier Diff"
+  "downloadDiff": "Télécharger le fichier Diff",
+  "maximizePanel": "Agrandir",
+  "restorePanel": "Restaurer",
+  "closeTabsMessage_one": "{{count}} onglet contient des modifications non enregistrées. L'enregistrer avant de fermer ?",
+  "closeTabsMessage_other": "{{count}} onglets contiennent des modifications non enregistrées. Les enregistrer avant de fermer ?",
+  "mermaidZoomHint": "Molette pour zoomer • Glisser pour déplacer • Échap pour fermer"
 }

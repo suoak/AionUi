@@ -167,5 +167,10 @@
   "closeTabTitle": "Sekmeyi Kapat",
   "closeTabsMessage": "{{count}} sekmede kaydedilmemiş değişiklik var. Kapatmadan önce kaydedilsin mi?",
   "openInSystemFailed": "Sistem uygulamasıyla açılamadı",
-  "downloadDiff": "Diff Dosyasını İndir"
+  "downloadDiff": "Diff Dosyasını İndir",
+  "maximizePanel": "Büyüt",
+  "restorePanel": "Geri Yükle",
+  "closeTabsMessage_one": "{{count}} sekmede kaydedilmemiş değişiklik var. Kapatmadan önce kaydedilsin mi?",
+  "closeTabsMessage_other": "{{count}} sekmede kaydedilmemiş değişiklik var. Kapatmadan önce kaydedilsin mi?",
+  "mermaidZoomHint": "Yakınlaştırmak için kaydırın • Taşımak için sürükleyin • ESC ile kapatın"
 }

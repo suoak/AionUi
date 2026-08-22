@@ -167,5 +167,10 @@
   "closeTabTitle": "탭 닫기",
   "closeTabsMessage": "저장되지 않은 탭이 {{count}}개 있습니다. 저장한 후 닫을까요?",
   "openInSystemFailed": "시스템 앱으로 열지 못했습니다",
-  "downloadDiff": "Diff 파일 다운로드"
+  "downloadDiff": "Diff 파일 다운로드",
+  "maximizePanel": "최대화",
+  "restorePanel": "복원",
+  "closeTabsMessage_one": "저장되지 않은 탭이 {{count}}개 있습니다. 저장한 후 닫을까요?",
+  "closeTabsMessage_other": "저장되지 않은 탭이 {{count}}개 있습니다. 저장한 후 닫을까요?",
+  "mermaidZoomHint": "스크롤로 확대 • 드래그로 이동 • ESC로 닫기"
 }

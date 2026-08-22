@@ -167,5 +167,10 @@
   "closeTabTitle": "Cerrar pestaña",
   "closeTabsMessage": "{{count}} pestañas tienen cambios sin guardar. ¿Guardar antes de cerrar?",
   "openInSystemFailed": "Error al abrir con la aplicación del sistema",
-  "downloadDiff": "Descargar archivo Diff"
+  "downloadDiff": "Descargar archivo Diff",
+  "maximizePanel": "Maximizar",
+  "restorePanel": "Restaurar",
+  "closeTabsMessage_one": "{{count}} pestaña tiene cambios sin guardar. ¿Guardar antes de cerrar?",
+  "closeTabsMessage_other": "{{count}} pestañas tienen cambios sin guardar. ¿Guardar antes de cerrar?",
+  "mermaidZoomHint": "Desplazarse para ampliar • Arrastrar para mover • ESC para cerrar"
 }

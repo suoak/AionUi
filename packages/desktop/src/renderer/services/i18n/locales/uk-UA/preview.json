@@ -167,5 +167,12 @@
   "closeTabTitle": "Закрити вкладку",
   "closeTabsMessage": "Незбережених вкладок: {{count}}. Зберегти перед закриттям?",
   "openInSystemFailed": "Не вдалося відкрити в системній програмі",
-  "downloadDiff": "Завантажити файл Diff"
+  "downloadDiff": "Завантажити файл Diff",
+  "maximizePanel": "Розгорнути",
+  "restorePanel": "Відновити",
+  "closeTabsMessage_one": "Незбережених вкладок: {{count}}. Зберегти перед закриттям?",
+  "closeTabsMessage_other": "Незбережених вкладок: {{count}}. Зберегти перед закриттям?",
+  "closeTabsMessage_few": "Незбережених вкладок: {{count}}. Зберегти перед закриттям?",
+  "closeTabsMessage_many": "Незбережених вкладок: {{count}}. Зберегти перед закриттям?",
+  "mermaidZoomHint": "Колесо — масштаб • Перетягування — панорама • ESC — закрити"
 }

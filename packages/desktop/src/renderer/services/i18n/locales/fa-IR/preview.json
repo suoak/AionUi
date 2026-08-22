@@ -167,5 +167,10 @@
   "closeTabTitle": "بستن تب",
   "closeTabsMessage": "{{count}} تب تغییرات ذخیره‌نشده دارند. پیش از بستن ذخیره شوند؟",
   "openInSystemFailed": "باز کردن با برنامه سیستم ناموفق بود",
-  "downloadDiff": "دانلود فایل Diff"
+  "downloadDiff": "دانلود فایل Diff",
+  "maximizePanel": "بزرگ‌نمایی",
+  "restorePanel": "بازگردانی",
+  "closeTabsMessage_one": "{{count}} تب تغییرات ذخیره‌نشده دارند. پیش از بستن ذخیره شوند؟",
+  "closeTabsMessage_other": "{{count}} تب تغییرات ذخیره‌نشده دارند. پیش از بستن ذخیره شوند؟",
+  "mermaidZoomHint": "برای بزرگنمایی اسکرول کنید • برای جابهجایی بکشید • ESC برای بستن"
 }
