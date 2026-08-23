@@ -1,5 +1,32 @@
 # Changelog
 
+## [2.1.80](https://github.com/suoak/AionUi/compare/v2.1.79...v2.1.80) (2026-08-23)
+
+### Desktop
+
+#### Features
+
+- **conversation:** add the semantic Trajectory 2.0 workspace with overview, virtualized records, filtering, raw-event mode, and record inspection (#90)
+- **core:** bundle AionCore v0.1.83 with journal-backed trajectory APIs and hardened multimodal attachment delivery
+
+#### Bug Fixes
+
+- **usage:** show the configured CSBU WorkMate brand instead of the legacy backend identifier in recent sessions (#89)
+
+#### 内网更新说明
+
+<!-- internal-release-notes:start -->
+
+**由运营管理部提供**
+
+- “最近会话”现在统一展示 CSBU WorkMate 品牌，不再显示旧的后端标识。
+- 全新轨迹视图按轮次、步骤和工具执行组织信息，合并无效的逐词与宿主事件，并支持搜索、筛选、详情检查和实时增量。
+- 加固图片附件检测、降级与图像工具结果，异常附件会给出明确结果，不影响正常聊天。
+
+<!-- internal-release-notes:end -->
+
+---
+
 ## [2.1.79](https://github.com/suoak/AionUi/compare/v2.1.78...v2.1.79) (2026-08-21)
 
 ### Desktop
