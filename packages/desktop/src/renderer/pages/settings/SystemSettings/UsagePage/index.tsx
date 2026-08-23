@@ -21,6 +21,7 @@ import {
   buildUsageDailySeries,
   filterUsageEventsByModel,
   filterUsageToday,
+  resolveUsageAgentLabel,
   resolveUsageModelFilter,
   summarizeUsageEvents,
   usageEventsToCsv,
@@ -347,7 +348,14 @@ const UsagePage: React.FC = () => {
                   >
                     <span className='min-w-0'>
                       <span className='block truncate text-13px text-t-primary'>{row.label}</span>
-                      <span className='block truncate text-11px text-t-tertiary'>{row.backend}</span>
+                      <span className='block truncate text-11px text-t-tertiary'>
+                        {resolveUsageAgentLabel(
+                          row.backend,
+                          agentLabels,
+                          t('settings.usage.unknownAgent'),
+                          t('settings.usage.retiredRuntime')
+                        )}
+                      </span>
                     </span>
                     <span className='shrink-0 text-12px text-t-secondary'>{formatTokenCount(row.total_tokens)}</span>
                   </Button>
