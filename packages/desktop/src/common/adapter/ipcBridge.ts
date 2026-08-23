@@ -17,11 +17,17 @@ import type { AcpSlashCommandApiItem } from '@/common/chat/slash/types';
 import { bridge } from '@/common/platform/bridge';
 import {
   buildJournalTranscriptPath,
+  buildTrajectoryPath,
   normalizeJournalTranscript,
   type ConversationHostPolicy,
   type JournalApprovalPolicy,
   type JournalTranscript,
   type JournalTranscriptVisibility,
+  type ConversationTrajectoryChangedEvent,
+  type RawTrajectoryProjection,
+  type TrajectoryPageParams,
+  type TrajectoryProjection,
+  type TrajectoryRecord,
 } from '@/common/types/journalTranscript';
 import { buildListTasksPath } from './teamTaskPath';
 import type { OpenDialogOptions } from 'electron';
@@ -488,6 +494,11 @@ export const conversation = {
     ),
     (raw) => normalizeJournalTranscript(raw, raw?.conversation_id ?? '')
   ),
+  getTrajectory: httpGet<TrajectoryProjection, TrajectoryPageParams>((p) => buildTrajectoryPath(p)),
+  getRawTrajectory: httpGet<RawTrajectoryProjection, TrajectoryPageParams>((p) => buildTrajectoryPath(p, true)),
+  getTrajectoryRecord: httpGet<TrajectoryRecord, { conversation_id: string; record_id: string }>(
+    (p) => `/api/conversations/${p.conversation_id}/trajectory/${encodeURIComponent(p.record_id)}`
+  ),
   setHostPolicy: httpPut<
     ConversationHostPolicy,
     { conversation_id: string; approval?: JournalApprovalPolicy; compaction_keep_n?: number }
@@ -535,6 +546,7 @@ export const conversation = {
   }>('message.userCreated'),
   inputChanged: wsEmitter<IConversationInputChangedEvent>('conversation.inputChanged'),
   capabilitiesChanged: wsEmitter<IConversationCapabilitiesChangedEvent>('conversation.capabilitiesChanged'),
+  trajectoryChanged: wsEmitter<ConversationTrajectoryChangedEvent>('conversation.trajectoryChanged'),
   cancellationChanged: wsEmitter<IConversationCancellationChangedEvent>('conversation.cancellationChanged'),
   artifactStream: wsEmitter<IConversationArtifact>('conversation.artifact'),
   turnCompleted: wsMappedEmitter<IConversationTurnCompletedEvent>('turn.completed', (raw) => {

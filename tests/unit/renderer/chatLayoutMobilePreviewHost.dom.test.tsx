@@ -1,4 +1,5 @@
 import React from 'react';
+import { createPortal } from 'react-dom';
 import { render, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
@@ -77,7 +78,12 @@ vi.mock('@/renderer/pages/conversation/hooks/useWorkspaceCollapse', () => ({
   useWorkspaceCollapse: () => ({ rightSiderCollapsed: true, setRightSiderCollapsed: vi.fn() }),
 }));
 
-import ChatLayout from '@/renderer/pages/conversation/components/ChatLayout';
+import ChatLayout, { useTrajectoryHost } from '@/renderer/pages/conversation/components/ChatLayout';
+
+function TrajectoryProbe() {
+  const host = useTrajectoryHost();
+  return host ? createPortal(<div data-testid='trajectory-probe'>trajectory</div>, host) : null;
+}
 
 function renderChatLayout(previewHosted: boolean) {
   return render(
@@ -110,5 +116,17 @@ describe('ChatLayout mobile preview host fallback', () => {
     mockIsMobile = false;
     renderChatLayout(false);
     expect(screen.getByTestId('preview-panel')).toBeInTheDocument();
+  });
+
+  it('portals trajectory content over the main surface without unmounting chat', () => {
+    render(
+      <ChatLayout headerExtra={<TrajectoryProbe />} sider={<div>sider</div>} workspaceEnabled={false} previewHosted>
+        <div data-testid='mounted-chat'>chat body</div>
+      </ChatLayout>
+    );
+
+    const host = screen.getByTestId('conversation-trajectory-host');
+    expect(host).toContainElement(screen.getByTestId('trajectory-probe'));
+    expect(screen.getByTestId('mounted-chat')).toBeInTheDocument();
   });
 });
