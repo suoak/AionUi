@@ -21,9 +21,13 @@ import {
   calcLayoutMetrics,
 } from '@/renderer/pages/conversation/utils/layoutCalc';
 import { Layout as ArcoLayout } from '@arco-design/web-react';
-import React, { useEffect, useState } from 'react';
+import React, { createContext, useContext, useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import './chat-layout.css';
+
+const TrajectoryHostContext = createContext<HTMLElement | null>(null);
+
+export const useTrajectoryHost = () => useContext(TrajectoryHostContext);
 
 // headerExtra allows injecting custom actions (e.g., model picker) into the header's right area
 const ChatLayout: React.FC<{
@@ -173,6 +177,7 @@ const ChatLayout: React.FC<{
   });
 
   const [mobileActionsSlot, setMobileActionsSlot] = useState<HTMLElement | null>(null);
+  const [trajectoryHost, setTrajectoryHost] = useState<HTMLElement | null>(null);
   useEffect(() => {
     if (!layout?.isMobile) {
       setMobileActionsSlot(null);
@@ -234,128 +239,135 @@ const ChatLayout: React.FC<{
   );
 
   return (
-    <ArcoLayout
-      className='size-full color-black '
-      style={{
-        // fontFamily: `cursive,"anthropicSans","anthropicSans Fallback",system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif`,
-      }}
-    >
-      <div ref={containerRef} className='flex flex-1 relative w-full overflow-hidden'>
-        {/* Unified layout: single DOM structure prevents children unmount/remount on preview toggle */}
-        <div
-          className='flex flex-col min-w-0'
-          style={{
-            flexGrow: 1,
-            flexShrink: 1,
-            flexBasis: 0,
-          }}
-        >
-          <div className='shrink-0 !bg-1'>{headerBlock}</div>
-          <div className='flex flex-1 min-h-0 relative'>
-            {/* Chat area - always mounted, never unmounted on preview toggle */}
-            <div
-              className='flex flex-col relative'
-              style={{
-                flexGrow: isPreviewOpen && isDesktop ? 0 : 1,
-                flexShrink: 0,
-                flexBasis: isPreviewOpen && isDesktop ? `${chatFlex}%` : 0,
-                display: isPreviewOpen && isMobile ? 'none' : 'flex',
-                minWidth: '240px',
-              }}
-              onClick={() => {
-                if (window.innerWidth < 768 && !rightSiderCollapsed) setRightSiderCollapsed(true);
-              }}
-            >
-              <ArcoLayout.Content className='flex flex-col flex-1 bg-1 overflow-hidden'>
-                {props.children}
-              </ArcoLayout.Content>
-            </div>
-            {/* Preview panel - conditionally rendered */}
-            {isPreviewOpen && (
-              <div
-                className={classNames(
-                  'preview-panel flex flex-col relative overflow-visible',
-                  // 移动端预览是覆盖层，保留内缩和圆角；桌面端不留边距，
-                  // 否则窗口底色会从缝隙透出（深色模式下尤其突兀）。
-                  // On mobile the preview is an overlay, so it keeps its inset and
-                  // rounding. On desktop no margin: a gap would expose the window's
-                  // own background, which is jarring in dark mode.
-                  isDesktop ? '' : 'm-[8px] rounded-[15px]'
-                )}
-                style={{
-                  flexGrow: 1,
-                  flexShrink: 1,
-                  flexBasis: 0,
-                  // 桌面端只用左边框分界；移动端覆盖层保留完整描边
-                  // Desktop: left divider only. Mobile overlay keeps a full border.
-                  ...(isDesktop ? { borderLeft: '1px solid var(--bg-3)' } : { border: '1px solid var(--bg-3)' }),
-                  minWidth: isDesktop ? '260px' : 0,
-                  maxWidth: isMobile ? 'calc(100% - 16px)' : undefined,
-                  width: isMobile ? 'calc(100% - 16px)' : undefined,
-                  boxSizing: 'border-box',
-                }}
-              >
-                {isDesktop &&
-                  createPreviewDragHandle({
-                    className: 'absolute top-0 bottom-0 z-30',
-                    style: { width: '20px', left: '-20px' },
-                    linePlacement: 'end',
-                    lineClassName: 'opacity-30 group-hover:opacity-100 group-active:opacity-100',
-                    lineStyle: { width: '2px' },
-                  })}
-                <div className={classNames('h-full w-full overflow-hidden', isDesktop ? '' : 'rounded-[15px]')}>
-                  <PreviewPanel />
-                </div>
-              </div>
-            )}
-          </div>
-        </div>
-        {workspaceEnabled && !layout?.isMobile && (
+    <TrajectoryHostContext.Provider value={trajectoryHost}>
+      <ArcoLayout
+        className='size-full color-black '
+        style={{
+          // fontFamily: `cursive,"anthropicSans","anthropicSans Fallback",system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif`,
+        }}
+      >
+        <div ref={containerRef} className='flex flex-1 relative w-full overflow-hidden'>
+          {/* Unified layout: single DOM structure prevents children unmount/remount on preview toggle */}
           <div
-            className={classNames('!bg-1 relative chat-layout-right-sider layout-sider')}
+            className='flex flex-col min-w-0'
             style={{
-              flexGrow: 0,
-              flexShrink: 0,
-              flexBasis: rightSiderCollapsed ? '0px' : `${Math.round(workspaceWidthPx)}px`,
-              width: rightSiderCollapsed ? '0px' : `${Math.round(workspaceWidthPx)}px`,
-              minWidth: rightSiderCollapsed ? '0px' : `${MIN_WORKSPACE_PANEL_PX}px`,
-              overflow: 'hidden',
-              borderLeft: rightSiderCollapsed ? 'none' : '1px solid var(--bg-3)',
+              flexGrow: 1,
+              flexShrink: 1,
+              flexBasis: 0,
             }}
           >
-            {isDesktop &&
-              !rightSiderCollapsed &&
-              createWorkspaceDragHandle({ className: 'absolute left-0 top-0 bottom-0', style: {}, reverse: true })}
-            <WorkspacePanelHeader
-              collapsed={rightSiderCollapsed}
-              onToggle={() => dispatchWorkspaceToggleEvent()}
-              togglePlacement={layout?.isMobile ? 'left' : 'right'}
+            <div className='shrink-0 !bg-1'>{headerBlock}</div>
+            <div className='flex flex-1 min-h-0 relative'>
+              {/* Chat area - always mounted, never unmounted on preview toggle */}
+              <div
+                className='flex flex-col relative'
+                style={{
+                  flexGrow: isPreviewOpen && isDesktop ? 0 : 1,
+                  flexShrink: 0,
+                  flexBasis: isPreviewOpen && isDesktop ? `${chatFlex}%` : 0,
+                  display: isPreviewOpen && isMobile ? 'none' : 'flex',
+                  minWidth: '240px',
+                }}
+                onClick={() => {
+                  if (window.innerWidth < 768 && !rightSiderCollapsed) setRightSiderCollapsed(true);
+                }}
+              >
+                <ArcoLayout.Content className='flex flex-col flex-1 bg-1 overflow-hidden'>
+                  {props.children}
+                </ArcoLayout.Content>
+              </div>
+              {/* Preview panel - conditionally rendered */}
+              {isPreviewOpen && (
+                <div
+                  className={classNames(
+                    'preview-panel flex flex-col relative overflow-visible',
+                    // 移动端预览是覆盖层，保留内缩和圆角；桌面端不留边距，
+                    // 否则窗口底色会从缝隙透出（深色模式下尤其突兀）。
+                    // On mobile the preview is an overlay, so it keeps its inset and
+                    // rounding. On desktop no margin: a gap would expose the window's
+                    // own background, which is jarring in dark mode.
+                    isDesktop ? '' : 'm-[8px] rounded-[15px]'
+                  )}
+                  style={{
+                    flexGrow: 1,
+                    flexShrink: 1,
+                    flexBasis: 0,
+                    // 桌面端只用左边框分界；移动端覆盖层保留完整描边
+                    // Desktop: left divider only. Mobile overlay keeps a full border.
+                    ...(isDesktop ? { borderLeft: '1px solid var(--bg-3)' } : { border: '1px solid var(--bg-3)' }),
+                    minWidth: isDesktop ? '260px' : 0,
+                    maxWidth: isMobile ? 'calc(100% - 16px)' : undefined,
+                    width: isMobile ? 'calc(100% - 16px)' : undefined,
+                    boxSizing: 'border-box',
+                  }}
+                >
+                  {isDesktop &&
+                    createPreviewDragHandle({
+                      className: 'absolute top-0 bottom-0 z-30',
+                      style: { width: '20px', left: '-20px' },
+                      linePlacement: 'end',
+                      lineClassName: 'opacity-30 group-hover:opacity-100 group-active:opacity-100',
+                      lineStyle: { width: '2px' },
+                    })}
+                  <div className={classNames('h-full w-full overflow-hidden', isDesktop ? '' : 'rounded-[15px]')}>
+                    <PreviewPanel />
+                  </div>
+                </div>
+              )}
+              <div
+                ref={setTrajectoryHost}
+                className='absolute inset-0 z-40 pointer-events-none overflow-hidden'
+                data-testid='conversation-trajectory-host'
+              />
+            </div>
+          </div>
+          {workspaceEnabled && !layout?.isMobile && (
+            <div
+              className={classNames('!bg-1 relative chat-layout-right-sider layout-sider')}
+              style={{
+                flexGrow: 0,
+                flexShrink: 0,
+                flexBasis: rightSiderCollapsed ? '0px' : `${Math.round(workspaceWidthPx)}px`,
+                width: rightSiderCollapsed ? '0px' : `${Math.round(workspaceWidthPx)}px`,
+                minWidth: rightSiderCollapsed ? '0px' : `${MIN_WORKSPACE_PANEL_PX}px`,
+                overflow: 'hidden',
+                borderLeft: rightSiderCollapsed ? 'none' : '1px solid var(--bg-3)',
+              }}
+            >
+              {isDesktop &&
+                !rightSiderCollapsed &&
+                createWorkspaceDragHandle({ className: 'absolute left-0 top-0 bottom-0', style: {}, reverse: true })}
+              <WorkspacePanelHeader
+                collapsed={rightSiderCollapsed}
+                onToggle={() => dispatchWorkspaceToggleEvent()}
+                togglePlacement={layout?.isMobile ? 'left' : 'right'}
+                workspacePath={workspacePath}
+                isTemporaryWorkspace={isTemporaryWorkspace}
+              >
+                {props.siderTitle}
+              </WorkspacePanelHeader>
+              <ArcoLayout.Content style={{ height: `calc(100% - ${WORKSPACE_HEADER_HEIGHT}px)` }}>
+                {props.sider}
+              </ArcoLayout.Content>
+            </div>
+          )}
+
+          {/* Mobile workspace overlay: backdrop + fixed panel + floating collapse handle */}
+          {workspaceEnabled && layout?.isMobile && (
+            <MobileWorkspaceOverlay
+              rightSiderCollapsed={rightSiderCollapsed}
+              setRightSiderCollapsed={setRightSiderCollapsed}
+              workspaceWidthPx={workspaceWidthPx}
+              mobileWorkspaceHandleRight={mobileWorkspaceHandleRight}
+              siderTitle={props.siderTitle}
+              sider={props.sider}
               workspacePath={workspacePath}
               isTemporaryWorkspace={isTemporaryWorkspace}
-            >
-              {props.siderTitle}
-            </WorkspacePanelHeader>
-            <ArcoLayout.Content style={{ height: `calc(100% - ${WORKSPACE_HEADER_HEIGHT}px)` }}>
-              {props.sider}
-            </ArcoLayout.Content>
-          </div>
-        )}
-
-        {/* Mobile workspace overlay: backdrop + fixed panel + floating collapse handle */}
-        {workspaceEnabled && layout?.isMobile && (
-          <MobileWorkspaceOverlay
-            rightSiderCollapsed={rightSiderCollapsed}
-            setRightSiderCollapsed={setRightSiderCollapsed}
-            workspaceWidthPx={workspaceWidthPx}
-            mobileWorkspaceHandleRight={mobileWorkspaceHandleRight}
-            siderTitle={props.siderTitle}
-            sider={props.sider}
-            workspacePath={workspacePath}
-            isTemporaryWorkspace={isTemporaryWorkspace}
-          />
-        )}
-      </div>
-    </ArcoLayout>
+            />
+          )}
+        </div>
+      </ArcoLayout>
+    </TrajectoryHostContext.Provider>
   );
 };
 

@@ -174,3 +174,102 @@ export function buildJournalTranscriptPath(
   const params = new URLSearchParams({ visibility });
   return `/api/conversations/${conversationId}/transcript?${params.toString()}`;
 }
+
+export type TrajectoryTokenUsage = {
+  input?: number;
+  output?: number;
+  cached?: number;
+  thinking?: number;
+};
+
+export type TrajectoryRecord = {
+  record_id: string;
+  category: string;
+  status: string;
+  visibility: string;
+  turn_id?: string;
+  step_id?: string;
+  parent_record_id?: string;
+  input_id?: string;
+  execution_id?: string;
+  tool_call_id?: string;
+  started_at_ms?: number;
+  completed_at_ms?: number;
+  duration_ms?: number;
+  title: string;
+  summary: string;
+  input_preview?: string;
+  output_preview?: string;
+  retained_output_reference?: string;
+  structured_content?: unknown;
+  error_code?: string;
+  truncation?: unknown;
+  tokens: TrajectoryTokenUsage;
+  first_sequence: number;
+  last_sequence: number;
+  source_sequences: number[];
+  detail?: unknown;
+};
+
+export type TrajectoryOverview = {
+  turns: number;
+  steps: number;
+  tools: number;
+  errors: number;
+  total_duration_ms?: number;
+  first_output_ms?: number;
+  tokens: TrajectoryTokenUsage;
+};
+
+export type TrajectoryProjection = {
+  schema_version: number;
+  conversation_id: string;
+  records: TrajectoryRecord[];
+  overview: TrajectoryOverview;
+  has_more: boolean;
+  oldest_sequence?: number;
+  newest_sequence?: number;
+  next_before_sequence?: number;
+  log_revision: number;
+};
+
+export type RawTrajectoryEvent = {
+  event_id: string;
+  sequence: number;
+  timestamp_ms: number;
+  kind: string;
+  payload: unknown;
+};
+
+export type RawTrajectoryProjection = {
+  schema_version: number;
+  conversation_id: string;
+  events: RawTrajectoryEvent[];
+  has_more: boolean;
+  oldest_sequence?: number;
+  newest_sequence?: number;
+  next_before_sequence?: number;
+  log_revision: number;
+};
+
+export type ConversationTrajectoryChangedEvent = {
+  conversation_id: string;
+  last_sequence: number;
+  log_revision: number;
+};
+
+export type TrajectoryPageParams = {
+  conversation_id: string;
+  before_sequence?: number;
+  after_sequence?: number;
+  limit?: number;
+};
+
+export function buildTrajectoryPath(params: TrajectoryPageParams, raw = false): string {
+  const search = new URLSearchParams();
+  if (params.before_sequence !== undefined) search.set('before_sequence', String(params.before_sequence));
+  if (params.after_sequence !== undefined) search.set('after_sequence', String(params.after_sequence));
+  if (params.limit !== undefined) search.set('limit', String(params.limit));
+  const query = search.toString();
+  return `/api/conversations/${params.conversation_id}/trajectory${raw ? '/raw' : ''}${query ? `?${query}` : ''}`;
+}

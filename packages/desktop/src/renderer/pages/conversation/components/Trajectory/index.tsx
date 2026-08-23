@@ -8,9 +8,11 @@ import { iconColors } from '@/renderer/styles/colors';
 import { Button, Tooltip } from '@arco-design/web-react';
 import { Timeline } from '@icon-park/react';
 import React from 'react';
+import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
-import TrajectoryDrawer from './TrajectoryDrawer';
-import { useConversationTrajectory } from './useConversationTrajectory';
+import { useTrajectoryHost } from '../ChatLayout';
+import TrajectoryView from './components/TrajectoryView';
+import { useConversationTrajectory } from './hooks/useConversationTrajectory';
 
 type ConversationTrajectoryButtonProps = {
   conversationId: string;
@@ -18,8 +20,31 @@ type ConversationTrajectoryButtonProps = {
 
 const ConversationTrajectoryButton: React.FC<ConversationTrajectoryButtonProps> = ({ conversationId }) => {
   const { t } = useTranslation();
-  const { visible, setVisible, loading, error, transcript, capabilities, savingPolicy, savePolicy, reload } =
-    useConversationTrajectory(conversationId);
+  const trajectory = useConversationTrajectory(conversationId);
+  const trajectoryHost = useTrajectoryHost();
+  const view = (
+    <TrajectoryView
+      conversationId={conversationId}
+      visible={trajectory.visible}
+      rawMode={trajectory.rawMode}
+      loading={trajectory.loading}
+      loadingOlder={trajectory.loadingOlder}
+      error={trajectory.error}
+      records={trajectory.records}
+      overview={trajectory.overview}
+      hasMore={trajectory.hasMore}
+      selected={trajectory.selected}
+      transcript={trajectory.transcript}
+      savingPolicy={trajectory.savingPolicy}
+      onClose={() => trajectory.setVisible(false)}
+      onRawModeChange={trajectory.setRawMode}
+      onRetry={() => void trajectory.reload()}
+      onLoadOlder={() => void trajectory.loadOlder()}
+      onSelect={(record) => void trajectory.loadDetail(record)}
+      onApprovalChange={(approval) => void trajectory.savePolicy({ approval })}
+      onKeepNChange={(keepN) => void trajectory.savePolicy({ compaction_keep_n: keepN })}
+    />
+  );
 
   return (
     <>
@@ -39,27 +64,10 @@ const ConversationTrajectoryButton: React.FC<ConversationTrajectoryButtonProps> 
               strokeLinecap='square'
             />
           }
-          onClick={() => setVisible(true)}
+          onClick={() => trajectory.setVisible(true)}
         />
       </Tooltip>
-      <TrajectoryDrawer
-        visible={visible}
-        loading={loading}
-        error={error}
-        savingPolicy={savingPolicy}
-        transcript={transcript}
-        capabilities={capabilities}
-        onClose={() => setVisible(false)}
-        onRetry={() => {
-          void reload();
-        }}
-        onApprovalChange={(approval) => {
-          void savePolicy({ approval });
-        }}
-        onKeepNChange={(keepN) => {
-          void savePolicy({ compaction_keep_n: keepN });
-        }}
-      />
+      {trajectoryHost ? createPortal(view, trajectoryHost) : view}
     </>
   );
 };
