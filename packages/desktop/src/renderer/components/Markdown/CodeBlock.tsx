@@ -15,6 +15,8 @@ import { copyText } from '@/renderer/utils/ui/clipboard';
 import MermaidBlock from './MermaidBlock';
 import { formatCode, getDiffLineStyle } from './markdownUtils';
 
+const WavedromBlock = React.lazy(() => import('./WavedromBlock'));
+
 const PREVIEW_LINES = 3;
 // code span: font-size 13px, line-height 20px (per ShadowView injection)
 const CODE_LINE_HEIGHT = 20;
@@ -28,8 +30,10 @@ type CodeBlockProps = {
   node?: unknown;
   hiddenCodeCopyButton?: boolean;
   codeStyle?: React.CSSProperties;
-  /** Enable drag-to-pan and zoom controls for rendered Mermaid diagrams. */
-  mermaidPanZoom?: boolean;
+  // Enable drag-to-pan + zoom on rendered diagrams (Mermaid, WaveDrom). Chat
+  // messages and the preview panel both opt in; other surfaces keep diagrams
+  // static.
+  diagramPanZoom?: boolean;
   [key: string]: unknown;
 };
 
@@ -66,7 +70,7 @@ function CodeBlock(props: CodeBlockProps) {
     node: _node,
     hiddenCodeCopyButton: _h,
     codeStyle: _c,
-    mermaidPanZoom: _mermaidPanZoom,
+    diagramPanZoom: _dpz,
     ...rest
   } = props;
   const match = /language-(\w+)/.exec(className || '');
@@ -87,7 +91,15 @@ function CodeBlock(props: CodeBlockProps) {
   }
 
   if (language === 'mermaid') {
-    return <MermaidBlock code={formatCode(children)} style={props.codeStyle} enablePanZoom={props.mermaidPanZoom} />;
+    return <MermaidBlock code={formatCode(children)} style={props.codeStyle} enablePanZoom={props.diagramPanZoom} />;
+  }
+
+  if (language === 'wavedrom' || language === 'wavejson') {
+    return (
+      <React.Suspense fallback={<div className='p-12px text-t-secondary'>{t('preview.loading')}</div>}>
+        <WavedromBlock code={formatCode(children)} style={props.codeStyle} enablePanZoom={props.diagramPanZoom} />
+      </React.Suspense>
+    );
   }
 
   // Inline code (single line)
@@ -133,6 +145,8 @@ function CodeBlock(props: CodeBlockProps) {
   return (
     <div
       ref={containerRef}
+      // Code is inherently left-to-right; keep it that way under an RTL document.
+      dir='ltr'
       style={{ width: '100%', minWidth: 0, maxWidth: '100%', ...props.codeStyle }}
       className='group'
     >
