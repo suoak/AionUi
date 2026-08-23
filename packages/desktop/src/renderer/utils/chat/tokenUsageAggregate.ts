@@ -341,15 +341,26 @@ export function breakdownUsageByAgent(
   const rows = new Map<string, UsageBreakdownRow>();
   for (const event of events) {
     const key = event.backend.trim() || 'unknown';
-    const label =
-      key === 'deepseek-harness'
-        ? retiredRuntimeLabel
-        : key === 'unknown'
-          ? unknownLabel
-          : agentLabels[key] || event.backend;
+    const label = resolveUsageAgentLabel(event.backend, agentLabels, unknownLabel, retiredRuntimeLabel);
     addBreakdownRow(rows, key, label, event);
   }
   return sortBreakdown(rows);
+}
+
+export function resolveUsageAgentLabel(
+  backend: string,
+  agentLabels: Record<string, string> = {},
+  unknownLabel?: string,
+  retiredRuntimeLabel?: string
+): string {
+  const key = backend.trim() || 'unknown';
+  if (key === 'deepseek-harness' && retiredRuntimeLabel) {
+    return retiredRuntimeLabel;
+  }
+  if (key === 'unknown' && unknownLabel) {
+    return unknownLabel;
+  }
+  return agentLabels[key] || backend;
 }
 
 export function breakdownUsageByAssistant(events: UsageEvent[], unknownLabel: string): UsageBreakdownRow[] {
@@ -460,7 +471,7 @@ export function usageEventsToCsv(events: UsageEvent[], agentLabels: Record<strin
       csvEscape(event.turn_id),
       csvEscape(event.conversation_id),
       csvEscape(event.conversation_name),
-      csvEscape(agentLabels[event.backend.trim()] || event.backend),
+      csvEscape(resolveUsageAgentLabel(event.backend, agentLabels)),
       csvEscape(event.assistant_name),
       csvEscape(event.model_id),
       usageEventTotalTokens(event),

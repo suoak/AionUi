@@ -5,7 +5,7 @@
  */
 
 import React from 'react';
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { STORAGE_KEYS } from '@/common/config/storageKeys';
 import { createEmptyUsageLedger, writeUsageLedger } from '@/renderer/utils/chat/tokenUsageLedger';
@@ -184,7 +184,9 @@ describe('UsagePage', () => {
 
     render(<UsagePage />);
 
-    expect(screen.getAllByText('CSBU WorkMate').length).toBeGreaterThan(0);
+    const recentRow = screen.getByTestId('usage-recent-row');
+    expect(within(recentRow).getByText('CSBU WorkMate')).toBeTruthy();
+    expect(within(recentRow).queryByText('aionrs')).toBeNull();
   });
 
   it('scopes the model breakdown to the selected model while keeping all filter chips', () => {
