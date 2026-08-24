@@ -1,5 +1,42 @@
 # Changelog
 
+## [2.1.83](https://github.com/suoak/AionUi/compare/v2.1.82...v2.1.83) (2026-08-24)
+
+### Desktop
+
+#### Features
+
+- **preview:** bundle the matching OfficeCLI v1.0.150 binary in Windows, macOS, and Linux desktop packages
+- **preview:** validate bundled OfficeCLI manifests and checksums before activating the managed runtime
+
+#### Bug Fixes
+
+- **preview:** show a WorkMate repair flow when the bundled OfficeCLI binary is missing or damaged
+
+#### 内网更新说明
+
+<!-- internal-release-notes:start -->
+
+**由运营管理部提供**
+
+- 桌面安装包现在内置对应平台和架构的 Office 文档处理组件，断网环境下也可以直接创建和预览 DOCX、XLSX 与 PPTX 文件。
+- 启动时会校验内置组件的版本和完整性；文件缺失或损坏时会提示修复或重新安装 CSBU WorkMate，不会误用系统中的同名程序，也不会影响正常聊天。
+
+<!-- internal-release-notes:end -->
+
+### Core ([v0.1.85](https://github.com/suoak/AionCore/releases/tag/v0.1.85))
+
+#### Features
+
+- **office:** support the CSBU WorkMate managed OfficeCLI runtime with fail-closed validation
+
+#### Bug Fixes
+
+- **office:** disable external fallback, online installation, and independent upgrades in bundled mode
+- **skills:** use the branded OfficeCLI distribution for built-in document workflows
+
+---
+
 ## [2.1.82](https://github.com/suoak/AionUi/compare/v2.1.80...v2.1.82) (2026-08-24)
 
 ### Desktop
