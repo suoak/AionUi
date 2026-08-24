@@ -24,6 +24,7 @@
       "startFailed": "شروع سرویس پیش‌نمایش Office ناموفق بود.",
       "installFailed": "نصب خودکار officecli ناموفق بود. لاگ‌های بک‌اند را بررسی کنید و دوباره تلاش کنید.",
       "officecliNotFound": "officecli نصب نشده است.",
+      "bundledUnavailable": "مؤلفه داخلی پیش‌نمایش Office در دسترس نیست. CSBU WorkMate را تعمیر یا دوباره نصب کنید.",
       "outsideSandbox": "این فایل خارج از سندباکس پروژه فعلی است.",
       "portTimeout": "سرویس پیش‌نمایش شروع شد اما به‌موقع آماده نشد. دوباره تلاش کنید."
     }

@@ -3,7 +3,11 @@ import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { afterEach, describe, expect, it } from 'vitest';
-import { prependBundledLarkCliToPath, prependPreferredLarkCliToPath } from '@/process/startup/bundledCliPath';
+import {
+  activateBundledOfficecli,
+  prependBundledLarkCliToPath,
+  prependPreferredLarkCliToPath,
+} from '@/process/startup/bundledCliPath';
 
 const temporaryDirectories: string[] = [];
 
@@ -146,5 +150,99 @@ describe('bundled Lark CLI PATH setup', () => {
     expect(active).toEqual({ directory: bundledDirectory, source: 'bundled', version: '1.0.85' });
     expect(env.PATH?.split(path.delimiter)[0]).toBe(bundledDirectory);
     expect(env.PATH).not.toContain(managedDirectory);
+  });
+});
+
+describe('bundled OfficeCLI activation', () => {
+  function writeOfficecliBundle(resourcesPath: string, binary = 'officecli-binary'): string {
+    const directory = path.join(resourcesPath, 'bundled-officecli', 'win32-x64');
+    mkdirSync(directory, { recursive: true });
+    writeFileSync(path.join(directory, 'officecli.exe'), binary);
+    writeFileSync(
+      path.join(directory, 'manifest.json'),
+      JSON.stringify({
+        name: 'suoak/OfficeCLI',
+        version: '1.0.150',
+        platform: 'win32',
+        arch: 'x64',
+        binarySha256: createHash('sha256').update(binary).digest('hex'),
+      })
+    );
+    return directory;
+  }
+
+  it('activates a verified desktop bundle before spawning AionCore', () => {
+    const resourcesPath = createResourcesRoot();
+    const directory = writeOfficecliBundle(resourcesPath);
+    const env: NodeJS.ProcessEnv = { PATH: 'C:\\Windows\\System32' };
+
+    const active = activateBundledOfficecli({
+      isPackaged: true,
+      resourcesPath,
+      cwd: resourcesPath,
+      platform: 'win32',
+      arch: 'x64',
+      env,
+    });
+
+    expect(active).toMatchObject({ active: true, directory, version: '1.0.150' });
+    expect(env.CSBU_WORKMATE_OFFICECLI_MODE).toBe('bundled');
+    expect(env.PATH?.split(path.delimiter)[0]).toBe(directory);
+  });
+
+  it('fails closed and keeps an unverified binary out of PATH', () => {
+    const resourcesPath = createResourcesRoot();
+    writeOfficecliBundle(resourcesPath);
+    writeFileSync(path.join(resourcesPath, 'bundled-officecli', 'win32-x64', 'officecli.exe'), 'tampered');
+    const env: NodeJS.ProcessEnv = { PATH: 'trusted-path' };
+
+    const active = activateBundledOfficecli({
+      isPackaged: true,
+      resourcesPath,
+      cwd: resourcesPath,
+      platform: 'win32',
+      arch: 'x64',
+      env,
+    });
+
+    expect(active).toEqual({ active: false, reason: 'checksumMismatch' });
+    expect(env.CSBU_WORKMATE_OFFICECLI_MODE).toBe('bundled');
+    expect(env.PATH).toBe('trusted-path');
+  });
+
+  it('marks a missing packaged bundle as managed without falling back to PATH', () => {
+    const resourcesPath = createResourcesRoot();
+    const env: NodeJS.ProcessEnv = { PATH: 'external-officecli-path' };
+
+    const active = activateBundledOfficecli({
+      isPackaged: true,
+      resourcesPath,
+      cwd: resourcesPath,
+      platform: 'linux',
+      arch: 'arm64',
+      env,
+    });
+
+    expect(active).toEqual({ active: false, reason: 'missingBinary' });
+    expect(env.CSBU_WORKMATE_OFFICECLI_MODE).toBe('bundled');
+    expect(env.PATH).toBe('external-officecli-path');
+  });
+
+  it('leaves development environments unchanged when no bundle is prepared', () => {
+    const resourcesPath = createResourcesRoot();
+    const env: NodeJS.ProcessEnv = { PATH: 'developer-path' };
+
+    const active = activateBundledOfficecli({
+      isPackaged: false,
+      resourcesPath,
+      cwd: resourcesPath,
+      platform: 'linux',
+      arch: 'x64',
+      env,
+    });
+
+    expect(active).toBeNull();
+    expect(env.CSBU_WORKMATE_OFFICECLI_MODE).toBeUndefined();
+    expect(env.PATH).toBe('developer-path');
   });
 });

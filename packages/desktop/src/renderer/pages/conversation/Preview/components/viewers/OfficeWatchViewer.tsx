@@ -17,6 +17,7 @@ import { useTranslation } from 'react-i18next';
 type DocType = 'ppt' | 'word' | 'excel';
 type OfficeWatchErrorCode =
   | 'OFFICECLI_NOT_FOUND'
+  | 'OFFICECLI_BUNDLED_UNAVAILABLE'
   | 'OFFICECLI_INSTALL_FAILED'
   | 'OFFICECLI_PORT_TIMEOUT'
   | 'OFFICECLI_START_FAILED'
@@ -64,6 +65,7 @@ const I18N_KEYS = {
 
 const OFFICE_ERROR_I18N_KEYS: Record<OfficeWatchErrorCode, string> = {
   OFFICECLI_NOT_FOUND: 'preview.office.errors.officecliNotFound',
+  OFFICECLI_BUNDLED_UNAVAILABLE: 'preview.office.errors.bundledUnavailable',
   OFFICECLI_INSTALL_FAILED: 'preview.office.errors.installFailed',
   OFFICECLI_PORT_TIMEOUT: 'preview.office.errors.portTimeout',
   OFFICECLI_START_FAILED: 'preview.office.errors.startFailed',
@@ -120,6 +122,7 @@ export function resolveOfficeWatchUrl(url: string, docType: DocType): string {
 function normalizeOfficeWatchErrorCode(error?: string | null): OfficeWatchErrorCode | undefined {
   switch (error) {
     case 'OFFICECLI_NOT_FOUND':
+    case 'OFFICECLI_BUNDLED_UNAVAILABLE':
     case 'OFFICECLI_INSTALL_FAILED':
     case 'OFFICECLI_PORT_TIMEOUT':
     case 'OFFICECLI_START_FAILED':
@@ -145,7 +148,7 @@ export function resolveOfficeErrorActions(
     // give them the server-side command instead.
     showServerInstallGuide: !isElectron && officecliMissing,
     showInstallLink: isElectron && code === 'OFFICECLI_NOT_FOUND',
-    showRetry: officecliMissing || code === 'OFFICECLI_PORT_TIMEOUT',
+    showRetry: officecliMissing || code === 'OFFICECLI_BUNDLED_UNAVAILABLE' || code === 'OFFICECLI_PORT_TIMEOUT',
   };
 }
 

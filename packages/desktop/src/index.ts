@@ -53,7 +53,7 @@ import { setupApplicationMenu } from './process/utils/appMenu';
 import { startWebHost } from '@csbu-workmate/web-host';
 import { initializeZoomFactor, setupZoomForWindow } from './process/utils/zoom';
 import { hydrateWindowsProcessPath } from './process/startup/windowsPath';
-import { prependPreferredLarkCliToPath } from './process/startup/bundledCliPath';
+import { activateBundledOfficecli, prependPreferredLarkCliToPath } from './process/startup/bundledCliPath';
 import { registerWindowsAppUserModelId } from './process/startup/windowsAppUserModelId';
 import {
   MIN_WINDOW_WIDTH,
@@ -177,6 +177,20 @@ if (activeLarkCli) {
   console.info(`[CSBU WorkMate] ${activeLarkCli.source} Lark CLI added to PATH`);
 } else if (app.isPackaged) {
   console.warn('[CSBU WorkMate] Bundled Lark CLI is missing for this runtime');
+}
+
+const activeOfficecli = activateBundledOfficecli({
+  isPackaged: app.isPackaged,
+  resourcesPath: process.resourcesPath,
+  cwd: process.cwd(),
+  platform: process.platform,
+  arch: process.arch,
+  env: process.env,
+});
+if (activeOfficecli?.active) {
+  console.info(`[CSBU WorkMate] Bundled OfficeCLI ${activeOfficecli.version} activated`);
+} else if (activeOfficecli && 'reason' in activeOfficecli && app.isPackaged) {
+  console.warn(`[CSBU WorkMate] Bundled OfficeCLI is unavailable (${activeOfficecli.reason})`);
 }
 
 // Handle Squirrel startup events (Windows installer)

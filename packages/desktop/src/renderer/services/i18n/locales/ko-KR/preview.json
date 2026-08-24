@@ -24,6 +24,7 @@
       "startFailed": "Office 미리보기 서비스 시작에 실패했습니다.",
       "installFailed": "officecli 자동 설치에 실패했습니다. 백엔드 로그를 확인한 뒤 다시 시도하세요.",
       "officecliNotFound": "officecli가 설치되어 있지 않습니다.",
+      "bundledUnavailable": "내장 Office 미리보기 구성 요소를 사용할 수 없습니다. CSBU WorkMate를 복구하거나 다시 설치하세요.",
       "outsideSandbox": "이 파일은 현재 프로젝트 샌드박스 범위 밖에 있습니다.",
       "portTimeout": "미리보기 서비스가 시작되었지만 제시간에 준비되지 않았습니다. 다시 시도하세요."
     }

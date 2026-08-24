@@ -305,6 +305,14 @@ function recordLarkCliPrepareCall(options) {
   return { prepared: true, dir: 'mock-bundled-lark-cli', version: options.version };
 }
 
+function recordOfficecliPrepareCall(options) {
+  const callsPath = process.env.CSBU_WORKMATE_PREPARE_CALLS_FILE;
+  const calls = fs.existsSync(callsPath) ? JSON.parse(fs.readFileSync(callsPath, 'utf8')) : [];
+  calls.push({ resource: 'officecli', ...options });
+  fs.writeFileSync(callsPath, JSON.stringify(calls));
+  return { prepared: true, dir: 'mock-bundled-officecli', version: options.version };
+}
+
 Module._load = function patchedLoad(request, parent, isMain) {
   if (request === './prepareAioncore' || request.endsWith('/prepareAioncore')) {
     return recordPrepareCall;
@@ -316,6 +324,10 @@ Module._load = function patchedLoad(request, parent, isMain) {
 
   if (request.endsWith('packages/shared-scripts/src/prepare-lark-cli.js')) {
     return { prepareLarkCli: recordLarkCliPrepareCall };
+  }
+
+  if (request.endsWith('packages/shared-scripts/src/prepare-officecli.js')) {
+    return { prepareOfficecli: recordOfficecliPrepareCall };
   }
 
   if (request === './resolveAioncoreVersion.js' || request.endsWith('/resolveAioncoreVersion.js')) {
@@ -397,6 +409,14 @@ childProcess.execSync = function mockedExecSync(command) {
       expect(calls).toContainEqual(expect.objectContaining({ resource: 'aioncore', arch: expectedArch }));
       expect(calls).toContainEqual(
         expect.objectContaining({ resource: 'lark-cli', arch: expectedArch, version: 'v1.0.85' })
+      );
+      expect(calls).toContainEqual(
+        expect.objectContaining({
+          resource: 'officecli',
+          platform: args.includes('--mac') ? 'darwin' : 'win32',
+          arch: expectedArch,
+          version: 'v1.0.150',
+        })
       );
     } finally {
       rmSync(outDir, { recursive: true, force: true });

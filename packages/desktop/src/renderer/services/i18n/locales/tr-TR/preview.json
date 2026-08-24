@@ -24,6 +24,7 @@
       "startFailed": "Office önizleme servisi başlatılamadı.",
       "installFailed": "officecli otomatik olarak yüklenemedi. Arka uç günlüklerini kontrol edip yeniden deneyin.",
       "officecliNotFound": "officecli yüklü değil.",
+      "bundledUnavailable": "Yerleşik Office önizleme bileşeni kullanılamıyor. CSBU WorkMate'i onarın veya yeniden yükleyin.",
       "outsideSandbox": "Bu dosya geçerli çalışma alanı sandbox'ının dışında.",
       "portTimeout": "Önizleme servisi başladı ancak zamanında hazır olmadı. Yeniden deneyin."
     }

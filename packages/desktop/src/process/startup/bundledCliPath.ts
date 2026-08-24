@@ -22,6 +22,12 @@ type ActivateCliPathOptions = {
 type PreferredCliPathOptions = BundledCliPathOptions & { userDataPath: string };
 
 export type ActiveLarkCli = { directory: string; source: 'managed' | 'bundled'; version: string | null };
+export type BundledOfficecliActivation =
+  | { active: true; directory: string; binaryPath: string; version: string }
+  | { active: false; reason: 'missingBinary' | 'missingManifest' | 'invalidManifest' | 'checksumMismatch' };
+
+const OFFICECLI_MODE_ENV = 'CSBU_WORKMATE_OFFICECLI_MODE';
+const OFFICECLI_PATH_ENV = 'CSBU_WORKMATE_OFFICECLI_PATH';
 
 const getBinaryName = (platform: NodeJS.Platform): string => (platform === 'win32' ? 'lark-cli.exe' : 'lark-cli');
 
@@ -109,5 +115,53 @@ export function prependPreferredLarkCliToPath(options: PreferredCliPathOptions):
     return { directory, source: 'bundled', version: manifest.version ?? null };
   } catch {
     return { directory, source: 'bundled', version: null };
+  }
+}
+
+/** Activate the immutable OfficeCLI bundled with a desktop release. */
+export function activateBundledOfficecli(options: BundledCliPathOptions): BundledOfficecliActivation | null {
+  const resourcesRoot = options.isPackaged ? options.resourcesPath : path.join(options.cwd, 'resources');
+  const runtimeKey = `${options.platform}-${options.arch}`;
+  const directory = path.join(resourcesRoot, 'bundled-officecli', runtimeKey);
+  const binaryPath = path.join(directory, options.platform === 'win32' ? 'officecli.exe' : 'officecli');
+  const manifestPath = path.join(directory, 'manifest.json');
+
+  if (!options.isPackaged && !existsSync(directory)) return null;
+
+  options.env[OFFICECLI_MODE_ENV] = 'bundled';
+  options.env[OFFICECLI_PATH_ENV] = binaryPath;
+
+  if (!existsSync(binaryPath)) return { active: false, reason: 'missingBinary' };
+  if (!existsSync(manifestPath)) return { active: false, reason: 'missingManifest' };
+
+  try {
+    const manifest = JSON.parse(readFileSync(manifestPath, 'utf8')) as {
+      name?: string;
+      version?: string;
+      platform?: string;
+      arch?: string;
+      binarySha256?: string;
+    };
+    if (
+      manifest.name !== 'suoak/OfficeCLI' ||
+      manifest.platform !== options.platform ||
+      manifest.arch !== options.arch ||
+      !manifest.version ||
+      !manifest.binarySha256
+    ) {
+      return { active: false, reason: 'invalidManifest' };
+    }
+    const binarySha256 = createHash('sha256').update(readFileSync(binaryPath)).digest('hex');
+    if (binarySha256 !== manifest.binarySha256) return { active: false, reason: 'checksumMismatch' };
+
+    activateLarkCliDirectory({
+      directory,
+      bundledRoot: path.join(resourcesRoot, 'bundled-officecli'),
+      platform: options.platform,
+      env: options.env,
+    });
+    return { active: true, directory, binaryPath, version: manifest.version };
+  } catch {
+    return { active: false, reason: 'invalidManifest' };
   }
 }

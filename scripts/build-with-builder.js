@@ -849,6 +849,24 @@ try {
     version: packageJson.larkCliVersion,
   });
 
+  const { prepareOfficecli } = require('../packages/shared-scripts/src/prepare-officecli.js');
+  const officecliPlatform = builderArgs.includes('--win')
+    ? 'win32'
+    : builderArgs.includes('--mac')
+      ? 'darwin'
+      : builderArgs.includes('--linux')
+        ? 'linux'
+        : process.platform;
+  const officecliArchitectures = multiArch ? archArgs : [targetArch];
+  for (const officecliArch of officecliArchitectures) {
+    prepareOfficecli({
+      projectRoot,
+      platform: officecliPlatform,
+      arch: officecliArch,
+      version: packageJson.officecliVersion,
+    });
+  }
+
   // 6. Prepare hub resources (index.json + extension zips for offline fallback)
   execSync('node scripts/prepareHubResources.js', { stdio: 'inherit', env: process.env });
 

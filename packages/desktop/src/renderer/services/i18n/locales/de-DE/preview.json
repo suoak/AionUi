@@ -24,6 +24,7 @@
       "startFailed": "Office-Vorschau-Dienst konnte nicht gestartet werden.",
       "installFailed": "Automatische Installation von officecli fehlgeschlagen. Überprüfe Backend-Logs und versuche es erneut.",
       "officecliNotFound": "officecli ist nicht installiert.",
+      "bundledUnavailable": "Die integrierte Office-Vorschau ist nicht verfügbar. Repariere oder installiere CSBU WorkMate neu.",
       "outsideSandbox": "Diese Datei befindet sich außerhalb der aktuellen Projekt-Sandbox.",
       "portTimeout": "Vorschau-Dienst gestartet, wurde aber nicht rechtzeitig bereit. Versuche es erneut."
     }

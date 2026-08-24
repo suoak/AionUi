@@ -24,6 +24,7 @@
       "startFailed": "Error al iniciar el servicio de vista previa de Office.",
       "installFailed": "Error al instalar officecli automáticamente. Revisa los registros del backend y reintenta.",
       "officecliNotFound": "officecli no está instalado.",
+      "bundledUnavailable": "El componente integrado de vista previa de Office no está disponible. Repara o reinstala CSBU WorkMate.",
       "outsideSandbox": "Este archivo está fuera del sandbox del proyecto actual.",
       "portTimeout": "El servicio de vista previa inició pero no estuvo listo a tiempo. Reintenta."
     }
