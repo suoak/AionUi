@@ -114,6 +114,8 @@ extraResources:
     to: bundled-aioncore
   - from: resources/bundled-lark-cli
     to: bundled-lark-cli
+  - from: resources/bundled-officecli
+    to: bundled-officecli
   - from: resources/hub
     to: hub
 win:

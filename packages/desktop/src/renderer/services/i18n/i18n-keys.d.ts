@@ -1388,6 +1388,7 @@ export type I18nKey =
   | 'preview.missingFile.openInNewTab'
   | 'preview.missingFile.title'
   | 'preview.noTabs'
+  | 'preview.office.errors.bundledUnavailable'
   | 'preview.office.errors.installFailed'
   | 'preview.office.errors.officecliNotFound'
   | 'preview.office.errors.outsideSandbox'

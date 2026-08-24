@@ -24,6 +24,7 @@
       "startFailed": "Office プレビューサービスの起動に失敗しました。",
       "installFailed": "officecli の自動インストールに失敗しました。バックエンドログを確認して再試行してください。",
       "officecliNotFound": "officecli がインストールされていません。",
+      "bundledUnavailable": "内蔵の Office プレビューコンポーネントを使用できません。CSBU WorkMate を修復または再インストールしてください。",
       "outsideSandbox": "このファイルは現在のプロジェクトサンドボックスの外にあります。",
       "portTimeout": "プレビューサービスは起動しましたが、時間内に準備完了になりませんでした。再試行してください。"
     }

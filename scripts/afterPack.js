@@ -10,6 +10,10 @@ const {
 } = require('./rebuildNativeModules');
 const { verifyBundledAioncoreResources } = require('../packages/shared-scripts/src/verify-bundled-aioncore-resources');
 const { verifyBundledLarkCliResources } = require('../packages/shared-scripts/src/prepare-lark-cli');
+const {
+  pruneBundledOfficecliResources,
+  verifyBundledOfficecliResources,
+} = require('../packages/shared-scripts/src/prepare-officecli');
 
 /**
  * afterPack hook for electron-builder
@@ -43,6 +47,13 @@ function verifyBundledResources(resourcesDir, electronPlatformName, targetArch) 
     throw new Error(
       `Packaged app is missing required bundled Lark CLI resource(s): ${larkCliResult.missing.join(', ')}`
     );
+  }
+  pruneBundledOfficecliResources({ resourcesDir, electronPlatformName, targetArch });
+  const officecliResult = verifyBundledOfficecliResources({ resourcesDir, electronPlatformName, targetArch });
+  if (officecliResult.missing.length > 0 || officecliResult.errors.length > 0) {
+    const problems = [...officecliResult.missing, ...officecliResult.errors];
+    console.error(`   Invalid bundled OfficeCLI resources: ${problems.join(', ')}`);
+    throw new Error(`Packaged app contains invalid bundled OfficeCLI resource(s): ${problems.join(', ')}`);
   }
   if (larkCliResult.errors.length > 0) {
     console.error(`   Invalid bundled Lark CLI resources: ${larkCliResult.errors.join(', ')}`);

@@ -24,6 +24,7 @@
       "startFailed": "Failed to start the Office preview service.",
       "installFailed": "Failed to install officecli automatically. Check backend logs and retry.",
       "officecliNotFound": "officecli is not installed.",
+      "bundledUnavailable": "The built-in Office preview component is unavailable. Repair or reinstall CSBU WorkMate.",
       "outsideSandbox": "This file is outside the current project sandbox.",
       "portTimeout": "Preview service started but did not become ready in time. Retry."
     }

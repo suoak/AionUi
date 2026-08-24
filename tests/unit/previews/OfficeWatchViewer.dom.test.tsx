@@ -105,12 +105,12 @@ describe('resolveOfficeWatchUrl (Electron mode)', () => {
  * panel shows a copyable server-side command instead (issue #3212 follow-up).
  */
 describe('resolveOfficeErrorActions', () => {
-  const load = async () => {
+  const loadErrorActions = async () => {
     return officeWatchViewer.resolveOfficeErrorActions;
   };
 
   it('web mode shows the server install guide when officecli is missing', async () => {
-    const resolveOfficeErrorActions = await load();
+    const resolveOfficeErrorActions = await loadErrorActions();
     expect(resolveOfficeErrorActions('OFFICECLI_NOT_FOUND', false)).toEqual({
       showServerInstallGuide: true,
       showInstallLink: false,
@@ -119,7 +119,7 @@ describe('resolveOfficeErrorActions', () => {
   });
 
   it('web mode shows the server install guide when auto-install failed', async () => {
-    const resolveOfficeErrorActions = await load();
+    const resolveOfficeErrorActions = await loadErrorActions();
     expect(resolveOfficeErrorActions('OFFICECLI_INSTALL_FAILED', false)).toEqual({
       showServerInstallGuide: true,
       showInstallLink: false,
@@ -128,7 +128,7 @@ describe('resolveOfficeErrorActions', () => {
   });
 
   it('electron mode keeps the local install link and never shows the server guide', async () => {
-    const resolveOfficeErrorActions = await load();
+    const resolveOfficeErrorActions = await loadErrorActions();
     expect(resolveOfficeErrorActions('OFFICECLI_NOT_FOUND', true)).toEqual({
       showServerInstallGuide: false,
       showInstallLink: true,
@@ -136,8 +136,17 @@ describe('resolveOfficeErrorActions', () => {
     });
   });
 
+  it('bundled corruption stays inside the WorkMate repair flow', async () => {
+    const resolveOfficeErrorActions = await loadErrorActions();
+    expect(resolveOfficeErrorActions('OFFICECLI_BUNDLED_UNAVAILABLE', true)).toEqual({
+      showServerInstallGuide: false,
+      showInstallLink: false,
+      showRetry: true,
+    });
+  });
+
   it('timeout errors only offer retry', async () => {
-    const resolveOfficeErrorActions = await load();
+    const resolveOfficeErrorActions = await loadErrorActions();
     expect(resolveOfficeErrorActions('OFFICECLI_PORT_TIMEOUT', false)).toEqual({
       showServerInstallGuide: false,
       showInstallLink: false,
@@ -146,7 +155,7 @@ describe('resolveOfficeErrorActions', () => {
   });
 
   it('non-recoverable errors offer no actions', async () => {
-    const resolveOfficeErrorActions = await load();
+    const resolveOfficeErrorActions = await loadErrorActions();
     expect(resolveOfficeErrorActions('PATH_OUTSIDE_SANDBOX', false)).toEqual({
       showServerInstallGuide: false,
       showInstallLink: false,

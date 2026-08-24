@@ -24,6 +24,7 @@
       "startFailed": "Falha ao iniciar o serviço de visualização do Office.",
       "installFailed": "Falha ao instalar o officecli automaticamente. Verifique os logs do backend e tente novamente.",
       "officecliNotFound": "officecli não está instalado.",
+      "bundledUnavailable": "O componente integrado de visualização do Office não está disponível. Repare ou reinstale o CSBU WorkMate.",
       "outsideSandbox": "Este arquivo está fora da sandbox atual do projeto.",
       "portTimeout": "O serviço de visualização iniciou, mas não ficou pronto a tempo. Tente novamente."
     }
