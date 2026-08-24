@@ -49,17 +49,13 @@ function safelyLog(log: (message: string, value: unknown) => void, message: stri
 /** Install durable diagnostics for failures that otherwise terminate Electron silently. */
 export function installMainProcessDiagnostics({ process, logError, logInfo }: MainProcessDiagnosticsDeps): void {
   process.on('uncaughtException', (error, origin) => {
-    safelyLog(
-      logError,
-      '[CSBU WorkMate] uncaught exception in main process',
-      describeUncaughtError(error, origin),
-    );
+    safelyLog(logError, '[CSBU WorkMate] uncaught exception in main process', describeUncaughtError(error, origin));
   });
   process.on('unhandledRejection', (reason) => {
     safelyLog(
       logError,
       '[CSBU WorkMate] unhandled rejection in main process',
-      describeUncaughtError(reason, 'unhandledRejection'),
+      describeUncaughtError(reason, 'unhandledRejection')
     );
   });
   process.on('exit', (code) => {
