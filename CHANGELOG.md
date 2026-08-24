@@ -1,5 +1,25 @@
 # Changelog
 
+## [2.1.81](https://github.com/suoak/AionUi/compare/v2.1.80...v2.1.81) (2026-08-24)
+
+### Desktop
+
+#### Bug Fixes
+
+- **trajectory:** handle unavailable timing and token metrics without crashing the conversation view (#92)
+
+#### 内网更新说明
+
+<!-- internal-release-notes:start -->
+
+**由运营管理部提供**
+
+- 修复打开“查看对话轨迹”时因部分耗时或令牌统计暂不可用而导致页面异常的问题；不可用指标现在会安全显示，不影响轨迹查看和正常聊天。
+
+<!-- internal-release-notes:end -->
+
+---
+
 ## [2.1.80](https://github.com/suoak/AionUi/compare/v2.1.79...v2.1.80) (2026-08-23)
 
 ### Desktop
