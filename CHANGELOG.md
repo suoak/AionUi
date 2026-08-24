@@ -1,5 +1,48 @@
 # Changelog
 
+## [2.1.82](https://github.com/suoak/AionUi/compare/v2.1.80...v2.1.82) (2026-08-24)
+
+### Desktop
+
+#### Features
+
+- **markdown:** add safe Mermaid pan and zoom, WaveDrom timing diagrams, and reusable full-screen diagram inspection
+- **markdown:** render chat KaTeX formulas once in Shadow DOM and preserve heading typography for inline markup
+- **layout:** add a resizable desktop sidebar with snap-to-collapse behavior
+- **chat:** accept slash commands with Tab and prevent the Enter key send race
+- **acp:** render relative images returned by agents
+
+#### Bug Fixes
+
+- **trajectory:** handle unavailable timing and token metrics without crashing the conversation view
+- **desktop:** stop renderer launch-failure reload storms and improve uncaught-error attribution
+- **security:** block path traversal while inlining HTML preview resources
+- **web-host:** preserve upload bytes, select the real LAN address, and avoid leaking build-only environment flags to agents
+- **explorer:** remove the duplicate desktop toggle
+
+#### 内网更新说明
+
+<!-- internal-release-notes:start -->
+
+**由运营管理部提供**
+
+- 数学公式预览更加稳定，聊天中的公式只渲染一次，并保持标题内公式与文字的字号一致。
+- Mermaid 流程图支持平移、缩放、适配视图和全屏查看；新增 WaveDrom 时序图预览，长图表更便于检查。
+- 桌面侧栏可以拖动调整宽度并快速收起，斜杠命令支持 Tab 补全，消息发送与相对图片显示更加可靠。
+- 修复打开对话轨迹时部分耗时或 Token 指标不可用导致的页面异常，并加固预览路径、启动恢复和 Web 访问稳定性。
+<!-- internal-release-notes:end -->
+
+### Core ([v0.1.84](https://github.com/suoak/AionCore/releases/tag/v0.1.84))
+
+#### Bug Fixes
+
+- **auth:** harden CSRF checks for tool hooks and provider status requests
+- **runtime:** improve graceful shutdown, Windows backend launching, and PATH diagnostics
+- **session:** preserve hidden messages, developer instructions, presets, titles, and ACP error details
+- **dependencies:** consume the published aionrs v0.2.21 tool and provider baseline
+
+---
+
 ## [2.1.81](https://github.com/suoak/AionUi/compare/v2.1.80...v2.1.81) (2026-08-24)
 
 ### Desktop
