@@ -1,7 +1,7 @@
 import { describeUncaughtError, type UncaughtErrorOrigin } from '../utils/describeUncaughtError';
 
 type MainProcessEvents = {
-  on(event: 'uncaughtException', listener: (error: Error, origin: UncaughtErrorOrigin) => void): unknown;
+  on(event: 'uncaughtException', listener: (error: Error, origin?: UncaughtErrorOrigin) => void): unknown;
   on(event: 'unhandledRejection', listener: (reason: unknown, promise: Promise<unknown>) => void): unknown;
   on(event: 'exit', listener: (code: number) => void): unknown;
 };
@@ -49,7 +49,11 @@ function safelyLog(log: (message: string, value: unknown) => void, message: stri
 /** Install durable diagnostics for failures that otherwise terminate Electron silently. */
 export function installMainProcessDiagnostics({ process, logError, logInfo }: MainProcessDiagnosticsDeps): void {
   process.on('uncaughtException', (error, origin) => {
-    safelyLog(logError, '[CSBU WorkMate] uncaught exception in main process', describeUncaughtError(error, origin));
+    safelyLog(
+      logError,
+      '[CSBU WorkMate] uncaught exception in main process',
+      describeUncaughtError(error, origin ?? 'uncaughtException')
+    );
   });
   process.on('unhandledRejection', (reason) => {
     safelyLog(
