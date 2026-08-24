@@ -56,10 +56,25 @@ describe('installMainProcessDiagnostics', () => {
     listeners.get('uncaughtException')?.(error as never);
     listeners.get('unhandledRejection')?.({ code: 'EPIPE' } as never);
 
-    expect(logError).toHaveBeenNthCalledWith(1, '[CSBU WorkMate] uncaught exception in main process', error);
-    expect(logError).toHaveBeenNthCalledWith(2, '[CSBU WorkMate] unhandled rejection in main process', {
-      code: 'EPIPE',
-    });
+    expect(logError).toHaveBeenNthCalledWith(
+      1,
+      '[CSBU WorkMate] uncaught exception in main process',
+      expect.objectContaining({
+        message: 'renderer bridge failed',
+        name: 'Error',
+        origin: 'uncaughtException',
+        valueType: 'Error',
+      })
+    );
+    expect(logError).toHaveBeenNthCalledWith(
+      2,
+      '[CSBU WorkMate] unhandled rejection in main process',
+      expect.objectContaining({
+        code: 'EPIPE',
+        origin: 'unhandledRejection',
+        valueType: 'object',
+      })
+    );
   });
 
   it('logs process exit codes', () => {

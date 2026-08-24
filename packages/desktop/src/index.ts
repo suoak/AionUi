@@ -8,6 +8,7 @@
 // ANY module that calls app.getPath('userData'), because Electron caches the path on first call.
 import './process/utils/configureChromium';
 import { getGpuStatus, installGpuCrashHandler } from './process/utils/gpuRecovery';
+import { createRendererRecoveryPolicy } from './process/utils/rendererRecovery';
 import { DESKTOP_PET_FEATURE_ENABLED } from './common/config/constants';
 import {
   captureBackendStartupFailure,
@@ -648,13 +649,35 @@ const createWindow = ({ showOnReady = true }: { showOnReady?: boolean } = {}): v
     console.error('[CSBU WorkMate] did-fail-load:', { errorCode, errorDescription, validatedURL, isMainFrame });
   });
 
+  // Recovery policy for renderer crashes: reload with backoff for ordinary
+  // crashes, escalate to a throttled app relaunch when the renderer cannot
+  // launch at all (e.g. app files replaced by an update while running).
+  // An unconditional immediate reload here caused a ~50/s crash storm on
+  // `launch-failed` (Sentry AIONUI-DESKTOP-A).
+  const rendererRecovery = createRendererRecoveryPolicy();
+
   mainWindow.webContents.on('render-process-gone', (_event, details) => {
     console.error('[CSBU WorkMate] render-process-gone:', details);
+    if (mainWindow.isDestroyed()) return;
 
-    // Reload the renderer to recover from the crash.
+    const action = rendererRecovery.onCrash(details.reason);
+
+    if (action.kind === 'relaunch') {
+      console.warn(`[CSBU WorkMate] renderer cannot be recovered in-place (reason=${details.reason}); relaunching app`);
+      app.relaunch();
+      app.exit(0);
+      return;
+    }
+
+    if (action.kind === 'give-up') {
+      console.error(`[CSBU WorkMate] renderer recovery exhausted (reason=${details.reason}); not retrying`);
+      return;
+    }
+
     // The isDestroyed() guard in adapter/main.ts prevents further sends
     // to the dead webContents while the reload is in progress.
-    if (!mainWindow.isDestroyed()) {
+    const reload = () => {
+      if (mainWindow.isDestroyed()) return;
       console.log('[CSBU WorkMate] Attempting to recover from renderer crash by reloading...');
 
       if (!app.isPackaged && rendererUrl) {
@@ -666,6 +689,12 @@ const createWindow = ({ showOnReady = true }: { showOnReady?: boolean } = {}): v
           console.error('[CSBU WorkMate] Recovery loadFile failed:', error.message || error);
         });
       }
+    };
+
+    if (action.delayMs === 0) {
+      reload();
+    } else {
+      setTimeout(reload, action.delayMs);
     }
   });
 
