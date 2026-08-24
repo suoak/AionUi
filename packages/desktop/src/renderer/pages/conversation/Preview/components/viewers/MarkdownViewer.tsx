@@ -7,6 +7,7 @@
 import { joinPath } from '@/common/chat/chatLib';
 import { ipcBridge } from '@/common';
 import type { ChatFileRef } from '@/common/types/chatFile';
+import CodeBlock from '@/renderer/components/Markdown/CodeBlock';
 import LocalFileLink from '@/renderer/components/Markdown/LocalFileLink';
 import { resolveLocalFileLinkReference } from '@/renderer/components/Markdown/markdownUtils';
 import { useTextSelection } from '@/renderer/hooks/ui/useTextSelection';
@@ -356,6 +357,9 @@ const MarkdownPreview: React.FC<MarkdownPreviewProps> = ({
               rehypePlugins={[defaultRehypePlugins.raw, defaultRehypePlugins.sanitize, defaultRehypePlugins.katex]}
               components={{
                 ...HEADING_COMPONENTS,
+                code: (props: Record<string, unknown>) => (
+                  <CodeBlock {...(props as Parameters<typeof CodeBlock>[0])} diagramPanZoom />
+                ),
                 a({ href, children, ...props }: React.AnchorHTMLAttributes<HTMLAnchorElement>) {
                   const localFileReference = resolveLocalFileLinkReference(typeof href === 'string' ? href : '');
                   if (localFileReference) {

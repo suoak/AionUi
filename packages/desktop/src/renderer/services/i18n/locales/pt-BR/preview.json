@@ -1,4 +1,9 @@
 {
+  "wavedromTitle": "Diagrama WaveDrom",
+  "zoomIn": "Ampliar",
+  "zoomOut": "Reduzir",
+  "zoomReset": "Redefinir visualização",
+  "diagramZoomHint": "Role para ampliar • Arraste para mover • ESC para fechar",
   "noTabs": "Nenhuma guia aberta",
   "ppt": {
     "startFailed": "Falha ao iniciar a visualização do PPT",
