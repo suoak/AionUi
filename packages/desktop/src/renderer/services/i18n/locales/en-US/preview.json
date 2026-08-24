@@ -172,5 +172,11 @@
   "restorePanel": "Restore",
   "closeTabsMessage_one": "{{count}} tab has unsaved changes. Save it before closing?",
   "closeTabsMessage_other": "{{count}} tabs have unsaved changes. Save them before closing?",
-  "mermaidZoomHint": "Scroll to zoom • Drag to pan • ESC to close"
+  "mermaidZoomHint": "Scroll to zoom • Drag to pan • ESC to close",
+  "close": "Close",
+  "closeUnmodified": "Close Unmodified",
+  "copyPath": "Copy Path",
+  "copyRelativePath": "Copy Relative Path",
+  "openLocation": "Show in folder",
+  "openLocationFailed": "Failed to open containing folder"
 }

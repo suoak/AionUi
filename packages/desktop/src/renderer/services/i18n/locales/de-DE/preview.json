@@ -172,5 +172,11 @@
   "restorePanel": "Wiederherstellen",
   "closeTabsMessage_one": "{{count}} Tab hat ungespeicherte Änderungen. Vor dem Schließen speichern?",
   "closeTabsMessage_other": "{{count}} Tabs haben ungespeicherte Änderungen. Vor dem Schließen speichern?",
-  "mermaidZoomHint": "Scrollen zum Zoomen • Ziehen zum Verschieben • ESC zum Schließen"
+  "mermaidZoomHint": "Scrollen zum Zoomen • Ziehen zum Verschieben • ESC zum Schließen",
+  "close": "Schließen",
+  "closeUnmodified": "Unveränderte schließen",
+  "copyPath": "Pfad kopieren",
+  "copyRelativePath": "Relativen Pfad kopieren",
+  "openLocation": "Im Ordner anzeigen",
+  "openLocationFailed": "Enthaltenden Ordner öffnen fehlgeschlagen"
 }

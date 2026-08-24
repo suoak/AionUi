@@ -172,5 +172,11 @@
   "restorePanel": "بازگردانی",
   "closeTabsMessage_one": "{{count}} تب تغییرات ذخیره‌نشده دارند. پیش از بستن ذخیره شوند؟",
   "closeTabsMessage_other": "{{count}} تب تغییرات ذخیره‌نشده دارند. پیش از بستن ذخیره شوند؟",
-  "mermaidZoomHint": "برای بزرگنمایی اسکرول کنید • برای جابهجایی بکشید • ESC برای بستن"
+  "mermaidZoomHint": "برای بزرگنمایی اسکرول کنید • برای جابهجایی بکشید • ESC برای بستن",
+  "close": "بستن",
+  "closeUnmodified": "بستن تغییرنیافته‌ها",
+  "copyPath": "کپی مسیر",
+  "copyRelativePath": "کپی مسیر نسبی",
+  "openLocation": "نمایش در پوشه",
+  "openLocationFailed": "باز کردن پوشه حاوی ناموفق بود"
 }

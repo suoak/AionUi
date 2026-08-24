@@ -172,5 +172,11 @@
   "restorePanel": "Geri Yükle",
   "closeTabsMessage_one": "{{count}} sekmede kaydedilmemiş değişiklik var. Kapatmadan önce kaydedilsin mi?",
   "closeTabsMessage_other": "{{count}} sekmede kaydedilmemiş değişiklik var. Kapatmadan önce kaydedilsin mi?",
-  "mermaidZoomHint": "Yakınlaştırmak için kaydırın • Taşımak için sürükleyin • ESC ile kapatın"
+  "mermaidZoomHint": "Yakınlaştırmak için kaydırın • Taşımak için sürükleyin • ESC ile kapatın",
+  "close": "Kapat",
+  "closeUnmodified": "Değiştirilmemişleri Kapat",
+  "copyPath": "Yolu Kopyala",
+  "copyRelativePath": "Göreli Yolu Kopyala",
+  "openLocation": "Klasörde göster",
+  "openLocationFailed": "İçeren klasör açılamadı"
 }

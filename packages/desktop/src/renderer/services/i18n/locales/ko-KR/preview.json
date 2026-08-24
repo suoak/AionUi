@@ -172,5 +172,11 @@
   "restorePanel": "복원",
   "closeTabsMessage_one": "저장되지 않은 탭이 {{count}}개 있습니다. 저장한 후 닫을까요?",
   "closeTabsMessage_other": "저장되지 않은 탭이 {{count}}개 있습니다. 저장한 후 닫을까요?",
-  "mermaidZoomHint": "스크롤로 확대 • 드래그로 이동 • ESC로 닫기"
+  "mermaidZoomHint": "스크롤로 확대 • 드래그로 이동 • ESC로 닫기",
+  "close": "닫기",
+  "closeUnmodified": "수정되지 않은 탭 닫기",
+  "copyPath": "경로 복사",
+  "copyRelativePath": "상대 경로 복사",
+  "openLocation": "폴더에서 보기",
+  "openLocationFailed": "포함 폴더 열기 실패"
 }

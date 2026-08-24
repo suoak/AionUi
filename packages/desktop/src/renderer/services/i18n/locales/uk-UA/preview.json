@@ -174,5 +174,11 @@
   "closeTabsMessage_other": "Незбережених вкладок: {{count}}. Зберегти перед закриттям?",
   "closeTabsMessage_few": "Незбережених вкладок: {{count}}. Зберегти перед закриттям?",
   "closeTabsMessage_many": "Незбережених вкладок: {{count}}. Зберегти перед закриттям?",
-  "mermaidZoomHint": "Колесо — масштаб • Перетягування — панорама • ESC — закрити"
+  "mermaidZoomHint": "Колесо — масштаб • Перетягування — панорама • ESC — закрити",
+  "close": "Закрити",
+  "closeUnmodified": "Закрити незмінені",
+  "copyPath": "Копіювати шлях",
+  "copyRelativePath": "Копіювати відносний шлях",
+  "openLocation": "Показати в папці",
+  "openLocationFailed": "Не вдалося відкрити папку з файлом"
 }
