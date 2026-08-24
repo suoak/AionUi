@@ -175,6 +175,24 @@ describe('ConversationTrajectoryButton', () => {
     );
   });
 
+  it('renders unavailable metrics when the backend returns null token and timing values', async () => {
+    getTrajectory.mockResolvedValueOnce({
+      ...projection,
+      overview: {
+        ...projection.overview,
+        total_duration_ms: null,
+        first_output_ms: null,
+        tokens: { ...projection.overview.tokens, thinking: null },
+      },
+    });
+    render(<ConversationTrajectoryButton conversationId='conv-1' />);
+    fireEvent.click(screen.getByTestId('conversation-trajectory-button'));
+
+    expect(await screen.findByTestId('conversation-trajectory-overview')).toHaveTextContent(
+      'conversation.trajectory.overview.thinkingTokens'
+    );
+  });
+
   it('shows structured tool diagnostics as explicit inspector fields', async () => {
     getTrajectoryRecord.mockResolvedValueOnce({
       ...projection.records[0],

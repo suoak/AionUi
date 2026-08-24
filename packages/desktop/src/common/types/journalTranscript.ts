@@ -176,10 +176,10 @@ export function buildJournalTranscriptPath(
 }
 
 export type TrajectoryTokenUsage = {
-  input?: number;
-  output?: number;
-  cached?: number;
-  thinking?: number;
+  input?: number | null;
+  output?: number | null;
+  cached?: number | null;
+  thinking?: number | null;
 };
 
 export type TrajectoryRecord = {
@@ -187,22 +187,22 @@ export type TrajectoryRecord = {
   category: string;
   status: string;
   visibility: string;
-  turn_id?: string;
-  step_id?: string;
-  parent_record_id?: string;
-  input_id?: string;
-  execution_id?: string;
-  tool_call_id?: string;
-  started_at_ms?: number;
-  completed_at_ms?: number;
-  duration_ms?: number;
+  turn_id?: string | null;
+  step_id?: string | null;
+  parent_record_id?: string | null;
+  input_id?: string | null;
+  execution_id?: string | null;
+  tool_call_id?: string | null;
+  started_at_ms?: number | null;
+  completed_at_ms?: number | null;
+  duration_ms?: number | null;
   title: string;
   summary: string;
-  input_preview?: string;
-  output_preview?: string;
-  retained_output_reference?: string;
+  input_preview?: string | null;
+  output_preview?: string | null;
+  retained_output_reference?: string | null;
   structured_content?: unknown;
-  error_code?: string;
+  error_code?: string | null;
   truncation?: unknown;
   tokens: TrajectoryTokenUsage;
   first_sequence: number;
@@ -216,8 +216,8 @@ export type TrajectoryOverview = {
   steps: number;
   tools: number;
   errors: number;
-  total_duration_ms?: number;
-  first_output_ms?: number;
+  total_duration_ms?: number | null;
+  first_output_ms?: number | null;
   tokens: TrajectoryTokenUsage;
 };
 

@@ -133,7 +133,7 @@ const TrajectoryList: React.FC<Props> = ({
                       <Tag size='small'>{t(`conversation.trajectory.status.${record.status}`)}</Tag>
                     )}
                     <span className='ml-auto text-11px text-t-secondary shrink-0'>
-                      {record.duration_ms === undefined ? '' : `${record.duration_ms} ms`}
+                      {record.duration_ms == null ? '' : `${record.duration_ms} ms`}
                     </span>
                   </div>
                   {record.summary && <span className='text-12px text-t-secondary truncate'>{record.summary}</span>}

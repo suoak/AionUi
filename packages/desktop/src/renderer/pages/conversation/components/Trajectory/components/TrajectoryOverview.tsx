@@ -5,8 +5,9 @@ import { useTranslation } from 'react-i18next';
 
 type Props = { overview: Overview };
 
-const duration = (value?: number) => (value === undefined ? '—' : `${(value / 1000).toFixed(value < 10_000 ? 1 : 0)}s`);
-const tokens = (value?: number) => (value === undefined ? '—' : value.toLocaleString());
+const duration = (value?: number | null) =>
+  value == null ? '—' : `${(value / 1000).toFixed(value < 10_000 ? 1 : 0)}s`;
+const tokens = (value?: number | null) => (value == null ? '—' : value.toLocaleString());
 
 const TrajectoryOverview: React.FC<Props> = ({ overview }) => {
   const { t } = useTranslation();
