@@ -1,5 +1,28 @@
 # Changelog
 
+## [2.1.84](https://github.com/suoak/AionUi/compare/v2.1.83...v2.1.84) (2026-08-25)
+
+### Desktop
+
+#### Bug Fixes
+
+- **conversation:** preserve chronological message order after reopening MCP-assisted conversations
+- **updater:** preserve the explicit download and install flow for application updates
+
+#### 内网更新说明
+
+<!-- internal-release-notes:start -->
+
+**由运营管理部提供**
+
+- 修复使用 MCP 工具的对话在切换到其他对话后重新打开时，消息、工具调用和回复可能顺序错乱的问题。
+- 正常历史记录现在始终以数据库为准；仅在完整历史中的助手和工具消息整体缺失时，才使用运行日志进行保守恢复。
+- 修复应用更新过程中下载与安装步骤衔接异常的问题，保留明确的下载和安装流程。
+
+<!-- internal-release-notes:end -->
+
+---
+
 ## [2.1.83](https://github.com/suoak/AionUi/compare/v2.1.82...v2.1.83) (2026-08-24)
 
 ### Desktop
