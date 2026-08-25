@@ -51,6 +51,11 @@ export function messagesNeedJournalHydration(messages: TMessage[]): boolean {
   return !messages.some(isModelVisibleMessage);
 }
 
+export type JournalHydrationOptions = {
+  /** True only when the DB response covers the whole conversation history. */
+  isCompleteHistory: boolean;
+};
+
 function isUnfinishedMessage(message: TMessage): boolean {
   return message.status === 'pending' || message.status === 'work';
 }
@@ -127,36 +132,71 @@ function findMatchingDbMessage(messages: TMessage[], recovered: TMessage, usedId
   });
 }
 
-/** True when the live/DB list already shows this reconstructed model-visible row. */
-export function isJournalMessageAlreadyShown(existing: TMessage[], candidate: TMessage): boolean {
-  if (
-    existing.some(
-      (message) => message.id === candidate.id || Boolean(candidate.msg_id && message.msg_id === candidate.msg_id)
-    )
-  ) {
-    return true;
+export function messagesFromJournalTranscript(conversationId: string, transcript: JournalTranscript): TMessage[] {
+  const items = transcript.items.filter((item) => item.visibility === 'model');
+  const messages: TMessage[] = [];
+
+  for (let index = 0; index < items.length; index += 1) {
+    const item = items[index];
+    const executionId = items[index + 1] ? toolExecutionId(items[index + 1]) : undefined;
+    if (item.transcript_kind !== 'tool/call' || !executionId) {
+      messages.push(transcriptItemToMessage(conversationId, item));
+      continue;
+    }
+
+    let end = index + 2;
+    while (end < items.length && items[end].transcript_kind === 'tool/call') {
+      if (items[end + 1] && toolExecutionId(items[end + 1])) {
+        break;
+      }
+      end += 1;
+    }
+    messages.push(transcriptToolExecutionToMessage(conversationId, item, executionId, items.slice(index + 2, end)));
+    index = end - 1;
   }
-  if (existing.some((message) => isLiveJournalUserClone(message, candidate))) {
-    return true;
-  }
-  const recoveredToolId = toolCallId(candidate);
-  if (recoveredToolId && existing.some((message) => toolCallId(message) === recoveredToolId)) {
-    return true;
-  }
-  const recoveredText = assistantText(candidate);
-  return (
-    recoveredText !== undefined &&
-    existing.some((message) => {
-      const text = assistantText(message);
-      return text !== undefined && textsLooselyEqual(text, recoveredText);
-    })
-  );
+
+  return messages;
 }
 
-export function messagesFromJournalTranscript(conversationId: string, transcript: JournalTranscript): TMessage[] {
-  return transcript.items
-    .filter((item) => item.visibility === 'model')
-    .map((item) => transcriptItemToMessage(conversationId, item));
+function toolExecutionId(item: JournalTranscriptItem): string | undefined {
+  if (item.transcript_kind !== 'tool/call') {
+    return undefined;
+  }
+  try {
+    const marker = JSON.parse(transcriptItemText(item)) as unknown;
+    if (!marker || typeof marker !== 'object' || Array.isArray(marker)) {
+      return undefined;
+    }
+    const record = marker as Record<string, unknown>;
+    return record.phase === 'execute' && typeof record.execution_id === 'string' ? record.execution_id : undefined;
+  } catch {
+    return undefined;
+  }
+}
+
+function transcriptToolExecutionToMessage(
+  conversationId: string,
+  item: JournalTranscriptItem,
+  executionId: string,
+  resultItems: JournalTranscriptItem[]
+): TMessage {
+  const resultTexts = [...new Set(resultItems.map(transcriptItemText).filter(Boolean))];
+  return {
+    id: `journal:${executionId}`,
+    msg_id: executionId,
+    conversation_id: conversationId,
+    type: 'tool_call',
+    position: 'left',
+    status: 'finish',
+    created_at: item.sequence,
+    content: {
+      call_id: executionId,
+      name: item.summary || item.journal_kind,
+      args: {},
+      status: 'completed',
+      description: resultTexts.join('\n\n') || transcriptItemText(item),
+    },
+  };
 }
 
 export function mergeDbWithJournalTranscript(messages: TMessage[], recovered: TMessage[]): TMessage[] {
@@ -166,16 +206,20 @@ export function mergeDbWithJournalTranscript(messages: TMessage[], recovered: TM
 
   const usedIds = new Set<string>();
   const dbUsers = messages.filter(isUserTextMessage);
-  let dbUserIndex = 0;
+  const recoveredUserCount = recovered.filter(isUserTextMessage).length;
+  const canMatchUsersByPosition = dbUsers.length === recoveredUserCount;
   const backbone: TMessage[] = [];
 
   for (const item of recovered) {
-    if (isUserTextMessage(item) && dbUserIndex < dbUsers.length) {
-      const dbUser = dbUsers[dbUserIndex];
-      dbUserIndex += 1;
-      usedIds.add(dbUser.id);
-      backbone.push(overlayJournalMessage(item, dbUser));
-      continue;
+    if (isUserTextMessage(item)) {
+      const dbUser =
+        dbUsers.find((message) => !usedIds.has(message.id) && isLiveJournalUserClone(message, item)) ??
+        (canMatchUsersByPosition ? dbUsers.find((message) => !usedIds.has(message.id)) : undefined);
+      if (dbUser) {
+        usedIds.add(dbUser.id);
+        backbone.push(overlayJournalMessage(item, dbUser));
+        continue;
+      }
     }
     const match = findMatchingDbMessage(messages, item, usedIds);
     if (match) {
@@ -212,14 +256,68 @@ export function mergeDbWithJournalTranscript(messages: TMessage[], recovered: TM
     result.push(backbone[backboneIndex]);
     backboneIndex += 1;
   }
-  return result;
+  return alignJournalMessageTimestamps(result);
+}
+
+/**
+ * Journal items carry a monotonic sequence, not an epoch timestamp. Keep the
+ * journal backbone order while placing recovered-only rows around persisted DB
+ * anchors so later UI timestamp sorting cannot move them across turns.
+ */
+function alignJournalMessageTimestamps(messages: TMessage[]): TMessage[] {
+  if (!messages.some(isJournalDerivedMessage)) {
+    return messages;
+  }
+
+  const aligned = messages.slice();
+  let index = 0;
+  while (index < aligned.length) {
+    if (!isJournalDerivedMessage(aligned[index])) {
+      index += 1;
+      continue;
+    }
+
+    const start = index;
+    while (index < aligned.length && isJournalDerivedMessage(aligned[index])) {
+      index += 1;
+    }
+    const end = index;
+    const previousTimestamp = start > 0 ? aligned[start - 1].created_at : undefined;
+    const nextTimestamp = end < aligned.length ? aligned[end].created_at : undefined;
+    const runLength = end - start;
+
+    for (let offset = 0; offset < runLength; offset += 1) {
+      let createdAt: number;
+      if (previousTimestamp !== undefined && nextTimestamp !== undefined) {
+        const availableRange = nextTimestamp - previousTimestamp;
+        createdAt =
+          availableRange > runLength
+            ? previousTimestamp + Math.floor((availableRange * (offset + 1)) / (runLength + 1))
+            : previousTimestamp;
+      } else if (previousTimestamp !== undefined) {
+        createdAt = previousTimestamp + offset + 1;
+      } else if (nextTimestamp !== undefined) {
+        createdAt = nextTimestamp - runLength + offset;
+      } else {
+        continue;
+      }
+      aligned[start + offset] = { ...aligned[start + offset], created_at: createdAt } as TMessage;
+    }
+  }
+  return aligned;
 }
 
 export async function hydrateConversationMessagesFromJournal(
   conversationId: string,
-  messages: TMessage[]
+  messages: TMessage[],
+  options: JournalHydrationOptions
 ): Promise<TMessage[]> {
-  if (!conversationId) {
+  // A journal transcript is a full-conversation recovery source, while
+  // `messages` is normally just one DB page. Merging the full transcript into
+  // a healthy page duplicates tool lifecycle events and can pair journal users
+  // with the wrong page-local user rows. Only recover when the DB projection
+  // has no model-visible assistant/tool row at all.
+  if (!conversationId || !options.isCompleteHistory || !messagesNeedJournalHydration(messages)) {
     return messages;
   }
   try {
