@@ -140,7 +140,10 @@ const UpdateNotificationCard: React.FC = () => {
         return (
           <div className='flex items-start gap-10px text-13px text-t-secondary leading-relaxed'>
             <CheckOne theme='filled' size='18' fill='rgb(var(--success-6))' className='mt-2px shrink-0' />
-            <span>{t('update.downloadCompleteTitle')}</span>
+            <span>
+              <span className='block text-t-primary font-500'>{t('update.downloadCompleteTitle')}</span>
+              <span className='block mt-2px'>{t('update.readyToInstallDesc')}</span>
+            </span>
           </div>
         );
       case 'preparing-install':
@@ -278,6 +281,15 @@ const UpdateNotificationCard: React.FC = () => {
 
   const releaseNotes = state.autoUpdateInfo?.releaseNotes || state.updateInfo?.body || t('update.releaseNotesFallback');
 
+  const notificationTitle = (() => {
+    if (state.status === 'installer-last-failure') return t('update.installerLastFailure.title');
+    if (state.updatePolicy.mode === 'required') return t('update.requiredTitle');
+    if (state.status === 'downloading') return t('update.downloadingTitle');
+    if (state.status === 'downloaded' || state.status === 'preparing-install') return t('update.readyToInstall');
+    if (state.status === 'error') return t('update.errorTitle');
+    return t('update.modalTitle');
+  })();
+
   return renderNotificationLayer(
     <>
       {state.updatePolicy.mode === 'required' && (
@@ -296,13 +308,7 @@ const UpdateNotificationCard: React.FC = () => {
             size='18'
             fill={state.status === 'installer-last-failure' ? 'rgb(var(--warning-6))' : 'rgb(var(--primary-6))'}
           />
-          <div className='text-14px text-t-primary font-600 truncate flex-1'>
-            {state.status === 'installer-last-failure'
-              ? t('update.installerLastFailure.title')
-              : state.updatePolicy.mode === 'required'
-                ? t('update.requiredTitle')
-                : t('update.modalTitle')}
-          </div>
+          <div className='text-14px text-t-primary font-600 truncate flex-1'>{notificationTitle}</div>
           {(state.status === 'upToDate' ||
             (state.status === 'downloading' && state.updatePolicy.mode !== 'required')) && (
             <div className='flex items-center gap-4px'>

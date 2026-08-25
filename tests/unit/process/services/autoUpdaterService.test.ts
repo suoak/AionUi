@@ -644,7 +644,7 @@ describe('AutoUpdaterService', () => {
     expect(nativeAutoUpdaterMock.on).not.toHaveBeenCalled();
   });
 
-  it('uses a non-silent handoff for user-initiated Windows installs without changing app-quit installs', async () => {
+  it('installs only from the explicit Windows handoff without enabling install on a later app quit', async () => {
     setPlatform('win32');
     const cleanup = vi.fn();
     const { autoUpdaterService } = await import('@/process/services/autoUpdaterService');
@@ -655,7 +655,7 @@ describe('AutoUpdaterService', () => {
     await autoUpdaterService.quitAndInstall();
 
     expect(cleanup).toHaveBeenCalledTimes(1);
-    expect(autoUpdaterMock.autoInstallOnAppQuit).toBe(true);
+    expect(autoUpdaterMock.autoInstallOnAppQuit).toBe(false);
     expect(autoUpdaterMock.quitAndInstall).toHaveBeenCalledWith(false, true);
   });
 

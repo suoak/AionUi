@@ -102,6 +102,88 @@ describe('updateNotificationReducer', () => {
     expect(result.effects).toEqual([]);
   });
 
+  it.each([
+    {
+      name: 'an automatic available event',
+      event: {
+        type: 'autoStatusAvailable' as const,
+        version: '2.2.0',
+        currentVersion: '2.1.9',
+      },
+    },
+    {
+      name: 'a completed available check',
+      event: {
+        type: 'checkAvailable' as const,
+        currentVersion: '2.1.9',
+        updateInfo: null,
+        releasePageUrl: '',
+        autoUpdateAvailable: true,
+        autoUpdateInfo: { version: '2.2.0' },
+        updatePolicy: { mode: 'optional' as const },
+      },
+    },
+    {
+      name: 'a completed up-to-date check',
+      event: {
+        type: 'checkUpToDate' as const,
+        currentVersion: '2.1.9',
+        updateInfo: null,
+        releasePageUrl: '',
+      },
+    },
+    {
+      name: 'a late check error',
+      event: {
+        type: 'checkError' as const,
+        message: 'late failure',
+      },
+    },
+  ])('does not replace active download progress with $name', ({ event }) => {
+    const downloadingState: UpdateNotificationState = {
+      ...initialUpdateNotificationState,
+      visible: true,
+      status: 'downloading',
+      activeTask: { kind: 'auto', id: 'auto' },
+      progress: {
+        percent: 42,
+        transferred: 42,
+        total: 100,
+        speed: '1.0 MB/s',
+      },
+    };
+
+    const result = updateNotificationReducer(downloadingState, event);
+
+    expect(result.state).toBe(downloadingState);
+    expect(result.effects).toEqual([]);
+  });
+
+  it('does not replace a downloaded update with a repeated available event', () => {
+    const downloadedState: UpdateNotificationState = {
+      ...initialUpdateNotificationState,
+      visible: true,
+      status: 'downloaded',
+      autoUpdateAvailable: true,
+      autoUpdateInfo: { version: '2.2.0' },
+      progress: {
+        percent: 100,
+        transferred: 100,
+        total: 100,
+        speed: '',
+      },
+    };
+
+    const result = updateNotificationReducer(downloadedState, {
+      type: 'autoStatusAvailable',
+      version: '2.2.0',
+      currentVersion: '2.1.9',
+    });
+
+    expect(result.state).toBe(downloadedState);
+    expect(result.effects).toEqual([]);
+  });
+
   it('hides the notification on later without clearing the active download', () => {
     const downloadingState: UpdateNotificationState = {
       ...initialUpdateNotificationState,

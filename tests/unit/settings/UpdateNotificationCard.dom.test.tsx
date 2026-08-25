@@ -211,6 +211,8 @@ describe('UpdateNotificationCard', () => {
     expect(await screen.findByTestId('update-notification-card')).toBeInTheDocument();
     // Downloaded state shows the "download complete" label + restart button (no progress bar).
     expect(screen.getByText('update.downloadCompleteTitle')).toBeInTheDocument();
+    expect(screen.getByText('update.readyToInstallDesc')).toBeInTheDocument();
+    expect(screen.getByText('update.readyToInstall')).toBeInTheDocument();
     expect(screen.getByText('update.restartNow')).toBeInTheDocument();
     expect(mocks.updateCheckMock).not.toHaveBeenCalled();
 
@@ -333,6 +335,18 @@ describe('UpdateNotificationCard', () => {
     expect(screen.getByText('42%')).toBeInTheDocument();
     expect(screen.getByText('1.0 MB / 4.0 MB')).toBeInTheDocument();
     expect(screen.getByText('512.0 KB/s')).toBeInTheDocument();
+    expect(screen.getByText('update.downloadingTitle')).toBeInTheDocument();
+
+    await act(async () => {
+      mocks.autoStatusHandler?.({
+        status: 'available',
+        version: '2.1.14',
+        currentVersion: '2.1.13',
+      });
+    });
+
+    expect(screen.getByRole('progressbar')).toHaveAttribute('aria-valuenow', '42');
+    expect(screen.queryByText('update.downloadButton')).not.toBeInTheDocument();
 
     await act(async () => {
       mocks.updateOpenHandler?.({ source: 'menu' });

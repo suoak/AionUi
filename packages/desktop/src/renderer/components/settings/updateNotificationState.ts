@@ -243,6 +243,12 @@ const showInstallerLastFailure = (
   releaseNotesStatus: 'idle',
 });
 
+const hasProtectedUpdateTask = (state: UpdateNotificationState): boolean =>
+  Boolean(state.activeTask) ||
+  state.status === 'downloading' ||
+  state.status === 'downloaded' ||
+  state.status === 'preparing-install';
+
 export const updateNotificationReducer = (
   state: UpdateNotificationState,
   event: UpdateNotificationEvent
@@ -263,6 +269,12 @@ export const updateNotificationReducer = (
         effects: [],
       };
     case 'autoStatusAvailable': {
+      // An update check can finish after the user has already started the
+      // download. Its late "available" event must not roll the UI back while
+      // the updater continues working in the background.
+      if (hasProtectedUpdateTask(state)) {
+        return { state, effects: [] };
+      }
       const releaseNotes =
         event.releaseNotes ||
         (state.autoUpdateInfo?.version === event.version ? state.autoUpdateInfo.releaseNotes : undefined);
@@ -290,6 +302,9 @@ export const updateNotificationReducer = (
       };
     }
     case 'checkAvailable':
+      if (hasProtectedUpdateTask(state)) {
+        return { state, effects: [] };
+      }
       return {
         state: {
           ...state,
@@ -310,6 +325,9 @@ export const updateNotificationReducer = (
         effects: [],
       };
     case 'checkUpToDate':
+      if (hasProtectedUpdateTask(state)) {
+        return { state, effects: [] };
+      }
       return {
         state: {
           ...state,
@@ -328,6 +346,9 @@ export const updateNotificationReducer = (
         effects: [],
       };
     case 'checkError':
+      if (hasProtectedUpdateTask(state)) {
+        return { state, effects: [] };
+      }
       return {
         state: {
           ...state,

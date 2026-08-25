@@ -171,7 +171,9 @@ class AutoUpdaterService extends EventEmitter {
 
     // Disable auto-download for manual control
     autoUpdater.autoDownload = false;
-    autoUpdater.autoInstallOnAppQuit = true;
+    // Downloading an update must not silently turn a later normal app quit
+    // into an install. Installation starts only from the explicit UI action.
+    autoUpdater.autoInstallOnAppQuit = false;
     this.configureDevAutoUpdateDebug();
 
     // Set the correct update channel based on platform and architecture before
@@ -941,8 +943,7 @@ class AutoUpdaterService extends EventEmitter {
     try {
       this.moveCwdOutOfInstallDirForWindowsHandoff();
       // The first argument maps to electron-updater's silent installer flag.
-      // User-clicked "install now" should show NSIS progress/completion pages;
-      // autoInstallOnAppQuit remains true for background app-quit installs.
+      // User-clicked "install now" should show NSIS progress/completion pages.
       autoUpdater.quitAndInstall(false, true);
       recordAutoUpdateQuitAndInstall(this.getAutoUpdateDiagnosticOptions());
     } catch (error) {
