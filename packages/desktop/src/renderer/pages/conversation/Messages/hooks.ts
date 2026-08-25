@@ -19,7 +19,6 @@ import { useCallback, useEffect, useRef } from 'react';
 import { createContext } from '@renderer/utils/ui/createContext';
 import {
   hydrateConversationMessagesFromJournal,
-  isJournalMessageAlreadyShown,
   isJournalDerivedMessage,
   isLiveJournalUserClone,
 } from '@/renderer/utils/chat/hydrateMessagesFromJournal';
@@ -889,7 +888,6 @@ export const useLoadPreviousMessagePage = (conversationId?: string) => {
   const pagination = useMessagePaginationState();
   const setPagination = useUpdateMessagePaginationState();
   const prependHistoryPage = usePrependHistoryPage();
-  const currentList = useMessageList();
 
   return useCallback(async () => {
     if (!conversationId || !pagination.oldestCursor || !pagination.hasMoreBefore || pagination.isLoadingBefore) {
@@ -904,9 +902,10 @@ export const useLoadPreviousMessagePage = (conversationId?: string) => {
         contentMode: 'compact',
       });
       const messages = page.items.map(normalizeDbMessage);
-      const hydrated = await hydrateConversationMessagesFromJournal(conversationId, messages);
-      const uniqueHistory = hydrated.filter((message) => !isJournalMessageAlreadyShown(currentList, message));
-      prependHistoryPage(uniqueHistory);
+      // A previous-page request is only a slice of DB history. Hydrating it
+      // from the full journal would inject the entire conversation into this
+      // page and corrupt both ordering and cursor boundaries.
+      prependHistoryPage(messages);
       setPagination((current) => ({
         ...current,
         oldestCursor: page.oldest_cursor ?? current.oldestCursor,
@@ -923,7 +922,6 @@ export const useLoadPreviousMessagePage = (conversationId?: string) => {
     }
   }, [
     conversationId,
-    currentList,
     pagination.hasMoreBefore,
     pagination.isLoadingBefore,
     pagination.oldestCursor,
@@ -977,7 +975,9 @@ export const useMessageLstCache = (key: string) => {
     });
     const messages = result?.items?.map(normalizeDbMessage);
     if (messages && Array.isArray(messages)) {
-      const hydrated = await hydrateConversationMessagesFromJournal(key, messages);
+      const hydrated = await hydrateConversationMessagesFromJournal(key, messages, {
+        isCompleteHistory: !result.has_more_before && !result.has_more_after,
+      });
       update((currentList) => mergeLoadedPageWithCurrent(key, hydrated, currentList));
       setPagination({
         oldestCursor: result.oldest_cursor ?? undefined,
