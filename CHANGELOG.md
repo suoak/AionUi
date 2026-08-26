@@ -1,5 +1,33 @@
 # Changelog
 
+## [2.1.85](https://github.com/suoak/AionUi/compare/v2.1.84...v2.1.85) (2026-08-26)
+
+### Desktop
+
+#### Features
+
+- **updater:** download optional updates in the background and present a compact ready-to-restart prompt
+
+#### 内网更新说明
+
+<!-- internal-release-notes:start -->
+
+**由运营管理部提供**
+
+- 应用发现可选更新后会在后台下载安装包，并以小型进度提示展示下载状态，不再打断当前工作。
+- 安装包准备完成后会提醒用户重启升级；用户可以稍后处理，应用不会在普通退出时自动安装。
+- 强制更新仍保留前台流程，下载取消、重试和并发检查状态更加稳定。
+
+<!-- internal-release-notes:end -->
+
+### Core ([v0.1.86](https://github.com/suoak/AionCore/releases/tag/v0.1.86))
+
+#### Bug Fixes
+
+- **runtime:** update the pinned Grok Build package to 1.0.10
+
+---
+
 ## [2.1.84](https://github.com/suoak/AionUi/compare/v2.1.83...v2.1.84) (2026-08-25)
 
 ### Desktop
