@@ -117,6 +117,7 @@ export const useUpdateNotificationController = () => {
         currentVersion: evt.currentVersion || __APP_VERSION__,
         releaseNotes: evt.releaseNotes,
         updatePolicy: evt.updatePolicy,
+        backgroundDownload: evt.backgroundDownload,
       });
       void loadManualReleaseInfoForDisplay();
     },
@@ -286,6 +287,9 @@ export const useUpdateNotificationController = () => {
           dispatchAutoAvailable(evt);
           break;
         case 'downloading': {
+          if (stateRef.current.activeTask?.kind !== 'auto') {
+            dispatch({ type: 'autoDownloadStarted', background: evt.backgroundDownload });
+          }
           const progress = toAutoProgress(evt);
           if (progress) {
             dispatch({ type: 'autoProgress', progress });
@@ -293,6 +297,9 @@ export const useUpdateNotificationController = () => {
           break;
         }
         case 'downloaded':
+          if (stateRef.current.activeTask?.kind !== 'auto') {
+            dispatch({ type: 'autoDownloadStarted', background: evt.backgroundDownload });
+          }
           dispatch({ type: 'autoDownloaded' });
           break;
         case 'preparing-install':

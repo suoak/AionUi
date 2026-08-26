@@ -658,6 +658,51 @@ describe('UpdateNotificationCard', () => {
     expect(screen.getByText('update.restartNow')).toBeInTheDocument();
   });
 
+  it('shows compact progress for a background download and expands when restart is ready', async () => {
+    render(<UpdateNotificationCard />);
+
+    await waitFor(() => {
+      expect(mocks.autoStatusHandler).toBeTruthy();
+    });
+
+    await act(async () => {
+      mocks.autoStatusHandler?.({
+        status: 'available',
+        version: '2.1.14',
+        currentVersion: '2.1.13',
+        backgroundDownload: true,
+      });
+      mocks.autoStatusHandler?.({
+        status: 'downloading',
+        backgroundDownload: true,
+        progress: {
+          bytesPerSecond: 1048576,
+          percent: 64,
+          transferred: 1048576,
+          total: 4194304,
+        },
+      });
+    });
+
+    expect(await screen.findByTestId('update-notification-mini-progress')).toHaveAttribute(
+      'data-mini-status',
+      'downloading'
+    );
+
+    await act(async () => {
+      mocks.autoStatusHandler?.({
+        status: 'downloaded',
+        version: '2.1.14',
+        backgroundDownload: true,
+      });
+    });
+
+    expect(await screen.findByText('update.downloadCompleteTitle')).toBeInTheDocument();
+    expect(screen.queryByTestId('update-notification-mini-progress')).not.toBeInTheDocument();
+    expect(screen.getByText('update.later')).toBeInTheDocument();
+    expect(screen.getByText('update.restartNow')).toBeInTheDocument();
+  });
+
   it('shows preparing install loading state after restart is clicked and hides later action', async () => {
     let resolveInstall!: () => void;
     mocks.autoUpdateQuitAndInstallMock.mockImplementation(

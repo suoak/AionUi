@@ -149,6 +149,21 @@ describe('AutoUpdaterService', () => {
     expect(autoUpdaterMock.checkForUpdates).not.toHaveBeenCalled();
   });
 
+  it('still performs the stable startup check when manual prerelease mode is enabled', async () => {
+    autoUpdaterMock.checkForUpdates.mockResolvedValue({
+      isUpdateAvailable: false,
+      updateInfo: { version: '2.1.13' },
+    });
+
+    const { autoUpdaterService } = await import('@/process/services/autoUpdaterService');
+    autoUpdaterService.initialize();
+    autoUpdaterService.setAllowPrerelease(true);
+
+    await autoUpdaterService.checkForUpdatesAndNotify();
+
+    expect(autoUpdaterMock.checkForUpdates).toHaveBeenCalledTimes(1);
+  });
+
   it('configures electron-updater to verify signed metadata from GitHub Releases', async () => {
     const { autoUpdaterService } = await import('@/process/services/autoUpdaterService');
 
@@ -298,6 +313,34 @@ describe('AutoUpdaterService', () => {
     return entry[1] as () => void;
   };
 
+  const getUpdateAvailableHandler = (): ((info: { version: string; releaseDate?: string }) => void) => {
+    const entry = autoUpdaterMock.on.mock.calls.find(([event]) => event === 'update-available');
+    if (!entry) throw new Error('update-available handler not registered');
+    return entry[1] as (info: { version: string; releaseDate?: string }) => void;
+  };
+
+  const getUpdateCancelledHandler = (): (() => void) => {
+    const entry = autoUpdaterMock.on.mock.calls.find(([event]) => event === 'update-cancelled');
+    if (!entry) throw new Error('update-cancelled handler not registered');
+    return entry[1] as () => void;
+  };
+
+  const getDownloadProgressHandler = (): ((progress: {
+    bytesPerSecond: number;
+    percent: number;
+    transferred: number;
+    total: number;
+  }) => void) => {
+    const entry = autoUpdaterMock.on.mock.calls.find(([event]) => event === 'download-progress');
+    if (!entry) throw new Error('download-progress handler not registered');
+    return entry[1] as (progress: {
+      bytesPerSecond: number;
+      percent: number;
+      transferred: number;
+      total: number;
+    }) => void;
+  };
+
   it('clarifies the Squirrel bundle error in dev mode', async () => {
     appMock.isPackaged = false;
     const { autoUpdaterService } = await import('@/process/services/autoUpdaterService');
@@ -325,6 +368,132 @@ describe('AutoUpdaterService', () => {
 
     const errorStatus = statuses.find((s) => s.status === 'error');
     expect(errorStatus?.error).toBe('network timeout');
+  });
+
+  it('downloads an optional update in the background after the startup check', async () => {
+    const updateInfo = {
+      version: '2.1.14',
+      releaseDate: '2026-08-26T00:00:00.000Z',
+    };
+    autoUpdaterMock.checkForUpdates.mockImplementation(async () => {
+      getUpdateAvailableHandler()(updateInfo);
+      return { isUpdateAvailable: true, updateInfo };
+    });
+    autoUpdaterMock.downloadUpdate.mockImplementation(async () => {
+      getDownloadProgressHandler()({
+        bytesPerSecond: 1024,
+        percent: 50,
+        transferred: 512,
+        total: 1024,
+      });
+      getUpdateDownloadedHandler()({ version: updateInfo.version });
+    });
+
+    const { autoUpdaterService } = await import('@/process/services/autoUpdaterService');
+    autoUpdaterService.initialize();
+    const statuses: Array<{ status: string; backgroundDownload?: boolean }> = [];
+    autoUpdaterService.on('update-status', (status) => statuses.push(status));
+
+    await autoUpdaterService.checkForUpdatesAndNotify();
+
+    expect(autoUpdaterMock.downloadUpdate).toHaveBeenCalledTimes(1);
+    expect(statuses).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ status: 'available', backgroundDownload: true }),
+        expect.objectContaining({ status: 'downloading', backgroundDownload: true, version: '2.1.14' }),
+        expect.objectContaining({
+          status: 'downloading',
+          backgroundDownload: true,
+          progress: expect.objectContaining({ percent: 50 }),
+        }),
+        expect.objectContaining({ status: 'downloaded', backgroundDownload: true, version: '2.1.14' }),
+      ])
+    );
+  });
+
+  it('keeps a required startup update in the foreground while downloading it automatically', async () => {
+    const updateInfo = { version: '2.1.14', updateMode: 'required' };
+    autoUpdaterMock.checkForUpdates.mockImplementation(async () => {
+      getUpdateAvailableHandler()(updateInfo);
+      return { isUpdateAvailable: true, updateInfo };
+    });
+    autoUpdaterMock.downloadUpdate.mockResolvedValue(undefined);
+
+    const { autoUpdaterService } = await import('@/process/services/autoUpdaterService');
+    autoUpdaterService.initialize();
+    const statuses: Array<{ status: string; backgroundDownload?: boolean }> = [];
+    autoUpdaterService.on('update-status', (status) => statuses.push(status));
+
+    await autoUpdaterService.checkForUpdatesAndNotify();
+
+    expect(autoUpdaterMock.downloadUpdate).toHaveBeenCalledTimes(1);
+    expect(statuses).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ status: 'available', backgroundDownload: false }),
+        expect.objectContaining({ status: 'downloading', backgroundDownload: false }),
+      ])
+    );
+  });
+
+  it('does not start a download when the startup check finds no update', async () => {
+    autoUpdaterMock.checkForUpdates.mockResolvedValue({
+      isUpdateAvailable: false,
+      updateInfo: { version: '2.1.13' },
+    });
+
+    const { autoUpdaterService } = await import('@/process/services/autoUpdaterService');
+    autoUpdaterService.initialize();
+
+    await autoUpdaterService.checkForUpdatesAndNotify();
+
+    expect(autoUpdaterMock.downloadUpdate).not.toHaveBeenCalled();
+  });
+
+  it('keeps a concurrent foreground check visible while the startup check is pending', async () => {
+    const updateInfo = { version: '2.1.14' };
+    let resolveCheck!: (result: { isUpdateAvailable: boolean; updateInfo: typeof updateInfo }) => void;
+    const sharedCheck = new Promise<{ isUpdateAvailable: boolean; updateInfo: typeof updateInfo }>((resolve) => {
+      resolveCheck = resolve;
+    });
+    autoUpdaterMock.checkForUpdates.mockReturnValue(sharedCheck);
+    autoUpdaterMock.downloadUpdate.mockResolvedValue(undefined);
+
+    const { autoUpdaterService } = await import('@/process/services/autoUpdaterService');
+    autoUpdaterService.initialize();
+    const statuses: Array<{ status: string; backgroundDownload?: boolean }> = [];
+    autoUpdaterService.on('update-status', (status) => statuses.push(status));
+
+    const startupCheck = autoUpdaterService.checkForUpdatesAndNotify();
+    const foregroundCheck = autoUpdaterService.checkForUpdates();
+    getUpdateAvailableHandler()(updateInfo);
+    resolveCheck({ isUpdateAvailable: true, updateInfo });
+    await Promise.all([startupCheck, foregroundCheck]);
+
+    expect(statuses.find((status) => status.status === 'available')?.backgroundDownload).toBe(false);
+  });
+
+  it('reports a startup download failure only once', async () => {
+    const updateInfo = { version: '2.1.14' };
+    autoUpdaterMock.checkForUpdates.mockImplementation(async () => {
+      getUpdateAvailableHandler()(updateInfo);
+      return { isUpdateAvailable: true, updateInfo };
+    });
+    autoUpdaterMock.downloadUpdate.mockImplementation(async () => {
+      const error = new Error('network timeout');
+      getErrorHandler()(error);
+      throw error;
+    });
+
+    const { autoUpdaterService } = await import('@/process/services/autoUpdaterService');
+    autoUpdaterService.initialize();
+    const statuses: Array<{ status: string; error?: string }> = [];
+    autoUpdaterService.on('update-status', (status) => statuses.push(status));
+
+    await autoUpdaterService.checkForUpdatesAndNotify();
+
+    expect(statuses.filter((status) => status.status === 'error')).toEqual([
+      expect.objectContaining({ error: 'network timeout' }),
+    ]);
   });
 
   it('reuses the active auto-update download promise', async () => {
@@ -388,6 +557,56 @@ describe('AutoUpdaterService', () => {
 
     resolveDownload();
     await expect(download).resolves.toEqual({ success: true });
+  });
+
+  it('waits for a cancelled download to settle before starting a retry', async () => {
+    const downloadResolvers: Array<() => void> = [];
+    autoUpdaterMock.downloadUpdate.mockImplementation(
+      () =>
+        new Promise<void>((resolve) => {
+          downloadResolvers.push(resolve);
+        })
+    );
+
+    const { autoUpdaterService } = await import('@/process/services/autoUpdaterService');
+    autoUpdaterService.initialize();
+
+    const firstDownload = autoUpdaterService.downloadUpdate();
+    await autoUpdaterService.cancelDownload();
+    const retryDownload = autoUpdaterService.downloadUpdate();
+    getUpdateCancelledHandler()();
+
+    expect(autoUpdaterMock.downloadUpdate).toHaveBeenCalledTimes(1);
+
+    downloadResolvers[0]?.();
+    await firstDownload;
+    await vi.waitFor(() => expect(autoUpdaterMock.downloadUpdate).toHaveBeenCalledTimes(2));
+    downloadResolvers[1]?.();
+
+    await expect(retryDownload).resolves.toEqual({ success: true });
+  });
+
+  it('does not start a queued retry when the user cancels it before the previous download settles', async () => {
+    let resolveDownload!: () => void;
+    autoUpdaterMock.downloadUpdate.mockImplementation(
+      () =>
+        new Promise<void>((resolve) => {
+          resolveDownload = resolve;
+        })
+    );
+
+    const { autoUpdaterService } = await import('@/process/services/autoUpdaterService');
+    autoUpdaterService.initialize();
+
+    const firstDownload = autoUpdaterService.downloadUpdate();
+    await autoUpdaterService.cancelDownload();
+    const queuedRetry = autoUpdaterService.downloadUpdate();
+    await autoUpdaterService.cancelDownload();
+    resolveDownload();
+
+    await Promise.all([firstDownload, queuedRetry]);
+
+    expect(autoUpdaterMock.downloadUpdate).toHaveBeenCalledTimes(1);
   });
 
   it('restores a completed cached auto-update when the downloaded package validates', async () => {

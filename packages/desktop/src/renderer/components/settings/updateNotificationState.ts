@@ -67,6 +67,7 @@ export type UpdateNotificationEvent =
       currentVersion?: string;
       releaseNotes?: string;
       updatePolicy?: UpdatePolicy;
+      backgroundDownload?: boolean;
     }
   | {
       type: 'openRequested';
@@ -127,6 +128,7 @@ export type UpdateNotificationEvent =
     }
   | {
       type: 'autoDownloadStarted';
+      background?: boolean;
     }
   | {
       type: 'manualDownloadStarted';
@@ -284,7 +286,7 @@ export const updateNotificationReducer = (
       return {
         state: {
           ...state,
-          visible: true,
+          visible: !event.backgroundDownload,
           status: 'available',
           autoUpdateAvailable: true,
           updatePolicy: event.updatePolicy ?? { mode: 'optional' },
@@ -295,7 +297,7 @@ export const updateNotificationReducer = (
           },
           installerLastFailure: undefined,
           pendingInstallerLastFailure: undefined,
-          presentation: 'card',
+          presentation: event.backgroundDownload ? 'mini' : 'card',
           releaseNotesStatus: hasReleaseNotes ? 'loaded' : 'loading',
         },
         effects: [{ type: 'loadManualReleaseInfoForDisplay' }],
@@ -458,11 +460,12 @@ export const updateNotificationReducer = (
       return {
         state: {
           ...state,
+          visible: true,
           status: 'downloading',
           activeTask: { kind: 'auto', id: 'auto' },
           installerLastFailure: undefined,
           progress: emptyProgress(),
-          presentation: 'card',
+          presentation: event.background ? 'mini' : 'card',
         },
         effects: [],
       };
@@ -517,9 +520,11 @@ export const updateNotificationReducer = (
         state: {
           ...state,
           status: 'downloaded',
+          visible: true,
           activeTask: null,
           installerLastFailure: undefined,
           progress: completeProgress(state.progress),
+          presentation: 'card',
         },
         effects: [],
       };
