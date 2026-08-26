@@ -77,6 +77,8 @@ export interface AutoUpdateStatus {
     | 'preparing-install'
     | 'error'
     | 'cancelled';
+  /** Whether an optional update is downloading automatically after the startup check. */
+  backgroundDownload?: boolean;
   version?: string;
   /** Current installed version — reflects the dev debug override when set. */
   currentVersion?: string;
@@ -96,6 +98,8 @@ type PolicyAwareUpdateInfo = UpdateInfo & {
   updateMode?: unknown;
   minimumSupportedVersion?: unknown;
 };
+
+type UpdateCheckSource = 'foreground' | 'background' | 'restore';
 
 const normalizeVersion = (version: string): string | null => valid(version) || coerce(version)?.version || null;
 
@@ -142,6 +146,11 @@ class AutoUpdaterService extends EventEmitter {
   private _activeDownloadPromise: Promise<{ success: boolean; error?: string }> | null = null;
   private _activeDownloadCancellationToken: CancellationToken | null = null;
   private _ignoreActiveDownloadEvents = false;
+  private _backgroundUpdateCheckCount = 0;
+  private _foregroundUpdateCheckCount = 0;
+  private _activeDownloadIsBackground = false;
+  private _downloadCancellationPending = false;
+  private _downloadCancellationGeneration = 0;
   private _nativeInstallReady = process.platform !== 'darwin';
   private _nativeInstallReadyWait: {
     promise: Promise<void>;
@@ -338,6 +347,11 @@ class AutoUpdaterService extends EventEmitter {
     this._activeDownloadPromise = null;
     this._activeDownloadCancellationToken = null;
     this._ignoreActiveDownloadEvents = false;
+    this._backgroundUpdateCheckCount = 0;
+    this._foregroundUpdateCheckCount = 0;
+    this._activeDownloadIsBackground = false;
+    this._downloadCancellationPending = false;
+    this._downloadCancellationGeneration = 0;
     this.clearNativeInstallReadyWait();
     this._nativeInstallReady = process.platform !== 'darwin';
     this._downloadedUpdateVersion = undefined;
@@ -356,6 +370,11 @@ class AutoUpdaterService extends EventEmitter {
     this._activeDownloadPromise = null;
     this._activeDownloadCancellationToken = null;
     this._ignoreActiveDownloadEvents = false;
+    this._backgroundUpdateCheckCount = 0;
+    this._foregroundUpdateCheckCount = 0;
+    this._activeDownloadIsBackground = false;
+    this._downloadCancellationPending = false;
+    this._downloadCancellationGeneration = 0;
     this.clearNativeInstallReadyWait();
     this._nativeInstallReady = process.platform !== 'darwin';
     this._downloadedUpdateVersion = undefined;
@@ -447,15 +466,20 @@ class AutoUpdaterService extends EventEmitter {
       log.info(`Update available: ${info.version}`);
       this.resetNativeInstallReady(info.version);
       const currentVersion = autoUpdater.currentVersion?.version || app.getVersion();
+      const updatePolicy = resolveUpdatePolicy(info, currentVersion);
       this.broadcastStatus({
         status: 'available',
+        backgroundDownload:
+          this._backgroundUpdateCheckCount > 0 &&
+          this._foregroundUpdateCheckCount === 0 &&
+          updatePolicy.mode === 'optional',
         version: info.version,
         // Reflects the dev debug override (autoUpdater.currentVersion) when set,
         // so the "current → new" display matches the version used for comparison.
         currentVersion,
         releaseDate: info.releaseDate,
         releaseNotes: typeof info.releaseNotes === 'string' ? info.releaseNotes : undefined,
-        updatePolicy: resolveUpdatePolicy(info, currentVersion),
+        updatePolicy,
       });
     });
 
@@ -472,6 +496,7 @@ class AutoUpdaterService extends EventEmitter {
       log.debug(`Download progress: ${progress.percent.toFixed(2)}%`);
       this.broadcastStatus({
         status: 'downloading',
+        backgroundDownload: this._activeDownloadIsBackground,
         progress: {
           bytesPerSecond: progress.bytesPerSecond,
           percent: progress.percent,
@@ -487,8 +512,6 @@ class AutoUpdaterService extends EventEmitter {
         return;
       }
       log.info('Update downloaded');
-      this._activeDownloadPromise = null;
-      this._activeDownloadCancellationToken = null;
       this._downloadedUpdateVersion = info.version;
       if (process.platform === 'darwin' && !this._nativeInstallReady) {
         log.debug('[auto-update] macOS service-level update-downloaded received before native install readiness', {
@@ -497,16 +520,20 @@ class AutoUpdaterService extends EventEmitter {
       }
       this.broadcastStatus({
         status: 'downloaded',
+        backgroundDownload: this._activeDownloadIsBackground,
         version: info.version,
       });
+      this._activeDownloadIsBackground = false;
     });
 
     register('update-cancelled', () => {
       log.info('Update download cancelled');
-      this._activeDownloadPromise = null;
-      this._activeDownloadCancellationToken = null;
-      this._ignoreActiveDownloadEvents = false;
-      this.broadcastStatus({ status: 'cancelled' });
+      if (this._downloadCancellationPending) {
+        log.debug('[auto-update] Waiting for the cancelled download promise to settle before allowing a retry');
+        return;
+      }
+      this.broadcastStatus({ status: 'cancelled', backgroundDownload: this._activeDownloadIsBackground });
+      this._activeDownloadIsBackground = false;
     });
 
     register('error', (error: Error) => {
@@ -515,12 +542,12 @@ class AutoUpdaterService extends EventEmitter {
         return;
       }
       log.error('Auto-updater error:', error);
-      this._activeDownloadPromise = null;
-      this._activeDownloadCancellationToken = null;
       this.broadcastStatus({
         status: 'error',
+        backgroundDownload: this._activeDownloadIsBackground,
         error: this.describeAutoUpdateError(error),
       });
+      this._activeDownloadIsBackground = false;
     });
   }
 
@@ -670,12 +697,19 @@ class AutoUpdaterService extends EventEmitter {
     }
   }
 
-  async checkForUpdates(): Promise<{
+  async checkForUpdates(options: { source?: UpdateCheckSource } = {}): Promise<{
     success: boolean;
     updateInfo?: UpdateInfo;
     updatePolicy?: UpdatePolicy;
     error?: string;
   }> {
+    const source = options.source ?? 'foreground';
+    if (source === 'background') {
+      this._backgroundUpdateCheckCount += 1;
+    } else if (source === 'foreground') {
+      this._foregroundUpdateCheckCount += 1;
+    }
+
     try {
       if (!this._isInitialized) {
         throw new Error('AutoUpdaterService not initialized');
@@ -691,7 +725,7 @@ class AutoUpdaterService extends EventEmitter {
         appIsPackaged: app.isPackaged,
       });
 
-      if (this._allowPrerelease) {
+      if (this._allowPrerelease && source === 'foreground') {
         log.info('Skipping electron-updater check for prerelease manual mode');
         log.debug('[auto-update] Stable auto-install check skipped because prerelease mode is manual-only');
         return { success: true };
@@ -735,6 +769,12 @@ class AutoUpdaterService extends EventEmitter {
         success: false,
         error: message,
       };
+    } finally {
+      if (source === 'background') {
+        this._backgroundUpdateCheckCount = Math.max(0, this._backgroundUpdateCheckCount - 1);
+      } else if (source === 'foreground') {
+        this._foregroundUpdateCheckCount = Math.max(0, this._foregroundUpdateCheckCount - 1);
+      }
     }
   }
 
@@ -748,7 +788,7 @@ class AutoUpdaterService extends EventEmitter {
         throw new Error('AutoUpdaterService not initialized');
       }
 
-      const checkResult = await this.checkForUpdates();
+      const checkResult = await this.checkForUpdates({ source: 'restore' });
       if (!checkResult.success || !checkResult.updateInfo) {
         return {
           success: checkResult.success,
@@ -861,14 +901,26 @@ class AutoUpdaterService extends EventEmitter {
     return fileInfo.info.url;
   }
 
-  async downloadUpdate(): Promise<{ success: boolean; error?: string }> {
+  async downloadUpdate(options: { background?: boolean } = {}): Promise<{ success: boolean; error?: string }> {
     if (this._activeDownloadPromise) {
+      if (this._downloadCancellationPending) {
+        const cancellingDownload = this._activeDownloadPromise;
+        const cancellationGeneration = this._downloadCancellationGeneration;
+        log.debug('[auto-update] Waiting for active download cancellation before retrying');
+        await cancellingDownload;
+        if (this._downloadCancellationGeneration !== cancellationGeneration) {
+          log.debug('[auto-update] Queued download retry cancelled before it started');
+          return { success: true };
+        }
+        return this.downloadUpdate(options);
+      }
       log.debug('[auto-update] downloadUpdate reused active download');
       return this._activeDownloadPromise;
     }
 
     const cancellationToken = new CancellationToken();
     this._activeDownloadCancellationToken = cancellationToken;
+    this._activeDownloadIsBackground = options.background === true;
 
     const runDownload = async (): Promise<{ success: boolean; error?: string }> => {
       try {
@@ -895,22 +947,34 @@ class AutoUpdaterService extends EventEmitter {
       }
     };
 
-    this._activeDownloadPromise = runDownload();
-    return this._activeDownloadPromise;
+    const downloadPromise = runDownload();
+    this._activeDownloadPromise = downloadPromise;
+    void downloadPromise.finally(() => {
+      if (this._activeDownloadPromise === downloadPromise) {
+        this._activeDownloadPromise = null;
+        this._activeDownloadCancellationToken = null;
+        this._downloadCancellationPending = false;
+        this._ignoreActiveDownloadEvents = false;
+      }
+    });
+    return downloadPromise;
   }
 
   async cancelDownload(): Promise<{ success: boolean; error?: string }> {
     if (!this._activeDownloadPromise) {
-      this.broadcastStatus({ status: 'cancelled' });
+      this.broadcastStatus({ status: 'cancelled', backgroundDownload: this._activeDownloadIsBackground });
+      this._activeDownloadIsBackground = false;
       return { success: true };
     }
 
     log.info('[auto-update] Cancelling active auto-update download');
+    this._downloadCancellationPending = true;
+    this._downloadCancellationGeneration += 1;
     this._activeDownloadCancellationToken?.cancel();
     this._activeDownloadCancellationToken = null;
-    this._activeDownloadPromise = null;
     this._ignoreActiveDownloadEvents = true;
-    this.broadcastStatus({ status: 'cancelled' });
+    this.broadcastStatus({ status: 'cancelled', backgroundDownload: this._activeDownloadIsBackground });
+    this._activeDownloadIsBackground = false;
     return { success: true };
   }
 
@@ -976,9 +1040,28 @@ class AutoUpdaterService extends EventEmitter {
    */
   async checkForUpdatesAndNotify(): Promise<void> {
     autoUpdater.allowDowngrade = false;
-    const result = await this.checkForUpdates();
+    const result = await this.checkForUpdates({ source: 'background' });
     if (!result.success) {
       log.error('Auto-update check failed:', result.error);
+      return;
+    }
+    if (!result.updateInfo) {
+      return;
+    }
+
+    const backgroundDownload = result.updatePolicy?.mode !== 'required';
+    log.info('[auto-update] Starting update download after startup check', {
+      backgroundDownload,
+      version: result.updateInfo.version,
+    });
+    this.broadcastStatus({
+      status: 'downloading',
+      backgroundDownload,
+      version: result.updateInfo.version,
+    });
+    const downloadResult = await this.downloadUpdate({ background: backgroundDownload });
+    if (!downloadResult.success) {
+      log.error('[auto-update] Startup update download failed:', downloadResult.error);
     }
   }
 }

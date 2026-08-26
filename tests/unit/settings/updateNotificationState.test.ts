@@ -32,6 +32,28 @@ describe('updateNotificationReducer', () => {
     expect(result.effects).toEqual([{ type: 'loadManualReleaseInfoForDisplay' }]);
   });
 
+  it('keeps an optional startup update hidden until its background download starts', () => {
+    const available = updateNotificationReducer(initialUpdateNotificationState, {
+      type: 'autoStatusAvailable',
+      version: '2.2.0',
+      currentVersion: '2.1.9',
+      backgroundDownload: true,
+    });
+
+    expect(available.state.visible).toBe(false);
+    expect(available.state.status).toBe('available');
+    expect(available.state.presentation).toBe('mini');
+
+    const downloading = updateNotificationReducer(available.state, {
+      type: 'autoDownloadStarted',
+      background: true,
+    });
+
+    expect(downloading.state.visible).toBe(true);
+    expect(downloading.state.status).toBe('downloading');
+    expect(downloading.state.presentation).toBe('mini');
+  });
+
   it('keeps loaded release notes visible when a repeated available event omits them', () => {
     const stateWithReleaseNotes: UpdateNotificationState = {
       ...initialUpdateNotificationState,
@@ -349,6 +371,8 @@ describe('updateNotificationReducer', () => {
     expect(result.state.status).toBe('downloaded');
     expect(result.state.activeTask).toBeNull();
     expect(result.state.progress.percent).toBe(100);
+    expect(result.state.visible).toBe(true);
+    expect(result.state.presentation).toBe('card');
   });
 
   it('restores a completed auto-update without requiring an active download owner', () => {

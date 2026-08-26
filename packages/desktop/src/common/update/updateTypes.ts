@@ -123,6 +123,8 @@ export interface AutoUpdateProgress {
 
 export interface AutoUpdateStatus {
   status: AutoUpdateStatusType;
+  /** Whether an optional update is downloading automatically after the startup check. */
+  backgroundDownload?: boolean;
   /** New version available for download. */
   version?: string;
   /** Current installed version — reflects the dev debug override when set. */
