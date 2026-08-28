@@ -127,6 +127,7 @@ const MessageText: React.FC<{
   const [showCopyAlert, setShowCopyAlert] = useState(false);
   const isUserMessage = message.position === 'right';
   const isTeammateMessage = message.position === 'left' && message.content.teammateMessage === true;
+  const senderName = message.content.senderName;
   const { text, files } = useMemo(
     () => parseFileMarker(contentToRender, isUserMessage),
     [contentToRender, isUserMessage]
@@ -221,7 +222,6 @@ const MessageText: React.FC<{
   ) : null;
 
   const cronMeta = message.content.cronMeta;
-  const senderName = message.content.senderName;
   const senderAgentType = message.content.senderAgentType;
   const senderConversationId = message.content.senderConversationId;
   const fallbackBackendLogo = senderAgentType ? resolveAgentLogo(logos, { backend: senderAgentType }) : null;

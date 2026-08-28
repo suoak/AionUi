@@ -6,7 +6,7 @@
 
 import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import AionSelect from '@/renderer/components/base/AionSelect';
+import WorkMateSelect from '@/renderer/components/base/WorkMateSelect';
 import { FONT_WEIGHT_TIERS, SYSTEM_FONT_WEIGHT } from '@/common/config/fontWeights';
 
 type FontWeightSelectProps = {
@@ -36,7 +36,7 @@ const FontWeightSelect: React.FC<FontWeightSelectProps> = ({ value, onChange }) 
   }, [t]);
 
   return (
-    <AionSelect
+    <WorkMateSelect
       className='w-140px'
       value={value}
       onChange={(next) => onChange(typeof next === 'string' ? next : SYSTEM_FONT_WEIGHT)}
