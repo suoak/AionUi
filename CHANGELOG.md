@@ -1,5 +1,51 @@
 # Changelog
 
+## [2.2.0](https://github.com/suoak/AionUi/compare/v2.1.85...v2.2.0) (2026-08-29)
+
+### Desktop
+
+#### Features
+
+- **sidebar:** archive-first conversation UI and archived settings page with group load-more
+- **settings:** font family and font weight selection in Appearance
+- **preview:** maximize toggle and tab context-menu actions
+- **chat:** `@@` conversation mentions and cross-conversation delivery UI
+- **conversation:** empty-input start with assistant empty state, and pin the plan above the send box
+- **explorer:** refresh a root via backend remount, plus new file/dir and drag-to-transfer
+- **auth:** silently refresh WebUI session on 401
+- **theme:** structured token channel and custom-theme guide
+
+#### Bug Fixes
+
+- **webui:** stop bridge websocket reconnect storm on repeated failures
+- **guid:** stop turning "no model picked" into a silent pick
+- **conversation:** make empty conversation titles clickable to rename
+- **markdown:** align table header with body rows
+
+#### 内网更新说明
+
+<!-- internal-release-notes:start -->
+
+**由运营管理部提供**
+
+- 侧边栏改为归档优先，并新增归档页与分组加载更多。
+- 外观设置支持选择字体和字重。
+- 预览面板支持最大化，标签页可使用右键菜单操作。
+- 支持用 @@ 提及其他对话并跨对话投递消息。
+- 允许空输入开始对话，计划条固定在发送框上方。
+- 资源管理器支持刷新挂载、新建文件或文件夹，以及拖拽移动。
+- WebUI 在登录过期时会静默刷新会话，并避免 websocket 反复重连。
+- 斜杠命令 Tab 确认、Mermaid 缩放和 WaveDrom 时序图沿用此前已合入能力。
+
+<!-- internal-release-notes:end -->
+
+### Core ([v0.2.0](https://github.com/suoak/AionCore/releases/tag/v0.2.0))
+
+- Pin desktop to AionCore v0.2.0 (WorkMate backend; GitHub Release publishes from suoak/AionCore).
+
+---
+
+
 ## [2.1.85](https://github.com/suoak/AionUi/compare/v2.1.84...v2.1.85) (2026-08-26)
 
 ### Desktop
