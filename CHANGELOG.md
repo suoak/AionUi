@@ -1,5 +1,36 @@
 # Changelog
 
+## [2.2.1](https://github.com/suoak/AionUi/compare/v2.2.0...v2.2.1) (2026-08-29)
+
+### Desktop
+
+#### Features
+
+- **preview:** math formula rendering in the markdown viewer (KaTeX via react-markdown)
+
+#### Bug Fixes
+
+- **ci:** CHANGELOG oxfmt, WorkMateSelect types, MessageText senderName hoist, i18n key types
+- **tests:** align AcpChat local-image root and AionrsSendBox send-path tests with WorkMate wiring
+
+#### 内网更新说明
+
+<!-- internal-release-notes:start -->
+
+**由运营管理部提供**
+
+- 桌面端固定到 AionCore v0.2.1。
+- Markdown 预览支持数学公式（KaTeX）。
+- 修复若干 CI 与单测，不引入团队协作大功能。
+
+<!-- internal-release-notes:end -->
+
+### Core ([v0.2.1](https://github.com/suoak/AionCore/releases/tag/v0.2.1))
+
+- Pin desktop to AionCore v0.2.1 (WorkMate backend; GitHub Release publishes from suoak/AionCore).
+
+---
+
 ## [2.2.0](https://github.com/suoak/AionUi/compare/v2.1.85...v2.2.0) (2026-08-29)
 
 ### Desktop

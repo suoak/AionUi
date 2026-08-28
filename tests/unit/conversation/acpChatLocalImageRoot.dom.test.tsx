@@ -59,11 +59,22 @@ vi.mock('@renderer/pages/conversation/Messages/hooks', () => {
   return {
     __esModule: true,
     useMessageLstCache: () => {},
+    useUpdateMessageList: () => () => {},
     MessageListProvider: PassThrough,
     MessageListLoadingProvider: PassThrough,
     MessagePaginationProvider: PassThrough,
   };
 });
+
+vi.mock('@renderer/pages/conversation/PlanBar/usePlanRecovery', () => ({
+  __esModule: true,
+  usePlanRecovery: () => {},
+}));
+
+vi.mock('@renderer/pages/conversation/PlanBar/ConversationPlanBar', () => ({
+  __esModule: true,
+  default: () => null,
+}));
 
 vi.mock('@renderer/pages/conversation/Messages/usePendingConfirmationsRecovery', () => ({
   __esModule: true,
