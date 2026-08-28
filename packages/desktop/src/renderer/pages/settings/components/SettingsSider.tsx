@@ -9,6 +9,7 @@ import {
   Communication,
   Computer,
   Earth,
+  Inbox,
   Info,
   Lightning,
   LinkCloud,
@@ -36,6 +37,7 @@ export const BUILTIN_TAB_IDS = [
   'pet',
   'usage',
   'system',
+  'archived',
   'about',
 ] as const;
 
@@ -61,6 +63,7 @@ export const LEGACY_ANCHOR_REMAP: Record<string, string> = {
 const GROUP_HEADER_BEFORE: Record<string, string> = {
   agent: 'settings.groupAiCore',
   appearance: 'settings.groupApp',
+  archived: 'settings.archived.title',
   about: 'settings.groupAbout',
 };
 
@@ -122,6 +125,12 @@ const SettingsSider: React.FC<{ collapsed?: boolean; tooltipEnabled?: boolean }>
         path: 'usage',
       },
       system: { id: 'system', label: t('settings.system'), icon: <System />, path: 'system' },
+      archived: {
+        id: 'archived',
+        label: t('settings.archived.navLabel'),
+        icon: <Inbox />,
+        path: 'archived',
+      },
       about: { id: 'about', label: t('settings.about'), icon: <Info />, path: 'about' },
     };
 

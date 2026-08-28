@@ -4,7 +4,9 @@
     "searchHint": "Cliquez ici pour rechercher des mots-clés",
     "noMatch": "Aucun contenu correspondant trouvé",
     "empty": "Aucun échange Q&R pour l'instant",
-    "count": "{{count}} échanges"
+    "count": "{{count}} échanges",
+    "count_one": "{{count}} échange",
+    "count_other": "{{count}} échanges"
   },
   "trajectory": {
     "searchPlaceholder": "Search trajectory",
@@ -177,7 +179,23 @@
     "today": "Aujourd'hui",
     "pinnedSection": "Épinglés",
     "deleteSuccess": "Supprimé avec succès",
-    "exportDialogHint": "La sélection du dossier suit la même interaction que la migration de l'espace de travail."
+    "exportDialogHint": "La sélection du dossier suit la même interaction que la migration de l'espace de travail.",
+    "batchDeleteConfirm_one": "Supprimer {{count}} sujet sélectionné ?",
+    "batchDeleteConfirm_other": "Supprimer {{count}} sujets sélectionnés ?",
+    "batchDeleteSuccess_one": "{{count}} sujet supprimé",
+    "batchDeleteSuccess_other": "{{count}} sujets supprimés",
+    "removeProjectConfirm_one": "Supprimer le projet \"{{name}}\" ? Sa {{count}} conversation sera également supprimée.",
+    "removeProjectConfirm_other": "Supprimer le projet \"{{name}}\" ? Ses {{count}} conversations seront également supprimées.",
+    "archive": "Archiver",
+    "archiveSuccess": "Archivé",
+    "archiveFailed": "Échec de l'archivage",
+    "batchArchive": "Batch archive",
+    "batchArchiveConfirm": "Archive {{count}} selected topics? You can restore or delete them from Archived in Settings.",
+    "batchArchiveSuccess": "Archived {{count}} topics",
+    "archiveProject": "Archive project",
+    "archiveProjectTitle": "Archive project",
+    "archiveProjectConfirm": "Archive project \"{{name}}\"? Its {{count}} conversation(s) will be archived too. You can restore or delete them from Archived in Settings.",
+    "archiving": "Archiving..."
   },
   "noAgentsAvailable": "Aucun agent disponible",
   "agentError": {
@@ -465,7 +483,16 @@
       "manual": "Envoi manuel",
       "auto": "Envoi automatique"
     },
-    "clearConfirmContent": "Tous les messages en attente seront supprimés. Cela ne peut pas être annulé."
+    "clearConfirmContent": "Tous les messages en attente seront supprimés. Cela ne peut pas être annulé.",
+    "files_one": "{{count}} fichier",
+    "files_other": "{{count}} fichiers",
+    "addToQueue": "Ajouter à la boîte de brouillons",
+    "addToQueueShortcut": "⌘ + Enter / Ctrl + Enter",
+    "midturnBlocked": "L'interjection n'est pas prise en charge pendant que cet agent répond. Utilisez plutôt Ajouter à la boîte de brouillons.",
+    "enterShortcut": "Enter",
+    "actionMode": "Choose send action",
+    "midturnBlockedSendHint": "This agent is still working, so the message can’t be sent directly. Save it to Draft box and send it later.",
+    "addToQueueBusyHint": "Save to Draft box and send it later."
   },
   "createFailed": "Échec de la création de la conversation",
   "agentTip": {
@@ -521,7 +548,8 @@
       "unsupported": "Non pris en charge",
       "loaded": "Chargé"
     },
-    "loaded": "MCP chargé"
+    "loaded": "MCP chargé",
+    "selected": "MCP sélectionnés"
   },
   "contextUsage": {
     "contextUsed": "contexte utilisé",
@@ -580,7 +608,8 @@
   },
   "sendbox": {
     "hint": "Tapez / pour les commandes, @ pour référencer des fichiers, ↑/↓ pour l'historique des messages",
-    "mediaPathFallback": "Cet agent ne prend pas en charge nativement ce type de fichier ; il sera envoyé sous forme de chemin de fichier."
+    "mediaPathFallback": "Cet agent ne prend pas en charge nativement ce type de fichier ; il sera envoyé sous forme de chemin de fichier.",
+    "hintWithSessions": "/ pour les commandes, @ pour les fichiers, @@ pour les conversations, ↑/↓ pour l’historique"
   },
   "chat": {
     "noModelSelected": "Aucun modèle sélectionné pour la session actuelle, impossible d'envoyer le message",
@@ -607,7 +636,8 @@
       "emptyTranscript": "Aucune parole détectée",
       "unsupported": "La saisie vocale n'est pas disponible dans cet environnement",
       "genericError": "Échec de la saisie vocale. Veuillez réessayer",
-      "transcriptionFailed": "Échec de la transcription audio"
+      "transcriptionFailed": "Échec de la transcription audio",
+      "recordTooltipWithShortcut": "Saisie vocale cmd+M"
     },
     "confirmationLoadError": "Échec du chargement de la boîte de dialogue de confirmation",
     "apiErrorSwitched": "Erreur API, basculement automatique vers {{cli}} CLI",
@@ -759,7 +789,15 @@
         "rejectedFailed": "L'action n'a pas pu être effectuée",
         "blockedHint": "Résolvez le conflit en dehors d'CSBU WorkMate avant d'indexer ou d'abandonner",
         "notSent": "La requête n'a pas atteint le backend — rien n'a été modifié. Vous pouvez réessayer.",
-        "partialDetail": "Non terminés : {{files}}"
+        "partialDetail": "Non terminés : {{files}}",
+        "okStage_one": "{{count}} fichier indexé",
+        "okStage_other": "{{count}} fichiers indexés",
+        "okUnstage_one": "{{count}} fichier désindexé",
+        "okUnstage_other": "{{count}} fichiers désindexés",
+        "okDiscard_one": "{{count}} fichier abandonné",
+        "okDiscard_other": "{{count}} fichiers abandonnés",
+        "allFailed_one": "{{count}} fichier n'a pas pu être traité",
+        "allFailed_other": "Aucun des {{count}} fichiers n'a pu être traité"
       },
       "viewAsTree": "Afficher en arborescence",
       "loadFailed": "Impossible de charger les modifications",
@@ -819,8 +857,15 @@
       "rename": "Renommer",
       "copyAbsolutePath": "Copier le chemin absolu",
       "copyRelativePath": "Copier le chemin relatif",
-      "addToChat": "Ajouter au chat"
-    }
+      "addToChat": "Ajouter au chat",
+      "newFile": "Nouveau fichier",
+      "newDir": "Nouveau dossier",
+      "refresh": "Actualiser"
+    },
+    "copyNodeFailed": "Échec de la copie",
+    "moveNodeFailed": "Échec du déplacement",
+    "newFileFailed": "Échec de la création du fichier",
+    "newDirFailed": "Échec de la création du dossier"
   },
   "thinking": {
     "complete": "Réflexion terminée",
@@ -854,5 +899,26 @@
     "loading": "Loading full output...",
     "loadFailed": "Failed to load full output",
     "previewNote": "Showing a preview of the retained tool output ({{size}} total)"
+  },
+  "emptyState": {
+    "greeting": "Bonjour ! Dites-moi ce dont vous avez besoin et je commence."
+  },
+  "crossSession": {
+    "mentionAgain": "Mentionner la conversation {{name}} dans la zone de saisie",
+    "mentionAgainHint": "Cliquez pour mentionner cette conversation dans la zone de saisie",
+    "mentionUnavailable": "Cette conversation ne peut plus être mentionnée.",
+    "mentionFailed": "Impossible de mentionner cette conversation.",
+    "fromBadge": "De la conversation {{name}}",
+    "otherWorkspace": "espace de travail différent",
+    "rateLimitedTitle": "Les messages entre conversations semblent boucler",
+    "rateLimited": "Les messages automatiques entre « {{from}} » et « {{to}} » sont anormalement fréquents et semblent boucler.",
+    "stopBoth": "Arrêter les deux conversations",
+    "disableFeature": "Désactiver les messages entre conversations"
+  },
+  "planBar": {
+    "title": "Plan",
+    "progress": "{{completed}}/{{total}}",
+    "expand": "Développer le plan",
+    "collapse": "Réduire le plan"
   }
 }

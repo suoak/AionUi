@@ -163,22 +163,6 @@
     },
     "portReportTimeout": {
       "title": "起動がタイムアウトしました",
-      "description": "CSBU WorkMate ??Core は想定時間内に起動を完了できませんでした。アプリを再起動してください。繰り返し発生する場合は、診断情報を送信してください。",
-      "sendDiagnostics": "診断を送信",
-      "diagnosticsSent": "診断を送信しました",
-      "diagnosticsReportSuccess": "診断情報を送信しました",
-      "diagnosticsReportFailed": "診断の送信に失敗しました。しばらくしてから再試行してください。"
-    },
-    "startupFailed": {
-      "title": "起動に失敗しました",
-      "description": "CSBU WorkMate ??Core を起動できませんでした。アプリを再起動してください。繰り返し発生する場合は、診断情報を送信してください。",
-      "sendDiagnostics": "診断を送信",
-      "diagnosticsSent": "診断を送信しました",
-      "diagnosticsReportSuccess": "診断情報を送信しました",
-      "diagnosticsReportFailed": "診断の送信に失敗しました。しばらくしてから再試行してください。"
-    },
-    "portReportTimeout": {
-      "title": "起動がタイムアウトしました",
       "description": "CSBU WorkMate backend は想定時間内に起動を完了できませんでした。アプリを再起動してください。繰り返し発生する場合は、診断情報を送信してください。",
       "sendDiagnostics": "診断を送信",
       "diagnosticsSent": "診断を送信しました",
@@ -230,5 +214,8 @@
     "title": "問題が発生しました",
     "description": "ページで予期しないエラーが発生しました。会話履歴は保存されています。再読み込みして続行してください。",
     "reload": "再読み込み"
-  }
+  },
+  "viewMoreLines_one": "もっと見る ({{count}} 行)",
+  "viewMoreLines_other": "もっと見る ({{count}} 行)",
+  "aiAssistant": "AI アシスタント"
 }

@@ -42,6 +42,9 @@ import { useTeamPermission } from '@/renderer/pages/team/hooks/TeamPermissionCon
 import type { TeamSendBoxRuntime } from '@/renderer/pages/team/components/teamSendRuntime';
 import { allSupportedExts } from '@/renderer/services/FileService';
 import { iconColors } from '@/renderer/styles/colors';
+import type { SessionRef } from '@/common/adapter/ipcBridge';
+import CrossSessionDisabledBanner from '@/renderer/components/chat/CrossSessionDisabledBanner';
+import { useCrossSessionMessageEnabled } from '@/renderer/hooks/chat/useCrossSessionMessageEnabled';
 import { emitter, useAddEventListener } from '@/renderer/utils/emitter';
 import { localSelectionItems, mergeFileSelectionItems } from '@/renderer/utils/file/fileSelection';
 import { collectChatFileRefs, splitChatFileRefs } from '@/renderer/utils/file/messageFiles';
@@ -288,7 +291,7 @@ const AcpSendBox: React.FC<{
   });
 
   const executeCommand = useCallback(
-    async ({ input, files }: Pick<ConversationCommandQueueItem, 'input' | 'files'>) => {
+    async ({ input, files, sessions }: Pick<ConversationCommandQueueItem, 'input' | 'files' | 'sessions'>) => {
       // Plain user text; the backend resolves each ChatFileRef and injects the
       // [[AION_FILES]] marker at the send edge (no front-end path/marker building).
       try {
@@ -309,6 +312,9 @@ const AcpSendBox: React.FC<{
           input,
           conversation_id,
           files,
+          // `@@` references. Dropping this here is a silent failure: the agent
+          // simply never receives the session block.
+          sessions,
         });
         markSendAccepted(result.turn_id, result.runtime, result.msg_id);
         emitter.emit('chat.history.refresh');
@@ -431,10 +437,14 @@ Please check your local CLI tool authentication status`,
     onExecute: executeCommand,
   });
 
+  const [selectedSessions, setSelectedSessions] = useState<SessionRef[]>([]);
+  const { enabled: crossSessionEnabled } = useCrossSessionMessageEnabled();
+
   const onSendHandler = async (message: string) => {
     const allFiles = collectChatFileRefs(uploadFile, atPath);
-
+    const sessions = selectedSessions.length > 0 ? selectedSessions : undefined;
     clearFiles();
+    setSelectedSessions([]);
     emitter.emit('acp.selected.file.clear');
 
     if (
@@ -444,11 +454,11 @@ Please check your local CLI tool authentication status`,
         hasPendingCommands,
       })
     ) {
-      enqueue({ input: message, files: allFiles, mode: queuedInputMode });
+      enqueue({ input: message, files: allFiles, mode: queuedInputMode, sessions });
       return;
     }
 
-    await executeCommand({ input: message, files: allFiles });
+    await executeCommand({ input: message, files: allFiles, sessions });
   };
 
   useAddEventListener(
@@ -754,7 +764,7 @@ Please check your local CLI tool authentication status`,
         onStop={effectiveHandleStop}
         onRetryStart={teamRuntime?.onRetryStart ? () => void teamRuntime.onRetryStart?.() : undefined}
       />
-
+      <CrossSessionDisabledBanner />
       <SendBox
         onMobilePlusClick={isMobile ? () => setIsMobileSheetOpen(true) : undefined}
         value={content}
@@ -764,6 +774,10 @@ Please check your local CLI tool authentication status`,
           emitter.emit('acp.selected.file', items, conversation_id);
           setAtPath(items);
         }}
+        selectedSessions={selectedSessions}
+        onSelectedSessionsChange={setSelectedSessions}
+        crossSessionEnabled={crossSessionEnabled}
+        isTeamConversation={Boolean(teamRuntime)}
         loading={teamRuntime?.loading ?? isBusy}
         active={teamRuntime?.isActive}
         onFocused={teamRuntime?.onFocus}

@@ -167,5 +167,18 @@
   "closeTabTitle": "Закрыть вкладку",
   "closeTabsMessage": "Несохранённых вкладок: {{count}}. Сохранить перед закрытием?",
   "openInSystemFailed": "Не удалось открыть системным приложением",
-  "downloadDiff": "Скачать Diff-файл"
+  "downloadDiff": "Скачать Diff-файл",
+  "maximizePanel": "Развернуть",
+  "restorePanel": "Восстановить",
+  "closeTabsMessage_one": "Несохранённых вкладок: {{count}}. Сохранить перед закрытием?",
+  "closeTabsMessage_other": "Несохранённых вкладок: {{count}}. Сохранить перед закрытием?",
+  "closeTabsMessage_few": "Несохранённых вкладок: {{count}}. Сохранить перед закрытием?",
+  "closeTabsMessage_many": "Несохранённых вкладок: {{count}}. Сохранить перед закрытием?",
+  "mermaidZoomHint": "Колесо — масштаб • Перетаскивание — панорама • ESC — закрыть",
+  "close": "Закрыть",
+  "closeUnmodified": "Закрыть неизменённые",
+  "copyPath": "Копировать путь",
+  "copyRelativePath": "Копировать относительный путь",
+  "openLocation": "Показать в папке",
+  "openLocationFailed": "Не удалось открыть содержащую папку"
 }

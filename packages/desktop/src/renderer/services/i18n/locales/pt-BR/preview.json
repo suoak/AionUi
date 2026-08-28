@@ -167,5 +167,16 @@
   "closeTabTitle": "Fechar Guia",
   "closeTabsMessage": "{{count}} abas têm alterações não salvas. Salvar antes de fechar?",
   "openInSystemFailed": "Falha ao abrir com o aplicativo do sistema",
-  "downloadDiff": "Baixar arquivo Diff"
+  "downloadDiff": "Baixar arquivo Diff",
+  "maximizePanel": "Maximizar",
+  "restorePanel": "Restaurar",
+  "closeTabsMessage_one": "{{count}} aba tem alterações não salvas. Salvar antes de fechar?",
+  "closeTabsMessage_other": "{{count}} abas têm alterações não salvas. Salvar antes de fechar?",
+  "mermaidZoomHint": "Role para ampliar • Arraste para mover • ESC para fechar",
+  "close": "Fechar",
+  "closeUnmodified": "Fechar Não Modificadas",
+  "copyPath": "Copiar Caminho",
+  "copyRelativePath": "Copiar Caminho Relativo",
+  "openLocation": "Mostrar na pasta",
+  "openLocationFailed": "Falha ao abrir a pasta que contém o arquivo"
 }

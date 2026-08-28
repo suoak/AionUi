@@ -163,22 +163,6 @@
     },
     "portReportTimeout": {
       "title": "Délai de démarrage dépassé",
-      "description": "CSBU WorkMate ??Core n'a pas terminé son démarrage dans le délai prévu. Veuillez redémarrer l'application ; si le problème persiste, envoyez un diagnostic.",
-      "sendDiagnostics": "Envoyer le diagnostic",
-      "diagnosticsSent": "Diagnostic envoyé",
-      "diagnosticsReportSuccess": "Diagnostic envoyé",
-      "diagnosticsReportFailed": "Échec de l'envoi du diagnostic, veuillez réessayer"
-    },
-    "startupFailed": {
-      "title": "Échec du démarrage",
-      "description": "CSBU WorkMate ??Core n'a pas pu démarrer. Veuillez redémarrer l'application ; si le problème persiste, envoyez un diagnostic.",
-      "sendDiagnostics": "Envoyer le diagnostic",
-      "diagnosticsSent": "Diagnostic envoyé",
-      "diagnosticsReportSuccess": "Diagnostic envoyé",
-      "diagnosticsReportFailed": "Échec de l'envoi du diagnostic, veuillez réessayer"
-    },
-    "portReportTimeout": {
-      "title": "Délai de démarrage dépassé",
       "description": "CSBU WorkMate backend n'a pas terminé son démarrage dans le délai prévu. Veuillez redémarrer l'application ; si le problème persiste, envoyez un diagnostic.",
       "sendDiagnostics": "Envoyer le diagnostic",
       "diagnosticsSent": "Diagnostic envoyé",
@@ -228,5 +212,10 @@
     "title": "Something went wrong",
     "description": "The page hit an unexpected error. Your conversation history is still saved. Reload to continue.",
     "reload": "Reload"
-  }
+  },
+  "viewMoreLines_one": "Voir plus ({{count}} ligne)",
+  "viewMoreLines_other": "Voir plus ({{count}} lignes)",
+  "selectedCount": "{{count}} sélectionné(s)",
+  "selectedSkills": "Compétences sélectionnées",
+  "aiAssistant": "Assistant IA"
 }

@@ -4,7 +4,9 @@
     "searchHint": "Click here to search keywords",
     "noMatch": "No matching content found",
     "empty": "No Q&A turns yet",
-    "count": "{{count}} turns"
+    "count": "{{count}} turns",
+    "count_one": "{{count}} turn",
+    "count_other": "{{count}} turns"
   },
   "trajectory": {
     "searchPlaceholder": "Search trajectory",
@@ -177,7 +179,23 @@
     "today": "Today",
     "pinnedSection": "Pinned",
     "deleteSuccess": "Deleted successfully",
-    "exportDialogHint": "Folder selection follows the same interaction as changing the project."
+    "exportDialogHint": "Folder selection follows the same interaction as changing the project.",
+    "batchDeleteConfirm_one": "Delete {{count}} selected topic?",
+    "batchDeleteConfirm_other": "Delete {{count}} selected topics?",
+    "batchDeleteSuccess_one": "{{count}} topic deleted",
+    "batchDeleteSuccess_other": "{{count}} topics deleted",
+    "removeProjectConfirm_one": "Remove project \"{{name}}\"? Its {{count}} conversation will be removed too.",
+    "removeProjectConfirm_other": "Remove project \"{{name}}\"? Its {{count}} conversations will be removed too.",
+    "archive": "Archive",
+    "archiveSuccess": "Archived",
+    "archiveFailed": "Archive failed",
+    "batchArchive": "Batch archive",
+    "batchArchiveConfirm": "Archive {{count}} selected topics? You can restore or delete them from Archived in Settings.",
+    "batchArchiveSuccess": "Archived {{count}} topics",
+    "archiveProject": "Archive project",
+    "archiveProjectTitle": "Archive project",
+    "archiveProjectConfirm": "Archive project \"{{name}}\"? Its {{count}} conversation(s) will be archived too. You can restore or delete them from Archived in Settings.",
+    "archiving": "Archiving..."
   },
   "noAgentsAvailable": "No agents available",
   "agentError": {
@@ -465,7 +483,16 @@
       "manual": "Manual send",
       "auto": "Auto send"
     },
-    "clearConfirmContent": "All pending messages will be removed. This cannot be undone."
+    "clearConfirmContent": "All pending messages will be removed. This cannot be undone.",
+    "files_one": "{{count}} file",
+    "files_other": "{{count}} files",
+    "addToQueue": "Save to Draft box",
+    "addToQueueShortcut": "⌘ + Enter / Ctrl + Enter",
+    "midturnBlocked": "This agent is still working, so the message can’t be sent directly. Save it to Draft box and send it later.",
+    "enterShortcut": "Enter",
+    "actionMode": "Choose send action",
+    "midturnBlockedSendHint": "This agent is still working, so the message can’t be sent directly. Save it to Draft box and send it later.",
+    "addToQueueBusyHint": "Save to Draft box and send it later."
   },
   "createFailed": "Failed to create conversation",
   "agentTip": {
@@ -581,7 +608,8 @@
   },
   "sendbox": {
     "hint": "Type / for commands, @ to reference files, ↑/↓ for message history",
-    "mediaPathFallback": "This agent has no native support for this file type; it will be sent as a file path."
+    "mediaPathFallback": "This agent has no native support for this file type; it will be sent as a file path.",
+    "hintWithSessions": "Type / for commands, @ for files, @@ for conversations, ↑/↓ for history"
   },
   "chat": {
     "noModelSelected": "No model selected for current session, cannot send message",
@@ -761,7 +789,15 @@
         "rejectedFailed": "The action couldn’t be completed",
         "blockedHint": "Resolve the conflict outside CSBU WorkMate before staging or discarding",
         "notSent": "The request didn't reach the backend — nothing was changed. You can try again.",
-        "partialDetail": "Not completed: {{files}}"
+        "partialDetail": "Not completed: {{files}}",
+        "okStage_one": "Staged {{count}} file",
+        "okStage_other": "Staged {{count}} files",
+        "okUnstage_one": "Unstaged {{count}} file",
+        "okUnstage_other": "Unstaged {{count}} files",
+        "okDiscard_one": "Discarded {{count}} file",
+        "okDiscard_other": "Discarded {{count}} files",
+        "allFailed_one": "{{count}} file could not be processed",
+        "allFailed_other": "None of the {{count}} files could be processed"
       },
       "viewAsTree": "View as tree",
       "loadFailed": "Couldn't load changes",
@@ -821,8 +857,15 @@
       "rename": "Rename",
       "copyAbsolutePath": "Copy absolute path",
       "copyRelativePath": "Copy relative path",
-      "addToChat": "Add to chat"
-    }
+      "addToChat": "Add to chat",
+      "newFile": "New file",
+      "newDir": "New folder",
+      "refresh": "Refresh"
+    },
+    "copyNodeFailed": "Failed to copy",
+    "moveNodeFailed": "Failed to move",
+    "newFileFailed": "Couldn't create file",
+    "newDirFailed": "Couldn't create folder"
   },
   "thinking": {
     "complete": "Thought complete",
@@ -856,5 +899,26 @@
     "loading": "Loading full output...",
     "loadFailed": "Failed to load full output",
     "previewNote": "Showing a preview of the retained tool output ({{size}} total)"
+  },
+  "emptyState": {
+    "greeting": "Hi! Tell me what you need and I'll get started."
+  },
+  "crossSession": {
+    "mentionAgain": "Mention conversation {{name}} in the message box",
+    "mentionAgainHint": "Click to mention this conversation in the message box",
+    "mentionUnavailable": "That conversation can no longer be mentioned.",
+    "mentionFailed": "Could not mention that conversation.",
+    "fromBadge": "From conversation {{name}}",
+    "otherWorkspace": "different workspace",
+    "rateLimitedTitle": "Cross-conversation messages may be looping",
+    "rateLimited": "Automatic messages between \"{{from}}\" and \"{{to}}\" are unusually frequent and may be looping.",
+    "stopBoth": "Stop both conversations",
+    "disableFeature": "Turn off cross-conversation messages"
+  },
+  "planBar": {
+    "title": "Plan",
+    "progress": "{{completed}}/{{total}}",
+    "expand": "Expand plan",
+    "collapse": "Collapse plan"
   }
 }

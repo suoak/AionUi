@@ -163,22 +163,6 @@
     },
     "portReportTimeout": {
       "title": "Başlatma zaman aşımına uğradı",
-      "description": "CSBU WorkMate ??Core beklenen süre içinde başlatmayı tamamlayamadı. Lütfen uygulamayı yeniden başlatın; sorun devam ederse tanılama gönderin.",
-      "sendDiagnostics": "Tanılama gönder",
-      "diagnosticsSent": "Tanılama gönderildi",
-      "diagnosticsReportSuccess": "Tanılama bildirildi",
-      "diagnosticsReportFailed": "Tanılama gönderilemedi, lütfen tekrar deneyin"
-    },
-    "startupFailed": {
-      "title": "Başlatma başarısız oldu",
-      "description": "CSBU WorkMate ??Core başlatılamadı. Lütfen uygulamayı yeniden başlatın; sorun devam ederse tanılama gönderin.",
-      "sendDiagnostics": "Tanılama gönder",
-      "diagnosticsSent": "Tanılama gönderildi",
-      "diagnosticsReportSuccess": "Tanılama bildirildi",
-      "diagnosticsReportFailed": "Tanılama gönderilemedi, lütfen tekrar deneyin"
-    },
-    "portReportTimeout": {
-      "title": "Başlatma zaman aşımına uğradı",
       "description": "CSBU WorkMate backend beklenen süre içinde başlatmayı tamamlayamadı. Lütfen uygulamayı yeniden başlatın; sorun devam ederse tanılama gönderin.",
       "sendDiagnostics": "Tanılama gönder",
       "diagnosticsSent": "Tanılama gönderildi",
@@ -230,5 +214,8 @@
     "title": "Something went wrong",
     "description": "The page hit an unexpected error. Your conversation history is still saved. Reload to continue.",
     "reload": "Reload"
-  }
+  },
+  "viewMoreLines_one": "Daha Fazla Göster ({{count}} satır)",
+  "viewMoreLines_other": "Daha Fazla Göster ({{count}} satır)",
+  "aiAssistant": "Yapay Zekâ Asistanı"
 }

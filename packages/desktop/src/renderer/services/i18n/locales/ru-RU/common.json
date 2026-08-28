@@ -162,22 +162,6 @@
     },
     "portReportTimeout": {
       "title": "Время запуска истекло",
-      "description": "CSBU WorkMate ??Core не завершил запуск за ожидаемое время. Перезапустите приложение; если это повторяется, отправьте диагностику.",
-      "sendDiagnostics": "Отправить диагностику",
-      "diagnosticsSent": "Диагностика отправлена",
-      "diagnosticsReportSuccess": "Диагностика отправлена",
-      "diagnosticsReportFailed": "Не удалось отправить диагностику, повторите попытку позже"
-    },
-    "startupFailed": {
-      "title": "Сбой запуска",
-      "description": "CSBU WorkMate ??Core не удалось запустить. Перезапустите приложение; если это повторяется, отправьте диагностику.",
-      "sendDiagnostics": "Отправить диагностику",
-      "diagnosticsSent": "Диагностика отправлена",
-      "diagnosticsReportSuccess": "Диагностика отправлена",
-      "diagnosticsReportFailed": "Не удалось отправить диагностику, повторите попытку позже"
-    },
-    "portReportTimeout": {
-      "title": "Время запуска истекло",
       "description": "CSBU WorkMate backend не завершил запуск за ожидаемое время. Перезапустите приложение; если это повторяется, отправьте диагностику.",
       "sendDiagnostics": "Отправить диагностику",
       "diagnosticsSent": "Диагностика отправлена",
@@ -230,5 +214,10 @@
     "title": "Something went wrong",
     "description": "The page hit an unexpected error. Your conversation history is still saved. Reload to continue.",
     "reload": "Reload"
-  }
+  },
+  "viewMoreLines_one": "Показать ещё ({{count}} строка)",
+  "viewMoreLines_other": "Показать ещё ({{count}} строк)",
+  "viewMoreLines_few": "Показать ещё ({{count}} строки)",
+  "viewMoreLines_many": "Показать ещё ({{count}} строк)",
+  "aiAssistant": "ИИ-ассистент"
 }

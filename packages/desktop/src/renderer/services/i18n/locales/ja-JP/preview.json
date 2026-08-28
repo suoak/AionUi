@@ -167,5 +167,16 @@
   "closeTabTitle": "タブを閉じる",
   "closeTabsMessage": "未保存のタブが {{count}} 件あります。保存してから閉じますか？",
   "openInSystemFailed": "ファイルを開けませんでした",
-  "downloadDiff": "Diff ファイルをダウンロード"
+  "downloadDiff": "Diff ファイルをダウンロード",
+  "maximizePanel": "最大化",
+  "restorePanel": "元に戻す",
+  "closeTabsMessage_one": "未保存のタブが {{count}} 件あります。保存してから閉じますか？",
+  "closeTabsMessage_other": "未保存のタブが {{count}} 件あります。保存してから閉じますか？",
+  "mermaidZoomHint": "スクロールでズーム • ドラッグで移動 • ESC で閉じる",
+  "close": "閉じる",
+  "closeUnmodified": "未変更を閉じる",
+  "copyPath": "パスをコピー",
+  "copyRelativePath": "相対パスをコピー",
+  "openLocation": "ファイルの場所を開く",
+  "openLocationFailed": "フォルダーを開けませんでした"
 }

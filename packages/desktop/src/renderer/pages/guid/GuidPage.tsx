@@ -249,7 +249,6 @@ const GuidPage: React.FC = () => {
     selectedMode: agentSelection.selectedMode,
     selectedAcpModel: agentSelection.selectedAcpModel,
     selectedThoughtLevelValue: agentSelection.selectedThoughtLevelValue,
-    currentAcpCachedModelInfo: agentSelection.currentAcpCachedModelInfo,
     current_model: modelSelection.current_model,
 
     guidDisabledBuiltinSkills,
@@ -289,11 +288,14 @@ const GuidPage: React.FC = () => {
 
       if (event.key === 'Enter' && !event.shiftKey) {
         event.preventDefault();
-        if (!guidInput.input.trim()) return;
+        // Empty input is allowed — it creates an empty conversation ("start
+        // chat"). Mirror the send button's gate so Enter and click behave
+        // identically (blocked only while loading or with no assistant).
+        if (send.isButtonDisabled) return;
         send.sendMessageHandler();
       }
     },
-    [guidInput.input, send.sendMessageHandler, slashController]
+    [send.isButtonDisabled, send.sendMessageHandler, slashController]
   );
 
   const handleSelectAssistant = useCallback(
@@ -654,7 +656,7 @@ const GuidPage: React.FC = () => {
       <div ref={guidContainerRef} className={styles.guidContainer}>
         <div className={styles.guidLayout}>
           <div className={styles.heroHeader}>
-            <p className='text-2xl font-semibold mb-0 text-0 text-center'>{t('conversation.welcome.title')}</p>
+            <p className='text-2xl font-semibold mb-0 text-t-primary text-center'>{t('conversation.welcome.title')}</p>
           </div>
 
           <AssistantSelectionArea

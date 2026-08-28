@@ -167,5 +167,16 @@
   "closeTabTitle": "關閉標籤頁",
   "closeTabsMessage": "有 {{count}} 個標籤頁尚未儲存，是否儲存後再關閉？",
   "openInSystemFailed": "開啟檔案失敗",
-  "downloadDiff": "下載 Diff 檔案"
+  "downloadDiff": "下載 Diff 檔案",
+  "maximizePanel": "最大化",
+  "restorePanel": "還原",
+  "closeTabsMessage_one": "有 {{count}} 個標籤頁尚未儲存，是否儲存後再關閉？",
+  "closeTabsMessage_other": "有 {{count}} 個標籤頁尚未儲存，是否儲存後再關閉？",
+  "mermaidZoomHint": "滾輪縮放 • 拖曳平移 • ESC 關閉",
+  "close": "關閉",
+  "closeUnmodified": "關閉未修改",
+  "copyPath": "複製路徑",
+  "copyRelativePath": "複製相對路徑",
+  "openLocation": "開啟檔案所在資料夾",
+  "openLocationFailed": "無法開啟所在資料夾"
 }

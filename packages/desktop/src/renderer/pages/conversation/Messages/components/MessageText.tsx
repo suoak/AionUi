@@ -5,7 +5,9 @@
  */
 
 import type { IMessageText } from '@/common/chat/chatLib';
-import { CSBU_WORKMATE_FILES_MARKER } from '@/common/config/constants';
+import { parseFileMarker, resolveMessageFilePath } from './fileMarker';
+import SessionMentionAction from './SessionMentionAction';
+import { parseSessionMessageBlock, parseSessionsBlock } from './sessionMarkers';
 import { useConversationContextSafe } from '@/renderer/hooks/context/ConversationContext';
 import { useLayoutContext } from '@/renderer/hooks/context/LayoutContext';
 import { useLocalFilePreview } from '@/renderer/pages/conversation/Preview/hooks/useLocalFilePreview';
@@ -56,81 +58,26 @@ import { useTeammateColor } from '@/renderer/pages/team/identity/TeamIdentityCon
 
 const CODE_STYLE = { marginTop: 4, marginBlock: 4 };
 
-type ParsedFileMarker = {
-  text: string;
-  files: string[];
+type TeamContextResetNotice = {
+  kind: 'context_reset';
+  member_name: string;
+  runtime_status: 'ready' | 'failed';
 };
 
-const URL_SCHEME_PATTERN = /^[a-z][a-z0-9+.-]*:\/\//i;
-const MARKDOWN_ATTACHMENT_LINE_PATTERN = /^(#{1,6}\s|[-*+]\s|\d+[.)]\s|>\s?|```|~~~|\|)/;
-
-const parseFileMarker = (content: string, canParseFileMarker: boolean): ParsedFileMarker => {
-  if (!canParseFileMarker) {
-    return { text: content, files: [] };
-  }
-
-  const lines = content.split(/\r?\n/);
-  let markerLineIndex = -1;
-  for (let index = lines.length - 1; index >= 0; index -= 1) {
-    if (lines[index].trim() === CSBU_WORKMATE_FILES_MARKER) {
-      markerLineIndex = index;
-      break;
+export const parseTeamContextResetNotice = (content: string): TeamContextResetNotice | null => {
+  try {
+    const value = JSON.parse(content) as Record<string, unknown>;
+    if (
+      value.kind === 'context_reset' &&
+      typeof value.member_name === 'string' &&
+      (value.runtime_status === 'ready' || value.runtime_status === 'failed')
+    ) {
+      return value as TeamContextResetNotice;
     }
+  } catch {
+    // Ordinary teammate/system text is not a semantic notice.
   }
-
-  if (markerLineIndex === -1) {
-    return { text: content, files: [] };
-  }
-
-  const files = lines
-    .slice(markerLineIndex + 1)
-    .map((line) => line.trim())
-    .filter(Boolean);
-
-  if (!files.length || files.some((file_path) => !isLocalMessageFilePath(file_path))) {
-    return { text: content, files: [] };
-  }
-
-  return {
-    text: lines.slice(0, markerLineIndex).join('\n').trimEnd(),
-    files,
-  };
-};
-
-const isAbsoluteMessageFilePath = (file_path: string): boolean =>
-  file_path.startsWith('/') || file_path.startsWith('\\\\') || /^[A-Za-z]:[\\/]/.test(file_path);
-
-const isWorkspaceRelativeMessageFilePath = (file_path: string): boolean => {
-  const normalizedFilePath = file_path.replace(/\\/g, '/');
-  return (
-    normalizedFilePath.startsWith('./') ||
-    normalizedFilePath.startsWith('../') ||
-    normalizedFilePath.includes('/') ||
-    /(?:^|\/)[^/]+\.[^./\s][^/]*$/.test(normalizedFilePath)
-  );
-};
-
-const isLocalMessageFilePath = (file_path: string): boolean => {
-  const trimmedFilePath = file_path.trim();
-  if (
-    !trimmedFilePath ||
-    URL_SCHEME_PATTERN.test(trimmedFilePath) ||
-    MARKDOWN_ATTACHMENT_LINE_PATTERN.test(trimmedFilePath)
-  ) {
-    return false;
-  }
-
-  return isAbsoluteMessageFilePath(trimmedFilePath) || isWorkspaceRelativeMessageFilePath(trimmedFilePath);
-};
-
-export const resolveMessageFilePath = (file_path: string, workspace?: string): string => {
-  if (!file_path || isAbsoluteMessageFilePath(file_path) || !workspace) {
-    return file_path;
-  }
-
-  const normalizedWorkspace = workspace.replace(/[\\/]+$/, '').replace(/\\/g, '/');
-  const normalizedFilePath = file_path.replace(/^\.?[\\/]+/, '').replace(/\\/g, '/');
-  return `${normalizedWorkspace}/${normalizedFilePath}`.replace(/\/+/g, '/');
+  return null;
 };
 
 const useFormatContent = (content: string) => {
@@ -184,8 +131,32 @@ const MessageText: React.FC<{
     () => parseFileMarker(contentToRender, isUserMessage),
     [contentToRender, isUserMessage]
   );
-  const { data, json } = useFormatContent(text);
-  const shouldRenderPlainText = isUserMessage;
+  // Cross-session markers. Both live on USER messages: the sender-side
+  // `[[AION_SESSIONS]]` block is appended to the user's own message, and a
+  // delivery is persisted as a user message too. Not parsing them would show
+  // raw marker text in a bubble.
+  const { text: textWithoutMentions, sessions: mentionedSessions } = useMemo(
+    () => (isUserMessage ? parseSessionsBlock(text) : { text, sessions: [] }),
+    [isUserMessage, text]
+  );
+  const { text: visibleText, source: deliverySource } = useMemo(
+    () => (isUserMessage ? parseSessionMessageBlock(textWithoutMentions) : { text: textWithoutMentions, source: null }),
+    [isUserMessage, textWithoutMentions]
+  );
+  const contextResetNotice = useMemo(
+    () => (isTeammateMessage && senderName === 'team_system' ? parseTeamContextResetNotice(text) : null),
+    [isTeammateMessage, senderName, text]
+  );
+  const renderedText = contextResetNotice
+    ? t(
+        contextResetNotice.runtime_status === 'ready'
+          ? 'team.systemNotice.contextResetSuccess'
+          : 'team.systemNotice.contextResetRuntimeFailed',
+        { memberName: contextResetNotice.member_name }
+      )
+    : visibleText;
+  const { data, json } = useFormatContent(renderedText);
+  const shouldRenderPlainText = isUserMessage || Boolean(contextResetNotice);
   const conversationContext = useConversationContextSafe();
   const forkConversation = useForkConversation(conversationContext?.conversation_id);
   const layout = useLayoutContext();
@@ -274,6 +245,45 @@ const MessageText: React.FC<{
             >
               {senderName}
             </span>
+          </div>
+        )}
+        {deliverySource && (
+          <div
+            className={classNames('mb-4px flex items-center gap-4px text-12px text-t-secondary', {
+              'self-end': isUserMessage,
+            })}
+          >
+            <SessionMentionAction
+              id={deliverySource.fromId}
+              name={deliverySource.fromName || deliverySource.fromId}
+              label={t('conversation.crossSession.fromBadge', {
+                name: deliverySource.fromName || deliverySource.fromId,
+                defaultValue: 'From conversation {{name}}',
+              })}
+            />
+            {deliverySource.workspace && deliverySource.workspace !== 'same' && (
+              <span
+                className='px-4px rounded-4px'
+                style={{ background: 'var(--color-fill-2)' }}
+                title={deliverySource.workspace}
+              >
+                {t('conversation.crossSession.otherWorkspace', { defaultValue: 'different workspace' })}
+              </span>
+            )}
+          </div>
+        )}
+        {mentionedSessions.length > 0 && (
+          <div className={classNames('mb-4px flex flex-wrap gap-4px', { 'self-end': isUserMessage })}>
+            {mentionedSessions.map((session) => (
+              <SessionMentionAction
+                key={session.id}
+                id={session.id}
+                name={session.name}
+                label={`@@${session.name}`}
+                title={session.workspace}
+                chip
+              />
+            ))}
           </div>
         )}
         {files.length > 0 && (

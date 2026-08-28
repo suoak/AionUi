@@ -167,5 +167,16 @@
   "closeTabTitle": "Close Tab",
   "closeTabsMessage": "{{count}} tabs have unsaved changes. Save them before closing?",
   "openInSystemFailed": "Failed to open with system app",
-  "downloadDiff": "Download Diff file"
+  "downloadDiff": "Download Diff file",
+  "maximizePanel": "Maximize",
+  "restorePanel": "Restore",
+  "closeTabsMessage_one": "{{count}} tab has unsaved changes. Save it before closing?",
+  "closeTabsMessage_other": "{{count}} tabs have unsaved changes. Save them before closing?",
+  "mermaidZoomHint": "Scroll to zoom • Drag to pan • ESC to close",
+  "close": "Close",
+  "closeUnmodified": "Close Unmodified",
+  "copyPath": "Copy Path",
+  "copyRelativePath": "Copy Relative Path",
+  "openLocation": "Show in folder",
+  "openLocationFailed": "Failed to open containing folder"
 }

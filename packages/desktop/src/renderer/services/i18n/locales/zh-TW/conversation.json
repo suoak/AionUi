@@ -4,7 +4,9 @@
     "searchHint": "點擊這裡搜尋關鍵詞",
     "noMatch": "未找到相符內容",
     "empty": "暫無問答內容",
-    "count": "{{count}} 條"
+    "count": "{{count}} 條",
+    "count_one": "{{count}} 條",
+    "count_other": "{{count}} 條"
   },
   "trajectory": {
     "searchPlaceholder": "搜索轨迹",
@@ -177,7 +179,23 @@
     "pinned": "Pinned",
     "pinnedSection": "Pinned",
     "deleteSuccess": "刪除成功",
-    "exportDialogHint": "Folder selection follows the same interaction as changing the project."
+    "exportDialogHint": "Folder selection follows the same interaction as changing the project.",
+    "batchDeleteConfirm_one": "Delete {{count}} selected topics?",
+    "batchDeleteConfirm_other": "Delete {{count}} selected topics?",
+    "batchDeleteSuccess_one": "{{count}} topics deleted",
+    "batchDeleteSuccess_other": "{{count}} topics deleted",
+    "removeProjectConfirm_one": "確定要移除專案「{{name}}」嗎？專案下的 {{count}} 個對話也會被一起移除。",
+    "removeProjectConfirm_other": "確定要移除專案「{{name}}」嗎？專案下的 {{count}} 個對話也會被一起移除。",
+    "archive": "封存",
+    "archiveSuccess": "已封存",
+    "archiveFailed": "封存失敗",
+    "batchArchive": "批次歸檔",
+    "batchArchiveConfirm": "確定歸檔已選的 {{count}} 個話題嗎？歸檔後可在設定的歸檔頁恢復或刪除。",
+    "batchArchiveSuccess": "已歸檔 {{count}} 個話題",
+    "archiveProject": "歸檔專案",
+    "archiveProjectTitle": "歸檔專案",
+    "archiveProjectConfirm": "確定歸檔專案「{{name}}」嗎？專案下的 {{count}} 個對話也會一起歸檔。歸檔後可在設定的歸檔頁恢復或刪除。",
+    "archiving": "歸檔中..."
   },
   "noAgentsAvailable": "沒有可用的 Agent",
   "agentError": {
@@ -465,7 +483,16 @@
       "manual": "手動發送",
       "auto": "自動發送"
     },
-    "clearConfirmContent": "所有待發送的訊息都會被移除，且無法復原。"
+    "clearConfirmContent": "所有待發送的訊息都會被移除，且無法復原。",
+    "files_one": "{{count}} 個檔案",
+    "files_other": "{{count}} 個檔案",
+    "addToQueue": "存到草稿箱",
+    "addToQueueShortcut": "⌘ + Enter / Ctrl + Enter",
+    "midturnBlocked": "目前 Agent 正在處理，暫時不能直接傳送。可以先存到草稿箱，稍後傳送。",
+    "enterShortcut": "Enter",
+    "actionMode": "Choose send action",
+    "midturnBlockedSendHint": "目前 Agent 正在處理，暫時不能直接傳送。可以先存到草稿箱，稍後傳送。",
+    "addToQueueBusyHint": "先存到草稿箱，稍後傳送。"
   },
   "createFailed": "建立對話失敗",
   "agentTip": {
@@ -581,7 +608,8 @@
   },
   "sendbox": {
     "hint": "輸入 / 喚起命令，@ 引用檔案，↑/↓ 切換歷史訊息",
-    "mediaPathFallback": "該 Agent 不原生支援此檔案類型，將以檔案路徑形式傳送。"
+    "mediaPathFallback": "該 Agent 不原生支援此檔案類型，將以檔案路徑形式傳送。",
+    "hintWithSessions": "輸入 / 喚起命令，@ 引用檔案，@@ 引用對話，↑/↓ 切換歷史訊息"
   },
   "chat": {
     "noModelSelected": "當前會話未選擇模型，無法發送訊息",
@@ -608,7 +636,8 @@
       "emptyTranscript": "未識別到語音內容",
       "unsupported": "目前環境不支援語音輸入",
       "genericError": "語音輸入失敗，請再試一次",
-      "transcriptionFailed": "音訊轉寫失敗"
+      "transcriptionFailed": "音訊轉寫失敗",
+      "recordTooltipWithShortcut": "語音輸入 cmd+M"
     },
     "confirmationLoadError": "確認對話框載入失敗",
     "apiErrorSwitched": "API 錯誤，已自動切換到 {{cli}} CLI",
@@ -760,7 +789,15 @@
         "rejectedFailed": "操作未能完成",
         "blockedHint": "請先在 CSBU WorkMate 之外解決衝突，然後再暫存或捨棄",
         "notSent": "請求沒有送達後端，未變動任何內容。可以重試。",
-        "partialDetail": "未完成：{{files}}"
+        "partialDetail": "未完成：{{files}}",
+        "okStage_one": "已暫存 {{count}} 個檔案",
+        "okStage_other": "已暫存 {{count}} 個檔案",
+        "okUnstage_one": "已取消暫存 {{count}} 個檔案",
+        "okUnstage_other": "已取消暫存 {{count}} 個檔案",
+        "okDiscard_one": "已捨棄 {{count}} 個檔案",
+        "okDiscard_other": "已捨棄 {{count}} 個檔案",
+        "allFailed_one": "{{count}} 個檔案都未能處理",
+        "allFailed_other": "{{count}} 個檔案都未能處理"
       },
       "viewAsTree": "以樹狀檢視顯示",
       "loadFailed": "無法載入變更",
@@ -820,8 +857,15 @@
       "rename": "重新命名",
       "copyAbsolutePath": "複製絕對路徑",
       "copyRelativePath": "複製相對路徑",
-      "addToChat": "加入對話"
-    }
+      "addToChat": "加入對話",
+      "newFile": "新增檔案",
+      "newDir": "新增資料夾",
+      "refresh": "重新整理"
+    },
+    "copyNodeFailed": "複製失敗",
+    "moveNodeFailed": "移動失敗",
+    "newFileFailed": "建立檔案失敗",
+    "newDirFailed": "建立資料夾失敗"
   },
   "thinking": {
     "complete": "思考完成",
@@ -855,5 +899,26 @@
     "loading": "正在載入完整輸出...",
     "loadFailed": "載入完整輸出失敗",
     "previewNote": "目前顯示保留工具輸出的預覽（共 {{size}}）"
+  },
+  "emptyState": {
+    "greeting": "你好！說說你的需求，我這就開始。"
+  },
+  "crossSession": {
+    "mentionAgain": "在輸入框中提及對話 {{name}}",
+    "mentionAgainHint": "點擊以在輸入框中提及此對話",
+    "mentionUnavailable": "該對話已無法提及",
+    "mentionFailed": "無法提及該對話",
+    "fromBadge": "來自對話「{{name}}」",
+    "otherWorkspace": "不同工作目錄",
+    "rateLimitedTitle": "跨對話訊息可能在空轉",
+    "rateLimited": "對話「{{from}}」與「{{to}}」之間的自動訊息過於頻繁，可能在空轉。",
+    "stopBoth": "停止這兩個對話",
+    "disableFeature": "關閉跨對話訊息"
+  },
+  "planBar": {
+    "title": "計劃",
+    "progress": "{{completed}}/{{total}}",
+    "expand": "展開計劃",
+    "collapse": "收合計劃"
   }
 }
