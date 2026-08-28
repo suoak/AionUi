@@ -45,7 +45,6 @@
 
 ---
 
-
 ## [2.1.85](https://github.com/suoak/AionUi/compare/v2.1.84...v2.1.85) (2026-08-26)
 
 ### Desktop
@@ -164,6 +163,7 @@
 - Mermaid 流程图支持平移、缩放、适配视图和全屏查看；新增 WaveDrom 时序图预览，长图表更便于检查。
 - 桌面侧栏可以拖动调整宽度并快速收起，斜杠命令支持 Tab 补全，消息发送与相对图片显示更加可靠。
 - 修复打开对话轨迹时部分耗时或 Token 指标不可用导致的页面异常，并加固预览路径、启动恢复和 Web 访问稳定性。
+
 <!-- internal-release-notes:end -->
 
 ### Core ([v0.1.84](https://github.com/suoak/AionCore/releases/tag/v0.1.84))
@@ -1001,6 +1001,7 @@
 
 - 优化版本更新提示、更新策略和更新入口。
 - 明确产品由网络安全运营管理部开发和维护。
+
 <!-- internal-release-notes:end -->
 
 ---
