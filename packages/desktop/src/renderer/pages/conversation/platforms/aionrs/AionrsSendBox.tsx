@@ -48,7 +48,6 @@ import CrossSessionDisabledBanner from '@/renderer/components/chat/CrossSessionD
 import { useCrossSessionMessageEnabled } from '@/renderer/hooks/chat/useCrossSessionMessageEnabled';
 import { emitter, useAddEventListener } from '@/renderer/utils/emitter';
 import { type ChatFileRef, isChatFileRef, uploadFileRef } from '@/common/types/chatFile';
-import type { SlashCommandItem } from '@/common/chat/slash/types';
 import { localSelectionItems, mergeFileSelectionItems } from '@/renderer/utils/file/fileSelection';
 import { collectChatFileRefs, splitChatFileRefs } from '@/renderer/utils/file/messageFiles';
 import type { AgentModeOption } from '@/renderer/utils/model/agentTypes';
@@ -127,16 +126,7 @@ const AionrsSendBox: React.FC<{
   agent_name?: string;
   teamSendMessage?: (payload: { input: string; files: ChatFileRef[] }) => Promise<void>;
   teamRuntime?: TeamSendBoxRuntime;
-  extraSlashCommands?: SlashCommandItem[];
-}> = ({
-  conversation_id,
-  modelSelection,
-  session_mode,
-  agent_name,
-  teamSendMessage,
-  teamRuntime,
-  extraSlashCommands,
-}) => {
+}> = ({ conversation_id, modelSelection, session_mode, agent_name, teamSendMessage, teamRuntime }) => {
   const [dynamicModes, setDynamicModes] = useState<AgentModeOption[]>([]);
   const [currentMode, setCurrentMode] = useState<string | undefined>(session_mode);
   const [isMobileSheetOpen, setIsMobileSheetOpen] = useState(false);
@@ -913,7 +903,6 @@ const AionrsSendBox: React.FC<{
         }
         onSend={onSendHandler}
         slash_commands={slash_commands}
-        extraSlashCommands={extraSlashCommands}
         onSlashBuiltinCommand={onSlashBuiltinCommand}
         onAddToDraft={handleAddToQueue}
         addToDraftDisabled={!canQueueCurrentDraft}

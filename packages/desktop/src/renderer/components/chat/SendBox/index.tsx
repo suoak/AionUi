@@ -260,8 +260,6 @@ const SendBox: React.FC<{
   addToDraftTooltip?: React.ReactNode;
   sendDisabledTooltip?: React.ReactNode;
   slash_commands?: SlashCommandItem[];
-  /** Extra locally-handled slash commands (e.g. team `/clear`) merged with builtin priority. */
-  extraSlashCommands?: SlashCommandItem[];
   onSlashBuiltinCommand?: (name: string) => void;
   hasPendingAttachments?: boolean;
   enableBtw?: boolean;
@@ -322,7 +320,6 @@ const SendBox: React.FC<{
   addToDraftTooltip,
   sendDisabledTooltip,
   slash_commands = [],
-  extraSlashCommands = [],
   onSlashBuiltinCommand,
   hasPendingAttachments = false,
   enableBtw = false,
@@ -646,8 +643,8 @@ const SendBox: React.FC<{
 
   // Priority on name collisions: builtin > ACP agent commands > session skills.
   const mergedSlashCommands = useMemo(
-    () => mergeSlashCommands([...builtinSlashCommands, ...extraSlashCommands], slash_commands, skillSlashCommands),
-    [builtinSlashCommands, extraSlashCommands, slash_commands, skillSlashCommands]
+    () => mergeSlashCommands(builtinSlashCommands, slash_commands, skillSlashCommands),
+    [builtinSlashCommands, slash_commands, skillSlashCommands]
   );
 
   const slashController = useSlashCommandController({
