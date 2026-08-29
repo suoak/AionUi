@@ -155,5 +155,9 @@
       "idle_notification": "Leerlaufhinweis",
       "shutdown_request": "Stopp-Anfrage"
     }
+  },
+  "clearCommand": {
+    "member": "Kontext dieses Mitglieds löschen",
+    "leader": "Kontext eines Mitglieds löschen: /clear <Mitgliedsname>"
   }
 }

@@ -6,6 +6,7 @@
 
 import type { IConversationMcpStatus } from '@/common/config/storage';
 import type { ChatFileRef } from '@/common/types/chatFile';
+import type { SlashCommandItem } from '@/common/chat/slash/types';
 import { ConversationProvider } from '@/renderer/hooks/context/ConversationContext';
 import ConversationPlanBar from '@renderer/pages/conversation/PlanBar/ConversationPlanBar';
 import { usePlanRecovery } from '@renderer/pages/conversation/PlanBar/usePlanRecovery';
@@ -42,6 +43,7 @@ const AcpChat: React.FC<{
   loadedMcpStatuses?: IConversationMcpStatus[];
   teamSendMessage?: (payload: { input: string; files: ChatFileRef[] }) => Promise<void>;
   teamRuntime?: TeamSendBoxRuntime;
+  extraSlashCommands?: SlashCommandItem[];
   assistantId?: string;
   forkCapability?: { at_turn: boolean };
   promptCapability?: { image: boolean; audio: boolean };
@@ -59,6 +61,7 @@ const AcpChat: React.FC<{
   loadedMcpStatuses,
   teamSendMessage,
   teamRuntime,
+  extraSlashCommands,
   assistantId,
   forkCapability,
   promptCapability,
@@ -104,6 +107,7 @@ const AcpChat: React.FC<{
               messageState={messageState}
               teamSendMessage={teamSendMessage}
               teamRuntime={teamRuntime}
+              extraSlashCommands={extraSlashCommands}
             ></AcpSendBox>
           )}
         </div>

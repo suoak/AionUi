@@ -155,5 +155,9 @@
       "idle_notification": "空闲通知",
       "shutdown_request": "关闭请求"
     }
+  },
+  "clearCommand": {
+    "member": "清空该成员的上下文",
+    "leader": "清空指定成员的上下文:/clear <成员名>"
   }
 }

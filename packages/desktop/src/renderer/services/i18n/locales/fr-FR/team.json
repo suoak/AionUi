@@ -109,5 +109,9 @@
       "idle_notification": "Notif. d’inactivité",
       "shutdown_request": "Demande d’arrêt"
     }
+  },
+  "clearCommand": {
+    "member": "Effacer le contexte de ce membre",
+    "leader": "Effacer le contexte d'un membre : /clear <nom du membre>"
   }
 }

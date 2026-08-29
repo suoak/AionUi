@@ -155,5 +155,9 @@
       "idle_notification": "アイドル通知",
       "shutdown_request": "停止リクエスト"
     }
+  },
+  "clearCommand": {
+    "member": "このメンバーのコンテキストをクリア",
+    "leader": "メンバーのコンテキストをクリア: /clear <メンバー名>"
   }
 }

@@ -155,5 +155,9 @@
       "idle_notification": "Boşta bildirimi",
       "shutdown_request": "Kapatma isteği"
     }
+  },
+  "clearCommand": {
+    "member": "Bu üyenin bağlamını temizle",
+    "leader": "Bir üyenin bağlamını temizle: /clear <üye adı>"
   }
 }

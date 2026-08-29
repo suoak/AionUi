@@ -155,5 +155,9 @@
       "idle_notification": "Aviso de inactividad",
       "shutdown_request": "Solicitud de cierre"
     }
+  },
+  "clearCommand": {
+    "member": "Borrar el contexto de este miembro",
+    "leader": "Borrar el contexto de un miembro: /clear <nombre del miembro>"
   }
 }
