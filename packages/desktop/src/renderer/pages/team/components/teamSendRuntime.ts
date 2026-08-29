@@ -3,7 +3,7 @@ import { isBackendHttpError } from '@/common/adapter/httpBridge';
 import type { ConversationCommandQueueRuntimeGate } from '@/renderer/pages/conversation/platforms/useConversationCommandQueue';
 import type { ITeamSlotWork, TeamSlotBlockedReason } from '@/common/types/team/teamTypes';
 import type { ChatFileRef } from '@/common/types/chatFile';
-import type { TeamRunViewState } from '../hooks/useTeamRunView';
+import type { TeamRunReconcileResult, TeamRunViewState } from '../hooks/useTeamRunView';
 
 export type TeamSendBoxRuntime = {
   runtimeGate: ConversationCommandQueueRuntimeGate;
@@ -61,8 +61,9 @@ type BuildTeamStopHandlerOptions = {
   slot_id: string;
   runView: TeamRunViewState;
   pauseSlotWork: (params: PauseSlotWorkParams) => Promise<void>;
+  onStopSucceeded?: () => void;
   onStopFailed?: () => void;
-  onRunStateStale?: () => Promise<boolean>;
+  onRunStateStale?: () => Promise<TeamRunReconcileResult>;
 };
 
 // `session_stopped` is intentionally NOT fatal: an idle-reclaimed session is
@@ -83,7 +84,10 @@ type TeamWorkStatusTextFormatters = {
 export const getTeamWorkQueuedCount = (work?: ITeamSlotWork): number =>
   (work?.queued_foreground_count ?? 0) + (work?.queued_background_count ?? 0);
 
-const hasActiveTeamWork = (work?: ITeamSlotWork): boolean => work?.state === 'starting' || work?.state === 'running';
+const isTeamWorkProcessing = (work?: ITeamSlotWork): boolean => {
+  if (work?.state === 'starting' || work?.state === 'running') return true;
+  return work?.state === 'queued' && getTeamWorkQueuedCount(work) > 0;
+};
 
 export const buildTeamWorkStatusText = (
   work: ITeamSlotWork | undefined,
@@ -102,8 +106,10 @@ export const buildTeamWorkStatusText = (
       break;
   }
 
+  if (work?.state === 'paused') return undefined;
+
   const queuedCount = getTeamWorkQueuedCount(work);
-  if (hasActiveTeamWork(work)) {
+  if (work?.state === 'starting' || work?.state === 'running') {
     return queuedCount > 0 ? format.processingWithQueued(queuedCount) : undefined;
   }
 
@@ -128,6 +134,7 @@ export const buildTeamStopHandler = ({
   slot_id,
   runView,
   pauseSlotWork,
+  onStopSucceeded,
   onStopFailed,
   onRunStateStale,
 }: BuildTeamStopHandlerOptions): (() => Promise<void>) => {
@@ -152,11 +159,13 @@ export const buildTeamStopHandler = ({
         slot_id,
         reason: 'user_stop',
       });
+      onStopSucceeded?.();
+      void onRunStateStale?.();
     } catch (error) {
       console.warn('[TeamChatView] pause slot work failed', error);
       if (isStaleTeamRunPauseError(error)) {
         const reconciled = await onRunStateStale?.();
-        if (!reconciled) onStopFailed?.();
+        if (!reconciled || reconciled === 'failed') onStopFailed?.();
         return;
       }
       onStopFailed?.();
@@ -177,7 +186,7 @@ export const buildTeamSendRuntime = ({
   // Stopped session: force the recoverable-stopped shape — keep the gate open
   // and suppress the spinner, overriding any residual fatal block or active work.
   const effectiveFatalBlock = sessionStopped ? false : fatalBlock;
-  const loading = sessionStopped ? false : hasActiveTeamWork(work) || (!fatalBlock && queuedCount > 0);
+  const loading = sessionStopped ? false : !fatalBlock && isTeamWorkProcessing(work);
   return {
     loading,
     queuedCount,

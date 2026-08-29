@@ -15,7 +15,7 @@ import {
   buildTeamWorkStatusText,
 } from './teamSendRuntime';
 import type { TeamSendBoxRuntime } from './teamSendRuntime';
-import type { TeamRunViewState } from '../hooks/useTeamRunView';
+import type { TeamRunReconcileResult, TeamRunViewState } from '../hooks/useTeamRunView';
 import TeamChatEmptyState from './TeamChatEmptyState';
 import { useTeamTabs } from '@/renderer/pages/team/hooks/TeamTabsContext';
 import { usePresetAssistantInfo } from '@/renderer/hooks/agent/usePresetAssistantInfo';
@@ -117,7 +117,8 @@ type TeamChatViewProps = {
   isLeader?: boolean;
   teamRunView?: TeamRunViewState;
   onTeamRunAck?: (ack: ITeamRunAck) => void;
-  onRunStateStale?: () => Promise<boolean>;
+  onRunStateStale?: () => Promise<TeamRunReconcileResult>;
+  onTeamSlotPaused?: (slot_id: string) => void;
 };
 
 /**
@@ -136,6 +137,7 @@ const TeamChatView: React.FC<TeamChatViewProps> = ({
   teamRunView = EMPTY_TEAM_RUN_VIEW,
   onTeamRunAck,
   onRunStateStale,
+  onTeamSlotPaused,
 }) => {
   const { t } = useTranslation();
   const { activeSlotId, switchTab } = useTeamTabs();
@@ -241,6 +243,7 @@ const TeamChatView: React.FC<TeamChatViewProps> = ({
               slot_id,
               runView: teamRunView,
               pauseSlotWork: (params) => ipcBridge.team.pauseSlotWork.invoke(params),
+              onStopSucceeded: () => onTeamSlotPaused?.(slot_id),
               onStopFailed: () => {
                 Message.error(
                   t('team.stopAgentFailed', { defaultValue: 'Failed to stop this agent. Please try again.' })
