@@ -8,7 +8,7 @@ import React from 'react';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import MarkdownView from '@/renderer/components/Markdown';
-import LocalImageView from '@/renderer/components/media/LocalImageView';
+import { ConversationProvider } from '@/renderer/hooks/context/ConversationContext';
 import { downloadFileFromPath } from '@/renderer/utils/file/download';
 
 const copyTextMock = vi.hoisted(() => vi.fn().mockResolvedValue(undefined));
@@ -293,9 +293,9 @@ describe('MarkdownView local file links', () => {
     const workspace = 'C:\\Users\\test\\workspace';
 
     render(
-      <LocalImageView.Provider value={{ root: workspace }}>
+      <ConversationProvider value={{ conversation_id: 'conv-1', workspace, type: 'acp' }}>
         <MarkdownView localFileAliases={{ 'images/1.jpg': generatedPath }}>{'![landscape](images/1.jpg)'}</MarkdownView>
-      </LocalImageView.Provider>
+      </ConversationProvider>
     );
 
     expect(await screen.findByRole('img', { name: 'landscape' })).toHaveAttribute('src', generatedPath);

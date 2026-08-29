@@ -21,6 +21,25 @@ import { useTranslation } from 'react-i18next';
 
 const getCommandPreview = (input: string): string => input.replace(/\s+/g, ' ').trim();
 
+const DraftBoxActionIcon: React.FC<{ size?: number; color?: string }> = ({ size = 16, color = 'currentColor' }) => (
+  <svg width={size} height={size} viewBox='0 0 24 24' fill='none' aria-hidden='true'>
+    <path
+      d='M7 4.5h10l2 7.5v5.2A2.8 2.8 0 0 1 16.2 20H7.8A2.8 2.8 0 0 1 5 17.2V12l2-7.5Z'
+      stroke={color}
+      strokeWidth='2'
+      strokeLinejoin='round'
+    />
+    <path d='M5.4 12h4l1.4 2h2.4l1.4-2h4' stroke={color} strokeWidth='2' strokeLinecap='round' strokeLinejoin='round' />
+    <path
+      d='M12 5.5v6.2m0 0 2.5-2.5M12 11.7 9.5 9.2'
+      stroke={color}
+      strokeWidth='2'
+      strokeLinecap='round'
+      strokeLinejoin='round'
+    />
+  </svg>
+);
+
 const QUEUE_STATUS_KEYS = {
   held: 'conversation.commandQueue.statusHeld',
   dispatching: 'conversation.commandQueue.statusDispatching',
@@ -137,22 +156,26 @@ const renderQueueActionIconButton = ({
     aria-label={ariaLabel}
     title={ariaLabel}
     onClick={onClick}
-  >
-    <span
-      className='inline-flex items-center justify-center'
-      style={{
-        color: danger
-          ? 'rgb(var(--danger-6))'
-          : accent
-            ? 'rgb(var(--primary-6))'
-            : disabled
-              ? 'var(--color-text-4)'
-              : 'var(--color-text-3)',
-      }}
-    >
-      {icon}
-    </span>
-  </Button>
+    icon={
+      <>
+        <span
+          className='inline-flex items-center justify-center'
+          aria-hidden='true'
+          style={{
+            color: danger
+              ? 'rgb(var(--danger-6))'
+              : accent
+                ? 'rgb(var(--primary-6))'
+                : disabled
+                  ? 'var(--color-text-4)'
+                  : 'var(--color-text-3)',
+          }}
+        >
+          {icon}
+        </span>
+      </>
+    }
+  />
 );
 
 const QueueItemCard: React.FC<QueueItemCardProps> = ({
@@ -294,7 +317,7 @@ const QueueItemCard: React.FC<QueueItemCardProps> = ({
               onClick: canCancelQueueItem(item) ? () => onRemove(item.id) : undefined,
               icon: <Delete theme='outline' size='14' strokeWidth={2.5} />,
               danger: true,
-            })}
+            })}{' '}
       </div>
     </div>
   );
@@ -434,11 +457,11 @@ const CommandQueuePanel: React.FC<CommandQueuePanelProps> = ({
     []
   );
 
-  const title = t('conversation.commandQueue.title', { defaultValue: 'Send draft box' });
+  const title = t('conversation.commandQueue.title', { defaultValue: 'Draft box' });
   const modeLabel =
     mode === 'auto'
-      ? t('conversation.commandQueue.mode.auto', { defaultValue: 'Auto' })
-      : t('conversation.commandQueue.mode.manual', { defaultValue: 'Manual' });
+      ? t('conversation.commandQueue.mode.auto', { defaultValue: 'Auto send' })
+      : t('conversation.commandQueue.mode.manual', { defaultValue: 'Manual send' });
 
   const helpContent = (
     <div className='flex flex-col gap-6px max-w-260px text-12px leading-18px'>
@@ -448,13 +471,13 @@ const CommandQueuePanel: React.FC<CommandQueuePanelProps> = ({
         })}
       </span>
       <span>
-        <b>{t('conversation.commandQueue.mode.auto', { defaultValue: 'Auto' })}</b>
+        <b>{t('conversation.commandQueue.mode.auto', { defaultValue: 'Auto send' })}</b>
         {t('conversation.commandQueue.helpAuto', {
           defaultValue: ': sent automatically one by one after each reply finishes.',
         })}
       </span>
       <span>
-        <b>{t('conversation.commandQueue.mode.manual', { defaultValue: 'Manual' })}</b>
+        <b>{t('conversation.commandQueue.mode.manual', { defaultValue: 'Manual send' })}</b>
         {t('conversation.commandQueue.helpManual', {
           defaultValue: ': kept here without sending; use Send now on each.',
         })}
@@ -516,11 +539,12 @@ const CommandQueuePanel: React.FC<CommandQueuePanelProps> = ({
             {isMobile ? (
               <Tooltip content={title} position='top'>
                 <span className='inline-flex items-center justify-center text-t-tertiary' aria-label={title}>
-                  <Inbox theme='outline' size='16' strokeWidth={2.4} />
+                  <DraftBoxActionIcon size={16} />
                 </span>
               </Tooltip>
             ) : (
-              <span className='inline-flex items-center text-12px font-600 text-t-secondary whitespace-nowrap leading-none'>
+              <span className='inline-flex items-center gap-5px text-12px font-600 text-t-secondary whitespace-nowrap leading-none'>
+                <DraftBoxActionIcon size={15} />
                 {title}
               </span>
             )}
@@ -595,7 +619,10 @@ const CommandQueuePanel: React.FC<CommandQueuePanelProps> = ({
                   data-command-queue-list='true'
                   data-drag-axis='vertical'
                   data-drag-bounds='queue'
-                  className='p-6px flex flex-col gap-4px'
+                  className='p-6px flex flex-col gap-4px overflow-y-auto overscroll-contain'
+                  style={{
+                    maxHeight: isMobile ? 'min(48vh, 320px)' : 'min(36vh, 320px)',
+                  }}
                 >
                   {items.map((item) => {
                     const preview = getCommandPreview(item.input);

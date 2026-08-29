@@ -18,6 +18,11 @@ const {
   markSendAcceptedMock,
   sendBoxPropsSpy,
   aionrsMessageState,
+  enqueueMock,
+  clearFilesMock,
+  draftMutateMock,
+  draftContentRef,
+  runtimeViewIsProcessingRef,
 } = vi.hoisted(() => ({
   ensureConversationRuntimeMock: vi.fn().mockResolvedValue({ recovered: false, config_options: [], runtime: null }),
   sendMessageInvokeMock: vi.fn().mockResolvedValue(undefined),
@@ -37,6 +42,11 @@ const {
     setWaitingResponse: vi.fn(),
     resetState: vi.fn(),
   },
+  enqueueMock: vi.fn(),
+  clearFilesMock: vi.fn(),
+  draftMutateMock: vi.fn(),
+  draftContentRef: { current: '' },
+  runtimeViewIsProcessingRef: { current: false },
 }));
 
 vi.mock('@/common', () => ({
@@ -66,6 +76,8 @@ vi.mock('@/renderer/components/chat/SendBox', () => ({
     sendButtonPrefix,
     disabled,
     sendDisabled,
+    rightTools,
+    topRightOverlay,
     onAddToDraft,
     addToDraftDisabled,
     selectedSessions,
@@ -80,6 +92,8 @@ vi.mock('@/renderer/components/chat/SendBox', () => ({
     sendButtonPrefix?: React.ReactNode;
     disabled?: boolean;
     sendDisabled?: boolean;
+    rightTools?: React.ReactNode;
+    topRightOverlay?: React.ReactNode;
     onAddToDraft?: () => void;
     addToDraftDisabled?: boolean;
     selectedSessions?: Array<{ id: string }>;
@@ -102,10 +116,21 @@ vi.mock('@/renderer/components/chat/SendBox', () => ({
     });
     return (
       <div>
+        {rightTools}
+        {sendButtonPrefix}
+        {topRightOverlay}
         <button type='button' onClick={() => onChange?.('hello')}>
           change
         </button>
-        <button type='button' onClick={() => void onSend('Hello').catch(() => {})}>
+        <button
+          type='button'
+          onClick={() => {
+            // Models the Enter-key submit path: in the real component Enter
+            // reaches `onSend` regardless of the button's visual `sendDisabled`
+            // state — the parent decides whether to block+toast.
+            void onSend('Hello').catch(() => {});
+          }}
+        >
           send
         </button>
       </div>
@@ -175,15 +200,15 @@ vi.mock('@/renderer/hooks/chat/useSendBoxDraft', () => ({
     data: {
       atPath: [],
       uploadFile: [],
-      content: '',
+      content: draftContentRef.current,
     },
-    mutate: vi.fn(),
+    mutate: draftMutateMock,
   }),
 }));
 vi.mock('@/renderer/hooks/chat/useSendBoxFiles', () => ({
   useSendBoxFiles: () => ({
     handleFilesAdded: vi.fn(),
-    clearFiles: vi.fn(),
+    clearFiles: clearFilesMock,
   }),
   createSetUploadFile: () => vi.fn(),
 }));
@@ -200,7 +225,6 @@ vi.mock('@/renderer/hooks/ui/useLatestRef', () => ({
   useLatestRef: <T,>(value: T) => ({ current: value }),
 }));
 vi.mock('@/renderer/pages/conversation/platforms/useConversationCommandQueue', () => ({
-  shouldEnqueueConversationCommand: () => false,
   useConversationCommandQueue: () => ({
     items: [],
     recentItems: [],
@@ -208,7 +232,7 @@ vi.mock('@/renderer/pages/conversation/platforms/useConversationCommandQueue', (
     isPaused: false,
     isInteractionLocked: false,
     hasPendingCommands: false,
-    enqueue: vi.fn(),
+    enqueue: enqueueMock,
     remove: vi.fn(),
     retry: vi.fn(),
     prioritize: vi.fn(),
@@ -226,7 +250,9 @@ vi.mock('@/renderer/pages/conversation/runtime/useConversationRuntimeView', () =
   useConversationRuntimeView: () => ({
     hydrated: true,
     canSendMessage: true,
-    isProcessing: false,
+    get isProcessing() {
+      return runtimeViewIsProcessingRef.current;
+    },
     state: 'idle',
     markSendStarted: markSendStartedMock,
     markSendAccepted: markSendAcceptedMock,
@@ -280,6 +306,19 @@ vi.mock('@arco-design/web-react', () => ({
   Select: Object.assign(({ children }: { children?: React.ReactNode }) => <div>{children}</div>, {
     Option: ({ children }: { children?: React.ReactNode }) => <>{children}</>,
   }),
+  Button: ({
+    children,
+    onClick,
+    disabled,
+  }: {
+    children?: React.ReactNode;
+    onClick?: () => void;
+    disabled?: boolean;
+  }) => (
+    <button type='button' onClick={onClick} disabled={disabled}>
+      {children}
+    </button>
+  ),
 }));
 vi.mock('@icon-park/react', () => ({
   Brain: () => null,
@@ -307,6 +346,8 @@ describe('AionrsSendBox', () => {
     aionrsMessageState.tokenUsage = null;
     ensureConversationRuntimeMock.mockResolvedValue({ recovered: false, config_options: [], runtime: null });
     useTeamPermissionMock.mockReturnValue(null);
+    draftContentRef.current = '';
+    runtimeViewIsProcessingRef.current = false;
   });
 
   it('does not warm up team session when draft content changes', async () => {
@@ -434,5 +475,97 @@ describe('AionrsSendBox', () => {
     aionrsMessageState.tokenUsage = { total_tokens: 240 };
     render(<AionrsSendBox conversation_id='conv-1' modelSelection={modelSelection} />);
     expect(sendBoxPropsSpy.mock.calls.at(-1)?.[0].sendButtonPrefix).toBeTruthy();
+  });
+
+  describe('mid-turn interjection controls', () => {
+    it('disables the send button and blocks Enter with a toast while replying, without implicitly enqueuing', async () => {
+      runtimeViewIsProcessingRef.current = true;
+      draftContentRef.current = 'hello world';
+
+      render(<AionrsSendBox conversation_id='conv-1' modelSelection={modelSelection} />);
+      await waitFor(() => expect(ensureConversationRuntimeMock).toHaveBeenCalledWith('conv-1'));
+
+      const props = sendBoxPropsSpy.mock.calls.at(-1)?.[0] as { sendDisabled?: boolean };
+      expect(props.sendDisabled).toBe(true);
+
+      await act(async () => {
+        screen.getByRole('button', { name: 'send' }).click();
+      });
+
+      expect(sendMessageInvokeMock).not.toHaveBeenCalled();
+      expect(enqueueMock).not.toHaveBeenCalled();
+      expect(clearFilesMock).not.toHaveBeenCalled();
+      expect(Message.warning).toHaveBeenCalledWith(
+        'This agent is still working, so the message can’t be sent directly. Save it to Draft box and send it later.'
+      );
+    });
+
+    it('sends normally while idle', async () => {
+      runtimeViewIsProcessingRef.current = false;
+
+      render(<AionrsSendBox conversation_id='conv-1' modelSelection={modelSelection} />);
+      await waitFor(() => expect(ensureConversationRuntimeMock).toHaveBeenCalledWith('conv-1'));
+
+      const props = sendBoxPropsSpy.mock.calls.at(-1)?.[0] as { sendDisabled?: boolean };
+      expect(props.sendDisabled).toBe(false);
+
+      await act(async () => {
+        screen.getByRole('button', { name: 'send' }).click();
+      });
+
+      await waitFor(() => {
+        expect(sendMessageInvokeMock).toHaveBeenCalledTimes(1);
+      });
+      expect(enqueueMock).not.toHaveBeenCalled();
+      expect(Message.warning).not.toHaveBeenCalled();
+    });
+
+    it('shows the add-to-draft-box entry with a non-empty draft while replying, and clicking it enqueues without executing', async () => {
+      runtimeViewIsProcessingRef.current = true;
+      draftContentRef.current = 'hello world';
+
+      render(<AionrsSendBox conversation_id='conv-1' modelSelection={modelSelection} />);
+      await waitFor(() => expect(ensureConversationRuntimeMock).toHaveBeenCalledWith('conv-1'));
+
+      const props = sendBoxPropsSpy.mock.calls.at(-1)?.[0] as { onAddToDraft?: () => void };
+      expect(props.onAddToDraft).toBeDefined();
+      await act(async () => {
+        props.onAddToDraft?.();
+      });
+
+      expect(enqueueMock).toHaveBeenCalledWith({ input: 'hello world', files: [] });
+      expect(sendMessageInvokeMock).not.toHaveBeenCalled();
+      expect(clearFilesMock).toHaveBeenCalled();
+      const updater = draftMutateMock.mock.calls.at(-1)?.[0] as (prev: { content: string }) => { content: string };
+      expect(updater({ content: 'hello world' })).toEqual(expect.objectContaining({ content: '' }));
+    });
+
+    it('shows the add-to-draft-box option while idle, as long as the draft is non-empty', async () => {
+      // Visibility is keyed only to the draft, not to the agent's busy state —
+      // clicking while idle is semantically fine (the queue's own mode governs).
+      runtimeViewIsProcessingRef.current = false;
+      draftContentRef.current = 'hello world';
+
+      render(<AionrsSendBox conversation_id='conv-1' modelSelection={modelSelection} />);
+      await waitFor(() => expect(ensureConversationRuntimeMock).toHaveBeenCalledWith('conv-1'));
+
+      const props = sendBoxPropsSpy.mock.calls.at(-1)?.[0] as { onAddToDraft?: () => void };
+      expect(props.onAddToDraft).toBeDefined();
+    });
+
+    it('disables the Draft box action with an empty draft, even while replying', async () => {
+      runtimeViewIsProcessingRef.current = true;
+      draftContentRef.current = '';
+
+      render(<AionrsSendBox conversation_id='conv-1' modelSelection={modelSelection} />);
+      await waitFor(() => expect(ensureConversationRuntimeMock).toHaveBeenCalledWith('conv-1'));
+
+      const props = sendBoxPropsSpy.mock.calls.at(-1)?.[0] as {
+        onAddToDraft?: () => void;
+        addToDraftDisabled?: boolean;
+      };
+      expect(props.onAddToDraft).toBeDefined();
+      expect(props.addToDraftDisabled).toBe(true);
+    });
   });
 });
