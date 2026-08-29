@@ -232,10 +232,7 @@ describe('useConversationCommandQueue drain', () => {
     );
     const onExecute = vi.fn().mockResolvedValue(undefined);
     // Probe/submit path only auto-migrates in auto mode. Default is now manual.
-    sessionStorage.setItem(
-      storageKey('conv-probe'),
-      JSON.stringify({ items: [], isPaused: false, mode: 'auto' })
-    );
+    sessionStorage.setItem(storageKey('conv-probe'), JSON.stringify({ items: [], isPaused: false, mode: 'auto' }));
     const { result } = renderQueue({ conversation_id: 'conv-probe', runtimeGate: idleGate, onExecute });
     await waitFor(() => expect(result.current.mode).toBe('auto'));
 

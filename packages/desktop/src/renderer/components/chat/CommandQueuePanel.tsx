@@ -317,7 +317,8 @@ const QueueItemCard: React.FC<QueueItemCardProps> = ({
               onClick: canCancelQueueItem(item) ? () => onRemove(item.id) : undefined,
               icon: <Delete theme='outline' size='14' strokeWidth={2.5} />,
               danger: true,
-            })}      </div>
+            })}{' '}
+      </div>
     </div>
   );
 };
@@ -610,7 +611,8 @@ const CommandQueuePanel: React.FC<CommandQueuePanelProps> = ({
               onDragStart={handleDragStart}
               onDragEnd={handleDragEnd}
               onDragCancel={handleDragCancel}
-              modifiers={dragModifiers}>
+              modifiers={dragModifiers}
+            >
               <SortableContext items={items.map((item) => item.id)} strategy={verticalListSortingStrategy}>
                 <div
                   ref={queueContainerRef}

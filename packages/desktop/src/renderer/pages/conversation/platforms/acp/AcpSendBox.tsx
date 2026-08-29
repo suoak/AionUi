@@ -495,7 +495,6 @@ Please check your local CLI tool authentication status`,
     emitter.emit('acp.selected.file.clear');
   }, [atPath, clearFiles, content, enqueue, selectedSessions, setContent, uploadFile]);
 
-
   const handleEditQueuedCommand = useCallback(
     (item: ConversationCommandQueueItem) => {
       remove(item.id);

@@ -401,7 +401,7 @@ const AionrsSendBox: React.FC<{
       Message.warning(
         t('conversation.commandQueue.midturnBlocked', {
           defaultValue:
-            "This agent is still working, so the message can’t be sent directly. Save it to Draft box and send it later.",
+            'This agent is still working, so the message can’t be sent directly. Save it to Draft box and send it later.',
         })
       );
       return false;
@@ -444,7 +444,6 @@ const AionrsSendBox: React.FC<{
     clearFiles();
     emitter.emit('aionrs.selected.file.clear');
   }, [atPath, clearFiles, content, enqueue, selectedSessions, setContent, uploadFile]);
-
 
   const handleEditQueuedCommand = useCallback(
     (item: ConversationCommandQueueItem) => {
