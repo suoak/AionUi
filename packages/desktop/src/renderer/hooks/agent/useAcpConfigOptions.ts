@@ -255,6 +255,14 @@ export function useAcpConfigOptions({
     getConversationPending(conversation_id)
   );
   const [isReloading, setIsReloading] = useState(false);
+  const runtimeIdentity = enabled ? conversation_id : null;
+  const runtimeIdentityRef = useRef(runtimeIdentity);
+  const runtimeGenerationRef = useRef(0);
+  if (runtimeIdentityRef.current !== runtimeIdentity) {
+    runtimeIdentityRef.current = runtimeIdentity;
+    runtimeGenerationRef.current += 1;
+  }
+  const [loadedRuntimeGeneration, setLoadedRuntimeGeneration] = useState<number | null>(null);
   const optionsRef = useRef<AcpConfigOptionDto[] | null>(null);
   const getRuntimeSnapshot = useCallback(() => getConversationRuntimeViewSnapshot(conversation_id), [conversation_id]);
   const runtimeView = useSyncExternalStore(subscribeConversationRuntimeView, getRuntimeSnapshot, getRuntimeSnapshot);
@@ -306,11 +314,17 @@ export function useAcpConfigOptions({
   );
 
   const reload = useCallback(async () => {
+    const runtimeGeneration = runtimeGenerationRef.current;
     setIsReloading(true);
     try {
       await prepareRuntime?.();
       const next = await fetchConfigOptionsOnce(key, loadConfigOptions);
-      if (next) replaceSnapshot(next);
+      if (next) {
+        replaceSnapshot(next);
+        if (runtimeGenerationRef.current === runtimeGeneration) {
+          setLoadedRuntimeGeneration(runtimeGeneration);
+        }
+      }
       setIsReloading(false);
       return next;
     } catch (error) {
@@ -392,6 +406,7 @@ export function useAcpConfigOptions({
 
   return {
     configOptions,
+    isRuntimeReady: enabled && loadedRuntimeGeneration === runtimeGenerationRef.current,
     isLoading: enabled && !configOptions && (isLoading || isReloading),
     setStatus,
     pendingValues,
