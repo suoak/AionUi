@@ -1,6 +1,6 @@
 {
   "name": "csbu-workmate",
-  "version": "2.2.1",
+  "version": "2.2.2",
   "description": "CSBU's internal AI workspace for everyday office tasks.",
   "keywords": [],
   "license": "Apache-2.0",
@@ -263,7 +263,7 @@
   "engines": {
     "node": ">=22 <25"
   },
-  "aioncoreVersion": "v0.2.1",
+  "aioncoreVersion": "v0.2.2",
   "electronRebuild": {
     "electronVersion": "^37.10.3"
   },

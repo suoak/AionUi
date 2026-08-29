@@ -1,5 +1,36 @@
 # Changelog
 
+## [2.2.2](https://github.com/suoak/AionUi/compare/v2.2.1...v2.2.2) (2026-08-29)
+
+### Desktop
+
+#### Features
+
+- **chat:** mid-turn send while the assistant is still streaming
+- **chat:** compose actions and draft queue
+- **branding:** ThemedLogo for agent and runtime badges
+- **preview:** LocalImageView keeps the sandbox local-file read root
+
+#### 内网更新说明
+
+<!-- internal-release-notes:start -->
+
+**由运营管理部提供**
+
+- 桌面端固定到 AionCore v0.2.2。
+- 支持在助手回复过程中插入消息。
+- 发送框增加草稿队列与撰写操作。
+- 助手徽标使用主题化图标。
+- 本地图片预览继续使用沙箱读取根路径。
+
+<!-- internal-release-notes:end -->
+
+### Core ([v0.2.2](https://github.com/suoak/AionCore/releases/tag/v0.2.2))
+
+- Pin desktop to AionCore v0.2.2 (WorkMate backend; GitHub Release publishes from suoak/AionCore).
+
+---
+
 ## [2.2.1](https://github.com/suoak/AionUi/compare/v2.2.0...v2.2.1) (2026-08-29)
 
 ### Desktop
