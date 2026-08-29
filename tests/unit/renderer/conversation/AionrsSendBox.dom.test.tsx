@@ -31,6 +31,7 @@ const {
   aionrsMessageState: {
     thought: { subject: '', description: '' },
     running: false,
+    turnStartedAtMs: null as number | null,
     tokenUsage: null as { total_tokens: number } | null,
     setActiveMsgId: vi.fn(),
     setWaitingResponse: vi.fn(),
@@ -63,7 +64,8 @@ vi.mock('@/renderer/components/chat/SendBox', () => ({
     active,
     onFocused,
     sendButtonPrefix,
-    topRightOverlay,
+    disabled,
+    sendDisabled,
     onAddToDraft,
     addToDraftDisabled,
     selectedSessions,
@@ -76,7 +78,8 @@ vi.mock('@/renderer/components/chat/SendBox', () => ({
     active?: boolean;
     onFocused?: () => void;
     sendButtonPrefix?: React.ReactNode;
-    topRightOverlay?: React.ReactNode;
+    disabled?: boolean;
+    sendDisabled?: boolean;
     onAddToDraft?: () => void;
     addToDraftDisabled?: boolean;
     selectedSessions?: Array<{ id: string }>;
@@ -89,6 +92,7 @@ vi.mock('@/renderer/components/chat/SendBox', () => ({
       onFocused,
       disabled,
       sendDisabled,
+      sendButtonPrefix,
       onAddToDraft,
       addToDraftDisabled,
       selectedSessions,
@@ -141,6 +145,26 @@ vi.mock('@/renderer/hooks/context/ConversationContext', () => ({
 vi.mock('@/renderer/hooks/context/LayoutContext', () => ({
   useLayoutContext: () => ({ isMobile: false }),
 }));
+vi.mock('@/renderer/pages/conversation/platforms/useConversationInputCapabilities', () => ({
+  useConversationInputCapabilities: () => ({
+    capabilities: null,
+    inputMode: 'followup',
+    setInputMode: vi.fn(),
+    hasAlternateInputModes: false,
+  }),
+}));
+vi.mock('@/renderer/hooks/chat/useCrossSessionMessageEnabled', () => ({
+  useCrossSessionMessageEnabled: () => true,
+}));
+vi.mock('@/renderer/components/chat/CrossSessionDisabledBanner', () => ({
+  default: () => null,
+}));
+vi.mock('@/renderer/styles/colors', () => ({
+  iconColors: { secondary: '#888' },
+}));
+vi.mock('@/renderer/pages/conversation/utils/chatSurfaceWidth', () => ({
+  getChatSurfaceWidthClass: () => '',
+}));
 vi.mock('@/renderer/hooks/chat/useAutoTitle', () => ({
   useAutoTitle: () => ({
     checkAndUpdateTitle: vi.fn(),
@@ -179,13 +203,18 @@ vi.mock('@/renderer/pages/conversation/platforms/useConversationCommandQueue', (
   shouldEnqueueConversationCommand: () => false,
   useConversationCommandQueue: () => ({
     items: [],
+    recentItems: [],
+    mode: 'auto',
     isPaused: false,
     isInteractionLocked: false,
     hasPendingCommands: false,
     enqueue: vi.fn(),
     remove: vi.fn(),
+    retry: vi.fn(),
+    prioritize: vi.fn(),
     clear: vi.fn(),
     reorder: vi.fn(),
+    toggleMode: vi.fn(),
     pause: vi.fn(),
     resume: vi.fn(),
     lockInteraction: vi.fn(),
@@ -248,6 +277,9 @@ vi.mock('@arco-design/web-react', () => ({
     success: vi.fn(),
   },
   Tag: ({ children }: { children?: React.ReactNode }) => <>{children}</>,
+  Select: Object.assign(({ children }: { children?: React.ReactNode }) => <div>{children}</div>, {
+    Option: ({ children }: { children?: React.ReactNode }) => <>{children}</>,
+  }),
 }));
 vi.mock('@icon-park/react', () => ({
   Brain: () => null,

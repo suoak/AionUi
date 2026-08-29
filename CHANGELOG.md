@@ -1,5 +1,36 @@
 # Changelog
 
+## [2.2.1](https://github.com/suoak/AionUi/compare/v2.2.0...v2.2.1) (2026-08-29)
+
+### Desktop
+
+#### Features
+
+- **preview:** math formula rendering in the markdown viewer (KaTeX via react-markdown)
+
+#### Bug Fixes
+
+- **ci:** CHANGELOG oxfmt, WorkMateSelect types, MessageText senderName hoist, i18n key types
+- **tests:** align AcpChat local-image root and AionrsSendBox send-path tests with WorkMate wiring
+
+#### 内网更新说明
+
+<!-- internal-release-notes:start -->
+
+**由运营管理部提供**
+
+- 桌面端固定到 AionCore v0.2.1。
+- Markdown 预览支持数学公式（KaTeX）。
+- 修复若干 CI 与单测，不引入团队协作大功能。
+
+<!-- internal-release-notes:end -->
+
+### Core ([v0.2.1](https://github.com/suoak/AionCore/releases/tag/v0.2.1))
+
+- Pin desktop to AionCore v0.2.1 (WorkMate backend; GitHub Release publishes from suoak/AionCore).
+
+---
+
 ## [2.2.0](https://github.com/suoak/AionUi/compare/v2.1.85...v2.2.0) (2026-08-29)
 
 ### Desktop
@@ -44,7 +75,6 @@
 - Pin desktop to AionCore v0.2.0 (WorkMate backend; GitHub Release publishes from suoak/AionCore).
 
 ---
-
 
 ## [2.1.85](https://github.com/suoak/AionUi/compare/v2.1.84...v2.1.85) (2026-08-26)
 
@@ -164,6 +194,7 @@
 - Mermaid 流程图支持平移、缩放、适配视图和全屏查看；新增 WaveDrom 时序图预览，长图表更便于检查。
 - 桌面侧栏可以拖动调整宽度并快速收起，斜杠命令支持 Tab 补全，消息发送与相对图片显示更加可靠。
 - 修复打开对话轨迹时部分耗时或 Token 指标不可用导致的页面异常，并加固预览路径、启动恢复和 Web 访问稳定性。
+
 <!-- internal-release-notes:end -->
 
 ### Core ([v0.1.84](https://github.com/suoak/AionCore/releases/tag/v0.1.84))
@@ -1001,6 +1032,7 @@
 
 - 优化版本更新提示、更新策略和更新入口。
 - 明确产品由网络安全运营管理部开发和维护。
+
 <!-- internal-release-notes:end -->
 
 ---

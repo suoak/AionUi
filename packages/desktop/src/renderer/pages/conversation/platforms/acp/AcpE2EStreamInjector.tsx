@@ -123,7 +123,6 @@ const AcpE2EStreamInjector: React.FC<{ conversationId: string }> = ({ conversati
       is_processing: true,
       pending_confirmations: 0,
       turn_id: turnId,
-      supports_midturn_delivery: false,
     });
 
     registry.controllers[conversationId] = {

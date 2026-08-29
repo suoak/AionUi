@@ -8,9 +8,6 @@ import ReactMarkdown, { defaultUrlTransform } from 'react-markdown';
 
 import rehypeKatex from 'rehype-katex';
 import rehypeRaw from 'rehype-raw';
-import remarkBreaks from 'remark-breaks';
-import remarkGfm from 'remark-gfm';
-import remarkMath from 'remark-math';
 
 // Import KaTeX CSS to make it available in the document
 import 'katex/dist/katex.min.css';
@@ -28,11 +25,10 @@ import { convertLatexDelimiters } from '@renderer/utils/chat/latexDelimiters';
 import LocalImageView from '@renderer/components/media/LocalImageView';
 import CodeBlock from './CodeBlock';
 import LocalFileLink from './LocalFileLink';
+import { MARKDOWN_REMARK_PLUGINS, MarkdownTable, MarkdownTd } from './markdownComponents';
 import ShadowView from './ShadowView';
 import { resolveLocalFileLinkPath, resolveLocalFileLinkReference, resolveMarkdownLocalFilePath } from './markdownUtils';
 import type { LocalFileLinkReference } from './markdownUtils';
-
-const REMARK_PLUGINS = [remarkGfm, remarkMath, remarkBreaks];
 
 const isLocalFilePath = (src: string): boolean => {
   if (src.startsWith('http://') || src.startsWith('https://')) return false;
@@ -228,30 +224,8 @@ const MarkdownView: React.FC<MarkdownViewProps> = React.memo(
             <a {...anchorProps} href={anchorProps.href} target='_blank' rel='noreferrer' onClick={handleLinkClick} />
           );
         },
-        table: ({ node: _node, ...rest }: Record<string, unknown>) => (
-          <div style={{ overflowX: 'auto', maxWidth: '100%' }}>
-            <table
-              {...(rest as React.TableHTMLAttributes<HTMLTableElement>)}
-              style={{
-                ...(rest as { style?: React.CSSProperties }).style,
-                borderCollapse: 'collapse',
-                border: '1px solid var(--bg-3)',
-                minWidth: '100%',
-              }}
-            />
-          </div>
-        ),
-        td: ({ node: _node, ...rest }: Record<string, unknown>) => (
-          <td
-            {...(rest as React.TdHTMLAttributes<HTMLTableCellElement>)}
-            style={{
-              ...(rest as { style?: React.CSSProperties }).style,
-              padding: '8px',
-              border: '1px solid var(--bg-3)',
-              minWidth: '120px',
-            }}
-          />
-        ),
+        table: MarkdownTable,
+        td: MarkdownTd,
         img: ({ node: _node, ...rest }: Record<string, unknown>) => {
           const imgProps = rest as React.ImgHTMLAttributes<HTMLImageElement>;
           if (isLocalFilePath(imgProps.src || '')) {
@@ -280,7 +254,7 @@ const MarkdownView: React.FC<MarkdownViewProps> = React.memo(
         <ShadowView>
           <div ref={onRef} className='markdown-shadow-body'>
             <ReactMarkdown
-              remarkPlugins={REMARK_PLUGINS}
+              remarkPlugins={MARKDOWN_REMARK_PLUGINS}
               rehypePlugins={rehypePlugins}
               components={components}
               urlTransform={(url) => (resolveLocalFileLinkPath(url) ? url : defaultUrlTransform(url))}
