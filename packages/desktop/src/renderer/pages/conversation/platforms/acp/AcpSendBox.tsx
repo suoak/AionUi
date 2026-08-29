@@ -29,7 +29,6 @@ import { useOpenFileSelector } from '@/renderer/hooks/file/useOpenFileSelector';
 import { useLatestRef } from '@/renderer/hooks/ui/useLatestRef';
 import { useAddOrUpdateMessage } from '@/renderer/pages/conversation/Messages/hooks';
 import {
-  shouldEnqueueConversationCommand,
   useConversationCommandQueue,
   type ConversationCommandQueueItem,
 } from '@/renderer/pages/conversation/platforms/useConversationCommandQueue';
@@ -153,7 +152,7 @@ const AcpSendBox: React.FC<{
     }));
   const promptCapability = conversationContext?.promptCapability;
   // Hint shown on a media chip when the agent takes no native image/audio
-  // blocks — the attachment then reaches it as a file path. SVG is never
+  // blocks â the attachment then reaches it as a file path. SVG is never
   // sent natively (vision APIs reject it), so it always hints like a path.
   const mediaPathHintFor = useCallback(
     (path: string): string | undefined => {
@@ -240,7 +239,7 @@ const AcpSendBox: React.FC<{
   const addOrUpdateMessage = useAddOrUpdateMessage(); // Move this here so it's available in useEffect
   const addOrUpdateMessageRef = useLatestRef(addOrUpdateMessage);
   const runtimeView = useConversationRuntimeView(conversation_id);
-  const { markSendStarted, markSendAccepted, markSendFailed } = runtimeView;
+  const { markSendStarted, markSendAccepted, markSendFailed, supportsMidturnDelivery } = runtimeView;
 
   // Shared file handling logic
   const { handleFilesAdded, clearFiles } = useSendBoxFiles({
@@ -336,7 +335,7 @@ const AcpSendBox: React.FC<{
         markSendFailed({ kind: 'ordinary', reason: errorMsg });
 
         // Archived conversation (e.g. legacy Gemini). Backend signals this
-        // via HTTP 410 + code='CONVERSATION_ARCHIVED' — identified by code,
+        // via HTTP 410 + code='CONVERSATION_ARCHIVED' â identified by code,
         // not by substring matching.
         if (isBackendHttpError(error) && error.code === 'CONVERSATION_ARCHIVED') {
           Message.error({
@@ -350,7 +349,7 @@ const AcpSendBox: React.FC<{
         const isAuthError =
           errorMsg.includes('[ACP-AUTH-') ||
           errorMsg.includes('authentication failed') ||
-          errorMsg.includes('认证失败');
+          errorMsg.includes('è®¤è¯å¤±è´¥');
         if (isAuthError) {
           const errorMessage = {
             id: uuid(),
@@ -418,7 +417,6 @@ Please check your local CLI tool authentication status`,
     recentItems: recentQueuedCommands,
     mode: queueMode,
     isInteractionLocked: isQueueInteractionLocked,
-    hasPendingCommands,
     enqueue,
     remove,
     retry,
@@ -431,6 +429,12 @@ Please check your local CLI tool authentication status`,
     resetActiveExecution,
   } = useConversationCommandQueue({
     conversation_id: conversation_id,
+    // The queue (panel, runner, auto-send) is always live: backends that can
+    // deliver mid-turn (supports_midturn_delivery) still need a working
+    // enqueue for the explicit "add to queue" entry, and queued items must
+    // keep auto-sending once their turn arrives, same as non-supporting
+    // backends. What changed is who can trigger enqueue implicitly â see
+    // onSendHandler below.
     enabled: true,
     isBusy,
     runtimeGate: commandQueueRuntimeGate,
@@ -440,23 +444,24 @@ Please check your local CLI tool authentication status`,
   const [selectedSessions, setSelectedSessions] = useState<SessionRef[]>([]);
   const { enabled: crossSessionEnabled } = useCrossSessionMessageEnabled();
 
-  const onSendHandler = async (message: string) => {
+  // Supporting agents (mid-turn delivery) send immediately, busy or not.
+  // Non-supporting agents can no longer send while the agent is replying.
+  const onSendHandler = async (message: string): Promise<void | false> => {
+    if (!supportsMidturnDelivery && isBusy) {
+      Message.warning(
+        t('conversation.commandQueue.midturnBlocked', {
+          defaultValue:
+            'This agent is still working, so the message can’t be sent directly. Save it to Draft box and send it later.',
+        })
+      );
+      return false;
+    }
+
     const allFiles = collectChatFileRefs(uploadFile, atPath);
     const sessions = selectedSessions.length > 0 ? selectedSessions : undefined;
     clearFiles();
     setSelectedSessions([]);
     emitter.emit('acp.selected.file.clear');
-
-    if (
-      shouldEnqueueConversationCommand({
-        enabled: true,
-        isBusy,
-        hasPendingCommands,
-      })
-    ) {
-      enqueue({ input: message, files: allFiles, mode: queuedInputMode, sessions });
-      return;
-    }
 
     await executeCommand({ input: message, files: allFiles, sessions });
   };
@@ -468,13 +473,7 @@ Please check your local CLI tool authentication status`,
 
       request.claimed = true;
       const command: Pick<ConversationCommandQueueItem, 'input' | 'files'> = { input: request.input, files: [] };
-      if (
-        shouldEnqueueConversationCommand({
-          enabled: true,
-          isBusy,
-          hasPendingCommands,
-        })
-      ) {
+      if (!supportsMidturnDelivery && isBusy) {
         enqueue(command);
         request.onAccepted();
         return;
@@ -482,14 +481,26 @@ Please check your local CLI tool authentication status`,
 
       void executeCommand(command).then(request.onAccepted).catch(request.onRejected);
     },
-    [conversation_id, enqueue, executeCommand, hasPendingCommands, isBusy]
+    [conversation_id, enqueue, executeCommand, isBusy, supportsMidturnDelivery]
   );
+
+  const canQueueCurrentDraft = content.trim().length > 0;
+  const handleAddToQueue = useCallback(() => {
+    const allFiles = collectChatFileRefs(uploadFile, atPath);
+    const sessions = selectedSessions.length > 0 ? selectedSessions : undefined;
+    enqueue(sessions ? { input: content, files: allFiles, sessions } : { input: content, files: allFiles });
+    setContent('');
+    setSelectedSessions([]);
+    clearFiles();
+    emitter.emit('acp.selected.file.clear');
+  }, [atPath, clearFiles, content, enqueue, selectedSessions, setContent, uploadFile]);
+
 
   const handleEditQueuedCommand = useCallback(
     (item: ConversationCommandQueueItem) => {
       remove(item.id);
       setContent(item.input);
-      // Restore upload refs → uploadFile paths, project refs → atPath items.
+      // Restore upload refs â uploadFile paths, project refs â atPath items.
       const { uploadFiles, atPath: restoredAtPath } = splitChatFileRefs(item.files);
       setUploadFile(uploadFiles);
       setAtPath(restoredAtPath);
@@ -501,7 +512,7 @@ Please check your local CLI tool authentication status`,
   const appendSelectedFiles = useCallback(
     (files: string[]) => {
       // "Add files" picks a file from the backend machine's own filesystem
-      // (native dialog / server-fs browse) — an absolute backend path. Send it
+      // (native dialog / server-fs browse) â an absolute backend path. Send it
       // as a `local` ref (via the atPath lane, external-owned), NOT an `upload`
       // ref: the raw path is not under the managed upload dir and would be
       // rejected. Merge into this box's atPath only (no cross-column emit).
@@ -552,7 +563,7 @@ Please check your local CLI tool authentication status`,
     const entries: MobileActionSheetEntry[] = [];
 
     // Model entry: only when the agent exposes a switchable list. Otherwise
-    // (Codex with no list, no info) skip — exposing a no-op row would be noise.
+    // (Codex with no list, no info) skip â exposing a no-op row would be noise.
     if (modelOptions.length > 0) {
       entries.push({
         key: 'model',
@@ -643,7 +654,7 @@ Please check your local CLI tool authentication status`,
           item.status === 'loaded'
             ? undefined
             : item.reason
-              ? `${t(`conversation.mcp.status.${item.status}` as const)} · ${item.reason}`
+              ? `${t(`conversation.mcp.status.${item.status}` as const)} Â· ${item.reason}`
               : t(`conversation.mcp.status.${item.status}` as const),
       }));
       entries.push({
@@ -703,7 +714,7 @@ Please check your local CLI tool authentication status`,
   // Stop conversation handler
   const handleStop = async (): Promise<void> => {
     // Cancelling is best-effort: swallow errors (e.g. backend WS not yet
-    // connected → 409) so they don't bubble up as unhandled rejections.
+    // connected â 409) so they don't bubble up as unhandled rejections.
     // UI state is still reset via finally.
     const turnId = runtimeView.activeTurnId;
     if (!turnId) {
@@ -726,15 +737,39 @@ Please check your local CLI tool authentication status`,
   const effectiveHandleStop = teamRuntime?.onStop ?? handleStop;
   const handleSendNowQueued = useCallback(
     async (item: ConversationCommandQueueItem) => {
+      if (supportsMidturnDelivery) {
+        // Supporting agents can deliver directly into the running turn â no
+        // need to stop/restart. Remove the item BEFORE executing (rather than
+        // after success) so the queue's own auto-drain effect can never
+        // double-pick it: send-now can be clicked while the turn is still
+        // busy (isProcessing â canExecute stays false, drain naturally
+        // skips) or while idle (canExecute true, drain WOULD race to dequeue
+        // the same front-of-queue item concurrently with this manual send).
+        // Removing first closes that race in both cases.
+        remove(item.id);
+        try {
+          await executeCommand({ input: item.input, files: item.files });
+        } catch {
+          // executeCommand already surfaces the failure (busy-conflict toast,
+          // error message card, etc.) via its own catch path â don't show a
+          // second one. Restore the user's content instead of dropping it:
+          // enqueue appends to the end, so promote it back to the front to
+          // match "send now" intent (it was already next in line).
+          const restored = enqueue({ input: item.input, files: item.files });
+          if (restored) prioritize(restored.id);
+        }
+        return;
+      }
+
       // Stop the current reply (best-effort), then promote the chosen command
       // to the front of the queue in auto mode.  The drain effect will fire it
-      // once the execution gate shows canExecute — avoiding the 409 race that
+      // once the execution gate shows canExecute â avoiding the 409 race that
       // occurs when sendNow() calls onExecute() directly before the backend
       // has finished processing the stop.
       await effectiveHandleStop();
       prioritize(item.id);
     },
-    [effectiveHandleStop, prioritize]
+    [effectiveHandleStop, enqueue, executeCommand, prioritize, remove, supportsMidturnDelivery]
   );
   const sendBoxWidthClass = getChatSurfaceWidthClass();
 
@@ -782,6 +817,15 @@ Please check your local CLI tool authentication status`,
         active={teamRuntime?.isActive}
         onFocused={teamRuntime?.onFocus}
         disabled={false}
+        sendDisabled={!supportsMidturnDelivery && isBusy}
+        sendDisabledTooltip={
+          !supportsMidturnDelivery && isBusy
+            ? t('conversation.commandQueue.midturnBlockedSendHint', {
+                defaultValue:
+                  'The current agent is still working and cannot receive another message yet. Add it to Draft box instead.',
+              })
+            : undefined
+        }
         placeholder={t('acp.sendbox.placeholder', {
           backend: agent_name || backend,
           defaultValue: `Send message to {{backend}}...`,
@@ -892,8 +936,8 @@ Please check your local CLI tool authentication status`,
         sendButtonPrefix={
           // Agents reporting a window size (UsageUpdate.size) get a progress
           // ring; agents reporting only a token count get a hollow ring whose
-          // popover shows the raw count — never a percentage against a
-          // guessed denominator. No usage report at all → nothing.
+          // popover shows the raw count â never a percentage against a
+          // guessed denominator. No usage report at all â nothing.
           tokenUsage ? (
             <ContextUsageIndicator
               tokenUsage={tokenUsage}
@@ -901,6 +945,15 @@ Please check your local CLI tool authentication status`,
               conversation_id={conversation_id}
             />
           ) : undefined
+        }
+        onAddToDraft={handleAddToQueue}
+        addToDraftDisabled={!canQueueCurrentDraft}
+        addToDraftTooltip={
+          isBusy
+            ? t('conversation.commandQueue.addToQueueBusyHint', {
+                defaultValue: 'Save to Draft box and send it later.',
+              })
+            : t('conversation.commandQueue.addToQueue', { defaultValue: 'Save to Draft box' })
         }
       ></SendBox>
       {isMobile && (

@@ -18,6 +18,10 @@ export type ConversationRuntimeView = {
   localSubmitting: boolean;
   hydrated: boolean;
   localStopping: boolean;
+  /** Mirrors the backend runtime's `supports_midturn_delivery` bit. Lets UI
+   * (e.g. the command queue) bypass client-side queuing for backends that can
+   * accept a message while a turn is already running. */
+  supportsMidturnDelivery: boolean;
 };
 
 export type ConversationRuntimeViewLogEvent =
@@ -99,6 +103,7 @@ export const createDefaultConversationRuntimeView = (conversation_id: string): C
   localSubmitting: false,
   hydrated: false,
   localStopping: false,
+  supportsMidturnDelivery: false,
 });
 
 const summarizeView = (view: ConversationRuntimeView): Record<string, unknown> => ({
@@ -147,12 +152,17 @@ const viewFromRuntimeSummary = (
     activeTurnId,
     state: pendingLocalSend && runtime.state === 'idle' ? 'starting' : runtime.state,
     isProcessing: pendingLocalSend || isCancelling || runtime.is_processing,
-    canSendMessage: !pendingLocalSend && !isCancelling && runtime.can_send_message,
+    canSendMessage:
+      !pendingLocalSend &&
+      !isCancelling &&
+      (runtime.can_send_message ||
+        (runtime.supports_midturn_delivery === true && runtime.state !== 'waiting_confirmation')),
     pendingConfirmations: runtime.pending_confirmations,
     hasBackendRuntime: true,
     hydrated: true,
     localSubmitting: pendingLocalSend,
     localStopping,
+    supportsMidturnDelivery: runtime.supports_midturn_delivery === true,
   };
 };
 
