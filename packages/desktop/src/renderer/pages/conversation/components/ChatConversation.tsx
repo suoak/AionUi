@@ -34,7 +34,7 @@ import AionrsChat from '../platforms/aionrs/AionrsChat';
 import AionrsModelSelector from '../platforms/aionrs/AionrsModelSelector';
 import { useAionrsModelSelection } from '../platforms/aionrs/useAionrsModelSelection';
 import { useConversationRuntimeView } from '../runtime/useConversationRuntimeView';
-import { isConversationProcessing, isLegacyReadOnlyConversationType } from '../utils/conversationRuntime';
+import { isLegacyReadOnlyConversationType } from '../utils/conversationRuntime';
 import { resolveConversationBackend } from '../utils/conversationAssistantIdentity';
 import LegacyReadOnlyConversation from '../platforms/legacy/LegacyReadOnlyConversation';
 import SingleChatEmptyState from './SingleChatEmptyState';
@@ -412,11 +412,7 @@ const ChatConversation: React.FC<{
       {modelSelector && <div className='shrink-0'>{modelSelector}</div>}
       {conversation && conversation.type === 'acp' && !isMobile && !isLegacyReadOnlyConversation && (
         <div className='shrink-0'>
-          <AcpRuntimeRestartButton
-            conversation_id={conversation.id}
-            disabled={isConversationProcessing(conversation)}
-            disabledReason={t('agent.runtimeRestart.processingTooltip')}
-          />
+          <AcpRuntimeRestartButton conversation_id={conversation.id} />
         </div>
       )}
     </div>
