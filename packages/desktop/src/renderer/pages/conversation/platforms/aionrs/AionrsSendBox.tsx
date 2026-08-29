@@ -190,7 +190,7 @@ const AionrsSendBox: React.FC<{
     conversation_id,
     prepareRuntime: prepareRuntimeConfig,
     prepareSetRuntime: teamPermission?.warmupSession,
-    loadConfigOptions: teamPermission?.loadConfigOptions,
+    configOptionsPort: teamPermission?.configOptionsPort,
     enabled: Boolean(conversation_id),
   });
   const runtimeMode = runtimeConfig.mode;
@@ -855,7 +855,7 @@ const AionrsSendBox: React.FC<{
               onModeChanged={propagateMode}
               beforeRuntimeSync={prepareRuntimeConfig}
               beforeRuntimeSet={teamPermission?.warmupSession}
-              loadConfigOptions={teamPermission?.loadConfigOptions}
+              configOptionsPort={teamPermission?.configOptionsPort}
             />
           </div>
         }
