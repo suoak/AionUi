@@ -156,6 +156,8 @@
       "shutdown_request": "Kapatma isteği"
     }
   },
+  "interruptAndSend": "Kes ve gönder",
+  "interruptAgentFailed": "Aracı kesme başarısız oldu. Lütfen tekrar deneyin.",
   "clearCommand": {
     "member": "Bu üyenin bağlamını temizle",
     "leader": "Bir üyenin bağlamını temizle: /clear <üye adı>"

@@ -14,6 +14,7 @@ import {
   buildTeamStopHandler,
   buildTeamWorkStatusText,
 } from './teamSendRuntime';
+import type { TeamSendBoxRuntime } from './teamSendRuntime';
 import type { TeamRunViewState } from '../hooks/useTeamRunView';
 import TeamChatEmptyState from './TeamChatEmptyState';
 import { useTeamTabs } from '@/renderer/pages/team/hooks/TeamTabsContext';
@@ -208,6 +209,25 @@ const TeamChatView: React.FC<TeamChatViewProps> = ({
         sessionStopped: () => t('team.work.sessionStopped', { defaultValue: 'The team session has stopped.' }),
       });
   const isRuntimeFailed = slot_id ? slotWork?.blocked_reason === 'runtime_failed' : false;
+  const interruptAndSend =
+    team_id && slot_id && !isLeader && slotWork?.active_turn_id
+      ? async ({ input, files }: Parameters<NonNullable<TeamSendBoxRuntime['onInterruptSend']>>[0]) => {
+          try {
+            await ipcBridge.team.interruptAgent.invoke({
+              team_id,
+              slot_id,
+              input,
+              files,
+              reason: 'leader_intervention',
+              queued_policy: 'retain',
+            });
+          } catch (error) {
+            console.error('[TeamChatView] interrupt agent failed', error);
+            Message.error(t('team.interruptAgentFailed'));
+            throw error;
+          }
+        }
+      : undefined;
   const teamRuntime =
     team_id && slot_id
       ? {
@@ -236,6 +256,7 @@ const TeamChatView: React.FC<TeamChatViewProps> = ({
           // and focusing that sendbox syncs the active tab back.
           isActive: slot_id === activeSlotId,
           onFocus: () => switchTab(slot_id),
+          onInterruptSend: interruptAndSend,
         }
       : undefined;
   const content = (() => {

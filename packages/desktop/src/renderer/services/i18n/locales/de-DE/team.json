@@ -156,6 +156,8 @@
       "shutdown_request": "Stopp-Anfrage"
     }
   },
+  "interruptAndSend": "Unterbrechen & senden",
+  "interruptAgentFailed": "Der Agent konnte nicht unterbrochen werden. Bitte erneut versuchen.",
   "clearCommand": {
     "member": "Kontext dieses Mitglieds löschen",
     "leader": "Kontext eines Mitglieds löschen: /clear <Mitgliedsname>"

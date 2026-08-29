@@ -156,6 +156,8 @@
       "shutdown_request": "关闭请求"
     }
   },
+  "interruptAndSend": "打断并发送",
+  "interruptAgentFailed": "打断成员失败，请重试。",
   "clearCommand": {
     "member": "清空该成员的上下文",
     "leader": "清空指定成员的上下文:/clear <成员名>"

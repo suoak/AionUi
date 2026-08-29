@@ -156,6 +156,8 @@
       "shutdown_request": "關閉請求"
     }
   },
+  "interruptAndSend": "中斷並傳送",
+  "interruptAgentFailed": "中斷成員失敗，請再試一次。",
   "clearCommand": {
     "member": "清空該成員的上下文",
     "leader": "清空指定成員的上下文:/clear <成員名>"
