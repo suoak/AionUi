@@ -15,6 +15,39 @@ export const IMAGE_GEN_ENV_KEYS = {
   model: 'CSBU_WORKMATE_IMG_MODEL',
 } as const;
 
+const LEGACY_IMAGE_GEN_ENV_KEYS = {
+  platform: 'AIONUI_IMG_PLATFORM',
+  baseUrl: 'AIONUI_IMG_BASE_URL',
+  apiKey: 'AIONUI_IMG_API_KEY',
+  model: 'AIONUI_IMG_MODEL',
+  proxy: 'AIONUI_IMG_PROXY',
+} as const;
+
+export type ImageGenerationRuntimeEnv = {
+  platform: string;
+  baseUrl: string;
+  apiKey: string;
+  model: string;
+  proxy?: string;
+};
+
+/** Read the current branded MCP environment while preserving old fork configs. */
+export function readImageGenerationRuntimeEnv(
+  env: Readonly<Record<string, string | undefined>>
+): ImageGenerationRuntimeEnv | undefined {
+  const platform = env[IMAGE_GEN_ENV_KEYS.platform] || env[LEGACY_IMAGE_GEN_ENV_KEYS.platform];
+  const model = env[IMAGE_GEN_ENV_KEYS.model] || env[LEGACY_IMAGE_GEN_ENV_KEYS.model];
+  if (!platform || !model) return undefined;
+
+  return {
+    platform,
+    model,
+    baseUrl: env[IMAGE_GEN_ENV_KEYS.baseUrl] || env[LEGACY_IMAGE_GEN_ENV_KEYS.baseUrl] || '',
+    apiKey: env[IMAGE_GEN_ENV_KEYS.apiKey] || env[LEGACY_IMAGE_GEN_ENV_KEYS.apiKey] || '',
+    proxy: env.CSBU_WORKMATE_IMG_PROXY || env[LEGACY_IMAGE_GEN_ENV_KEYS.proxy] || undefined,
+  };
+}
+
 type ImageGenerationSelection = Partial<ImageGenerationModelSetting>;
 
 export type ImageGenerationMcpEnvResolveSource = 'provider-id' | 'field-match';
