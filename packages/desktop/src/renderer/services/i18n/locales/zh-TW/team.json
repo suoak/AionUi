@@ -121,8 +121,6 @@
     "retry": "重試"
   },
   "reorderMember": "拖動以調整成員順序",
-  "interruptAndSend": "中斷並傳送",
-  "interruptAgentFailed": "中斷成員失敗，請再試一次。",
   "agentActions": {
     "label": "代理操作",
     "reconnectDescription": "重新啟動代理程序，保留目前上下文。",

@@ -121,8 +121,6 @@
     "retry": "Retry"
   },
   "reorderMember": "Üye sırasını değiştirmek için sürükleyin",
-  "interruptAndSend": "Kes ve gönder",
-  "interruptAgentFailed": "Aracı kesme başarısız oldu. Lütfen tekrar deneyin.",
   "agentActions": {
     "label": "Aracı işlemleri",
     "reconnectDescription": "Aracı sürecini yeniden başlatır ve mevcut bağlamı korur.",

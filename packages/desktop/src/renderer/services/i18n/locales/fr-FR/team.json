@@ -72,8 +72,6 @@
     }
   },
   "reorderMember": "Faites glisser pour réorganiser le membre",
-  "interruptAndSend": "Interrompre et envoyer",
-  "interruptAgentFailed": "Impossible d’interrompre l’agent. Veuillez réessayer.",
   "agentActions": {
     "label": "Actions de l’agent",
     "reconnectDescription": "Redémarre le processus de l’agent et conserve le contexte actuel.",

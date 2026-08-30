@@ -121,8 +121,6 @@
     "retry": "Retry"
   },
   "reorderMember": "드래그하여 멤버 순서 변경",
-  "interruptAndSend": "중단하고 보내기",
-  "interruptAgentFailed": "에이전트를 중단하지 못했습니다. 다시 시도하세요.",
   "agentActions": {
     "label": "에이전트 작업",
     "reconnectDescription": "에이전트 프로세스를 다시 시작하고 현재 컨텍스트를 유지합니다.",

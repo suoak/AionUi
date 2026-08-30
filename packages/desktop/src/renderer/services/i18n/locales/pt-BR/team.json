@@ -121,8 +121,6 @@
     "retry": "Retry"
   },
   "reorderMember": "Arraste para reordenar o membro",
-  "interruptAndSend": "Interromper e enviar",
-  "interruptAgentFailed": "Não foi possível interromper o agente. Tente novamente.",
   "agentActions": {
     "label": "Ações do agente",
     "reconnectDescription": "Reinicia o processo do agente e mantém o contexto atual.",

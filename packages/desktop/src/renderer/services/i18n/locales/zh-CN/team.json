@@ -121,8 +121,6 @@
     "retry": "重试"
   },
   "reorderMember": "拖动以调整成员顺序",
-  "interruptAndSend": "打断并发送",
-  "interruptAgentFailed": "打断成员失败，请重试。",
   "agentActions": {
     "label": "代理操作",
     "reconnectDescription": "重启代理进程，保留当前上下文。",

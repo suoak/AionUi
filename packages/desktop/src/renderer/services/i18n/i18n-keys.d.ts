@@ -3048,6 +3048,8 @@ export type I18nKey =
   | 'team.agentActions.label'
   | 'team.agentActions.reconnectDescription'
   | 'team.agentNotConfigured'
+  | 'team.clearCommand.leader'
+  | 'team.clearCommand.member'
   | 'team.create.allAssistantsWithCount'
   | 'team.create.chooseDifferentFolder'
   | 'team.create.confirm'

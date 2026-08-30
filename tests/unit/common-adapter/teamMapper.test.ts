@@ -74,7 +74,9 @@ describe('teamMapper', () => {
   });
 
   it('removes a legacy assistant brand returned by the backend', () => {
-    expect(fromBackendAssistant({ assistant_name: 'Aion CLI' }).assistant_name).toBe('CSBU WorkMate');
+    expect(fromBackendAssistant({ ...contextResetReady, assistant_name: 'Aion CLI' }).assistant_name).toBe(
+      'CSBU WorkMate'
+    );
   });
 
   it('prefers assistant-first team response fields while keeping legacy aliases hydrated', () => {

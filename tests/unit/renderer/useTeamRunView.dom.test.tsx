@@ -217,7 +217,7 @@ describe('useTeamRunView', () => {
     teamEventMocks.invoke.getRunState.mockResolvedValue({ active_run: null });
 
     await act(async () => {
-      expect(await result.current.reconcile('new-team')).toBe(true);
+      expect(await result.current.reconcile('new-team')).toBe('applied');
     });
 
     expect(result.current.state.slotWorkBySlot).toEqual({});

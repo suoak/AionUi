@@ -121,8 +121,6 @@
     "retry": "Retry"
   },
   "reorderMember": "Перетягніть, щоб змінити порядок учасників",
-  "interruptAndSend": "Перервати й надіслати",
-  "interruptAgentFailed": "Не вдалося перервати агента. Спробуйте ще раз.",
   "agentActions": {
     "label": "Дії агента",
     "reconnectDescription": "Перезапускає процес агента та зберігає поточний контекст.",

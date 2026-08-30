@@ -121,8 +121,6 @@
     "retry": "Retry"
   },
   "reorderMember": "برای تغییر ترتیب عضو بکشید",
-  "interruptAndSend": "توقف و ارسال",
-  "interruptAgentFailed": "توقف عامل ناموفق بود. دوباره تلاش کنید.",
   "agentActions": {
     "label": "عملیات عامل",
     "reconnectDescription": "فرایند عامل را دوباره راه‌اندازی می‌کند و زمینه فعلی را نگه می‌دارد.",
