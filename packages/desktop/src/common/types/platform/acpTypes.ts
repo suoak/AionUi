@@ -237,6 +237,8 @@ export type SetConfigOptionRequest = {
 export type SetConfigOptionResponse = {
   confirmation: AcpConfigOptionConfirmation;
   config_options: AcpConfigOptionDto[] | null;
+  /** Team-owned model changes report whether the confirmed runtime value was durably saved. */
+  persistence?: 'not_required' | 'persisted' | 'failed';
 };
 
 // ===== ACP Mode / Model types (unstable API) =====

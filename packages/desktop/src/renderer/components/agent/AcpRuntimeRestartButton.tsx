@@ -42,8 +42,13 @@ export const useAcpRuntimeRestart = ({
         const response = await ipcBridge.conversation.restartRuntime.invoke({ conversation_id });
         runtimeView.markRestartSucceeded(response.runtime);
       }
-      await revalidateAcpConfigOptions(conversation_id);
       Message.success(t('agent.runtimeRestart.success'));
+      try {
+        await revalidateAcpConfigOptions(conversation_id);
+      } catch (refreshError) {
+        console.warn('[AcpRuntimeRestartButton] runtime restarted but config refresh failed', refreshError);
+        Message.warning(t('agent.config.failed'));
+      }
     } catch (error) {
       if (!team) {
         let runtime = null;

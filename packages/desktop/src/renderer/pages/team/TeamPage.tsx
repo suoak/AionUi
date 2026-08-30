@@ -70,6 +70,7 @@ const configErrorMessageKey = (error: unknown) => {
   if (errorKind === 'command_ack') return 'agent.config.commandAck';
   if (errorKind === 'confirmation_timeout') return 'agent.config.timeout';
   if (errorKind === 'config_update_in_progress') return 'agent.config.busy';
+  if (errorKind === 'config_persistence_failed') return 'agent.config.persistenceFailed';
   return 'agent.config.failed';
 };
 

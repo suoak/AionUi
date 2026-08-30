@@ -62,6 +62,7 @@ const configErrorMessageKey = (error: unknown) => {
   if (errorKind === 'command_ack') return 'agent.config.commandAck';
   if (errorKind === 'confirmation_timeout') return 'agent.config.timeout';
   if (errorKind === 'config_update_in_progress') return 'agent.config.busy';
+  if (errorKind === 'config_persistence_failed') return 'agent.config.persistenceFailed';
   return 'agent.config.failed';
 };
 
@@ -235,6 +236,7 @@ const AcpSendBox: React.FC<{
   const setContentRef = useLatestRef(setContent);
   const contentRef = useLatestRef(content);
   const atPathRef = useLatestRef(atPath);
+  const uploadFilesRef = useLatestRef(uploadFile);
 
   const addOrUpdateMessage = useAddOrUpdateMessage(); // Move this here so it's available in useEffect
   const addOrUpdateMessageRef = useLatestRef(addOrUpdateMessage);
@@ -500,12 +502,19 @@ Please check your local CLI tool authentication status`,
     if (!teamRuntime?.onInterruptSend || !content.trim() || interrupting) return;
     const files = collectChatFileRefs(uploadFile, atPath);
     const input = content;
-    setContent('');
-    clearFiles();
-    emitter.emit('acp.selected.file.clear');
+    const submittedAtPath = atPath;
+    const submittedUploadFile = uploadFile;
     setInterrupting(true);
     try {
       await teamRuntime.onInterruptSend({ input, files });
+      // Keep the draft intact until the durable interrupt request succeeds. If
+      // the user edited it while the request was in flight, preserve that newer
+      // draft instead of clearing it with the submitted snapshot.
+      if (contentRef.current === input) setContent('');
+      if (atPathRef.current === submittedAtPath && uploadFilesRef.current === submittedUploadFile) {
+        clearFiles();
+        emitter.emit('acp.selected.file.clear');
+      }
     } finally {
       setInterrupting(false);
     }
@@ -960,7 +969,7 @@ Please check your local CLI tool authentication status`,
                 type='secondary'
                 icon={<Lightning />}
                 loading={interrupting}
-                onClick={() => void handleInterruptSend()}
+                onClick={() => void handleInterruptSend().catch((): void => undefined)}
               >
                 {t('team.interruptAndSend')}
               </Button>
