@@ -1,4 +1,7 @@
 {
+  "imageGenSupportedTooltipOpenAI": "مدل‌های Images API سازگار با OpenAI: GPT Image، Grok Imagine، Seedream، FLUX، Stable Diffusion، Recraft، Qwen Image، Ideogram و سایر مدل‌های درگاه",
+  "imageGenCustomModelWarning": "مدل‌های سفارشی تأیید نشده‌اند. آن‌ها فقط زمانی کار می‌کنند که ارائه‌دهنده تصاویر را از طریق Images API یا پاسخ چت سازگار برگرداند.",
+  "imageGenCompatibilityNote": "اتصال مستقیم به نقاط پایانی بومی ارائه‌دهنده که Images API یا پاسخ چت سازگار ندارند، پشتیبانی نمی‌شود.",
   "assistant.pairingRejected": "جفت‌شدن رد شد",
   "webui.passwordChanged": "رمز عبور با موفقیت تغییر کرد",
   "noConfiguredModels": "مدل پیکربندی‌شده‌ای وجود ندارد",

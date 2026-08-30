@@ -236,10 +236,11 @@ export const ScmResourceRow: React.FC<ScmResourceRowProps> = ({
       className={`group flex items-center gap-6px px-8px py-3px rd-4px cursor-pointer hover:bg-2 min-w-0 ${
         selected ? 'bg-2' : ''
       }`}
-      style={indent ? { paddingLeft: 8 + indent } : undefined}
+      style={indent ? { paddingInlineStart: 8 + indent } : undefined}
       title={hint ?? resource.repo_relative_path}
     >
       <span
+        dir='ltr'
         aria-label={t(`conversation.explorer.scm.state.${suffix}`)}
         className={`flex-shrink-0 w-14px text-center text-12px font-medium ${BADGE_CLASS[suffix]}`}
       >
@@ -263,7 +264,7 @@ export const ScmResourceRow: React.FC<ScmResourceRowProps> = ({
         </span>
       )}
       {actionable && (
-        <span className='flex items-center flex-shrink-0 ml-auto'>
+        <span className='flex items-center flex-shrink-0 ms-auto'>
           {canDiscard && actionButton('discard', <Undo theme='outline' size='13' />)}
           {stagingActions &&
             (resource.staged === true

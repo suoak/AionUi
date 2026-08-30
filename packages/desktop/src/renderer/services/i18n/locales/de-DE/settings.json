@@ -1,4 +1,7 @@
 {
+  "imageGenSupportedTooltipOpenAI": "Modelle über eine OpenAI-kompatible Images API: GPT Image, Grok Imagine, Seedream, FLUX, Stable Diffusion, Recraft, Qwen Image, Ideogram und weitere Gateway-Modelle",
+  "imageGenCustomModelWarning": "Benutzerdefinierte Modelle sind nicht verifiziert. Sie funktionieren nur, wenn der Anbieter Bilder über eine kompatible Images API oder Chat-Antwort zurückgibt.",
+  "imageGenCompatibilityNote": "Herstellerspezifische Endpunkte ohne kompatible Images API oder Chat-Antwort werden nicht direkt unterstützt.",
   "assistant.pairingRejected": "Kopplung abgelehnt",
   "webui.passwordChanged": "Passwort erfolgreich geändert",
   "noConfiguredModels": "Keine konfigurierten Modelle",

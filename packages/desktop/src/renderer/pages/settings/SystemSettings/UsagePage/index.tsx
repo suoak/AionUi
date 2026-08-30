@@ -48,7 +48,8 @@ const UsageSummaryCard: React.FC<{ label: string; value: string; hint?: string }
 );
 
 const UsagePage: React.FC = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const locale = i18n?.language ?? 'en-US';
   const navigate = useNavigate();
   const [range, setRange] = useState<UsageRange>('30d');
   const [modelFilter, setModelFilter] = useState('all');
@@ -237,7 +238,7 @@ const UsagePage: React.FC = () => {
                 data-testid={`usage-model-filter-${row.key}`}
                 onClick={() => setModelFilter(row.key)}
               >
-                {row.label} · {formatTokenCount(row.total_tokens)}
+                {row.label} · {formatTokenCount(row.total_tokens, false, locale)}
               </Button>
             ))}
           </div>
@@ -246,7 +247,7 @@ const UsagePage: React.FC = () => {
         <div className='grid grid-cols-2 gap-10px md:grid-cols-4'>
           <UsageSummaryCard
             label={t('settings.usage.totalTokens')}
-            value={formatTokenCount(totals.total_tokens)}
+            value={formatTokenCount(totals.total_tokens, false, locale)}
             hint={t('settings.usage.turnsAndConversations', {
               turns: totals.turn_count,
               conversations: totals.conversation_count,
@@ -254,22 +255,31 @@ const UsagePage: React.FC = () => {
           />
           <UsageSummaryCard
             label={t('settings.usage.todayTokens')}
-            value={formatTokenCount(todayTotals.total_tokens)}
+            value={formatTokenCount(todayTotals.total_tokens, false, locale)}
             hint={t('settings.usage.turnsAndConversations', {
               turns: todayTotals.turn_count,
               conversations: todayTotals.conversation_count,
             })}
           />
-          <UsageSummaryCard label={t('settings.usage.inputTokens')} value={formatTokenCount(totals.input_tokens)} />
-          <UsageSummaryCard label={t('settings.usage.outputTokens')} value={formatTokenCount(totals.output_tokens)} />
-          <UsageSummaryCard label={t('settings.usage.thoughtTokens')} value={formatTokenCount(totals.thought_tokens)} />
+          <UsageSummaryCard
+            label={t('settings.usage.inputTokens')}
+            value={formatTokenCount(totals.input_tokens, false, locale)}
+          />
+          <UsageSummaryCard
+            label={t('settings.usage.outputTokens')}
+            value={formatTokenCount(totals.output_tokens, false, locale)}
+          />
+          <UsageSummaryCard
+            label={t('settings.usage.thoughtTokens')}
+            value={formatTokenCount(totals.thought_tokens, false, locale)}
+          />
           <UsageSummaryCard
             label={t('conversation.contextUsage.cachedRead')}
-            value={formatTokenCount(totals.cached_read_tokens)}
+            value={formatTokenCount(totals.cached_read_tokens, false, locale)}
           />
           <UsageSummaryCard
             label={t('conversation.contextUsage.cachedWrite')}
-            value={formatTokenCount(totals.cached_write_tokens)}
+            value={formatTokenCount(totals.cached_write_tokens, false, locale)}
           />
         </div>
 
@@ -279,7 +289,7 @@ const UsagePage: React.FC = () => {
             {Object.entries(totals.cost_by_currency).map(([currency, amount], index) => (
               <React.Fragment key={currency}>
                 {index > 0 ? ' · ' : null}
-                <span className='font-600 text-t-primary'>{formatCostAmount({ amount, currency })}</span>
+                <span className='font-600 text-t-primary'>{formatCostAmount({ amount, currency }, locale)}</span>
               </React.Fragment>
             ))}
           </div>
@@ -294,6 +304,7 @@ const UsagePage: React.FC = () => {
             emptyLabel={t('settings.usage.emptyTitle')}
             inputLabel={t('settings.usage.inputTokens')}
             outputLabel={t('settings.usage.outputTokens')}
+            locale={locale}
           />
         </div>
 
@@ -311,25 +322,25 @@ const UsagePage: React.FC = () => {
               <Typography.Text className='mb-12px block text-13px font-medium text-t-primary'>
                 {t('settings.usage.byAgentTitle')}
               </Typography.Text>
-              <UsageBreakdownList rows={byAgent} emptyLabel={t('settings.usage.emptyTitle')} />
+              <UsageBreakdownList rows={byAgent} emptyLabel={t('settings.usage.emptyTitle')} locale={locale} />
             </div>
             <div className='rounded-12px border border-solid border-transparent bg-base px-16px py-16px'>
               <Typography.Text className='mb-12px block text-13px font-medium text-t-primary'>
                 {t('settings.usage.byAssistantTitle')}
               </Typography.Text>
-              <UsageBreakdownList rows={byAssistant} emptyLabel={t('settings.usage.emptyTitle')} />
+              <UsageBreakdownList rows={byAssistant} emptyLabel={t('settings.usage.emptyTitle')} locale={locale} />
             </div>
             <div className='rounded-12px border border-solid border-transparent bg-base px-16px py-16px md:col-span-2'>
               <Typography.Text className='mb-12px block text-13px font-medium text-t-primary'>
                 {t('settings.usage.byChannelTitle')}
               </Typography.Text>
-              <UsageBreakdownList rows={byChannel} emptyLabel={t('settings.usage.emptyTitle')} />
+              <UsageBreakdownList rows={byChannel} emptyLabel={t('settings.usage.emptyTitle')} locale={locale} />
             </div>
             <div className='rounded-12px border border-solid border-transparent bg-base px-16px py-16px md:col-span-2'>
               <Typography.Text className='mb-12px block text-13px font-medium text-t-primary'>
                 {t('settings.usage.byModelTitle')}
               </Typography.Text>
-              <UsageBreakdownList rows={scopedByModel} emptyLabel={t('settings.usage.emptyTitle')} />
+              <UsageBreakdownList rows={scopedByModel} emptyLabel={t('settings.usage.emptyTitle')} locale={locale} />
             </div>
             <div className='rounded-12px border border-solid border-transparent bg-base px-16px py-16px md:col-span-2'>
               <Typography.Text className='mb-12px block text-13px font-medium text-t-primary'>
@@ -357,7 +368,9 @@ const UsagePage: React.FC = () => {
                         )}
                       </span>
                     </span>
-                    <span className='shrink-0 text-12px text-t-secondary'>{formatTokenCount(row.total_tokens)}</span>
+                    <span className='shrink-0 text-12px text-t-secondary'>
+                      {formatTokenCount(row.total_tokens, false, locale)}
+                    </span>
                   </Button>
                 ))}
               </div>

@@ -1,4 +1,7 @@
 {
+  "imageGenSupportedTooltipOpenAI": "OpenAI 互換 Images API モデル：GPT Image、Grok Imagine、Seedream、FLUX、Stable Diffusion、Recraft、Qwen Image、Ideogram、およびその他のゲートウェイモデル",
+  "imageGenCustomModelWarning": "カスタムモデルは未検証です。プロバイダーが互換性のある Images API またはチャット応答で画像を返す場合にのみ動作します。",
+  "imageGenCompatibilityNote": "互換性のある Images API またはチャット応答を実装していないベンダー固有エンドポイントへの直接接続はサポートされません。",
   "assistant.pairingRejected": "Pairing rejected",
   "webui.passwordChanged": "パスワードが正常に変更されました",
   "noConfiguredModels": "設定されたモデルがありません",

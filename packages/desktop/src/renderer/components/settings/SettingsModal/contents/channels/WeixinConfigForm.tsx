@@ -16,6 +16,7 @@ import { Button, Dropdown, Empty, Menu, Message, Spin, Tooltip } from '@arco-des
 import { CheckOne, CloseOne, Copy, Delete, Down, Refresh } from '@icon-park/react';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { formatDateTime } from '@/renderer/services/i18n/format';
 import { QRCodeSVG } from 'qrcode.react';
 import {
   buildChannelAssistantBinding,
@@ -60,7 +61,7 @@ const getRemainingTime = (expiresAt: number) => {
   return `${remaining} min`;
 };
 
-const formatTime = (timestamp: number) => new Date(timestamp).toLocaleString();
+const formatTime = (timestamp: number, locale: string) => formatDateTime(timestamp, locale);
 
 const WeixinConfigForm: React.FC<WeixinConfigFormProps> = ({ pluginStatus, modelSelection, onStatusChange }) => {
   const { t, i18n } = useTranslation();
@@ -592,7 +593,8 @@ const WeixinConfigForm: React.FC<WeixinConfigFormProps> = ({ pluginStatus, model
                   <div className='flex-1'>
                     <div className='text-14px font-500 text-t-primary'>{user.display_name || 'Unknown User'}</div>
                     <div className='text-12px text-t-tertiary mt-4px'>
-                      {t('settings.assistant.authorizedAt', 'Authorized')}: {formatTime(user.authorizedAt)}
+                      {t('settings.assistant.authorizedAt', 'Authorized')}:{' '}
+                      {formatTime(user.authorizedAt, i18n?.language ?? 'en-US')}
                     </div>
                   </div>
                   <Tooltip content={t('settings.assistant.revokeAccess', 'Revoke access')}>

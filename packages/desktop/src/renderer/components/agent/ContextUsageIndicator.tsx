@@ -10,6 +10,7 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
 import type { TokenUsageCost, TokenUsageData } from '@/common/config/storage';
+import { formatCurrency, formatNumber } from '@/renderer/services/i18n/format';
 import { conversationSpendTokens } from '@/renderer/utils/chat/tokenUsageAggregate';
 import { readUsageLedger } from '@/renderer/utils/chat/tokenUsageLedger';
 
@@ -33,7 +34,8 @@ const ContextUsageIndicator: React.FC<ContextUsageIndicatorProps> = ({
   className = '',
   size = 20,
 }) => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const locale = i18n?.language;
   const navigate = useNavigate();
 
   const hasWindow = context_limit > 0;
@@ -53,7 +55,7 @@ const ContextUsageIndicator: React.FC<ContextUsageIndicatorProps> = ({
     if (!hasWindow) {
       return {
         percentage: 0,
-        displayTotal: formatTokenCount(total),
+        displayTotal: formatTokenCount(total, false, locale),
         displayLimit: '0',
         isWarning: false,
         isDanger: false,
@@ -64,12 +66,12 @@ const ContextUsageIndicator: React.FC<ContextUsageIndicatorProps> = ({
 
     return {
       percentage: pct,
-      displayTotal: formatTokenCount(total),
-      displayLimit: formatTokenCount(context_limit, true),
+      displayTotal: formatTokenCount(total, false, locale),
+      displayLimit: formatTokenCount(context_limit, true, locale),
       isWarning: pct > 70,
       isDanger: pct > 90,
     };
-  }, [tokenUsage, context_limit, hasWindow]);
+  }, [tokenUsage, context_limit, hasWindow, locale]);
 
   if (!tokenUsage) {
     return null;
@@ -98,27 +100,27 @@ const ContextUsageIndicator: React.FC<ContextUsageIndicatorProps> = ({
   if (breakdown) {
     if (typeof breakdown.input_tokens === 'number') {
       breakdownParts.push(
-        `${t('conversation.contextUsage.input', 'Input')} ${formatTokenCount(breakdown.input_tokens)}`
+        `${t('conversation.contextUsage.input', 'Input')} ${formatTokenCount(breakdown.input_tokens, false, locale)}`
       );
     }
     if (typeof breakdown.output_tokens === 'number') {
       breakdownParts.push(
-        `${t('conversation.contextUsage.output', 'Output')} ${formatTokenCount(breakdown.output_tokens)}`
+        `${t('conversation.contextUsage.output', 'Output')} ${formatTokenCount(breakdown.output_tokens, false, locale)}`
       );
     }
     if (breakdown.cached_read_tokens) {
       breakdownParts.push(
-        `${t('conversation.contextUsage.cachedRead', 'Cache read')} ${formatTokenCount(breakdown.cached_read_tokens)}`
+        `${t('conversation.contextUsage.cachedRead', 'Cache read')} ${formatTokenCount(breakdown.cached_read_tokens, false, locale)}`
       );
     }
     if (breakdown.cached_write_tokens) {
       breakdownParts.push(
-        `${t('conversation.contextUsage.cachedWrite', 'Cache write')} ${formatTokenCount(breakdown.cached_write_tokens)}`
+        `${t('conversation.contextUsage.cachedWrite', 'Cache write')} ${formatTokenCount(breakdown.cached_write_tokens, false, locale)}`
       );
     }
     if (breakdown.thought_tokens) {
       breakdownParts.push(
-        `${t('conversation.contextUsage.thought', 'Thinking')} ${formatTokenCount(breakdown.thought_tokens)}`
+        `${t('conversation.contextUsage.thought', 'Thinking')} ${formatTokenCount(breakdown.thought_tokens, false, locale)}`
       );
     }
   }
@@ -134,12 +136,13 @@ const ContextUsageIndicator: React.FC<ContextUsageIndicatorProps> = ({
     <>
       {conversationSpend > 0 && (
         <div className='text-12px text-t-secondary mt-4px'>
-          {t('conversation.contextUsage.sessionSpend', 'Session spend')} {formatTokenCount(conversationSpend)}
+          {t('conversation.contextUsage.sessionSpend', 'Session spend')}{' '}
+          {formatTokenCount(conversationSpend, false, locale)}
         </div>
       )}
       {tokenUsage.cost && (
         <div className='text-12px text-t-secondary mt-4px'>
-          {t('conversation.contextUsage.sessionCost', 'Session cost')} ≈ {formatCostAmount(tokenUsage.cost)}
+          {t('conversation.contextUsage.sessionCost', 'Session cost')} ≈ {formatCostAmount(tokenUsage.cost, locale)}
         </div>
       )}
       {breakdownParts.length > 0 && (
@@ -164,7 +167,7 @@ const ContextUsageIndicator: React.FC<ContextUsageIndicatorProps> = ({
   const popoverContent = hasWindow ? (
     <div className='p-8px min-w-160px'>
       <div className='text-14px font-medium text-t-primary'>
-        {percentage.toFixed(1)}% · {displayTotal} / {displayLimit}{' '}
+        {formatPercentage(percentage, locale)} · {displayTotal} / {displayLimit}{' '}
         {t('conversation.contextUsage.contextUsed', 'context used')}
       </div>
       {details}
@@ -222,16 +225,20 @@ const ContextUsageIndicator: React.FC<ContextUsageIndicatorProps> = ({
  * Format an agent-reported cumulative session cost, e.g. "$0.42".
  * Falls back to "0.42 USD" when the currency code is not renderable.
  */
-export function formatCostAmount(cost: TokenUsageCost): string {
-  try {
-    return new Intl.NumberFormat(undefined, {
-      style: 'currency',
-      currency: cost.currency,
-      maximumFractionDigits: 4,
-    }).format(cost.amount);
-  } catch {
-    return `${cost.amount.toFixed(4)} ${cost.currency}`;
-  }
+export function formatCostAmount(cost: TokenUsageCost, locale?: string): string {
+  const options: Intl.NumberFormatOptions =
+    cost.amount === 0 || Math.abs(cost.amount) >= 0.0001
+      ? { maximumFractionDigits: 4 }
+      : { maximumSignificantDigits: 2 };
+  return formatCurrency(cost.amount, cost.currency, locale, options);
+}
+
+export function formatPercentage(value: number, locale?: string): string {
+  return formatNumber(value / 100, locale, {
+    style: 'percent',
+    minimumFractionDigits: 1,
+    maximumFractionDigits: 1,
+  });
 }
 
 /**
@@ -240,18 +247,17 @@ export function formatCostAmount(cost: TokenUsageCost): string {
  * @param hideZeroDecimals 是否隐藏小数点为0的情况（如 1.0M 显示为 1M），默认为 false
  * @returns 格式化后的字符串，如 "37.0K" 或 "1.2M"，当 hideZeroDecimals 为 true 时 "1.0M" 显示为 "1M"
  */
-export function formatTokenCount(count: number, hideZeroDecimals = false): string {
-  if (count >= 1_000_000) {
-    const value = count / 1_000_000;
-    const formatted = value.toFixed(1);
-    return hideZeroDecimals && formatted.endsWith('.0') ? `${Math.floor(value)}M` : `${formatted}M`;
-  }
-  if (count >= 1_000) {
-    const value = count / 1_000;
-    const formatted = value.toFixed(1);
-    return hideZeroDecimals && formatted.endsWith('.0') ? `${Math.floor(value)}K` : `${formatted}K`;
-  }
-  return count.toString();
+export function formatTokenCount(count: number, hideZeroDecimals = false, locale?: string): string {
+  const withSuffix = (value: number, suffix: string): string => {
+    if (hideZeroDecimals && value.toFixed(1).endsWith('.0')) {
+      return `${formatNumber(Math.floor(value), locale, { maximumFractionDigits: 0 })}${suffix}`;
+    }
+    return `${formatNumber(value, locale, { minimumFractionDigits: 1, maximumFractionDigits: 1 })}${suffix}`;
+  };
+
+  if (count >= 1_000_000) return withSuffix(count / 1_000_000, 'M');
+  if (count >= 1_000) return withSuffix(count / 1_000, 'K');
+  return formatNumber(count, locale, { maximumFractionDigits: 0 });
 }
 
 export default ContextUsageIndicator;

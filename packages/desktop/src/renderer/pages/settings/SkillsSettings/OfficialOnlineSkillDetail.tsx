@@ -7,9 +7,10 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
 import SettingsPageWrapper from '../components/SettingsPageWrapper';
 import { getSkillRegistryConflictName, getSkillRegistryErrorMessage } from './skillRegistryMessages';
+import { formatDateTime } from '@/renderer/services/i18n/format';
 
 const OfficialOnlineSkillDetail: React.FC = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const navigate = useNavigate();
   const { namespace = '', slug = '' } = useParams();
   const [skill, setSkill] = useState<OfficialSkillDetail>();
@@ -162,7 +163,7 @@ const OfficialOnlineSkillDetail: React.FC = () => {
                 },
                 {
                   label: t('settings.skillsHub.officialOnline.updatedAt'),
-                  value: skill.updated_at ? new Date(skill.updated_at).toLocaleString() : '-',
+                  value: skill.updated_at ? formatDateTime(new Date(skill.updated_at), i18n?.language) : '-',
                 },
                 {
                   label: t('settings.skillsHub.officialOnline.downloads'),
