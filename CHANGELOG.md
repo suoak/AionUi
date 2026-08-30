@@ -1,5 +1,44 @@
 # Changelog
 
+## [2.2.3](https://github.com/suoak/AionUi/compare/v2.2.2...v2.2.3) (2026-08-30)
+
+### Desktop
+
+#### Features
+
+- **runtime:** restart ordinary conversations and refresh available ACP models
+- **team:** restart teammate runtimes and persist teammate model selections
+- **team:** interrupt an active teammate turn and send replacement instructions
+- **team:** clear teammate context, including members whose names contain spaces
+- **team:** read queued mailbox messages reliably with oldest-first pagination
+- **team:** inject and refresh each assistant's enabled MCP servers
+
+#### Bug Fixes
+
+- **team:** keep runtime actions synchronized with server readiness and stuck-processing state
+- **chat:** preserve strict mid-turn delivery, `@@` mentions, and the draft queue
+
+#### 内网更新说明
+
+<!-- internal-release-notes:start -->
+
+**由运营管理部提供**
+
+- 桌面端固定到 AionCore v0.2.3。
+- 支持重启普通会话与团队成员运行时，并刷新可用模型。
+- 团队成员的模型选择可持久保存。
+- 可中断队员当前回合并发送替换指令，不丢失已排队工作。
+- 支持清空队员上下文，并增强邮箱消息投递与 MCP 刷新可靠性。
+- 保留回复中插入消息、`@@` 引用与草稿队列。
+
+<!-- internal-release-notes:end -->
+
+### Core ([v0.2.3](https://github.com/suoak/AionCore/releases/tag/v0.2.3))
+
+- Pin desktop to AionCore v0.2.3 (WorkMate backend; six architecture packages and checksums are published).
+
+---
+
 ## [2.2.2](https://github.com/suoak/AionUi/compare/v2.2.1...v2.2.2) (2026-08-29)
 
 ### Desktop
