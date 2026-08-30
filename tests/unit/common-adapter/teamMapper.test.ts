@@ -12,6 +12,10 @@ import {
   toBackendAssistant,
 } from '@/common/adapter/teamMapper';
 
+const contextResetReady = {
+  context_reset: { supported: true, availability: 'ready' },
+} as const;
+
 describe('teamMapper', () => {
   describe('normalizeTeamStatus', () => {
     it.each([
@@ -37,6 +41,7 @@ describe('teamMapper', () => {
 
   it('uses normalized status when mapping backend agents', () => {
     const assistant = fromBackendAssistant({
+      ...contextResetReady,
       slot_id: 'slot-1',
       conversation_id: 'conversation-1',
       role: 'teammate',
@@ -50,6 +55,7 @@ describe('teamMapper', () => {
 
   it('maps backend agent fields into assistant-first frontend runtime fields', () => {
     const assistant = fromBackendAssistant({
+      ...contextResetReady,
       slot_id: 'slot-1',
       conversation_id: 'conversation-1',
       role: 'teammate',
@@ -68,7 +74,9 @@ describe('teamMapper', () => {
   });
 
   it('removes a legacy assistant brand returned by the backend', () => {
-    expect(fromBackendAssistant({ assistant_name: 'Aion CLI' }).assistant_name).toBe('CSBU WorkMate');
+    expect(fromBackendAssistant({ ...contextResetReady, assistant_name: 'Aion CLI' }).assistant_name).toBe(
+      'CSBU WorkMate'
+    );
   });
 
   it('prefers assistant-first team response fields while keeping legacy aliases hydrated', () => {
@@ -80,6 +88,7 @@ describe('teamMapper', () => {
       leader_assistant_id: 'slot-lead',
       assistants: [
         {
+          ...contextResetReady,
           slot_id: 'slot-lead',
           conversation_id: 'conv-1',
           role: 'leader',
@@ -100,6 +109,7 @@ describe('teamMapper', () => {
 
   it('prefers the concrete backend over generic agent_type when hydrating assistant runtime fields', () => {
     const assistant = fromBackendAssistant({
+      ...contextResetReady,
       slot_id: 'slot-1',
       conversation_id: 'conversation-1',
       role: 'teammate',
@@ -116,6 +126,7 @@ describe('teamMapper', () => {
   it('hydrates assistant identity from assistant_id', () => {
     expect(
       fromBackendAssistant({
+        ...contextResetReady,
         slot_id: 'slot-1',
         conversation_id: 'conversation-1',
         role: 'teammate',
@@ -129,6 +140,7 @@ describe('teamMapper', () => {
   it('ignores legacy custom_agent_id when assistant_id is absent from the backend payload', () => {
     expect(
       fromBackendAssistant({
+        ...contextResetReady,
         slot_id: 'slot-2',
         conversation_id: 'conversation-2',
         role: 'teammate',
@@ -163,6 +175,18 @@ describe('teamMapper', () => {
         assistant_id: 'assistant-legacy-name',
       })
     ).toMatchObject({ name: 'CSBU WorkMate' });
+  });
+
+  it('rejects a backend payload that omits the required context-reset capability', () => {
+    expect(() =>
+      fromBackendAssistant({
+        slot_id: 'slot-1',
+        conversation_id: 'conversation-1',
+        role: 'teammate',
+        backend: 'claude',
+        name: 'Worker',
+      })
+    ).toThrow('Invalid team context-reset capability');
   });
 
   it('omits backend for new assistant-led payloads so the backend can derive it from assistant identity', () => {

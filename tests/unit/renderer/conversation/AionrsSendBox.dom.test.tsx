@@ -469,12 +469,12 @@ describe('AionrsSendBox', () => {
   });
 
   it('shows a usage ring after the builtin agent reports tokens', () => {
-    render(<AionrsSendBox conversation_id='conv-1' modelSelection={modelSelection} />);
-    expect(sendBoxPropsSpy.mock.calls.at(-1)?.[0]).toMatchObject({ sendButtonPrefix: undefined });
+    const { rerender } = render(<AionrsSendBox conversation_id='conv-1' modelSelection={modelSelection} />);
+    expect(screen.queryByTestId('context-usage-indicator')).not.toBeInTheDocument();
 
     aionrsMessageState.tokenUsage = { total_tokens: 240 };
-    render(<AionrsSendBox conversation_id='conv-1' modelSelection={modelSelection} />);
-    expect(sendBoxPropsSpy.mock.calls.at(-1)?.[0].sendButtonPrefix).toBeTruthy();
+    rerender(<AionrsSendBox conversation_id='conv-1' modelSelection={modelSelection} />);
+    expect(screen.getByTestId('context-usage-indicator')).toBeInTheDocument();
   });
 
   describe('mid-turn interjection controls', () => {

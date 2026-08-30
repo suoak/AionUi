@@ -48,8 +48,8 @@ import { emitter, useAddEventListener } from '@/renderer/utils/emitter';
 import { localSelectionItems, mergeFileSelectionItems } from '@/renderer/utils/file/fileSelection';
 import { collectChatFileRefs, splitChatFileRefs } from '@/renderer/utils/file/messageFiles';
 import type { ChatFileRef } from '@/common/types/chatFile';
-import { Message, Select, Tag } from '@arco-design/web-react';
-import { Brain, MagicHat, Shield } from '@icon-park/react';
+import { Button, Message, Select, Tag } from '@arco-design/web-react';
+import { Brain, Lightning, MagicHat, Shield } from '@icon-park/react';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { classifyConversationBusyError } from '../conversationBusyError';
@@ -177,7 +177,7 @@ const AcpSendBox: React.FC<{
     conversation_id,
     prepareRuntime: prepareRuntimeConfig,
     prepareSetRuntime: teamPermission?.warmupSession,
-    loadConfigOptions: teamPermission?.loadConfigOptions,
+    configOptionsPort: teamPermission?.configOptionsPort,
     enabled: true,
   });
   const runtimeMode = runtimeConfig.mode;
@@ -197,7 +197,7 @@ const AcpSendBox: React.FC<{
     backend,
     prepareRuntime: prepareRuntimeConfig,
     prepareSetRuntime: teamPermission?.warmupSession,
-    loadConfigOptions: teamPermission?.loadConfigOptions,
+    configOptionsPort: teamPermission?.configOptionsPort,
     enabled: isMobile,
     onSelectModelSuccess: () => Message.success(t('agent.model.switchSuccess')),
     onSelectModelFailed: (_modelId, error) => Message.error(t(configErrorMessageKey(error))),
@@ -494,6 +494,22 @@ Please check your local CLI tool authentication status`,
     clearFiles();
     emitter.emit('acp.selected.file.clear');
   }, [atPath, clearFiles, content, enqueue, selectedSessions, setContent, uploadFile]);
+
+  const [interrupting, setInterrupting] = useState(false);
+  const handleInterruptSend = async () => {
+    if (!teamRuntime?.onInterruptSend || !content.trim() || interrupting) return;
+    const files = collectChatFileRefs(uploadFile, atPath);
+    const input = content;
+    setContent('');
+    clearFiles();
+    emitter.emit('acp.selected.file.clear');
+    setInterrupting(true);
+    try {
+      await teamRuntime.onInterruptSend({ input, files });
+    } finally {
+      setInterrupting(false);
+    }
+  };
 
   const handleEditQueuedCommand = useCallback(
     (item: ConversationCommandQueueItem) => {
@@ -882,7 +898,7 @@ Please check your local CLI tool authentication status`,
                 onModeChanged={isLeaderInTeam ? teamPermission?.propagateMode : undefined}
                 beforeRuntimeSync={prepareRuntimeConfig}
                 beforeRuntimeSet={teamPermission?.warmupSession}
-                loadConfigOptions={teamPermission?.loadConfigOptions}
+                configOptionsPort={teamPermission?.configOptionsPort}
               />
             )}
           </div>
@@ -935,15 +951,28 @@ Please check your local CLI tool authentication status`,
         sendButtonPrefix={
           // Agents reporting a window size (UsageUpdate.size) get a progress
           // ring; agents reporting only a token count get a hollow ring whose
-          // popover shows the raw count â never a percentage against a
-          // guessed denominator. No usage report at all â nothing.
-          tokenUsage ? (
-            <ContextUsageIndicator
-              tokenUsage={tokenUsage}
-              context_limit={context_limit}
-              conversation_id={conversation_id}
-            />
-          ) : undefined
+          // popover shows the raw count — never a percentage against a
+          // guessed denominator. No usage report at all → nothing.
+          <>
+            {teamRuntime?.onInterruptSend && content.trim() && (
+              <Button
+                size='mini'
+                type='secondary'
+                icon={<Lightning />}
+                loading={interrupting}
+                onClick={() => void handleInterruptSend()}
+              >
+                {t('team.interruptAndSend')}
+              </Button>
+            )}
+            {tokenUsage ? (
+              <ContextUsageIndicator
+                tokenUsage={tokenUsage}
+                context_limit={context_limit}
+                conversation_id={conversation_id}
+              />
+            ) : undefined}
+          </>
         }
         onAddToDraft={handleAddToQueue}
         addToDraftDisabled={!canQueueCurrentDraft}
