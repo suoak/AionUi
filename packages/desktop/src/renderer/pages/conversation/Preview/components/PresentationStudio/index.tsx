@@ -73,16 +73,16 @@ const PresentationStudio: React.FC<Props> = ({
   const [catalogError, setCatalogError] = useState(false);
   const [saveConflict, setSaveConflict] = useState(false);
   const [importingAssetId, setImportingAssetId] = useState<string>();
-  const dirtyRevision = useRef<number>();
+  const dirtyRevision = useRef<number | undefined>(undefined);
   const currentRevision = useRef(spec?.revision);
   const specRef = useRef(spec);
-  const activeJob = useRef<PresentationRenderJob>();
+  const activeJob = useRef<PresentationRenderJob | undefined>(undefined);
   const reloadRequested = useRef(false);
   specRef.current = spec;
 
   const cancelActiveRender = useCallback(() => {
     if (activeJob.current && ['queued', 'running'].includes(activeJob.current.status)) {
-      void ipcBridge.presentation.cancel.invoke({ job_id: activeJob.current.job_id }).catch(() => undefined);
+      void ipcBridge.presentation.cancel.invoke({ job_id: activeJob.current.job_id }).catch((): void => undefined);
     }
     activeJob.current = undefined;
     setJob(undefined);
@@ -103,7 +103,7 @@ const PresentationStudio: React.FC<Props> = ({
   useEffect(
     () => () => {
       if (activeJob.current && ['queued', 'running'].includes(activeJob.current.status)) {
-        void ipcBridge.presentation.cancel.invoke({ job_id: activeJob.current.job_id }).catch(() => undefined);
+        void ipcBridge.presentation.cancel.invoke({ job_id: activeJob.current.job_id }).catch((): void => undefined);
       }
     },
     []
@@ -148,7 +148,7 @@ const PresentationStudio: React.FC<Props> = ({
     async (revision: number) => {
       const started = await ipcBridge.presentation.render.invoke({ ...source, expected_revision: revision });
       if (!isCurrentRevision(currentRevision.current, revision)) {
-        void ipcBridge.presentation.cancel.invoke({ job_id: started.job_id }).catch(() => undefined);
+        void ipcBridge.presentation.cancel.invoke({ job_id: started.job_id }).catch((): void => undefined);
         return;
       }
       activeJob.current = started;
