@@ -5,6 +5,7 @@
  */
 
 import type { PreviewContentType } from '@/common/types/office/preview';
+import { NATIVE_PRESENTATION_STUDIO_ENABLED } from '@/common/config/constants';
 
 /**
  * 文件扩展名到内容类型的映射配置
@@ -19,6 +20,7 @@ export const FILE_EXTENSION_MAP: Record<PreviewContentType, readonly string[]> =
   // which does not help for a format it cannot open.
   word: ['docx'],
   ppt: ['pptx'],
+  presentation: [],
   excel: ['xlsx'],
   // CSV is plain text, and officecli rejects it outright — so it reads as text
   // rather than failing in a spreadsheet renderer.
@@ -88,6 +90,9 @@ export const getFileExtension = (file_path: string): string => {
  * ```
  */
 export const getContentTypeByExtension = (file_path: string): PreviewContentType => {
+  if (NATIVE_PRESENTATION_STUDIO_ENABLED && file_path.toLowerCase().endsWith('.workmate-deck.json')) {
+    return 'presentation';
+  }
   const ext = getFileExtension(file_path);
   if (!ext) return 'code'; // 没有扩展名，默认为 code / No extension, default to code
 

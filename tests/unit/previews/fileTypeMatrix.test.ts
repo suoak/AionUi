@@ -117,6 +117,17 @@ describe('unchanged mappings still hold', () => {
   });
 });
 
+describe('native presentation source files', () => {
+  it('use the semantic studio in both file entry points', () => {
+    expect(getContentTypeByExtension('quarterly.workmate-deck.json')).toBe('presentation');
+    expect(getFileTypeInfo('quarterly.workmate-deck.json')).toEqual({
+      contentType: 'presentation',
+      editable: true,
+      language: 'json',
+    });
+  });
+});
+
 // Two implementations, different entry points: `getContentTypeByExtension` serves
 // the explorer and local-file links, `getFileTypeInfo` serves diff cards and
 // message file-change rows. They must not disagree, or the same file opens one way

@@ -72,6 +72,10 @@ describe('fileUtils', () => {
       expect(getContentTypeByExtension('changes.diff')).toBe('diff');
     });
 
+    it('recognizes the compound WorkMate deck suffix before .json', () => {
+      expect(getContentTypeByExtension('quarterly.workmate-deck.json')).toBe('presentation');
+    });
+
     it('returns code as default for unknown extension', () => {
       expect(getContentTypeByExtension('script.ts')).toBe('code');
       expect(getContentTypeByExtension('app.jsx')).toBe('code');

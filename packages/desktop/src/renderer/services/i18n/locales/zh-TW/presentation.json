@@ -1,0 +1,12 @@
+{
+  "action": { "undo": "復原", "redo": "重做", "validate": "驗證", "export": "匯出 PPTX", "duplicate": "複製頁面", "delete": "刪除頁面", "uploadImage": "上傳", "selectImage": "工作區", "generateImage": "產生圖片", "regenerate": "重新產生目前頁面" },
+  "field": { "slideTitle": "頁面標題", "layout": "版式", "hidden": "隱藏頁面", "notes": "講者備註", "content": "內容" },
+  "conflict": { "description": "此 Deck 已在磁碟上發生變更。自動儲存已暫停，以保護兩個版本。", "reload": "重新載入磁碟版本", "saveAs": "另存副本" },
+  "catalog": { "theme": { "business-light": "商務簡約", "technology-dark": "深色科技", "editorial-report": "編輯報告" }, "layout": { "cover": "封面", "agenda": "目錄", "section": "章節過渡", "statement": "核心觀點", "metrics": "指標卡片", "comparison": "對比分析", "timeline": "流程／時間線", "chart": "圖表主導", "image-text": "圖文分欄", "cards": "卡片矩陣", "matrix": "表格／二維矩陣", "closing": "總結／行動／結束頁" }, "control": { "balance": "分欄比例", "showInsight": "顯示洞察欄", "mediaSide": "媒體位置" }, "option": { "left": "左側", "right": "右側" } },
+  "slide": { "hidden": "已隱藏", "regeneratePrompt": "請根據已確認的大綱和現有證據，只重新產生簡報頁面 {{slideId}}。保留穩定的頁面 ID，更新語意內容區塊和講者備註，然後驗證 DeckSpec。" },
+  "outline": { "description": "請先確認大綱和主題，再產生完整簡報。", "continue": "在對話中繼續", "continuePrompt": "簡報的大綱和主題已確認。請補全語意內容、講者備註和媒體需求，然後驗證 DeckSpec。" },
+  "media": { "imageFiles": "圖片檔案", "assetIdRequired": "此圖片內容區塊需要先設定資產 ID 才能匯入媒體。", "fileTooLarge": "圖片不可超過 25 MB。", "importSuccess": "圖片匯入成功", "importFailed": "圖片匯入失敗", "importOutdated": "圖片已匯入，但媒體槽在更新 DeckSpec 前發生了變更。", "generatePrompt": "請使用已設定的自訂圖片模型，為簡報頁面 {{slideId}} 的內容區塊 {{blockId}}、資產 {{assetId}} 產生圖片。將檔案儲存到此 Deck 的 assets 目錄並只更新此媒體槽；若產生失敗，請保留舊圖片。" },
+  "status": { "valid": "簡報驗證通過", "invalid": "簡報需要修正", "validateFailed": "驗證失敗", "saveFailed": "自動儲存失敗", "renderFailed": "PPTX 匯出失敗" },
+  "job": { "queued": "已排隊", "running": "正在產生 PPTX…", "completed": "PPTX 已就緒", "failed": "產生失敗", "cancelled": "產生已取消" },
+  "error": { "invalidSpec": "此檔案不是有效的 WorkMate DeckSpec v1。", "catalogUnavailable": "內建簡報目錄無法使用。", "noSlides": "簡報中沒有頁面。" }
+}

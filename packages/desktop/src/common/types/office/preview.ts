@@ -11,6 +11,7 @@ export type PreviewContentType =
   | 'html'
   | 'pdf'
   | 'ppt'
+  | 'presentation'
   | 'word'
   | 'excel'
   | 'image'
