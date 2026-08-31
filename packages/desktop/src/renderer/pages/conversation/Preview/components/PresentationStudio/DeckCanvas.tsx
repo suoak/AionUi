@@ -48,55 +48,56 @@ const DeckCanvas: React.FC<Props> = ({
       fontFamily: theme?.tokens.fontFamily,
     }}
   >
-    {layout && resolveLayoutSlots(layout, slide).map((slot) => {
-      const block = slide.blocks.find((item) => item.slot === slot.id);
-      return (
-        <div
-          key={slot.id}
-          className={`absolute overflow-hidden rd-6px border border-solid whitespace-pre-line ${
-            block?.id === selectedBlockId ? 'border-primary' : 'border-transparent'
-          }`}
-          style={{
-            left: `${slot.x * 100}%`,
-            top: `${slot.y * 100}%`,
-            width: `${slot.width * 100}%`,
-            height: `${slot.height * 100}%`,
-            background:
-              block && ['metric', 'shape'].includes(block.type) ? color(theme, 'surface', 'FFFFFF') : undefined,
-            color: block?.type === 'metric' ? color(theme, 'accent', '246BFD') : undefined,
-          }}
-        >
-          {block?.id === selectedBlockId && !['image', 'chart', 'table', 'shape'].includes(block.type) ? (
-            <Input.TextArea
-              autoFocus
-              className='w-full h-full p-10px'
-              value={blockLabel(block)}
-              onChange={(value) => onEditBlockText(block.id, value)}
-            />
-          ) : block ? (
-            <Button
-              type='text'
-              long
-              className='w-full h-full p-10px text-left whitespace-pre-line'
-              onClick={() => onSelectBlock(block.id)}
-            >
-              {block.type === 'image' ? (
-                <MediaBlock
-                  asset={assets.find((asset) => asset.id === block.assetId)}
-                  deckRef={deckRef}
-                  deckPath={deckPath}
-                  fallback={blockLabel(block)}
-                />
-              ) : (
-                blockLabel(block)
-              )}
-            </Button>
-          ) : (
-            <span className='block p-10px text-t-tertiary text-11px'>{slot.id}</span>
-          )}
-        </div>
-      );
-    })}
+    {layout &&
+      resolveLayoutSlots(layout, slide).map((slot) => {
+        const block = slide.blocks.find((item) => item.slot === slot.id);
+        return (
+          <div
+            key={slot.id}
+            className={`absolute overflow-hidden rd-6px border border-solid whitespace-pre-line ${
+              block?.id === selectedBlockId ? 'border-primary' : 'border-transparent'
+            }`}
+            style={{
+              left: `${slot.x * 100}%`,
+              top: `${slot.y * 100}%`,
+              width: `${slot.width * 100}%`,
+              height: `${slot.height * 100}%`,
+              background:
+                block && ['metric', 'shape'].includes(block.type) ? color(theme, 'surface', 'FFFFFF') : undefined,
+              color: block?.type === 'metric' ? color(theme, 'accent', '246BFD') : undefined,
+            }}
+          >
+            {block?.id === selectedBlockId && !['image', 'chart', 'table', 'shape'].includes(block.type) ? (
+              <Input.TextArea
+                autoFocus
+                className='w-full h-full p-10px'
+                value={blockLabel(block)}
+                onChange={(value) => onEditBlockText(block.id, value)}
+              />
+            ) : block ? (
+              <Button
+                type='text'
+                long
+                className='w-full h-full p-10px text-left whitespace-pre-line'
+                onClick={() => onSelectBlock(block.id)}
+              >
+                {block.type === 'image' ? (
+                  <MediaBlock
+                    asset={assets.find((asset) => asset.id === block.assetId)}
+                    deckRef={deckRef}
+                    deckPath={deckPath}
+                    fallback={blockLabel(block)}
+                  />
+                ) : (
+                  blockLabel(block)
+                )}
+              </Button>
+            ) : (
+              <span className='block p-10px text-t-tertiary text-11px'>{slot.id}</span>
+            )}
+          </div>
+        );
+      })}
   </div>
 );
 

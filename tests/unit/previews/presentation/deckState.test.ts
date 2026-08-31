@@ -43,9 +43,7 @@ describe('WorkMate presentation deck state', () => {
     expect(parseDeckSpec(serializeDeckSpec(deck()))?.revision).toBe(4);
     expect(parseDeckSpec('{"schemaVersion":2}')).toBeNull();
     expect(
-      parseDeckSpec(
-        JSON.stringify({ ...deck(), slides: [{ id: 'broken', role: 'cover', layoutId: 'cover' }] })
-      )
+      parseDeckSpec(JSON.stringify({ ...deck(), slides: [{ id: 'broken', role: 'cover', layoutId: 'cover' }] }))
     ).toBeNull();
     expect(parseDeckSpec('not json')).toBeNull();
   });
@@ -205,7 +203,11 @@ describe('WorkMate presentation deck state', () => {
 
   it('resolves local Windows asset paths and rejects traversal', () => {
     expect(
-      resolveAssetFileRef({ kind: 'local', path: 'C:\\reports\\q1.workmate-deck.json' }, undefined, 'q1.assets/hero.png')
+      resolveAssetFileRef(
+        { kind: 'local', path: 'C:\\reports\\q1.workmate-deck.json' },
+        undefined,
+        'q1.assets/hero.png'
+      )
     ).toEqual({ kind: 'local', path: 'C:\\reports\\q1.assets\\hero.png' });
     expect(resolveAssetFileRef(undefined, '/workspace/q1.workmate-deck.json', '../secret.png')).toBeNull();
   });

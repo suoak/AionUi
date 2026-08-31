@@ -24,10 +24,7 @@ describe('WorkMate presentation media block', () => {
       />
     );
 
-    expect(await screen.findByRole('img', { name: 'Hero' })).toHaveAttribute(
-      'src',
-      'data:image/png;base64,aGVybw=='
-    );
+    expect(await screen.findByRole('img', { name: 'Hero' })).toHaveAttribute('src', 'data:image/png;base64,aGVybw==');
     expect(ipcBridge.fs.readContent.invoke).toHaveBeenCalledWith({
       file: { kind: 'project', pe_id: 'pe-1', relative_path: 'reports/q1.assets/hero.png' },
       encoding: 'dataurl',

@@ -73,7 +73,11 @@ const Inspector: React.FC<Props> = ({
             {control.type === 'toggle' ? (
               <Switch size='small' checked={Boolean(value)} onChange={(checked) => setControl(control.id, checked)} />
             ) : control.type === 'select' ? (
-              <Select className='w-full' value={String(value)} onChange={(selected) => setControl(control.id, selected)}>
+              <Select
+                className='w-full'
+                value={String(value)}
+                onChange={(selected) => setControl(control.id, selected)}
+              >
                 {control.options?.map((option) => (
                   <Select.Option key={option} value={option}>
                     {t(`presentation.catalog.option.${option}`, { defaultValue: option })}

@@ -1,12 +1,86 @@
 {
-  "action": { "undo": "Undo", "redo": "Redo", "validate": "Validate", "export": "Export PPTX", "duplicate": "Duplicate slide", "delete": "Delete slide", "uploadImage": "Upload", "selectImage": "Workspace", "generateImage": "Generate image", "regenerate": "Regenerate slide" },
-  "field": { "slideTitle": "Slide title", "layout": "Layout", "hidden": "Hidden", "notes": "Speaker notes", "content": "Content" },
-  "conflict": { "description": "This deck changed on disk. Automatic saving is paused to protect both versions.", "reload": "Reload disk version", "saveAs": "Save a copy" },
-  "catalog": { "theme": { "business-light": "Business Light", "technology-dark": "Technology Dark", "editorial-report": "Editorial Report" }, "layout": { "cover": "Cover", "agenda": "Agenda", "section": "Section", "statement": "Core statement", "metrics": "Metrics", "comparison": "Comparison", "timeline": "Timeline", "chart": "Chart", "image-text": "Image and text", "cards": "Cards", "matrix": "Table or matrix", "closing": "Closing" }, "control": { "balance": "Column balance", "showInsight": "Show insight panel", "mediaSide": "Media side" }, "option": { "left": "Left", "right": "Right" } },
-  "slide": { "hidden": "Hidden", "regeneratePrompt": "Regenerate only presentation slide {{slideId}} using the confirmed outline and available evidence. Preserve its stable slide ID, update semantic blocks and speaker notes, then validate the DeckSpec." },
-  "outline": { "description": "Review the outline and theme before generating the full presentation.", "continue": "Continue in chat", "continuePrompt": "The presentation outline and theme are confirmed. Please complete the semantic content, speaker notes, and media requirements, then validate the DeckSpec." },
-  "media": { "imageFiles": "Image files", "assetIdRequired": "This image block needs an asset ID before media can be imported.", "fileTooLarge": "Images cannot exceed 25 MB.", "importSuccess": "Image imported", "importFailed": "Image import failed", "importOutdated": "The image was imported, but its media slot changed before the DeckSpec could be updated.", "generatePrompt": "Generate an image for presentation slide {{slideId}}, block {{blockId}}, asset {{assetId}}, using the configured custom image model. Save it in this deck's assets directory and update only that asset slot; preserve the previous image if generation fails." },
-  "status": { "valid": "Presentation is valid", "invalid": "Presentation needs attention", "validateFailed": "Validation failed", "saveFailed": "Automatic save failed", "renderFailed": "PPTX export failed" },
-  "job": { "queued": "Queued", "running": "Building PPTX…", "completed": "PPTX is ready", "failed": "Build failed", "cancelled": "Build cancelled" },
-  "error": { "invalidSpec": "This file is not a valid WorkMate DeckSpec v1.", "catalogUnavailable": "The built-in presentation catalog is unavailable.", "noSlides": "This presentation has no slides." }
+  "action": {
+    "undo": "Undo",
+    "redo": "Redo",
+    "validate": "Validate",
+    "export": "Export PPTX",
+    "duplicate": "Duplicate slide",
+    "delete": "Delete slide",
+    "uploadImage": "Upload",
+    "selectImage": "Workspace",
+    "generateImage": "Generate image",
+    "regenerate": "Regenerate slide"
+  },
+  "field": {
+    "slideTitle": "Slide title",
+    "layout": "Layout",
+    "hidden": "Hidden",
+    "notes": "Speaker notes",
+    "content": "Content"
+  },
+  "conflict": {
+    "description": "This deck changed on disk. Automatic saving is paused to protect both versions.",
+    "reload": "Reload disk version",
+    "saveAs": "Save a copy"
+  },
+  "catalog": {
+    "theme": {
+      "business-light": "Business Light",
+      "technology-dark": "Technology Dark",
+      "editorial-report": "Editorial Report"
+    },
+    "layout": {
+      "cover": "Cover",
+      "agenda": "Agenda",
+      "section": "Section",
+      "statement": "Core statement",
+      "metrics": "Metrics",
+      "comparison": "Comparison",
+      "timeline": "Timeline",
+      "chart": "Chart",
+      "image-text": "Image and text",
+      "cards": "Cards",
+      "matrix": "Table or matrix",
+      "closing": "Closing"
+    },
+    "control": { "balance": "Column balance", "showInsight": "Show insight panel", "mediaSide": "Media side" },
+    "option": { "left": "Left", "right": "Right" }
+  },
+  "slide": {
+    "hidden": "Hidden",
+    "regeneratePrompt": "Regenerate only presentation slide {{slideId}} using the confirmed outline and available evidence. Preserve its stable slide ID, update semantic blocks and speaker notes, then validate the DeckSpec."
+  },
+  "outline": {
+    "description": "Review the outline and theme before generating the full presentation.",
+    "continue": "Continue in chat",
+    "continuePrompt": "The presentation outline and theme are confirmed. Please complete the semantic content, speaker notes, and media requirements, then validate the DeckSpec."
+  },
+  "media": {
+    "imageFiles": "Image files",
+    "assetIdRequired": "This image block needs an asset ID before media can be imported.",
+    "fileTooLarge": "Images cannot exceed 25 MB.",
+    "importSuccess": "Image imported",
+    "importFailed": "Image import failed",
+    "importOutdated": "The image was imported, but its media slot changed before the DeckSpec could be updated.",
+    "generatePrompt": "Generate an image for presentation slide {{slideId}}, block {{blockId}}, asset {{assetId}}, using the configured custom image model. Save it in this deck's assets directory and update only that asset slot; preserve the previous image if generation fails."
+  },
+  "status": {
+    "valid": "Presentation is valid",
+    "invalid": "Presentation needs attention",
+    "validateFailed": "Validation failed",
+    "saveFailed": "Automatic save failed",
+    "renderFailed": "PPTX export failed"
+  },
+  "job": {
+    "queued": "Queued",
+    "running": "Building PPTX…",
+    "completed": "PPTX is ready",
+    "failed": "Build failed",
+    "cancelled": "Build cancelled"
+  },
+  "error": {
+    "invalidSpec": "This file is not a valid WorkMate DeckSpec v1.",
+    "catalogUnavailable": "The built-in presentation catalog is unavailable.",
+    "noSlides": "This presentation has no slides."
+  }
 }

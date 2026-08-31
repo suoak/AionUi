@@ -1,12 +1,76 @@
 {
-  "action": { "undo": "撤销", "redo": "重做", "validate": "校验", "export": "导出 PPTX", "duplicate": "复制页面", "delete": "删除页面", "uploadImage": "上传", "selectImage": "工作区", "generateImage": "生成图片", "regenerate": "重新生成当前页" },
+  "action": {
+    "undo": "撤销",
+    "redo": "重做",
+    "validate": "校验",
+    "export": "导出 PPTX",
+    "duplicate": "复制页面",
+    "delete": "删除页面",
+    "uploadImage": "上传",
+    "selectImage": "工作区",
+    "generateImage": "生成图片",
+    "regenerate": "重新生成当前页"
+  },
   "field": { "slideTitle": "页面标题", "layout": "版式", "hidden": "隐藏页面", "notes": "讲者备注", "content": "内容" },
-  "conflict": { "description": "该 Deck 已在磁盘上发生变化。自动保存已暂停，以保护两个版本。", "reload": "重新加载磁盘版本", "saveAs": "另存副本" },
-  "catalog": { "theme": { "business-light": "商务简约", "technology-dark": "深色科技", "editorial-report": "编辑报告" }, "layout": { "cover": "封面", "agenda": "目录", "section": "章节过渡", "statement": "核心观点", "metrics": "指标卡片", "comparison": "对比分析", "timeline": "流程／时间线", "chart": "图表主导", "image-text": "图文分栏", "cards": "卡片矩阵", "matrix": "表格／二维矩阵", "closing": "总结／行动／结束页" }, "control": { "balance": "分栏比例", "showInsight": "显示洞察栏", "mediaSide": "媒体位置" }, "option": { "left": "左侧", "right": "右侧" } },
-  "slide": { "hidden": "已隐藏", "regeneratePrompt": "请根据已确认的大纲和现有证据，只重新生成演示文稿页面 {{slideId}}。保留稳定的页面 ID，更新语义内容块和讲者备注，然后校验 DeckSpec。" },
-  "outline": { "description": "请先确认大纲和主题，再生成完整演示文稿。", "continue": "在对话中继续", "continuePrompt": "演示文稿的大纲和主题已确认。请补全语义内容、讲者备注和媒体需求，然后校验 DeckSpec。" },
-  "media": { "imageFiles": "图片文件", "assetIdRequired": "该图片内容块需要先设置资产 ID 才能导入媒体。", "fileTooLarge": "图片不能超过 25 MB。", "importSuccess": "图片导入成功", "importFailed": "图片导入失败", "importOutdated": "图片已导入，但媒体槽在更新 DeckSpec 前发生了变化。", "generatePrompt": "请使用已配置的自定义图片模型，为演示文稿页面 {{slideId}} 的内容块 {{blockId}}、资产 {{assetId}} 生成图片。将文件保存到该 Deck 的 assets 目录并只更新这个媒体槽；如果生成失败，请保留旧图片。" },
-  "status": { "valid": "演示文稿校验通过", "invalid": "演示文稿需要修正", "validateFailed": "校验失败", "saveFailed": "自动保存失败", "renderFailed": "PPTX 导出失败" },
-  "job": { "queued": "已排队", "running": "正在生成 PPTX…", "completed": "PPTX 已就绪", "failed": "生成失败", "cancelled": "生成已取消" },
-  "error": { "invalidSpec": "该文件不是有效的 WorkMate DeckSpec v1。", "catalogUnavailable": "内置演示目录不可用。", "noSlides": "演示文稿中没有页面。" }
+  "conflict": {
+    "description": "该 Deck 已在磁盘上发生变化。自动保存已暂停，以保护两个版本。",
+    "reload": "重新加载磁盘版本",
+    "saveAs": "另存副本"
+  },
+  "catalog": {
+    "theme": { "business-light": "商务简约", "technology-dark": "深色科技", "editorial-report": "编辑报告" },
+    "layout": {
+      "cover": "封面",
+      "agenda": "目录",
+      "section": "章节过渡",
+      "statement": "核心观点",
+      "metrics": "指标卡片",
+      "comparison": "对比分析",
+      "timeline": "流程／时间线",
+      "chart": "图表主导",
+      "image-text": "图文分栏",
+      "cards": "卡片矩阵",
+      "matrix": "表格／二维矩阵",
+      "closing": "总结／行动／结束页"
+    },
+    "control": { "balance": "分栏比例", "showInsight": "显示洞察栏", "mediaSide": "媒体位置" },
+    "option": { "left": "左侧", "right": "右侧" }
+  },
+  "slide": {
+    "hidden": "已隐藏",
+    "regeneratePrompt": "请根据已确认的大纲和现有证据，只重新生成演示文稿页面 {{slideId}}。保留稳定的页面 ID，更新语义内容块和讲者备注，然后校验 DeckSpec。"
+  },
+  "outline": {
+    "description": "请先确认大纲和主题，再生成完整演示文稿。",
+    "continue": "在对话中继续",
+    "continuePrompt": "演示文稿的大纲和主题已确认。请补全语义内容、讲者备注和媒体需求，然后校验 DeckSpec。"
+  },
+  "media": {
+    "imageFiles": "图片文件",
+    "assetIdRequired": "该图片内容块需要先设置资产 ID 才能导入媒体。",
+    "fileTooLarge": "图片不能超过 25 MB。",
+    "importSuccess": "图片导入成功",
+    "importFailed": "图片导入失败",
+    "importOutdated": "图片已导入，但媒体槽在更新 DeckSpec 前发生了变化。",
+    "generatePrompt": "请使用已配置的自定义图片模型，为演示文稿页面 {{slideId}} 的内容块 {{blockId}}、资产 {{assetId}} 生成图片。将文件保存到该 Deck 的 assets 目录并只更新这个媒体槽；如果生成失败，请保留旧图片。"
+  },
+  "status": {
+    "valid": "演示文稿校验通过",
+    "invalid": "演示文稿需要修正",
+    "validateFailed": "校验失败",
+    "saveFailed": "自动保存失败",
+    "renderFailed": "PPTX 导出失败"
+  },
+  "job": {
+    "queued": "已排队",
+    "running": "正在生成 PPTX…",
+    "completed": "PPTX 已就绪",
+    "failed": "生成失败",
+    "cancelled": "生成已取消"
+  },
+  "error": {
+    "invalidSpec": "该文件不是有效的 WorkMate DeckSpec v1。",
+    "catalogUnavailable": "内置演示目录不可用。",
+    "noSlides": "演示文稿中没有页面。"
+  }
 }
