@@ -15,26 +15,21 @@ import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js'
 import { z } from 'zod';
 import { BUILTIN_IMAGE_GEN_ID, BUILTIN_IMAGE_GEN_NAME } from './constants';
 import { executeImageGeneration } from '@/common/chat/imageGenCore';
+import { readImageGenerationRuntimeEnv } from '@/common/config/imageGenerationMcpEnv';
 import type { TProviderWithModel } from '@/common/config/storage';
 
 // Read provider config from environment variables
 function getProviderFromEnv(): TProviderWithModel | null {
-  const platform = process.env.AIONUI_IMG_PLATFORM;
-  const base_url = process.env.AIONUI_IMG_BASE_URL;
-  const api_key = process.env.AIONUI_IMG_API_KEY;
-  const model = process.env.AIONUI_IMG_MODEL;
-
-  if (!platform || !model) {
-    return null;
-  }
+  const runtimeEnv = readImageGenerationRuntimeEnv(process.env);
+  if (!runtimeEnv) return null;
 
   return {
     id: BUILTIN_IMAGE_GEN_ID,
     name: BUILTIN_IMAGE_GEN_NAME,
-    platform,
-    base_url: base_url || '',
-    api_key: api_key || '',
-    use_model: model,
+    platform: runtimeEnv.platform,
+    base_url: runtimeEnv.baseUrl,
+    api_key: runtimeEnv.apiKey,
+    use_model: runtimeEnv.model,
   };
 }
 
@@ -102,7 +97,7 @@ IMPORTANT: When user provides multiple images, ALWAYS pass ALL images to the ima
         };
       }
 
-      const proxy = process.env.AIONUI_IMG_PROXY || undefined;
+      const proxy = readImageGenerationRuntimeEnv(process.env)?.proxy;
       // Trusted workspace root: the MCP server inherits the agent process cwd,
       // which the backend sets to the conversation workspace. Never accept a
       // workspace path from the model (path traversal boundary).

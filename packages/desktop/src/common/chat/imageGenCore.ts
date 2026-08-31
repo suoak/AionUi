@@ -12,16 +12,23 @@
 
 import * as fs from 'fs';
 import * as path from 'path';
+import { randomUUID } from 'node:crypto';
 import { jsonrepair } from 'jsonrepair';
 import type OpenAI from 'openai';
 import { ClientFactory, type RotatingClient } from '@/common/api/ClientFactory';
+import type { OpenAIRotatingClient } from '@/common/api/OpenAIRotatingClient';
+import type { OpenAIChatCompletionParams } from '@/common/api/OpenAI2GeminiConverter';
 import type { TProviderWithModel } from '@/common/config/storage';
 import type { UnifiedChatCompletionResponse } from '@/common/api/RotatingApiClient';
 import { IMAGE_EXTENSIONS, MIME_TYPE_MAP, MIME_TO_EXT_MAP, DEFAULT_IMAGE_EXTENSION } from '@/common/config/constants';
+import { resolveImageGenerationApiMode } from '@/common/utils/imageModelAllowlist';
 
-const API_TIMEOUT_MS = 120000; // 2 minutes for image generation API calls
+const API_TIMEOUT_MS = 180000;
+const MAX_IMAGE_DOWNLOAD_BYTES = 64 * 1024 * 1024;
 
 type ImageExtension = (typeof IMAGE_EXTENSIONS)[number];
+
+const createGeneratedImageName = (extension: string): string => `img-${Date.now()}-${randomUUID()}${extension}`;
 
 // ===== Path Boundary Helpers =====
 
@@ -68,11 +75,11 @@ export function safeJsonParse<T = unknown>(jsonString: string, fallbackValue: T)
 
   try {
     return JSON.parse(jsonString) as T;
-  } catch (_error) {
+  } catch {
     try {
       const repairedJson = jsonrepair(jsonString);
       return JSON.parse(repairedJson) as T;
-    } catch (_repairError) {
+    } catch {
       console.warn('[ImageGen] JSON parse failed:', jsonString.substring(0, 50));
       return fallbackValue;
     }
@@ -115,14 +122,89 @@ export function getFileExtensionFromDataUrl(dataUrl: string): string {
   return DEFAULT_IMAGE_EXTENSION;
 }
 
-export async function saveGeneratedImage(base64Data: string, workspaceDir: string): Promise<string> {
-  const timestamp = Date.now();
-  const fileExtension = getFileExtensionFromDataUrl(base64Data);
-  const file_name = `img-${timestamp}${fileExtension}`;
+function imageSizeLimitError(): Error {
+  return new Error(`Generated image exceeds the ${MAX_IMAGE_DOWNLOAD_BYTES / 1024 / 1024} MB download limit.`);
+}
+
+async function readGeneratedImageBody(response: Response): Promise<Buffer> {
+  if (!response.body) {
+    const buffer = Buffer.from(await response.arrayBuffer());
+    if (buffer.byteLength > MAX_IMAGE_DOWNLOAD_BYTES) throw imageSizeLimitError();
+    return buffer;
+  }
+
+  const reader = response.body.getReader();
+  const chunks: Uint8Array[] = [];
+  let totalBytes = 0;
+  try {
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      totalBytes += value.byteLength;
+      if (totalBytes > MAX_IMAGE_DOWNLOAD_BYTES) {
+        await reader.cancel().catch((): void => undefined);
+        throw imageSizeLimitError();
+      }
+      chunks.push(value);
+    }
+  } finally {
+    reader.releaseLock();
+  }
+  return Buffer.concat(chunks, totalBytes);
+}
+
+async function downloadGeneratedImage(url: string, workspaceDir: string, signal?: AbortSignal): Promise<string> {
+  const response = await fetch(url, { signal });
+  if (!response.ok) {
+    throw new Error(`Failed to download generated image: HTTP ${response.status} ${response.statusText}`);
+  }
+
+  const declaredLength = Number(response.headers.get('content-length'));
+  if (Number.isFinite(declaredLength) && declaredLength > MAX_IMAGE_DOWNLOAD_BYTES) {
+    throw imageSizeLimitError();
+  }
+
+  const contentType = (response.headers.get('content-type') || '').split(';')[0].trim().toLowerCase();
+  if (contentType && !contentType.startsWith('image/') && contentType !== 'application/octet-stream') {
+    throw new Error(`Generated image URL returned unsupported content type: ${contentType}`);
+  }
+
+  const imageBuffer = await readGeneratedImageBody(response);
+
+  let fileExtension = contentType.startsWith('image/')
+    ? MIME_TO_EXT_MAP[contentType.slice('image/'.length)]
+    : undefined;
+  if (!fileExtension) {
+    const urlExtension = path.extname(new URL(url).pathname).toLowerCase();
+    if (IMAGE_EXTENSIONS.includes(urlExtension as ImageExtension)) {
+      fileExtension = urlExtension;
+    }
+  }
+
+  const fileName = createGeneratedImageName(fileExtension || DEFAULT_IMAGE_EXTENSION);
+  const filePath = path.join(path.resolve(workspaceDir), fileName);
+  await fs.promises.writeFile(filePath, imageBuffer);
+  return filePath;
+}
+
+export async function saveGeneratedImage(
+  imageSource: string,
+  workspaceDir: string,
+  signal?: AbortSignal
+): Promise<string> {
+  if (isHttpUrl(imageSource)) {
+    return await downloadGeneratedImage(imageSource, workspaceDir, signal);
+  }
+
+  const fileExtension = getFileExtensionFromDataUrl(imageSource);
+  const file_name = createGeneratedImageName(fileExtension);
   const resolvedDir = path.resolve(workspaceDir);
   const file_path = path.join(resolvedDir, file_name);
 
-  const base64WithoutPrefix = base64Data.replace(/^data:image\/[^;]+;base64,/, '');
+  const base64WithoutPrefix = imageSource.replace(/^data:image\/[^;]+;base64,/, '');
+  const paddingLength = base64WithoutPrefix.endsWith('==') ? 2 : base64WithoutPrefix.endsWith('=') ? 1 : 0;
+  const decodedLength = Math.floor((base64WithoutPrefix.length * 3) / 4) - paddingLength;
+  if (decodedLength > MAX_IMAGE_DOWNLOAD_BYTES) throw imageSizeLimitError();
   const imageBuffer = Buffer.from(base64WithoutPrefix, 'base64');
 
   try {
@@ -208,6 +290,95 @@ export interface ImageGenResult {
   error?: string;
 }
 
+type OpenAIImageClient = RotatingClient & Pick<OpenAIRotatingClient, 'createImage'>;
+type ImageResultItem = { b64_json?: string; url?: string; revised_prompt?: string };
+type ImagesApiResponse = OpenAI.Images.ImagesResponse & {
+  images?: ImageResultItem[];
+  output_format?: string;
+};
+
+function supportsOpenAIImagesApi(client: RotatingClient): client is OpenAIImageClient {
+  return 'createImage' in client && typeof client.createImage === 'function';
+}
+
+function extractImageResultItems(response: ImagesApiResponse): ImageResultItem[] {
+  if (Array.isArray(response.data) && response.data.length > 0) {
+    return response.data;
+  }
+  return Array.isArray(response.images) ? response.images : [];
+}
+
+function isMicrosoftMaiProvider(provider: TProviderWithModel): boolean {
+  const baseUrl = provider.base_url.toLowerCase();
+  return (
+    baseUrl.includes('services.ai.azure.com/mai/v1') ||
+    (baseUrl.includes('services.ai.azure.com') && /^mai[-_/ ]?image/i.test(provider.use_model))
+  );
+}
+
+function ensureVersionedImagesBaseUrl(provider: TProviderWithModel): string {
+  const trimmed = provider.base_url.replace(/\/+$/, '');
+  if (isMicrosoftMaiProvider(provider) && !/\/mai\/v1$/i.test(trimmed)) {
+    return `${trimmed}/mai/v1`;
+  }
+  if (!trimmed || /\/v\d+(?:beta)?$/i.test(trimmed) || /\/openai\/deployments\//i.test(trimmed)) {
+    return trimmed;
+  }
+  return `${trimmed}/v1`;
+}
+
+async function executeOpenAIImagesGeneration(
+  prompt: string,
+  provider: TProviderWithModel,
+  rotatingClient: RotatingClient,
+  workspaceDir: string,
+  signal?: AbortSignal
+): Promise<ImageGenResult> {
+  if (!supportsOpenAIImagesApi(rotatingClient)) {
+    return {
+      success: false,
+      text: `Model ${provider.use_model} requires an OpenAI-compatible Images API provider.`,
+      error: 'OpenAI Images API is not available for the selected provider.',
+    };
+  }
+
+  const generationParams: Record<string, unknown> = { model: provider.use_model, prompt };
+  if (isMicrosoftMaiProvider(provider)) {
+    generationParams.width = 1024;
+    generationParams.height = 1024;
+  }
+
+  const response = (await rotatingClient.createImage(generationParams as unknown as OpenAI.Images.ImageGenerateParams, {
+    signal,
+    timeout: API_TIMEOUT_MS,
+  })) as ImagesApiResponse;
+  const image = extractImageResultItems(response)[0];
+  if (!image?.b64_json && !image?.url) {
+    return {
+      success: false,
+      text: 'Image generation API did not return image data or an image URL.',
+      error: 'No image data returned.',
+    };
+  }
+
+  const imagePath = image.b64_json
+    ? await saveGeneratedImage(
+        `data:image/${String(response.output_format || 'png') === 'jpg' ? 'jpeg' : String(response.output_format || 'png')};base64,${image.b64_json}`,
+        workspaceDir,
+        signal
+      )
+    : await saveGeneratedImage(image.url!, workspaceDir, signal);
+  const relativeImagePath = path.relative(workspaceDir, imagePath);
+  const revisedPrompt = image.revised_prompt ? `\n\nRevised prompt: ${image.revised_prompt}` : '';
+
+  return {
+    success: true,
+    text: `Image generated successfully.${revisedPrompt}\n\nGenerated image saved to: ${imagePath}`,
+    imagePath,
+    relativeImagePath,
+  };
+}
+
 /**
  * Core image generation function shared between MCP server and Gemini tool.
  */
@@ -257,6 +428,32 @@ export async function executeImageGeneration(
     }
 
     const hasImages = imageUris.length > 0;
+    const apiMode = resolveImageGenerationApiMode(provider, provider.use_model) || 'chat-completions';
+    if (apiMode === 'openai-images' && hasImages) {
+      return {
+        success: false,
+        text: `Image editing is not yet supported for ${provider.use_model}. Generate a new image without image_uris instead.`,
+        error: 'OpenAI Images API editing is not implemented.',
+      };
+    }
+
+    const rotatingClient: RotatingClient = await ClientFactory.createRotatingClient(provider, {
+      proxy,
+      rotatingOptions: { maxRetries: 3, retryDelay: 1000 },
+      ...(apiMode === 'openai-images'
+        ? {
+            baseConfig: {
+              baseURL: ensureVersionedImagesBaseUrl(provider),
+              ...(isMicrosoftMaiProvider(provider) ? { defaultHeaders: { 'api-key': provider.api_key } } : {}),
+            },
+          }
+        : {}),
+    });
+
+    if (apiMode === 'openai-images') {
+      return await executeOpenAIImagesGeneration(params.prompt, provider, rotatingClient, resolvedWorkspaceDir, signal);
+    }
+
     let enhancedPrompt: string;
     if (hasImages) {
       enhancedPrompt = `Analyze/Edit image: ${params.prompt}`;
@@ -264,7 +461,7 @@ export async function executeImageGeneration(
       enhancedPrompt = `Generate image: ${params.prompt}`;
     }
 
-    const contentParts: OpenAI.Chat.Completions.ChatCompletionContentPart[] = [{ type: 'text', text: enhancedPrompt }];
+    const contentParts: Array<{ type: 'text'; text: string } | ImageContent> = [{ type: 'text', text: enhancedPrompt }];
 
     // Process image URIs
     if (hasImages) {
@@ -294,16 +491,18 @@ export async function executeImageGeneration(
       }
     }
 
-    const messages: OpenAI.Chat.Completions.ChatCompletionMessageParam[] = [{ role: 'user', content: contentParts }];
-
-    // Create client and call API
-    const rotatingClient: RotatingClient = await ClientFactory.createRotatingClient(provider, {
-      proxy,
-      rotatingOptions: { maxRetries: 3, retryDelay: 1000 },
-    });
-
+    const messages = [{ role: 'user' as const, content: contentParts }];
+    const completionParams: OpenAIChatCompletionParams &
+      Omit<OpenAI.Chat.Completions.ChatCompletionCreateParamsNonStreaming, 'modalities'> & {
+        modalities?: Array<'image' | 'text'>;
+      } = {
+      model: provider.use_model,
+      messages,
+      ...(provider.base_url.toLowerCase().includes('openrouter.ai') ? { modalities: ['image', 'text'] } : {}),
+    };
     const completion: UnifiedChatCompletionResponse = await rotatingClient.createChatCompletion(
-      { model: provider.use_model, messages: messages as any },
+      completionParams as unknown as OpenAIChatCompletionParams &
+        OpenAI.Chat.Completions.ChatCompletionCreateParamsNonStreaming,
       { signal, timeout: API_TIMEOUT_MS }
     );
 
@@ -328,22 +527,26 @@ export async function executeImageGeneration(
         const file_pathRegex = /!\[[^\]]*\]\(([^)]+\.(?:jpg|jpeg|png|gif|webp|bmp|tiff|svg))\)/gi;
         const file_pathMatches = [...responseText.matchAll(file_pathRegex)];
         if (file_pathMatches.length > 0) {
-          const processedImages: Array<{ type: 'image_url'; image_url: { url: string } }> = [];
-          for (const match of file_pathMatches) {
-            const file_path = match[1];
-            try {
-              const fullPath = await resolveSafePath(resolvedWorkspaceDir, file_path);
-              await fs.promises.access(fullPath);
-              const base64Data = await fileToBase64(fullPath);
-              const mimeType = getImageMimeType(fullPath);
-              processedImages.push({
-                type: 'image_url',
-                image_url: { url: `data:${mimeType};base64,${base64Data}` },
-              });
-            } catch (_fileError) {
-              console.warn(`[ImageGen] Could not load image file: ${file_path}`);
-            }
-          }
+          const processedImages = (
+            await Promise.all(
+              file_pathMatches.map(async (match) => {
+                const filePath = match[1];
+                try {
+                  const fullPath = await resolveSafePath(resolvedWorkspaceDir, filePath);
+                  await fs.promises.access(fullPath);
+                  const base64Data = await fileToBase64(fullPath);
+                  const mimeType = getImageMimeType(fullPath);
+                  return {
+                    type: 'image_url' as const,
+                    image_url: { url: `data:${mimeType};base64,${base64Data}` },
+                  };
+                } catch {
+                  console.warn(`[ImageGen] Could not load image file: ${filePath}`);
+                  return null;
+                }
+              })
+            )
+          ).filter((image) => image !== null);
           if (processedImages.length > 0) {
             images = processedImages;
           }
@@ -358,7 +561,7 @@ export async function executeImageGeneration(
 
     const firstImage = images[0];
     if (firstImage.type === 'image_url' && firstImage.image_url?.url) {
-      const imagePath = await saveGeneratedImage(firstImage.image_url.url, resolvedWorkspaceDir);
+      const imagePath = await saveGeneratedImage(firstImage.image_url.url, resolvedWorkspaceDir, signal);
       const relativeImagePath = path.relative(resolvedWorkspaceDir, imagePath);
 
       // Strip any inline base64 data URLs from the human-readable text before

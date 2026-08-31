@@ -145,4 +145,31 @@ describe('ToolsModalContent image model guide', () => {
     );
     expect(links).toHaveLength(0);
   });
+
+  it('keeps configured custom models selectable and marks an unverified selection', async () => {
+    hooks.modelListWithImage = [
+      {
+        id: 'custom-provider',
+        name: 'Custom Provider',
+        platform: 'custom',
+        base_url: 'https://example.com/v1',
+        api_key: 'test-key',
+        models: ['saved-image-model', 'other-image-model'],
+      },
+    ];
+    hooks.getClientBusinessSetting.mockResolvedValueOnce({
+      id: 'custom-provider',
+      name: 'Custom Provider',
+      platform: 'custom',
+      base_url: '',
+      api_key: '',
+      use_model: 'saved-image-model',
+    });
+
+    render(<ToolsModalContent />);
+
+    expect(await screen.findByText('saved-image-model')).toBeInTheDocument();
+    expect(screen.getByText('other-image-model')).toBeInTheDocument();
+    expect(await screen.findByText('settings.imageGenCustomModelWarning')).toBeInTheDocument();
+  });
 });
