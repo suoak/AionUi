@@ -1742,6 +1742,39 @@ export const document = {
   >('/api/document/convert'),
 };
 
+type PresentationFileRequest = import('../types/office/presentation').PresentationFileRequest;
+type PresentationRenderJob = import('../types/office/presentation').PresentationRenderJob;
+
+export const presentation = {
+  catalog: httpGet<import('../types/office/presentation').PresentationCatalog, void>('/api/presentations/catalog'),
+  validate: httpPost<import('../types/office/presentation').PresentationValidation, PresentationFileRequest>(
+    '/api/presentations/validate',
+    (request) => ({ ...request, file_path: request.file_path ?? '' })
+  ),
+  render: httpPost<PresentationRenderJob, PresentationFileRequest & { expected_revision: number }>(
+    '/api/presentations/render',
+    ({ expected_revision, ...source }) => ({
+      ...source,
+      file_path: source.file_path ?? '',
+      expected_revision,
+    })
+  ),
+  importAsset: httpPost<
+    import('../types/office/presentation').PresentationAssetImportResponse,
+    import('../types/office/presentation').PresentationAssetImportRequest
+  >('/api/presentations/assets/import', ({ deck, ...request }) => ({
+    ...request,
+    deck: { ...deck, file_path: deck.file_path ?? '' },
+  })),
+  job: httpGet<PresentationRenderJob, { job_id: string }>(
+    ({ job_id }) => `/api/presentations/jobs/${encodeURIComponent(job_id)}`
+  ),
+  cancel: httpPost<PresentationRenderJob, { job_id: string }>(
+    ({ job_id }) => `/api/presentations/jobs/${encodeURIComponent(job_id)}/cancel`,
+    () => ({})
+  ),
+};
+
 // ---------------------------------------------------------------------------
 // Office Previews — routed to /api/*-preview/*
 // ---------------------------------------------------------------------------

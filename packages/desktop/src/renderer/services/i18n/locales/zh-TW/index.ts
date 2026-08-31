@@ -5,6 +5,7 @@ import update from './update.json';
 import login from './login.json';
 import fileSelection from './fileSelection.json';
 import preview from './preview.json';
+import presentation from './presentation.json';
 import conversation from './conversation.json';
 import settings from './settings.json';
 import messages from './messages.json';
@@ -26,6 +27,7 @@ export default {
   login,
   fileSelection,
   preview,
+  presentation,
   conversation,
   settings,
   messages,

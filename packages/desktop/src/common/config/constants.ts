@@ -119,6 +119,10 @@ export const TEAM_MODE_ENABLED = true;
 /** Desktop pet is retained in the codebase but hidden until the product enables it again. */
 export const DESKTOP_PET_FEATURE_ENABLED = false;
 
+/** Native semantic presentation editing is opt-in in packaged builds until cloud visual E2E is green. */
+export const NATIVE_PRESENTATION_STUDIO_ENABLED =
+  process.env.NODE_ENV !== 'production' || process.env.CSBU_WORKMATE_NATIVE_PRESENTATION_STUDIO === '1';
+
 /** Keep the desktop process discoverable after users close the main window. */
 export const CLOSE_TO_TRAY_DEFAULT_ENABLED = true;
 

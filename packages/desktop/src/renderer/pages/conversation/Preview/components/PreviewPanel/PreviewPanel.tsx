@@ -39,6 +39,7 @@ import MarkdownPreview from '../viewers/MarkdownViewer';
 import PDFPreview from '../viewers/PDFViewer';
 import OfficeDocPreview from '../viewers/OfficeDocViewer';
 import PptViewer from '../viewers/PptViewer';
+import PresentationStudio from '../PresentationStudio';
 import CodeEditor from '../editors/CodeEditor';
 import URLViewer from '../viewers/URLViewer';
 import BrowserTabLayer from '../../browser/BrowserTabLayer';
@@ -327,6 +328,12 @@ const PreviewPanel: React.FC = () => {
       }
     },
     [updateContent]
+  );
+
+  const handlePresentationSave = useCallback(() => saveContent(activeTabId ?? undefined), [activeTabId, saveContent]);
+  const handlePresentationReload = useCallback(
+    () => (activeTabId ? reloadTabContent(activeTabId) : Promise.resolve(false)),
+    [activeTabId, reloadTabContent]
   );
 
   // 批量关闭的统一入口：有未保存的就先确认，否则直接关。
@@ -1117,6 +1124,19 @@ const PreviewPanel: React.FC = () => {
           fileRef={metadata?.fileRef}
           file_path={metadata?.file_path}
           content={content}
+        />
+      );
+    } else if (content_type === 'presentation') {
+      return (
+        <PresentationStudio
+          content={content}
+          fileRef={metadata?.fileRef}
+          filePath={metadata?.file_path}
+          fileName={metadata?.file_name}
+          workspace={metadata?.workspace}
+          onChange={handleContentChange}
+          onSave={handlePresentationSave}
+          onReload={handlePresentationReload}
         />
       );
     } else if (content_type === 'ppt') {

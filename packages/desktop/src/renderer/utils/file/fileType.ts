@@ -5,6 +5,7 @@
  */
 
 import type { PreviewContentType } from '@/common/types/office/preview';
+import { NATIVE_PRESENTATION_STUDIO_ENABLED } from '@/common/config/constants';
 
 interface FileTypeInfo {
   contentType: PreviewContentType;
@@ -76,6 +77,9 @@ export const EXTENSION_MAP: Record<string, FileTypeInfo> = {
  * Determine preview content type and editability from file name
  */
 export const getFileTypeInfo = (file_name: string): FileTypeInfo => {
+  if (NATIVE_PRESENTATION_STUDIO_ENABLED && file_name.toLowerCase().endsWith('.workmate-deck.json')) {
+    return { contentType: 'presentation', editable: true, language: 'json' };
+  }
   const ext = file_name.toLowerCase().split('.').pop() || '';
   return EXTENSION_MAP[ext] || { contentType: 'code', editable: true, language: ext || 'text' };
 };
