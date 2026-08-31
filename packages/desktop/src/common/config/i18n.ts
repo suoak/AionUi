@@ -25,10 +25,13 @@ export function normalizeLanguageCode(language: string): SupportedLanguage {
     return normalized as SupportedLanguage;
   }
 
-  const langOnly = normalized.toLowerCase().split('-')[0];
+  const lower = normalized.toLowerCase();
+  if (lower.startsWith('zh')) {
+    return /\bhant\b|-hk\b|-mo\b/.test(lower) ? 'zh-TW' : 'zh-CN';
+  }
+
+  const langOnly = lower.split('-')[0];
   switch (langOnly) {
-    case 'zh':
-      return 'zh-CN';
     case 'ja':
       return 'ja-JP';
     case 'ko':

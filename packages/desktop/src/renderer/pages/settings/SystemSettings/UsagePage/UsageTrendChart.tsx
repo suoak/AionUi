@@ -13,9 +13,10 @@ type UsageTrendChartProps = {
   emptyLabel: string;
   inputLabel: string;
   outputLabel: string;
+  locale: string;
 };
 
-const UsageTrendChart: React.FC<UsageTrendChartProps> = ({ points, emptyLabel, inputLabel, outputLabel }) => {
+const UsageTrendChart: React.FC<UsageTrendChartProps> = ({ points, emptyLabel, inputLabel, outputLabel, locale }) => {
   const max = Math.max(0, ...points.map((point) => point.total_tokens));
   const labelStep = Math.max(1, Math.ceil(points.length / 12));
   if (max <= 0) {
@@ -51,7 +52,7 @@ const UsageTrendChart: React.FC<UsageTrendChartProps> = ({ points, emptyLabel, i
                 <div
                   className='flex w-70% max-w-18px flex-col justify-end overflow-hidden rounded-4px'
                   style={{ height: `${height}%` }}
-                  title={`${point.date}: ${formatTokenCount(point.total_tokens)}`}
+                  title={`${point.date}: ${formatTokenCount(point.total_tokens, false, locale)}`}
                 >
                   <div className='w-full bg-primary-6' style={{ height: `${Math.round(outputShare * 100)}%` }} />
                   <div className='min-h-2px w-full flex-1 bg-primary-3' />

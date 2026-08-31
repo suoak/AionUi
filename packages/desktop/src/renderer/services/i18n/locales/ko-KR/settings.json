@@ -1,4 +1,7 @@
 {
+  "imageGenSupportedTooltipOpenAI": "OpenAI 호환 Images API 모델: GPT Image, Grok Imagine, Seedream, FLUX, Stable Diffusion, Recraft, Qwen Image, Ideogram 및 기타 게이트웨이 모델",
+  "imageGenCustomModelWarning": "사용자 지정 모델은 검증되지 않았습니다. 공급자가 호환되는 Images API 또는 채팅 응답으로 이미지를 반환하는 경우에만 작동합니다.",
+  "imageGenCompatibilityNote": "호환 Images API 또는 채팅 응답을 구현하지 않은 공급자 네이티브 엔드포인트는 직접 연결을 지원하지 않습니다.",
   "assistant.pairingRejected": "Pairing rejected",
   "webui.passwordChanged": "비밀번호가 성공적으로 변경되었습니다",
   "noConfiguredModels": "구성된 모델 없음",

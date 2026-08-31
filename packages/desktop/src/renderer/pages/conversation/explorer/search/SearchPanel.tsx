@@ -96,13 +96,13 @@ export const SearchPanel: React.FC<SearchPanelProps> = ({ roots, peNames, onReve
           12px inner padding would push the magnifier to 24px, so !pl-8px trims it to
           8px and lands the icon at 20px — the same line as the tab text and the tree
           arrow (see the baseline note in ExplorerContainer.tsx). */}
-      <div className='flex-shrink-0 pl-12px pr-8px pt-8px pb-4px'>
+      <div className='flex-shrink-0 ps-12px pe-8px pt-8px pb-4px'>
         <Input
           value={query}
           onChange={onQueryChange}
           allowClear
           size='small'
-          className='[&_.arco-input-inner-wrapper]:!pl-8px'
+          className='[&_.arco-input-inner-wrapper]:!ps-8px'
           prefix={<Search theme='outline' size='14' />}
           placeholder={t('conversation.explorer.search.placeholder')}
           aria-label={t('conversation.explorer.search.placeholder')}
@@ -119,7 +119,7 @@ export const SearchPanel: React.FC<SearchPanelProps> = ({ roots, peNames, onReve
           pl-12px puts the tree's row boxes on the panel baseline; the arrow inside
           is then offset a further 8px by the .workspace-tree rules in
           arco-override.css, landing at 20px. */}
-      <div className='flex-1 min-h-0 overflow-auto pl-12px' style={active && owned ? { display: 'none' } : undefined}>
+      <div className='flex-1 min-h-0 overflow-auto ps-12px' style={active && owned ? { display: 'none' } : undefined}>
         {children}
       </div>
 
@@ -129,7 +129,7 @@ export const SearchPanel: React.FC<SearchPanelProps> = ({ roots, peNames, onReve
         // pl-4px plus each row's own px-8px lands on the same 12px baseline as the
         // tree and the search box, so the list replacing the tree as you type does
         // not shift sideways.
-        <div className='flex-1 min-h-0 overflow-auto pl-4px pr-4px'>
+        <div className='flex-1 min-h-0 overflow-auto ps-4px pe-4px'>
           {showSearching && (
             <div className='px-8px py-6px text-t-secondary text-13px'>
               {t('conversation.explorer.search.searching')}
@@ -154,10 +154,13 @@ export const SearchPanel: React.FC<SearchPanelProps> = ({ roots, peNames, onReve
               title={hit.relative_path}
             >
               <FileTypeIcon node={{ name: hit.name, relativePath: hit.relative_path, isFile: true }} />
-              <span className='overflow-hidden text-ellipsis whitespace-nowrap flex-shrink-0 max-w-[45%]'>
+              <span dir='ltr' className='overflow-hidden text-ellipsis whitespace-nowrap flex-shrink-0 max-w-[45%]'>
                 {hit.name}
               </span>
-              <span className='overflow-hidden text-ellipsis whitespace-nowrap text-t-tertiary text-12px flex-1 min-w-0'>
+              <span
+                dir='ltr'
+                className='overflow-hidden text-ellipsis whitespace-nowrap text-t-tertiary text-12px flex-1 min-w-0'
+              >
                 {peLabeledPath(hit.pe_id, hit.relative_path, peNames)}
               </span>
               {onAddHit && (

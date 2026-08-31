@@ -16,6 +16,7 @@ import { Button, Dropdown, Empty, Input, Menu, Message, Spin, Tooltip } from '@a
 import { CheckOne, CloseOne, Copy, Delete, Down, Refresh } from '@icon-park/react';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { formatDateTime } from '@/renderer/services/i18n/format';
 import {
   buildChannelAssistantBinding,
   getDefaultChannelAssistant,
@@ -311,7 +312,7 @@ const LarkConfigForm: React.FC<LarkConfigFormProps> = ({ pluginStatus, modelSele
 
   // Format timestamp
   const formatTime = (timestamp: number) => {
-    return new Date(timestamp).toLocaleString();
+    return formatDateTime(timestamp, i18n?.language);
   };
 
   // Calculate remaining time

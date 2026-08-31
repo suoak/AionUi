@@ -38,6 +38,7 @@
     "commandAck": "Befehl gesendet, aber Status nicht bestätigt. Aktualisiere oder versuche es später erneut.",
     "timeout": "Einstellungsbestätigung zeitüberschritten. Vorheriger Status wird angezeigt.",
     "busy": "Eine andere Einstellung wird gerade angewendet. Versuche es später erneut.",
+    "persistenceFailed": "Die Laufzeit wurde geändert, aber die Einstellung konnte nicht gespeichert werden. Versuche es vor dem erneuten Verbinden noch einmal.",
     "failed": "Einstellung konnte nicht angewendet werden. Vorheriger Status wird angezeigt."
   },
   "thoughtLevel": {

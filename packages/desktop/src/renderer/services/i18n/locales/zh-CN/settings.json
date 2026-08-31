@@ -1,4 +1,7 @@
 {
+  "imageGenSupportedTooltipOpenAI": "兼容 OpenAI Images API 的模型：GPT Image、Grok Imagine、Seedream、FLUX、Stable Diffusion、Recraft、Qwen Image、Ideogram 及其他网关模型",
+  "imageGenCustomModelWarning": "自定义模型未经验证；仅当供应商通过兼容的 Images API 或聊天响应返回图片时才能工作。",
+  "imageGenCompatibilityNote": "未实现兼容 Images API 或聊天响应的厂商原生接口暂不支持直连。",
   "assistant.pairingRejected": "配对已拒绝",
   "webui.passwordChanged": "密码修改成功",
   "noConfiguredModels": "暂无已配置的模型",

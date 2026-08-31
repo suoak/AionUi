@@ -1,4 +1,7 @@
 {
+  "imageGenSupportedTooltipOpenAI": "OpenAI uyumlu Images API modelleri: GPT Image, Grok Imagine, Seedream, FLUX, Stable Diffusion, Recraft, Qwen Image, Ideogram ve diğer ağ geçidi modelleri",
+  "imageGenCustomModelWarning": "Özel modeller doğrulanmamıştır. Yalnızca sağlayıcı görüntüleri uyumlu bir Images API veya sohbet yanıtıyla döndürürse çalışırlar.",
+  "imageGenCompatibilityNote": "Uyumlu bir Images API veya sohbet yanıtı sunmayan sağlayıcıya özgü uç noktalara doğrudan bağlantı desteklenmez.",
   "assistant.pairingRejected": "Eşleşme reddedildi",
   "webui.passwordChanged": "Şifre başarıyla değiştirildi",
   "noConfiguredModels": "Yapılandırılmış model yok",

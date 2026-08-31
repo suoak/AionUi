@@ -38,6 +38,7 @@
     "commandAck": "Comando enviado, pero el estado no está confirmado. Actualiza o intenta de nuevo.",
     "timeout": "Confirmación de configuración expirada. Se muestra el estado anterior.",
     "busy": "Se está aplicando otra configuración. Intenta más tarde.",
+    "persistenceFailed": "El runtime cambió, pero no se pudo guardar la configuración. Inténtalo de nuevo antes de reconectar.",
     "failed": "Error al aplicar la configuración. Se muestra el estado anterior."
   },
   "thoughtLevel": {

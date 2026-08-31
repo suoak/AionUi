@@ -29,13 +29,16 @@
   },
   "model": {
     "switchSuccess": "Le modèle a changé avec succès",
-    "switchFailed": "Échec du changement de modèle"
+    "switchFailed": "Échec du changement de modèle",
+    "searchPlaceholder": "Rechercher des modèles",
+    "noResults": "Aucun modèle correspondant"
   },
   "config": {
     "setting": "Application du paramètre...",
     "commandAck": "Commande envoyée, mais l'état n'est pas confirmé. Actualisez ou réessayez plus tard.",
     "timeout": "Le délai de confirmation du paramètre a expiré. L'état précédent est toujours affiché.",
     "busy": "Un autre paramètre est en cours d'application. Réessayez plus tard.",
+    "persistenceFailed": "L'environnement d'exécution a changé, mais le paramètre n'a pas pu être enregistré. Réessayez avant de vous reconnecter.",
     "failed": "Échec de l'application du paramètre. L'état précédent est toujours affiché."
   },
   "thoughtLevel": {

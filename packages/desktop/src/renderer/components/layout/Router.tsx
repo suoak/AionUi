@@ -1,5 +1,6 @@
-import React, { Suspense } from 'react';
+import React, { Suspense, useEffect } from 'react';
 import { HashRouter, Navigate, Route, Routes, useLocation } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import AppLoader from '@renderer/components/layout/AppLoader';
 import { useCrossSessionRateLimitNotice } from '@/renderer/hooks/system/useCrossSessionRateLimitNotice';
 import { useAuth } from '@renderer/hooks/context/AuthContext';
@@ -35,6 +36,21 @@ const withRouteFallback = (Component: React.LazyExoticComponent<React.ComponentT
   </Suspense>
 );
 
+export function titleForPath(pathname: string, t: (key: 'login.pageTitle') => string): string {
+  return pathname.startsWith('/login') ? t('login.pageTitle') : 'CSBU WorkMate';
+}
+
+const DocumentTitle: React.FC = () => {
+  const { pathname } = useLocation();
+  const { t, i18n } = useTranslation();
+
+  useEffect(() => {
+    document.title = titleForPath(pathname, t);
+  }, [pathname, t, i18n?.language]);
+
+  return null;
+};
+
 /**
  * Legacy `/settings/capabilities?tab=tools` deep links now map to the standalone
  * Tools page; everything else (skills tab or no tab) lands on the Skills page.
@@ -68,6 +84,7 @@ const PanelRoute: React.FC<{ layout: React.ReactElement }> = ({ layout }) => {
 
   return (
     <HashRouter>
+      <DocumentTitle />
       <Routes>
         <Route
           path='/login'

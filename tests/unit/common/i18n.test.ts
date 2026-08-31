@@ -41,6 +41,12 @@ describe('i18n', () => {
       expect(normalizeLanguageCode('de-CH')).toBe('de-DE');
     });
 
+    it('keeps Traditional Chinese regional and script variants on zh-TW', () => {
+      expect(normalizeLanguageCode('zh-HK')).toBe('zh-TW');
+      expect(normalizeLanguageCode('zh-MO')).toBe('zh-TW');
+      expect(normalizeLanguageCode('zh-Hant')).toBe('zh-TW');
+    });
+
     it('falls back to the default language for unsupported codes', () => {
       expect(normalizeLanguageCode('it')).toBe(DEFAULT_LANGUAGE);
       expect(normalizeLanguageCode('')).toBe(DEFAULT_LANGUAGE);

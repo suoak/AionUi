@@ -2,15 +2,17 @@ import type { TrajectoryOverview as Overview } from '@/common/types/journalTrans
 import { Statistic } from '@arco-design/web-react';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+import { formatNumber } from '@/renderer/services/i18n/format';
 
 type Props = { overview: Overview };
 
 const duration = (value?: number | null) =>
   value == null ? '—' : `${(value / 1000).toFixed(value < 10_000 ? 1 : 0)}s`;
-const tokens = (value?: number | null) => (value == null ? '—' : value.toLocaleString());
+const tokens = (value: number | null | undefined, locale: string) =>
+  value == null ? '—' : formatNumber(value, locale);
 
 const TrajectoryOverview: React.FC<Props> = ({ overview }) => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const values = [
     [t('conversation.trajectory.overview.turns'), overview.turns],
     [t('conversation.trajectory.overview.steps'), overview.steps],
@@ -18,10 +20,10 @@ const TrajectoryOverview: React.FC<Props> = ({ overview }) => {
     [t('conversation.trajectory.overview.errors'), overview.errors],
     [t('conversation.trajectory.overview.duration'), duration(overview.total_duration_ms)],
     [t('conversation.trajectory.overview.firstOutput'), duration(overview.first_output_ms)],
-    [t('conversation.trajectory.overview.inputTokens'), tokens(overview.tokens.input)],
-    [t('conversation.trajectory.overview.outputTokens'), tokens(overview.tokens.output)],
-    [t('conversation.trajectory.overview.cachedTokens'), tokens(overview.tokens.cached)],
-    [t('conversation.trajectory.overview.thinkingTokens'), tokens(overview.tokens.thinking)],
+    [t('conversation.trajectory.overview.inputTokens'), tokens(overview.tokens.input, i18n?.language ?? 'en-US')],
+    [t('conversation.trajectory.overview.outputTokens'), tokens(overview.tokens.output, i18n?.language ?? 'en-US')],
+    [t('conversation.trajectory.overview.cachedTokens'), tokens(overview.tokens.cached, i18n?.language ?? 'en-US')],
+    [t('conversation.trajectory.overview.thinkingTokens'), tokens(overview.tokens.thinking, i18n?.language ?? 'en-US')],
   ] as const;
   return (
     <div

@@ -1,4 +1,7 @@
 {
+  "imageGenSupportedTooltipOpenAI": "Моделі через OpenAI-сумісний Images API: GPT Image, Grok Imagine, Seedream, FLUX, Stable Diffusion, Recraft, Qwen Image, Ideogram та інші моделі шлюзів",
+  "imageGenCustomModelWarning": "Власні моделі не перевірені. Вони працюють лише тоді, коли провайдер повертає зображення через сумісний Images API або відповідь чату.",
+  "imageGenCompatibilityNote": "Пряме підключення до нативних endpoint провайдера без сумісного Images API або відповіді чату не підтримується.",
   "assistant.pairingRejected": "Сполучення відхилено",
   "webui.passwordChanged": "Пароль успішно змінено",
   "noConfiguredModels": "Моделі не налаштовано",
