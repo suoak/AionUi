@@ -322,6 +322,7 @@ vi.mock('@arco-design/web-react', () => ({
 }));
 vi.mock('@icon-park/react', () => ({
   Brain: () => null,
+  Lightning: () => null,
   MagicHat: () => null,
   Shield: () => null,
 }));
@@ -466,6 +467,34 @@ describe('AionrsSendBox', () => {
     expect(props.active).toBe(true);
     props.onFocused?.();
     expect(onFocus).toHaveBeenCalledTimes(1);
+  });
+
+  it('preserves the interrupt draft and attachments when the durable request fails', async () => {
+    draftContentRef.current = 'urgent correction';
+    const onInterruptSend = vi.fn().mockRejectedValue(new Error('network unavailable'));
+    render(
+      <AionrsSendBox
+        conversation_id='conv-1'
+        modelSelection={modelSelection}
+        teamRuntime={
+          {
+            runtimeGate: { hydrated: true, canSendMessage: true, isProcessing: false },
+            loading: true,
+            queuedCount: 0,
+            startedAtMs: null,
+            onInterruptSend,
+          } as TeamSendBoxRuntime
+        }
+      />
+    );
+
+    await act(async () => {
+      screen.getByRole('button', { name: 'team.interruptAndSend' }).click();
+    });
+
+    expect(onInterruptSend).toHaveBeenCalledWith({ input: 'urgent correction', files: [] });
+    expect(clearFilesMock).not.toHaveBeenCalled();
+    expect(draftMutateMock).not.toHaveBeenCalled();
   });
 
   it('shows a usage ring after the builtin agent reports tokens', () => {

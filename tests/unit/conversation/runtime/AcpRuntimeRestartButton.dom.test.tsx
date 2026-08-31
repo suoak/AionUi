@@ -15,6 +15,7 @@ const mocks = vi.hoisted(() => ({
   revalidateConfig: vi.fn(),
   messageSuccess: vi.fn(),
   messageError: vi.fn(),
+  messageWarning: vi.fn(),
   markRestartStarted: vi.fn(),
   markRestartSucceeded: vi.fn(),
   markRestartFailed: vi.fn(),
@@ -107,6 +108,7 @@ vi.mock('@arco-design/web-react', () => ({
   Message: {
     success: mocks.messageSuccess,
     error: mocks.messageError,
+    warning: mocks.messageWarning,
   },
 }));
 
@@ -172,6 +174,21 @@ describe('AcpRuntimeRestartButton', () => {
     expect(mocks.markRestartSucceeded).not.toHaveBeenCalled();
     expect(mocks.revalidateConfig).not.toHaveBeenCalled();
     expect(mocks.messageError).toHaveBeenCalledWith('agent.runtimeRestart.failed');
+  });
+
+  it('keeps a successful restart successful when only the config refresh fails', async () => {
+    mocks.revalidateConfig.mockRejectedValueOnce(new Error('refresh unavailable'));
+    const user = userEvent.setup();
+    render(<AcpRuntimeRestartButton conversation_id='conversation-refetch' />);
+
+    await user.click(screen.getByRole('button', { name: 'confirm restart' }));
+
+    await waitFor(() => {
+      expect(mocks.messageWarning).toHaveBeenCalledWith('agent.config.failed');
+    });
+    expect(mocks.markRestartSucceeded).toHaveBeenCalledWith(idleRuntime);
+    expect(mocks.markRestartFailed).not.toHaveBeenCalled();
+    expect(mocks.messageSuccess).toHaveBeenCalledWith('agent.runtimeRestart.success');
   });
 
   it('asks the user to wait and does not refresh config when team work is active', async () => {

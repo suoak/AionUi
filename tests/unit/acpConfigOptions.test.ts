@@ -94,4 +94,8 @@ describe('ACP config option derivation', () => {
 
     expect(classifyConfigSetError(error)).toBe('config_update_in_progress');
   });
+
+  it('classifies a confirmed runtime change that was not persisted separately', () => {
+    expect(classifyConfigSetError(new Error('config_persistence_failed'))).toBe('config_persistence_failed');
+  });
 });

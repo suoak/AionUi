@@ -39,6 +39,7 @@ export type AcpConfigSetErrorKind =
   | 'command_ack'
   | 'confirmation_timeout'
   | 'config_update_in_progress'
+  | 'config_persistence_failed'
   | 'config_not_observed'
   | 'unknown';
 
@@ -94,6 +95,7 @@ export function classifyConfigSetError(error: unknown): AcpConfigSetErrorKind {
   if (error instanceof Error) {
     if (error.message.includes('command_ack')) return 'command_ack';
     if (error.message.includes('config_update_in_progress')) return 'config_update_in_progress';
+    if (error.message.includes('config_persistence_failed')) return 'config_persistence_failed';
     if (error.message.includes('config_not_observed')) return 'config_not_observed';
   }
   if (isBackendHttpError(error)) {
@@ -383,6 +385,7 @@ export function useAcpConfigOptions({
         if (confirmation === 'pending_next_turn') {
           markPending(conversation_id, optionId, value);
           if (response.config_options) replaceSnapshot(response.config_options);
+          if (response.persistence === 'failed') throw new Error('config_persistence_failed');
           return response.config_options;
         }
         if (!hasObservedValue(response, optionId, value)) {
@@ -391,6 +394,7 @@ export function useAcpConfigOptions({
         // A switch that landed supersedes any pending entry for the same option.
         resolvePendingFromSnapshot(conversation_id, response.config_options);
         replaceSnapshot(response.config_options);
+        if (response.persistence === 'failed') throw new Error('config_persistence_failed');
         return response.config_options;
       } finally {
         setConversationSetStatus(conversation_id, { state: 'idle' });

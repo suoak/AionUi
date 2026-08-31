@@ -441,6 +441,32 @@ describe('useAcpModelInfo', () => {
     expect(onSelectModelSuccess).not.toHaveBeenCalled();
   });
 
+  it('shows the applied runtime model while reporting that durable persistence failed', async () => {
+    const onSelectModelSuccess = vi.fn();
+    const onSelectModelFailed = vi.fn();
+    setConfigOptionInvokeMock.mockResolvedValue({
+      confirmation: 'observed',
+      config_options: buildConfigOptions('opus-4'),
+      persistence: 'failed',
+    });
+    const { result } = renderUseAcpModelInfo({
+      conversation_id: 'conv-1',
+      backend: 'claude',
+      onSelectModelSuccess,
+      onSelectModelFailed,
+    });
+    await waitFor(() => expect(result.current.canSwitch).toBe(true));
+
+    act(() => result.current.selectModel('opus-4'));
+
+    await waitFor(() => expect(result.current.model_info?.current_model_id).toBe('opus-4'));
+    expect(onSelectModelFailed).toHaveBeenCalledWith(
+      'opus-4',
+      expect.objectContaining({ message: 'config_persistence_failed' })
+    );
+    expect(onSelectModelSuccess).not.toHaveBeenCalled();
+  });
+
   // Persistence is no longer a separate step the caller chains after the switch —
   // the backend persists it in the same request. So a failure raised AFTER the
   // switch landed must not be reported as a failed switch, which is what the

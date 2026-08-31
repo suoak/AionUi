@@ -734,6 +734,37 @@ describe('AcpSendBox', () => {
     expect(onFocus).toHaveBeenCalledTimes(1);
   });
 
+  it('preserves the interrupt draft and attachments when the durable request fails', async () => {
+    draftContentRef.current = 'urgent correction';
+    const onInterruptSend = vi.fn().mockRejectedValue(new Error('network unavailable'));
+
+    render(
+      <AcpSendBox
+        conversation_id='conv-1'
+        backend='claude'
+        workspacePath='/tmp/workspace'
+        messageState={makeMessageState()}
+        teamRuntime={
+          {
+            runtimeGate: { hydrated: true, canSendMessage: true, isProcessing: false },
+            loading: true,
+            queuedCount: 0,
+            startedAtMs: null,
+            onInterruptSend,
+          } as TeamSendBoxRuntime
+        }
+      />
+    );
+
+    await act(async () => {
+      screen.getByRole('button', { name: 'team.interruptAndSend' }).click();
+    });
+
+    expect(onInterruptSend).toHaveBeenCalledWith({ input: 'urgent correction', files: [] });
+    expect(clearFilesMock).not.toHaveBeenCalled();
+    expect(draftMutateMock).not.toHaveBeenCalled();
+  });
+
   it('keeps the client command queue enabled for backends that can deliver mid-turn (queued items still auto-send)', () => {
     runtimeViewMock.supportsMidturnDelivery = true;
 

@@ -64,6 +64,7 @@ const configErrorMessageKey = (error: unknown) => {
   if (errorKind === 'command_ack') return 'agent.config.commandAck';
   if (errorKind === 'confirmation_timeout') return 'agent.config.timeout';
   if (errorKind === 'config_update_in_progress') return 'agent.config.busy';
+  if (errorKind === 'config_persistence_failed') return 'agent.config.persistenceFailed';
   return 'agent.config.failed';
 };
 
@@ -231,6 +232,7 @@ const AionrsSendBox: React.FC<{
   const setContentRef = useLatestRef(setContent);
   const contentRef = useLatestRef(content);
   const atPathRef = useLatestRef(atPath);
+  const uploadFilesRef = useLatestRef(uploadFile);
 
   // Register handler for adding text from preview panel to sendbox
   useEffect(() => {
@@ -450,12 +452,16 @@ const AionrsSendBox: React.FC<{
     if (!teamRuntime?.onInterruptSend || !content.trim() || interrupting) return;
     const files = collectChatFileRefs(uploadFile, atPath);
     const input = content;
-    setContent('');
-    clearFiles();
-    emitter.emit('aionrs.selected.file.clear');
+    const submittedAtPath = atPath;
+    const submittedUploadFile = uploadFile;
     setInterrupting(true);
     try {
       await teamRuntime.onInterruptSend({ input, files });
+      if (contentRef.current === input) setContent('');
+      if (atPathRef.current === submittedAtPath && uploadFilesRef.current === submittedUploadFile) {
+        clearFiles();
+        emitter.emit('aionrs.selected.file.clear');
+      }
     } finally {
       setInterrupting(false);
     }
@@ -922,7 +928,7 @@ const AionrsSendBox: React.FC<{
                 type='secondary'
                 icon={<Lightning />}
                 loading={interrupting}
-                onClick={() => void handleInterruptSend()}
+                onClick={() => void handleInterruptSend().catch((): void => undefined)}
               >
                 {t('team.interruptAndSend')}
               </Button>
