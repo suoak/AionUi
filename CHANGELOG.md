@@ -1,5 +1,45 @@
 # Changelog
 
+## [2.2.4](https://github.com/suoak/AionUi/compare/v2.2.3...v2.2.4) (2026-08-31)
+
+### Desktop
+
+#### Features
+
+- **presentation:** add the native conversation presentation studio (#111)
+- **image:** support custom image-generation models (#110)
+- **i18n:** improve locale-aware desktop rendering (#108)
+
+#### Bug Fixes
+
+- **agent:** preserve runtime configuration state (#109)
+
+#### 内网更新说明
+
+<!-- internal-release-notes:start -->
+
+**由运营管理部提供**
+
+- 桌面端后端组件升级到 v0.2.4，内置文档工具升级到 v1.0.153。
+- 新增对话内原生演示工作台，支持语义化页面编辑、主题与版式切换、讲者备注、校验和可编辑演示文件导出。
+- 支持使用自定义图片生成模型填充演示媒体槽，并保留失败重试与旧图片保护。
+- 改进多语言、RTL、日期和数字格式显示。
+- 修复模型、模式和运行时重启后的配置状态丢失问题。
+
+<!-- internal-release-notes:end -->
+
+### Core ([v0.2.4](https://github.com/suoak/AionCore/releases/tag/v0.2.4))
+
+#### Features
+
+- **presentation:** add native deck orchestration, validation, rendering jobs, cancellation, and the two-stage presentation skill.
+
+#### Performance
+
+- **office:** bound preview port probes across platforms.
+
+---
+
 ## [2.2.3](https://github.com/suoak/AionUi/compare/v2.2.2...v2.2.3) (2026-08-30)
 
 ### Desktop
