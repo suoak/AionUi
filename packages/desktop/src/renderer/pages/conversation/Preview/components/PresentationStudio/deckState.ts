@@ -103,30 +103,159 @@ export const resolveAssetFileRef = (
   return deckRef?.kind === 'upload' ? { kind: 'upload', path } : { kind: 'local', path };
 };
 
+const controlNumber = (controls: Record<string, unknown>, id: string, fallback: number): number => {
+  const value = controls[id];
+  return typeof value === 'number' && Number.isFinite(value) ? value : fallback;
+};
+
+const controlString = (controls: Record<string, unknown>, id: string, fallback: string): string => {
+  const value = controls[id];
+  return typeof value === 'string' ? value : fallback;
+};
+
+const controlBool = (controls: Record<string, unknown>, id: string, fallback: boolean): boolean => {
+  const value = controls[id];
+  return typeof value === 'boolean' ? value : fallback;
+};
+
+const MODULE_SLOT_IDS: Record<string, string[]> = {
+  metrics: ['metric1', 'metric2', 'metric3'],
+  'kpi-trio': ['metric1', 'metric2', 'metric3'],
+  'metrics-row-4': ['metric1', 'metric2', 'metric3', 'metric4'],
+  cards: ['card1', 'card2', 'card3'],
+  'agenda-cards': ['card1', 'card2', 'card3'],
+  'three-column': ['col1', 'col2', 'col3'],
+  'comparison-three': ['col1', 'col2', 'col3'],
+  'process-steps': ['step1', 'step2', 'step3', 'step4'],
+  'process-horizontal': ['step1', 'step2', 'step3', 'step4'],
+  'cycle-4': ['step1', 'step2', 'step3', 'step4'],
+  team: ['member1', 'member2', 'member3', 'member4'],
+  funnel: ['stage1', 'stage2', 'stage3', 'stage4'],
+  'gallery-two': ['visual1', 'visual2'],
+};
+
+const packModuleSlots = (layoutId: string, slot: DeckSlot, controls: Record<string, unknown>): DeckSlot => {
+  const moduleIds = MODULE_SLOT_IDS[layoutId];
+  if (!moduleIds) return slot;
+  const index = moduleIds.indexOf(slot.id);
+  if (index < 0) return slot;
+  const count = Math.min(
+    moduleIds.length,
+    Math.max(1, Math.round(controlNumber(controls, 'moduleCount', moduleIds.length)))
+  );
+  if (index >= count) return { ...slot, width: 0, height: 0 };
+  // Keep authored geometry for non-row packs (funnel stages, 2x2 cycle, gallery).
+  if (layoutId === 'funnel' || layoutId === 'cycle-4' || layoutId === 'gallery-two') return slot;
+  const start = 0.06;
+  const total = 0.88;
+  const gap = 0.03;
+  const usable = total - gap * Math.max(0, count - 1);
+  const width = usable / count;
+  return { ...slot, x: start + index * (width + gap), width };
+};
+
+/** Mirror OfficeCLI DeckService.AdjustSlot / PackModuleSlots for Studio preview parity. */
 export const resolveLayoutSlots = (layout: DeckLayout, slide: DeckSlide): DeckSlot[] => {
   const controls = slide.controls ?? {};
   return layout.slots
-    .filter((slot) => !(layout.id === 'chart' && slot.id === 'insight' && controls.showInsight === false))
+    .filter((slot) => {
+      if (
+        (layout.id === 'chart' || layout.id === 'chart-radar') &&
+        slot.id === 'insight' &&
+        !controlBool(controls, 'showInsight', true)
+      ) {
+        return false;
+      }
+      if (layout.id === 'data-table' && slot.id === 'insight' && !controlBool(controls, 'showInsight', true)) {
+        return false;
+      }
+      return true;
+    })
     .map((slot) => {
-      if (layout.id === 'image-text' && controls.mediaSide === 'right') {
+      if (
+        (layout.id === 'image-text' ||
+          layout.id === 'two-column' ||
+          layout.id === 'cover-split' ||
+          layout.id === 'quote-split') &&
+        controlString(controls, 'mediaSide', 'left') === 'right'
+      ) {
         return { ...slot, x: 1 - slot.x - slot.width };
       }
-      if (layout.id === 'chart' && slot.id === 'chart' && controls.showInsight === false) {
+
+      if (
+        (layout.id === 'chart' || layout.id === 'chart-radar') &&
+        slot.id === 'chart' &&
+        !controlBool(controls, 'showInsight', true)
+      ) {
         return { ...slot, width: 0.88 };
       }
-      if (layout.id === 'comparison' && (slot.id === 'left' || slot.id === 'right')) {
-        const rawBalance = typeof controls.balance === 'number' ? controls.balance : 50;
-        const balance = Math.min(65, Math.max(35, rawBalance)) / 100;
+
+      if (layout.id === 'data-table' && slot.id === 'table' && !controlBool(controls, 'showInsight', true)) {
+        return { ...slot, x: 0.06, width: 0.88 };
+      }
+
+      if (
+        (layout.id === 'comparison' ||
+          layout.id === 'two-column' ||
+          layout.id === 'toc' ||
+          layout.id === 'before-after' ||
+          layout.id === 'pros-cons' ||
+          layout.id === 'mitigation-plan' ||
+          layout.id === 'bullets-two' ||
+          layout.id === 'metrics-highlight' ||
+          layout.id === 'chart-compare') &&
+        (slot.id === 'left' || slot.id === 'right' || slot.id === 'kpi' || slot.id === 'support')
+      ) {
+        const balance = Math.min(65, Math.max(35, controlNumber(controls, 'balance', 50))) / 100;
         const start = 0.06;
         const gap = 0.06;
         const usable = 0.88 - gap;
         const leftWidth = usable * balance;
-        return slot.id === 'left'
+        return slot.id === 'left' || slot.id === 'kpi'
           ? { ...slot, x: start, width: leftWidth }
           : { ...slot, x: start + leftWidth + gap, width: usable - leftWidth };
       }
-      return slot;
-    });
+
+      if (
+        (layout.id === 'comparison-table' ||
+          layout.id === 'risk' ||
+          layout.id === 'risk-heatmap' ||
+          layout.id === 'data-table') &&
+        (slot.id === 'left' ||
+          slot.id === 'summary' ||
+          slot.id === 'insight' ||
+          slot.id === 'table' ||
+          slot.id === 'matrix')
+      ) {
+        const balance = Math.min(50, Math.max(25, controlNumber(controls, 'balance', 35))) / 100;
+        const start = 0.06;
+        const gap = 0.04;
+        const usable = 0.88 - gap;
+        const leftWidth = usable * balance;
+        if (slot.id === 'left' || slot.id === 'summary' || slot.id === 'insight') {
+          return { ...slot, x: start, width: leftWidth };
+        }
+        return { ...slot, x: start + leftWidth + gap, width: usable - leftWidth };
+      }
+
+      if (
+        layout.id === 'swot' &&
+        (slot.id === 'strengths' || slot.id === 'weaknesses' || slot.id === 'opportunities' || slot.id === 'threats')
+      ) {
+        const balance = Math.min(60, Math.max(40, controlNumber(controls, 'balance', 50))) / 100;
+        const start = 0.06;
+        const gap = 0.04;
+        const usable = 0.88 - gap;
+        const leftWidth = usable * balance;
+        const isLeft = slot.id === 'strengths' || slot.id === 'opportunities';
+        return isLeft
+          ? { ...slot, x: start, width: leftWidth }
+          : { ...slot, x: start + leftWidth + gap, width: usable - leftWidth };
+      }
+
+      return packModuleSlots(layout.id, slot, controls);
+    })
+    .filter((slot) => slot.width > 0 && slot.height > 0);
 };
 
 export type OutlineRequiredField = 'title' | 'language' | 'theme';
