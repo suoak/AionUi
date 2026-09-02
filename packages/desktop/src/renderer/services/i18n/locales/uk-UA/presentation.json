@@ -17,6 +17,7 @@
     "hidden": "Hidden",
     "notes": "Speaker notes",
     "content": "Content",
+    "layoutAlternatives": "Альтернативні макети",
     "layoutControls": "Layout controls"
   },
   "conflict": {

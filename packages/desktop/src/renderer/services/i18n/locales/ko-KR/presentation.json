@@ -17,6 +17,7 @@
     "hidden": "Hidden",
     "notes": "Speaker notes",
     "content": "Content",
+    "layoutAlternatives": "동일 역할 레이아웃 후보",
     "layoutControls": "Layout controls"
   },
   "conflict": {

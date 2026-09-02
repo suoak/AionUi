@@ -17,6 +17,7 @@
     "hidden": "Hidden",
     "notes": "Speaker notes",
     "content": "Content",
+    "layoutAlternatives": "同ロールのレイアウト候補",
     "layoutControls": "Layout controls"
   },
   "conflict": {

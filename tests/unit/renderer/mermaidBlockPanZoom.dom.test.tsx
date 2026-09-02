@@ -5,7 +5,7 @@
  */
 
 import { beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
-import { fireEvent, render, screen } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import React from 'react';
 
 const renderMock = vi.hoisted(() => vi.fn());
@@ -101,18 +101,30 @@ describe('MermaidBlock pan/zoom', () => {
     // Pan viewport clips (hidden overflow) instead of native scroll.
     expect(diagram.style.overflow).toBe('hidden');
 
-    const inner = diagram.firstElementChild as HTMLElement;
-    expect(inner.style.transform).toContain('scale(1)');
+    // Mermaid render + Strict Mode remount can reset transform; wait until stable.
+    await waitFor(() => {
+      const inner = screen.getByTestId('mermaid-diagram').firstElementChild as HTMLElement;
+      expect(inner.style.transform).toContain('scale(1)');
+    });
 
     fireEvent.click(screen.getByTestId('mermaid-zoom-in'));
-    expect(inner.style.transform).toContain('scale(1.25)');
+    await waitFor(() => {
+      const inner = screen.getByTestId('mermaid-diagram').firstElementChild as HTMLElement;
+      expect(inner.style.transform).toContain('scale(1.25)');
+    });
 
     fireEvent.click(screen.getByTestId('mermaid-zoom-out'));
-    expect(inner.style.transform).toContain('scale(1)');
+    await waitFor(() => {
+      const inner = screen.getByTestId('mermaid-diagram').firstElementChild as HTMLElement;
+      expect(inner.style.transform).toContain('scale(1)');
+    });
 
     fireEvent.click(screen.getByTestId('mermaid-zoom-in'));
     fireEvent.click(screen.getByTestId('mermaid-zoom-reset'));
-    expect(inner.style.transform).toContain('translate(0px, 0px) scale(1)');
+    await waitFor(() => {
+      const inner = screen.getByTestId('mermaid-diagram').firstElementChild as HTMLElement;
+      expect(inner.style.transform).toContain('translate(0px, 0px) scale(1)');
+    });
   });
 
   it('caps narrow diagrams at their natural width so they render 1:1', async () => {
