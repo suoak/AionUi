@@ -760,6 +760,9 @@
     "attachFailed": "新增資料夾失敗",
     "namePlaceholder": "名稱",
     "addFolder": "新增資料夾到專案",
+    "refreshFiles": "重新整理檔案",
+    "refreshChanges": "重新整理變更",
+    "collapseAll": "全部摺疊",
     "scm": {
       "expandWorktrees": "顯示工作樹",
       "sections": {
@@ -830,7 +833,6 @@
         "changes": "變更"
       },
       "notARepository": "該資料夾未納入版本控制",
-      "refresh": "重新整理",
       "renamedFrom": "{{from}} → {{to}}",
       "state": {
         "conflicted": "衝突",
@@ -859,8 +861,7 @@
       "copyRelativePath": "複製相對路徑",
       "addToChat": "加入對話",
       "newFile": "新增檔案",
-      "newDir": "新增資料夾",
-      "refresh": "重新整理"
+      "newDir": "新增資料夾"
     },
     "copyNodeFailed": "複製失敗",
     "moveNodeFailed": "移動失敗",

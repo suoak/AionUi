@@ -760,6 +760,9 @@
     "attachFailed": "添加文件夹失败",
     "namePlaceholder": "名称",
     "addFolder": "添加文件夹到项目",
+    "refreshFiles": "刷新文件",
+    "refreshChanges": "刷新变更",
+    "collapseAll": "全部折叠",
     "scm": {
       "expandWorktrees": "显示工作树",
       "sections": {
@@ -830,7 +833,6 @@
         "changes": "变更"
       },
       "notARepository": "该文件夹未纳入版本控制",
-      "refresh": "刷新",
       "renamedFrom": "{{from}} → {{to}}",
       "state": {
         "conflicted": "冲突",
@@ -859,8 +861,7 @@
       "copyRelativePath": "复制相对路径",
       "addToChat": "添加到聊天",
       "newFile": "新建文件",
-      "newDir": "新建目录",
-      "refresh": "刷新"
+      "newDir": "新建目录"
     },
     "copyNodeFailed": "复制失败",
     "moveNodeFailed": "移动失败",

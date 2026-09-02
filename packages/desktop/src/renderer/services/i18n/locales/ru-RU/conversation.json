@@ -770,6 +770,9 @@
     "attachFailed": "Couldn't add the folder",
     "namePlaceholder": "Имя",
     "addFolder": "Add folder to project",
+    "refreshFiles": "Обновить файлы",
+    "refreshChanges": "Обновить изменения",
+    "collapseAll": "Свернуть все",
     "scm": {
       "expandWorktrees": "Показать рабочие деревья",
       "sections": {
@@ -848,7 +851,6 @@
         "changes": "Изменения"
       },
       "notARepository": "Эта папка не под контролем версий",
-      "refresh": "Обновить",
       "renamedFrom": "{{from}} → {{to}}",
       "state": {
         "conflicted": "Конфликт",
@@ -877,8 +879,7 @@
       "copyRelativePath": "Копировать относительный путь",
       "addToChat": "Добавить в чат",
       "newFile": "Новый файл",
-      "newDir": "Новая папка",
-      "refresh": "Обновить"
+      "newDir": "Новая папка"
     },
     "copyNodeFailed": "Не удалось скопировать",
     "moveNodeFailed": "Не удалось переместить",

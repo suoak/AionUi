@@ -761,6 +761,9 @@
     "attachFailed": "Couldn't add the folder",
     "namePlaceholder": "Nombre",
     "addFolder": "Add folder to project",
+    "refreshFiles": "Actualizar archivos",
+    "refreshChanges": "Actualizar cambios",
+    "collapseAll": "Contraer todo",
     "scm": {
       "expandWorktrees": "Mostrar árboles de trabajo",
       "sections": {
@@ -831,7 +834,6 @@
         "changes": "Cambios"
       },
       "notARepository": "Esta carpeta no está bajo control de versiones",
-      "refresh": "Actualizar",
       "renamedFrom": "{{from}} → {{to}}",
       "state": {
         "conflicted": "Conflicto",
@@ -860,8 +862,7 @@
       "copyRelativePath": "Copiar ruta relativa",
       "addToChat": "Añadir al chat",
       "newFile": "Nuevo archivo",
-      "newDir": "Nueva carpeta",
-      "refresh": "Actualizar"
+      "newDir": "Nueva carpeta"
     },
     "copyNodeFailed": "Error al copiar",
     "moveNodeFailed": "Error al mover",

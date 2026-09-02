@@ -760,6 +760,9 @@
     "attachFailed": "Couldn't add the folder",
     "namePlaceholder": "نام",
     "addFolder": "Add folder to project",
+    "refreshFiles": "به‌روزرسانی پرونده‌ها",
+    "refreshChanges": "به‌روزرسانی تغییرات",
+    "collapseAll": "جمع کردن همه",
     "scm": {
       "expandWorktrees": "نمایش درخت‌کاری‌ها",
       "sections": {
@@ -830,7 +833,6 @@
         "changes": "تغییرات"
       },
       "notARepository": "این پوشه تحت کنترل نسخه نیست",
-      "refresh": "به‌روزرسانی",
       "renamedFrom": "{{from}} → {{to}}",
       "state": {
         "conflicted": "تضاد",
@@ -859,8 +861,7 @@
       "copyRelativePath": "کپی کردن مسیر نسبی",
       "addToChat": "افزودن به گفتگو",
       "newFile": "فایل جدید",
-      "newDir": "پوشه جدید",
-      "refresh": "تازه‌سازی"
+      "newDir": "پوشه جدید"
     },
     "copyNodeFailed": "کپی ناموفق بود",
     "moveNodeFailed": "انتقال ناموفق بود",

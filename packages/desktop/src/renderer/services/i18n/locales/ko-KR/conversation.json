@@ -760,6 +760,9 @@
     "attachFailed": "Couldn't add the folder",
     "namePlaceholder": "이름",
     "addFolder": "Add folder to project",
+    "refreshFiles": "파일 새로 고침",
+    "refreshChanges": "변경 새로 고침",
+    "collapseAll": "모두 접기",
     "scm": {
       "expandWorktrees": "워크트리 표시",
       "sections": {
@@ -830,7 +833,6 @@
         "changes": "변경"
       },
       "notARepository": "이 폴더는 버전 관리 대상이 아닙니다",
-      "refresh": "새로 고침",
       "renamedFrom": "{{from}} → {{to}}",
       "state": {
         "conflicted": "충돌",
@@ -859,8 +861,7 @@
       "copyRelativePath": "상대 경로 복사",
       "addToChat": "채팅에 추가",
       "newFile": "새 파일",
-      "newDir": "새 폴더",
-      "refresh": "새로 고침"
+      "newDir": "새 폴더"
     },
     "copyNodeFailed": "복사에 실패했습니다",
     "moveNodeFailed": "이동에 실패했습니다",
