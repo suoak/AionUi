@@ -9,7 +9,9 @@
     "uploadImage": "Upload",
     "selectImage": "Workspace",
     "generateImage": "Generate image",
-    "regenerate": "Regenerate slide"
+    "regenerate": "Regenerate slide",
+    "skipMedia": "Пропустить",
+    "replaceImage": "Заменить"
   },
   "field": {
     "slideTitle": "Slide title",
@@ -57,7 +59,8 @@
   },
   "slide": {
     "hidden": "Hidden",
-    "regeneratePrompt": "Regenerate only presentation slide {{slideId}} using the confirmed outline and available evidence. Preserve its stable slide ID, update semantic blocks and speaker notes, then validate the DeckSpec."
+    "regeneratePrompt": "Regenerate only presentation slide {{slideId}} using the confirmed outline and available evidence. Preserve its stable slide ID, update semantic blocks and speaker notes, then validate the DeckSpec.",
+    "pendingMedia": "Медиа ожидает"
   },
   "outline": {
     "description": "Review goal, audience, theme, and slide titles, then confirm the outline before generating full slide content.",
@@ -84,7 +87,13 @@
     "importSuccess": "Image imported",
     "importFailed": "Image import failed",
     "importOutdated": "The image was imported, but its media slot changed before the DeckSpec could be updated.",
-    "generatePrompt": "Generate an image for presentation slide {{slideId}}, block {{blockId}}, asset {{assetId}}, using the configured custom image model. Save it in this deck's assets directory and update only that asset slot; preserve the previous image if generation fails."
+    "generatePrompt": "Generate an image for presentation slide {{slideId}}, block {{blockId}}, asset {{assetId}}, using the configured custom image model. Save it in this deck's assets directory and update only that asset slot; preserve the previous image if generation fails.",
+    "pendingPlaceholder": "Изображение ожидает",
+    "pendingHint": "Импортируйте, сгенерируйте или пропустите, чтобы не блокировать экспорт.",
+    "errorPlaceholder": "Ошибка изображения",
+    "errorHint": "Импортируйте замену, сгенерируйте снова или пропустите этот слот.",
+    "readyStatus": "Изображение готово — импортируйте или сгенерируйте для замены.",
+    "skipSuccess": "Медиаслот пропущен"
   },
   "status": {
     "valid": "Presentation is valid",

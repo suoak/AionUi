@@ -33,6 +33,17 @@ const layouts: DeckLayout[] = [
   { id: 'cover', role: 'cover', label: 'Cover', slots: [], controls: [] },
 ];
 
+const baseProps = {
+  layouts,
+  onLayoutChange: vi.fn(),
+  onSlideChange: vi.fn(),
+  onBlockChange: vi.fn(),
+  onImportImage: vi.fn(),
+  onUploadImage: vi.fn(),
+  onGenerateImage: vi.fn(),
+  onSkipMedia: vi.fn(),
+};
+
 describe('WorkMate presentation inspector controls', () => {
   it('renders catalog layout controls and writes into slide.controls', () => {
     const slide: DeckSlide = {
@@ -47,18 +58,7 @@ describe('WorkMate presentation inspector controls', () => {
       update(slide);
     });
 
-    render(
-      <Inspector
-        slide={slide}
-        layouts={layouts}
-        onLayoutChange={vi.fn()}
-        onSlideChange={onSlideChange}
-        onBlockChange={vi.fn()}
-        onImportImage={vi.fn()}
-        onUploadImage={vi.fn()}
-        onGenerateImage={vi.fn()}
-      />
-    );
+    render(<Inspector {...baseProps} slide={slide} onSlideChange={onSlideChange} />);
 
     expect(screen.getByTestId('presentation-layout-controls')).toBeInTheDocument();
     expect(screen.getByTestId('layout-control-balance')).toBeInTheDocument();
@@ -72,18 +72,51 @@ describe('WorkMate presentation inspector controls', () => {
 
   it('hides the controls section when the layout has none', () => {
     const slide: DeckSlide = { id: 'cover', role: 'cover', layoutId: 'cover', blocks: [] };
+    render(<Inspector {...baseProps} slide={slide} />);
+    expect(screen.queryByTestId('presentation-layout-controls')).not.toBeInTheDocument();
+  });
+
+  it('shows pending media actions including skip', () => {
+    const slide: DeckSlide = {
+      id: 'cover',
+      role: 'cover',
+      layoutId: 'cover',
+      blocks: [{ id: 'hero', type: 'image', slot: 'media', assetId: 'hero' }],
+    };
+    const onSkipMedia = vi.fn();
     render(
       <Inspector
+        {...baseProps}
         slide={slide}
-        layouts={layouts}
-        onLayoutChange={vi.fn()}
-        onSlideChange={vi.fn()}
-        onBlockChange={vi.fn()}
-        onImportImage={vi.fn()}
-        onUploadImage={vi.fn()}
-        onGenerateImage={vi.fn()}
+        block={slide.blocks[0]}
+        asset={{ id: 'hero', path: 'q1.assets/hero.png', type: 'image', status: 'pending' }}
+        onSkipMedia={onSkipMedia}
       />
     );
-    expect(screen.queryByTestId('presentation-layout-controls')).not.toBeInTheDocument();
+
+    expect(screen.getByTestId('media-status-pending')).toBeInTheDocument();
+    expect(screen.getByTestId('media-skip')).toBeInTheDocument();
+    fireEvent.click(screen.getByTestId('media-skip'));
+    expect(onSkipMedia).toHaveBeenCalledWith(slide.blocks[0]);
+  });
+
+  it('shows replace labeling when the asset is ready', () => {
+    const slide: DeckSlide = {
+      id: 'cover',
+      role: 'cover',
+      layoutId: 'cover',
+      blocks: [{ id: 'hero', type: 'image', slot: 'media', assetId: 'hero' }],
+    };
+    render(
+      <Inspector
+        {...baseProps}
+        slide={slide}
+        block={slide.blocks[0]}
+        asset={{ id: 'hero', path: 'q1.assets/hero.png', type: 'image', status: 'ready' }}
+      />
+    );
+    expect(screen.getByTestId('media-status-ready')).toBeInTheDocument();
+    expect(screen.getByText('presentation.action.replaceImage')).toBeInTheDocument();
+    expect(screen.queryByTestId('media-skip')).not.toBeInTheDocument();
   });
 });

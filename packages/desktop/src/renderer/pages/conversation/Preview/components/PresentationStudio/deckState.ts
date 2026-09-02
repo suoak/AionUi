@@ -434,6 +434,29 @@ export const setAssetReady = (spec: DeckSpecV1, assetId: string, path: string): 
     draft.assets.push({ id: assetId, path, type: 'image', status: 'ready', source: 'upload' });
   });
 
+/** Remove a pending/error image block so export is not blocked; drop unused assets. */
+export const skipPendingMedia = (spec: DeckSpecV1, slideId: string, blockId: string): DeckSpecV1 => {
+  const slide = spec.slides.find((item) => item.id === slideId);
+  const block = slide?.blocks.find((item) => item.id === blockId);
+  if (!block || block.type !== 'image') return spec;
+  const assetId = block.assetId;
+  return mutateDeck(spec, (draft) => {
+    const draftSlide = draft.slides.find((item) => item.id === slideId);
+    if (!draftSlide) return;
+    draftSlide.blocks = draftSlide.blocks.filter((item) => item.id !== blockId);
+    if (!assetId) return;
+    const stillReferenced = draft.slides.some((item) => item.blocks.some((candidate) => candidate.assetId === assetId));
+    if (!stillReferenced) draft.assets = draft.assets.filter((asset) => asset.id !== assetId);
+  });
+};
+
+export const slideHasUnresolvedMedia = (slide: DeckSlide, assets: DeckSpecV1['assets']): boolean =>
+  slide.blocks.some((block) => {
+    if (block.type !== 'image' || !block.assetId) return false;
+    const asset = assets.find((item) => item.id === block.assetId);
+    return asset?.status === 'pending' || asset?.status === 'error';
+  });
+
 const uniqueId = (base: string, ids: string[]): string => {
   if (!ids.includes(base)) return base;
   let suffix = 2;

@@ -1,5 +1,5 @@
-import type { DeckBlock, DeckLayout, DeckSlide } from '@/common/types/office/presentation';
-import { Button, Input, Select, Slider, Switch, Upload } from '@arco-design/web-react';
+import type { DeckAsset, DeckBlock, DeckLayout, DeckSlide } from '@/common/types/office/presentation';
+import { Alert, Button, Input, Select, Slider, Switch, Upload } from '@arco-design/web-react';
 import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -8,6 +8,7 @@ import { suggestLayoutAlternatives } from './deckState';
 type Props = {
   slide: DeckSlide;
   block?: DeckBlock;
+  asset?: DeckAsset;
   layouts: DeckLayout[];
   onLayoutChange: (layout: DeckLayout) => void;
   onSlideChange: (update: (slide: DeckSlide) => void) => void;
@@ -15,12 +16,14 @@ type Props = {
   onImportImage: (block: DeckBlock) => void;
   onUploadImage: (block: DeckBlock, file: File) => void;
   onGenerateImage: (block: DeckBlock) => void;
+  onSkipMedia: (block: DeckBlock) => void;
   importingAssetId?: string;
 };
 
 const Inspector: React.FC<Props> = ({
   slide,
   block,
+  asset,
   layouts,
   onLayoutChange,
   onSlideChange,
@@ -28,6 +31,7 @@ const Inspector: React.FC<Props> = ({
   onImportImage,
   onUploadImage,
   onGenerateImage,
+  onSkipMedia,
   importingAssetId,
 }) => {
   const { t } = useTranslation();
@@ -42,6 +46,9 @@ const Inspector: React.FC<Props> = ({
     onSlideChange((draft) => {
       draft.controls = { ...draft.controls, [id]: value };
     });
+  const unresolvedMedia = asset?.status === 'pending' || asset?.status === 'error';
+  const uploadLabel =
+    asset?.status === 'ready' ? t('presentation.action.replaceImage') : t('presentation.action.uploadImage');
 
   return (
     <div
@@ -178,26 +185,48 @@ const Inspector: React.FC<Props> = ({
             }
           />
           {block.type === 'image' && (
-            <div className='mt-8px grid grid-cols-3 gap-8px'>
-              <Upload
-                accept='image/png,image/jpeg,image/gif'
-                showUploadList={false}
-                autoUpload={false}
-                beforeUpload={(file) => {
-                  onUploadImage(block, file);
-                  return false;
-                }}
-              >
-                <Button long loading={importingAssetId === block.id}>
-                  {t('presentation.action.uploadImage')}
+            <div className='mt-8px' data-testid='presentation-media-actions'>
+              {unresolvedMedia && (
+                <Alert
+                  className='mb-8px'
+                  type={asset?.status === 'error' ? 'error' : 'warning'}
+                  content={
+                    asset?.status === 'error' ? t('presentation.media.errorHint') : t('presentation.media.pendingHint')
+                  }
+                  data-testid={asset?.status === 'error' ? 'media-status-error' : 'media-status-pending'}
+                />
+              )}
+              {asset?.status === 'ready' && (
+                <div className='mb-8px text-12px text-t-secondary' data-testid='media-status-ready'>
+                  {t('presentation.media.readyStatus')}
+                </div>
+              )}
+              <div className={`grid gap-8px ${unresolvedMedia ? 'grid-cols-2' : 'grid-cols-3'}`}>
+                <Upload
+                  accept='image/png,image/jpeg,image/gif'
+                  showUploadList={false}
+                  autoUpload={false}
+                  beforeUpload={(file) => {
+                    onUploadImage(block, file);
+                    return false;
+                  }}
+                >
+                  <Button long loading={importingAssetId === block.id}>
+                    {uploadLabel}
+                  </Button>
+                </Upload>
+                <Button loading={importingAssetId === block.id} onClick={() => onImportImage(block)}>
+                  {t('presentation.action.selectImage')}
                 </Button>
-              </Upload>
-              <Button loading={importingAssetId === block.id} onClick={() => onImportImage(block)}>
-                {t('presentation.action.selectImage')}
-              </Button>
-              <Button type='primary' onClick={() => onGenerateImage(block)}>
-                {t('presentation.action.generateImage')}
-              </Button>
+                <Button type='primary' onClick={() => onGenerateImage(block)}>
+                  {t('presentation.action.generateImage')}
+                </Button>
+                {unresolvedMedia && (
+                  <Button status='warning' onClick={() => onSkipMedia(block)} data-testid='media-skip'>
+                    {t('presentation.action.skipMedia')}
+                  </Button>
+                )}
+              </div>
             </div>
           )}
         </>

@@ -33,6 +33,7 @@ import {
   removeSlide,
   serializeDeckSpec,
   setAssetReady,
+  skipPendingMedia,
   updateBlock,
   updateSlide,
 } from './deckState';
@@ -553,6 +554,7 @@ const PresentationStudio: React.FC<Props> = ({
       <div className='flex-1 min-h-0 flex'>
         <SlideRail
           slides={spec.slides}
+          assets={spec.assets}
           selectedId={slide.id}
           onSelect={(id) => {
             setSelectedSlideId(id);
@@ -591,6 +593,7 @@ const PresentationStudio: React.FC<Props> = ({
         <Inspector
           slide={slide}
           block={block}
+          asset={block?.assetId ? spec.assets.find((item) => item.id === block.assetId) : undefined}
           layouts={catalog.layouts}
           onLayoutChange={(nextLayout) => commit(changeSlideLayout(spec, slide.id, nextLayout), spec)}
           onSlideChange={(update) => commit(updateSlide(spec, slide.id, update), spec)}
@@ -606,6 +609,12 @@ const PresentationStudio: React.FC<Props> = ({
               })
             )
           }
+          onSkipMedia={(imageBlock) => {
+            const next = skipPendingMedia(spec, slide.id, imageBlock.id);
+            commit(next, spec);
+            if (selectedBlockId === imageBlock.id) setSelectedBlockId(undefined);
+            Message.success(t('presentation.media.skipSuccess'));
+          }}
           importingAssetId={importingAssetId}
         />
       </div>

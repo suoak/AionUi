@@ -9,7 +9,9 @@
     "uploadImage": "Upload",
     "selectImage": "Workspace",
     "generateImage": "Generate image",
-    "regenerate": "Regenerate slide"
+    "regenerate": "Regenerate slide",
+    "skipMedia": "Ignorer",
+    "replaceImage": "Remplacer"
   },
   "field": {
     "slideTitle": "Slide title",
@@ -57,7 +59,8 @@
   },
   "slide": {
     "hidden": "Hidden",
-    "regeneratePrompt": "Regenerate only presentation slide {{slideId}} using the confirmed outline and available evidence. Preserve its stable slide ID, update semantic blocks and speaker notes, then validate the DeckSpec."
+    "regeneratePrompt": "Regenerate only presentation slide {{slideId}} using the confirmed outline and available evidence. Preserve its stable slide ID, update semantic blocks and speaker notes, then validate the DeckSpec.",
+    "pendingMedia": "Média en attente"
   },
   "outline": {
     "description": "Review goal, audience, theme, and slide titles, then confirm the outline before generating full slide content.",
@@ -84,7 +87,13 @@
     "importSuccess": "Image imported",
     "importFailed": "Image import failed",
     "importOutdated": "The image was imported, but its media slot changed before the DeckSpec could be updated.",
-    "generatePrompt": "Generate an image for presentation slide {{slideId}}, block {{blockId}}, asset {{assetId}}, using the configured custom image model. Save it in this deck's assets directory and update only that asset slot; preserve the previous image if generation fails."
+    "generatePrompt": "Generate an image for presentation slide {{slideId}}, block {{blockId}}, asset {{assetId}}, using the configured custom image model. Save it in this deck's assets directory and update only that asset slot; preserve the previous image if generation fails.",
+    "pendingPlaceholder": "Image en attente",
+    "pendingHint": "Importez, générez ou ignorez ce espace réservé pour ne pas bloquer l'export.",
+    "errorPlaceholder": "Échec de l'image",
+    "errorHint": "Importez un remplacement, régénérez ou ignorez cet emplacement.",
+    "readyStatus": "Image prête — importez ou générez pour remplacer.",
+    "skipSuccess": "Emplacement média ignoré"
   },
   "status": {
     "valid": "Presentation is valid",
