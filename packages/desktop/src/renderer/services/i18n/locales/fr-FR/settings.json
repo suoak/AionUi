@@ -488,6 +488,7 @@
   "assistantBuiltinReadonlyTip": "Il s'agit d'un assistant officiel : seuls les paramètres liés au moteur peuvent être modifiés. Pour personnaliser autre chose,",
   "browserNotification": {
     "bodyConfirmation": "Un agent attend votre confirmation",
+    "bodyConfirmationNamed": "« {{name}} » attend votre confirmation",
     "denied": "Notifications bloquées : activez-les dans les paramètres du site de votre navigateur",
     "insecureContext": "Les notifications du navigateur nécessitent un accès HTTPS ou localhost",
     "granted": "Notifications du navigateur activées",

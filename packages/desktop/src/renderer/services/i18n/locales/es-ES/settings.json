@@ -488,6 +488,7 @@
   "assistantBuiltinReadonlyTip": "Este es un asistente integrado. Puedes cambiar el Agente principal, el Modelo predeterminado y el Permiso predeterminado. Para personalizar otros campos, ",
   "browserNotification": {
     "bodyConfirmation": "An agent is waiting for your confirmation",
+    "bodyConfirmationNamed": "\"{{name}}\" is waiting for your confirmation",
     "denied": "Notifications blocked — enable them in your browser's site settings",
     "insecureContext": "Browser notifications require HTTPS or localhost access",
     "granted": "Browser notifications enabled",
