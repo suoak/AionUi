@@ -492,7 +492,8 @@
     "insecureContext": "浏览器通知需要通过 HTTPS 或 localhost 访问",
     "granted": "浏览器通知已开启",
     "enable": "开启浏览器通知",
-    "bodyTurnCompleted": "agent 已完成本轮回复"
+    "bodyTurnCompleted": "已完成本轮回复",
+    "bodyTurnCompletedNamed": "「{{name}}」已完成本轮回复"
   },
   "dingtalk": {
     "step4": "授权成功后，你可以通过钉钉与 AI 助手聊天！",
