@@ -229,6 +229,22 @@ export const updateSlide = (spec: DeckSpecV1, slideId: string, update: (slide: D
   });
 };
 
+/** Same-role layout alternatives for one-click switching in PresentationStudio (CSBU WorkMate). */
+export const suggestLayoutAlternatives = (
+  layouts: DeckLayout[],
+  currentLayoutId: string,
+  role: string,
+  limit = 4
+): DeckLayout[] => {
+  const sameRole = layouts.filter((layout) => layout.role === role);
+  const preferred = sameRole.filter((layout) => layout.id !== currentLayoutId);
+  const ordered = [
+    ...sameRole.filter((layout) => layout.id === currentLayoutId),
+    ...preferred,
+  ];
+  return ordered.slice(0, Math.max(1, limit));
+};
+
 /** Migrates a slide to a semantic layout without retaining invalid slot or control state. */
 export const changeSlideLayout = (spec: DeckSpecV1, slideId: string, layout: DeckLayout): DeckSpecV1 => {
   const source = spec.slides.find((slide) => slide.id === slideId);

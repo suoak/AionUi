@@ -17,6 +17,7 @@
     "hidden": "隱藏頁面",
     "notes": "講者備註",
     "content": "內容",
+    "layoutAlternatives": "同角色版式候選",
     "layoutControls": "版式控制項"
   },
   "conflict": {

@@ -1,7 +1,9 @@
 import type { DeckBlock, DeckLayout, DeckSlide } from '@/common/types/office/presentation';
 import { Button, Input, Select, Slider, Switch, Upload } from '@arco-design/web-react';
-import React from 'react';
+import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
+
+import { suggestLayoutAlternatives } from './deckState';
 
 type Props = {
   slide: DeckSlide;
@@ -32,6 +34,10 @@ const Inspector: React.FC<Props> = ({
   const textValue = block?.items?.join('\n') ?? block?.text ?? block?.value ?? '';
   const currentLayout = layouts.find((layout) => layout.id === slide.layoutId);
   const layoutControls = currentLayout?.controls ?? [];
+  const roleAlternatives = useMemo(
+    () => suggestLayoutAlternatives(layouts, slide.layoutId, slide.role, 4),
+    [layouts, slide.layoutId, slide.role]
+  );
   const setControl = (id: string, value: unknown) =>
     onSlideChange((draft) => {
       draft.controls = { ...draft.controls, [id]: value };
@@ -51,6 +57,20 @@ const Inspector: React.FC<Props> = ({
           })
         }
       />
+
+      <label className='block text-12px text-t-secondary mt-14px mb-5px'>{t('presentation.field.layoutAlternatives')}</label>
+      <div className='flex flex-wrap gap-6px' data-testid='presentation-layout-alternatives'>
+        {roleAlternatives.map((layout) => (
+          <Button
+            key={layout.id}
+            size='mini'
+            type={layout.id === slide.layoutId ? 'primary' : 'outline'}
+            onClick={() => onLayoutChange(layout)}
+          >
+            {t(`presentation.catalog.layout.${layout.id}`, { defaultValue: layout.label })}
+          </Button>
+        ))}
+      </div>
 
       <label className='block text-12px text-t-secondary mt-14px mb-5px'>{t('presentation.field.layout')}</label>
       <Select

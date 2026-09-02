@@ -17,6 +17,7 @@
     "hidden": "Hidden",
     "notes": "Speaker notes",
     "content": "Content",
+    "layoutAlternatives": "Alternatives de mise en page",
     "layoutControls": "Layout controls"
   },
   "conflict": {
