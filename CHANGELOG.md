@@ -1,5 +1,36 @@
 # Changelog
 
+## [2.2.5](https://github.com/suoak/AionUi/compare/v2.2.4...v2.2.5) (2026-09-02)
+
+### Desktop
+
+#### Features
+
+- **presentation:** Outline gate, stronger Inspector layout controls, and theme swatches in Presentation Studio (#113)
+- **presentation:** Expand catalog to 6 themes / 26 layouts via OfficeCLI 1.0.154
+- **chat:** Prefer opening chat HTTP(S) links in the system default browser when `openChatLinksInDefaultBrowser` is enabled (#114)
+
+#### 内网更新说明
+
+<!-- internal-release-notes:start -->
+
+**由运营管理部提供**
+
+- 桌面端后端组件升级到 v0.2.5，内置文档工具升级到 v1.0.154（6 主题 / 26 版式）。
+- 演示工作台增强大纲确认、Inspector 版式控件与主题色块预览。
+- 新增设置项：可选择在系统默认浏览器中打开对话内的 HTTP(S) 链接。
+- 固定到 Core v0.2.5。
+
+<!-- internal-release-notes:end -->
+
+### Core ([v0.2.5](https://github.com/suoak/AionCore/releases/tag/v0.2.5))
+
+- Pin desktop to Core v0.2.5 (WorkMate backend; six architecture packages and checksums are published).
+- **skills:** enforce zip extraction limits.
+- **presentation:** outline confirmation before filling in the presentation skill.
+
+---
+
 ## [2.2.4](https://github.com/suoak/AionUi/compare/v2.2.3...v2.2.4) (2026-08-31)
 
 ### Desktop
