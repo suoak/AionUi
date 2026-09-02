@@ -770,6 +770,9 @@
     "attachFailed": "Couldn't add the folder",
     "namePlaceholder": "Назва",
     "addFolder": "Add folder to project",
+    "refreshFiles": "Оновити файли",
+    "refreshChanges": "Оновити зміни",
+    "collapseAll": "Згорнути все",
     "scm": {
       "expandWorktrees": "Показати робочі дерева",
       "sections": {
@@ -848,7 +851,6 @@
         "changes": "Зміни"
       },
       "notARepository": "Ця тека не під контролем версій",
-      "refresh": "Оновити",
       "renamedFrom": "{{from}} → {{to}}",
       "state": {
         "conflicted": "Конфлікт",
@@ -877,8 +879,7 @@
       "copyRelativePath": "Копіювати відносний шлях",
       "addToChat": "Додати в чат",
       "newFile": "Новий файл",
-      "newDir": "Нова папка",
-      "refresh": "Оновити"
+      "newDir": "Нова папка"
     },
     "copyNodeFailed": "Не вдалося скопіювати",
     "moveNodeFailed": "Не вдалося перемістити",

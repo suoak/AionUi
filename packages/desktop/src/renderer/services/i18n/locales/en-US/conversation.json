@@ -760,6 +760,9 @@
     "attachFailed": "Couldn't add the folder",
     "namePlaceholder": "Name",
     "addFolder": "Add folder to project",
+    "refreshFiles": "Refresh files",
+    "refreshChanges": "Refresh changes",
+    "collapseAll": "Collapse all",
     "scm": {
       "expandWorktrees": "Show worktrees",
       "sections": {
@@ -830,7 +833,6 @@
         "changes": "Changes"
       },
       "notARepository": "Not a version-controlled folder",
-      "refresh": "Refresh",
       "renamedFrom": "{{from}} → {{to}}",
       "state": {
         "conflicted": "Conflict",
@@ -859,8 +861,7 @@
       "copyRelativePath": "Copy relative path",
       "addToChat": "Add to chat",
       "newFile": "New file",
-      "newDir": "New folder",
-      "refresh": "Refresh"
+      "newDir": "New folder"
     },
     "copyNodeFailed": "Failed to copy",
     "moveNodeFailed": "Failed to move",

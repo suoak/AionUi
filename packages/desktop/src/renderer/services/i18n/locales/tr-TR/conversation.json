@@ -762,6 +762,9 @@
     "attachFailed": "Couldn't add the folder",
     "namePlaceholder": "Ad",
     "addFolder": "Add folder to project",
+    "refreshFiles": "Dosyaları yenile",
+    "refreshChanges": "Değişiklikleri yenile",
+    "collapseAll": "Tümünü daralt",
     "scm": {
       "expandWorktrees": "Çalışma ağaçlarını göster",
       "sections": {
@@ -832,7 +835,6 @@
         "changes": "Değişiklikler"
       },
       "notARepository": "Bu klasör sürüm denetiminde değil",
-      "refresh": "Yenile",
       "renamedFrom": "{{from}} → {{to}}",
       "state": {
         "conflicted": "Çakışma",
@@ -861,8 +863,7 @@
       "copyRelativePath": "Göreli yolu kopyala",
       "addToChat": "Sohbete ekle",
       "newFile": "Yeni dosya",
-      "newDir": "Yeni klasör",
-      "refresh": "Yenile"
+      "newDir": "Yeni klasör"
     },
     "copyNodeFailed": "Kopyalanamadı",
     "moveNodeFailed": "Taşınamadı",

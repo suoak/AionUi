@@ -760,6 +760,9 @@
     "attachFailed": "Couldn't add the folder",
     "namePlaceholder": "名前",
     "addFolder": "Add folder to project",
+    "refreshFiles": "ファイルを更新",
+    "refreshChanges": "変更を更新",
+    "collapseAll": "すべて折りたたむ",
     "scm": {
       "expandWorktrees": "ワークツリーを表示",
       "sections": {
@@ -830,7 +833,6 @@
         "changes": "変更"
       },
       "notARepository": "このフォルダーはバージョン管理されていません",
-      "refresh": "更新",
       "renamedFrom": "{{from}} → {{to}}",
       "state": {
         "conflicted": "競合",
@@ -859,8 +861,7 @@
       "copyRelativePath": "相対パスをコピー",
       "addToChat": "チャットに追加",
       "newFile": "新規ファイル",
-      "newDir": "新規フォルダー",
-      "refresh": "更新"
+      "newDir": "新規フォルダー"
     },
     "copyNodeFailed": "コピーに失敗しました",
     "moveNodeFailed": "移動に失敗しました",
