@@ -86,9 +86,7 @@ describe('MarkdownView chat http link preference', () => {
   });
 
   it('opens http links in the system browser when preference is on', () => {
-    configGetMock.mockImplementation((key: string) =>
-      key === 'openChatLinksInDefaultBrowser' ? true : undefined
-    );
+    configGetMock.mockImplementation((key: string) => (key === 'openChatLinksInDefaultBrowser' ? true : undefined));
 
     render(<MarkdownView>{'[docs](https://example.com/docs)'}</MarkdownView>);
 
