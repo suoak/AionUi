@@ -15,6 +15,7 @@ import {
   setAssetReady,
   setSlideControl,
   serializeDeckSpec,
+  suggestLayoutAlternatives,
   themeTokenColor,
   updateBlock,
 } from '@/renderer/pages/conversation/Preview/components/PresentationStudio/deckState';
@@ -271,5 +272,59 @@ describe('WorkMate presentation deck state', () => {
     expect(themeTokenColor({ background: 'F7F8FA', accent: '#246BFD' }, 'accent')).toBe('#246BFD');
     expect(themeTokenColor(undefined, 'background')).toBeUndefined();
     expect(themeTokenColor({ background: '  ' }, 'background')).toBeUndefined();
+  });
+
+  it('suggests same-role layout alternatives with the current layout first', () => {
+    const layouts = [
+      { id: 'metrics', role: 'metrics', label: 'Metrics', slots: [], controls: [] },
+      { id: 'kpi-trio', role: 'metrics', label: 'KPI trio', slots: [], controls: [] },
+      { id: 'metrics-row-4', role: 'metrics', label: 'Metrics row', slots: [], controls: [] },
+      { id: 'cover', role: 'cover', label: 'Cover', slots: [], controls: [] },
+    ];
+    expect(suggestLayoutAlternatives(layouts, 'kpi-trio', 'metrics', 4).map((layout) => layout.id)).toEqual([
+      'kpi-trio',
+      'metrics',
+      'metrics-row-4',
+    ]);
+  });
+
+  it('packs moduleCount slots and hides overflow modules like OfficeCLI', () => {
+    const metrics = {
+      id: 'metrics',
+      role: 'metrics',
+      label: 'Metrics',
+      slots: [
+        { id: 'title', x: 0.06, y: 0.08, width: 0.88, height: 0.1, accepts: ['text' as const] },
+        { id: 'metric1', x: 0.06, y: 0.28, width: 0.28, height: 0.5, accepts: ['metric' as const] },
+        { id: 'metric2', x: 0.36, y: 0.28, width: 0.28, height: 0.5, accepts: ['metric' as const] },
+        { id: 'metric3', x: 0.66, y: 0.28, width: 0.28, height: 0.5, accepts: ['metric' as const] },
+      ],
+      controls: [],
+    };
+    const slide = { ...deck().slides[0], layoutId: 'metrics', controls: { moduleCount: 2 } };
+    const slots = resolveLayoutSlots(metrics, slide);
+    expect(slots.map((slot) => slot.id)).toEqual(['title', 'metric1', 'metric2']);
+    expect(slots[1].width).toBeCloseTo((0.88 - 0.03) / 2);
+    expect(slots[2].x).toBeCloseTo(0.06 + slots[1].width + 0.03);
+  });
+
+  it('honors showInsight optional slot toggles for chart layouts', () => {
+    const chart = {
+      id: 'chart',
+      role: 'chart',
+      label: 'Chart',
+      slots: [
+        { id: 'chart', x: 0.06, y: 0.2, width: 0.58, height: 0.65, accepts: ['chart' as const] },
+        { id: 'insight', x: 0.7, y: 0.2, width: 0.24, height: 0.65, accepts: ['text' as const] },
+      ],
+      controls: [],
+    };
+    const hidden = resolveLayoutSlots(chart, {
+      ...deck().slides[0],
+      layoutId: 'chart',
+      controls: { showInsight: false },
+    });
+    expect(hidden.map((slot) => slot.id)).toEqual(['chart']);
+    expect(hidden[0].width).toBeCloseTo(0.88);
   });
 });
