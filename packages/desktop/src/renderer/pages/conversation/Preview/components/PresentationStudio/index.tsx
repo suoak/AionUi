@@ -418,7 +418,10 @@ const PresentationStudio: React.FC<Props> = ({
         </Button>
       </div>
       {spec.stage === 'outline' && (
-        <div className='border-b border-border-2 bg-primary-light px-12px py-10px' data-testid='presentation-outline-gate'>
+        <div
+          className='border-b border-border-2 bg-primary-light px-12px py-10px'
+          data-testid='presentation-outline-gate'
+        >
           <div className='text-13px font-500 mb-6px'>{t('presentation.outline.title')}</div>
           <div className='text-12px text-t-secondary mb-8px'>{t('presentation.outline.description')}</div>
           <div className='grid grid-cols-2 gap-x-16px gap-y-4px text-12px mb-8px'>

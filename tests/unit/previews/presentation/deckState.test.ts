@@ -217,7 +217,12 @@ describe('WorkMate presentation deck state', () => {
   });
 
   it('gates outline confirmation on title, language, and theme', () => {
-    const outline = { ...deck(), stage: 'outline' as const, metadata: { title: '', language: '', aspectRatio: '16:9' as const }, theme: { id: '' } };
+    const outline = {
+      ...deck(),
+      stage: 'outline' as const,
+      metadata: { title: '', language: '', aspectRatio: '16:9' as const },
+      theme: { id: '' },
+    };
     expect(evaluateOutlineGate(outline)).toMatchObject({
       canConfirm: false,
       missingRequired: ['title', 'language', 'theme'],
@@ -267,5 +272,4 @@ describe('WorkMate presentation deck state', () => {
     expect(themeTokenColor(undefined, 'background')).toBeUndefined();
     expect(themeTokenColor({ background: '  ' }, 'background')).toBeUndefined();
   });
-
 });

@@ -38,7 +38,10 @@ const Inspector: React.FC<Props> = ({
     });
 
   return (
-    <div className='w-280px flex-shrink-0 overflow-y-auto border-l border-border-2 bg-bg-2 p-14px' data-testid='presentation-inspector'>
+    <div
+      className='w-280px flex-shrink-0 overflow-y-auto border-l border-border-2 bg-bg-2 p-14px'
+      data-testid='presentation-inspector'
+    >
       <label className='block text-12px text-t-secondary mb-5px'>{t('presentation.field.slideTitle')}</label>
       <Input
         value={slide.title ?? ''}

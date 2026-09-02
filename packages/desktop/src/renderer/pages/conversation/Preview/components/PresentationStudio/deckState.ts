@@ -129,7 +129,6 @@ export const resolveLayoutSlots = (layout: DeckLayout, slide: DeckSlide): DeckSl
     });
 };
 
-
 export type OutlineRequiredField = 'title' | 'language' | 'theme';
 export type OutlineWarningField = 'goal' | 'audience';
 
@@ -260,13 +259,7 @@ export const changeSlideLayout = (spec: DeckSpecV1, slideId: string, layout: Dec
   });
 };
 
-
-export const setSlideControl = (
-  spec: DeckSpecV1,
-  slideId: string,
-  controlId: string,
-  value: unknown
-): DeckSpecV1 =>
+export const setSlideControl = (spec: DeckSpecV1, slideId: string, controlId: string, value: unknown): DeckSpecV1 =>
   updateSlide(spec, slideId, (slide) => {
     slide.controls = { ...slide.controls, [controlId]: value };
   });

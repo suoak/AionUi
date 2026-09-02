@@ -26,7 +26,9 @@ const layouts: DeckLayout[] = [
     role: 'content',
     label: 'Image and text',
     slots: [],
-    controls: [{ id: 'mediaSide', type: 'select', label: 'Media side', defaultValue: 'left', options: ['left', 'right'] }],
+    controls: [
+      { id: 'mediaSide', type: 'select', label: 'Media side', defaultValue: 'left', options: ['left', 'right'] },
+    ],
   },
   { id: 'cover', role: 'cover', label: 'Cover', slots: [], controls: [] },
 ];
