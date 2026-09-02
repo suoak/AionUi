@@ -492,7 +492,8 @@
     "insecureContext": "As notificações do navegador exigem acesso via HTTPS ou localhost",
     "granted": "Notificações do navegador ativadas",
     "enable": "Ativar notificações do navegador",
-    "bodyTurnCompleted": "O agente terminou de responder"
+    "bodyTurnCompleted": "O agente terminou de responder",
+    "bodyTurnCompletedNamed": "\"{{name}}\" terminou de responder"
   },
   "dingtalk": {
     "step4": "Uma vez aprovado, você pode começar a conversar com o assistente de IA através do DingTalk!",

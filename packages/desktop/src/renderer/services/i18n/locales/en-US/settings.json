@@ -492,7 +492,8 @@
     "insecureContext": "Browser notifications require HTTPS or localhost access",
     "granted": "Browser notifications enabled",
     "enable": "Enable browser notifications",
-    "bodyTurnCompleted": "The agent has finished responding"
+    "bodyTurnCompleted": "The agent has finished responding",
+    "bodyTurnCompletedNamed": "\"{{name}}\" has finished responding"
   },
   "dingtalk": {
     "step4": "Once approved, you can start chatting with the AI assistant through DingTalk!",

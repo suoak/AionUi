@@ -494,7 +494,8 @@
     "insecureContext": "瀏覽器通知需要透過 HTTPS 或 localhost 存取",
     "granted": "瀏覽器通知已開啟",
     "enable": "開啟瀏覽器通知",
-    "bodyTurnCompleted": "agent 已完成本輪回覆"
+    "bodyTurnCompleted": "已完成本輪回覆",
+    "bodyTurnCompletedNamed": "「{{name}}」已完成本輪回覆"
   },
   "dingtalk": {
     "step4": "授權成功後，你可以通過釘釘與 AI 助手聊天！",

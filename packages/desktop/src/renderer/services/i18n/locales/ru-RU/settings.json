@@ -494,7 +494,8 @@
     "insecureContext": "Браузерные уведомления требуют доступа через HTTPS или localhost",
     "granted": "Браузерные уведомления включены",
     "enable": "Включить браузерные уведомления",
-    "bodyTurnCompleted": "Агент завершил ответ"
+    "bodyTurnCompleted": "Агент завершил ответ",
+    "bodyTurnCompletedNamed": "«{{name}}» завершил ответ"
   },
   "dingtalk": {
     "step4": "После авторизации вы сможете общаться с AI-ассистентом через DingTalk!",

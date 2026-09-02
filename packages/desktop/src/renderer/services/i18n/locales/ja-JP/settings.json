@@ -494,7 +494,8 @@
     "insecureContext": "ブラウザ通知には HTTPS または localhost からのアクセスが必要です",
     "granted": "ブラウザ通知が有効になりました",
     "enable": "ブラウザ通知を有効にする",
-    "bodyTurnCompleted": "エージェントが応答を完了しました"
+    "bodyTurnCompleted": "エージェントが応答を完了しました",
+    "bodyTurnCompletedNamed": "「{{name}}」の応答が完了しました"
   },
   "dingtalk": {
     "step4": "承認後、DingTalk を通じて AI アシスタントとチャットできます！",

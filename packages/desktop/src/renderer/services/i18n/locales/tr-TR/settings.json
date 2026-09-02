@@ -492,7 +492,8 @@
     "insecureContext": "Tarayıcı bildirimleri için HTTPS veya localhost erişimi gereklidir",
     "granted": "Tarayıcı bildirimleri etkinleştirildi",
     "enable": "Tarayıcı bildirimlerini etkinleştir",
-    "bodyTurnCompleted": "Agent yanıtlamayı tamamladı"
+    "bodyTurnCompleted": "Agent yanıtlamayı tamamladı",
+    "bodyTurnCompletedNamed": "\"{{name}}\" yanıtlamayı tamamladı"
   },
   "dingtalk": {
     "step4": "Onaylandiktan sonra, DingTalk uzerinden AI asistani ile sohbet edebilirsiniz!",
