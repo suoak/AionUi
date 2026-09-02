@@ -488,6 +488,7 @@
   "assistantBuiltinReadonlyTip": "Este é um assistente oficial — apenas as configurações relacionadas ao mecanismo podem ser alteradas. Para personalizar qualquer outra coisa, ",
   "browserNotification": {
     "bodyConfirmation": "Um agente está aguardando sua confirmação",
+    "bodyConfirmationNamed": "\"{{name}}\" está aguardando sua confirmação",
     "denied": "Notificações bloqueadas — ative-as nas configurações de site do seu navegador",
     "insecureContext": "As notificações do navegador exigem acesso via HTTPS ou localhost",
     "granted": "Notificações do navegador ativadas",

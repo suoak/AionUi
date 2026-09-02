@@ -1989,6 +1989,7 @@ export type I18nKey =
   | 'settings.browserData.openChatLinksExternalLabel'
   | 'settings.browserData.title'
   | 'settings.browserNotification.bodyConfirmation'
+  | 'settings.browserNotification.bodyConfirmationNamed'
   | 'settings.browserNotification.bodyTurnCompleted'
   | 'settings.browserNotification.bodyTurnCompletedNamed'
   | 'settings.browserNotification.denied'

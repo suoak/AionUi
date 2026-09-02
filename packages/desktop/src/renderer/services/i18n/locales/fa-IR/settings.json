@@ -488,6 +488,7 @@
   "assistantBuiltinReadonlyTip": "این یک دستیار پیش‌فرض است. فقط ایجنت اصلی قابل تغییر است. برای سفارشی‌سازی سایر فیلدها، ",
   "browserNotification": {
     "bodyConfirmation": "یک ایجنت منتظر تأیید شماست",
+    "bodyConfirmationNamed": "«{{name}}» منتظر تأیید شماست",
     "denied": "اعلان‌ها مسدود شده‌اند — آن‌ها را در تنظیمات سایت مرورگر فعال کنید",
     "insecureContext": "اعلان‌های مرورگر به HTTPS یا دسترسی localhost نیاز دارند",
     "granted": "اعلان‌های مرورگر فعال شد",

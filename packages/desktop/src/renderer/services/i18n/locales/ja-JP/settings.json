@@ -490,6 +490,7 @@
   "assistantBuiltinReadonlyTip": "これは公式アシスタントです。エンジン関連の設定のみ変更できます。その他の内容をカスタマイズするには、",
   "browserNotification": {
     "bodyConfirmation": "エージェントが確認を待っています",
+    "bodyConfirmationNamed": "「{{name}}」が確認を待っています",
     "denied": "通知がブロックされています — ブラウザのサイト設定から有効にしてください",
     "insecureContext": "ブラウザ通知には HTTPS または localhost からのアクセスが必要です",
     "granted": "ブラウザ通知が有効になりました",

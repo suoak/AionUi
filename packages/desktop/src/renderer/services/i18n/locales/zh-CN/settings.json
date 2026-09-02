@@ -488,6 +488,7 @@
   "assistantBuiltinReadonlyTip": "这是官方助手，仅支持修改引擎相关的配置。如需自定义其他内容，请",
   "browserNotification": {
     "bodyConfirmation": "有一个 agent 正在等待你的确认",
+    "bodyConfirmationNamed": "「{{name}}」正在等待你确认",
     "denied": "通知已被拦截 —— 请在浏览器的网站设置中开启",
     "insecureContext": "浏览器通知需要通过 HTTPS 或 localhost 访问",
     "granted": "浏览器通知已开启",
