@@ -230,11 +230,7 @@ export const resolveLayoutSlots = (layout: DeckLayout, slide: DeckSlide): DeckSl
           layout.id === 'vs-scorecard' ||
           layout.id === 'statement-split' ||
           layout.id === 'image-left-bullets') &&
-        (slot.id === 'left' ||
-          slot.id === 'right' ||
-          slot.id === 'kpi' ||
-          slot.id === 'support' ||
-          slot.id === 'body')
+        (slot.id === 'left' || slot.id === 'right' || slot.id === 'kpi' || slot.id === 'support' || slot.id === 'body')
       ) {
         const balance = Math.min(65, Math.max(35, controlNumber(controls, 'balance', 50))) / 100;
         const start = 0.06;
