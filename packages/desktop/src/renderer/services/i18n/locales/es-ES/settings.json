@@ -1399,7 +1399,9 @@
     "clearLabel": "Borrar datos de navegación",
     "agentControlFailed": "No se pudo guardar el ajuste",
     "clearFailed": "No se pudieron borrar los datos de navegación",
-    "clearConfirmContent": "Se cerrará tu sesión en todos los sitios del navegador integrado. Esta acción no se puede deshacer."
+    "clearConfirmContent": "Se cerrará tu sesión en todos los sitios del navegador integrado. Esta acción no se puede deshacer.",
+    "openChatLinksExternalLabel": "Abrir enlaces del chat en el navegador predeterminado del sistema",
+    "openChatLinksExternalDesc": "Si está activado, los enlaces http(s) de los mensajes del chat se abren en el navegador del sistema en lugar de una pestaña de vista previa integrada."
   },
   "mcpOAuthLoginSuccess": "Inicio de sesión OAuth exitoso",
   "webui.stopFailed": "Error al detener WebUI",

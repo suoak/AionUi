@@ -1399,7 +1399,9 @@
     "clearLabel": "Clear browsing data",
     "agentControlFailed": "Failed to save setting",
     "clearFailed": "Failed to clear browsing data",
-    "clearConfirmContent": "You will be signed out of every site in the in-app browser. This cannot be undone."
+    "clearConfirmContent": "You will be signed out of every site in the in-app browser. This cannot be undone.",
+    "openChatLinksExternalLabel": "Open chat links in the system default browser",
+    "openChatLinksExternalDesc": "When enabled, http(s) links in chat messages open in your system browser instead of an in-app preview tab."
   },
   "mcpOAuthLoginSuccess": "OAuth login successful",
   "webui.stopFailed": "Failed to stop WebUI",

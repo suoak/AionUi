@@ -1401,7 +1401,9 @@
     "clearLabel": "인터넷 사용 정보 삭제",
     "agentControlFailed": "설정 저장에 실패했습니다",
     "clearFailed": "인터넷 사용 정보 삭제에 실패했습니다",
-    "clearConfirmContent": "앱 내 브라우저의 모든 사이트에서 로그아웃됩니다. 되돌릴 수 없습니다."
+    "clearConfirmContent": "앱 내 브라우저의 모든 사이트에서 로그아웃됩니다. 되돌릴 수 없습니다.",
+    "openChatLinksExternalLabel": "채팅 링크를 시스템 기본 브라우저에서 열기",
+    "openChatLinksExternalDesc": "사용하면 채팅 메시지의 http(s) 링크가 앱 내 미리보기 탭 대신 시스템 브라우저에서 열립니다."
   },
   "mcpOAuthLoginSuccess": "OAuth 로그인 성공",
   "webui.stopFailed": "WebUI 중지 실패",

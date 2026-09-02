@@ -12,6 +12,7 @@ import rehypeRaw from 'rehype-raw';
 // Import KaTeX CSS to make it available in the document
 import 'katex/dist/katex.min.css';
 
+import { configService } from '@/common/config/configService';
 import { openExternalUrl } from '@/renderer/utils/platform';
 import { parseHttpUrl } from '@/renderer/utils/url';
 import { useOptionalPreviewContext } from '@/renderer/pages/conversation/Preview/context/PreviewContext';
@@ -179,7 +180,11 @@ const MarkdownView: React.FC<MarkdownViewProps> = React.memo(
         const href = (e.currentTarget as HTMLAnchorElement).href;
         if (!href) return;
         const httpUrl = parseHttpUrl(href);
-        if (httpUrl && preview) {
+        // Preference: open chat http(s) links in the system default browser
+        // instead of the in-app preview tab. Preview panel address bar / webview
+        // navigation is unaffected (this handler is chat-markdown only).
+        const preferSystemBrowser = configService.get('openChatLinksInDefaultBrowser') === true;
+        if (httpUrl && preview && !preferSystemBrowser) {
           preview.openBrowserTab(httpUrl);
           return;
         }

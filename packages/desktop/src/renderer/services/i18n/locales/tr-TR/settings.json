@@ -1399,7 +1399,9 @@
     "clearLabel": "Tarama verilerini temizle",
     "agentControlFailed": "Ayar kaydedilemedi",
     "clearFailed": "Tarama verileri temizlenemedi",
-    "clearConfirmContent": "Uygulama içi tarayıcıdaki tüm sitelerden çıkış yapılacak. Bu işlem geri alınamaz."
+    "clearConfirmContent": "Uygulama içi tarayıcıdaki tüm sitelerden çıkış yapılacak. Bu işlem geri alınamaz.",
+    "openChatLinksExternalLabel": "Sohbet bağlantılarını sistem varsayılan tarayıcısında aç",
+    "openChatLinksExternalDesc": "Etkinleştirildiğinde, sohbet iletilerindeki http(s) bağlantıları uygulama içi önizleme sekmesi yerine sistem tarayıcısında açılır."
   },
   "mcpOAuthLoginSuccess": "OAuth girişi başarılı",
   "webui.stopFailed": "Web Arayüzü durdurulamadı",

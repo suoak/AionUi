@@ -86,6 +86,11 @@ export interface IConfigStorageRefer {
   // Desktop Pet: whether tool-call confirmations are routed to the pet's bubble
   // (true) or remain in the main chat window (false). Default true.
   'pet.confirmEnabled'?: boolean;
+  /**
+   * When true, http(s) links in chat markdown open in the system default browser
+   * instead of an in-app preview browser tab. Default false (in-app tab).
+   */
+  openChatLinksInDefaultBrowser?: boolean;
 }
 
 /**

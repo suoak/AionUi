@@ -1985,6 +1985,8 @@ export type I18nKey =
   | 'settings.browserData.clearFailed'
   | 'settings.browserData.clearLabel'
   | 'settings.browserData.clearSuccess'
+  | 'settings.browserData.openChatLinksExternalDesc'
+  | 'settings.browserData.openChatLinksExternalLabel'
   | 'settings.browserData.title'
   | 'settings.browserNotification.bodyConfirmation'
   | 'settings.browserNotification.bodyTurnCompleted'

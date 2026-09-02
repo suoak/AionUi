@@ -1399,7 +1399,9 @@
     "clearLabel": "Browserdaten löschen",
     "agentControlFailed": "Einstellung konnte nicht gespeichert werden",
     "clearFailed": "Browserdaten konnten nicht gelöscht werden",
-    "clearConfirmContent": "Du wirst von allen Websites im integrierten Browser abgemeldet. Das kann nicht rückgängig gemacht werden."
+    "clearConfirmContent": "Du wirst von allen Websites im integrierten Browser abgemeldet. Das kann nicht rückgängig gemacht werden.",
+    "openChatLinksExternalLabel": "Chat-Links im Standardbrowser des Systems öffnen",
+    "openChatLinksExternalDesc": "Wenn aktiviert, öffnen http(s)-Links in Chat-Nachrichten im Systembrowser statt in einem In-App-Vorschau-Tab."
   },
   "mcpOAuthLoginSuccess": "OAuth-Anmeldung erfolgreich",
   "webui.stopFailed": "WebUI stoppen fehlgeschlagen",
