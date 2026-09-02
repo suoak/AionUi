@@ -31,12 +31,14 @@ const Inspector: React.FC<Props> = ({
   const { t } = useTranslation();
   const textValue = block?.items?.join('\n') ?? block?.text ?? block?.value ?? '';
   const currentLayout = layouts.find((layout) => layout.id === slide.layoutId);
+  const layoutControls = currentLayout?.controls ?? [];
   const setControl = (id: string, value: unknown) =>
     onSlideChange((draft) => {
       draft.controls = { ...draft.controls, [id]: value };
     });
+
   return (
-    <div className='w-280px flex-shrink-0 overflow-y-auto border-l border-border-2 bg-bg-2 p-14px'>
+    <div className='w-280px flex-shrink-0 overflow-y-auto border-l border-border-2 bg-bg-2 p-14px' data-testid='presentation-inspector'>
       <label className='block text-12px text-t-secondary mb-5px'>{t('presentation.field.slideTitle')}</label>
       <Input
         value={slide.title ?? ''}
@@ -63,39 +65,48 @@ const Inspector: React.FC<Props> = ({
         ))}
       </Select>
 
-      {currentLayout?.controls.map((control) => {
-        const value = slide.controls?.[control.id] ?? control.defaultValue;
-        return (
-          <div key={control.id} className='mt-14px'>
-            <div className='text-12px text-t-secondary mb-5px'>
-              {t(`presentation.catalog.control.${control.id}`, { defaultValue: control.label })}
-            </div>
-            {control.type === 'toggle' ? (
-              <Switch size='small' checked={Boolean(value)} onChange={(checked) => setControl(control.id, checked)} />
-            ) : control.type === 'select' ? (
-              <Select
-                className='w-full'
-                value={String(value)}
-                onChange={(selected) => setControl(control.id, selected)}
-              >
-                {control.options?.map((option) => (
-                  <Select.Option key={option} value={option}>
-                    {t(`presentation.catalog.option.${option}`, { defaultValue: option })}
-                  </Select.Option>
-                ))}
-              </Select>
-            ) : (
-              <Slider
-                min={control.min}
-                max={control.max}
-                step={control.step}
-                value={Number(value)}
-                onChange={(selected) => setControl(control.id, Array.isArray(selected) ? selected[0] : selected)}
-              />
-            )}
-          </div>
-        );
-      })}
+      {layoutControls.length > 0 && (
+        <div className='mt-14px' data-testid='presentation-layout-controls'>
+          <div className='text-13px font-500 mb-8px'>{t('presentation.field.layoutControls')}</div>
+          {layoutControls.map((control) => {
+            const value = slide.controls?.[control.id] ?? control.defaultValue;
+            return (
+              <div key={control.id} className='mt-12px' data-testid={`layout-control-${control.id}`}>
+                <div className='text-12px text-t-secondary mb-5px'>
+                  {t(`presentation.catalog.control.${control.id}`, { defaultValue: control.label })}
+                </div>
+                {control.type === 'toggle' ? (
+                  <Switch
+                    size='small'
+                    checked={Boolean(value)}
+                    onChange={(checked) => setControl(control.id, checked)}
+                  />
+                ) : control.type === 'select' ? (
+                  <Select
+                    className='w-full'
+                    value={String(value)}
+                    onChange={(selected) => setControl(control.id, selected)}
+                  >
+                    {(control.options ?? []).map((option) => (
+                      <Select.Option key={option} value={option}>
+                        {t(`presentation.catalog.option.${option}`, { defaultValue: option })}
+                      </Select.Option>
+                    ))}
+                  </Select>
+                ) : (
+                  <Slider
+                    min={control.min}
+                    max={control.max}
+                    step={control.step}
+                    value={Number(value)}
+                    onChange={(selected) => setControl(control.id, Array.isArray(selected) ? selected[0] : selected)}
+                  />
+                )}
+              </div>
+            );
+          })}
+        </div>
+      )}
 
       <div className='flex items-center justify-between mt-14px'>
         <span className='text-12px text-t-secondary'>{t('presentation.field.hidden')}</span>

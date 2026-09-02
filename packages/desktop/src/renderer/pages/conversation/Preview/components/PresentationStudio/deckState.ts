@@ -129,6 +129,49 @@ export const resolveLayoutSlots = (layout: DeckLayout, slide: DeckSlide): DeckSl
     });
 };
 
+
+export type OutlineRequiredField = 'title' | 'language' | 'theme';
+export type OutlineWarningField = 'goal' | 'audience';
+
+export type OutlineGateResult = {
+  canConfirm: boolean;
+  missingRequired: OutlineRequiredField[];
+  warnings: OutlineWarningField[];
+};
+
+const isBlank = (value: string | undefined): boolean => !value || !value.trim();
+
+/** Whether the outline stage may advance to ready (title/language/theme required). */
+export const evaluateOutlineGate = (spec: DeckSpecV1): OutlineGateResult => {
+  const missingRequired: OutlineRequiredField[] = [];
+  if (isBlank(spec.metadata.title)) missingRequired.push('title');
+  if (isBlank(spec.metadata.language)) missingRequired.push('language');
+  if (isBlank(spec.theme.id)) missingRequired.push('theme');
+  const warnings: OutlineWarningField[] = [];
+  if (isBlank(spec.metadata.goal)) warnings.push('goal');
+  if (isBlank(spec.metadata.audience)) warnings.push('audience');
+  return {
+    canConfirm: spec.stage === 'outline' && missingRequired.length === 0,
+    missingRequired,
+    warnings,
+  };
+};
+
+/** Advance outline → ready only when required metadata is present. */
+export const confirmOutline = (spec: DeckSpecV1): DeckSpecV1 => {
+  if (!evaluateOutlineGate(spec).canConfirm) return spec;
+  return mutateDeck(spec, (draft) => {
+    draft.stage = 'ready';
+  });
+};
+
+/** Normalize catalog token colors (hex without #) for CSS swatches. */
+export const themeTokenColor = (tokens: Record<string, string> | undefined, key: string): string | undefined => {
+  const raw = tokens?.[key]?.trim();
+  if (!raw) return undefined;
+  return raw.startsWith('#') ? raw : `#${raw}`;
+};
+
 export const mutateDeck = (spec: DeckSpecV1, mutation: (draft: DeckSpecV1) => void): DeckSpecV1 => {
   const draft = structuredClone(spec);
   mutation(draft);
@@ -216,6 +259,17 @@ export const changeSlideLayout = (spec: DeckSpecV1, slideId: string, layout: Dec
     }
   });
 };
+
+
+export const setSlideControl = (
+  spec: DeckSpecV1,
+  slideId: string,
+  controlId: string,
+  value: unknown
+): DeckSpecV1 =>
+  updateSlide(spec, slideId, (slide) => {
+    slide.controls = { ...slide.controls, [controlId]: value };
+  });
 
 export const updateBlock = (
   spec: DeckSpecV1,

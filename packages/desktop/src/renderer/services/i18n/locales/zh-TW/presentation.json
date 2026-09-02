@@ -11,14 +11,25 @@
     "generateImage": "產生圖片",
     "regenerate": "重新產生目前頁面"
   },
-  "field": { "slideTitle": "頁面標題", "layout": "版式", "hidden": "隱藏頁面", "notes": "講者備註", "content": "內容" },
+  "field": {
+    "slideTitle": "頁面標題",
+    "layout": "版式",
+    "hidden": "隱藏頁面",
+    "notes": "講者備註",
+    "content": "內容",
+    "layoutControls": "版式控制項"
+  },
   "conflict": {
     "description": "此 Deck 已在磁碟上發生變更。自動儲存已暫停，以保護兩個版本。",
     "reload": "重新載入磁碟版本",
     "saveAs": "另存副本"
   },
   "catalog": {
-    "theme": { "business-light": "商務簡約", "technology-dark": "深色科技", "editorial-report": "編輯報告" },
+    "theme": {
+      "business-light": "商務簡約",
+      "technology-dark": "深色科技",
+      "editorial-report": "編輯報告"
+    },
     "layout": {
       "cover": "封面",
       "agenda": "目錄",
@@ -33,17 +44,37 @@
       "matrix": "表格／二維矩陣",
       "closing": "總結／行動／結束頁"
     },
-    "control": { "balance": "分欄比例", "showInsight": "顯示洞察欄", "mediaSide": "媒體位置" },
-    "option": { "left": "左側", "right": "右側" }
+    "control": {
+      "balance": "分欄比例",
+      "showInsight": "顯示洞察欄",
+      "mediaSide": "媒體位置"
+    },
+    "option": {
+      "left": "左側",
+      "right": "右側"
+    }
   },
   "slide": {
     "hidden": "已隱藏",
     "regeneratePrompt": "請根據已確認的大綱和現有證據，只重新產生簡報頁面 {{slideId}}。保留穩定的頁面 ID，更新語意內容區塊和講者備註，然後驗證 DeckSpec。"
   },
   "outline": {
-    "description": "請先確認大綱和主題，再產生完整簡報。",
+    "description": "請先核對目標、受眾、主題和頁面標題，確認大綱後再產生完整頁面內容。",
     "continue": "在對話中繼續",
-    "continuePrompt": "簡報的大綱和主題已確認。請補全語意內容、講者備註和媒體需求，然後驗證 DeckSpec。"
+    "continuePrompt": "簡報的大綱和主題已確認。請補全語意內容、講者備註和媒體需求，然後驗證 DeckSpec。",
+    "title": "填入內容前請確認大綱",
+    "confirm": "確認大綱",
+    "metaTitle": "標題",
+    "metaLanguage": "語言",
+    "metaGoal": "目標",
+    "metaAudience": "受眾",
+    "metaTheme": "主題",
+    "metaSlides": "頁面標題",
+    "empty": "未設定",
+    "missingRequired": "確認大綱前請先設定標題、語言和主題。",
+    "warnGoalAudience": "目標或受眾為空。仍可確認，但後續填入可能不夠準確。",
+    "confirmed": "大綱已確認，可以開始填入內容。",
+    "exportBlocked": "請先確認大綱再匯出 PPTX。"
   },
   "media": {
     "imageFiles": "圖片檔案",
