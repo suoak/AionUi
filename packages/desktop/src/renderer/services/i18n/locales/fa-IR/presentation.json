@@ -9,7 +9,9 @@
     "uploadImage": "Upload",
     "selectImage": "Workspace",
     "generateImage": "Generate image",
-    "regenerate": "Regenerate slide"
+    "regenerate": "Regenerate slide",
+    "skipMedia": "رد کردن",
+    "replaceImage": "جایگزینی"
   },
   "field": {
     "slideTitle": "Slide title",
@@ -57,7 +59,8 @@
   },
   "slide": {
     "hidden": "Hidden",
-    "regeneratePrompt": "Regenerate only presentation slide {{slideId}} using the confirmed outline and available evidence. Preserve its stable slide ID, update semantic blocks and speaker notes, then validate the DeckSpec."
+    "regeneratePrompt": "Regenerate only presentation slide {{slideId}} using the confirmed outline and available evidence. Preserve its stable slide ID, update semantic blocks and speaker notes, then validate the DeckSpec.",
+    "pendingMedia": "رسانه در انتظار"
   },
   "outline": {
     "description": "Review goal, audience, theme, and slide titles, then confirm the outline before generating full slide content.",
@@ -84,7 +87,13 @@
     "importSuccess": "Image imported",
     "importFailed": "Image import failed",
     "importOutdated": "The image was imported, but its media slot changed before the DeckSpec could be updated.",
-    "generatePrompt": "Generate an image for presentation slide {{slideId}}, block {{blockId}}, asset {{assetId}}, using the configured custom image model. Save it in this deck's assets directory and update only that asset slot; preserve the previous image if generation fails."
+    "generatePrompt": "Generate an image for presentation slide {{slideId}}, block {{blockId}}, asset {{assetId}}, using the configured custom image model. Save it in this deck's assets directory and update only that asset slot; preserve the previous image if generation fails.",
+    "pendingPlaceholder": "تصویر در انتظار",
+    "pendingHint": "وارد کنید، تولید کنید یا رد کنید تا خروجی مسدود نشود.",
+    "errorPlaceholder": "خطای تصویر",
+    "errorHint": "جایگزین وارد کنید، دوباره تولید کنید یا این جایگاه را رد کنید.",
+    "readyStatus": "تصویر آماده — برای جایگزینی وارد یا تولید کنید.",
+    "skipSuccess": "جایگاه رسانه رد شد"
   },
   "status": {
     "valid": "Presentation is valid",

@@ -9,7 +9,9 @@
     "uploadImage": "上传",
     "selectImage": "工作区",
     "generateImage": "生成图片",
-    "regenerate": "重新生成当前页"
+    "regenerate": "重新生成当前页",
+    "skipMedia": "跳过",
+    "replaceImage": "替换"
   },
   "field": {
     "slideTitle": "页面标题",
@@ -57,7 +59,8 @@
   },
   "slide": {
     "hidden": "已隐藏",
-    "regeneratePrompt": "请根据已确认的大纲和现有证据，只重新生成演示文稿页面 {{slideId}}。保留稳定的页面 ID，更新语义内容块和讲者备注，然后校验 DeckSpec。"
+    "regeneratePrompt": "请根据已确认的大纲和现有证据，只重新生成演示文稿页面 {{slideId}}。保留稳定的页面 ID，更新语义内容块和讲者备注，然后校验 DeckSpec。",
+    "pendingMedia": "待补图"
   },
   "outline": {
     "description": "请先核对目标、受众、主题和页面标题，确认大纲后再生成完整页面内容。",
@@ -84,7 +87,13 @@
     "importSuccess": "图片导入成功",
     "importFailed": "图片导入失败",
     "importOutdated": "图片已导入，但媒体槽在更新 DeckSpec 前发生了变化。",
-    "generatePrompt": "请使用已配置的自定义图片模型，为演示文稿页面 {{slideId}} 的内容块 {{blockId}}、资产 {{assetId}} 生成图片。将文件保存到该 Deck 的 assets 目录并只更新这个媒体槽；如果生成失败，请保留旧图片。"
+    "generatePrompt": "请使用已配置的自定义图片模型，为演示文稿页面 {{slideId}} 的内容块 {{blockId}}、资产 {{assetId}} 生成图片。将文件保存到该 Deck 的 assets 目录并只更新这个媒体槽；如果生成失败，请保留旧图片。",
+    "pendingPlaceholder": "待填充图片",
+    "pendingHint": "请导入、生成或跳过此占位，以免阻塞导出。",
+    "errorPlaceholder": "图片失败",
+    "errorHint": "请导入替换图、重新生成，或跳过此槽位。",
+    "readyStatus": "图片已就绪 — 可导入或生成以替换。",
+    "skipSuccess": "已跳过媒体槽位"
   },
   "status": {
     "valid": "演示文稿校验通过",

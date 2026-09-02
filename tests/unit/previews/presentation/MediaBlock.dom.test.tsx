@@ -6,6 +6,12 @@ vi.mock('@/common', () => ({
   ipcBridge: { fs: { readContent: { invoke: vi.fn() } } },
 }));
 
+vi.mock('react-i18next', () => ({
+  useTranslation: () => ({
+    t: (key: string) => key,
+  }),
+}));
+
 import { ipcBridge } from '@/common';
 import MediaBlock from '@/renderer/pages/conversation/Preview/components/PresentationStudio/MediaBlock';
 
@@ -44,5 +50,31 @@ describe('WorkMate presentation media block', () => {
     await waitFor(() => expect(ipcBridge.fs.readContent.invoke).toHaveBeenCalledOnce());
     expect(screen.getByText('hero fallback')).toBeInTheDocument();
     expect(screen.queryByRole('img')).not.toBeInTheDocument();
+  });
+
+  it('renders a pending placeholder without reading the asset file', () => {
+    render(
+      <MediaBlock
+        asset={{ id: 'hero', path: 'q1.assets/hero.png', type: 'image', status: 'pending' }}
+        deckRef={{ kind: 'project', pe_id: 'pe-1', relative_path: 'q1.workmate-deck.json' }}
+        fallback='hero'
+      />
+    );
+    expect(screen.getByTestId('media-pending')).toBeInTheDocument();
+    expect(screen.getByText('presentation.media.pendingPlaceholder')).toBeInTheDocument();
+    expect(ipcBridge.fs.readContent.invoke).not.toHaveBeenCalled();
+  });
+
+  it('renders an error placeholder for failed assets', () => {
+    render(
+      <MediaBlock
+        asset={{ id: 'hero', path: 'q1.assets/hero.png', type: 'image', status: 'error' }}
+        deckRef={{ kind: 'project', pe_id: 'pe-1', relative_path: 'q1.workmate-deck.json' }}
+        fallback='hero'
+      />
+    );
+    expect(screen.getByTestId('media-error')).toBeInTheDocument();
+    expect(screen.getByText('presentation.media.errorPlaceholder')).toBeInTheDocument();
+    expect(ipcBridge.fs.readContent.invoke).not.toHaveBeenCalled();
   });
 });

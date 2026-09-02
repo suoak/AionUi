@@ -9,7 +9,9 @@
     "uploadImage": "Upload",
     "selectImage": "Workspace",
     "generateImage": "Generate image",
-    "regenerate": "Regenerate slide"
+    "regenerate": "Regenerate slide",
+    "skipMedia": "건너뛰기",
+    "replaceImage": "교체"
   },
   "field": {
     "slideTitle": "Slide title",
@@ -57,7 +59,8 @@
   },
   "slide": {
     "hidden": "Hidden",
-    "regeneratePrompt": "Regenerate only presentation slide {{slideId}} using the confirmed outline and available evidence. Preserve its stable slide ID, update semantic blocks and speaker notes, then validate the DeckSpec."
+    "regeneratePrompt": "Regenerate only presentation slide {{slideId}} using the confirmed outline and available evidence. Preserve its stable slide ID, update semantic blocks and speaker notes, then validate the DeckSpec.",
+    "pendingMedia": "미디어 대기"
   },
   "outline": {
     "description": "Review goal, audience, theme, and slide titles, then confirm the outline before generating full slide content.",
@@ -84,7 +87,13 @@
     "importSuccess": "Image imported",
     "importFailed": "Image import failed",
     "importOutdated": "The image was imported, but its media slot changed before the DeckSpec could be updated.",
-    "generatePrompt": "Generate an image for presentation slide {{slideId}}, block {{blockId}}, asset {{assetId}}, using the configured custom image model. Save it in this deck's assets directory and update only that asset slot; preserve the previous image if generation fails."
+    "generatePrompt": "Generate an image for presentation slide {{slideId}}, block {{blockId}}, asset {{assetId}}, using the configured custom image model. Save it in this deck's assets directory and update only that asset slot; preserve the previous image if generation fails.",
+    "pendingPlaceholder": "이미지 대기",
+    "pendingHint": "가져오기, 생성 또는 건너뛰기로 내보내기 차단을 해제하세요.",
+    "errorPlaceholder": "이미지 실패",
+    "errorHint": "대체 이미지를 가져오거나 다시 생성하거나 이 슬롯을 건너뛰세요.",
+    "readyStatus": "이미지 준비됨 — 가져오기 또는 생성으로 교체할 수 있습니다.",
+    "skipSuccess": "미디어 슬롯을 건너뛰었습니다"
   },
   "status": {
     "valid": "Presentation is valid",

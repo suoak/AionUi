@@ -9,7 +9,9 @@
     "uploadImage": "上傳",
     "selectImage": "工作區",
     "generateImage": "產生圖片",
-    "regenerate": "重新產生目前頁面"
+    "regenerate": "重新產生目前頁面",
+    "skipMedia": "略過",
+    "replaceImage": "取代"
   },
   "field": {
     "slideTitle": "頁面標題",
@@ -57,7 +59,8 @@
   },
   "slide": {
     "hidden": "已隱藏",
-    "regeneratePrompt": "請根據已確認的大綱和現有證據，只重新產生簡報頁面 {{slideId}}。保留穩定的頁面 ID，更新語意內容區塊和講者備註，然後驗證 DeckSpec。"
+    "regeneratePrompt": "請根據已確認的大綱和現有證據，只重新產生簡報頁面 {{slideId}}。保留穩定的頁面 ID，更新語意內容區塊和講者備註，然後驗證 DeckSpec。",
+    "pendingMedia": "待補圖"
   },
   "outline": {
     "description": "請先核對目標、受眾、主題和頁面標題，確認大綱後再產生完整頁面內容。",
@@ -84,7 +87,13 @@
     "importSuccess": "圖片匯入成功",
     "importFailed": "圖片匯入失敗",
     "importOutdated": "圖片已匯入，但媒體槽在更新 DeckSpec 前發生了變更。",
-    "generatePrompt": "請使用已設定的自訂圖片模型，為簡報頁面 {{slideId}} 的內容區塊 {{blockId}}、資產 {{assetId}} 產生圖片。將檔案儲存到此 Deck 的 assets 目錄並只更新此媒體槽；若產生失敗，請保留舊圖片。"
+    "generatePrompt": "請使用已設定的自訂圖片模型，為簡報頁面 {{slideId}} 的內容區塊 {{blockId}}、資產 {{assetId}} 產生圖片。將檔案儲存到此 Deck 的 assets 目錄並只更新此媒體槽；若產生失敗，請保留舊圖片。",
+    "pendingPlaceholder": "待填入圖片",
+    "pendingHint": "請匯入、產生或略過此佔位，以免阻塞匯出。",
+    "errorPlaceholder": "圖片失敗",
+    "errorHint": "請匯入替換圖、重新產生，或略過此槽位。",
+    "readyStatus": "圖片已就緒 — 可匯入或產生以取代。",
+    "skipSuccess": "已略過媒體槽位"
   },
   "status": {
     "valid": "簡報驗證通過",

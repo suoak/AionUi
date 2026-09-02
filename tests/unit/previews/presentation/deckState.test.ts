@@ -15,6 +15,8 @@ import {
   setAssetReady,
   setSlideControl,
   serializeDeckSpec,
+  skipPendingMedia,
+  slideHasUnresolvedMedia,
   suggestLayoutAlternatives,
   themeTokenColor,
   updateBlock,
@@ -109,6 +111,55 @@ describe('WorkMate presentation deck state', () => {
   it('declares a missing asset after a successful upload', () => {
     const updated = setAssetReady(deck(), 'new-asset', 'quarterly.assets/new-asset.jpg');
     expect(updated.assets.at(-1)).toMatchObject({ id: 'new-asset', status: 'ready', type: 'image' });
+  });
+
+  it('skips a pending media block and drops the unused asset', () => {
+    const source: DeckSpecV1 = {
+      ...deck(),
+      slides: [
+        {
+          id: 'cover',
+          role: 'cover',
+          layoutId: 'cover',
+          blocks: [
+            { id: 'title', type: 'text', slot: 'title', text: 'Q1' },
+            { id: 'hero', type: 'image', slot: 'media', assetId: 'hero' },
+          ],
+        },
+      ],
+      assets: [{ id: 'hero', path: 'quarterly.assets/hero.png', type: 'image', status: 'pending' }],
+    };
+    expect(slideHasUnresolvedMedia(source.slides[0], source.assets)).toBe(true);
+    const updated = skipPendingMedia(source, 'cover', 'hero');
+    expect(updated.slides[0].blocks.map((block) => block.id)).toEqual(['title']);
+    expect(updated.assets).toEqual([]);
+    expect(slideHasUnresolvedMedia(updated.slides[0], updated.assets)).toBe(false);
+  });
+
+  it('keeps a shared asset when skipping one of several image references', () => {
+    const source: DeckSpecV1 = {
+      ...deck(),
+      slides: [
+        {
+          id: 'cover',
+          role: 'cover',
+          layoutId: 'cover',
+          blocks: [
+            { id: 'hero', type: 'image', slot: 'media', assetId: 'shared' },
+            { id: 'thumb', type: 'image', slot: 'thumb', assetId: 'shared' },
+          ],
+        },
+      ],
+      assets: [{ id: 'shared', path: 'quarterly.assets/shared.png', type: 'image', status: 'error' }],
+    };
+    const updated = skipPendingMedia(source, 'cover', 'hero');
+    expect(updated.slides[0].blocks.map((block) => block.id)).toEqual(['thumb']);
+    expect(updated.assets).toHaveLength(1);
+  });
+
+  it('ignores skip for non-image blocks', () => {
+    const source = deck();
+    expect(skipPendingMedia(source, 'cover', 'title')).toBe(source);
   });
 
   it('moves and duplicates slides with stable unique ids', () => {

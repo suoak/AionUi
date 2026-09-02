@@ -9,7 +9,9 @@
     "uploadImage": "Upload",
     "selectImage": "Workspace",
     "generateImage": "Generate image",
-    "regenerate": "Regenerate slide"
+    "regenerate": "Regenerate slide",
+    "skipMedia": "Ignorar",
+    "replaceImage": "Substituir"
   },
   "field": {
     "slideTitle": "Slide title",
@@ -57,7 +59,8 @@
   },
   "slide": {
     "hidden": "Hidden",
-    "regeneratePrompt": "Regenerate only presentation slide {{slideId}} using the confirmed outline and available evidence. Preserve its stable slide ID, update semantic blocks and speaker notes, then validate the DeckSpec."
+    "regeneratePrompt": "Regenerate only presentation slide {{slideId}} using the confirmed outline and available evidence. Preserve its stable slide ID, update semantic blocks and speaker notes, then validate the DeckSpec.",
+    "pendingMedia": "Mídia pendente"
   },
   "outline": {
     "description": "Review goal, audience, theme, and slide titles, then confirm the outline before generating full slide content.",
@@ -84,7 +87,13 @@
     "importSuccess": "Image imported",
     "importFailed": "Image import failed",
     "importOutdated": "The image was imported, but its media slot changed before the DeckSpec could be updated.",
-    "generatePrompt": "Generate an image for presentation slide {{slideId}}, block {{blockId}}, asset {{assetId}}, using the configured custom image model. Save it in this deck's assets directory and update only that asset slot; preserve the previous image if generation fails."
+    "generatePrompt": "Generate an image for presentation slide {{slideId}}, block {{blockId}}, asset {{assetId}}, using the configured custom image model. Save it in this deck's assets directory and update only that asset slot; preserve the previous image if generation fails.",
+    "pendingPlaceholder": "Imagem pendente",
+    "pendingHint": "Importe, gere ou ignore este espaço reservado para não bloquear a exportação.",
+    "errorPlaceholder": "Falha na imagem",
+    "errorHint": "Importe um substituto, gere novamente ou ignore este slot.",
+    "readyStatus": "Imagem pronta — importe ou gere para substituir.",
+    "skipSuccess": "Slot de mídia ignorado"
   },
   "status": {
     "valid": "Presentation is valid",
