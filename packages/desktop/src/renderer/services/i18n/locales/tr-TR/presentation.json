@@ -16,7 +16,8 @@
     "layout": "Layout",
     "hidden": "Hidden",
     "notes": "Speaker notes",
-    "content": "Content"
+    "content": "Content",
+    "layoutControls": "Layout controls"
   },
   "conflict": {
     "description": "This deck changed on disk. Automatic saving is paused to protect both versions.",
@@ -43,17 +44,37 @@
       "matrix": "Table or matrix",
       "closing": "Closing"
     },
-    "control": { "balance": "Column balance", "showInsight": "Show insight panel", "mediaSide": "Media side" },
-    "option": { "left": "Left", "right": "Right" }
+    "control": {
+      "balance": "Column balance",
+      "showInsight": "Show insight panel",
+      "mediaSide": "Media side"
+    },
+    "option": {
+      "left": "Left",
+      "right": "Right"
+    }
   },
   "slide": {
     "hidden": "Hidden",
     "regeneratePrompt": "Regenerate only presentation slide {{slideId}} using the confirmed outline and available evidence. Preserve its stable slide ID, update semantic blocks and speaker notes, then validate the DeckSpec."
   },
   "outline": {
-    "description": "Review the outline and theme before generating the full presentation.",
+    "description": "Review goal, audience, theme, and slide titles, then confirm the outline before generating full slide content.",
     "continue": "Continue in chat",
-    "continuePrompt": "The presentation outline and theme are confirmed. Please complete the semantic content, speaker notes, and media requirements, then validate the DeckSpec."
+    "continuePrompt": "The presentation outline and theme are confirmed. Please complete the semantic content, speaker notes, and media requirements, then validate the DeckSpec.",
+    "title": "Confirm outline before filling",
+    "confirm": "Confirm outline",
+    "metaTitle": "Title",
+    "metaLanguage": "Language",
+    "metaGoal": "Goal",
+    "metaAudience": "Audience",
+    "metaTheme": "Theme",
+    "metaSlides": "Slide titles",
+    "empty": "Not set",
+    "missingRequired": "Set title, language, and theme before confirming the outline.",
+    "warnGoalAudience": "Goal or audience is empty. You can still confirm, but filling may be less accurate.",
+    "confirmed": "Outline confirmed. Content filling can begin.",
+    "exportBlocked": "Confirm the outline before exporting PPTX."
   },
   "media": {
     "imageFiles": "Image files",

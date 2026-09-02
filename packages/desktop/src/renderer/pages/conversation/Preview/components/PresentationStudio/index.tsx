@@ -23,7 +23,9 @@ import {
   MAX_DECK_HISTORY,
   canFinalizeSave,
   changeSlideLayout,
+  confirmOutline,
   duplicateSlide,
+  evaluateOutlineGate,
   isCurrentRevision,
   moveSlide,
   mutateDeck,
@@ -34,6 +36,7 @@ import {
   updateBlock,
   updateSlide,
 } from './deckState';
+import ThemeOptionLabel from './ThemeOptionLabel';
 
 type Props = {
   content: string;
@@ -359,8 +362,18 @@ const PresentationStudio: React.FC<Props> = ({
         </Button>
         <Select
           size='small'
-          className='w-180px'
+          className='w-220px'
           value={spec.theme.id}
+          renderFormat={(option) => {
+            const item = catalog.themes.find((theme) => theme.id === (option?.value ?? spec.theme.id));
+            if (!item) return spec.theme.id;
+            return (
+              <ThemeOptionLabel
+                theme={item}
+                label={t(`presentation.catalog.theme.${item.id}`, { defaultValue: item.label })}
+              />
+            );
+          }}
           onChange={(value) =>
             commit(
               mutateDeck(spec, (draft) => {
@@ -372,7 +385,10 @@ const PresentationStudio: React.FC<Props> = ({
         >
           {catalog.themes.map((item) => (
             <Select.Option key={item.id} value={item.id}>
-              {t(`presentation.catalog.theme.${item.id}`, { defaultValue: item.label })}
+              <ThemeOptionLabel
+                theme={item}
+                label={t(`presentation.catalog.theme.${item.id}`, { defaultValue: item.label })}
+              />
             </Select.Option>
           ))}
         </Select>
@@ -395,26 +411,90 @@ const PresentationStudio: React.FC<Props> = ({
           icon={<Export />}
           loading={job?.status === 'queued' || job?.status === 'running'}
           disabled={spec.stage !== 'ready'}
+          title={spec.stage !== 'ready' ? t('presentation.outline.exportBlocked') : undefined}
           onClick={() => void exportPptx()}
         >
           {t('presentation.action.export')}
         </Button>
       </div>
       {spec.stage === 'outline' && (
-        <Alert
-          type='info'
-          content={t('presentation.outline.description')}
-          action={
-            <Button
-              size='small'
-              type='primary'
-              icon={<Refresh />}
-              onClick={() => addToSendBox(t('presentation.outline.continuePrompt'))}
-            >
-              {t('presentation.outline.continue')}
-            </Button>
-          }
-        />
+        <div
+          className='border-b border-border-2 bg-primary-light px-12px py-10px'
+          data-testid='presentation-outline-gate'
+        >
+          <div className='text-13px font-500 mb-6px'>{t('presentation.outline.title')}</div>
+          <div className='text-12px text-t-secondary mb-8px'>{t('presentation.outline.description')}</div>
+          <div className='grid grid-cols-2 gap-x-16px gap-y-4px text-12px mb-8px'>
+            <div>
+              <span className='text-t-tertiary'>{t('presentation.outline.metaTitle')}: </span>
+              {spec.metadata.title.trim() || t('presentation.outline.empty')}
+            </div>
+            <div>
+              <span className='text-t-tertiary'>{t('presentation.outline.metaLanguage')}: </span>
+              {spec.metadata.language.trim() || t('presentation.outline.empty')}
+            </div>
+            <div>
+              <span className='text-t-tertiary'>{t('presentation.outline.metaGoal')}: </span>
+              {spec.metadata.goal?.trim() || t('presentation.outline.empty')}
+            </div>
+            <div>
+              <span className='text-t-tertiary'>{t('presentation.outline.metaAudience')}: </span>
+              {spec.metadata.audience?.trim() || t('presentation.outline.empty')}
+            </div>
+            <div className='col-span-2'>
+              <span className='text-t-tertiary'>{t('presentation.outline.metaTheme')}: </span>
+              {theme
+                ? t(`presentation.catalog.theme.${theme.id}`, { defaultValue: theme.label })
+                : spec.theme.id || t('presentation.outline.empty')}
+            </div>
+            <div className='col-span-2'>
+              <span className='text-t-tertiary'>{t('presentation.outline.metaSlides')}: </span>
+              {spec.slides.map((item) => item.title?.trim() || item.id).join(' · ') || t('presentation.outline.empty')}
+            </div>
+          </div>
+          {(() => {
+            const gate = evaluateOutlineGate(spec);
+            return (
+              <div className='flex flex-wrap items-center gap-8px'>
+                {!gate.canConfirm && (
+                  <span className='text-12px text-t-warning'>{t('presentation.outline.missingRequired')}</span>
+                )}
+                {gate.canConfirm && gate.warnings.length > 0 && (
+                  <span className='text-12px text-t-warning'>{t('presentation.outline.warnGoalAudience')}</span>
+                )}
+                <div className='flex-1' />
+                <Button
+                  size='small'
+                  type='text'
+                  icon={<Refresh />}
+                  onClick={() => addToSendBox(t('presentation.outline.continuePrompt'))}
+                >
+                  {t('presentation.outline.continue')}
+                </Button>
+                <Button
+                  size='small'
+                  type='primary'
+                  icon={<Check />}
+                  disabled={!gate.canConfirm}
+                  data-testid='presentation-outline-confirm'
+                  onClick={() => {
+                    const next = confirmOutline(spec);
+                    if (next === spec) {
+                      Message.warning(t('presentation.outline.missingRequired'));
+                      return;
+                    }
+                    if (gate.warnings.length > 0) Message.warning(t('presentation.outline.warnGoalAudience'));
+                    commit(next, spec);
+                    Message.success(t('presentation.outline.confirmed'));
+                    addToSendBox(t('presentation.outline.continuePrompt'));
+                  }}
+                >
+                  {t('presentation.outline.confirm')}
+                </Button>
+              </div>
+            );
+          })()}
+        </div>
       )}
       {saveConflict && (
         <Alert

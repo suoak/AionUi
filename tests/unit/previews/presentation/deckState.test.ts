@@ -3,7 +3,9 @@ import type { DeckSpecV1 } from '@/common/types/office/presentation';
 import {
   canFinalizeSave,
   changeSlideLayout,
+  confirmOutline,
   duplicateSlide,
+  evaluateOutlineGate,
   isCurrentRevision,
   moveSlide,
   parseDeckSpec,
@@ -11,7 +13,9 @@ import {
   resolveAssetFileRef,
   resolveLayoutSlots,
   setAssetReady,
+  setSlideControl,
   serializeDeckSpec,
+  themeTokenColor,
   updateBlock,
 } from '@/renderer/pages/conversation/Preview/components/PresentationStudio/deckState';
 
@@ -210,5 +214,62 @@ describe('WorkMate presentation deck state', () => {
       )
     ).toEqual({ kind: 'local', path: 'C:\\reports\\q1.assets\\hero.png' });
     expect(resolveAssetFileRef(undefined, '/workspace/q1.workmate-deck.json', '../secret.png')).toBeNull();
+  });
+
+  it('gates outline confirmation on title, language, and theme', () => {
+    const outline = {
+      ...deck(),
+      stage: 'outline' as const,
+      metadata: { title: '', language: '', aspectRatio: '16:9' as const },
+      theme: { id: '' },
+    };
+    expect(evaluateOutlineGate(outline)).toMatchObject({
+      canConfirm: false,
+      missingRequired: ['title', 'language', 'theme'],
+      warnings: ['goal', 'audience'],
+    });
+
+    const readyMeta = {
+      ...deck(),
+      stage: 'outline' as const,
+      metadata: { title: 'Q1', language: 'en-US', aspectRatio: '16:9' as const, goal: 'Align', audience: 'Execs' },
+      theme: { id: 'business-light' },
+    };
+    expect(evaluateOutlineGate(readyMeta).canConfirm).toBe(true);
+    expect(confirmOutline(readyMeta).stage).toBe('ready');
+    expect(confirmOutline(readyMeta).revision).toBe(5);
+    expect(confirmOutline(outline)).toBe(outline);
+    expect(confirmOutline({ ...readyMeta, stage: 'ready' })).toEqual({ ...readyMeta, stage: 'ready' });
+  });
+
+  it('warns when goal or audience is empty but still allows confirm', () => {
+    const outline = {
+      ...deck(),
+      stage: 'outline' as const,
+      metadata: { title: 'Q1', language: 'en-US', aspectRatio: '16:9' as const },
+      theme: { id: 'business-light' },
+    };
+    const gate = evaluateOutlineGate(outline);
+    expect(gate.canConfirm).toBe(true);
+    expect(gate.warnings).toEqual(['goal', 'audience']);
+    expect(confirmOutline(outline).stage).toBe('ready');
+  });
+
+  it('writes layout control values onto slide.controls', () => {
+    const source = deck();
+    const toggled = setSlideControl(source, 'cover', 'showInsight', false);
+    expect(toggled.slides[0].controls).toEqual({ showInsight: false });
+    const ranged = setSlideControl(toggled, 'cover', 'balance', 60);
+    expect(ranged.slides[0].controls).toEqual({ showInsight: false, balance: 60 });
+    const sided = setSlideControl(ranged, 'cover', 'mediaSide', 'right');
+    expect(sided.slides[0].controls).toEqual({ showInsight: false, balance: 60, mediaSide: 'right' });
+    expect(source.slides[0].controls).toBeUndefined();
+  });
+
+  it('normalizes catalog theme token colors for swatches', () => {
+    expect(themeTokenColor({ background: 'F7F8FA', accent: '#246BFD' }, 'background')).toBe('#F7F8FA');
+    expect(themeTokenColor({ background: 'F7F8FA', accent: '#246BFD' }, 'accent')).toBe('#246BFD');
+    expect(themeTokenColor(undefined, 'background')).toBeUndefined();
+    expect(themeTokenColor({ background: '  ' }, 'background')).toBeUndefined();
   });
 });

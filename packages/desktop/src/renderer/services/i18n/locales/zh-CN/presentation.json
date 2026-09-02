@@ -11,14 +11,25 @@
     "generateImage": "生成图片",
     "regenerate": "重新生成当前页"
   },
-  "field": { "slideTitle": "页面标题", "layout": "版式", "hidden": "隐藏页面", "notes": "讲者备注", "content": "内容" },
+  "field": {
+    "slideTitle": "页面标题",
+    "layout": "版式",
+    "hidden": "隐藏页面",
+    "notes": "讲者备注",
+    "content": "内容",
+    "layoutControls": "版式控件"
+  },
   "conflict": {
     "description": "该 Deck 已在磁盘上发生变化。自动保存已暂停，以保护两个版本。",
     "reload": "重新加载磁盘版本",
     "saveAs": "另存副本"
   },
   "catalog": {
-    "theme": { "business-light": "商务简约", "technology-dark": "深色科技", "editorial-report": "编辑报告" },
+    "theme": {
+      "business-light": "商务简约",
+      "technology-dark": "深色科技",
+      "editorial-report": "编辑报告"
+    },
     "layout": {
       "cover": "封面",
       "agenda": "目录",
@@ -33,17 +44,37 @@
       "matrix": "表格／二维矩阵",
       "closing": "总结／行动／结束页"
     },
-    "control": { "balance": "分栏比例", "showInsight": "显示洞察栏", "mediaSide": "媒体位置" },
-    "option": { "left": "左侧", "right": "右侧" }
+    "control": {
+      "balance": "分栏比例",
+      "showInsight": "显示洞察栏",
+      "mediaSide": "媒体位置"
+    },
+    "option": {
+      "left": "左侧",
+      "right": "右侧"
+    }
   },
   "slide": {
     "hidden": "已隐藏",
     "regeneratePrompt": "请根据已确认的大纲和现有证据，只重新生成演示文稿页面 {{slideId}}。保留稳定的页面 ID，更新语义内容块和讲者备注，然后校验 DeckSpec。"
   },
   "outline": {
-    "description": "请先确认大纲和主题，再生成完整演示文稿。",
+    "description": "请先核对目标、受众、主题和页面标题，确认大纲后再生成完整页面内容。",
     "continue": "在对话中继续",
-    "continuePrompt": "演示文稿的大纲和主题已确认。请补全语义内容、讲者备注和媒体需求，然后校验 DeckSpec。"
+    "continuePrompt": "演示文稿的大纲和主题已确认。请补全语义内容、讲者备注和媒体需求，然后校验 DeckSpec。",
+    "title": "填充内容前请确认大纲",
+    "confirm": "确认大纲",
+    "metaTitle": "标题",
+    "metaLanguage": "语言",
+    "metaGoal": "目标",
+    "metaAudience": "受众",
+    "metaTheme": "主题",
+    "metaSlides": "页面标题",
+    "empty": "未设置",
+    "missingRequired": "确认大纲前请先设置标题、语言和主题。",
+    "warnGoalAudience": "目标或受众为空。仍可确认，但后续填充可能不够准确。",
+    "confirmed": "大纲已确认，可以开始填充内容。",
+    "exportBlocked": "请先确认大纲再导出 PPTX。"
   },
   "media": {
     "imageFiles": "图片文件",
