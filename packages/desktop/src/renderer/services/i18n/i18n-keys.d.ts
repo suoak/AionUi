@@ -1440,6 +1440,7 @@ export type I18nKey =
   | 'presentation.field.content'
   | 'presentation.field.hidden'
   | 'presentation.field.layout'
+  | 'presentation.field.layoutAlternatives'
   | 'presentation.field.layoutControls'
   | 'presentation.field.notes'
   | 'presentation.field.slideTitle'

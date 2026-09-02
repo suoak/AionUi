@@ -238,10 +238,7 @@ export const suggestLayoutAlternatives = (
 ): DeckLayout[] => {
   const sameRole = layouts.filter((layout) => layout.role === role);
   const preferred = sameRole.filter((layout) => layout.id !== currentLayoutId);
-  const ordered = [
-    ...sameRole.filter((layout) => layout.id === currentLayoutId),
-    ...preferred,
-  ];
+  const ordered = [...sameRole.filter((layout) => layout.id === currentLayoutId), ...preferred];
   return ordered.slice(0, Math.max(1, limit));
 };
 

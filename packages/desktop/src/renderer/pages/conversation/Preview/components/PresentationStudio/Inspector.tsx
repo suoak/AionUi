@@ -58,7 +58,9 @@ const Inspector: React.FC<Props> = ({
         }
       />
 
-      <label className='block text-12px text-t-secondary mt-14px mb-5px'>{t('presentation.field.layoutAlternatives')}</label>
+      <label className='block text-12px text-t-secondary mt-14px mb-5px'>
+        {t('presentation.field.layoutAlternatives')}
+      </label>
       <div className='flex flex-wrap gap-6px' data-testid='presentation-layout-alternatives'>
         {roleAlternatives.map((layout) => (
           <Button
