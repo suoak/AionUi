@@ -1,5 +1,36 @@
 # Changelog
 
+## [2.2.6](https://github.com/suoak/AionUi/compare/v2.2.5...v2.2.6) (2026-09-02)
+
+### Desktop
+
+#### Features
+
+- **notification:** Name the conversation in turn-completed notifications (#116)
+- **conversation:** Distinguish waiting-for-user state in sidebar and notify (#117)
+- **explorer:** Tab-scoped refresh with repo rediscovery and Collapse All (linked worktrees / SCM) (#118)
+
+#### 内网更新说明
+
+<!-- internal-release-notes:start -->
+
+**由运营管理部提供**
+
+- 桌面端后端组件升级到 v0.2.6。
+- Track B：会话通知显示对话名称；侧边栏区分等待用户确认状态并通知。
+- 资源管理器：按标签页刷新时重新发现仓库，支持 Collapse All；配对 Core 工作树 SCM 枚举。
+- 固定到 Core v0.2.6；OfficeCLI 仍为 v1.0.154。
+
+<!-- internal-release-notes:end -->
+
+### Core ([v0.2.6](https://github.com/suoak/AionCore/releases/tag/v0.2.6))
+
+- Pin desktop to Core v0.2.6 (WorkMate backend; six architecture packages and checksums are published).
+- **conversation:** route @@ to session-message skill + capabilities fallback (#96).
+- **scm:** enumerate linked worktrees during discovery (#97).
+
+---
+
 ## [2.2.5](https://github.com/suoak/AionUi/compare/v2.2.4...v2.2.5) (2026-09-02)
 
 ### Desktop
