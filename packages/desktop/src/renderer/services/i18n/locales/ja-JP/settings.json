@@ -1401,7 +1401,9 @@
     "clearLabel": "閲覧データを消去",
     "agentControlFailed": "設定の保存に失敗しました",
     "clearFailed": "閲覧データの消去に失敗しました",
-    "clearConfirmContent": "アプリ内ブラウザーのすべてのサイトからサインアウトされます。この操作は取り消せません。"
+    "clearConfirmContent": "アプリ内ブラウザーのすべてのサイトからサインアウトされます。この操作は取り消せません。",
+    "openChatLinksExternalLabel": "チャットのリンクをシステムのデフォルトブラウザで開く",
+    "openChatLinksExternalDesc": "有効にすると、チャットメッセージ内の http(s) リンクはアプリ内プレビュータブではなく、システムのブラウザで開きます。"
   },
   "mcpOAuthLoginSuccess": "OAuth ログイン成功",
   "webui.stopFailed": "WebUI の停止に失敗しました",

@@ -1400,7 +1400,9 @@
     "clearLabel": "清空浏览数据",
     "agentControlFailed": "设置保存失败",
     "clearFailed": "清空浏览数据失败",
-    "clearConfirmContent": "应用内浏览器中所有网站的登录状态都会被退出，且无法恢复。"
+    "clearConfirmContent": "应用内浏览器中所有网站的登录状态都会被退出，且无法恢复。",
+    "openChatLinksExternalLabel": "在系统默认浏览器中打开聊天链接",
+    "openChatLinksExternalDesc": "开启后，会话消息里的 http(s) 链接用系统浏览器打开，不再打开应用内预览标签。"
   },
   "mcpOAuthLoginSuccess": "OAuth 登录成功",
   "webui.stopFailed": "停止 WebUI 失败",

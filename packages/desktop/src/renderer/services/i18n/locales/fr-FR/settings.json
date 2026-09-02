@@ -1399,7 +1399,9 @@
     "clearLabel": "Effacer les données de navigation",
     "agentControlFailed": "Échec de l'enregistrement du paramètre",
     "clearFailed": "Échec de l'effacement des données de navigation",
-    "clearConfirmContent": "Vous serez déconnecté de tous les sites du navigateur intégré. Cette action est irréversible."
+    "clearConfirmContent": "Vous serez déconnecté de tous les sites du navigateur intégré. Cette action est irréversible.",
+    "openChatLinksExternalLabel": "Ouvrir les liens du chat dans le navigateur par défaut du système",
+    "openChatLinksExternalDesc": "Une fois activé, les liens http(s) des messages de chat s’ouvrent dans le navigateur système au lieu d’un onglet d’aperçu intégré."
   },
   "mcpOAuthLoginSuccess": "Connexion OAuth réussie",
   "webui.stopFailed": "Échec de l'arrêt de WebUI",

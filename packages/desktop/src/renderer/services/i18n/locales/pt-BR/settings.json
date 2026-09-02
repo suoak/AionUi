@@ -1402,7 +1402,9 @@
     "clearLabel": "Limpar dados de navegação",
     "agentControlFailed": "Falha ao salvar a configuração",
     "clearFailed": "Falha ao limpar dados de navegação",
-    "clearConfirmContent": "Você sairá de todos os sites no navegador interno. Isso não pode ser desfeito."
+    "clearConfirmContent": "Você sairá de todos os sites no navegador interno. Isso não pode ser desfeito.",
+    "openChatLinksExternalLabel": "Abrir links do chat no navegador padrão do sistema",
+    "openChatLinksExternalDesc": "Quando ativado, links http(s) nas mensagens do chat abrem no navegador do sistema em vez de uma aba de pré-visualização no app."
   },
   "mcpOAuthLoginSuccess": "Login OAuth bem-sucedido",
   "webui.stopFailed": "Falha ao parar a WebUI",

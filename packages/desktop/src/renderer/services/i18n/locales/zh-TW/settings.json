@@ -1401,7 +1401,9 @@
     "clearLabel": "清空瀏覽資料",
     "agentControlFailed": "設定儲存失敗",
     "clearFailed": "清空瀏覽資料失敗",
-    "clearConfirmContent": "應用內瀏覽器中所有網站的登入狀態都會被登出，且無法復原。"
+    "clearConfirmContent": "應用內瀏覽器中所有網站的登入狀態都會被登出，且無法復原。",
+    "openChatLinksExternalLabel": "在系統預設瀏覽器中開啟聊天連結",
+    "openChatLinksExternalDesc": "開啟後，工作階段訊息中的 http(s) 連結會以系統瀏覽器開啟，不再開啟應用內預覽標籤。"
   },
   "mcpOAuthLoginSuccess": "OAuth 登入成功",
   "webui.stopFailed": "停止 WebUI 失敗",

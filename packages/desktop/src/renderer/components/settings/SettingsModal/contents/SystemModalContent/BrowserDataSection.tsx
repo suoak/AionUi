@@ -5,9 +5,10 @@
  */
 
 import { ipcBridge } from '@/common';
+import { configService } from '@/common/config/configService';
 import { notifyManualRestartRequired } from '@/renderer/utils/appRestart';
 import { Alert, Button, Message, Modal, Switch } from '@arco-design/web-react';
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import useSWR, { mutate } from 'swr';
 import PreferenceRow from './PreferenceRow';
@@ -35,8 +36,13 @@ const BrowserDataSection: React.FC = () => {
   const [clearing, setClearing] = useState(false);
   const { data: cdpStatus, isLoading } = useSWR('cdp.status', () => ipcBridge.application.getCdpStatus.invoke());
   const [switchLoading, setSwitchLoading] = useState(false);
+  const [openChatLinksInDefaultBrowser, setOpenChatLinksInDefaultBrowser] = useState(false);
 
   const status = cdpStatus?.data;
+
+  useEffect(() => {
+    setOpenChatLinksInDefaultBrowser(configService.get('openChatLinksInDefaultBrowser') ?? false);
+  }, []);
 
   /**
    * 开关写的是配置，真正生效要等下次启动 —— 通道随进程创建。两者不一致时提示重启。
@@ -45,6 +51,14 @@ const BrowserDataSection: React.FC = () => {
    */
   const agentControlEnabled = status?.configEnabled ?? false;
   const hasPendingChange = !isLoading && status !== undefined && status.configEnabled !== status.enabled;
+
+  const handleToggleOpenChatLinksExternal = useCallback((checked: boolean) => {
+    setOpenChatLinksInDefaultBrowser(checked);
+    configService.set('openChatLinksInDefaultBrowser', checked).catch(() => {
+      setOpenChatLinksInDefaultBrowser(!checked);
+      configService.setLocal('openChatLinksInDefaultBrowser', !checked);
+    });
+  }, []);
 
   const handleToggleAgentControl = useCallback(
     async (checked: boolean) => {
@@ -103,6 +117,13 @@ const BrowserDataSection: React.FC = () => {
   return (
     <div className='px-[12px] md:px-[32px] py-16px bg-2 rd-16px'>
       <div className='text-14px font-medium text-t-primary mb-8px'>{t('settings.browserData.title')}</div>
+
+      <PreferenceRow
+        label={t('settings.browserData.openChatLinksExternalLabel')}
+        description={t('settings.browserData.openChatLinksExternalDesc')}
+      >
+        <Switch checked={openChatLinksInDefaultBrowser} onChange={handleToggleOpenChatLinksExternal} />
+      </PreferenceRow>
 
       <PreferenceRow
         label={t('settings.browserData.agentControlLabel')}
