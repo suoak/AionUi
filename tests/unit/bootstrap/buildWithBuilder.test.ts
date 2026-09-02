@@ -415,7 +415,7 @@ childProcess.execSync = function mockedExecSync(command) {
           resource: 'officecli',
           platform: args.includes('--mac') ? 'darwin' : 'win32',
           arch: expectedArch,
-          version: 'v1.0.153',
+          version: 'v1.0.154',
         })
       );
     } finally {
