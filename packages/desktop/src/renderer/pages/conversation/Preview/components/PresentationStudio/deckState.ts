@@ -122,16 +122,25 @@ const MODULE_SLOT_IDS: Record<string, string[]> = {
   metrics: ['metric1', 'metric2', 'metric3'],
   'kpi-trio': ['metric1', 'metric2', 'metric3'],
   'metrics-row-4': ['metric1', 'metric2', 'metric3', 'metric4'],
+  'metrics-strip': ['metric1', 'metric2', 'metric3', 'metric4'],
   cards: ['card1', 'card2', 'card3'],
   'agenda-cards': ['card1', 'card2', 'card3'],
+  'cards-four': ['card1', 'card2', 'card3', 'card4'],
   'three-column': ['col1', 'col2', 'col3'],
   'comparison-three': ['col1', 'col2', 'col3'],
+  'option-cards-4': ['col1', 'col2', 'col3', 'col4'],
   'process-steps': ['step1', 'step2', 'step3', 'step4'],
   'process-horizontal': ['step1', 'step2', 'step3', 'step4'],
   'cycle-4': ['step1', 'step2', 'step3', 'step4'],
+  'agenda-timeline': ['step1', 'step2', 'step3', 'step4'],
+  'roadmap-milestones': ['step1', 'step2', 'step3', 'step4'],
+  'process-vertical': ['step1', 'step2', 'step3', 'step4'],
   team: ['member1', 'member2', 'member3', 'member4'],
+  'team-row': ['member1', 'member2', 'member3', 'member4'],
   funnel: ['stage1', 'stage2', 'stage3', 'stage4'],
+  'funnel-wide': ['stage1', 'stage2', 'stage3', 'stage4'],
   'gallery-two': ['visual1', 'visual2'],
+  'gallery-three': ['visual1', 'visual2', 'visual3'],
 };
 
 const packModuleSlots = (layoutId: string, slot: DeckSlot, controls: Record<string, unknown>): DeckSlot => {
@@ -144,8 +153,19 @@ const packModuleSlots = (layoutId: string, slot: DeckSlot, controls: Record<stri
     Math.max(1, Math.round(controlNumber(controls, 'moduleCount', moduleIds.length)))
   );
   if (index >= count) return { ...slot, width: 0, height: 0 };
-  // Keep authored geometry for non-row packs (funnel stages, 2x2 cycle, gallery).
-  if (layoutId === 'funnel' || layoutId === 'cycle-4' || layoutId === 'gallery-two') return slot;
+  // Keep authored geometry for non-row packs (funnel stages, 2x2 cycle, gallery, vertical/grid).
+  if (
+    layoutId === 'funnel' ||
+    layoutId === 'funnel-wide' ||
+    layoutId === 'cycle-4' ||
+    layoutId === 'gallery-two' ||
+    layoutId === 'gallery-three' ||
+    layoutId === 'process-vertical' ||
+    layoutId === 'cards-four' ||
+    layoutId === 'option-cards-4'
+  ) {
+    return slot;
+  }
   const start = 0.06;
   const total = 0.88;
   const gap = 0.03;
@@ -176,7 +196,9 @@ export const resolveLayoutSlots = (layout: DeckLayout, slide: DeckSlide): DeckSl
         (layout.id === 'image-text' ||
           layout.id === 'two-column' ||
           layout.id === 'cover-split' ||
-          layout.id === 'quote-split') &&
+          layout.id === 'quote-split' ||
+          layout.id === 'cover-banner' ||
+          layout.id === 'image-left-bullets') &&
         controlString(controls, 'mediaSide', 'left') === 'right'
       ) {
         return { ...slot, x: 1 - slot.x - slot.width };
@@ -203,8 +225,16 @@ export const resolveLayoutSlots = (layout: DeckLayout, slide: DeckSlide): DeckSl
           layout.id === 'mitigation-plan' ||
           layout.id === 'bullets-two' ||
           layout.id === 'metrics-highlight' ||
-          layout.id === 'chart-compare') &&
-        (slot.id === 'left' || slot.id === 'right' || slot.id === 'kpi' || slot.id === 'support')
+          layout.id === 'chart-compare' ||
+          layout.id === 'toc-two-column' ||
+          layout.id === 'vs-scorecard' ||
+          layout.id === 'statement-split' ||
+          layout.id === 'image-left-bullets') &&
+        (slot.id === 'left' ||
+          slot.id === 'right' ||
+          slot.id === 'kpi' ||
+          slot.id === 'support' ||
+          slot.id === 'body')
       ) {
         const balance = Math.min(65, Math.max(35, controlNumber(controls, 'balance', 50))) / 100;
         const start = 0.06;
@@ -220,12 +250,16 @@ export const resolveLayoutSlots = (layout: DeckLayout, slide: DeckSlide): DeckSl
         (layout.id === 'comparison-table' ||
           layout.id === 'risk' ||
           layout.id === 'risk-heatmap' ||
-          layout.id === 'data-table') &&
+          layout.id === 'data-table' ||
+          layout.id === 'risk-matrix-simple' ||
+          layout.id === 'table-callouts' ||
+          layout.id === 'chart-insight-right') &&
         (slot.id === 'left' ||
           slot.id === 'summary' ||
           slot.id === 'insight' ||
           slot.id === 'table' ||
-          slot.id === 'matrix')
+          slot.id === 'matrix' ||
+          slot.id === 'chart')
       ) {
         const balance = Math.min(50, Math.max(25, controlNumber(controls, 'balance', 35))) / 100;
         const start = 0.06;
@@ -239,7 +273,7 @@ export const resolveLayoutSlots = (layout: DeckLayout, slide: DeckSlide): DeckSl
       }
 
       if (
-        layout.id === 'swot' &&
+        (layout.id === 'swot' || layout.id === 'swot-compact') &&
         (slot.id === 'strengths' || slot.id === 'weaknesses' || slot.id === 'opportunities' || slot.id === 'threats')
       ) {
         const balance = Math.min(60, Math.max(40, controlNumber(controls, 'balance', 50))) / 100;
@@ -371,14 +405,20 @@ export const suggestLayoutAlternatives = (
   return ordered.slice(0, Math.max(1, limit));
 };
 
-/** Migrates a slide to a semantic layout without retaining invalid slot or control state. */
+/** Migrates a slide to a semantic layout; keeps shared control values, drops unknowns. */
 export const changeSlideLayout = (spec: DeckSpecV1, slideId: string, layout: DeckLayout): DeckSpecV1 => {
   const source = spec.slides.find((slide) => slide.id === slideId);
   if (!source || source.layoutId === layout.id) return spec;
   return updateSlide(spec, slideId, (slide) => {
     slide.layoutId = layout.id;
     slide.role = layout.role;
-    slide.controls = Object.fromEntries(layout.controls.map((control) => [control.id, control.defaultValue]));
+    const previous = slide.controls ?? {};
+    slide.controls = Object.fromEntries(
+      layout.controls.map((control) => [
+        control.id,
+        Object.prototype.hasOwnProperty.call(previous, control.id) ? previous[control.id] : control.defaultValue,
+      ])
+    );
 
     const occupied = new Set<string>();
     for (const block of slide.blocks) {

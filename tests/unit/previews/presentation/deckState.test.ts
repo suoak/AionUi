@@ -181,9 +181,9 @@ describe('WorkMate presentation deck state', () => {
     expect(removeSlide(oneSlide, 'cover').slides).toHaveLength(1);
   });
 
-  it('migrates blocks and resets controls when changing semantic layouts', () => {
+  it('migrates blocks and preserves intersecting controls when changing layouts', () => {
     const source = deck();
-    source.slides[0].controls = { stale: true };
+    source.slides[0].controls = { stale: true, mediaSide: 'right' };
     source.slides[0].blocks.push(
       { id: 'subtitle', type: 'text', slot: 'title', text: 'Detail' },
       { id: 'visual', type: 'image', slot: 'obsolete', assetId: 'hero' },
@@ -198,7 +198,10 @@ describe('WorkMate presentation deck state', () => {
         { id: 'body', x: 0, y: 0.2, width: 0.5, height: 0.8, accepts: ['text' as const] },
         { id: 'visual', x: 0.5, y: 0.2, width: 0.5, height: 0.8, accepts: ['image' as const] },
       ],
-      controls: [{ id: 'mediaSide', type: 'select' as const, label: 'Media side', defaultValue: 'left' }],
+      controls: [
+        { id: 'mediaSide', type: 'select' as const, label: 'Media side', defaultValue: 'left' },
+        { id: 'balance', type: 'range' as const, label: 'Balance', defaultValue: 50 },
+      ],
     };
 
     const changed = changeSlideLayout(source, 'cover', layout);
@@ -206,7 +209,7 @@ describe('WorkMate presentation deck state', () => {
     expect(changed.slides[0]).toMatchObject({
       layoutId: 'image-text',
       role: 'content',
-      controls: { mediaSide: 'left' },
+      controls: { mediaSide: 'right', balance: 50 },
     });
     expect(changed.slides[0].blocks.map((block) => [block.id, block.slot])).toEqual([
       ['title', 'title'],
@@ -357,6 +360,40 @@ describe('WorkMate presentation deck state', () => {
     expect(slots.map((slot) => slot.id)).toEqual(['title', 'metric1', 'metric2']);
     expect(slots[1].width).toBeCloseTo((0.88 - 0.03) / 2);
     expect(slots[2].x).toBeCloseTo(0.06 + slots[1].width + 0.03);
+  });
+
+  it('mirrors OfficeCLI 1.0.156 packing ids for mediaSide and non-row packs', () => {
+    const banner = {
+      id: 'cover-banner',
+      role: 'cover',
+      label: 'Cover banner',
+      slots: [{ id: 'visual', x: 0.04, y: 0.06, width: 0.5, height: 0.88, accepts: ['image' as const] }],
+      controls: [],
+    };
+    expect(
+      resolveLayoutSlots(banner, { ...deck().slides[0], layoutId: 'cover-banner', controls: { mediaSide: 'right' } })[0]
+        .x
+    ).toBeCloseTo(0.46);
+
+    const gallery = {
+      id: 'gallery-three',
+      role: 'gallery',
+      label: 'Gallery three',
+      slots: [
+        { id: 'visual1', x: 0.06, y: 0.2, width: 0.28, height: 0.5, accepts: ['image' as const] },
+        { id: 'visual2', x: 0.36, y: 0.2, width: 0.28, height: 0.5, accepts: ['image' as const] },
+        { id: 'visual3', x: 0.66, y: 0.2, width: 0.28, height: 0.5, accepts: ['image' as const] },
+      ],
+      controls: [],
+    };
+    const kept = resolveLayoutSlots(gallery, {
+      ...deck().slides[0],
+      layoutId: 'gallery-three',
+      controls: { moduleCount: 2 },
+    });
+    expect(kept.map((slot) => slot.id)).toEqual(['visual1', 'visual2']);
+    expect(kept[0].x).toBeCloseTo(0.06);
+    expect(kept[0].width).toBeCloseTo(0.28);
   });
 
   it('honors showInsight optional slot toggles for chart layouts', () => {
