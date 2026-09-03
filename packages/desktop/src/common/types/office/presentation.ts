@@ -24,6 +24,8 @@ export type DeckSlide = {
   hidden?: boolean;
   blocks: DeckBlock[];
   controls?: Record<string, unknown>;
+  /** Preferred alternate layout ids (DeckSpec candidates[]). Studio chips prefer these when present. */
+  candidates?: string[];
 };
 
 export type DeckAsset = {

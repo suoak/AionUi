@@ -44,12 +44,19 @@ const Inspector: React.FC<Props> = ({
     ).length;
     const hasChart = slide.blocks.some((candidate) => candidate.type === 'chart');
     const needsMedia = slide.blocks.some((candidate) => candidate.type === 'image');
-    return suggestLayoutAlternatives(layouts, slide.layoutId, slide.role, 4, {
-      itemCount,
-      hasChart,
-      needsMedia,
-    });
-  }, [layouts, slide.blocks, slide.layoutId, slide.role]);
+    return suggestLayoutAlternatives(
+      layouts,
+      slide.layoutId,
+      slide.role,
+      4,
+      {
+        itemCount,
+        hasChart,
+        needsMedia,
+      },
+      slide.candidates
+    );
+  }, [layouts, slide.blocks, slide.candidates, slide.layoutId, slide.role]);
   const hasShowInsightControl = layoutControls.some((control) => control.id === 'showInsight');
   const toggleableSlots = useMemo(
     () =>

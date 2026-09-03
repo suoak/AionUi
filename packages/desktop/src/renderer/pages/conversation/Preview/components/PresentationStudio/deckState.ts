@@ -557,11 +557,13 @@ export const suggestLayoutAlternatives = (
   currentLayoutId: string,
   role: string,
   limit = 4,
-  hints?: LayoutSuggestionHints
+  hints?: LayoutSuggestionHints,
+  candidateIds?: string[]
 ): DeckLayout[] => {
+  const byId = new Map(layouts.map((layout) => [layout.id, layout]));
   const sameRole = layouts.filter((layout) => layout.role === role);
   const current = sameRole.filter((layout) => layout.id === currentLayoutId);
-  const preferred = sameRole
+  const scoredPreferred = sameRole
     .filter((layout) => layout.id !== currentLayoutId)
     .slice()
     .sort((a, b) => {
@@ -569,6 +571,16 @@ export const suggestLayoutAlternatives = (
       if (scoreDelta !== 0) return scoreDelta;
       return a.id.localeCompare(b.id);
     });
+  const fromCandidates: DeckLayout[] = [];
+  const seen = new Set<string>([currentLayoutId]);
+  for (const id of candidateIds ?? []) {
+    if (!id || seen.has(id)) continue;
+    const layout = byId.get(id);
+    if (!layout) continue;
+    fromCandidates.push(layout);
+    seen.add(id);
+  }
+  const preferred = [...fromCandidates, ...scoredPreferred.filter((layout) => !seen.has(layout.id))];
   const ordered = [...current, ...preferred];
   return ordered.slice(0, Math.max(1, limit));
 };
