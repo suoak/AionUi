@@ -498,4 +498,73 @@ describe('WorkMate presentation deck state', () => {
       'slot.metric2.visible': false,
     });
   });
+
+  it('mirrors OfficeCLI 1.0.158 packing for process-5 and pest balance', () => {
+    const process5 = {
+      id: 'process-5',
+      role: 'process',
+      label: 'Five steps',
+      slots: [
+        { id: 'step1', x: 0.04, y: 0.2, width: 0.17, height: 0.66, accepts: ['text' as const] },
+        { id: 'step2', x: 0.23, y: 0.2, width: 0.17, height: 0.66, accepts: ['text' as const] },
+        { id: 'step3', x: 0.42, y: 0.2, width: 0.17, height: 0.66, accepts: ['text' as const] },
+        { id: 'step4', x: 0.61, y: 0.2, width: 0.17, height: 0.66, accepts: ['text' as const] },
+        { id: 'step5', x: 0.8, y: 0.2, width: 0.16, height: 0.66, accepts: ['text' as const] },
+      ],
+      controls: [],
+    };
+    const kept = resolveLayoutSlots(process5, {
+      ...deck().slides[0],
+      layoutId: 'process-5',
+      controls: { moduleCount: 3 },
+    });
+    expect(kept.map((slot) => slot.id)).toEqual(['step1', 'step2', 'step3']);
+    expect(kept[0].x).toBeCloseTo(0.04);
+    expect(kept[0].width).toBeCloseTo(0.17);
+
+    const pest = {
+      id: 'pest',
+      role: 'comparison',
+      label: 'PEST',
+      slots: [
+        { id: 'political', x: 0.06, y: 0.18, width: 0.42, height: 0.34, accepts: ['text' as const] },
+        { id: 'economic', x: 0.52, y: 0.18, width: 0.42, height: 0.34, accepts: ['text' as const] },
+        { id: 'social', x: 0.06, y: 0.56, width: 0.42, height: 0.34, accepts: ['text' as const] },
+        { id: 'technological', x: 0.52, y: 0.56, width: 0.42, height: 0.34, accepts: ['text' as const] },
+      ],
+      controls: [],
+    };
+    const balanced = resolveLayoutSlots(pest, {
+      ...deck().slides[0],
+      layoutId: 'pest',
+      controls: { balance: 40 },
+    });
+    expect(balanced.find((slot) => slot.id === 'political')?.width).toBeCloseTo((0.88 - 0.04) * 0.4);
+    expect(balanced.find((slot) => slot.id === 'economic')?.x).toBeCloseTo(
+      0.06 + (0.88 - 0.04) * 0.4 + 0.04
+    );
+  });
+
+  it('ranks layout alternatives with capacity-aware hints', () => {
+    const layouts = [
+      { id: 'metrics', role: 'metrics', label: 'Metrics', slots: [
+        { id: 'metric1', x: 0, y: 0, width: 0.2, height: 0.2, accepts: ['metric' as const] },
+        { id: 'metric2', x: 0, y: 0, width: 0.2, height: 0.2, accepts: ['metric' as const] },
+        { id: 'metric3', x: 0, y: 0, width: 0.2, height: 0.2, accepts: ['metric' as const] },
+      ], controls: [] },
+      { id: 'metrics-row-4', role: 'metrics', label: 'Row4', slots: [
+        { id: 'metric1', x: 0, y: 0, width: 0.2, height: 0.2, accepts: ['metric' as const] },
+        { id: 'metric2', x: 0, y: 0, width: 0.2, height: 0.2, accepts: ['metric' as const] },
+        { id: 'metric3', x: 0, y: 0, width: 0.2, height: 0.2, accepts: ['metric' as const] },
+        { id: 'metric4', x: 0, y: 0, width: 0.2, height: 0.2, accepts: ['metric' as const] },
+      ], controls: [] },
+      { id: 'chart', role: 'metrics', label: 'Chart', slots: [
+        { id: 'chart', x: 0, y: 0, width: 0.5, height: 0.5, accepts: ['chart' as const] },
+      ], controls: [] },
+    ];
+    const ranked = suggestLayoutAlternatives(layouts, 'metrics', 'metrics', 3, { itemCount: 4, hasChart: true });
+    expect(ranked[0].id).toBe('metrics');
+    expect(ranked.slice(1).map((layout) => layout.id)).toEqual(['chart', 'metrics-row-4']);
+  });
+
 });
