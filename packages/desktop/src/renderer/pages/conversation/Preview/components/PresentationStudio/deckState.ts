@@ -139,6 +139,8 @@ export const isSlotVisible = (controls: Record<string, unknown> | undefined, slo
     return map[key] as boolean;
   }
   if (slotId === 'insight') return controlBool(map, 'showInsight', true);
+  if (slotId === 'callout') return controlBool(map, 'showCallout', true);
+  if (slotId === 'footer') return controlBool(map, 'showFooter', true);
   return true;
 };
 
@@ -153,12 +155,19 @@ const MODULE_SLOT_IDS: Record<string, string[]> = {
   'context-facts': ['metric1', 'metric2', 'metric3'],
   'case-metrics': ['metric1', 'metric2', 'metric3'],
   'result-metrics': ['metric1', 'metric2', 'metric3'],
+  'metrics-with-footer': ['metric1', 'metric2', 'metric3'],
+  'closing-cta-metrics': ['metric1', 'metric2', 'metric3'],
   'metrics-duo': ['metric1', 'metric2'],
   'quote-metrics': ['metric1', 'metric2'],
   'result-summary': ['metric1', 'metric2'],
+  'cover-dual-metric': ['metric1', 'metric2'],
+  'metrics-callout-side': ['metric1', 'metric2'],
+  'case-quote-result': ['metric1', 'metric2'],
   'metrics-row-4': ['metric1', 'metric2', 'metric3', 'metric4'],
   'metrics-strip': ['metric1', 'metric2', 'metric3', 'metric4'],
   'kpi-sparkline-row': ['metric1', 'metric2', 'metric3', 'metric4'],
+  'context-metrics-strip': ['metric1', 'metric2', 'metric3', 'metric4'],
+  'metrics-grid-compact': ['metric1', 'metric2', 'metric3', 'metric4', 'metric5', 'metric6'],
   cards: ['card1', 'card2', 'card3'],
   'agenda-cards': ['card1', 'card2', 'card3'],
   'toc-cards': ['card1', 'card2', 'card3'],
@@ -166,8 +175,15 @@ const MODULE_SLOT_IDS: Record<string, string[]> = {
   'observation-callouts': ['card1', 'card2', 'card3'],
   'actions-priority': ['card1', 'card2', 'card3'],
   'relationship-map-lite': ['card1', 'card2', 'card3'],
+  'breakdown-icon-row': ['card1', 'card2', 'card3'],
+  'risks-priority-cards': ['card1', 'card2', 'card3'],
+  'result-three-up': ['card1', 'card2', 'card3'],
   'cards-four': ['card1', 'card2', 'card3', 'card4'],
   'team-org-lite': ['card1', 'card2', 'card3', 'card4'],
+  'breakdown-numbered-cards': ['card1', 'card2', 'card3', 'card4'],
+  'breakdown-quad': ['card1', 'card2', 'card3', 'card4'],
+  'observation-grid': ['card1', 'card2', 'card3', 'card4'],
+  'relationship-hub': ['card1', 'card2', 'card3', 'card4'],
   'three-column': ['col1', 'col2', 'col3'],
   'comparison-three': ['col1', 'col2', 'col3'],
   'breakdown-pillars': ['col1', 'col2', 'col3'],
@@ -176,8 +192,14 @@ const MODULE_SLOT_IDS: Record<string, string[]> = {
   'team-roles': ['col1', 'col2', 'col3'],
   'distribution-segments': ['col1', 'col2', 'col3'],
   'stakeholder-grid': ['col1', 'col2', 'col3'],
+  'team-roles-footer': ['col1', 'col2', 'col3'],
+  'case-three-phase': ['col1', 'col2', 'col3'],
+  'process-lanes-2': ['col1', 'col2', 'col3'],
   'option-cards-4': ['col1', 'col2', 'col3', 'col4'],
   'comparison-four': ['col1', 'col2', 'col3', 'col4'],
+  'comparison-columns-4': ['col1', 'col2', 'col3', 'col4'],
+  'distribution-four-seg': ['col1', 'col2', 'col3', 'col4'],
+  'stakeholder-map-4': ['col1', 'col2', 'col3', 'col4'],
   'process-steps': ['step1', 'step2', 'step3', 'step4'],
   'process-horizontal': ['step1', 'step2', 'step3', 'step4'],
   'cycle-4': ['step1', 'step2', 'step3', 'step4'],
@@ -189,19 +211,39 @@ const MODULE_SLOT_IDS: Record<string, string[]> = {
   'closing-roadmap': ['step1', 'step2', 'step3', 'step4'],
   'context-timeline': ['step1', 'step2', 'step3', 'step4'],
   'double-diamond': ['step1', 'step2', 'step3', 'step4'],
+  'process-checkpoint': ['step1', 'step2', 'step3', 'step4'],
+  'case-timeline': ['step1', 'step2', 'step3', 'step4'],
+  'chapter-progress': ['step1', 'step2', 'step3', 'step4'],
   'process-5': ['step1', 'step2', 'step3', 'step4', 'step5'],
+  'process-vertical-5': ['step1', 'step2', 'step3', 'step4', 'step5'],
+  'process-6': ['step1', 'step2', 'step3', 'step4', 'step5', 'step6'],
   team: ['member1', 'member2', 'member3', 'member4'],
   'team-row': ['member1', 'member2', 'member3', 'member4'],
   'team-grid': ['member1', 'member2', 'member3', 'member4'],
+  'team-cards-5': ['member1', 'member2', 'member3', 'member4', 'member5'],
+  'team-lead-grid': ['member1', 'member2', 'member3', 'member4', 'member5'],
   'closing-contacts': ['member1', 'member2', 'member3'],
+  'closing-contacts-footer': ['member1', 'member2', 'member3'],
   funnel: ['stage1', 'stage2', 'stage3', 'stage4'],
   'funnel-wide': ['stage1', 'stage2', 'stage3', 'stage4'],
   'pipeline-stages': ['stage1', 'stage2', 'stage3', 'stage4'],
   'gallery-two': ['visual1', 'visual2'],
   'gallery-three': ['visual1', 'visual2', 'visual3'],
   'image-three-up': ['visual1', 'visual2', 'visual3'],
+  'gallery-caption-row': ['visual1', 'visual2', 'visual3'],
   'image-mosaic-4': ['visual1', 'visual2', 'visual3', 'visual4'],
   'five-forces': ['rivalry', 'entrants', 'substitutes', 'suppliers', 'buyers'],
+};
+
+const densityPackMetrics = (controls: Record<string, unknown>): { start: number; total: number; gap: number } => {
+  switch (controlString(controls, 'density', 'comfortable')) {
+    case 'compact':
+      return { start: 0.04, total: 0.92, gap: 0.02 };
+    case 'spacious':
+      return { start: 0.08, total: 0.84, gap: 0.05 };
+    default:
+      return { start: 0.06, total: 0.88, gap: 0.03 };
+  }
 };
 
 const packModuleSlots = (layoutId: string, slot: DeckSlot, controls: Record<string, unknown>): DeckSlot => {
@@ -209,9 +251,13 @@ const packModuleSlots = (layoutId: string, slot: DeckSlot, controls: Record<stri
   if (!moduleIds) return slot;
   const index = moduleIds.indexOf(slot.id);
   if (index < 0) return slot;
+  const countControl =
+    moduleIds[0]?.startsWith('col') && Object.prototype.hasOwnProperty.call(controls, 'columns')
+      ? 'columns'
+      : 'moduleCount';
   const count = Math.min(
     moduleIds.length,
-    Math.max(1, Math.round(controlNumber(controls, 'moduleCount', moduleIds.length)))
+    Math.max(1, Math.round(controlNumber(controls, countControl, moduleIds.length)))
   );
   const visibleIds = moduleIds.slice(0, count).filter((id) => isSlotVisible(controls, id));
   const visibleIndex = visibleIds.indexOf(slot.id);
@@ -240,13 +286,20 @@ const packModuleSlots = (layoutId: string, slot: DeckSlot, controls: Record<stri
     layoutId === 'context-facts' ||
     layoutId === 'relationship-map-lite' ||
     layoutId === 'quote-metrics' ||
-    layoutId === 'result-summary'
+    layoutId === 'result-summary' ||
+    layoutId === 'breakdown-quad' ||
+    layoutId === 'observation-grid' ||
+    layoutId === 'relationship-hub' ||
+    layoutId === 'team-lead-grid' ||
+    layoutId === 'metrics-grid-compact' ||
+    layoutId === 'process-vertical-5' ||
+    layoutId === 'cover-dual-metric' ||
+    layoutId === 'case-quote-result' ||
+    layoutId === 'metrics-callout-side'
   ) {
     return slot;
   }
-  const start = 0.06;
-  const total = 0.88;
-  const gap = 0.03;
+  const { start, total, gap } = densityPackMetrics(controls);
   const packCount = Math.max(1, visibleIds.length);
   const usable = total - gap * Math.max(0, packCount - 1);
   const width = usable / packCount;
@@ -269,7 +322,10 @@ export const resolveLayoutSlots = (layout: DeckLayout, slide: DeckSlide): DeckSl
           layout.id === 'image-left-bullets' ||
           layout.id === 'cover-dark-band' ||
           layout.id === 'image-quote' ||
-          layout.id === 'image-stats') &&
+          layout.id === 'image-stats' ||
+          layout.id === 'cover-photo-stack' ||
+          layout.id === 'image-callout-overlay' ||
+          layout.id === 'image-split-caption') &&
         controlString(controls, 'mediaSide', 'left') === 'right'
       ) {
         return { ...slot, x: 1 - slot.x - slot.width };
@@ -282,7 +338,8 @@ export const resolveLayoutSlots = (layout: DeckLayout, slide: DeckSlide): DeckSl
             layout.id === 'chart-insight-right' ||
             layout.id === 'chart-waterfall' ||
             layout.id === 'chart-funnel' ||
-            layout.id === 'distribution-pie-focus') &&
+            layout.id === 'distribution-pie-focus' ||
+            layout.id === 'result-chart-proof') &&
           slot.id === 'chart'
         ) {
           return { ...slot, x: 0.06, width: 0.88 };
@@ -322,15 +379,29 @@ export const resolveLayoutSlots = (layout: DeckLayout, slide: DeckSlide): DeckSl
           layout.id === 'case-study' ||
           layout.id === 'case-challenge-solution' ||
           layout.id === 'relationship-pairs' ||
-          layout.id === 'chart-dual-panel') &&
-        (slot.id === 'left' || slot.id === 'right' || slot.id === 'kpi' || slot.id === 'support' || slot.id === 'body')
+          layout.id === 'chart-dual-panel' ||
+          layout.id === 'comparison-criteria' ||
+          layout.id === 'ask-split-footer' ||
+          layout.id === 'risks-two-track' ||
+          layout.id === 'context-split-callout' ||
+          layout.id === 'actions-two-column' ||
+          layout.id === 'trend-dual-charts' ||
+          layout.id === 'process-lanes-2' ||
+          layout.id === 'bullets-callout') &&
+        (slot.id === 'left' ||
+          slot.id === 'right' ||
+          slot.id === 'kpi' ||
+          slot.id === 'support' ||
+          slot.id === 'body' ||
+          slot.id === 'content' ||
+          slot.id === 'callout')
       ) {
         const balance = Math.min(65, Math.max(35, controlNumber(controls, 'balance', 50))) / 100;
         const start = 0.06;
         const gap = 0.06;
         const usable = 0.88 - gap;
         const leftWidth = usable * balance;
-        return slot.id === 'left' || slot.id === 'kpi'
+        return slot.id === 'left' || slot.id === 'kpi' || slot.id === 'content'
           ? { ...slot, x: start, width: leftWidth }
           : { ...slot, x: start + leftWidth + gap, width: usable - leftWidth };
       }
