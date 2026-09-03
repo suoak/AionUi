@@ -3,6 +3,7 @@ import { Alert, Button, Input, Select, Slider, Switch, Upload } from '@arco-desi
 import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import CandidateCompare from './CandidateCompare';
 import { isSlotVisible, slotVisibilityControlId, suggestLayoutAlternatives } from './deckState';
 
 type Props = {
@@ -171,6 +172,8 @@ const Inspector: React.FC<Props> = ({
             ))}
         </Select>
       </div>
+
+      <CandidateCompare slide={slide} layouts={layouts} onLayoutChange={onLayoutChange} />
 
       <label className='block text-12px text-t-secondary mt-14px mb-5px'>{t('presentation.field.layout')}</label>
       <Select

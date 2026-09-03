@@ -26,7 +26,12 @@
     "layoutCandidates": "Pinned layout candidates",
     "pinCandidate": "Pin layout as candidate",
     "addCandidate": "Add candidate",
-    "removeCandidate": "Remove candidate"
+    "removeCandidate": "Remove candidate",
+    "compareShow": "Compare layouts",
+    "compareHide": "Hide compare",
+    "compareSide": "Side by side",
+    "compareSequential": "Flip through",
+    "compareApply": "Use this layout"
   },
   "conflict": {
     "description": "This deck changed on disk. Automatic saving is paused to protect both versions.",
@@ -58,7 +63,9 @@
     "control": {
       "balance": "Column balance",
       "showInsight": "Show insight panel",
-      "mediaSide": "Media side"
+      "mediaSide": "Media side",
+      "showKicker": "Show kicker / eyebrow",
+      "focusIndex": "Focus module index"
     },
     "option": {
       "left": "Left",
