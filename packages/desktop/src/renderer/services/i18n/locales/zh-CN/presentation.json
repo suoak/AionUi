@@ -37,7 +37,9 @@
     "theme": {
       "business-light": "商务简约",
       "technology-dark": "深色科技",
-      "editorial-report": "编辑报告"
+      "editorial-report": "编辑报告",
+      "csbu-workmate": "CSBU WorkMate",
+      "csbu-workmate-night": "CSBU WorkMate Night"
     },
     "layout": {
       "cover": "封面",
@@ -86,7 +88,8 @@
     "confirmed": "大纲已确认，可以开始填充内容。",
     "exportBlocked": "请先确认大纲再导出 PPTX。",
     "pickTheme": "选择 CSBU WorkMate 主题",
-    "themeStrips": "主题样张（WorkMate token）"
+    "themeStrips": "主题样张（WorkMate token）",
+    "themeRemapReport": "主题已从 {{from}} 换到 {{to}}。有 {{count}} 页可能需要换版式，请查看 candidates 芯片。"
   },
   "media": {
     "imageFiles": "图片文件",

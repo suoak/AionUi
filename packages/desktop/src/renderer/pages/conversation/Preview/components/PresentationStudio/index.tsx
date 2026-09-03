@@ -30,6 +30,7 @@ import {
   moveSlide,
   mutateDeck,
   parseDeckSpec,
+  remapTheme,
   removeSlide,
   serializeDeckSpec,
   setAssetReady,
@@ -375,14 +376,19 @@ const PresentationStudio: React.FC<Props> = ({
               />
             );
           }}
-          onChange={(value) =>
-            commit(
-              mutateDeck(spec, (draft) => {
-                draft.theme.id = value;
-              }),
-              spec
-            )
-          }
+          onChange={(value) => {
+            const { spec: next, report } = remapTheme(spec, String(value), catalog);
+            commit(next, spec);
+            if (report.needsRemapCount > 0) {
+              Message.info(
+                t('presentation.outline.themeRemapReport', {
+                  count: report.needsRemapCount,
+                  from: report.fromThemeId,
+                  to: report.toThemeId,
+                })
+              );
+            }
+          }}
         >
           {catalog.themes.map((item) => (
             <Select.Option key={item.id} value={item.id}>
@@ -459,14 +465,19 @@ const PresentationStudio: React.FC<Props> = ({
                       item.id === spec.theme.id ? 'border-primary' : 'border-border-2'
                     }`}
                     data-testid={`outline-theme-${item.id}`}
-                    onClick={() =>
-                      commit(
-                        mutateDeck(spec, (draft) => {
-                          draft.theme.id = item.id;
-                        }),
-                        spec
-                      )
-                    }
+                    onClick={() => {
+                      const { spec: next, report } = remapTheme(spec, item.id, catalog);
+                      commit(next, spec);
+                      if (report.needsRemapCount > 0) {
+                        Message.info(
+                          t('presentation.outline.themeRemapReport', {
+                            count: report.needsRemapCount,
+                            from: report.fromThemeId,
+                            to: report.toThemeId,
+                          })
+                        );
+                      }
+                    }}
                   >
                     <ThemeOptionLabel
                       theme={item}

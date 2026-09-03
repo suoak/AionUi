@@ -24,6 +24,7 @@ import {
   themeStripPalette,
   addSlideCandidate,
   removeSlideCandidate,
+  remapTheme,
   updateBlock,
 } from '@/renderer/pages/conversation/Preview/components/PresentationStudio/deckState';
 
@@ -643,5 +644,54 @@ describe('WorkMate presentation deck state', () => {
       accent: '#C4A35A',
       text: '#F8FAFC',
     });
+  });
+
+  it('remaps theme id, writes extensions.themeRemap, and pins candidates', () => {
+    const catalog = {
+      themes: [
+        {
+          id: 'business-light',
+          label: 'Business Light',
+          tokens: { background: 'F7F8FA', surface: 'FFFFFF', text: '172033', accent: '246BFD' },
+        },
+        {
+          id: 'csbu-workmate-night',
+          label: 'Night',
+          tokens: { background: '0E0E0E', surface: '1A1A1A', text: 'F2F3F5', accent: '4D9FFF' },
+        },
+      ],
+      layouts: [
+        {
+          id: 'cover',
+          role: 'cover',
+          label: 'Cover',
+          slots: [{ id: 'title', x: 0, y: 0, width: 1, height: 1, accepts: ['text' as const] }],
+          controls: [],
+        },
+        {
+          id: 'cover-split',
+          role: 'cover',
+          label: 'Cover Split',
+          slots: [
+            { id: 'title', x: 0, y: 0, width: 0.5, height: 1, accepts: ['text' as const] },
+            { id: 'visual', x: 0.5, y: 0, width: 0.5, height: 1, accepts: ['image' as const] },
+          ],
+          controls: [],
+        },
+        {
+          id: 'closing',
+          role: 'closing',
+          label: 'Closing',
+          slots: [{ id: 'title', x: 0, y: 0, width: 1, height: 1, accepts: ['text' as const] }],
+          controls: [],
+        },
+      ],
+    };
+    const { spec: next, report } = remapTheme(deck(), 'csbu-workmate-night', catalog);
+    expect(next.theme.id).toBe('csbu-workmate-night');
+    expect(next.theme.mode).toBe('dark');
+    expect(report.modeChange).toBe('light->dark');
+    expect(next.extensions?.themeRemap).toBeTruthy();
+    expect(next.revision).toBe(5);
   });
 });
