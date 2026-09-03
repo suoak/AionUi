@@ -1446,6 +1446,8 @@ export type I18nKey =
   | 'presentation.field.layoutControls'
   | 'presentation.field.notes'
   | 'presentation.field.slideTitle'
+  | 'presentation.field.slotVisibility'
+  | 'presentation.field.slotVisible'
   | 'presentation.job.cancelled'
   | 'presentation.job.completed'
   | 'presentation.job.failed'
