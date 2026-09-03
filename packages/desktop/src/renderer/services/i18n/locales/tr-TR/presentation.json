@@ -20,7 +20,9 @@
     "notes": "Speaker notes",
     "content": "Content",
     "layoutAlternatives": "Düzen alternatifleri",
-    "layoutControls": "Layout controls"
+    "layoutControls": "Layout controls",
+    "slotVisibility": "Yuva görünürlüğü",
+    "slotVisible": "{{slot}} göster"
   },
   "conflict": {
     "description": "This deck changed on disk. Automatic saving is paused to protect both versions.",

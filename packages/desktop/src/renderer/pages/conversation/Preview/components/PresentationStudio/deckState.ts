@@ -118,6 +118,23 @@ const controlBool = (controls: Record<string, unknown>, id: string, fallback: bo
   return typeof value === 'boolean' ? value : fallback;
 };
 
+/** Control id pattern for generic per-slot visibility (mirrors OfficeCLI 1.0.157). */
+export const slotVisibilityControlId = (slotId: string): string => `slot.${slotId}.visible`;
+
+/**
+ * Generic per-slot visibility from slide.controls[`slot.<id>.visible`].
+ * Falls back to legacy showInsight for the insight slot.
+ */
+export const isSlotVisible = (controls: Record<string, unknown> | undefined, slotId: string): boolean => {
+  const map = controls ?? {};
+  const key = slotVisibilityControlId(slotId);
+  if (Object.prototype.hasOwnProperty.call(map, key) && typeof map[key] === 'boolean') {
+    return map[key] as boolean;
+  }
+  if (slotId === 'insight') return controlBool(map, 'showInsight', true);
+  return true;
+};
+
 const MODULE_SLOT_IDS: Record<string, string[]> = {
   metrics: ['metric1', 'metric2', 'metric3'],
   'kpi-trio': ['metric1', 'metric2', 'metric3'],
@@ -152,7 +169,9 @@ const packModuleSlots = (layoutId: string, slot: DeckSlot, controls: Record<stri
     moduleIds.length,
     Math.max(1, Math.round(controlNumber(controls, 'moduleCount', moduleIds.length)))
   );
-  if (index >= count) return { ...slot, width: 0, height: 0 };
+  const visibleIds = moduleIds.slice(0, count).filter((id) => isSlotVisible(controls, id));
+  const visibleIndex = visibleIds.indexOf(slot.id);
+  if (visibleIndex < 0) return { ...slot, width: 0, height: 0 };
   // Keep authored geometry for non-row packs (funnel stages, 2x2 cycle, gallery, vertical/grid).
   if (
     layoutId === 'funnel' ||
@@ -169,28 +188,18 @@ const packModuleSlots = (layoutId: string, slot: DeckSlot, controls: Record<stri
   const start = 0.06;
   const total = 0.88;
   const gap = 0.03;
-  const usable = total - gap * Math.max(0, count - 1);
-  const width = usable / count;
-  return { ...slot, x: start + index * (width + gap), width };
+  const packCount = Math.max(1, visibleIds.length);
+  const usable = total - gap * Math.max(0, packCount - 1);
+  const width = usable / packCount;
+  return { ...slot, x: start + visibleIndex * (width + gap), width };
 };
 
 /** Mirror OfficeCLI DeckService.AdjustSlot / PackModuleSlots for Studio preview parity. */
 export const resolveLayoutSlots = (layout: DeckLayout, slide: DeckSlide): DeckSlot[] => {
   const controls = slide.controls ?? {};
+  const insightVisible = isSlotVisible(controls, 'insight');
   return layout.slots
-    .filter((slot) => {
-      if (
-        (layout.id === 'chart' || layout.id === 'chart-radar') &&
-        slot.id === 'insight' &&
-        !controlBool(controls, 'showInsight', true)
-      ) {
-        return false;
-      }
-      if (layout.id === 'data-table' && slot.id === 'insight' && !controlBool(controls, 'showInsight', true)) {
-        return false;
-      }
-      return true;
-    })
+    .filter((slot) => isSlotVisible(controls, slot.id))
     .map((slot) => {
       if (
         (layout.id === 'image-text' ||
@@ -204,16 +213,19 @@ export const resolveLayoutSlots = (layout: DeckLayout, slide: DeckSlide): DeckSl
         return { ...slot, x: 1 - slot.x - slot.width };
       }
 
-      if (
-        (layout.id === 'chart' || layout.id === 'chart-radar') &&
-        slot.id === 'chart' &&
-        !controlBool(controls, 'showInsight', true)
-      ) {
-        return { ...slot, width: 0.88 };
-      }
-
-      if (layout.id === 'data-table' && slot.id === 'table' && !controlBool(controls, 'showInsight', true)) {
-        return { ...slot, x: 0.06, width: 0.88 };
+      if (!insightVisible) {
+        if (
+          (layout.id === 'chart' || layout.id === 'chart-radar' || layout.id === 'chart-insight-right') &&
+          slot.id === 'chart'
+        ) {
+          return { ...slot, x: 0.06, width: 0.88 };
+        }
+        if ((layout.id === 'data-table' || layout.id === 'table-callouts') && slot.id === 'table') {
+          return { ...slot, x: 0.06, width: 0.88 };
+        }
+        if (layout.id === 'risk-matrix-simple' && slot.id === 'matrix') {
+          return { ...slot, x: 0.06, width: 0.88 };
+        }
       }
 
       if (
@@ -257,6 +269,16 @@ export const resolveLayoutSlots = (layout: DeckLayout, slide: DeckSlide): DeckSl
           slot.id === 'matrix' ||
           slot.id === 'chart')
       ) {
+        if (
+          !insightVisible &&
+          (layout.id === 'data-table' ||
+            layout.id === 'risk-matrix-simple' ||
+            layout.id === 'table-callouts' ||
+            layout.id === 'chart-insight-right') &&
+          (slot.id === 'table' || slot.id === 'matrix' || slot.id === 'chart')
+        ) {
+          return { ...slot, x: 0.06, width: 0.88 };
+        }
         const balance = Math.min(50, Math.max(25, controlNumber(controls, 'balance', 35))) / 100;
         const start = 0.06;
         const gap = 0.04;
@@ -409,12 +431,19 @@ export const changeSlideLayout = (spec: DeckSpecV1, slideId: string, layout: Dec
     slide.layoutId = layout.id;
     slide.role = layout.role;
     const previous = slide.controls ?? {};
-    slide.controls = Object.fromEntries(
+    const nextControls: Record<string, unknown> = Object.fromEntries(
       layout.controls.map((control) => [
         control.id,
         Object.prototype.hasOwnProperty.call(previous, control.id) ? previous[control.id] : control.defaultValue,
       ])
     );
+    // Preserve intersecting slot.<id>.visible toggles for toggleable slots on the new layout.
+    for (const slot of layout.slots) {
+      if (!slot.toggleable) continue;
+      const key = slotVisibilityControlId(slot.id);
+      if (Object.prototype.hasOwnProperty.call(previous, key)) nextControls[key] = previous[key];
+    }
+    slide.controls = nextControls;
 
     const occupied = new Set<string>();
     for (const block of slide.blocks) {

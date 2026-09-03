@@ -20,7 +20,9 @@
     "notes": "Speaker notes",
     "content": "Content",
     "layoutAlternatives": "Альтернативные макеты",
-    "layoutControls": "Layout controls"
+    "layoutControls": "Layout controls",
+    "slotVisibility": "Видимость слотов",
+    "slotVisible": "Показать {{slot}}"
   },
   "conflict": {
     "description": "This deck changed on disk. Automatic saving is paused to protect both versions.",

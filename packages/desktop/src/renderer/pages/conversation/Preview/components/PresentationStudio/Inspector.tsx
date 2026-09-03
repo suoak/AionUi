@@ -3,7 +3,7 @@ import { Alert, Button, Input, Select, Slider, Switch, Upload } from '@arco-desi
 import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { suggestLayoutAlternatives } from './deckState';
+import { isSlotVisible, slotVisibilityControlId, suggestLayoutAlternatives } from './deckState';
 
 type Props = {
   slide: DeckSlide;
@@ -41,6 +41,17 @@ const Inspector: React.FC<Props> = ({
   const roleAlternatives = useMemo(
     () => suggestLayoutAlternatives(layouts, slide.layoutId, slide.role, 4),
     [layouts, slide.layoutId, slide.role]
+  );
+  const hasShowInsightControl = layoutControls.some((control) => control.id === 'showInsight');
+  const toggleableSlots = useMemo(
+    () =>
+      (currentLayout?.slots ?? []).filter((slot) => {
+        if (!slot.toggleable) return false;
+        // Avoid duplicating the legacy showInsight control for the insight slot.
+        if (slot.id === 'insight' && hasShowInsightControl) return false;
+        return true;
+      }),
+    [currentLayout?.slots, hasShowInsightControl]
   );
   const setControl = (id: string, value: unknown) =>
     onSlideChange((draft) => {
@@ -134,6 +145,30 @@ const Inspector: React.FC<Props> = ({
                     onChange={(selected) => setControl(control.id, Array.isArray(selected) ? selected[0] : selected)}
                   />
                 )}
+              </div>
+            );
+          })}
+        </div>
+      )}
+
+      {toggleableSlots.length > 0 && (
+        <div className='mt-14px' data-testid='presentation-slot-visibility'>
+          <div className='text-13px font-500 mb-8px'>{t('presentation.field.slotVisibility')}</div>
+          {toggleableSlots.map((slot) => {
+            const controlId = slotVisibilityControlId(slot.id);
+            const checked = isSlotVisible(slide.controls, slot.id);
+            return (
+              <div
+                key={slot.id}
+                className='mt-12px flex items-center justify-between'
+                data-testid={`slot-visibility-${slot.id}`}
+              >
+                <span className='text-12px text-t-secondary'>
+                  {t('presentation.field.slotVisible', {
+                    slot: t(`presentation.catalog.slot.${slot.id}`, { defaultValue: slot.id }),
+                  })}
+                </span>
+                <Switch size='small' checked={checked} onChange={(value) => setControl(controlId, value)} />
               </div>
             );
           })}

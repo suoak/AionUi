@@ -20,7 +20,9 @@
     "notes": "Speaker notes",
     "content": "Content",
     "layoutAlternatives": "동일 역할 레이아웃 후보",
-    "layoutControls": "Layout controls"
+    "layoutControls": "Layout controls",
+    "slotVisibility": "슬롯 표시",
+    "slotVisible": "{{slot}} 표시"
   },
   "conflict": {
     "description": "This deck changed on disk. Automatic saving is paused to protect both versions.",

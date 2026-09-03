@@ -20,7 +20,9 @@
     "notes": "講者備註",
     "content": "內容",
     "layoutAlternatives": "同角色版式候選",
-    "layoutControls": "版式控制項"
+    "layoutControls": "版式控制項",
+    "slotVisibility": "槽位可見性",
+    "slotVisible": "顯示 {{slot}}"
   },
   "conflict": {
     "description": "此 Deck 已在磁碟上發生變更。自動儲存已暫停，以保護兩個版本。",

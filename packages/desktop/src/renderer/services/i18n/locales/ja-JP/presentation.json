@@ -20,7 +20,9 @@
     "notes": "Speaker notes",
     "content": "Content",
     "layoutAlternatives": "同ロールのレイアウト候補",
-    "layoutControls": "Layout controls"
+    "layoutControls": "Layout controls",
+    "slotVisibility": "スロット表示",
+    "slotVisible": "{{slot}} を表示"
   },
   "conflict": {
     "description": "This deck changed on disk. Automatic saving is paused to protect both versions.",
