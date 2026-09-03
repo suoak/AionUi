@@ -917,7 +917,7 @@ export const remapTheme = (
     draft.theme.id = toId;
     draft.theme.mode = toMode;
     if (writeReport) {
-      draft.extensions = { ...(draft.extensions ?? {}), themeRemap: report };
+      draft.extensions = { ...draft.extensions, themeRemap: report };
     }
     if (pinCandidates) {
       for (const row of slides) {
