@@ -11,12 +11,14 @@ import {
   parseDeckSpec,
   removeSlide,
   resolveAssetFileRef,
+  isSlotVisible,
   resolveLayoutSlots,
   setAssetReady,
   setSlideControl,
   serializeDeckSpec,
   skipPendingMedia,
   slideHasUnresolvedMedia,
+  slotVisibilityControlId,
   suggestLayoutAlternatives,
   themeTokenColor,
   updateBlock,
@@ -414,5 +416,86 @@ describe('WorkMate presentation deck state', () => {
     });
     expect(hidden.map((slot) => slot.id)).toEqual(['chart']);
     expect(hidden[0].width).toBeCloseTo(0.88);
+  });
+
+  it('honors generic slot.<id>.visible toggles and prefers them over showInsight', () => {
+    expect(slotVisibilityControlId('metric2')).toBe('slot.metric2.visible');
+    expect(isSlotVisible({ 'slot.insight.visible': false, showInsight: true }, 'insight')).toBe(false);
+    expect(isSlotVisible({ showInsight: false }, 'insight')).toBe(false);
+    expect(isSlotVisible({}, 'insight')).toBe(true);
+
+    const chart = {
+      id: 'chart',
+      role: 'chart',
+      label: 'Chart',
+      slots: [
+        { id: 'chart', x: 0.06, y: 0.2, width: 0.58, height: 0.65, accepts: ['chart' as const] },
+        {
+          id: 'insight',
+          x: 0.7,
+          y: 0.2,
+          width: 0.24,
+          height: 0.65,
+          accepts: ['text' as const],
+          toggleable: true,
+        },
+      ],
+      controls: [],
+    };
+    const hidden = resolveLayoutSlots(chart, {
+      ...deck().slides[0],
+      layoutId: 'chart',
+      controls: { 'slot.insight.visible': false },
+    });
+    expect(hidden.map((slot) => slot.id)).toEqual(['chart']);
+    expect(hidden[0].width).toBeCloseTo(0.88);
+  });
+
+  it('reflows module packs when a middle slot is hidden via slot.visible', () => {
+    const metrics = {
+      id: 'metrics',
+      role: 'metrics',
+      label: 'Metrics',
+      slots: [
+        { id: 'title', x: 0.06, y: 0.08, width: 0.88, height: 0.1, accepts: ['text' as const] },
+        { id: 'metric1', x: 0.06, y: 0.28, width: 0.28, height: 0.5, accepts: ['metric' as const], toggleable: true },
+        { id: 'metric2', x: 0.36, y: 0.28, width: 0.28, height: 0.5, accepts: ['metric' as const], toggleable: true },
+        { id: 'metric3', x: 0.66, y: 0.28, width: 0.28, height: 0.5, accepts: ['metric' as const], toggleable: true },
+      ],
+      controls: [],
+    };
+    const slots = resolveLayoutSlots(metrics, {
+      ...deck().slides[0],
+      layoutId: 'metrics',
+      controls: { moduleCount: 3, 'slot.metric2.visible': false },
+    });
+    expect(slots.map((slot) => slot.id)).toEqual(['title', 'metric1', 'metric3']);
+    expect(slots[1].width).toBeCloseTo((0.88 - 0.03) / 2);
+    expect(slots[2].x).toBeCloseTo(0.06 + slots[1].width + 0.03);
+  });
+
+  it('preserves intersecting slot visibility controls when changing layouts', () => {
+    const source = deck();
+    source.slides[0].controls = {
+      'slot.metric2.visible': false,
+      'slot.insight.visible': false,
+      stale: true,
+    };
+    const layout = {
+      id: 'metrics',
+      role: 'metrics',
+      label: 'Metrics',
+      slots: [
+        { id: 'metric1', x: 0, y: 0, width: 0.3, height: 0.4, accepts: ['metric' as const], toggleable: true },
+        { id: 'metric2', x: 0.35, y: 0, width: 0.3, height: 0.4, accepts: ['metric' as const], toggleable: true },
+        { id: 'metric3', x: 0.7, y: 0, width: 0.3, height: 0.4, accepts: ['metric' as const], toggleable: true },
+      ],
+      controls: [{ id: 'moduleCount', type: 'range' as const, label: 'Modules', defaultValue: 3, min: 1, max: 3 }],
+    };
+    const changed = changeSlideLayout(source, 'cover', layout);
+    expect(changed.slides[0].controls).toEqual({
+      moduleCount: 3,
+      'slot.metric2.visible': false,
+    });
   });
 });

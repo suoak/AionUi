@@ -63,6 +63,8 @@ export type DeckSlot = {
   height: number;
   accepts: DeckBlockType[];
   required?: boolean;
+  /** Catalog-declared optional slot; Studio exposes slot.<id>.visible toggle. */
+  toggleable?: boolean;
   maxLength?: number;
   maxItems?: number;
 };
