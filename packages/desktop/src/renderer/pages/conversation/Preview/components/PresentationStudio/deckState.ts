@@ -462,6 +462,38 @@ export const themeTokenColor = (tokens: Record<string, string> | undefined, key:
   return raw.startsWith('#') ? raw : `#${raw}`;
 };
 
+/** Original CSBU WorkMate theme strip palette (Studio / outline picker; no third-party assets). */
+export const themeStripPalette = (
+  tokens: Record<string, string> | undefined
+): { background: string; surface: string; accent: string; text: string } => ({
+  background: themeTokenColor(tokens, 'background') ?? '#D0D5DD',
+  surface: themeTokenColor(tokens, 'surface') ?? '#FFFFFF',
+  accent: themeTokenColor(tokens, 'accent') ?? '#667085',
+  text: themeTokenColor(tokens, 'text') ?? '#111827',
+});
+
+/** Pin a preferred alternate layout id on slides[].candidates (export still uses layoutId only). */
+export const addSlideCandidate = (spec: DeckSpecV1, slideId: string, layoutId: string): DeckSpecV1 => {
+  const id = layoutId.trim();
+  if (!id) return spec;
+  const slide = spec.slides.find((item) => item.id === slideId);
+  if (!slide) return spec;
+  if ((slide.candidates ?? []).includes(id)) return spec;
+  return updateSlide(spec, slideId, (draft) => {
+    draft.candidates = [...(draft.candidates ?? []), id];
+  });
+};
+
+/** Remove a pinned layout id from slides[].candidates. */
+export const removeSlideCandidate = (spec: DeckSpecV1, slideId: string, layoutId: string): DeckSpecV1 => {
+  const slide = spec.slides.find((item) => item.id === slideId);
+  if (!slide?.candidates?.length || !slide.candidates.includes(layoutId)) return spec;
+  return updateSlide(spec, slideId, (draft) => {
+    const next = (draft.candidates ?? []).filter((candidate) => candidate !== layoutId);
+    draft.candidates = next.length ? next : undefined;
+  });
+};
+
 export const mutateDeck = (spec: DeckSpecV1, mutation: (draft: DeckSpecV1) => void): DeckSpecV1 => {
   const draft = structuredClone(spec);
   mutation(draft);

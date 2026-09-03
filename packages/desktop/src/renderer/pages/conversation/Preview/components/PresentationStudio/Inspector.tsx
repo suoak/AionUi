@@ -107,6 +107,71 @@ const Inspector: React.FC<Props> = ({
         ))}
       </div>
 
+      <label className='block text-12px text-t-secondary mt-14px mb-5px'>
+        {t('presentation.field.layoutCandidates')}
+      </label>
+      <div className='flex flex-wrap gap-6px items-center' data-testid='presentation-layout-candidates'>
+        {(slide.candidates ?? []).map((candidateId) => {
+          const layout = layouts.find((item) => item.id === candidateId);
+          return (
+            <Button.Group key={candidateId}>
+              <Button
+                size='mini'
+                type={candidateId === slide.layoutId ? 'primary' : 'outline'}
+                onClick={() => {
+                  if (layout) onLayoutChange(layout);
+                }}
+                disabled={!layout}
+              >
+                {layout ? t(`presentation.catalog.layout.${layout.id}`, { defaultValue: layout.label }) : candidateId}
+              </Button>
+              <Button
+                size='mini'
+                type='outline'
+                status='danger'
+                aria-label={t('presentation.field.removeCandidate')}
+                data-testid={`remove-candidate-${candidateId}`}
+                onClick={() =>
+                  onSlideChange((draft) => {
+                    const next = (draft.candidates ?? []).filter((id) => id !== candidateId);
+                    draft.candidates = next.length ? next : undefined;
+                  })
+                }
+              >
+                ×
+              </Button>
+            </Button.Group>
+          );
+        })}
+        <Select
+          size='mini'
+          className='w-160px'
+          placeholder={t('presentation.field.addCandidate')}
+          data-testid='presentation-add-candidate'
+          onChange={(value) => {
+            if (!value) return;
+            onSlideChange((draft) => {
+              const existing = draft.candidates ?? [];
+              if (existing.includes(value)) return;
+              draft.candidates = [...existing, value];
+            });
+          }}
+        >
+          {layouts
+            .filter(
+              (layout) =>
+                layout.role === slide.role &&
+                layout.id !== slide.layoutId &&
+                !(slide.candidates ?? []).includes(layout.id)
+            )
+            .map((layout) => (
+              <Select.Option key={layout.id} value={layout.id}>
+                {t(`presentation.catalog.layout.${layout.id}`, { defaultValue: layout.label })}
+              </Select.Option>
+            ))}
+        </Select>
+      </div>
+
       <label className='block text-12px text-t-secondary mt-14px mb-5px'>{t('presentation.field.layout')}</label>
       <Select
         value={slide.layoutId}

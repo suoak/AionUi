@@ -22,7 +22,11 @@
     "layoutAlternatives": "Альтернативні макети",
     "layoutControls": "Layout controls",
     "slotVisibility": "Видимість слотів",
-    "slotVisible": "Показати {{slot}}"
+    "slotVisible": "Показати {{slot}}",
+    "layoutCandidates": "Pinned layout candidates",
+    "pinCandidate": "Pin layout as candidate",
+    "addCandidate": "Add candidate",
+    "removeCandidate": "Remove candidate"
   },
   "conflict": {
     "description": "This deck changed on disk. Automatic saving is paused to protect both versions.",
@@ -80,7 +84,9 @@
     "missingRequired": "Set title, language, and theme before confirming the outline.",
     "warnGoalAudience": "Goal or audience is empty. You can still confirm, but filling may be less accurate.",
     "confirmed": "Outline confirmed. Content filling can begin.",
-    "exportBlocked": "Confirm the outline before exporting PPTX."
+    "exportBlocked": "Confirm the outline before exporting PPTX.",
+    "pickTheme": "Pick a CSBU WorkMate theme",
+    "themeStrips": "Theme previews (WorkMate tokens)"
   },
   "media": {
     "imageFiles": "Image files",
