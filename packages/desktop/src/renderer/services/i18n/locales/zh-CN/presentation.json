@@ -22,7 +22,11 @@
     "layoutAlternatives": "同角色版式候选",
     "layoutControls": "版式控件",
     "slotVisibility": "槽位可见性",
-    "slotVisible": "显示 {{slot}}"
+    "slotVisible": "显示 {{slot}}",
+    "layoutCandidates": "固定版式候选",
+    "pinCandidate": "将版式固定为候选",
+    "addCandidate": "添加候选",
+    "removeCandidate": "移除候选"
   },
   "conflict": {
     "description": "该 Deck 已在磁盘上发生变化。自动保存已暂停，以保护两个版本。",
@@ -80,7 +84,9 @@
     "missingRequired": "确认大纲前请先设置标题、语言和主题。",
     "warnGoalAudience": "目标或受众为空。仍可确认，但后续填充可能不够准确。",
     "confirmed": "大纲已确认，可以开始填充内容。",
-    "exportBlocked": "请先确认大纲再导出 PPTX。"
+    "exportBlocked": "请先确认大纲再导出 PPTX。",
+    "pickTheme": "选择 CSBU WorkMate 主题",
+    "themeStrips": "主题样张（WorkMate token）"
   },
   "media": {
     "imageFiles": "图片文件",

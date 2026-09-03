@@ -119,4 +119,61 @@ describe('WorkMate presentation inspector controls', () => {
     expect(screen.getByText('presentation.action.replaceImage')).toBeInTheDocument();
     expect(screen.queryByTestId('media-skip')).not.toBeInTheDocument();
   });
+
+  it('renders DeckSpec candidates chips and removes a pinned candidate', () => {
+    const slide: DeckSlide = {
+      id: 'compare',
+      role: 'comparison',
+      layoutId: 'comparison',
+      title: 'Options',
+      blocks: [],
+      candidates: ['image-text'],
+      controls: {},
+    };
+    // image-text has different role in fixture layouts — use cover as same-role peer instead
+    const peerLayouts: DeckLayout[] = [
+      ...layouts,
+      { id: 'comparison-table', role: 'comparison', label: 'Comparison table', slots: [], controls: [] },
+    ];
+    slide.candidates = ['comparison-table'];
+    const onLayoutChange = vi.fn();
+    const onSlideChange = vi.fn((update: (draft: DeckSlide) => void) => {
+      update(slide);
+    });
+    render(
+      <Inspector
+        {...baseProps}
+        layouts={peerLayouts}
+        slide={slide}
+        onLayoutChange={onLayoutChange}
+        onSlideChange={onSlideChange}
+      />
+    );
+    expect(screen.getByTestId('presentation-layout-candidates')).toBeInTheDocument();
+    fireEvent.click(screen.getByTestId('remove-candidate-comparison-table'));
+    expect(onSlideChange).toHaveBeenCalled();
+    expect(slide.candidates).toBeUndefined();
+  });
+
+  it('selecting a candidates chip calls onLayoutChange (changeSlideLayout path)', () => {
+    const peer: DeckLayout = {
+      id: 'comparison-table',
+      role: 'comparison',
+      label: 'Comparison table',
+      slots: [],
+      controls: [],
+    };
+    const slide: DeckSlide = {
+      id: 'compare',
+      role: 'comparison',
+      layoutId: 'comparison',
+      blocks: [],
+      candidates: ['comparison-table'],
+    };
+    const onLayoutChange = vi.fn();
+    render(<Inspector {...baseProps} layouts={[...layouts, peer]} slide={slide} onLayoutChange={onLayoutChange} />);
+    const candidateGroup = screen.getByTestId('presentation-layout-candidates');
+    fireEvent.click(candidateGroup.querySelector('button')!);
+    expect(onLayoutChange).toHaveBeenCalledWith(peer);
+  });
 });
