@@ -21,6 +21,9 @@ import {
   slotVisibilityControlId,
   suggestLayoutAlternatives,
   themeTokenColor,
+  themeStripPalette,
+  addSlideCandidate,
+  removeSlideCandidate,
   updateBlock,
 } from '@/renderer/pages/conversation/Preview/components/PresentationStudio/deckState';
 
@@ -619,5 +622,26 @@ describe('WorkMate presentation deck state', () => {
       'missing-layout',
     ]);
     expect(ranked.map((layout) => layout.id)).toEqual(['metrics', 'metrics-row-4', 'chart']);
+  });
+
+  it('adds and removes slides[].candidates without changing layoutId (export uses layoutId only)', () => {
+    const base = deck();
+    const pinned = addSlideCandidate(base, 'cover', 'metrics-row-4');
+    expect(pinned.slides[0].layoutId).toBe('cover');
+    expect(pinned.slides[0].candidates).toEqual(['metrics-row-4']);
+    const again = addSlideCandidate(pinned, 'cover', 'metrics-row-4');
+    expect(again).toBe(pinned);
+    const cleared = removeSlideCandidate(pinned, 'cover', 'metrics-row-4');
+    expect(cleared.slides[0].layoutId).toBe('cover');
+    expect(cleared.slides[0].candidates).toBeUndefined();
+  });
+
+  it('builds original WorkMate theme strip palettes from catalog tokens', () => {
+    expect(themeStripPalette({ background: '0B1220', surface: '152238', accent: 'C4A35A', text: 'F8FAFC' })).toEqual({
+      background: '#0B1220',
+      surface: '#152238',
+      accent: '#C4A35A',
+      text: '#F8FAFC',
+    });
   });
 });

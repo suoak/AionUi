@@ -448,6 +448,35 @@ const PresentationStudio: React.FC<Props> = ({
                 ? t(`presentation.catalog.theme.${theme.id}`, { defaultValue: theme.label })
                 : spec.theme.id || t('presentation.outline.empty')}
             </div>
+            <div className='col-span-2 mt-6px' data-testid='presentation-outline-theme-strips'>
+              <div className='text-12px text-t-tertiary mb-6px'>{t('presentation.outline.themeStrips')}</div>
+              <div className='grid grid-cols-3 gap-8px'>
+                {catalog.themes.map((item) => (
+                  <button
+                    key={item.id}
+                    type='button'
+                    className={`text-left rounded-6px border px-6px py-6px bg-bg-1 hover:border-primary ${
+                      item.id === spec.theme.id ? 'border-primary' : 'border-border-2'
+                    }`}
+                    data-testid={`outline-theme-${item.id}`}
+                    onClick={() =>
+                      commit(
+                        mutateDeck(spec, (draft) => {
+                          draft.theme.id = item.id;
+                        }),
+                        spec
+                      )
+                    }
+                  >
+                    <ThemeOptionLabel
+                      theme={item}
+                      variant='strip'
+                      label={t(`presentation.catalog.theme.${item.id}`, { defaultValue: item.label })}
+                    />
+                  </button>
+                ))}
+              </div>
+            </div>
             <div className='col-span-2'>
               <span className='text-t-tertiary'>{t('presentation.outline.metaSlides')}: </span>
               {spec.slides.map((item) => item.title?.trim() || item.id).join(' · ') || t('presentation.outline.empty')}
