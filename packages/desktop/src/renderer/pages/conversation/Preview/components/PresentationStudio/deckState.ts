@@ -6,6 +6,7 @@ import type {
   DeckSlide,
   DeckSlot,
   DeckSpecV1,
+  DeckTheme,
 } from '@/common/types/office/presentation';
 
 export const MAX_DECK_HISTORY = 50;
@@ -792,4 +793,146 @@ const uniqueId = (base: string, ids: string[]): string => {
   let suffix = 2;
   while (ids.includes(`${base}-${suffix}`)) suffix += 1;
   return `${base}-${suffix}`;
+};
+
+export type ThemeRemapSlideReport = {
+  slideId: string;
+  role: string;
+  layoutId: string;
+  needsRemap: boolean;
+  reasons: string[];
+  alternatives: string[];
+};
+
+export type ThemeRemapReport = {
+  fromThemeId: string;
+  toThemeId: string;
+  modeChange?: string;
+  generatedAt: string;
+  needsRemapCount: number;
+  slides: ThemeRemapSlideReport[];
+};
+
+const inferThemeMode = (tokens: Record<string, string> | undefined): 'light' | 'dark' => {
+  const raw = tokens?.background?.trim().replace(/^#/, '') ?? '';
+  if (!/^[0-9a-fA-F]{6}([0-9a-fA-F]{2})?$/.test(raw)) return 'light';
+  const r = Number.parseInt(raw.slice(0, 2), 16);
+  const g = Number.parseInt(raw.slice(2, 4), 16);
+  const b = Number.parseInt(raw.slice(4, 6), 16);
+  const luminance = (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255;
+  return luminance < 0.45 ? 'dark' : 'light';
+};
+
+const blockHints = (slide: DeckSlide): LayoutSuggestionHints => ({
+  itemCount: Math.max(
+    1,
+    slide.blocks.filter((block) => block.type === 'metric' || block.type === 'list' || block.type === 'timeline')
+      .length || slide.blocks.length
+  ),
+  hasChart: slide.blocks.some((block) => block.type === 'chart'),
+  needsMedia: slide.blocks.some((block) => block.type === 'image' || block.type === 'shape'),
+});
+
+/**
+ * Change theme.id (CSBU WorkMate), write extensions.themeRemap, and pin same-role
+ * alternatives onto slides[].candidates when a remap is advised. Mirrors
+ * `officecli deck theme-remap` for Studio.
+ */
+export const remapTheme = (
+  spec: DeckSpecV1,
+  toThemeId: string,
+  catalog: { themes: DeckTheme[]; layouts: DeckLayout[] },
+  options?: { writeReport?: boolean; pinCandidates?: boolean; limit?: number }
+): { spec: DeckSpecV1; report: ThemeRemapReport } => {
+  const toId = toThemeId.trim();
+  const toTheme = catalog.themes.find((theme) => theme.id === toId);
+  if (!toTheme || toId === spec.theme.id) {
+    return {
+      spec,
+      report: {
+        fromThemeId: spec.theme.id,
+        toThemeId: toId || spec.theme.id,
+        generatedAt: new Date().toISOString(),
+        needsRemapCount: 0,
+        slides: [],
+      },
+    };
+  }
+
+  const fromTheme = catalog.themes.find((theme) => theme.id === spec.theme.id);
+  const fromMode = inferThemeMode(fromTheme?.tokens);
+  const toMode = inferThemeMode(toTheme.tokens);
+  const modeChange = fromMode !== toMode ? `${fromMode}->${toMode}` : undefined;
+  const limit = Math.max(1, Math.min(options?.limit ?? 5, 20));
+  const layoutById = new Map(catalog.layouts.map((layout) => [layout.id, layout]));
+  const slides: ThemeRemapSlideReport[] = spec.slides.map((slide) => {
+    const known = layoutById.has(slide.layoutId);
+    const hints = blockHints(slide);
+    const alts = suggestLayoutAlternatives(
+      catalog.layouts,
+      slide.layoutId,
+      slide.role,
+      limit + 1,
+      hints,
+      slide.candidates
+    )
+      .filter((layout) => layout.id !== slide.layoutId)
+      .slice(0, limit);
+    const reasons: string[] = [];
+    if (!known) reasons.push('unknown_layout');
+    if (modeChange) reasons.push('theme_mode_shift');
+    if (alts.length > 0) {
+      const currentScore = known
+        ? scoreLayoutAlternative(layoutById.get(slide.layoutId)!, hints)
+        : Number.NEGATIVE_INFINITY;
+      const bestScore = scoreLayoutAlternative(alts[0], hints);
+      if (!known || bestScore - currentScore >= 2) reasons.push('better_alternative');
+    }
+    const needsRemap =
+      reasons.includes('unknown_layout') ||
+      reasons.includes('better_alternative') ||
+      (reasons.includes('theme_mode_shift') && alts.length > 0 && !known);
+    return {
+      slideId: slide.id,
+      role: slide.role,
+      layoutId: slide.layoutId,
+      needsRemap,
+      reasons,
+      alternatives: alts.map((layout) => layout.id),
+    };
+  });
+
+  const report: ThemeRemapReport = {
+    fromThemeId: spec.theme.id,
+    toThemeId: toId,
+    modeChange,
+    generatedAt: new Date().toISOString(),
+    needsRemapCount: slides.filter((slide) => slide.needsRemap).length,
+    slides,
+  };
+
+  const writeReport = options?.writeReport !== false;
+  const pinCandidates = options?.pinCandidates !== false;
+  const next = mutateDeck(spec, (draft) => {
+    draft.theme.id = toId;
+    draft.theme.mode = toMode;
+    if (writeReport) {
+      draft.extensions = { ...draft.extensions, themeRemap: report };
+    }
+    if (pinCandidates) {
+      for (const row of slides) {
+        if (!row.needsRemap || row.alternatives.length === 0) continue;
+        const slide = draft.slides.find((item) => item.id === row.slideId);
+        if (!slide) continue;
+        const existing = slide.candidates ?? [];
+        const merged = [...existing];
+        for (const id of row.alternatives.slice(0, 3)) {
+          if (!merged.includes(id)) merged.push(id);
+        }
+        slide.candidates = merged.length ? merged : undefined;
+      }
+    }
+  });
+
+  return { spec: next, report };
 };

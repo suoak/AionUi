@@ -37,7 +37,9 @@
     "theme": {
       "business-light": "商務簡約",
       "technology-dark": "深色科技",
-      "editorial-report": "編輯報告"
+      "editorial-report": "編輯報告",
+      "csbu-workmate": "CSBU WorkMate",
+      "csbu-workmate-night": "CSBU WorkMate Night"
     },
     "layout": {
       "cover": "封面",
@@ -86,7 +88,8 @@
     "confirmed": "大綱已確認，可以開始填入內容。",
     "exportBlocked": "請先確認大綱再匯出 PPTX。",
     "pickTheme": "選擇 CSBU WorkMate 主題",
-    "themeStrips": "主題樣張（WorkMate token）"
+    "themeStrips": "主題樣張（WorkMate token）",
+    "themeRemapReport": "主題已從 {{from}} 換到 {{to}}。有 {{count}} 頁可能需要換版式，請查看 candidates 芯片。"
   },
   "media": {
     "imageFiles": "圖片檔案",
