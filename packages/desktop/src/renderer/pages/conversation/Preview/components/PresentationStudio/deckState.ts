@@ -1,5 +1,5 @@
 import type { ChatFileRef } from '@/common/types/chatFile';
-import type { DeckBlock, DeckLayout, DeckSlide, DeckSlot, DeckSpecV1 } from '@/common/types/office/presentation';
+import type { DeckBlock, DeckBlockType, DeckLayout, DeckSlide, DeckSlot, DeckSpecV1 } from '@/common/types/office/presentation';
 
 export const MAX_DECK_HISTORY = 50;
 const BLOCK_TYPES = new Set(['text', 'list', 'metric', 'image', 'chart', 'table', 'timeline', 'quote', 'shape']);
@@ -138,26 +138,63 @@ export const isSlotVisible = (controls: Record<string, unknown> | undefined, slo
 const MODULE_SLOT_IDS: Record<string, string[]> = {
   metrics: ['metric1', 'metric2', 'metric3'],
   'kpi-trio': ['metric1', 'metric2', 'metric3'],
+  'cover-kpi-strip': ['metric1', 'metric2', 'metric3'],
+  'metrics-callout': ['metric1', 'metric2', 'metric3'],
+  'kpi-radar-sidecar': ['metric1', 'metric2', 'metric3'],
+  'chart-with-kpis': ['metric1', 'metric2', 'metric3'],
+  'image-stats': ['metric1', 'metric2', 'metric3'],
+  'context-facts': ['metric1', 'metric2', 'metric3'],
+  'case-metrics': ['metric1', 'metric2', 'metric3'],
+  'result-metrics': ['metric1', 'metric2', 'metric3'],
+  'metrics-duo': ['metric1', 'metric2'],
+  'quote-metrics': ['metric1', 'metric2'],
+  'result-summary': ['metric1', 'metric2'],
   'metrics-row-4': ['metric1', 'metric2', 'metric3', 'metric4'],
   'metrics-strip': ['metric1', 'metric2', 'metric3', 'metric4'],
+  'kpi-sparkline-row': ['metric1', 'metric2', 'metric3', 'metric4'],
   cards: ['card1', 'card2', 'card3'],
   'agenda-cards': ['card1', 'card2', 'card3'],
+  'toc-cards': ['card1', 'card2', 'card3'],
+  'risks-top3': ['card1', 'card2', 'card3'],
+  'observation-callouts': ['card1', 'card2', 'card3'],
+  'actions-priority': ['card1', 'card2', 'card3'],
+  'relationship-map-lite': ['card1', 'card2', 'card3'],
   'cards-four': ['card1', 'card2', 'card3', 'card4'],
+  'team-org-lite': ['card1', 'card2', 'card3', 'card4'],
   'three-column': ['col1', 'col2', 'col3'],
   'comparison-three': ['col1', 'col2', 'col3'],
+  'breakdown-pillars': ['col1', 'col2', 'col3'],
+  'option-score': ['col1', 'col2', 'col3'],
+  'process-swimlane-lite': ['col1', 'col2', 'col3'],
+  'team-roles': ['col1', 'col2', 'col3'],
+  'distribution-segments': ['col1', 'col2', 'col3'],
+  'stakeholder-grid': ['col1', 'col2', 'col3'],
   'option-cards-4': ['col1', 'col2', 'col3', 'col4'],
+  'comparison-four': ['col1', 'col2', 'col3', 'col4'],
   'process-steps': ['step1', 'step2', 'step3', 'step4'],
   'process-horizontal': ['step1', 'step2', 'step3', 'step4'],
   'cycle-4': ['step1', 'step2', 'step3', 'step4'],
   'agenda-timeline': ['step1', 'step2', 'step3', 'step4'],
   'roadmap-milestones': ['step1', 'step2', 'step3', 'step4'],
   'process-vertical': ['step1', 'step2', 'step3', 'step4'],
+  'toc-timeline': ['step1', 'step2', 'step3', 'step4'],
+  'journey-steps': ['step1', 'step2', 'step3', 'step4'],
+  'closing-roadmap': ['step1', 'step2', 'step3', 'step4'],
+  'context-timeline': ['step1', 'step2', 'step3', 'step4'],
+  'double-diamond': ['step1', 'step2', 'step3', 'step4'],
+  'process-5': ['step1', 'step2', 'step3', 'step4', 'step5'],
   team: ['member1', 'member2', 'member3', 'member4'],
   'team-row': ['member1', 'member2', 'member3', 'member4'],
+  'team-grid': ['member1', 'member2', 'member3', 'member4'],
+  'closing-contacts': ['member1', 'member2', 'member3'],
   funnel: ['stage1', 'stage2', 'stage3', 'stage4'],
   'funnel-wide': ['stage1', 'stage2', 'stage3', 'stage4'],
+  'pipeline-stages': ['stage1', 'stage2', 'stage3', 'stage4'],
   'gallery-two': ['visual1', 'visual2'],
   'gallery-three': ['visual1', 'visual2', 'visual3'],
+  'image-three-up': ['visual1', 'visual2', 'visual3'],
+  'image-mosaic-4': ['visual1', 'visual2', 'visual3', 'visual4'],
+  'five-forces': ['rivalry', 'entrants', 'substitutes', 'suppliers', 'buyers'],
 };
 
 const packModuleSlots = (layoutId: string, slot: DeckSlot, controls: Record<string, unknown>): DeckSlot => {
@@ -181,7 +218,22 @@ const packModuleSlots = (layoutId: string, slot: DeckSlot, controls: Record<stri
     layoutId === 'gallery-three' ||
     layoutId === 'process-vertical' ||
     layoutId === 'cards-four' ||
-    layoutId === 'option-cards-4'
+    layoutId === 'option-cards-4' ||
+    layoutId === 'comparison-four' ||
+    layoutId === 'pipeline-stages' ||
+    layoutId === 'image-mosaic-4' ||
+    layoutId === 'team-org-lite' ||
+    layoutId === 'five-forces' ||
+    layoutId === 'kpi-radar-sidecar' ||
+    layoutId === 'image-stats' ||
+    layoutId === 'case-metrics' ||
+    layoutId === 'process-5' ||
+    layoutId === 'chart-with-kpis' ||
+    layoutId === 'metrics-callout' ||
+    layoutId === 'context-facts' ||
+    layoutId === 'relationship-map-lite' ||
+    layoutId === 'quote-metrics' ||
+    layoutId === 'result-summary'
   ) {
     return slot;
   }
@@ -207,7 +259,10 @@ export const resolveLayoutSlots = (layout: DeckLayout, slide: DeckSlide): DeckSl
           layout.id === 'cover-split' ||
           layout.id === 'quote-split' ||
           layout.id === 'cover-banner' ||
-          layout.id === 'image-left-bullets') &&
+          layout.id === 'image-left-bullets' ||
+          layout.id === 'cover-dark-band' ||
+          layout.id === 'image-quote' ||
+          layout.id === 'image-stats') &&
         controlString(controls, 'mediaSide', 'left') === 'right'
       ) {
         return { ...slot, x: 1 - slot.x - slot.width };
@@ -215,7 +270,12 @@ export const resolveLayoutSlots = (layout: DeckLayout, slide: DeckSlide): DeckSl
 
       if (!insightVisible) {
         if (
-          (layout.id === 'chart' || layout.id === 'chart-radar' || layout.id === 'chart-insight-right') &&
+          (layout.id === 'chart' ||
+            layout.id === 'chart-radar' ||
+            layout.id === 'chart-insight-right' ||
+            layout.id === 'chart-waterfall' ||
+            layout.id === 'chart-funnel' ||
+            layout.id === 'distribution-pie-focus') &&
           slot.id === 'chart'
         ) {
           return { ...slot, x: 0.06, width: 0.88 };
@@ -223,7 +283,10 @@ export const resolveLayoutSlots = (layout: DeckLayout, slide: DeckSlide): DeckSl
         if ((layout.id === 'data-table' || layout.id === 'table-callouts') && slot.id === 'table') {
           return { ...slot, x: 0.06, width: 0.88 };
         }
-        if (layout.id === 'risk-matrix-simple' && slot.id === 'matrix') {
+        if (
+          (layout.id === 'risk-matrix-simple' || layout.id === 'risks-matrix' || layout.id === 'decision-matrix') &&
+          slot.id === 'matrix'
+        ) {
           return { ...slot, x: 0.06, width: 0.88 };
         }
       }
@@ -241,7 +304,18 @@ export const resolveLayoutSlots = (layout: DeckLayout, slide: DeckSlide): DeckSl
           layout.id === 'toc-two-column' ||
           layout.id === 'vs-scorecard' ||
           layout.id === 'statement-split' ||
-          layout.id === 'image-left-bullets') &&
+          layout.id === 'image-left-bullets' ||
+          layout.id === 'feature-vs' ||
+          layout.id === 'cost-benefit' ||
+          layout.id === 'kpi-vs-target' ||
+          layout.id === 'side-by-side-kpis' ||
+          layout.id === 'closing-split-cta' ||
+          layout.id === 'risks-mitigation-grid' ||
+          layout.id === 'result-before-after' ||
+          layout.id === 'case-study' ||
+          layout.id === 'case-challenge-solution' ||
+          layout.id === 'relationship-pairs' ||
+          layout.id === 'chart-dual-panel') &&
         (slot.id === 'left' || slot.id === 'right' || slot.id === 'kpi' || slot.id === 'support' || slot.id === 'body')
       ) {
         const balance = Math.min(65, Math.max(35, controlNumber(controls, 'balance', 50))) / 100;
@@ -261,20 +335,34 @@ export const resolveLayoutSlots = (layout: DeckLayout, slide: DeckSlide): DeckSl
           layout.id === 'data-table' ||
           layout.id === 'risk-matrix-simple' ||
           layout.id === 'table-callouts' ||
-          layout.id === 'chart-insight-right') &&
+          layout.id === 'chart-insight-right' ||
+          layout.id === 'decision-matrix' ||
+          layout.id === 'risks-matrix' ||
+          layout.id === 'risks-heatmap-lite' ||
+          layout.id === 'context-brief' ||
+          layout.id === 'observation-quote-data' ||
+          layout.id === 'distribution-pie-focus' ||
+          layout.id === 'chart-waterfall' ||
+          layout.id === 'chart-funnel') &&
         (slot.id === 'left' ||
           slot.id === 'summary' ||
           slot.id === 'insight' ||
           slot.id === 'table' ||
           slot.id === 'matrix' ||
-          slot.id === 'chart')
+          slot.id === 'chart' ||
+          slot.id === 'body')
       ) {
         if (
           !insightVisible &&
           (layout.id === 'data-table' ||
             layout.id === 'risk-matrix-simple' ||
             layout.id === 'table-callouts' ||
-            layout.id === 'chart-insight-right') &&
+            layout.id === 'chart-insight-right' ||
+            layout.id === 'decision-matrix' ||
+            layout.id === 'risks-matrix' ||
+            layout.id === 'distribution-pie-focus' ||
+            layout.id === 'chart-waterfall' ||
+            layout.id === 'chart-funnel') &&
           (slot.id === 'table' || slot.id === 'matrix' || slot.id === 'chart')
         ) {
           return { ...slot, x: 0.06, width: 0.88 };
@@ -300,6 +388,21 @@ export const resolveLayoutSlots = (layout: DeckLayout, slide: DeckSlide): DeckSl
         const usable = 0.88 - gap;
         const leftWidth = usable * balance;
         const isLeft = slot.id === 'strengths' || slot.id === 'opportunities';
+        return isLeft
+          ? { ...slot, x: start, width: leftWidth }
+          : { ...slot, x: start + leftWidth + gap, width: usable - leftWidth };
+      }
+
+      if (
+        layout.id === 'pest' &&
+        (slot.id === 'political' || slot.id === 'economic' || slot.id === 'social' || slot.id === 'technological')
+      ) {
+        const balance = Math.min(60, Math.max(40, controlNumber(controls, 'balance', 50))) / 100;
+        const start = 0.06;
+        const gap = 0.04;
+        const usable = 0.88 - gap;
+        const leftWidth = usable * balance;
+        const isLeft = slot.id === 'political' || slot.id === 'social';
         return isLeft
           ? { ...slot, x: start, width: leftWidth }
           : { ...slot, x: start + leftWidth + gap, width: usable - leftWidth };
@@ -410,16 +513,56 @@ export const updateSlide = (spec: DeckSpecV1, slideId: string, update: (slide: D
   });
 };
 
+export type LayoutSuggestionHints = {
+  /** Approximate content modules the slide wants to show (KPIs, cards, steps…). */
+  itemCount?: number;
+  /** Whether the slide needs a chart-capable slot. */
+  hasChart?: boolean;
+  /** Whether the slide needs an image/media-capable slot. */
+  needsMedia?: boolean;
+};
+
+const layoutCapacity = (layout: DeckLayout): number => {
+  const moduleIds = MODULE_SLOT_IDS[layout.id];
+  if (moduleIds?.length) return moduleIds.length;
+  return layout.slots.filter((slot) => slot.id !== 'title' && slot.id !== 'subtitle').length;
+};
+
+const layoutAccepts = (layout: DeckLayout, type: DeckBlockType): boolean =>
+  layout.slots.some((slot) => slot.accepts.includes(type));
+
+const scoreLayoutAlternative = (layout: DeckLayout, hints?: LayoutSuggestionHints): number => {
+  if (!hints) return 0;
+  let score = 0;
+  if (typeof hints.itemCount === 'number' && Number.isFinite(hints.itemCount)) {
+    const capacity = layoutCapacity(layout);
+    const delta = Math.abs(capacity - Math.max(1, Math.round(hints.itemCount)));
+    score += Math.max(0, 8 - delta * 2);
+  }
+  if (hints.hasChart) score += layoutAccepts(layout, 'chart') ? 5 : -3;
+  if (hints.needsMedia) score += layoutAccepts(layout, 'image') ? 4 : -2;
+  return score;
+};
+
 /** Same-role layout alternatives for one-click switching in PresentationStudio (CSBU WorkMate). */
 export const suggestLayoutAlternatives = (
   layouts: DeckLayout[],
   currentLayoutId: string,
   role: string,
-  limit = 4
+  limit = 4,
+  hints?: LayoutSuggestionHints
 ): DeckLayout[] => {
   const sameRole = layouts.filter((layout) => layout.role === role);
-  const preferred = sameRole.filter((layout) => layout.id !== currentLayoutId);
-  const ordered = [...sameRole.filter((layout) => layout.id === currentLayoutId), ...preferred];
+  const current = sameRole.filter((layout) => layout.id === currentLayoutId);
+  const preferred = sameRole
+    .filter((layout) => layout.id !== currentLayoutId)
+    .slice()
+    .sort((a, b) => {
+      const scoreDelta = scoreLayoutAlternative(b, hints) - scoreLayoutAlternative(a, hints);
+      if (scoreDelta !== 0) return scoreDelta;
+      return a.id.localeCompare(b.id);
+    });
+  const ordered = [...current, ...preferred];
   return ordered.slice(0, Math.max(1, limit));
 };
 
