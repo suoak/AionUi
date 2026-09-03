@@ -614,14 +614,10 @@ describe('WorkMate presentation deck state', () => {
         controls: [],
       },
     ];
-    const ranked = suggestLayoutAlternatives(
-      layouts,
-      'metrics',
-      'metrics',
-      3,
-      { itemCount: 4, hasChart: true },
-      ['metrics-row-4', 'missing-layout']
-    );
+    const ranked = suggestLayoutAlternatives(layouts, 'metrics', 'metrics', 3, { itemCount: 4, hasChart: true }, [
+      'metrics-row-4',
+      'missing-layout',
+    ]);
     expect(ranked.map((layout) => layout.id)).toEqual(['metrics', 'metrics-row-4', 'chart']);
   });
 });

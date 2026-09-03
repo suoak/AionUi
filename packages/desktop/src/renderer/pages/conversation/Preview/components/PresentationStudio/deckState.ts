@@ -580,10 +580,7 @@ export const suggestLayoutAlternatives = (
     fromCandidates.push(layout);
     seen.add(id);
   }
-  const preferred = [
-    ...fromCandidates,
-    ...scoredPreferred.filter((layout) => !seen.has(layout.id)),
-  ];
+  const preferred = [...fromCandidates, ...scoredPreferred.filter((layout) => !seen.has(layout.id))];
   const ordered = [...current, ...preferred];
   return ordered.slice(0, Math.max(1, limit));
 };
