@@ -1,5 +1,12 @@
 import type { ChatFileRef } from '@/common/types/chatFile';
-import type { DeckBlock, DeckBlockType, DeckLayout, DeckSlide, DeckSlot, DeckSpecV1 } from '@/common/types/office/presentation';
+import type {
+  DeckBlock,
+  DeckBlockType,
+  DeckLayout,
+  DeckSlide,
+  DeckSlot,
+  DeckSpecV1,
+} from '@/common/types/office/presentation';
 
 export const MAX_DECK_HISTORY = 50;
 const BLOCK_TYPES = new Set(['text', 'list', 'metric', 'image', 'chart', 'table', 'timeline', 'quote', 'shape']);

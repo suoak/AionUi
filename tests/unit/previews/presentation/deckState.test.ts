@@ -540,31 +540,44 @@ describe('WorkMate presentation deck state', () => {
       controls: { balance: 40 },
     });
     expect(balanced.find((slot) => slot.id === 'political')?.width).toBeCloseTo((0.88 - 0.04) * 0.4);
-    expect(balanced.find((slot) => slot.id === 'economic')?.x).toBeCloseTo(
-      0.06 + (0.88 - 0.04) * 0.4 + 0.04
-    );
+    expect(balanced.find((slot) => slot.id === 'economic')?.x).toBeCloseTo(0.06 + (0.88 - 0.04) * 0.4 + 0.04);
   });
 
   it('ranks layout alternatives with capacity-aware hints', () => {
     const layouts = [
-      { id: 'metrics', role: 'metrics', label: 'Metrics', slots: [
-        { id: 'metric1', x: 0, y: 0, width: 0.2, height: 0.2, accepts: ['metric' as const] },
-        { id: 'metric2', x: 0, y: 0, width: 0.2, height: 0.2, accepts: ['metric' as const] },
-        { id: 'metric3', x: 0, y: 0, width: 0.2, height: 0.2, accepts: ['metric' as const] },
-      ], controls: [] },
-      { id: 'metrics-row-4', role: 'metrics', label: 'Row4', slots: [
-        { id: 'metric1', x: 0, y: 0, width: 0.2, height: 0.2, accepts: ['metric' as const] },
-        { id: 'metric2', x: 0, y: 0, width: 0.2, height: 0.2, accepts: ['metric' as const] },
-        { id: 'metric3', x: 0, y: 0, width: 0.2, height: 0.2, accepts: ['metric' as const] },
-        { id: 'metric4', x: 0, y: 0, width: 0.2, height: 0.2, accepts: ['metric' as const] },
-      ], controls: [] },
-      { id: 'chart', role: 'metrics', label: 'Chart', slots: [
-        { id: 'chart', x: 0, y: 0, width: 0.5, height: 0.5, accepts: ['chart' as const] },
-      ], controls: [] },
+      {
+        id: 'metrics',
+        role: 'metrics',
+        label: 'Metrics',
+        slots: [
+          { id: 'metric1', x: 0, y: 0, width: 0.2, height: 0.2, accepts: ['metric' as const] },
+          { id: 'metric2', x: 0, y: 0, width: 0.2, height: 0.2, accepts: ['metric' as const] },
+          { id: 'metric3', x: 0, y: 0, width: 0.2, height: 0.2, accepts: ['metric' as const] },
+        ],
+        controls: [],
+      },
+      {
+        id: 'metrics-row-4',
+        role: 'metrics',
+        label: 'Row4',
+        slots: [
+          { id: 'metric1', x: 0, y: 0, width: 0.2, height: 0.2, accepts: ['metric' as const] },
+          { id: 'metric2', x: 0, y: 0, width: 0.2, height: 0.2, accepts: ['metric' as const] },
+          { id: 'metric3', x: 0, y: 0, width: 0.2, height: 0.2, accepts: ['metric' as const] },
+          { id: 'metric4', x: 0, y: 0, width: 0.2, height: 0.2, accepts: ['metric' as const] },
+        ],
+        controls: [],
+      },
+      {
+        id: 'chart',
+        role: 'metrics',
+        label: 'Chart',
+        slots: [{ id: 'chart', x: 0, y: 0, width: 0.5, height: 0.5, accepts: ['chart' as const] }],
+        controls: [],
+      },
     ];
     const ranked = suggestLayoutAlternatives(layouts, 'metrics', 'metrics', 3, { itemCount: 4, hasChart: true });
     expect(ranked[0].id).toBe('metrics');
     expect(ranked.slice(1).map((layout) => layout.id)).toEqual(['chart', 'metrics-row-4']);
   });
-
 });
