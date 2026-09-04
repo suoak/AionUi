@@ -694,4 +694,49 @@ describe('WorkMate presentation deck state', () => {
     expect(next.extensions?.themeRemap).toBeTruthy();
     expect(next.revision).toBe(5);
   });
+
+  it('showKicker hides kicker/eyebrow slots like legacy toggles', () => {
+    const layout = {
+      id: 'cover-kicker-hero',
+      role: 'cover',
+      label: 'Cover kicker',
+      slots: [
+        { id: 'kicker', x: 0.1, y: 0.1, width: 0.3, height: 0.08, accepts: ['text' as const] },
+        { id: 'title', x: 0.1, y: 0.25, width: 0.8, height: 0.2, accepts: ['text' as const] },
+      ],
+      controls: [],
+    };
+    const visible = resolveLayoutSlots(layout, {
+      id: 's1',
+      role: 'cover',
+      layoutId: 'cover-kicker-hero',
+      blocks: [],
+      controls: { showKicker: false },
+    });
+    expect(visible.map((slot) => slot.id)).toEqual(['title']);
+  });
+
+  it('focusIndex widens the focused module when packing metrics', () => {
+    const layout = {
+      id: 'metrics',
+      role: 'metrics',
+      label: 'Metrics',
+      slots: [
+        { id: 'metric1', x: 0.06, y: 0.25, width: 0.28, height: 0.5, accepts: ['metric' as const] },
+        { id: 'metric2', x: 0.36, y: 0.25, width: 0.28, height: 0.5, accepts: ['metric' as const] },
+        { id: 'metric3', x: 0.66, y: 0.25, width: 0.28, height: 0.5, accepts: ['metric' as const] },
+      ],
+      controls: [],
+    };
+    const packed = resolveLayoutSlots(layout, {
+      id: 's1',
+      role: 'metrics',
+      layoutId: 'metrics',
+      blocks: [],
+      controls: { moduleCount: 3, focusIndex: 1, density: 'comfortable' },
+    });
+    const m2 = packed.find((slot) => slot.id === 'metric2')!;
+    const m1 = packed.find((slot) => slot.id === 'metric1')!;
+    expect(m2.width).toBeGreaterThan(m1.width);
+  });
 });

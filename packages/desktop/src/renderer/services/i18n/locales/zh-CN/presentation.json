@@ -26,7 +26,12 @@
     "layoutCandidates": "固定版式候选",
     "pinCandidate": "将版式固定为候选",
     "addCandidate": "添加候选",
-    "removeCandidate": "移除候选"
+    "removeCandidate": "移除候选",
+    "compareShow": "对照版式",
+    "compareHide": "收起对照",
+    "compareSide": "并排对照",
+    "compareSequential": "翻页对照",
+    "compareApply": "使用此版式"
   },
   "conflict": {
     "description": "该 Deck 已在磁盘上发生变化。自动保存已暂停，以保护两个版本。",
@@ -58,7 +63,9 @@
     "control": {
       "balance": "分栏比例",
       "showInsight": "显示洞察栏",
-      "mediaSide": "媒体位置"
+      "mediaSide": "媒体位置",
+      "showKicker": "显示角标/眉题",
+      "focusIndex": "聚焦模块序号"
     },
     "option": {
       "left": "左侧",

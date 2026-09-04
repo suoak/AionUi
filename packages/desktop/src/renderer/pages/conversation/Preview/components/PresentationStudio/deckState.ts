@@ -142,6 +142,7 @@ export const isSlotVisible = (controls: Record<string, unknown> | undefined, slo
   if (slotId === 'insight') return controlBool(map, 'showInsight', true);
   if (slotId === 'callout') return controlBool(map, 'showCallout', true);
   if (slotId === 'footer') return controlBool(map, 'showFooter', true);
+  if (slotId === 'kicker' || slotId === 'eyebrow') return controlBool(map, 'showKicker', true);
   return true;
 };
 
@@ -303,8 +304,22 @@ const packModuleSlots = (layoutId: string, slot: DeckSlot, controls: Record<stri
   const { start, total, gap } = densityPackMetrics(controls);
   const packCount = Math.max(1, visibleIds.length);
   const usable = total - gap * Math.max(0, packCount - 1);
-  const width = usable / packCount;
-  return { ...slot, x: start + visibleIndex * (width + gap), width };
+  const focus = Math.round(controlNumber(controls, 'focusIndex', -1));
+  const widths: number[] = [];
+  if (focus >= 0 && focus < packCount && packCount > 1) {
+    const boost = 1.25;
+    const sibling = 1.0;
+    const weightSum = boost + sibling * (packCount - 1);
+    for (let i = 0; i < packCount; i += 1) {
+      widths[i] = usable * ((i === focus ? boost : sibling) / weightSum);
+    }
+  } else {
+    const width = usable / packCount;
+    for (let i = 0; i < packCount; i += 1) widths[i] = width;
+  }
+  let x = start;
+  for (let i = 0; i < visibleIndex; i += 1) x += widths[i] + gap;
+  return { ...slot, x, width: widths[visibleIndex] };
 };
 
 /** Mirror OfficeCLI DeckService.AdjustSlot / PackModuleSlots for Studio preview parity. */
