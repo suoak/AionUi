@@ -1,5 +1,37 @@
 # Changelog
 
+## [2.2.7](https://github.com/suoak/AionUi/compare/v2.2.6...v2.2.7) (2026-09-04)
+
+### Desktop
+
+#### Features
+
+- **presentation:** Deck uplift P0–P2 — catalog growth via OfficeCLI **v1.0.162** (**14 themes / 225 layouts**, catalog 1.5.2)
+- **presentation:** Same-role layout alternatives + Studio packing mirror waves (#120–#123, #125, #127, #132)
+- **presentation:** Inspector per-slot visible toggles; polish pending/error media UX (#124, #126)
+- **presentation:** Prefer DeckSpec `candidates[]` chips; WorkMate theme strips + theme-remap (#130–#133)
+- **presentation:** Candidate wireframe compare (side-by-side / sequential) + long-deck scaffold packing (`showKicker` / `focusIndex`) (#134)
+
+#### 内网更新说明
+
+<!-- internal-release-notes:start -->
+
+**由运营管理部提供**
+
+- 桌面端后端组件升级到 v0.2.7（内置 presentation skill：长稿 scaffold、版式查询、主题 remap、线框候选对比）。
+- 文档工具升级到 OfficeCLI v1.0.162：约 14 主题 / 225 版式（catalog 1.5.2）。
+- Presentation Studio：候选版式 chips、主题条、theme-remap、线框对比、槽位可见性与 packing 对齐 CLI。
+- 固定到 Core v0.2.7；OfficeCLI v1.0.162。
+
+<!-- internal-release-notes:end -->
+
+### Core ([v0.2.7](https://github.com/suoak/AionCore/releases/tag/v0.2.7))
+
+- Pin desktop to Core v0.2.7 (ships workmate-presentation skill updates #99–#104).
+- **skill:** layout switch/image fill, richer roles, layout-query, post-gen prompts, brand themes/theme-remap, long-deck scaffold + wireframe compare.
+
+---
+
 ## [2.2.6](https://github.com/suoak/AionUi/compare/v2.2.5...v2.2.6) (2026-09-02)
 
 ### Desktop
