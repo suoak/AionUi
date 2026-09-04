@@ -31,7 +31,6 @@ function readOfficecliVersion(): string {
   return pkg.officecliVersion;
 }
 
-
 function readInstallerErrorDefinitions(): Array<{ defineName: string; code: string }> {
   const source = readFileSync(resolve(repoRoot, 'resources/windows/installer-errors-sentry.nsh'), 'utf8');
   return Array.from(source.matchAll(/!define\s+(CSBU_WORKMATE_E_[A-Z0-9_]+)\s+"(E\d{4})"/g), (match) => ({
