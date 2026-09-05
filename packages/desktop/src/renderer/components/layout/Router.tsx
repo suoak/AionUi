@@ -10,6 +10,8 @@ const Guid = React.lazy(() => import('@renderer/pages/guid'));
 const AgentSettings = React.lazy(() => import('@renderer/pages/settings/AgentSettings'));
 const AgentRepairPage = React.lazy(() => import('@renderer/pages/settings/AgentSettings/AgentRepairPage'));
 const AssistantSettings = React.lazy(() => import('@renderer/pages/settings/AssistantSettings'));
+const AgentCenterListPage = React.lazy(() => import('@renderer/pages/agent-center/AgentCenterListPage'));
+const AgentCenterWizardPage = React.lazy(() => import('@renderer/pages/agent-center/AgentCenterWizardPage'));
 const SkillsSettings = React.lazy(() => import('@renderer/pages/settings/SkillsSettings/SkillsHubSettings'));
 const SkillDetailPage = React.lazy(() => import('@renderer/pages/settings/SkillsSettings/SkillDetailPage'));
 const OfficialOnlineSkillDetail = React.lazy(
@@ -100,6 +102,9 @@ const PanelRoute: React.FC<{ layout: React.ReactElement }> = ({ layout }) => {
           />
           <Route path='/settings/model' element={withRouteFallback(ModeSettings)} />
           <Route path='/assistants' element={withRouteFallback(AssistantSettings)} />
+          <Route path='/agent-center' element={withRouteFallback(AgentCenterListPage)} />
+          <Route path='/agent-center/new' element={<Suspense fallback={<AppLoader />}><AgentCenterWizardPage mode='create' /></Suspense>} />
+          <Route path='/agent-center/:id/edit' element={<Suspense fallback={<AppLoader />}><AgentCenterWizardPage mode='edit' /></Suspense>} />
           {/* Assistants moved out of Settings to a top-level entry; keep a redirect
               so old deep links / back-nav still land on the new page. */}
           <Route path='/settings/assistants' element={<Navigate to='/assistants' replace />} />
