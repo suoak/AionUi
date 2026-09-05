@@ -4,7 +4,7 @@
 
 ### Features
 
-* **skill-evolution:** Phase 3 UI — gate score / settings / team ACL (#148)
+- **skill-evolution:** Phase 3 UI — gate score / settings / team ACL (#148)
 
 ### 中文摘要
 
@@ -15,7 +15,6 @@
 ### Core ([v0.2.10](https://github.com/suoak/AionCore/releases/tag/v0.2.10))
 
 - Pin desktop to Core v0.2.10 (skill-evolution Phase 3 #116).
-
 
 ## [2.2.9](https://github.com/suoak/AionUi/compare/v2.2.8...v2.2.9) (2026-09-05)
 
