@@ -6,10 +6,18 @@ import type {
   AgentVisibility,
   CreateAgentCenterRequest,
 } from '@/common/types/agent/agentCenterTypes';
-import WorkMateSteps from '@renderer/components/base/WorkMateSteps';
-import { fetchManagedAgents, type ManagedAgent } from '@renderer/utils/model/agentTypes';
+import { WorkMateInlineSearchInput, WorkMateSteps } from '@renderer/components/base';
+import { DROPDOWN_SEARCH_THRESHOLD } from '@renderer/components/agent/runtimeSelectorOptions';
+import { useManagedAgentRuntimeCatalog } from '@renderer/hooks/agent/useManagedAgents';
+import { ensureBackendMcpCatalog } from '@renderer/hooks/mcp/catalog';
+import {
+  buildAssistantEditorBackends,
+  filterAssistantEditorBackends,
+} from '@renderer/pages/settings/AssistantSettings/assistantUtils';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
+import CapabilityTogglePicker from './CapabilityTogglePicker';
 
 const { Title, Text } = Typography;
 
@@ -26,9 +34,16 @@ const visibilityLabel: Record<AgentVisibility, string> = {
   enterprise: '企业',
 };
 
+type SkillOption = {
+  name: string;
+  description: string;
+};
+
 const AgentCenterWizardPage: React.FC<{ mode: 'create' | 'edit' }> = ({ mode }) => {
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
+  const { i18n } = useTranslation();
+  const localeKey = i18n.language;
   const [message, messageContext] = Message.useMessage({ maxCount: 5 });
   const [step, setStep] = useState(0);
   const [saving, setSaving] = useState(false);
@@ -40,20 +55,51 @@ const AgentCenterWizardPage: React.FC<{ mode: 'create' | 'edit' }> = ({ mode }) 
   const [description, setDescription] = useState('');
   const [visibility, setVisibility] = useState<AgentVisibility>('private');
   const [instructions, setInstructions] = useState('');
-  const [skillKeys, setSkillKeys] = useState('');
-  const [mcpIds, setMcpIds] = useState('');
+  const [selectedSkillKeys, setSelectedSkillKeys] = useState<string[]>([]);
+  const [selectedMcpIds, setSelectedMcpIds] = useState<string[]>([]);
   const [mcpPolicy, setMcpPolicy] = useState<AgentMcpPolicy>('allowlist');
   const [engineAgentId, setEngineAgentId] = useState('');
   const [changelog, setChangelog] = useState('');
-  const [managedAgents, setManagedAgents] = useState<ManagedAgent[]>([]);
+  const [skillOptions, setSkillOptions] = useState<SkillOption[]>([]);
+  const [mcpOptions, setMcpOptions] = useState<Array<{ id: string; name: string; description?: string }>>([]);
+  const [agentQuery, setAgentQuery] = useState('');
+
+  // Prefer the same backend-agent catalog as Settings → Assistants engine picker.
+  const managedAgentRuntimeCatalog = useManagedAgentRuntimeCatalog();
+  const availableBackends = useMemo(
+    () => buildAssistantEditorBackends(managedAgentRuntimeCatalog, localeKey, engineAgentId),
+    [managedAgentRuntimeCatalog, localeKey, engineAgentId]
+  );
+  const showAgentSearch = availableBackends.length > DROPDOWN_SEARCH_THRESHOLD;
+  const filteredBackends = useMemo(
+    () => filterAssistantEditorBackends(availableBackends, agentQuery),
+    [availableBackends, agentQuery]
+  );
 
   useEffect(() => {
     void (async () => {
       try {
-        const agents = await fetchManagedAgents();
-        setManagedAgents(agents.filter((a) => a.enabled !== false));
+        const [skillsList, { allServers }] = await Promise.all([
+          ipcBridge.fs.listAvailableSkills.invoke(),
+          ensureBackendMcpCatalog(),
+        ]);
+        setSkillOptions(
+          skillsList.map((s) => ({
+            name: s.name,
+            description: s.description || '',
+          }))
+        );
+        setMcpOptions(
+          allServers.map((s) => ({
+            id: s.id,
+            name: s.name,
+            description: s.description,
+          }))
+        );
       } catch (error) {
         console.error(error);
+        setSkillOptions([]);
+        setMcpOptions([]);
       }
     })();
   }, []);
@@ -68,8 +114,8 @@ const AgentCenterWizardPage: React.FC<{ mode: 'create' | 'edit' }> = ({ mode }) 
         setDescription(detail.assistant.profile.description ?? '');
         setVisibility(detail.meta.visibility);
         setInstructions(detail.assistant.rules.content ?? '');
-        setSkillKeys(detail.meta.skill_refs.map((s) => s.skill_key).join(', '));
-        setMcpIds(detail.assistant.defaults.mcps.value.join(', '));
+        setSelectedSkillKeys(detail.meta.skill_refs.map((s) => s.skill_key));
+        setSelectedMcpIds(detail.assistant.defaults.mcps.value ?? []);
         setMcpPolicy(detail.meta.mcp_policy);
         setEngineAgentId(detail.assistant.engine.agent_id);
         setStatus(detail.meta.status);
@@ -82,34 +128,46 @@ const AgentCenterWizardPage: React.FC<{ mode: 'create' | 'edit' }> = ({ mode }) 
   }, [mode, id, message]);
 
   const skillRefs = useMemo(
-    () =>
-      skillKeys
-        .split(',')
-        .map((s) => s.trim())
-        .filter(Boolean)
-        .map((skill_key) => ({ skill_key, version_policy: 'pin' as const })),
-    [skillKeys]
+    () => selectedSkillKeys.map((skill_key) => ({ skill_key, version_policy: 'pin' as const })),
+    [selectedSkillKeys]
   );
 
-  const mcpIdList = useMemo(
+  const skillToggleItems = useMemo(
     () =>
-      mcpIds
-        .split(',')
-        .map((s) => s.trim())
-        .filter(Boolean),
-    [mcpIds]
+      skillOptions.map((s) => ({
+        id: s.name,
+        name: s.name,
+        description: s.description || undefined,
+      })),
+    [skillOptions]
   );
 
-  const engineOptions = useMemo(() => {
-    const opts = managedAgents.map((a) => ({
-      value: a.id,
-      label: a.name_i18n?.['zh-CN'] || a.name_i18n?.zh || a.name,
-    }));
-    if (engineAgentId && !opts.some((o) => o.value === engineAgentId)) {
-      opts.unshift({ value: engineAgentId, label: engineAgentId });
-    }
-    return opts;
-  }, [managedAgents, engineAgentId]);
+  const mcpToggleItems = useMemo(
+    () =>
+      mcpOptions.map((s) => ({
+        id: s.id,
+        name: s.name,
+        description: s.description,
+      })),
+    [mcpOptions]
+  );
+
+  // Keep previously saved ids visible even if they left the catalog.
+  const skillToggleItemsWithOrphans = useMemo(() => {
+    const known = new Set(skillToggleItems.map((i) => i.id));
+    const orphans = selectedSkillKeys
+      .filter((key) => !known.has(key))
+      .map((key) => ({ id: key, name: key, description: '（当前环境未安装）' }));
+    return [...orphans, ...skillToggleItems];
+  }, [skillToggleItems, selectedSkillKeys]);
+
+  const mcpToggleItemsWithOrphans = useMemo(() => {
+    const known = new Set(mcpToggleItems.map((i) => i.id));
+    const orphans = selectedMcpIds
+      .filter((mcpId) => !known.has(mcpId))
+      .map((mcpId) => ({ id: mcpId, name: mcpId, description: '（当前环境未找到）' }));
+    return [...orphans, ...mcpToggleItems];
+  }, [mcpToggleItems, selectedMcpIds]);
 
   const persistRules = useCallback(async (assistantId: string, rules: string) => {
     const trimmed = rules.trim();
@@ -128,10 +186,10 @@ const AgentCenterWizardPage: React.FC<{ mode: 'create' | 'edit' }> = ({ mode }) 
       visibility,
       mcp_policy: mcpPolicy,
       skill_refs: skillRefs,
-      mcp_ids: mcpPolicy === 'allowlist' ? mcpIdList : undefined,
+      mcp_ids: mcpPolicy === 'allowlist' ? selectedMcpIds : undefined,
       // KnowHub stays out of primary UX; API field remains optional and empty.
     }),
-    [visibility, mcpPolicy, skillRefs, mcpIdList]
+    [visibility, mcpPolicy, skillRefs, selectedMcpIds]
   );
 
   const persist = async (opts: { publish: boolean; stay?: boolean }): Promise<string | null> => {
@@ -151,7 +209,7 @@ const AgentCenterWizardPage: React.FC<{ mode: 'create' | 'edit' }> = ({ mode }) 
           agent_id: engineAgentId.trim() || undefined,
           enabled_skills: skillRefs.map((s) => s.skill_key),
           defaults: {
-            mcps: { mode: mcpPolicy === 'allowlist' ? 'fixed' : 'auto', value: mcpIdList },
+            mcps: { mode: mcpPolicy === 'allowlist' ? 'fixed' : 'auto', value: selectedMcpIds },
             skills: { mode: 'fixed', value: skillRefs.map((s) => s.skill_key) },
           },
           meta,
@@ -169,7 +227,7 @@ const AgentCenterWizardPage: React.FC<{ mode: 'create' | 'edit' }> = ({ mode }) 
           agent_id: engineAgentId.trim() || undefined,
           enabled_skills: skillRefs.map((s) => s.skill_key),
           defaults: {
-            mcps: { mode: mcpPolicy === 'allowlist' ? 'fixed' : 'auto', value: mcpIdList },
+            mcps: { mode: mcpPolicy === 'allowlist' ? 'fixed' : 'auto', value: selectedMcpIds },
             skills: { mode: 'fixed', value: skillRefs.map((s) => s.skill_key) },
           },
           meta,
@@ -234,6 +292,11 @@ const AgentCenterWizardPage: React.FC<{ mode: 'create' | 'edit' }> = ({ mode }) 
     }
   };
 
+  const engineLabel = useMemo(() => {
+    const selected = availableBackends.find((b) => b.id === engineAgentId);
+    return selected?.name || engineAgentId || '默认引擎';
+  }, [availableBackends, engineAgentId]);
+
   return (
     <div className='h-full overflow-auto p-24px max-w-720px'>
       {messageContext}
@@ -288,30 +351,77 @@ const AgentCenterWizardPage: React.FC<{ mode: 'create' | 'edit' }> = ({ mode }) 
         <div className='flex flex-col gap-16px'>
           <div className='flex flex-col gap-8px'>
             <Text bold>后端 Agent / 模型引擎</Text>
-            <Text type='secondary'>选择已有后端 Agent，不新建第二套运行时。</Text>
+            <Text type='secondary'>选择已有后端 Agent（与设置页「助手」引擎选择器同源），不新建第二套运行时。</Text>
             <Select
               allowClear
-              showSearch
               placeholder='留空则使用默认 Agent'
               value={engineAgentId || undefined}
               onChange={(v) => setEngineAgentId((v as string) || '')}
-              options={engineOptions}
-            />
+              onVisibleChange={(visible) => {
+                if (!visible) setAgentQuery('');
+              }}
+              dropdownRender={(menu) =>
+                showAgentSearch ? (
+                  <div>
+                    <div className='px-6px pt-4px pb-6px' style={{ background: 'var(--color-bg-popup)' }}>
+                      <WorkMateInlineSearchInput
+                        value={agentQuery}
+                        onChange={setAgentQuery}
+                        placeholder='搜索 Agent'
+                        data-testid='agent-center-engine-search'
+                      />
+                    </div>
+                    {menu}
+                  </div>
+                ) : (
+                  menu
+                )
+              }
+              notFoundContent={
+                <div className='px-12px py-10px text-12px text-t-tertiary text-center'>无匹配的 Agent</div>
+              }
+              renderFormat={(_option, value) => {
+                const selected = availableBackends.find((item) => item.id === value);
+                return selected?.name || (value as string) || '';
+              }}
+              data-testid='agent-center-engine-select'
+            >
+              {filteredBackends.map((option) => (
+                <Select.Option key={option.id} value={option.id}>
+                  <span className='truncate'>{option.name}</span>
+                </Select.Option>
+              ))}
+            </Select>
           </div>
           <div className='flex flex-col gap-8px'>
             <Text bold>Skills</Text>
-            <Text type='secondary'>引用 skill key（逗号分隔）。发布时默认 pin 版本。</Text>
-            <Input value={skillKeys} onChange={setSkillKeys} placeholder='workmate-presentation, …' />
+            <Text type='secondary'>从 Skills Hub（已安装）多选；展示名称。发布时默认 pin 版本。</Text>
+            <CapabilityTogglePicker
+              items={skillToggleItemsWithOrphans}
+              value={selectedSkillKeys}
+              onChange={setSelectedSkillKeys}
+              searchPlaceholder='搜索 Skills…'
+              emptyText={skillOptions.length === 0 ? '暂无已安装 Skill，请先到 Skills Hub 安装' : '无匹配的 Skill'}
+              testId='agent-center-skills-picker'
+            />
           </div>
           <div className='flex flex-col gap-8px'>
             <Text bold>MCP（可选）</Text>
-            <Text type='secondary'>空白名单 = 不挂载任何 MCP。</Text>
+            <Text type='secondary'>从已配置的 MCP 服务器多选。白名单留空 = 不挂载任何 MCP。</Text>
             <Select value={mcpPolicy} onChange={(v) => setMcpPolicy(v as AgentMcpPolicy)}>
               <Select.Option value='allowlist'>白名单（空 = 不挂载）</Select.Option>
               <Select.Option value='inherit_user_enabled'>使用用户已启用 MCP</Select.Option>
             </Select>
             {mcpPolicy === 'allowlist' && (
-              <Input value={mcpIds} onChange={setMcpIds} placeholder='MCP 服务器 ID，可留空' />
+              <CapabilityTogglePicker
+                items={mcpToggleItemsWithOrphans}
+                value={selectedMcpIds}
+                onChange={setSelectedMcpIds}
+                searchPlaceholder='搜索 MCP 服务器…'
+                emptyText={mcpOptions.length === 0 ? '暂无 MCP 服务器，可在设置 → 工具中添加' : '无匹配的 MCP'}
+                footerHint='未勾选任何服务器时，此智能体运行时不会挂载 MCP。'
+                testId='agent-center-mcp-picker'
+              />
             )}
           </div>
         </div>
@@ -326,8 +436,8 @@ const AgentCenterWizardPage: React.FC<{ mode: 'create' | 'edit' }> = ({ mode }) 
             <Text bold>{name || '（未命名）'}</Text>
             <Text type='secondary' className='text-12px'>
               {status === 'published' ? `已发布 v${version}` : '草稿'}
-              {engineAgentId ? ` · 引擎 ${engineAgentId}` : ' · 默认引擎'} · Skills {skillRefs.length} · MCP{' '}
-              {mcpPolicy === 'allowlist' ? `${mcpIdList.length} 项白名单` : '继承用户'}
+              {` · 引擎 ${engineLabel}`} · Skills {skillRefs.length} · MCP{' '}
+              {mcpPolicy === 'allowlist' ? `${selectedMcpIds.length} 项白名单` : '继承用户'}
             </Text>
             {description ? <Text className='text-13px'>{description}</Text> : null}
             {instructions.trim() ? (
