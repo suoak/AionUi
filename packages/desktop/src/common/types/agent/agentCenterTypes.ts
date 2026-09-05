@@ -99,10 +99,14 @@ export interface AgentCenterRevision {
   created_at: number;
 }
 
+export type AgentCenterPreviewMode = 'draft' | 'published';
+
 export interface AgentCenterRunPlan {
   assistant_id: string;
   revision_id?: string;
   revision: number;
+  /** draft = try-run live/unpublished config; published = last published revision. */
+  preview_mode?: AgentCenterPreviewMode;
   create_conversation: {
     name?: string;
     assistant?: {
