@@ -25,6 +25,7 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
 import CapabilityDefaultsFields from './CapabilityDefaultsFields';
 import CapabilityTogglePicker from './CapabilityTogglePicker';
+import ConversationStartersFields from './ConversationStartersFields';
 
 const { Title, Text } = Typography;
 
@@ -62,6 +63,7 @@ const AgentCenterWizardPage: React.FC<{ mode: 'create' | 'edit' }> = ({ mode }) 
   const [description, setDescription] = useState('');
   const [visibility, setVisibility] = useState<AgentVisibility>('private');
   const [instructions, setInstructions] = useState('');
+  const [recommendedPrompts, setRecommendedPrompts] = useState<string[]>([]);
   const [selectedSkillKeys, setSelectedSkillKeys] = useState<string[]>([]);
   const [selectedMcpIds, setSelectedMcpIds] = useState<string[]>([]);
   const [mcpPolicy, setMcpPolicy] = useState<AgentMcpPolicy>('allowlist');
@@ -235,6 +237,7 @@ const AgentCenterWizardPage: React.FC<{ mode: 'create' | 'edit' }> = ({ mode }) 
         setDescription(detail.assistant.profile.description ?? '');
         setVisibility(detail.meta.visibility);
         setInstructions(detail.assistant.rules.content ?? '');
+        setRecommendedPrompts(detail.assistant.prompts?.recommended ?? []);
         setSelectedSkillKeys(detail.meta.skill_refs.map((s) => s.skill_key));
         setSelectedMcpIds(detail.assistant.defaults.mcps.value ?? []);
         setMcpPolicy(detail.meta.mcp_policy);
@@ -374,6 +377,7 @@ const AgentCenterWizardPage: React.FC<{ mode: 'create' | 'edit' }> = ({ mode }) 
           description: description.trim() || undefined,
           agent_id: engineAgentId.trim() || undefined,
           enabled_skills: skillRefs.map((s) => s.skill_key),
+          recommended_prompts: recommendedPrompts,
           defaults: buildAssistantDefaults(),
           meta,
         };
@@ -389,6 +393,7 @@ const AgentCenterWizardPage: React.FC<{ mode: 'create' | 'edit' }> = ({ mode }) 
           description: description.trim() || undefined,
           agent_id: engineAgentId.trim() || undefined,
           enabled_skills: skillRefs.map((s) => s.skill_key),
+          recommended_prompts: recommendedPrompts,
           defaults: buildAssistantDefaults(),
           meta,
         });
@@ -496,7 +501,7 @@ const AgentCenterWizardPage: React.FC<{ mode: 'create' | 'edit' }> = ({ mode }) 
       )}
 
       {step === 1 && (
-        <div className='flex flex-col gap-12px'>
+        <div className='flex flex-col gap-16px'>
           <Text type='secondary'>用自然语言写清角色、语气与边界（对应 ChatGPT 的 Instructions / Personality）。</Text>
           <Input.TextArea
             value={instructions}
@@ -504,6 +509,7 @@ const AgentCenterWizardPage: React.FC<{ mode: 'create' | 'edit' }> = ({ mode }) 
             placeholder={'你是…\n请用简洁、专业的中文回答。\n当信息不足时先提问再行动。'}
             autoSize={{ minRows: 8, maxRows: 18 }}
           />
+          <ConversationStartersFields items={recommendedPrompts} onChange={setRecommendedPrompts} />
         </div>
       )}
 
@@ -636,6 +642,24 @@ const AgentCenterWizardPage: React.FC<{ mode: 'create' | 'edit' }> = ({ mode }) 
             ) : (
               <Text type='secondary' className='text-12px'>
                 （尚未填写指令）
+              </Text>
+            )}
+            {recommendedPrompts.length > 0 ? (
+              <div className='mt-8px flex flex-col gap-4px'>
+                <Text bold className='text-12px'>
+                  对话开场白（{recommendedPrompts.length}）
+                </Text>
+                <ul className='m-0 pl-18px text-12px text-t-secondary'>
+                  {recommendedPrompts.map((prompt, index) => (
+                    <li key={`${prompt}-${index}`} className='leading-18px'>
+                      {prompt}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ) : (
+              <Text type='secondary' className='text-12px mt-4px'>
+                （未配置对话开场白；试跑欢迎页将使用默认提示）
               </Text>
             )}
           </div>
