@@ -68,6 +68,8 @@ export interface CreateAgentCenterRequest {
   description?: string;
   agent_id?: string;
   enabled_skills?: string[];
+  /** ChatGPT-style conversation starters; persisted on the underlying Assistant. */
+  recommended_prompts?: string[];
   defaults?: {
     model?: { mode: string; value?: string };
     permission?: { mode: string; value?: string };
@@ -83,6 +85,7 @@ export interface UpdateAgentCenterRequest {
   description?: string;
   agent_id?: string;
   enabled_skills?: string[];
+  recommended_prompts?: string[];
   defaults?: CreateAgentCenterRequest['defaults'];
   meta?: AgentCenterMetaPatch;
 }
