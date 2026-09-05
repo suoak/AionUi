@@ -95,9 +95,12 @@ const AgentCenterListPage: React.FC = () => {
             创建 → 指令与个性 → 能力配置 → 试跑预览 → 发布与共享。知识库产品保持独立，不在此捆绑。
           </Text>
         </div>
-        <Button type='primary' onClick={() => navigate('/agent-center/new')}>
-          创建智能体
-        </Button>
+        <div className='flex gap-8px'>
+          <Button onClick={() => navigate('/agent-center/skill-evolution')}>技能进化</Button>
+          <Button type='primary' onClick={() => navigate('/agent-center/new')}>
+            创建智能体
+          </Button>
+        </div>
       </div>
 
       <Tabs activeTab={scope} onChange={(key) => setScope(key as Scope)}>
