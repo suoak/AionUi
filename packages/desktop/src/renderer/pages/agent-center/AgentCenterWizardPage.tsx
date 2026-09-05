@@ -9,14 +9,21 @@ import type {
 import { WorkMateInlineSearchInput, WorkMateSteps } from '@renderer/components/base';
 import { DROPDOWN_SEARCH_THRESHOLD } from '@renderer/components/agent/runtimeSelectorOptions';
 import { useManagedAgentRuntimeCatalog } from '@renderer/hooks/agent/useManagedAgents';
+import { useModelProviderList } from '@renderer/hooks/agent/useModelProviderList';
 import { ensureBackendMcpCatalog } from '@renderer/hooks/mcp/catalog';
 import {
   buildAssistantEditorBackends,
   filterAssistantEditorBackends,
 } from '@renderer/pages/settings/AssistantSettings/assistantUtils';
+import {
+  buildAgentRuntimeModeState,
+  buildAgentRuntimeModelInfo,
+  buildAgentRuntimeThoughtLevelOption,
+} from '@renderer/utils/model/agentRuntimeCatalog';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
+import CapabilityDefaultsFields from './CapabilityDefaultsFields';
 import CapabilityTogglePicker from './CapabilityTogglePicker';
 
 const { Title, Text } = Typography;
@@ -59,6 +66,12 @@ const AgentCenterWizardPage: React.FC<{ mode: 'create' | 'edit' }> = ({ mode }) 
   const [selectedMcpIds, setSelectedMcpIds] = useState<string[]>([]);
   const [mcpPolicy, setMcpPolicy] = useState<AgentMcpPolicy>('allowlist');
   const [engineAgentId, setEngineAgentId] = useState('');
+  const [defaultModelMode, setDefaultModelMode] = useState<'auto' | 'fixed'>('auto');
+  const [defaultModelValue, setDefaultModelValue] = useState('');
+  const [defaultPermissionMode, setDefaultPermissionMode] = useState<'auto' | 'fixed'>('auto');
+  const [defaultPermissionValue, setDefaultPermissionValue] = useState('');
+  const [defaultThoughtLevelMode, setDefaultThoughtLevelMode] = useState<'auto' | 'fixed'>('auto');
+  const [defaultThoughtLevelValue, setDefaultThoughtLevelValue] = useState('');
   const [changelog, setChangelog] = useState('');
   const [skillOptions, setSkillOptions] = useState<SkillOption[]>([]);
   const [mcpOptions, setMcpOptions] = useState<Array<{ id: string; name: string; description?: string }>>([]);
@@ -66,6 +79,7 @@ const AgentCenterWizardPage: React.FC<{ mode: 'create' | 'edit' }> = ({ mode }) 
 
   // Prefer the same backend-agent catalog as Settings → Assistants engine picker.
   const managedAgentRuntimeCatalog = useManagedAgentRuntimeCatalog();
+  const { providers, getAvailableModels } = useModelProviderList();
   const availableBackends = useMemo(
     () => buildAssistantEditorBackends(managedAgentRuntimeCatalog, localeKey, engineAgentId),
     [managedAgentRuntimeCatalog, localeKey, engineAgentId]
@@ -75,6 +89,113 @@ const AgentCenterWizardPage: React.FC<{ mode: 'create' | 'edit' }> = ({ mode }) 
     () => filterAssistantEditorBackends(availableBackends, agentQuery),
     [availableBackends, agentQuery]
   );
+
+  const currentBackend = useMemo(
+    () => availableBackends.find((option) => option.id === engineAgentId),
+    [availableBackends, engineAgentId]
+  );
+  const editAgentRuntimeKey = currentBackend?.runtimeKey || (engineAgentId ? '' : 'aionrs');
+
+  const currentAgentRuntimeCatalog = useMemo(() => {
+    if (engineAgentId) {
+      return managedAgentRuntimeCatalog.find((agent) => agent.id === engineAgentId) ?? null;
+    }
+    // Empty engine = product default (aionrs / CSBU WorkMate).
+    return managedAgentRuntimeCatalog.find((agent) => (agent.backend || agent.agent_type) === 'aionrs') ?? null;
+  }, [engineAgentId, managedAgentRuntimeCatalog]);
+
+  const providerModelOptions = useMemo(
+    () =>
+      providers.flatMap((provider) =>
+        getAvailableModels(provider).map((modelName) => ({
+          key: `${provider.id}-${modelName}`,
+          value: modelName,
+          label: `${provider.name || provider.id} · ${modelName}`,
+        }))
+      ),
+    [getAvailableModels, providers]
+  );
+
+  const currentAgentRuntimeModelInfo = useMemo(
+    () => buildAgentRuntimeModelInfo(currentAgentRuntimeCatalog),
+    [currentAgentRuntimeCatalog]
+  );
+
+  const modelOptions = useMemo(() => {
+    if (editAgentRuntimeKey === 'aionrs') {
+      return providerModelOptions;
+    }
+    if (currentAgentRuntimeModelInfo && currentAgentRuntimeModelInfo.available_models.length > 0) {
+      return currentAgentRuntimeModelInfo.available_models.map((model) => ({
+        key: `${engineAgentId}-${model.id}`,
+        value: model.id,
+        label: model.label,
+        description: model.description,
+      }));
+    }
+    if (currentBackend && currentBackend.modelOptions.length > 0) {
+      return currentBackend.modelOptions.map((model) => ({
+        key: `${engineAgentId}-${model.value}`,
+        value: model.value,
+        label: model.label,
+        description: model.description,
+      }));
+    }
+    return [];
+  }, [currentAgentRuntimeModelInfo, currentBackend, editAgentRuntimeKey, engineAgentId, providerModelOptions]);
+
+  const permissionOptions = useMemo(
+    () =>
+      buildAgentRuntimeModeState(currentAgentRuntimeCatalog).options.map((option) => ({
+        value: option.value,
+        label: option.label,
+        description: option.description,
+      })),
+    [currentAgentRuntimeCatalog]
+  );
+
+  const thoughtLevelOption = useMemo(
+    () => buildAgentRuntimeThoughtLevelOption(currentAgentRuntimeCatalog),
+    [currentAgentRuntimeCatalog]
+  );
+  const thoughtLevelOptions = thoughtLevelOption?.options ?? [];
+
+  // Drop fixed values that disappeared after engine / provider catalog change.
+  useEffect(() => {
+    if (
+      defaultModelMode === 'fixed' &&
+      defaultModelValue &&
+      modelOptions.length > 0 &&
+      !modelOptions.some((option) => option.value === defaultModelValue)
+    ) {
+      setDefaultModelMode('auto');
+      setDefaultModelValue('');
+    }
+  }, [defaultModelMode, defaultModelValue, modelOptions]);
+
+  useEffect(() => {
+    if (
+      defaultPermissionMode === 'fixed' &&
+      defaultPermissionValue &&
+      permissionOptions.length > 0 &&
+      !permissionOptions.some((option) => option.value === defaultPermissionValue)
+    ) {
+      setDefaultPermissionMode('auto');
+      setDefaultPermissionValue('');
+    }
+  }, [defaultPermissionMode, defaultPermissionValue, permissionOptions]);
+
+  useEffect(() => {
+    if (
+      defaultThoughtLevelMode === 'fixed' &&
+      defaultThoughtLevelValue &&
+      thoughtLevelOptions.length > 0 &&
+      !thoughtLevelOptions.some((option) => option.value === defaultThoughtLevelValue)
+    ) {
+      setDefaultThoughtLevelMode('auto');
+      setDefaultThoughtLevelValue('');
+    }
+  }, [defaultThoughtLevelMode, defaultThoughtLevelValue, thoughtLevelOptions]);
 
   useEffect(() => {
     void (async () => {
@@ -118,6 +239,12 @@ const AgentCenterWizardPage: React.FC<{ mode: 'create' | 'edit' }> = ({ mode }) 
         setSelectedMcpIds(detail.assistant.defaults.mcps.value ?? []);
         setMcpPolicy(detail.meta.mcp_policy);
         setEngineAgentId(detail.assistant.engine.agent_id);
+        setDefaultModelMode(detail.assistant.defaults.model.mode === 'fixed' ? 'fixed' : 'auto');
+        setDefaultModelValue(detail.assistant.defaults.model.value || '');
+        setDefaultPermissionMode(detail.assistant.defaults.permission.mode === 'fixed' ? 'fixed' : 'auto');
+        setDefaultPermissionValue(detail.assistant.defaults.permission.value || '');
+        setDefaultThoughtLevelMode(detail.assistant.defaults.thought_level.mode === 'fixed' ? 'fixed' : 'auto');
+        setDefaultThoughtLevelValue(detail.assistant.defaults.thought_level.value || '');
         setStatus(detail.meta.status);
         setVersion(detail.meta.version);
       } catch (error) {
@@ -192,10 +319,49 @@ const AgentCenterWizardPage: React.FC<{ mode: 'create' | 'edit' }> = ({ mode }) 
     [visibility, mcpPolicy, skillRefs, selectedMcpIds]
   );
 
+  const buildAssistantDefaults = useCallback((): NonNullable<CreateAgentCenterRequest['defaults']> => {
+    return {
+      model: defaultModelMode === 'fixed' ? { mode: 'fixed', value: defaultModelValue.trim() } : { mode: 'auto' },
+      permission:
+        defaultPermissionMode === 'fixed' ? { mode: 'fixed', value: defaultPermissionValue.trim() } : { mode: 'auto' },
+      thought_level:
+        defaultThoughtLevelMode === 'fixed'
+          ? { mode: 'fixed', value: defaultThoughtLevelValue.trim() }
+          : { mode: 'auto' },
+      mcps: { mode: mcpPolicy === 'allowlist' ? 'fixed' : 'auto', value: selectedMcpIds },
+      skills: { mode: 'fixed', value: skillRefs.map((s) => s.skill_key) },
+    };
+  }, [
+    defaultModelMode,
+    defaultModelValue,
+    defaultPermissionMode,
+    defaultPermissionValue,
+    defaultThoughtLevelMode,
+    defaultThoughtLevelValue,
+    mcpPolicy,
+    selectedMcpIds,
+    skillRefs,
+  ]);
+
   const persist = async (opts: { publish: boolean; stay?: boolean }): Promise<string | null> => {
     if (!name.trim()) {
       message.warning('请填写名称');
       setStep(0);
+      return null;
+    }
+    if (defaultModelMode === 'fixed' && !defaultModelValue.trim()) {
+      message.warning('固定默认模型时请选择一个模型');
+      setStep(2);
+      return null;
+    }
+    if (defaultPermissionMode === 'fixed' && !defaultPermissionValue.trim()) {
+      message.warning('固定默认权限时请选择权限模式');
+      setStep(2);
+      return null;
+    }
+    if (defaultThoughtLevelMode === 'fixed' && !defaultThoughtLevelValue.trim()) {
+      message.warning('固定默认思考强度时请选择一个选项');
+      setStep(2);
       return null;
     }
     setSaving(true);
@@ -208,10 +374,7 @@ const AgentCenterWizardPage: React.FC<{ mode: 'create' | 'edit' }> = ({ mode }) 
           description: description.trim() || undefined,
           agent_id: engineAgentId.trim() || undefined,
           enabled_skills: skillRefs.map((s) => s.skill_key),
-          defaults: {
-            mcps: { mode: mcpPolicy === 'allowlist' ? 'fixed' : 'auto', value: selectedMcpIds },
-            skills: { mode: 'fixed', value: skillRefs.map((s) => s.skill_key) },
-          },
+          defaults: buildAssistantDefaults(),
           meta,
         };
         const created = await ipcBridge.agentCenter.create.invoke(body);
@@ -226,10 +389,7 @@ const AgentCenterWizardPage: React.FC<{ mode: 'create' | 'edit' }> = ({ mode }) 
           description: description.trim() || undefined,
           agent_id: engineAgentId.trim() || undefined,
           enabled_skills: skillRefs.map((s) => s.skill_key),
-          defaults: {
-            mcps: { mode: mcpPolicy === 'allowlist' ? 'fixed' : 'auto', value: selectedMcpIds },
-            skills: { mode: 'fixed', value: skillRefs.map((s) => s.skill_key) },
-          },
+          defaults: buildAssistantDefaults(),
           meta,
         });
         setStatus(updated.meta.status);
@@ -393,6 +553,25 @@ const AgentCenterWizardPage: React.FC<{ mode: 'create' | 'edit' }> = ({ mode }) 
               ))}
             </Select>
           </div>
+          <CapabilityDefaultsFields
+            localeKey={localeKey}
+            modelMode={defaultModelMode}
+            setModelMode={setDefaultModelMode}
+            modelValue={defaultModelValue}
+            setModelValue={setDefaultModelValue}
+            modelOptions={modelOptions}
+            permissionMode={defaultPermissionMode}
+            setPermissionMode={setDefaultPermissionMode}
+            permissionValue={defaultPermissionValue}
+            setPermissionValue={setDefaultPermissionValue}
+            permissionOptions={permissionOptions}
+            showThoughtLevel={thoughtLevelOption !== null}
+            thoughtLevelMode={defaultThoughtLevelMode}
+            setThoughtLevelMode={setDefaultThoughtLevelMode}
+            thoughtLevelValue={defaultThoughtLevelValue}
+            setThoughtLevelValue={setDefaultThoughtLevelValue}
+            thoughtLevelOptions={thoughtLevelOptions}
+          />
           <div className='flex flex-col gap-8px'>
             <Text bold>Skills</Text>
             <Text type='secondary'>从 Skills Hub（已安装）多选；展示名称。发布时默认 pin 版本。</Text>
@@ -436,8 +615,18 @@ const AgentCenterWizardPage: React.FC<{ mode: 'create' | 'edit' }> = ({ mode }) 
             <Text bold>{name || '（未命名）'}</Text>
             <Text type='secondary' className='text-12px'>
               {status === 'published' ? `已发布 v${version}` : '草稿'}
-              {` · 引擎 ${engineLabel}`} · Skills {skillRefs.length} · MCP{' '}
-              {mcpPolicy === 'allowlist' ? `${selectedMcpIds.length} 项白名单` : '继承用户'}
+              {` · 引擎 ${engineLabel}`}
+              {' · 模型 '}
+              {defaultModelMode === 'fixed' && defaultModelValue ? defaultModelValue : '自动'}
+              {' · 权限 '}
+              {defaultPermissionMode === 'fixed' && defaultPermissionValue ? defaultPermissionValue : '自动'}
+              {thoughtLevelOption
+                ? ` · 思考 ${
+                    defaultThoughtLevelMode === 'fixed' && defaultThoughtLevelValue ? defaultThoughtLevelValue : '自动'
+                  }`
+                : ''}
+              {' · Skills '}
+              {skillRefs.length} · MCP {mcpPolicy === 'allowlist' ? `${selectedMcpIds.length} 项白名单` : '继承用户'}
             </Text>
             {description ? <Text className='text-13px'>{description}</Text> : null}
             {instructions.trim() ? (

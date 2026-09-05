@@ -71,6 +71,7 @@ export interface CreateAgentCenterRequest {
   defaults?: {
     model?: { mode: string; value?: string };
     permission?: { mode: string; value?: string };
+    thought_level?: { mode: string; value?: string };
     skills?: { mode: string; value: string[] };
     mcps?: { mode: string; value: string[] };
   };
