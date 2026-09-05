@@ -21,6 +21,16 @@ import { describe, expect, it } from 'vitest';
 
 const repoRoot = resolve(__dirname, '../../..');
 
+function readOfficecliVersion(): string {
+  const pkg = JSON.parse(readFileSync(resolve(repoRoot, 'package.json'), 'utf8')) as {
+    officecliVersion?: string;
+  };
+  if (!pkg.officecliVersion) {
+    throw new Error('package.json missing officecliVersion');
+  }
+  return pkg.officecliVersion;
+}
+
 function readInstallerErrorDefinitions(): Array<{ defineName: string; code: string }> {
   const source = readFileSync(resolve(repoRoot, 'resources/windows/installer-errors-sentry.nsh'), 'utf8');
   return Array.from(source.matchAll(/!define\s+(CSBU_WORKMATE_E_[A-Z0-9_]+)\s+"(E\d{4})"/g), (match) => ({
@@ -415,7 +425,7 @@ childProcess.execSync = function mockedExecSync(command) {
           resource: 'officecli',
           platform: args.includes('--mac') ? 'darwin' : 'win32',
           arch: expectedArch,
-          version: 'v1.0.162',
+          version: readOfficecliVersion(),
         })
       );
     } finally {
