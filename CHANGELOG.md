@@ -1,5 +1,22 @@
 # Changelog
 
+## [2.2.10](https://github.com/suoak/AionUi/compare/v2.2.9...v2.2.10) (2026-09-05)
+
+### Features
+
+* **skill-evolution:** Phase 3 UI — gate score / settings / team ACL (#148)
+
+### 中文摘要
+
+- 技能进化：启发式门控分数与信号、门控设置（含自动应用中文警告）、经验库私有/团队筛选与团队徽章。
+- 桌面端后端组件升级到 v0.2.10（技能进化 Phase 3）。
+- 固定到 Core v0.2.10；不捆绑 KnowHub；经验库仍不注入日常对话。
+
+### Core ([v0.2.10](https://github.com/suoak/AionCore/releases/tag/v0.2.10))
+
+- Pin desktop to Core v0.2.10 (skill-evolution Phase 3 #116).
+
+
 ## [2.2.9](https://github.com/suoak/AionUi/compare/v2.2.8...v2.2.9) (2026-09-05)
 
 ### Desktop
