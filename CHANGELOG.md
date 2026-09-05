@@ -1,5 +1,39 @@
 # Changelog
 
+## [2.2.8](https://github.com/suoak/AionUi/compare/v2.2.7...v2.2.8) (2026-09-05)
+
+### Desktop
+
+#### Features
+
+- **agent-center:** 智能体中心 MVP UI + ChatGPT-style create→指令→能力→试跑→发布 workflow (#138–#139)
+- **agent-center:** Skills/MCP selectable capability pickers (#140)
+- **agent-center:** model / permission / thought defaults on 能力配置 (#141)
+- **agent-center:** ChatGPT-style conversation starters（推荐开场白）on 指令 step (#142)
+- **presentation:** pin OfficeCLI industry themes through **v1.0.164** (#136–#137)
+
+#### 内网更新说明
+
+<!-- internal-release-notes:start -->
+
+**由运营管理部提供**
+
+- 新增「智能体中心」：ChatGPT 风格创建→写指令→选能力→试跑→发布共享；支持对话开场白、Skills/MCP 白名单、模型/权限/思考默认值。
+- 桌面端后端组件升级到 v0.2.8（智能体中心 Core API、试跑 preview_mode、ACP/CLI 针脚）。
+- 文档工具保持 OfficeCLI v1.0.164（含行业主题包）。
+- 固定到 Core v0.2.8；OfficeCLI v1.0.164。不捆绑 KnowHub。
+
+<!-- internal-release-notes:end -->
+
+### Core ([v0.2.8](https://github.com/suoak/AionCore/releases/tag/v0.2.8))
+
+- Pin desktop to Core v0.2.8 (Agent Center #109/#110, ACP/CLI pins #108, industry theme skill docs #107).
+- **agent-center:** MVP model/API/routes + try-run `preview_mode`.
+- **acp,cli-version:** bump registry pins and verified CLI floors.
+- **skill:** industry theme pack ids + strips.
+
+---
+
 ## [2.2.7](https://github.com/suoak/AionUi/compare/v2.2.6...v2.2.7) (2026-09-04)
 
 ### Desktop
