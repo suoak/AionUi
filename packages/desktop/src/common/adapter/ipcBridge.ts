@@ -59,6 +59,13 @@ import type {
   UpdateAgentCenterRequest,
 } from '../types/agent/agentCenterTypes';
 import type {
+  ApproveSkillEvolutionResponse,
+  CreateSkillEvolutionProposalRequest,
+  ExperienceArticle,
+  ReviewSkillEvolutionRequest,
+  SkillEvolutionProposal,
+} from '../types/agent/skillEvolutionTypes';
+import type {
   EnsureConversationRuntimeResponse,
   GetConfigOptionsResponse,
   SetConfigOptionRequest,
@@ -391,6 +398,66 @@ export const agentCenter = {
     (p) => `/api/agent-center/agents/${encodeURIComponent(p.id)}/run`,
     () => ({})
   ),
+};
+
+// ---------------------------------------------------------------------------
+// Skill Evolution — /api/skill-evolution/* (CSBU WorkMate 技能进化)
+// ---------------------------------------------------------------------------
+
+export const skillEvolution = {
+  listProposals: httpGet<
+    SkillEvolutionProposal[],
+    { status?: string; assistant_id?: string; limit?: number } | undefined
+  >((p) => {
+    const params = new URLSearchParams();
+    if (p?.status) params.set('status', p.status);
+    if (p?.assistant_id) params.set('assistant_id', p.assistant_id);
+    if (p?.limit != null) params.set('limit', String(p.limit));
+    const qs = params.toString();
+    return `/api/skill-evolution/proposals${qs ? `?${qs}` : ''}`;
+  }),
+  getProposal: httpGet<SkillEvolutionProposal, { id: string }>(
+    (p) => `/api/skill-evolution/proposals/${encodeURIComponent(p.id)}`
+  ),
+  createProposal: httpPost<SkillEvolutionProposal, CreateSkillEvolutionProposalRequest>(
+    '/api/skill-evolution/proposals'
+  ),
+  submitProposal: httpPost<SkillEvolutionProposal, { id: string }>(
+    (p) => `/api/skill-evolution/proposals/${encodeURIComponent(p.id)}/submit`,
+    () => ({})
+  ),
+  approveProposal: httpPost<ApproveSkillEvolutionResponse, ReviewSkillEvolutionRequest & { id: string }>(
+    (p) => `/api/skill-evolution/proposals/${encodeURIComponent(p.id)}/approve`,
+    (p) => {
+      const { id: _id, ...body } = p;
+      return body;
+    }
+  ),
+  rejectProposal: httpPost<SkillEvolutionProposal, ReviewSkillEvolutionRequest & { id: string }>(
+    (p) => `/api/skill-evolution/proposals/${encodeURIComponent(p.id)}/reject`,
+    (p) => {
+      const { id: _id, ...body } = p;
+      return body;
+    }
+  ),
+  applyProposal: httpPost<ApproveSkillEvolutionResponse, { id: string }>(
+    (p) => `/api/skill-evolution/proposals/${encodeURIComponent(p.id)}/apply`,
+    () => ({})
+  ),
+  rollbackProposal: httpPost<SkillEvolutionProposal, ReviewSkillEvolutionRequest & { id: string }>(
+    (p) => `/api/skill-evolution/proposals/${encodeURIComponent(p.id)}/rollback`,
+    (p) => {
+      const { id: _id, ...body } = p;
+      return body;
+    }
+  ),
+  listExperience: httpGet<ExperienceArticle[], { assistant_id?: string; limit?: number } | undefined>((p) => {
+    const params = new URLSearchParams();
+    if (p?.assistant_id) params.set('assistant_id', p.assistant_id);
+    if (p?.limit != null) params.set('limit', String(p.limit));
+    const qs = params.toString();
+    return `/api/skill-evolution/experience${qs ? `?${qs}` : ''}`;
+  }),
 };
 
 // ---------------------------------------------------------------------------
