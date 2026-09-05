@@ -63,11 +63,14 @@ import type {
   ApplySkillEvolutionResponse,
   ApproveSkillEvolutionResponse,
   CreateSkillEvolutionProposalRequest,
+  CrossModelTransferNote,
   EvolveSkillEvolutionRequest,
   EvolveSkillEvolutionResponse,
   ExperienceArticle,
   ReviewSkillEvolutionRequest,
   SkillEvolutionProposal,
+  SkillEvolutionSettings,
+  UpdateSkillEvolutionSettingsRequest,
 } from '../types/agent/skillEvolutionTypes';
 import type {
   EnsureConversationRuntimeResponse,
@@ -475,13 +478,34 @@ export const skillEvolution = {
       return body;
     }
   ),
-  listExperience: httpGet<ExperienceArticle[], { assistant_id?: string; limit?: number } | undefined>((p) => {
+  listExperience: httpGet<
+    ExperienceArticle[],
+    { assistant_id?: string; visibility?: string; team_id?: string; limit?: number } | undefined
+  >((p) => {
     const params = new URLSearchParams();
     if (p?.assistant_id) params.set('assistant_id', p.assistant_id);
+    if (p?.visibility) params.set('visibility', p.visibility);
+    if (p?.team_id) params.set('team_id', p.team_id);
     if (p?.limit != null) params.set('limit', String(p.limit));
     const qs = params.toString();
     return `/api/skill-evolution/experience${qs ? `?${qs}` : ''}`;
   }),
+  createExperience: httpPost<
+    ExperienceArticle,
+    {
+      title: string;
+      body_md?: string;
+      kind?: string;
+      assistant_id?: string;
+      team_id?: string;
+      visibility?: string;
+      source_conversation_ids?: string[];
+      tags?: string[];
+    }
+  >('/api/skill-evolution/experience'),
+  getSettings: httpGet<SkillEvolutionSettings, void>('/api/skill-evolution/settings'),
+  updateSettings: httpPut<SkillEvolutionSettings, UpdateSkillEvolutionSettingsRequest>('/api/skill-evolution/settings'),
+  crossModelNotes: httpGet<CrossModelTransferNote[], void>('/api/skill-evolution/cross-model-notes'),
 };
 
 // ---------------------------------------------------------------------------

@@ -1,7 +1,7 @@
 import { Button, Input, Message, Select, Typography } from '@arco-design/web-react';
 import { ipcBridge } from '@/common';
 import type { TChatConversation } from '@/common/config/storage';
-import type { SkillEvolutionTrajectoryOverview } from '@/common/types/agent/skillEvolutionTypes';
+import type { ExperienceVisibility, SkillEvolutionTrajectoryOverview } from '@/common/types/agent/skillEvolutionTypes';
 import React, { useEffect, useMemo, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 
@@ -26,6 +26,8 @@ const SkillEvolutionCreatePage: React.FC = () => {
   const [evolving, setEvolving] = useState(false);
   const [overview, setOverview] = useState<SkillEvolutionTrajectoryOverview | null>(null);
   const [modelUsed, setModelUsed] = useState<string | null>(null);
+  const [visibility, setVisibility] = useState<ExperienceVisibility>('private');
+  const [teamId, setTeamId] = useState('');
   const [message, messageContext] = Message.useMessage({ maxCount: 5 });
 
   useEffect(() => {
@@ -94,6 +96,8 @@ const SkillEvolutionCreatePage: React.FC = () => {
         title: title.trim() || undefined,
         target_skill_key: skillKey.trim() || undefined,
         submit: false,
+        visibility,
+        team_id: visibility === 'team' ? teamId.trim() || undefined : undefined,
       });
       setTitle(res.proposal.title);
       setSummary(res.proposal.experience_summary);
@@ -102,7 +106,7 @@ const SkillEvolutionCreatePage: React.FC = () => {
       setOverview(res.trajectory_overview);
       setModelUsed(res.model_used ?? null);
       message.success(
-        `智能提炼完成${res.model_used ? `（模型 ${res.model_used}）` : ''}，经验库已写入 ${res.experience_articles.length} 篇，请编辑后创建/提交`
+        `智能提炼完成${res.model_used ? `（模型 ${res.model_used}）` : ''}，经验库已写入 ${res.experience_articles.length} 篇${res.gate_note ? `；${res.gate_note}` : ''}`
       );
       navigate(
         assistantId
@@ -137,6 +141,8 @@ const SkillEvolutionCreatePage: React.FC = () => {
         draft_skill_md: draftMd.trim() || undefined,
         auto_stub: !draftMd.trim(),
         submit: submitNow,
+        visibility,
+        team_id: visibility === 'team' ? teamId.trim() || undefined : undefined,
         action: 'create',
       });
       message.success(submitNow ? '提案已创建并提交审核' : '提案草稿已保存');
@@ -226,6 +232,30 @@ const SkillEvolutionCreatePage: React.FC = () => {
           <Text className='text-12px'>目标智能体 ID（可选，通过后可 pin）</Text>
           <Input className='mt-4px' value={assistantId} onChange={setAssistantId} placeholder='assistant id' />
         </div>
+        <div>
+          <Text className='text-12px'>经验可见性</Text>
+          <Select
+            className='mt-4px w-full'
+            value={visibility}
+            onChange={(v) => setVisibility(v as ExperienceVisibility)}
+            options={[
+              { value: 'private', label: '私有（仅自己）' },
+              { value: 'team', label: '团队（成员可读）' },
+              { value: 'owner_editors', label: '仅所有者/编辑' },
+            ]}
+          />
+        </div>
+        {visibility === 'team' ? (
+          <div>
+            <Text className='text-12px'>团队 ID *</Text>
+            <Input
+              className='mt-4px'
+              value={teamId}
+              onChange={setTeamId}
+              placeholder='team id（visibility=team 时必填）'
+            />
+          </div>
+        ) : null}
         <div>
           <Text className='text-12px'>建议 skill key</Text>
           <Input className='mt-4px' value={skillKey} onChange={setSkillKey} placeholder='workmate-weekly-report' />
