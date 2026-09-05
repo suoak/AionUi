@@ -1,7 +1,7 @@
 import { Button, Message, Tag, Typography } from '@arco-design/web-react';
 import { ipcBridge } from '@/common';
 import type { AgentCenterDetail, AgentVisibility } from '@/common/types/agent/agentCenterTypes';
-import type { SkillEvolutionProposal } from '@/common/types/agent/skillEvolutionTypes';
+import type { ExperienceArticle, SkillEvolutionProposal } from '@/common/types/agent/skillEvolutionTypes';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
@@ -49,8 +49,12 @@ const AgentCenterDetailPage: React.FC = () => {
     try {
       const [agent, props, experience] = await Promise.all([
         ipcBridge.agentCenter.get.invoke({ id }),
-        ipcBridge.skillEvolution.listProposals.invoke({ assistant_id: id, limit: 20 }).catch(() => []),
-        ipcBridge.skillEvolution.listExperience.invoke({ assistant_id: id, limit: 100 }).catch(() => []),
+        ipcBridge.skillEvolution.listProposals
+          .invoke({ assistant_id: id, limit: 20 })
+          .catch((): SkillEvolutionProposal[] => []),
+        ipcBridge.skillEvolution.listExperience
+          .invoke({ assistant_id: id, limit: 100 })
+          .catch((): ExperienceArticle[] => []),
       ]);
       setDetail(agent);
       setInstructions(agent.assistant.rules?.content ?? '');
