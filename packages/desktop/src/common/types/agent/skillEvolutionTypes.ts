@@ -6,6 +6,17 @@ export type SkillEvolutionStatus = 'draft' | 'pending_review' | 'approved' | 're
 
 export type SkillEvolutionAction = 'create' | 'patch';
 
+export type SkillEvolutionGateMode = 'human_only' | 'heuristic_assist' | 'auto_apply_on_pass';
+
+export type ExperienceVisibility = 'private' | 'team' | 'owner_editors';
+
+export interface SkillEvolutionGateSignal {
+  id: string;
+  passed: boolean;
+  weight: number;
+  detail: string;
+}
+
 export interface SkillEvolutionProposal {
   id: string;
   assistant_id?: string;
@@ -23,6 +34,13 @@ export interface SkillEvolutionProposal {
   reviewed_at?: number;
   applied_skill_key?: string;
   applied_skill_version?: string;
+  team_id?: string;
+  visibility?: string;
+  gate_mode?: string;
+  gate_score?: number;
+  gate_signals?: SkillEvolutionGateSignal[];
+  gate_recommendation?: string;
+  try_run_ok?: boolean;
   created_at: number;
   updated_at: number;
 }
@@ -38,6 +56,9 @@ export interface CreateSkillEvolutionProposalRequest {
   draft_diff_summary?: string;
   auto_stub?: boolean;
   submit?: boolean;
+  team_id?: string;
+  visibility?: ExperienceVisibility;
+  try_run_ok?: boolean;
 }
 
 export interface ReviewSkillEvolutionRequest {
@@ -64,6 +85,10 @@ export interface EvolveSkillEvolutionRequest {
   action?: SkillEvolutionAction;
   submit?: boolean;
   model?: string;
+  team_id?: string;
+  visibility?: ExperienceVisibility;
+  gate_mode?: SkillEvolutionGateMode;
+  try_run_ok?: boolean;
 }
 
 export interface SkillEvolutionTrajectoryOverview {
@@ -82,6 +107,7 @@ export interface EvolveSkillEvolutionResponse {
   experience_articles: ExperienceArticle[];
   trajectory_overview: SkillEvolutionTrajectoryOverview;
   model_used?: string;
+  gate_note?: string;
 }
 
 export interface ApplySkillEvolutionRequest {
@@ -108,12 +134,34 @@ export interface ApplySkillEvolutionResponse {
 export interface ExperienceArticle {
   id: string;
   assistant_id?: string;
+  team_id?: string;
   kind: string;
   title: string;
   body_md: string;
   source_conversation_ids: string[];
   tags: string[];
   status: string;
+  visibility?: string;
   created_at: number;
   updated_at: number;
+}
+
+export interface SkillEvolutionSettings {
+  gate_mode: SkillEvolutionGateMode | string;
+  assist_threshold: number;
+  auto_threshold: number;
+  default_experience_visibility: ExperienceVisibility | string;
+  updated_at?: number;
+}
+
+export interface UpdateSkillEvolutionSettingsRequest {
+  gate_mode?: SkillEvolutionGateMode;
+  assist_threshold?: number;
+  auto_threshold?: number;
+  default_experience_visibility?: ExperienceVisibility;
+}
+
+export interface CrossModelTransferNote {
+  title: string;
+  body_md: string;
 }

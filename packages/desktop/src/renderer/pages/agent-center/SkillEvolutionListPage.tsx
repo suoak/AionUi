@@ -1,8 +1,10 @@
-import { Button, Input, Message, Tabs, Typography } from '@arco-design/web-react';
+import { Button, Input, Message, Select, Tabs, Typography } from '@arco-design/web-react';
 import { ipcBridge } from '@/common';
 import type {
   ExperienceArticle,
+  SkillEvolutionGateMode,
   SkillEvolutionProposal,
+  SkillEvolutionSettings,
   SkillEvolutionStatus,
 } from '@/common/types/agent/skillEvolutionTypes';
 import React, { useCallback, useEffect, useState } from 'react';
@@ -29,7 +31,19 @@ const kindLabel: Record<string, string> = {
   general: '通用',
 };
 
-type Filter = 'all' | 'pending_review' | 'draft' | 'approved' | 'applied' | 'rejected' | 'experience';
+const visibilityLabel: Record<string, string> = {
+  private: '私有',
+  team: '团队',
+  owner_editors: '仅所有者/编辑',
+};
+
+const gateModeLabel: Record<string, string> = {
+  human_only: '仅人工审核（默认）',
+  heuristic_assist: '启发式辅助提交',
+  auto_apply_on_pass: '高分自动应用（危险）',
+};
+
+type Filter = 'all' | 'pending_review' | 'draft' | 'approved' | 'applied' | 'rejected' | 'experience' | 'settings';
 
 const SkillEvolutionListPage: React.FC = () => {
   const navigate = useNavigate();
@@ -39,6 +53,7 @@ const SkillEvolutionListPage: React.FC = () => {
   const [experienceCount, setExperienceCount] = useState(0);
   const [items, setItems] = useState<SkillEvolutionProposal[]>([]);
   const [experience, setExperience] = useState<ExperienceArticle[]>([]);
+  const [visibilityFilter, setVisibilityFilter] = useState<string>('all');
   const [loading, setLoading] = useState(false);
   const [busyId, setBusyId] = useState<string | null>(null);
   const [selected, setSelected] = useState<SkillEvolutionProposal | null>(null);
@@ -46,6 +61,9 @@ const SkillEvolutionListPage: React.FC = () => {
   const [comment, setComment] = useState('');
   const [exportPreview, setExportPreview] = useState<string | null>(null);
   const [applyPaths, setApplyPaths] = useState<string | null>(null);
+  const [settings, setSettings] = useState<SkillEvolutionSettings | null>(null);
+  const [settingsBusy, setSettingsBusy] = useState(false);
+  const [crossNotes, setCrossNotes] = useState<{ title: string; body_md: string }[]>([]);
   const [message, messageContext] = Message.useMessage({ maxCount: 5 });
 
   const load = useCallback(async () => {
@@ -54,11 +72,19 @@ const SkillEvolutionListPage: React.FC = () => {
       const aid = assistantFilter || undefined;
       const exp = await ipcBridge.skillEvolution.listExperience.invoke({
         assistant_id: aid,
+        visibility: visibilityFilter === 'all' ? undefined : visibilityFilter,
         limit: 100,
       });
       setExperienceCount(exp.length);
       if (filter === 'experience') {
         setExperience(exp);
+      } else if (filter === 'settings') {
+        const [s, notes] = await Promise.all([
+          ipcBridge.skillEvolution.getSettings.invoke(),
+          ipcBridge.skillEvolution.crossModelNotes.invoke().catch(() => []),
+        ]);
+        setSettings(s);
+        setCrossNotes(notes);
       } else {
         const list = await ipcBridge.skillEvolution.listProposals.invoke({
           status: filter === 'all' ? undefined : filter,
@@ -74,7 +100,7 @@ const SkillEvolutionListPage: React.FC = () => {
     } finally {
       setLoading(false);
     }
-  }, [filter, assistantFilter, message]);
+  }, [filter, assistantFilter, visibilityFilter, message]);
 
   useEffect(() => {
     void load();
@@ -91,6 +117,26 @@ const SkillEvolutionListPage: React.FC = () => {
     } catch (error) {
       console.error(error);
       message.error('加载提案详情失败');
+    }
+  };
+
+  const saveSettings = async (patch: Partial<SkillEvolutionSettings>) => {
+    setSettingsBusy(true);
+    try {
+      const next = await ipcBridge.skillEvolution.updateSettings.invoke({
+        gate_mode: (patch.gate_mode ?? settings?.gate_mode) as SkillEvolutionGateMode | undefined,
+        assist_threshold: patch.assist_threshold ?? settings?.assist_threshold,
+        auto_threshold: patch.auto_threshold ?? settings?.auto_threshold,
+        default_experience_visibility: (patch.default_experience_visibility ??
+          settings?.default_experience_visibility) as 'private' | 'team' | 'owner_editors' | undefined,
+      });
+      setSettings(next);
+      message.success('门控设置已保存');
+    } catch (error) {
+      console.error(error);
+      message.error(error instanceof Error ? error.message : '保存设置失败');
+    } finally {
+      setSettingsBusy(false);
     }
   };
 
@@ -182,7 +228,9 @@ const SkillEvolutionListPage: React.FC = () => {
         const res = await ipcBridge.skillEvolution.evolveProposal.invoke({ id, submit: false });
         setSelected(res.proposal);
         setExportPreview(res.proposal.draft_skill_md);
-        message.success(`已重新智能提炼${res.model_used ? `（${res.model_used}）` : ''}`);
+        message.success(
+          `已重新智能提炼${res.model_used ? `（${res.model_used}）` : ''}${res.gate_note ? ` · ${res.gate_note}` : ''}`
+        );
       } else {
         await ipcBridge.skillEvolution.rollbackProposal.invoke({ id, comment: comment || undefined });
         message.success('已回滚技能指针（经验库保留）');
@@ -210,6 +258,19 @@ const SkillEvolutionListPage: React.FC = () => {
     }
   };
 
+  const renderGateBadge = (item: SkillEvolutionProposal) => {
+    if (item.gate_score == null) return null;
+    const rec = item.gate_recommendation ?? 'needs_review';
+    const color =
+      rec === 'approve' ? 'var(--color-success-6)' : rec === 'reject' ? 'var(--color-danger-6)' : 'var(--color-warning-6)';
+    return (
+      <span className='text-12px ml-8px' style={{ color }}>
+        门控 {item.gate_score}
+        {rec === 'approve' ? ' · 建议通过' : rec === 'reject' ? ' · 建议拒绝' : ' · 需复核'}
+      </span>
+    );
+  };
+
   return (
     <div className='h-full overflow-auto p-24px'>
       {messageContext}
@@ -219,7 +280,7 @@ const SkillEvolutionListPage: React.FC = () => {
             技能进化
           </Title>
           <Text type='secondary'>
-            从会话经验提炼 SKILL.md 提案 → 人工审核 → 写入 Skills Hub /
+            从会话经验提炼 SKILL.md 提案 → 启发式门控（可配置）→ 人工审核 → 写入 Skills Hub /
             pin。经验库仅用于技能进化，不会注入日常对话；知识库产品保持独立。
             {experienceCount > 0 ? ` · 经验库 ${experienceCount} 篇` : ''}
           </Text>
@@ -269,15 +330,107 @@ const SkillEvolutionListPage: React.FC = () => {
         <TabPane key='applied' title='已应用' />
         <TabPane key='rejected' title='已拒绝' />
         <TabPane key='experience' title={`经验库${experienceCount ? ` (${experienceCount})` : ''}`} />
+        <TabPane key='settings' title='门控设置' />
         <TabPane key='all' title='全部提案' />
       </Tabs>
 
-      {filter === 'experience' ? (
+      {filter === 'settings' ? (
+        <div className='mt-16px max-w-720px flex flex-col gap-16px'>
+          <Text type='secondary' className='text-12px'>
+            默认「仅人工审核」。启发式分数仅作建议；「自动应用」需显式开启，高分通过后仍写 skill_impact，并可一键回滚。经验库永不注入日常对话。
+          </Text>
+          {!settings && loading ? <Text type='secondary'>加载中…</Text> : null}
+          {settings ? (
+            <>
+              <div>
+                <Text className='text-12px'>门控模式</Text>
+                <Select
+                  className='mt-4px w-full'
+                  value={settings.gate_mode}
+                  disabled={settingsBusy}
+                  onChange={(v) => {
+                    if (v === 'auto_apply_on_pass') {
+                      message.warning(
+                        '警告：自动应用会在高分时跳过人工点击通过/写入。请确认企业策略允许，并保留回滚习惯。'
+                      );
+                    }
+                    void saveSettings({ gate_mode: v });
+                  }}
+                  options={Object.entries(gateModeLabel).map(([value, label]) => ({ value, label }))}
+                />
+              </div>
+              <div className='flex gap-16px flex-wrap'>
+                <div>
+                  <Text className='text-12px'>辅助提交阈值（heuristic_assist）</Text>
+                  <Input
+                    className='mt-4px w-120px'
+                    type='number'
+                    value={String(settings.assist_threshold)}
+                    onBlur={(e) => {
+                      const n = Number(e.target.value);
+                      if (!Number.isNaN(n)) void saveSettings({ assist_threshold: n });
+                    }}
+                    onChange={(v) => setSettings({ ...settings, assist_threshold: Number(v) || 0 })}
+                  />
+                </div>
+                <div>
+                  <Text className='text-12px'>自动应用阈值（auto_apply_on_pass）</Text>
+                  <Input
+                    className='mt-4px w-120px'
+                    type='number'
+                    value={String(settings.auto_threshold)}
+                    onBlur={(e) => {
+                      const n = Number(e.target.value);
+                      if (!Number.isNaN(n)) void saveSettings({ auto_threshold: n });
+                    }}
+                    onChange={(v) => setSettings({ ...settings, auto_threshold: Number(v) || 0 })}
+                  />
+                </div>
+              </div>
+              <div>
+                <Text className='text-12px'>新建经验默认可见性</Text>
+                <Select
+                  className='mt-4px w-full'
+                  value={settings.default_experience_visibility}
+                  disabled={settingsBusy}
+                  onChange={(v) => void saveSettings({ default_experience_visibility: v })}
+                  options={Object.entries(visibilityLabel).map(([value, label]) => ({ value, label }))}
+                />
+              </div>
+            </>
+          ) : null}
+          {crossNotes.length ? (
+            <div className='mt-8px'>
+              <Title heading={6}>跨模型迁移提示（轻量）</Title>
+              {crossNotes.map((n) => (
+                <div key={n.title} className='mb-12px rounded-8px border border-[var(--color-border-2)] p-12px'>
+                  <div className='font-medium'>{n.title}</div>
+                  <pre className='mt-4px whitespace-pre-wrap text-12px'>{n.body_md}</pre>
+                </div>
+              ))}
+            </div>
+          ) : null}
+        </div>
+      ) : filter === 'experience' ? (
         <div className='mt-16px grid grid-cols-1 lg:grid-cols-2 gap-16px'>
           <div className='flex flex-col gap-12px'>
-            <Text type='secondary' className='text-12px'>
-              经验库仅用于技能进化，不会注入日常对话。
-            </Text>
+            <div className='flex items-center gap-8px'>
+              <Text type='secondary' className='text-12px'>
+                经验库仅用于技能进化，不会注入日常对话。
+              </Text>
+              <Select
+                size='small'
+                style={{ width: 140 }}
+                value={visibilityFilter}
+                onChange={setVisibilityFilter}
+                options={[
+                  { value: 'all', label: '全部可见性' },
+                  { value: 'private', label: '私有' },
+                  { value: 'team', label: '团队' },
+                  { value: 'owner_editors', label: '所有者/编辑' },
+                ]}
+              />
+            </div>
             {loading && <Text type='secondary'>加载中…</Text>}
             {!loading && experience.length === 0 && (
               <Text type='secondary'>暂无经验文章。智能提炼或拒绝提案后会出现。</Text>
@@ -291,9 +444,17 @@ const SkillEvolutionListPage: React.FC = () => {
                   setSelected(null);
                 }}
               >
-                <div className='font-medium truncate'>{item.title}</div>
+                <div className='font-medium truncate flex items-center gap-8px'>
+                  <span className='truncate'>{item.title}</span>
+                  {item.visibility === 'team' ? (
+                    <span className='text-11px px-6px py-1px rounded-4px bg-[var(--color-primary-light-1)] text-[var(--color-primary-6)] shrink-0'>
+                      团队
+                    </span>
+                  ) : null}
+                </div>
                 <Text type='secondary' className='text-12px'>
-                  {kindLabel[item.kind] ?? item.kind} · {item.id.slice(0, 10)}…
+                  {kindLabel[item.kind] ?? item.kind} · {visibilityLabel[item.visibility ?? 'private'] ?? item.visibility}{' '}
+                  · {item.id.slice(0, 10)}…
                   {item.source_conversation_ids[0] ? ` · 会话 ${item.source_conversation_ids[0].slice(0, 8)}…` : ''}
                 </Text>
               </div>
@@ -307,7 +468,10 @@ const SkillEvolutionListPage: React.FC = () => {
                 <div>
                   <div className='font-medium text-16px'>{selectedArticle.title}</div>
                   <Text type='secondary' className='text-12px'>
-                    {kindLabel[selectedArticle.kind] ?? selectedArticle.kind} · {selectedArticle.id}
+                    {kindLabel[selectedArticle.kind] ?? selectedArticle.kind} ·{' '}
+                    {visibilityLabel[selectedArticle.visibility ?? 'private'] ?? selectedArticle.visibility} ·{' '}
+                    {selectedArticle.id}
+                    {selectedArticle.team_id ? ` · team ${selectedArticle.team_id.slice(0, 8)}…` : ''}
                   </Text>
                 </div>
                 <div>
@@ -347,6 +511,7 @@ const SkillEvolutionListPage: React.FC = () => {
                   <Text type='secondary' className='text-12px'>
                     {statusLabel[item.status]} · {item.target_skill_key ?? '未命名 skill'}
                     {item.conversation_id ? ` · 会话 ${item.conversation_id.slice(0, 8)}…` : ''}
+                    {renderGateBadge(item)}
                   </Text>
                   <div className='mt-8px flex gap-8px flex-wrap' onClick={(e) => e.stopPropagation()}>
                     {item.status === 'draft' || item.status === 'pending_review' || item.status === 'rejected' ? (
@@ -409,8 +574,24 @@ const SkillEvolutionListPage: React.FC = () => {
                   <div className='font-medium text-16px'>{selected.title}</div>
                   <Text type='secondary' className='text-12px'>
                     {statusLabel[selected.status]} · {selected.id}
+                    {renderGateBadge(selected)}
                   </Text>
                 </div>
+                {selected.gate_signals && selected.gate_signals.length ? (
+                  <div>
+                    <Text className='text-12px'>启发式门控信号</Text>
+                    <ul className='mt-4px text-12px list-disc pl-18px'>
+                      {selected.gate_signals.map((s) => (
+                        <li key={s.id} style={{ color: s.passed ? 'inherit' : 'var(--color-danger-6)' }}>
+                          {s.passed ? '✓' : '✗'} {s.detail}（权重 {s.weight}）
+                        </li>
+                      ))}
+                    </ul>
+                    <Text type='secondary' className='text-11px'>
+                      模式：{gateModeLabel[selected.gate_mode ?? 'human_only'] ?? selected.gate_mode}
+                    </Text>
+                  </div>
+                ) : null}
                 <div>
                   <Text className='text-12px'>经验摘要</Text>
                   <pre className='mt-4px whitespace-pre-wrap text-13px bg-[var(--color-fill-1)] p-12px rounded-6px max-h-160px overflow-auto'>
