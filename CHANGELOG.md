@@ -1,5 +1,36 @@
 # Changelog
 
+## [2.2.9](https://github.com/suoak/AionUi/compare/v2.2.8...v2.2.9) (2026-09-05)
+
+### Desktop
+
+#### Features
+
+- **agent-center:** ChatGPT-style detail hub + try→improve→publish loop (#146)
+- **skill-evolution:** Phase 2 UI — 智能提炼 / 经验库 / apply (#145)
+- **skill-evolution:** MVP UI 提案审核 + 从会话提炼 (#144)
+- **skill-evolution:** assistant 筛选、拒绝后再提炼、apply 下一步 toast（随 #146）
+
+#### 内网更新说明
+
+<!-- internal-release-notes:start -->
+
+**由运营管理部提供**
+
+- 智能体中心：详情页改进闭环（根据试跑改进指令 / 从会话提炼技能 / 重新发布）；向导进度与发布 pin 摘要更清晰。
+- 技能进化：从会话智能提炼 SKILL.md → 人审 → 写入 Skills Hub / pin；经验库越用越丰富（不注入日常对话）。
+- 桌面端后端组件升级到 v0.2.9（技能进化 MVP+P2+质量环）。
+- 固定到 Core v0.2.9；OfficeCLI v1.0.164。不捆绑 KnowHub。
+
+<!-- internal-release-notes:end -->
+
+### Core ([v0.2.9](https://github.com/suoak/AionCore/releases/tag/v0.2.9))
+
+- Pin desktop to Core v0.2.9 (skill-evolution #112/#113/#114).
+- **skill-evolution:** schema/API, LLM evolve + apply/pin, prior rejected notes on re-evolve.
+
+---
+
 ## [2.2.8](https://github.com/suoak/AionUi/compare/v2.2.7...v2.2.8) (2026-09-05)
 
 ### Desktop
