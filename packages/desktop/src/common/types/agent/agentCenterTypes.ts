@@ -2,13 +2,13 @@
  * Mirror of aionui-api-types/src/agent_center.rs (CSBU WorkMate 智能体中心).
  */
 
-import type { Assistant, AssistantDetail } from "./assistantTypes";
+import type { Assistant, AssistantDetail } from './assistantTypes';
 
-export type AgentVisibility = "private" | "team" | "enterprise";
-export type AgentPublishStatus = "draft" | "published" | "archived";
-export type AgentMcpPolicy = "allowlist" | "inherit_user_enabled";
-export type SkillVersionPolicy = "pin" | "latest";
-export type AgentAclRole = "owner" | "editor" | "user";
+export type AgentVisibility = 'private' | 'team' | 'enterprise';
+export type AgentPublishStatus = 'draft' | 'published' | 'archived';
+export type AgentMcpPolicy = 'allowlist' | 'inherit_user_enabled';
+export type SkillVersionPolicy = 'pin' | 'latest';
+export type AgentAclRole = 'owner' | 'editor' | 'user';
 
 export interface AgentSkillRef {
   skill_key: string;
@@ -82,7 +82,7 @@ export interface UpdateAgentCenterRequest {
   description?: string;
   agent_id?: string;
   enabled_skills?: string[];
-  defaults?: CreateAgentCenterRequest["defaults"];
+  defaults?: CreateAgentCenterRequest['defaults'];
   meta?: AgentCenterMetaPatch;
 }
 
@@ -99,7 +99,7 @@ export interface AgentCenterRevision {
   created_at: number;
 }
 
-export type AgentCenterPreviewMode = "draft" | "published";
+export type AgentCenterPreviewMode = 'draft' | 'published';
 
 export interface AgentCenterRunPlan {
   assistant_id: string;
