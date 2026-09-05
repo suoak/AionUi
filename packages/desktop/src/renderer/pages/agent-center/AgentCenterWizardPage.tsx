@@ -20,7 +20,8 @@ import {
   buildAgentRuntimeModelInfo,
   buildAgentRuntimeThoughtLevelOption,
 } from '@renderer/utils/model/agentRuntimeCatalog';
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { formatAgentCenterError } from './agentCenterErrors';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import CapabilityDefaultsFields from './CapabilityDefaultsFields';
@@ -54,6 +55,8 @@ const AgentCenterWizardPage: React.FC<{ mode: 'create' | 'edit' }> = ({ mode }) 
   const { i18n } = useTranslation();
   const localeKey = i18n.language;
   const [message, messageContext] = Message.useMessage({ maxCount: 5 });
+  const messageRef = useRef(message);
+  messageRef.current = message;
   const [step, setStep] = useState(0);
   const [saving, setSaving] = useState(false);
   const [trying, setTrying] = useState(false);
@@ -260,10 +263,10 @@ const AgentCenterWizardPage: React.FC<{ mode: 'create' | 'edit' }> = ({ mode }) 
         setVersion(detail.meta.version);
       } catch (error) {
         console.error(error);
-        message.error('加载智能体失败');
+        messageRef.current.error(formatAgentCenterError(error, '加载智能体失败'));
       }
     })();
-  }, [mode, id, message]);
+  }, [mode, id]);
 
   const skillRefs = useMemo(
     () => selectedSkillKeys.map((skill_key) => ({ skill_key, version_policy: 'pin' as const })),
@@ -356,22 +359,22 @@ const AgentCenterWizardPage: React.FC<{ mode: 'create' | 'edit' }> = ({ mode }) 
 
   const persist = async (opts: { publish: boolean; stay?: boolean }): Promise<string | null> => {
     if (!name.trim()) {
-      message.warning('请填写名称');
+      messageRef.current.warning('请填写名称');
       setStep(0);
       return null;
     }
     if (defaultModelMode === 'fixed' && !defaultModelValue.trim()) {
-      message.warning('固定默认模型时请选择一个模型');
+      messageRef.current.warning('固定默认模型时请选择一个模型');
       setStep(2);
       return null;
     }
     if (defaultPermissionMode === 'fixed' && !defaultPermissionValue.trim()) {
-      message.warning('固定默认权限时请选择权限模式');
+      messageRef.current.warning('固定默认权限时请选择权限模式');
       setStep(2);
       return null;
     }
     if (defaultThoughtLevelMode === 'fixed' && !defaultThoughtLevelValue.trim()) {
-      message.warning('固定默认思考强度时请选择一个选项');
+      messageRef.current.warning('固定默认思考强度时请选择一个选项');
       setStep(2);
       return null;
     }
@@ -421,9 +424,9 @@ const AgentCenterWizardPage: React.FC<{ mode: 'create' | 'edit' }> = ({ mode }) 
         });
         setStatus(published.meta.status);
         setVersion(published.meta.version);
-        message.success(`已发布 v${published.meta.version}`);
+        messageRef.current.success(`已发布 v${published.meta.version}`);
       } else if (!opts.stay) {
-        message.success('已保存草稿');
+        messageRef.current.success('已保存草稿');
       }
 
       if (!opts.stay) {
@@ -432,7 +435,7 @@ const AgentCenterWizardPage: React.FC<{ mode: 'create' | 'edit' }> = ({ mode }) 
       return currentId;
     } catch (error) {
       console.error(error);
-      message.error(opts.publish ? '发布失败' : '保存失败');
+      messageRef.current.error(formatAgentCenterError(error, opts.publish ? '发布失败' : '保存失败'));
       return null;
     } finally {
       setSaving(false);
@@ -447,7 +450,7 @@ const AgentCenterWizardPage: React.FC<{ mode: 'create' | 'edit' }> = ({ mode }) 
       const plan = await ipcBridge.agentCenter.run.invoke({ id: currentId });
       const previewHint =
         plan.preview_mode === 'published' ? `已发布 v${plan.revision || version}` : '草稿试跑（当前配置）';
-      message.success(`正在打开对话 · ${previewHint}`);
+      messageRef.current.success(`正在打开对话 · ${previewHint}`);
       navigate('/guid', {
         state: {
           selectedAssistantId: plan.assistant_id,
@@ -459,7 +462,7 @@ const AgentCenterWizardPage: React.FC<{ mode: 'create' | 'edit' }> = ({ mode }) 
       });
     } catch (error) {
       console.error(error);
-      message.error('试跑失败，请先检查配置');
+      messageRef.current.error(formatAgentCenterError(error, '试跑失败，请先检查配置'));
     } finally {
       setTrying(false);
     }
