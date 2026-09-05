@@ -286,6 +286,11 @@ const ConversationRow: React.FC<ConversationRowProps> = (props) => {
                       onCreateCronTask(conversation);
                       return;
                     }
+                    if (key === 'evolveSkill') {
+                      // HashRouter: avoid useNavigate so unit tests without Router still render.
+                      window.location.hash = `#/agent-center/skill-evolution/new?conversation_id=${encodeURIComponent(conversation.id)}`;
+                      return;
+                    }
                     if (key === 'export') {
                       onExport?.(conversation);
                       return;
@@ -319,6 +324,12 @@ const ConversationRow: React.FC<ConversationRowProps> = (props) => {
                     <div className='flex items-center gap-8px'>
                       <Timer theme='outline' size='14' />
                       <span>{t('conversation.history.createCronTask')}</span>
+                    </div>
+                  </Menu.Item>
+                  <Menu.Item key='evolveSkill'>
+                    <div className='flex items-center gap-8px'>
+                      <Robot theme='outline' size='14' />
+                      <span>提炼为技能</span>
                     </div>
                   </Menu.Item>
                   {onExport && (
