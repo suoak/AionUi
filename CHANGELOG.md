@@ -17,6 +17,19 @@
 - 桌面端后端组件升级到 v0.2.10（技能进化 Phase 3）。
 - 固定到 Core v0.2.10；不捆绑 KnowHub；经验库仍不注入日常对话。
 
+#### 内网更新说明
+
+<!-- internal-release-notes:start -->
+
+**由运营管理部提供**
+
+- 修复智能体中心：列表与详情不再长时间「加载中」后失败；可查看原因并重试。
+- 技能进化：启发式门控分数与信号、门控设置（自动应用有明确中文提示）、经验库支持私有/团队可见。
+- 桌面端后端组件升级到 v0.2.10（技能进化 Phase 3）。
+- 固定到 Core v0.2.10。不捆绑知识库产品；经验库不注入日常对话。
+
+<!-- internal-release-notes:end -->
+
 ### Core ([v0.2.10](https://github.com/suoak/AionCore/releases/tag/v0.2.10))
 
 - Pin desktop to Core v0.2.10 (skill-evolution Phase 3 #116).
