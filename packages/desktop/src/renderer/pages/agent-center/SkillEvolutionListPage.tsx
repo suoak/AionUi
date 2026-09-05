@@ -7,7 +7,8 @@ import type {
   SkillEvolutionSettings,
   SkillEvolutionStatus,
 } from '@/common/types/agent/skillEvolutionTypes';
-import React, { useCallback, useEffect, useState } from 'react';
+import { formatAgentCenterError } from './agentCenterErrors';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 
 const { Title, Text } = Typography;
@@ -65,6 +66,8 @@ const SkillEvolutionListPage: React.FC = () => {
   const [settingsBusy, setSettingsBusy] = useState(false);
   const [crossNotes, setCrossNotes] = useState<{ title: string; body_md: string }[]>([]);
   const [message, messageContext] = Message.useMessage({ maxCount: 5 });
+  const messageRef = useRef(message);
+  messageRef.current = message;
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -95,12 +98,12 @@ const SkillEvolutionListPage: React.FC = () => {
       }
     } catch (error) {
       console.error(error);
-      const msg = error instanceof Error ? error.message : '加载失败（需 Core 含技能进化 API）';
-      message.error(msg);
+      const msg = formatAgentCenterError(error, '加载失败（技能进化为独立模块，需 Core 含技能进化 API）');
+      messageRef.current.error(msg);
     } finally {
       setLoading(false);
     }
-  }, [filter, assistantFilter, visibilityFilter, message]);
+  }, [filter, assistantFilter, visibilityFilter]);
 
   useEffect(() => {
     void load();
@@ -116,7 +119,7 @@ const SkillEvolutionListPage: React.FC = () => {
       setComment('');
     } catch (error) {
       console.error(error);
-      message.error('加载提案详情失败');
+      messageRef.current.error('加载提案详情失败');
     }
   };
 
@@ -131,10 +134,10 @@ const SkillEvolutionListPage: React.FC = () => {
           settings?.default_experience_visibility) as 'private' | 'team' | 'owner_editors' | undefined,
       });
       setSettings(next);
-      message.success('门控设置已保存');
+      messageRef.current.success('门控设置已保存');
     } catch (error) {
       console.error(error);
-      message.error(error instanceof Error ? error.message : '保存设置失败');
+      messageRef.current.error(formatAgentCenterError(error, '保存设置失败'));
     } finally {
       setSettingsBusy(false);
     }
@@ -145,14 +148,14 @@ const SkillEvolutionListPage: React.FC = () => {
     try {
       if (action === 'submit') {
         await ipcBridge.skillEvolution.submitProposal.invoke({ id });
-        message.success('已提交审核');
+        messageRef.current.success('已提交审核');
       } else if (action === 'approve') {
         const res = await ipcBridge.skillEvolution.approveProposal.invoke({ id, comment: comment || undefined });
         setExportPreview(res.export.skill_md);
-        message.success(`已通过，可应用到 ${res.export.suggested_path}`);
+        messageRef.current.success(`已通过，可应用到 ${res.export.suggested_path}`);
       } else if (action === 'reject') {
         await ipcBridge.skillEvolution.rejectProposal.invoke({ id, comment: comment || undefined });
-        message.success('已拒绝，经验库已记录');
+        messageRef.current.success('已拒绝，经验库已记录');
       } else if (action === 'apply') {
         const res = await ipcBridge.skillEvolution.applyProposal.invoke({
           id,
@@ -167,7 +170,7 @@ const SkillEvolutionListPage: React.FC = () => {
         ].filter(Boolean);
         setApplyPaths(parts.join(' · ') || res.export.suggested_path);
         const aid = res.proposal.assistant_id;
-        message.success({
+        messageRef.current.success({
           content: (
             <span>
               {parts.length ? `已写入并应用：${parts.join('；')}` : '已标记应用'}。下一步：
@@ -228,12 +231,12 @@ const SkillEvolutionListPage: React.FC = () => {
         const res = await ipcBridge.skillEvolution.evolveProposal.invoke({ id, submit: false });
         setSelected(res.proposal);
         setExportPreview(res.proposal.draft_skill_md);
-        message.success(
+        messageRef.current.success(
           `已重新智能提炼${res.model_used ? `（${res.model_used}）` : ''}${res.gate_note ? ` · ${res.gate_note}` : ''}`
         );
       } else {
         await ipcBridge.skillEvolution.rollbackProposal.invoke({ id, comment: comment || undefined });
-        message.success('已回滚技能指针（经验库保留）');
+        messageRef.current.success('已回滚技能指针（经验库保留）');
       }
       await load();
       if (action !== 'evolve') {
@@ -242,7 +245,7 @@ const SkillEvolutionListPage: React.FC = () => {
     } catch (error) {
       console.error(error);
       const msg = error instanceof Error ? error.message : '操作失败';
-      message.error(msg);
+      messageRef.current.error(msg);
     } finally {
       setBusyId(null);
     }
@@ -252,9 +255,9 @@ const SkillEvolutionListPage: React.FC = () => {
     if (!exportPreview) return;
     try {
       await navigator.clipboard.writeText(exportPreview);
-      message.success('SKILL.md 已复制到剪贴板');
+      messageRef.current.success('SKILL.md 已复制到剪贴板');
     } catch {
-      message.error('复制失败');
+      messageRef.current.error('复制失败');
     }
   };
 
@@ -355,7 +358,7 @@ const SkillEvolutionListPage: React.FC = () => {
                   disabled={settingsBusy}
                   onChange={(v) => {
                     if (v === 'auto_apply_on_pass') {
-                      message.warning(
+                      messageRef.current.warning(
                         '警告：自动应用会在高分时跳过人工点击通过/写入。请确认企业策略允许，并保留回滚习惯。'
                       );
                     }

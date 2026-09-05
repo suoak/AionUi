@@ -2,8 +2,9 @@ import { Button, Message, Tag, Typography } from '@arco-design/web-react';
 import { ipcBridge } from '@/common';
 import type { AgentCenterDetail, AgentVisibility } from '@/common/types/agent/agentCenterTypes';
 import type { ExperienceArticle, SkillEvolutionProposal } from '@/common/types/agent/skillEvolutionTypes';
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import { formatAgentCenterError } from './agentCenterErrors';
 
 const { Title, Text } = Typography;
 
@@ -36,16 +37,20 @@ const AgentCenterDetailPage: React.FC = () => {
   const { id = '' } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [message, messageContext] = Message.useMessage({ maxCount: 5 });
+  const messageRef = useRef(message);
+  messageRef.current = message;
   const [detail, setDetail] = useState<AgentCenterDetail | null>(null);
   const [instructions, setInstructions] = useState('');
   const [proposals, setProposals] = useState<SkillEvolutionProposal[]>([]);
   const [experienceCount, setExperienceCount] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
 
   const load = useCallback(async () => {
     if (!id) return;
     setLoading(true);
+    setLoadError(null);
     try {
       const [agent, props, experience] = await Promise.all([
         ipcBridge.agentCenter.get.invoke({ id }),
@@ -62,11 +67,14 @@ const AgentCenterDetailPage: React.FC = () => {
       setExperienceCount(experience.length);
     } catch (error) {
       console.error(error);
-      message.error('加载智能体详情失败');
+      const msg = formatAgentCenterError(error, '加载智能体详情失败');
+      setDetail(null);
+      setLoadError(msg);
+      messageRef.current.error(msg);
     } finally {
       setLoading(false);
     }
-  }, [id, message]);
+  }, [id]);
 
   useEffect(() => {
     void load();
@@ -102,7 +110,7 @@ const AgentCenterDetailPage: React.FC = () => {
       });
     } catch (error) {
       console.error(error);
-      message.error('准备试跑失败');
+      messageRef.current.error(formatAgentCenterError(error, '准备试跑失败'));
     } finally {
       setBusy(false);
     }
@@ -116,11 +124,11 @@ const AgentCenterDetailPage: React.FC = () => {
         id,
         pin_skills_on_publish: true,
       });
-      message.success(`已发布 v${published.meta.version}`);
+      messageRef.current.success(`已发布 v${published.meta.version}`);
       await load();
     } catch (error) {
       console.error(error);
-      message.error('发布失败');
+      messageRef.current.error(formatAgentCenterError(error, '发布失败'));
     } finally {
       setBusy(false);
     }
@@ -142,7 +150,15 @@ const AgentCenterDetailPage: React.FC = () => {
       </Button>
 
       {loading && <Text type='secondary'>加载中…</Text>}
-      {!loading && !detail && <Text type='secondary'>未找到智能体</Text>}
+      {!loading && loadError && (
+        <div className='mb-12px flex items-center justify-between gap-12px'>
+          <Text type='error'>{loadError}</Text>
+          <Button size='small' onClick={() => void load()}>
+            重试
+          </Button>
+        </div>
+      )}
+      {!loading && !loadError && !detail && <Text type='secondary'>未找到智能体</Text>}
 
       {detail ? (
         <>
