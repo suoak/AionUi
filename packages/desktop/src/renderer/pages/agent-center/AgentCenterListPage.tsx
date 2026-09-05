@@ -1,8 +1,9 @@
 import { Button, Message, Tabs, Typography } from '@arco-design/web-react';
 import { ipcBridge } from '@/common';
 import type { AgentCenterListItem, AgentVisibility } from '@/common/types/agent/agentCenterTypes';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { formatAgentCenterError } from './agentCenterErrors';
 
 const { Title, Text } = Typography;
 const TabPane = Tabs.TabPane;
@@ -26,21 +27,30 @@ const AgentCenterListPage: React.FC = () => {
   const [scope, setScope] = useState<Scope>('mine');
   const [items, setItems] = useState<AgentCenterListItem[]>([]);
   const [loading, setLoading] = useState(false);
+  const [loadError, setLoadError] = useState<string | null>(null);
   const [busyId, setBusyId] = useState<string | null>(null);
   const [message, messageContext] = Message.useMessage({ maxCount: 5 });
+  // Arco useMessage() returns a new API object each render — keep a ref so
+  // load() deps stay stable and we do not re-fetch in a loop.
+  const messageRef = useRef(message);
+  messageRef.current = message;
 
   const load = useCallback(async () => {
     setLoading(true);
+    setLoadError(null);
     try {
       const list = await ipcBridge.agentCenter.list.invoke({ scope });
-      setItems(list);
+      setItems(Array.isArray(list) ? list : []);
     } catch (error) {
       console.error(error);
-      message.error('加载智能体列表失败');
+      const msg = formatAgentCenterError(error, '加载智能体列表失败');
+      setLoadError(msg);
+      setItems([]);
+      messageRef.current.error(msg);
     } finally {
       setLoading(false);
     }
-  }, [scope, message]);
+  }, [scope]);
 
   useEffect(() => {
     void load();
@@ -60,7 +70,7 @@ const AgentCenterListPage: React.FC = () => {
       });
     } catch (error) {
       console.error(error);
-      message.error('准备试跑失败');
+      messageRef.current.error(formatAgentCenterError(error, '准备试跑失败'));
     } finally {
       setBusyId(null);
     }
@@ -73,11 +83,11 @@ const AgentCenterListPage: React.FC = () => {
         id,
         pin_skills_on_publish: true,
       });
-      message.success(`已发布 v${published.meta.version}`);
+      messageRef.current.success(`已发布 v${published.meta.version}`);
       await load();
     } catch (error) {
       console.error(error);
-      message.error('发布失败');
+      messageRef.current.error(formatAgentCenterError(error, '发布失败'));
     } finally {
       setBusyId(null);
     }
@@ -92,7 +102,8 @@ const AgentCenterListPage: React.FC = () => {
             智能体中心
           </Title>
           <Text type='secondary'>
-            创建 → 指令与个性 → 能力配置 → 试跑预览 → 发布与共享。知识库产品保持独立，不在此捆绑。
+            创建 → 指令与个性 → 能力配置 → 试跑预览 →
+            发布与共享。知识库产品保持独立，不在此捆绑。技能进化是独立模块，可从列表入口打开。
           </Text>
         </div>
         <div className='flex gap-8px'>
@@ -111,7 +122,17 @@ const AgentCenterListPage: React.FC = () => {
 
       <div className='mt-16px flex flex-col gap-12px'>
         {loading && <Text type='secondary'>加载中…</Text>}
-        {!loading && items.length === 0 && <Text type='secondary'>暂无智能体。点击「创建智能体」开始配置与试跑。</Text>}
+        {!loading && loadError && (
+          <div className='rounded-8px border border-[var(--color-danger-light-3)] bg-[var(--color-danger-light-1)] p-12px flex items-center justify-between gap-12px'>
+            <Text type='error'>{loadError}</Text>
+            <Button size='small' onClick={() => void load()}>
+              重试
+            </Button>
+          </div>
+        )}
+        {!loading && !loadError && items.length === 0 && (
+          <Text type='secondary'>暂无智能体。点击「创建智能体」开始配置与试跑。</Text>
+        )}
         {items.map((item) => {
           const id = item.assistant.id;
           const isDraft = item.meta.status === 'draft';
