@@ -156,10 +156,20 @@ const SkillEvolutionListPage: React.FC = () => {
                   ) : null}
                   {item.status === 'pending_review' || item.status === 'draft' ? (
                     <>
-                      <Button size='mini' type='primary' loading={busy} onClick={() => void runAction(item.id, 'approve')}>
+                      <Button
+                        size='mini'
+                        type='primary'
+                        loading={busy}
+                        onClick={() => void runAction(item.id, 'approve')}
+                      >
                         通过
                       </Button>
-                      <Button size='mini' status='danger' loading={busy} onClick={() => void runAction(item.id, 'reject')}>
+                      <Button
+                        size='mini'
+                        status='danger'
+                        loading={busy}
+                        onClick={() => void runAction(item.id, 'reject')}
+                      >
                         拒绝
                       </Button>
                     </>

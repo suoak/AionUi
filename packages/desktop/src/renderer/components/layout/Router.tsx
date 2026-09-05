@@ -115,10 +115,7 @@ const PanelRoute: React.FC<{ layout: React.ReactElement }> = ({ layout }) => {
           />
 
           <Route path='/agent-center/skill-evolution' element={withRouteFallback(SkillEvolutionListPage)} />
-          <Route
-            path='/agent-center/skill-evolution/new'
-            element={withRouteFallback(SkillEvolutionCreatePage)}
-          />
+          <Route path='/agent-center/skill-evolution/new' element={withRouteFallback(SkillEvolutionCreatePage)} />
           <Route
             path='/agent-center/:id/edit'
             element={

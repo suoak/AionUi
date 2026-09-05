@@ -2,13 +2,7 @@
  * Mirror of aionui-api-types/src/skill_evolution.rs (CSBU WorkMate 技能进化).
  */
 
-export type SkillEvolutionStatus =
-  | 'draft'
-  | 'pending_review'
-  | 'approved'
-  | 'rejected'
-  | 'applied'
-  | 'rolled_back';
+export type SkillEvolutionStatus = 'draft' | 'pending_review' | 'approved' | 'rejected' | 'applied' | 'rolled_back';
 
 export type SkillEvolutionAction = 'create' | 'patch';
 
