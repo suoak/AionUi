@@ -12,10 +12,11 @@ const SkillEvolutionCreatePage: React.FC = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const prefilledConversationId = searchParams.get('conversation_id') ?? '';
+  const prefilledAssistantId = searchParams.get('assistant_id') ?? '';
 
   const [conversations, setConversations] = useState<TChatConversation[]>([]);
   const [conversationId, setConversationId] = useState(prefilledConversationId);
-  const [assistantId, setAssistantId] = useState('');
+  const [assistantId, setAssistantId] = useState(prefilledAssistantId);
   const [title, setTitle] = useState('');
   const [summary, setSummary] = useState('');
   const [skillKey, setSkillKey] = useState('');
@@ -65,14 +66,20 @@ const SkillEvolutionCreatePage: React.FC = () => {
     })();
   }, [conversationId, conversations]);
 
-  const conversationOptions = useMemo(
-    () =>
-      conversations.map((c) => ({
-        label: `${c.name || '未命名'} (${c.id.slice(0, 8)}…)`,
-        value: c.id,
-      })),
-    [conversations]
-  );
+  const conversationOptions = useMemo(() => {
+    const filtered = assistantId
+      ? conversations.filter((c) => {
+          const aid =
+            (c as { assistant?: { id?: string } }).assistant?.id ||
+            (c as { extra?: { preset_assistant_id?: string } }).extra?.preset_assistant_id;
+          return !aid || aid === assistantId;
+        })
+      : conversations;
+    return filtered.map((c) => ({
+      label: `${c.name || '未命名'} (${c.id.slice(0, 8)}…)`,
+      value: c.id,
+    }));
+  }, [conversations, assistantId]);
 
   const handleEvolve = async () => {
     if (!conversationId.trim()) {
@@ -97,7 +104,12 @@ const SkillEvolutionCreatePage: React.FC = () => {
       message.success(
         `智能提炼完成${res.model_used ? `（模型 ${res.model_used}）` : ''}，经验库已写入 ${res.experience_articles.length} 篇，请编辑后创建/提交`
       );
-      navigate(`/agent-center/skill-evolution`, { state: { highlightId: res.proposal.id } });
+      navigate(
+        assistantId
+          ? `/agent-center/skill-evolution?assistant_id=${encodeURIComponent(assistantId)}`
+          : '/agent-center/skill-evolution',
+        { state: { highlightId: res.proposal.id } }
+      );
     } catch (error) {
       console.error(error);
       const msg = error instanceof Error ? error.message : '智能提炼失败';

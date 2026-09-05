@@ -11,6 +11,7 @@ const AgentSettings = React.lazy(() => import('@renderer/pages/settings/AgentSet
 const AgentRepairPage = React.lazy(() => import('@renderer/pages/settings/AgentSettings/AgentRepairPage'));
 const AssistantSettings = React.lazy(() => import('@renderer/pages/settings/AssistantSettings'));
 const AgentCenterListPage = React.lazy(() => import('@renderer/pages/agent-center/AgentCenterListPage'));
+const AgentCenterDetailPage = React.lazy(() => import('@renderer/pages/agent-center/AgentCenterDetailPage'));
 const AgentCenterWizardPage = React.lazy(() => import('@renderer/pages/agent-center/AgentCenterWizardPage'));
 const SkillEvolutionListPage = React.lazy(() => import('@renderer/pages/agent-center/SkillEvolutionListPage'));
 const SkillEvolutionCreatePage = React.lazy(() => import('@renderer/pages/agent-center/SkillEvolutionCreatePage'));
@@ -116,6 +117,7 @@ const PanelRoute: React.FC<{ layout: React.ReactElement }> = ({ layout }) => {
 
           <Route path='/agent-center/skill-evolution' element={withRouteFallback(SkillEvolutionListPage)} />
           <Route path='/agent-center/skill-evolution/new' element={withRouteFallback(SkillEvolutionCreatePage)} />
+          <Route path='/agent-center/:id' element={withRouteFallback(AgentCenterDetailPage)} />
           <Route
             path='/agent-center/:id/edit'
             element={

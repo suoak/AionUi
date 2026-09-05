@@ -121,11 +121,20 @@ const AgentCenterListPage: React.FC = () => {
               key={id}
               className='rounded-8px border border-[var(--color-border-2)] p-16px flex items-center justify-between gap-12px'
             >
-              <div className='min-w-0'>
+              <div
+                className='min-w-0 cursor-pointer'
+                onClick={() => navigate(`/agent-center/${id}`)}
+                role='button'
+                tabIndex={0}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') navigate(`/agent-center/${id}`);
+                }}
+              >
                 <div className='font-medium truncate'>{item.assistant.name}</div>
                 <Text type='secondary' className='text-12px'>
                   {visibilityLabel[item.meta.visibility]} · {statusLabel[item.meta.status] ?? item.meta.status}
                   {item.meta.version > 0 ? ` · v${item.meta.version}` : ' · 未发布'}
+                  {item.meta.skill_refs?.length ? ` · Skills ${item.meta.skill_refs.length}` : ''}
                 </Text>
                 {item.assistant.description ? (
                   <div className='text-13px mt-4px text-[var(--color-text-2)] line-clamp-2'>
@@ -136,6 +145,9 @@ const AgentCenterListPage: React.FC = () => {
               <div className='flex gap-8px shrink-0'>
                 <Button size='small' type='primary' loading={busy} onClick={() => void handleTryRun(id)}>
                   试跑
+                </Button>
+                <Button size='small' disabled={busy} onClick={() => navigate(`/agent-center/${id}`)}>
+                  详情
                 </Button>
                 <Button size='small' disabled={busy} onClick={() => navigate(`/agent-center/${id}/edit`)}>
                   编辑

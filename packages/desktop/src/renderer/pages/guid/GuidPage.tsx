@@ -49,6 +49,9 @@ type GuidNavigationState = {
   preservePrefillDraft?: boolean;
   focusPrefill?: boolean;
   workspace?: string;
+  agentCenterPreviewMode?: 'draft' | 'published';
+  agentCenterRunPlan?: unknown;
+  agentCenterReturnTo?: string;
   [key: string]: unknown;
 };
 
@@ -659,6 +662,40 @@ const GuidPage: React.FC = () => {
             <p className='text-2xl font-semibold mb-0 text-t-primary text-center'>{t('conversation.welcome.title')}</p>
           </div>
 
+          {(navState?.agentCenterPreviewMode === 'draft' || navState?.agentCenterPreviewMode === 'published') && (
+            <div
+              className='mb-12px mx-auto max-w-720px rounded-8px border border-[var(--color-border-2)] bg-[var(--color-fill-1)] px-14px py-10px flex items-center justify-between gap-8px flex-wrap'
+              data-testid='agent-center-try-banner'
+            >
+              <div className='min-w-0'>
+                <div className='text-13px font-medium text-t-primary'>智能体试跑预览</div>
+                <div className='text-12px text-t-secondary'>
+                  {navState.agentCenterPreviewMode === 'published'
+                    ? '正在预览已发布配置（类似 ChatGPT Preview）。'
+                    : '正在预览当前草稿配置。试跑后可返回改进指令或提炼技能。'}
+                </div>
+              </div>
+              <div className='flex gap-8px shrink-0'>
+                {typeof navState.agentCenterReturnTo === 'string' ? (
+                  <button
+                    type='button'
+                    className='text-12px text-primary-6 bg-transparent border-0 cursor-pointer p-0'
+                    onClick={() => navigate(navState.agentCenterReturnTo as string)}
+                  >
+                    返回改进
+                  </button>
+                ) : navState.selectedAssistantId ? (
+                  <button
+                    type='button'
+                    className='text-12px text-primary-6 bg-transparent border-0 cursor-pointer p-0'
+                    onClick={() => navigate(`/agent-center/${navState.selectedAssistantId}`)}
+                  >
+                    打开智能体详情
+                  </button>
+                ) : null}
+              </div>
+            </div>
+          )}
           <AssistantSelectionArea
             selectedAssistantId={agentSelection.selectedAssistantId}
             assistants={agentSelection.assistants}
