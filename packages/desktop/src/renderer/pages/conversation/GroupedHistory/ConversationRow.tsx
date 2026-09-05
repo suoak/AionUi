@@ -29,7 +29,6 @@ import ForkBranchIcon from '@renderer/components/base/ForkBranchIcon';
 import classNames from 'classnames';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
 
 import type { ConversationRowProps } from './types';
 import { isConversationPinned } from './utils/groupingHelpers';
@@ -67,7 +66,6 @@ const ConversationRow: React.FC<ConversationRowProps> = (props) => {
     getJobStatus,
   } = props;
   const { t } = useTranslation();
-  const navigate = useNavigate();
   const { info: assistantInfo } = usePresetAssistantInfo(conversation);
   const isPinned = isConversationPinned(conversation);
   // Fork-lineage badge: present only on forked conversations (extra.fork is
@@ -289,9 +287,8 @@ const ConversationRow: React.FC<ConversationRowProps> = (props) => {
                       return;
                     }
                     if (key === 'evolveSkill') {
-                      navigate(
-                        `/agent-center/skill-evolution/new?conversation_id=${encodeURIComponent(conversation.id)}`
-                      );
+                      // HashRouter: avoid useNavigate so unit tests without Router still render.
+                      window.location.hash = `#/agent-center/skill-evolution/new?conversation_id=${encodeURIComponent(conversation.id)}`;
                       return;
                     }
                     if (key === 'export') {
