@@ -57,6 +57,54 @@ export interface ApproveSkillEvolutionResponse {
   export: SkillEvolutionExportPayload;
 }
 
+export interface EvolveSkillEvolutionRequest {
+  assistant_id?: string;
+  title?: string;
+  target_skill_key?: string;
+  action?: SkillEvolutionAction;
+  submit?: boolean;
+  model?: string;
+}
+
+export interface SkillEvolutionTrajectoryOverview {
+  turns: number;
+  steps: number;
+  tools: number;
+  errors: number;
+  record_count: number;
+  digest_md: string;
+  conversation_name?: string;
+  workspace?: string;
+}
+
+export interface EvolveSkillEvolutionResponse {
+  proposal: SkillEvolutionProposal;
+  experience_articles: ExperienceArticle[];
+  trajectory_overview: SkillEvolutionTrajectoryOverview;
+  model_used?: string;
+}
+
+export interface ApplySkillEvolutionRequest {
+  write_to_skills_hub?: boolean;
+  pin_on_assistant?: boolean;
+  workspace_root?: string;
+}
+
+export interface SkillEvolutionSkillRefPayload {
+  skill_key: string;
+  version_policy: string;
+  pinned_version?: string;
+  source?: string;
+}
+
+export interface ApplySkillEvolutionResponse {
+  proposal: SkillEvolutionProposal;
+  export: SkillEvolutionExportPayload;
+  skills_hub_path?: string;
+  workspace_skill_path?: string;
+  skill_ref?: SkillEvolutionSkillRefPayload;
+}
+
 export interface ExperienceArticle {
   id: string;
   assistant_id?: string;

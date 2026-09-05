@@ -29,6 +29,7 @@ import ForkBranchIcon from '@renderer/components/base/ForkBranchIcon';
 import classNames from 'classnames';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 
 import type { ConversationRowProps } from './types';
 import { isConversationPinned } from './utils/groupingHelpers';
@@ -66,6 +67,7 @@ const ConversationRow: React.FC<ConversationRowProps> = (props) => {
     getJobStatus,
   } = props;
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const { info: assistantInfo } = usePresetAssistantInfo(conversation);
   const isPinned = isConversationPinned(conversation);
   // Fork-lineage badge: present only on forked conversations (extra.fork is
@@ -286,6 +288,12 @@ const ConversationRow: React.FC<ConversationRowProps> = (props) => {
                       onCreateCronTask(conversation);
                       return;
                     }
+                    if (key === 'evolveSkill') {
+                      navigate(
+                        `/agent-center/skill-evolution/new?conversation_id=${encodeURIComponent(conversation.id)}`
+                      );
+                      return;
+                    }
                     if (key === 'export') {
                       onExport?.(conversation);
                       return;
@@ -319,6 +327,12 @@ const ConversationRow: React.FC<ConversationRowProps> = (props) => {
                     <div className='flex items-center gap-8px'>
                       <Timer theme='outline' size='14' />
                       <span>{t('conversation.history.createCronTask')}</span>
+                    </div>
+                  </Menu.Item>
+                  <Menu.Item key='evolveSkill'>
+                    <div className='flex items-center gap-8px'>
+                      <Robot theme='outline' size='14' />
+                      <span>提炼为技能</span>
                     </div>
                   </Menu.Item>
                   {onExport && (

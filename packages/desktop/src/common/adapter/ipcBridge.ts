@@ -59,8 +59,12 @@ import type {
   UpdateAgentCenterRequest,
 } from '../types/agent/agentCenterTypes';
 import type {
+  ApplySkillEvolutionRequest,
+  ApplySkillEvolutionResponse,
   ApproveSkillEvolutionResponse,
   CreateSkillEvolutionProposalRequest,
+  EvolveSkillEvolutionRequest,
+  EvolveSkillEvolutionResponse,
   ExperienceArticle,
   ReviewSkillEvolutionRequest,
   SkillEvolutionProposal,
@@ -440,14 +444,34 @@ export const skillEvolution = {
       return body;
     }
   ),
-  applyProposal: httpPost<ApproveSkillEvolutionResponse, { id: string }>(
+  applyProposal: httpPost<ApplySkillEvolutionResponse, ApplySkillEvolutionRequest & { id: string }>(
     (p) => `/api/skill-evolution/proposals/${encodeURIComponent(p.id)}/apply`,
-    () => ({})
+    (p) => {
+      const { id: _id, ...body } = p;
+      return body;
+    }
   ),
   rollbackProposal: httpPost<SkillEvolutionProposal, ReviewSkillEvolutionRequest & { id: string }>(
     (p) => `/api/skill-evolution/proposals/${encodeURIComponent(p.id)}/rollback`,
     (p) => {
       const { id: _id, ...body } = p;
+      return body;
+    }
+  ),
+  evolveProposal: httpPost<EvolveSkillEvolutionResponse, EvolveSkillEvolutionRequest & { id: string }>(
+    (p) => `/api/skill-evolution/proposals/${encodeURIComponent(p.id)}/evolve`,
+    (p) => {
+      const { id: _id, ...body } = p;
+      return body;
+    }
+  ),
+  evolveFromConversation: httpPost<
+    EvolveSkillEvolutionResponse,
+    EvolveSkillEvolutionRequest & { conversation_id: string }
+  >(
+    (p) => `/api/skill-evolution/from-conversation/${encodeURIComponent(p.conversation_id)}/evolve`,
+    (p) => {
+      const { conversation_id: _cid, ...body } = p;
       return body;
     }
   ),
