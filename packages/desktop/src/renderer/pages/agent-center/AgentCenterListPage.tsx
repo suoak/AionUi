@@ -96,7 +96,9 @@ const AgentCenterListPage: React.FC = () => {
                 {item.meta.version > 0 ? ` · v${item.meta.version}` : ''}
               </Text>
               {item.assistant.description ? (
-                <div className='text-13px mt-4px text-[var(--color-text-2)] line-clamp-2'>{item.assistant.description}</div>
+                <div className='text-13px mt-4px text-[var(--color-text-2)] line-clamp-2'>
+                  {item.assistant.description}
+                </div>
               ) : null}
             </div>
             <div className='flex gap-8px shrink-0'>

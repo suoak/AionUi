@@ -66,9 +66,7 @@ const SiderAgentCenterEntry: React.FC<SiderAgentCenterEntryProps> = ({
             style={{ lineHeight: 0 }}
           />
         </span>
-        <span className='collapsed-hidden text-t-primary text-14px font-[500] leading-24px'>
-          {'智能体中心'}
-        </span>
+        <span className='collapsed-hidden text-t-primary text-14px font-[500] leading-24px'>{'智能体中心'}</span>
       </div>
     </Tooltip>
   );
