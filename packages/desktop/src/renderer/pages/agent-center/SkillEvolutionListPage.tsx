@@ -262,7 +262,11 @@ const SkillEvolutionListPage: React.FC = () => {
     if (item.gate_score == null) return null;
     const rec = item.gate_recommendation ?? 'needs_review';
     const color =
-      rec === 'approve' ? 'var(--color-success-6)' : rec === 'reject' ? 'var(--color-danger-6)' : 'var(--color-warning-6)';
+      rec === 'approve'
+        ? 'var(--color-success-6)'
+        : rec === 'reject'
+          ? 'var(--color-danger-6)'
+          : 'var(--color-warning-6)';
     return (
       <span className='text-12px ml-8px' style={{ color }}>
         门控 {item.gate_score}
@@ -337,7 +341,8 @@ const SkillEvolutionListPage: React.FC = () => {
       {filter === 'settings' ? (
         <div className='mt-16px max-w-720px flex flex-col gap-16px'>
           <Text type='secondary' className='text-12px'>
-            默认「仅人工审核」。启发式分数仅作建议；「自动应用」需显式开启，高分通过后仍写 skill_impact，并可一键回滚。经验库永不注入日常对话。
+            默认「仅人工审核」。启发式分数仅作建议；「自动应用」需显式开启，高分通过后仍写
+            skill_impact，并可一键回滚。经验库永不注入日常对话。
           </Text>
           {!settings && loading ? <Text type='secondary'>加载中…</Text> : null}
           {settings ? (
@@ -453,8 +458,8 @@ const SkillEvolutionListPage: React.FC = () => {
                   ) : null}
                 </div>
                 <Text type='secondary' className='text-12px'>
-                  {kindLabel[item.kind] ?? item.kind} · {visibilityLabel[item.visibility ?? 'private'] ?? item.visibility}{' '}
-                  · {item.id.slice(0, 10)}…
+                  {kindLabel[item.kind] ?? item.kind} ·{' '}
+                  {visibilityLabel[item.visibility ?? 'private'] ?? item.visibility} · {item.id.slice(0, 10)}…
                   {item.source_conversation_ids[0] ? ` · 会话 ${item.source_conversation_ids[0].slice(0, 8)}…` : ''}
                 </Text>
               </div>

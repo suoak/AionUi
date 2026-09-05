@@ -248,7 +248,12 @@ const SkillEvolutionCreatePage: React.FC = () => {
         {visibility === 'team' ? (
           <div>
             <Text className='text-12px'>团队 ID *</Text>
-            <Input className='mt-4px' value={teamId} onChange={setTeamId} placeholder='team id（visibility=team 时必填）' />
+            <Input
+              className='mt-4px'
+              value={teamId}
+              onChange={setTeamId}
+              placeholder='team id（visibility=team 时必填）'
+            />
           </div>
         ) : null}
         <div>

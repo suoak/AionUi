@@ -504,9 +504,7 @@ export const skillEvolution = {
     }
   >('/api/skill-evolution/experience'),
   getSettings: httpGet<SkillEvolutionSettings, void>('/api/skill-evolution/settings'),
-  updateSettings: httpPut<SkillEvolutionSettings, UpdateSkillEvolutionSettingsRequest>(
-    '/api/skill-evolution/settings'
-  ),
+  updateSettings: httpPut<SkillEvolutionSettings, UpdateSkillEvolutionSettingsRequest>('/api/skill-evolution/settings'),
   crossModelNotes: httpGet<CrossModelTransferNote[], void>('/api/skill-evolution/cross-model-notes'),
 };
 
