@@ -50,6 +50,15 @@ import type {
   UpdateAssistantRequest,
 } from '../types/agent/assistantTypes';
 import type {
+  AgentCenterDetail,
+  AgentCenterListItem,
+  AgentCenterRevision,
+  AgentCenterRunPlan,
+  CreateAgentCenterRequest,
+  PublishAgentCenterRequest,
+  UpdateAgentCenterRequest,
+} from '../types/agent/agentCenterTypes';
+import type {
   EnsureConversationRuntimeResponse,
   GetConfigOptionsResponse,
   SetConfigOptionRequest,
@@ -346,6 +355,42 @@ export const assistants = {
     normalizeAssistantBranding
   ),
   import: httpPost<ImportAssistantsResult, ImportAssistantsRequest>('/api/assistants/import'),
+};
+
+// ---------------------------------------------------------------------------
+// Agent Center — routed to /api/agent-center/agents* (CSBU WorkMate 智能体中心)
+// ---------------------------------------------------------------------------
+
+export const agentCenter = {
+  list: httpGet<AgentCenterListItem[], { scope?: string; team_id?: string } | undefined>((p) => {
+    const params = new URLSearchParams();
+    params.set('scope', p?.scope ?? 'mine');
+    if (p?.team_id) params.set('team_id', p.team_id);
+    return `/api/agent-center/agents?${params.toString()}`;
+  }),
+  get: httpGet<AgentCenterDetail, { id: string }>((p) => `/api/agent-center/agents/${encodeURIComponent(p.id)}`),
+  create: httpPost<AgentCenterDetail, CreateAgentCenterRequest>('/api/agent-center/agents'),
+  update: httpPut<AgentCenterDetail, UpdateAgentCenterRequest & { id: string }>(
+    (p) => `/api/agent-center/agents/${encodeURIComponent(p.id)}`,
+    (p) => {
+      const { id: _id, ...body } = p;
+      return body;
+    }
+  ),
+  publish: httpPost<AgentCenterDetail, PublishAgentCenterRequest & { id: string }>(
+    (p) => `/api/agent-center/agents/${encodeURIComponent(p.id)}/publish`,
+    (p) => {
+      const { id: _id, ...body } = p;
+      return body;
+    }
+  ),
+  versions: httpGet<AgentCenterRevision[], { id: string }>(
+    (p) => `/api/agent-center/agents/${encodeURIComponent(p.id)}/versions`
+  ),
+  run: httpPost<AgentCenterRunPlan, { id: string }>(
+    (p) => `/api/agent-center/agents/${encodeURIComponent(p.id)}/run`,
+    () => ({})
+  ),
 };
 
 // ---------------------------------------------------------------------------
