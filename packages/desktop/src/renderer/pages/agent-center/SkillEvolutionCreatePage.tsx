@@ -30,7 +30,7 @@ const SkillEvolutionCreatePage: React.FC = () => {
   useEffect(() => {
     void (async () => {
       try {
-        const page = await ipcBridge.conversation.getUserConversations.invoke({ limit: 50 });
+        const page = await ipcBridge.database.getUserConversations.invoke({ limit: 50 });
         setConversations(page.items ?? []);
       } catch (error) {
         console.error(error);
