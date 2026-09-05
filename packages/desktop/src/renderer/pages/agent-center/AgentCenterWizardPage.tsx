@@ -22,7 +22,7 @@ import {
 } from '@renderer/utils/model/agentRuntimeCatalog';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import CapabilityDefaultsFields from './CapabilityDefaultsFields';
 import CapabilityTogglePicker from './CapabilityTogglePicker';
 import ConversationStartersFields from './ConversationStartersFields';
@@ -50,6 +50,7 @@ type SkillOption = {
 const AgentCenterWizardPage: React.FC<{ mode: 'create' | 'edit' }> = ({ mode }) => {
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
+  const location = useLocation();
   const { i18n } = useTranslation();
   const localeKey = i18n.language;
   const [message, messageContext] = Message.useMessage({ maxCount: 5 });
@@ -78,6 +79,13 @@ const AgentCenterWizardPage: React.FC<{ mode: 'create' | 'edit' }> = ({ mode }) 
   const [skillOptions, setSkillOptions] = useState<SkillOption[]>([]);
   const [mcpOptions, setMcpOptions] = useState<Array<{ id: string; name: string; description?: string }>>([]);
   const [agentQuery, setAgentQuery] = useState('');
+
+  useEffect(() => {
+    const focusStep = (location.state as { focusStep?: number } | null)?.focusStep;
+    if (typeof focusStep === 'number' && focusStep >= 0 && focusStep < STEPS.length) {
+      setStep(focusStep);
+    }
+  }, [location.state]);
 
   // Prefer the same backend-agent catalog as Settings → Assistants engine picker.
   const managedAgentRuntimeCatalog = useManagedAgentRuntimeCatalog();
@@ -475,11 +483,15 @@ const AgentCenterWizardPage: React.FC<{ mode: 'create' | 'edit' }> = ({ mode }) 
         创建 → 写指令 → 选能力 → 试跑 → 发布共享。复用现有助手与会话运行时，不捆绑知识库产品。
       </Text>
 
-      <WorkMateSteps current={step} className='mb-24px' size='small'>
+      <WorkMateSteps current={step} className='mb-8px' size='small'>
         {STEPS.map((title) => (
           <WorkMateSteps.Step key={title} title={title} />
         ))}
       </WorkMateSteps>
+      <Text type='secondary' className='text-12px mb-16px block'>
+        步骤 {step + 1} / {STEPS.length} · {STEPS[step]}
+        {status === 'published' ? ` · 已发布 v${version}` : ' · 草稿'}
+      </Text>
 
       {step === 0 && (
         <div className='flex flex-col gap-12px'>
@@ -666,6 +678,35 @@ const AgentCenterWizardPage: React.FC<{ mode: 'create' | 'edit' }> = ({ mode }) 
           <Button type='primary' loading={trying || saving} onClick={() => void handleTryRun()}>
             试跑对话
           </Button>
+          {agentId ? (
+            <div className='rounded-8px bg-[var(--color-fill-1)] p-12px flex flex-col gap-8px mt-4px'>
+              <Text bold className='text-12px'>
+                试跑后改进
+              </Text>
+              <Text type='secondary' className='text-12px'>
+                类似 ChatGPT 自定义 GPT：预览 → 改指令 → 再发布。也可从会话提炼技能。
+              </Text>
+              <div className='flex flex-wrap gap-8px'>
+                <Button size='mini' onClick={() => setStep(1)}>
+                  根据试跑改进指令
+                </Button>
+                <Button
+                  size='mini'
+                  onClick={() =>
+                    navigate(`/agent-center/skill-evolution/new?assistant_id=${encodeURIComponent(agentId)}`)
+                  }
+                >
+                  从会话提炼技能
+                </Button>
+                <Button size='mini' onClick={() => setStep(4)}>
+                  去发布
+                </Button>
+                <Button size='mini' type='text' onClick={() => navigate(`/agent-center/${agentId}`)}>
+                  打开详情中心
+                </Button>
+              </div>
+            </div>
+          ) : null}
         </div>
       )}
 
@@ -693,11 +734,32 @@ const AgentCenterWizardPage: React.FC<{ mode: 'create' | 'edit' }> = ({ mode }) 
               autoSize={{ minRows: 2, maxRows: 4 }}
             />
           </label>
-          <div className='rounded-8px bg-[var(--color-fill-1)] p-12px'>
-            <Text type='secondary' className='text-12px'>
-              {name || '（未命名）'} · {visibilityLabel[visibility]}
-              {version > 0 ? ` · 当前 v${version}` : ' · 尚未发布'} · 发布后 Skills 默认 pin
+          <div className='rounded-8px border border-[var(--color-border-2)] p-12px sticky bottom-0 bg-[var(--color-bg-2)]'>
+            <Text bold className='text-12px block mb-6px'>
+              发布摘要（将写入不可变版本）
             </Text>
+            <Text type='secondary' className='text-12px block'>
+              {name || '（未命名）'} · {visibilityLabel[visibility]}
+              {version > 0 ? ` · 当前 v${version} → 即将 v${version + 1}` : ' · 首次发布为 v1'}
+            </Text>
+            <Text type='secondary' className='text-12px block mt-4px'>
+              将 pin Skills：{skillRefs.length ? skillRefs.map((s) => s.skill_key).join('、') : '（无）'}
+            </Text>
+            <Text type='secondary' className='text-12px block'>
+              MCP：
+              {mcpPolicy === 'allowlist'
+                ? selectedMcpIds.length
+                  ? `白名单 ${selectedMcpIds.length} 项`
+                  : '白名单为空 = 不挂载'
+                : '继承用户已启用'}
+              {' · 引擎 '}
+              {engineLabel}
+            </Text>
+            {changelog.trim() ? (
+              <Text type='secondary' className='text-12px block mt-4px'>
+                版本说明：{changelog.trim()}
+              </Text>
+            ) : null}
           </div>
         </div>
       )}

@@ -6,7 +6,7 @@ import type {
   SkillEvolutionStatus,
 } from '@/common/types/agent/skillEvolutionTypes';
 import React, { useCallback, useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 
 const { Title, Text } = Typography;
 const TabPane = Tabs.TabPane;
@@ -29,11 +29,14 @@ const kindLabel: Record<string, string> = {
   general: '通用',
 };
 
-type Filter = 'all' | 'pending_review' | 'draft' | 'approved' | 'applied' | 'experience';
+type Filter = 'all' | 'pending_review' | 'draft' | 'approved' | 'applied' | 'rejected' | 'experience';
 
 const SkillEvolutionListPage: React.FC = () => {
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const assistantFilter = searchParams.get('assistant_id') || '';
   const [filter, setFilter] = useState<Filter>('pending_review');
+  const [experienceCount, setExperienceCount] = useState(0);
   const [items, setItems] = useState<SkillEvolutionProposal[]>([]);
   const [experience, setExperience] = useState<ExperienceArticle[]>([]);
   const [loading, setLoading] = useState(false);
@@ -48,23 +51,30 @@ const SkillEvolutionListPage: React.FC = () => {
   const load = useCallback(async () => {
     setLoading(true);
     try {
+      const aid = assistantFilter || undefined;
+      const exp = await ipcBridge.skillEvolution.listExperience.invoke({
+        assistant_id: aid,
+        limit: 100,
+      });
+      setExperienceCount(exp.length);
       if (filter === 'experience') {
-        const list = await ipcBridge.skillEvolution.listExperience.invoke({ limit: 100 });
-        setExperience(list);
+        setExperience(exp);
       } else {
         const list = await ipcBridge.skillEvolution.listProposals.invoke({
           status: filter === 'all' ? undefined : filter,
+          assistant_id: aid,
           limit: 100,
         });
         setItems(list);
       }
     } catch (error) {
       console.error(error);
-      message.error('加载失败（需 Core 含技能进化 API）');
+      const msg = error instanceof Error ? error.message : '加载失败（需 Core 含技能进化 API）';
+      message.error(msg);
     } finally {
       setLoading(false);
     }
-  }, [filter, message]);
+  }, [filter, assistantFilter, message]);
 
   useEffect(() => {
     void load();
@@ -110,7 +120,64 @@ const SkillEvolutionListPage: React.FC = () => {
           res.skill_ref ? `已 pin: ${res.skill_ref.skill_key}@${res.skill_ref.pinned_version ?? 'pin'}` : null,
         ].filter(Boolean);
         setApplyPaths(parts.join(' · ') || res.export.suggested_path);
-        message.success(parts.length ? `已写入并应用：${parts.join('；')}` : '已标记应用');
+        const aid = res.proposal.assistant_id;
+        message.success({
+          content: (
+            <span>
+              {parts.length ? `已写入并应用：${parts.join('；')}` : '已标记应用'}。下一步：
+              {aid ? (
+                <>
+                  <a
+                    className='ml-4px'
+                    onClick={(e) => {
+                      e.preventDefault();
+                      navigate(`/agent-center/${aid}`);
+                    }}
+                  >
+                    查看智能体
+                  </a>
+                  {' / '}
+                  <a
+                    className='ml-4px'
+                    onClick={(e) => {
+                      e.preventDefault();
+                      void (async () => {
+                        try {
+                          const plan = await ipcBridge.agentCenter.run.invoke({ id: aid });
+                          navigate('/guid', {
+                            state: {
+                              selectedAssistantId: plan.assistant_id,
+                              agentCenterRunPlan: plan.create_conversation,
+                              agentCenterPreviewMode: plan.preview_mode,
+                              focusPrefill: true,
+                            },
+                          });
+                        } catch {
+                          navigate(`/agent-center/${aid}`);
+                        }
+                      })();
+                    }}
+                  >
+                    试跑
+                  </a>
+                  {' / '}
+                  <a
+                    className='ml-4px'
+                    onClick={(e) => {
+                      e.preventDefault();
+                      navigate(`/agent-center/${aid}/edit`, { state: { focusStep: 4 } });
+                    }}
+                  >
+                    发布 pin
+                  </a>
+                </>
+              ) : (
+                '可在智能体中心绑定技能后试跑 / 发布'
+              )}
+            </span>
+          ),
+          duration: 8000,
+        });
       } else if (action === 'evolve') {
         const res = await ipcBridge.skillEvolution.evolveProposal.invoke({ id, submit: false });
         setSelected(res.proposal);
@@ -126,7 +193,8 @@ const SkillEvolutionListPage: React.FC = () => {
       }
     } catch (error) {
       console.error(error);
-      message.error('操作失败');
+      const msg = error instanceof Error ? error.message : '操作失败';
+      message.error(msg);
     } finally {
       setBusyId(null);
     }
@@ -153,11 +221,42 @@ const SkillEvolutionListPage: React.FC = () => {
           <Text type='secondary'>
             从会话经验提炼 SKILL.md 提案 → 人工审核 → 写入 Skills Hub /
             pin。经验库仅用于技能进化，不会注入日常对话；知识库产品保持独立。
+            {experienceCount > 0 ? ` · 经验库 ${experienceCount} 篇` : ''}
           </Text>
+          {assistantFilter ? (
+            <div className='mt-8px flex items-center gap-8px'>
+              <Text type='secondary' className='text-12px'>
+                已按智能体筛选：{assistantFilter.slice(0, 12)}…
+              </Text>
+              <Button
+                size='mini'
+                type='text'
+                onClick={() => {
+                  const next = new URLSearchParams(searchParams);
+                  next.delete('assistant_id');
+                  setSearchParams(next);
+                }}
+              >
+                清除筛选
+              </Button>
+              <Button size='mini' type='text' onClick={() => navigate(`/agent-center/${assistantFilter}`)}>
+                打开智能体详情
+              </Button>
+            </div>
+          ) : null}
         </div>
         <div className='flex gap-8px'>
           <Button onClick={() => navigate('/agent-center')}>返回智能体中心</Button>
-          <Button type='primary' onClick={() => navigate('/agent-center/skill-evolution/new')}>
+          <Button
+            type='primary'
+            onClick={() =>
+              navigate(
+                assistantFilter
+                  ? `/agent-center/skill-evolution/new?assistant_id=${encodeURIComponent(assistantFilter)}`
+                  : '/agent-center/skill-evolution/new'
+              )
+            }
+          >
             从会话提炼技能
           </Button>
         </div>
@@ -168,7 +267,8 @@ const SkillEvolutionListPage: React.FC = () => {
         <TabPane key='draft' title='草稿' />
         <TabPane key='approved' title='已通过' />
         <TabPane key='applied' title='已应用' />
-        <TabPane key='experience' title='经验库' />
+        <TabPane key='rejected' title='已拒绝' />
+        <TabPane key='experience' title={`经验库${experienceCount ? ` (${experienceCount})` : ''}`} />
         <TabPane key='all' title='全部提案' />
       </Tabs>
 
@@ -249,9 +349,9 @@ const SkillEvolutionListPage: React.FC = () => {
                     {item.conversation_id ? ` · 会话 ${item.conversation_id.slice(0, 8)}…` : ''}
                   </Text>
                   <div className='mt-8px flex gap-8px flex-wrap' onClick={(e) => e.stopPropagation()}>
-                    {item.status === 'draft' || item.status === 'pending_review' ? (
+                    {item.status === 'draft' || item.status === 'pending_review' || item.status === 'rejected' ? (
                       <Button size='mini' loading={busy} onClick={() => void runAction(item.id, 'evolve')}>
-                        重新智能提炼
+                        再次智能提炼
                       </Button>
                     ) : null}
                     {item.status === 'draft' ? (
