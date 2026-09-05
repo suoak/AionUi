@@ -6,8 +6,13 @@
 
 - **skill-evolution:** Phase 3 UI — gate score / settings / team ACL (#148)
 
+### Bug Fixes
+
+- **agent-center:** stop endless loading / list failure from unstable Message.useMessage deps (#150). Agent Center and skill evolution remain separate modules; toasts show Core error detail when available.
+
 ### 中文摘要
 
+- **修复智能体中心**：列表/详情不再因 Message toast 依赖抖动而一直「加载中」后失败；错误提示展示服务端原因，可重试。技能进化仍是独立模块。
 - 技能进化：启发式门控分数与信号、门控设置（含自动应用中文警告）、经验库私有/团队筛选与团队徽章。
 - 桌面端后端组件升级到 v0.2.10（技能进化 Phase 3）。
 - 固定到 Core v0.2.10；不捆绑 KnowHub；经验库仍不注入日常对话。
@@ -15,6 +20,7 @@
 ### Core ([v0.2.10](https://github.com/suoak/AionCore/releases/tag/v0.2.10))
 
 - Pin desktop to Core v0.2.10 (skill-evolution Phase 3 #116).
+- Follow-up on main: agent-center list skips bad meta rows instead of failing the whole list (#118); ships in a subsequent Core patch if needed.
 
 ## [2.2.9](https://github.com/suoak/AionUi/compare/v2.2.8...v2.2.9) (2026-09-05)
 
