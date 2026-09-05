@@ -81,7 +81,7 @@ const SkillEvolutionListPage: React.FC = () => {
       } else if (filter === 'settings') {
         const [s, notes] = await Promise.all([
           ipcBridge.skillEvolution.getSettings.invoke(),
-          ipcBridge.skillEvolution.crossModelNotes.invoke().catch(() => []),
+          ipcBridge.skillEvolution.crossModelNotes.invoke().catch((): { title: string; body_md: string }[] => []),
         ]);
         setSettings(s);
         setCrossNotes(notes);
