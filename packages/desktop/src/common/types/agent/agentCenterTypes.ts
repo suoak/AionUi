@@ -9,6 +9,22 @@ export type AgentPublishStatus = 'draft' | 'published' | 'archived';
 export type AgentMcpPolicy = 'allowlist' | 'inherit_user_enabled';
 export type SkillVersionPolicy = 'pin' | 'latest';
 export type AgentAclRole = 'owner' | 'editor' | 'user';
+export type AgentWorkflowOutputFormat = 'markdown' | 'plain_text' | 'json';
+
+export type AgentWorkflowDefinition = {
+  schema_version: 1;
+  trigger: 'manual';
+  input: {
+    kind: 'text';
+    required: boolean;
+    placeholder?: string;
+  };
+  output: {
+    format: AgentWorkflowOutputFormat;
+  };
+  nodes: Array<{ id: string; kind: string }>;
+  edges: Array<{ source: string; target: string }>;
+};
 
 export interface AgentSkillRef {
   skill_key: string;
@@ -40,6 +56,7 @@ export interface AgentCenterMeta {
   skill_refs: AgentSkillRef[];
   mcp_policy: AgentMcpPolicy;
   role_bindings: AgentRoleBinding[];
+  workflow: AgentWorkflowDefinition;
 }
 
 export interface AgentCenterListItem {
@@ -60,6 +77,7 @@ export interface AgentCenterMetaPatch {
   skill_refs?: AgentSkillRef[];
   mcp_policy?: AgentMcpPolicy;
   role_bindings?: AgentRoleBinding[];
+  workflow?: AgentWorkflowDefinition;
   mcp_ids?: string[];
 }
 
@@ -111,6 +129,7 @@ export interface AgentCenterRunPlan {
   revision: number;
   /** draft = try-run live/unpublished config; published = last published revision. */
   preview_mode?: AgentCenterPreviewMode;
+  workflow: AgentWorkflowDefinition;
   create_conversation: {
     name?: string;
     assistant?: {

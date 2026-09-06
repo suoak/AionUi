@@ -54,6 +54,95 @@
     "description": "建立 → 指令與個性 → 能力設定 → 試跑預覽 → 發布與分享。知識庫產品保持獨立。",
     "emptyPinnedSkills": "暫無釘選技能，可在編輯頁中綁定。",
     "tryRunImprovementDescription": "預覽 → 修改指令 → 再次發布。",
+    "builder": {
+      "steps": {
+        "basic": "基本信息",
+        "instructions": "指令与个性",
+        "capabilities": "能力配置",
+        "workflow": "工作流",
+        "preview": "试跑预览",
+        "publish": "发布与共享"
+      },
+      "stepProgress": "步骤 {{current}} / {{total}} · {{title}}",
+      "readiness": {
+        "title": "发布就绪检查",
+        "name": "智能体名称",
+        "instructions": "核心指令",
+        "input": "输入说明",
+        "ready": "已就绪",
+        "missing": "待完善",
+        "nameMissing": "发布前请填写智能体名称。",
+        "instructionsMissing": "发布前请填写核心指令。",
+        "inputMissing": "发布前请说明用户需要提供什么输入。"
+      }
+    },
+    "templates": {
+      "title": "从企业工作流模板开始",
+      "description": "选择成熟起点，再按业务调整指令与能力。",
+      "applied": "已应用“{{name}}”模板",
+      "codeReview": {
+        "name": "代码 Review 智能体",
+        "description": "审查正确性、安全性、可维护性和测试。",
+        "instructions": "你是一名资深代码审查专家。请结合仓库上下文审查变更，优先检查正确性、安全性、回归风险、可维护性和测试缺口。按严重程度列出发现，给出文件与行号、影响及可执行修复建议。不要臆造问题。",
+        "inputPlaceholder": "粘贴代码差异、PR 链接，或说明待审查文件和目标。",
+        "starter": "审查这次变更，并优先列出阻断性问题。"
+      },
+      "defectAnalysis": {
+        "name": "缺陷分析智能体",
+        "description": "将现象与证据转化为可复现的根因分析。",
+        "instructions": "你是一名缺陷分析专家。请区分事实与假设，重建复现条件，对可能根因排序，提出最小安全修复方案，并定义验证与回归检查。缺少证据时先提问。",
+        "inputPlaceholder": "提供故障现象、复现步骤、日志、环境和近期变更。",
+        "starter": "分析这个缺陷并找出最可能的根因。"
+      },
+      "documentAnalysis": {
+        "name": "文档分析智能体",
+        "description": "提取决策、风险、行动项和待确认问题。",
+        "instructions": "你是一名文档分析专家。请忠实总结并提取决策、义务、风险、行动项、负责人、截止时间和未解决问题。区分原文事实与分析判断，并指出冲突。",
+        "inputPlaceholder": "粘贴文档内容或附加文件，并说明分析目标。",
+        "starter": "分析这份文档，输出管理摘要和行动项。"
+      },
+      "testPlan": {
+        "name": "测试方案智能体",
+        "description": "设计基于风险的功能、集成与回归覆盖。",
+        "instructions": "你是一名资深测试架构师。请将需求转化为基于风险的测试方案，覆盖正常路径、边界、失败、权限、兼容性、数据准备、可观测性和回归影响。标记优先级、自动化候选项和预期结果。",
+        "inputPlaceholder": "提供需求、验收标准、架构说明或代码变更。",
+        "starter": "为这项需求生成有优先级的测试方案。"
+      },
+      "weeklyReport": {
+        "name": "周报智能体",
+        "description": "把工作记录整理为进展、风险和下周计划。",
+        "instructions": "你是一名企业汇报助手。只使用提供的事实，按成果与量化结果、风险与阻塞、待决策事项和下周优先级组织周报，保持专业并删除重复细节。",
+        "inputPlaceholder": "粘贴本周任务、提交记录、会议纪要、成果和阻塞项。",
+        "starter": "把这些记录整理成一份简洁周报。"
+      },
+      "technicalResearch": {
+        "name": "技术调研智能体",
+        "description": "用证据、权衡和建议比较技术选项。",
+        "instructions": "你是一名技术调研负责人。请明确决策目标，比较可靠证据，识别约束与权衡并给出可执行建议。区分已验证事实与推断，有来源时提供引用，并说明不确定性。",
+        "inputPlaceholder": "说明调研问题、约束、候选方案和期望决策。",
+        "starter": "调研这个主题，并结合权衡给出推荐方案。"
+      }
+    },
+    "workflow": {
+      "description": "在现有 Agent Runtime 外定义输入输出契约。MVP 运行单个智能体，同时保留可扩展结构。",
+      "executionPath": "执行路径",
+      "futureHint": "当前支持手动触发；节点和边未来可增加工具、审批、条件与子工作流。",
+      "nodes": {
+        "start": "开始",
+        "agent": "智能体",
+        "output": "输出"
+      },
+      "inputLabel": "输入说明",
+      "inputPlaceholder": "告诉用户需要提供哪些上下文或文件。",
+      "outputLabel": "输出格式",
+      "outputFormats": {
+        "markdown": "结构化 Markdown",
+        "plainText": "纯文本",
+        "json": "JSON"
+      },
+      "contractSummary": "输入：{{input}} · 输出：{{output}}",
+      "defaultInput": "文本请求"
+    },
     "actions": {
       "unpublish": "取消發布"
     },

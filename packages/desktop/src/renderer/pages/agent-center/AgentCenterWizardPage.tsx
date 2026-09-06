@@ -1,11 +1,14 @@
-import { Button, Input, Message, Select, Typography } from '@arco-design/web-react';
+import { Button, Input, Message, Select, Tag, Typography } from '@arco-design/web-react';
 import { ipcBridge } from '@/common';
 import type {
   AgentCenterDetail,
   AgentMcpPolicy,
   AgentVisibility,
+  AgentWorkflowOutputFormat,
   CreateAgentCenterRequest,
 } from '@/common/types/agent/agentCenterTypes';
+import { createAgentWorkflow, getAgentPublishReadiness } from '@/common/types/agent/agentWorkflow';
+import type { AgentWorkflowTemplate } from '@/common/types/agent/agentWorkflowTemplates';
 import { WorkMateInlineSearchInput, WorkMateSteps } from '@renderer/components/base';
 import { DROPDOWN_SEARCH_THRESHOLD } from '@renderer/components/agent/runtimeSelectorOptions';
 import { useManagedAgentRuntimeCatalog } from '@renderer/hooks/agent/useManagedAgents';
@@ -27,6 +30,8 @@ import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import CapabilityDefaultsFields from './CapabilityDefaultsFields';
 import CapabilityTogglePicker from './CapabilityTogglePicker';
 import ConversationStartersFields from './ConversationStartersFields';
+import AgentWorkflowDefinitionFields from './AgentWorkflowDefinitionFields';
+import AgentWorkflowTemplatePicker from './AgentWorkflowTemplatePicker';
 
 const { Title, Text } = Typography;
 
@@ -35,7 +40,7 @@ const { Title, Text } = Typography;
  * 创建 → 指令与个性 → 能力配置 → 试跑预览 → 发布与共享
  * KnowHub / knowledge_scopes intentionally omitted from the primary flow.
  */
-const STEPS = ['基本信息', '指令与个性', '能力配置', '试跑预览', '发布与共享'] as const;
+const STEP_KEYS = ['basic', 'instructions', 'capabilities', 'workflow', 'preview', 'publish'] as const;
 
 const visibilityLabel: Record<AgentVisibility, string> = {
   private: '仅自己（私有）',
@@ -54,6 +59,7 @@ const AgentCenterWizardPage: React.FC<{ mode: 'create' | 'edit' }> = ({ mode }) 
   const location = useLocation();
   const { t, i18n } = useTranslation();
   const localeKey = i18n.language;
+  const stepTitles = useMemo(() => STEP_KEYS.map((key) => t(`agent.agentCenter.builder.steps.${key}`)), [t]);
   const [message, messageContext] = Message.useMessage({ maxCount: 5 });
   const messageRef = useRef(message);
   messageRef.current = message;
@@ -79,13 +85,15 @@ const AgentCenterWizardPage: React.FC<{ mode: 'create' | 'edit' }> = ({ mode }) 
   const [defaultThoughtLevelMode, setDefaultThoughtLevelMode] = useState<'auto' | 'fixed'>('auto');
   const [defaultThoughtLevelValue, setDefaultThoughtLevelValue] = useState('');
   const [changelog, setChangelog] = useState('');
+  const [workflowInputPlaceholder, setWorkflowInputPlaceholder] = useState('');
+  const [workflowOutputFormat, setWorkflowOutputFormat] = useState<AgentWorkflowOutputFormat>('markdown');
   const [skillOptions, setSkillOptions] = useState<SkillOption[]>([]);
   const [mcpOptions, setMcpOptions] = useState<Array<{ id: string; name: string; description?: string }>>([]);
   const [agentQuery, setAgentQuery] = useState('');
 
   useEffect(() => {
     const focusStep = (location.state as { focusStep?: number } | null)?.focusStep;
-    if (typeof focusStep === 'number' && focusStep >= 0 && focusStep < STEPS.length) {
+    if (typeof focusStep === 'number' && focusStep >= 0 && focusStep < STEP_KEYS.length) {
       setStep(focusStep);
     }
   }, [location.state]);
@@ -261,6 +269,8 @@ const AgentCenterWizardPage: React.FC<{ mode: 'create' | 'edit' }> = ({ mode }) 
         setDefaultThoughtLevelValue(detail.assistant.defaults.thought_level.value || '');
         setStatus(detail.meta.status);
         setVersion(detail.meta.version);
+        setWorkflowInputPlaceholder(detail.meta.workflow.input.placeholder ?? '');
+        setWorkflowOutputFormat(detail.meta.workflow.output.format);
       } catch (error) {
         console.error(error);
         messageRef.current.error(formatAgentCenterError(error, '加载智能体失败'));
@@ -327,10 +337,11 @@ const AgentCenterWizardPage: React.FC<{ mode: 'create' | 'edit' }> = ({ mode }) 
       visibility,
       mcp_policy: mcpPolicy,
       skill_refs: skillRefs,
+      workflow: createAgentWorkflow(workflowInputPlaceholder, workflowOutputFormat),
       mcp_ids: mcpPolicy === 'allowlist' ? selectedMcpIds : undefined,
       // KnowHub stays out of primary UX; API field remains optional and empty.
     }),
-    [visibility, mcpPolicy, skillRefs, selectedMcpIds]
+    [visibility, mcpPolicy, skillRefs, selectedMcpIds, workflowInputPlaceholder, workflowOutputFormat]
   );
 
   const buildAssistantDefaults = useCallback((): NonNullable<CreateAgentCenterRequest['defaults']> => {
@@ -377,6 +388,19 @@ const AgentCenterWizardPage: React.FC<{ mode: 'create' | 'edit' }> = ({ mode }) 
       messageRef.current.warning('固定默认思考强度时请选择一个选项');
       setStep(2);
       return null;
+    }
+    if (opts.publish) {
+      const firstMissing = getAgentPublishReadiness({
+        name,
+        instructions,
+        inputPlaceholder: workflowInputPlaceholder,
+      }).find((item) => !item.ready);
+      if (firstMissing) {
+        const targetStep = firstMissing.key === 'name' ? 0 : firstMissing.key === 'instructions' ? 1 : 3;
+        setStep(targetStep);
+        messageRef.current.warning(t(`agent.agentCenter.builder.readiness.${firstMissing.key}Missing`));
+        return null;
+      }
     }
     setSaving(true);
     try {
@@ -473,6 +497,26 @@ const AgentCenterWizardPage: React.FC<{ mode: 'create' | 'edit' }> = ({ mode }) 
     return selected?.name || engineAgentId || '默认引擎';
   }, [availableBackends, engineAgentId]);
 
+  const publishReadiness = useMemo(
+    () =>
+      getAgentPublishReadiness({
+        name,
+        instructions,
+        inputPlaceholder: workflowInputPlaceholder,
+      }),
+    [name, instructions, workflowInputPlaceholder]
+  );
+
+  const handleTemplateSelect = (template: AgentWorkflowTemplate) => {
+    setName(template.name);
+    setDescription(template.description);
+    setInstructions(template.instructions);
+    setRecommendedPrompts(template.starters);
+    setWorkflowInputPlaceholder(template.inputPlaceholder);
+    setWorkflowOutputFormat(template.outputFormat);
+    messageRef.current.success(t('agent.agentCenter.templates.applied', { name: template.name }));
+  };
+
   return (
     <div className='h-full overflow-auto p-24px max-w-720px'>
       {messageContext}
@@ -487,17 +531,22 @@ const AgentCenterWizardPage: React.FC<{ mode: 'create' | 'edit' }> = ({ mode }) 
       </Text>
 
       <WorkMateSteps current={step} className='mb-8px' size='small'>
-        {STEPS.map((title) => (
+        {stepTitles.map((title) => (
           <WorkMateSteps.Step key={title} title={title} />
         ))}
       </WorkMateSteps>
       <Text type='secondary' className='text-12px mb-16px block'>
-        步骤 {step + 1} / {STEPS.length} · {STEPS[step]}
+        {t('agent.agentCenter.builder.stepProgress', {
+          current: step + 1,
+          total: STEP_KEYS.length,
+          title: stepTitles[step],
+        })}
         {status === 'published' ? ` · 已发布 v${version}` : ' · 草稿'}
       </Text>
 
       {step === 0 && (
         <div className='flex flex-col gap-12px'>
+          {mode === 'create' ? <AgentWorkflowTemplatePicker onSelect={handleTemplateSelect} /> : null}
           <Text type='secondary'>先起个名字和简介，方便自己和团队辨认（类似自定义 GPT 的名称卡）。</Text>
           <label>
             <Text>名称</Text>
@@ -628,6 +677,15 @@ const AgentCenterWizardPage: React.FC<{ mode: 'create' | 'edit' }> = ({ mode }) 
       )}
 
       {step === 3 && (
+        <AgentWorkflowDefinitionFields
+          inputPlaceholder={workflowInputPlaceholder}
+          onInputPlaceholderChange={setWorkflowInputPlaceholder}
+          outputFormat={workflowOutputFormat}
+          onOutputFormatChange={setWorkflowOutputFormat}
+        />
+      )}
+
+      {step === 4 && (
         <div className='flex flex-col gap-12px'>
           <Text type='secondary'>
             一键试跑会先保存当前草稿，再打开会话预览（类似 GPT 编辑器里的 Preview）。可随时回来改指令再试。
@@ -693,7 +751,7 @@ const AgentCenterWizardPage: React.FC<{ mode: 'create' | 'edit' }> = ({ mode }) 
                 <Button size='mini' onClick={() => setStep(1)}>
                   根据试跑改进指令
                 </Button>
-                <Button size='mini' onClick={() => setStep(4)}>
+                <Button size='mini' onClick={() => setStep(5)}>
                   去发布
                 </Button>
                 <Button size='mini' type='text' onClick={() => navigate(`/agent-center/${agentId}`)}>
@@ -705,7 +763,7 @@ const AgentCenterWizardPage: React.FC<{ mode: 'create' | 'edit' }> = ({ mode }) 
         </div>
       )}
 
-      {step === 4 && (
+      {step === 5 && (
         <div className='flex flex-col gap-12px'>
           <Text type='secondary'>
             发布会生成不可变版本快照；共享范围类似 GPT 的「仅自己 / 邀请他人」，企业市场暂未开放。
@@ -720,6 +778,23 @@ const AgentCenterWizardPage: React.FC<{ mode: 'create' | 'edit' }> = ({ mode }) 
               </Select.Option>
             </Select>
           </label>
+          <div className='rounded-8px border border-[var(--color-border-2)] p-12px'>
+            <Text bold className='text-12px block mb-8px'>
+              {t('agent.agentCenter.builder.readiness.title')}
+            </Text>
+            <div className='flex flex-col gap-6px'>
+              {publishReadiness.map((item) => (
+                <div key={item.key} className='flex items-center justify-between gap-8px'>
+                  <Text className='text-12px'>{t(`agent.agentCenter.builder.readiness.${item.key}`)}</Text>
+                  <Tag size='small' color={item.ready ? 'green' : 'orange'}>
+                    {item.ready
+                      ? t('agent.agentCenter.builder.readiness.ready')
+                      : t('agent.agentCenter.builder.readiness.missing')}
+                  </Tag>
+                </div>
+              ))}
+            </div>
+          </div>
           <label>
             <Text>版本说明（可选）</Text>
             <Input.TextArea
@@ -764,14 +839,14 @@ const AgentCenterWizardPage: React.FC<{ mode: 'create' | 'edit' }> = ({ mode }) 
           上一步
         </Button>
         <div className='flex gap-8px'>
-          {step < STEPS.length - 1 ? (
+          {step < STEP_KEYS.length - 1 ? (
             <>
-              {step === 3 && (
+              {step === 4 && (
                 <Button loading={saving} onClick={() => void persist({ publish: false })}>
                   保存草稿并返回
                 </Button>
               )}
-              <Button type='primary' onClick={() => setStep((s) => Math.min(STEPS.length - 1, s + 1))}>
+              <Button type='primary' onClick={() => setStep((s) => Math.min(STEP_KEYS.length - 1, s + 1))}>
                 下一步
               </Button>
             </>

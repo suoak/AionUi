@@ -48,6 +48,7 @@ describe('Agent Center sparse response normalization', () => {
     expect(detail.assistant.defaults.mcps.value).toEqual([]);
     expect(detail.assistant.capabilities.default_skill_ids).toEqual([]);
     expect(detail.assistant.preferences.last_mcp_ids).toEqual([]);
+    expect(detail.meta.workflow.nodes.map((node) => node.kind)).toEqual(['start', 'agent', 'output']);
   });
 
   it('restores collections omitted from a list row when empty', () => {

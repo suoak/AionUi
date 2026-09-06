@@ -261,6 +261,33 @@ const AgentCenterDetailPage: React.FC = () => {
               )}
             </div>
           </div>
+          <div className='rounded-8px border border-[var(--color-border-2)] p-16px'>
+            <Text bold className='block mb-8px'>
+              {t('agent.agentCenter.workflow.executionPath')}
+            </Text>
+            <div className='flex items-center gap-8px flex-wrap mb-8px'>
+              {detail.meta.workflow.nodes.map((node, index) => (
+                <React.Fragment key={node.id}>
+                  {index > 0 ? <Text type='secondary'>→</Text> : null}
+                  <Tag color={node.kind === 'agent' ? 'purple' : node.kind === 'output' ? 'green' : 'arcoblue'}>
+                    {t(`agent.agentCenter.workflow.nodes.${node.kind as 'start' | 'agent' | 'output'}`)}
+                  </Tag>
+                </React.Fragment>
+              ))}
+            </div>
+            <Text type='secondary' className='text-12px block'>
+              {t('agent.agentCenter.workflow.contractSummary', {
+                input: detail.meta.workflow.input.placeholder || t('agent.agentCenter.workflow.defaultInput'),
+                output: t(
+                  `agent.agentCenter.workflow.outputFormats.${
+                    detail.meta.workflow.output.format === 'plain_text'
+                      ? 'plainText'
+                      : detail.meta.workflow.output.format
+                  }`
+                ),
+              })}
+            </Text>
+          </div>
         </>
       ) : null}
     </div>

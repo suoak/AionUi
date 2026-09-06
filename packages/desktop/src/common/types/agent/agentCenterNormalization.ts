@@ -7,6 +7,7 @@
 import { normalizeLegacyBrandText } from '../../utils/utils';
 import type { Assistant, AssistantDetail } from './assistantTypes';
 import type { AgentCenterDetail, AgentCenterListItem } from './agentCenterTypes';
+import { createDefaultAgentWorkflow } from './agentWorkflow';
 
 type AssistantCollectionKey =
   | 'name_i18n'
@@ -44,8 +45,11 @@ type AssistantDetailWire = Omit<
     >;
 };
 
-type AgentCenterMetaWire = Omit<AgentCenterDetail['meta'], 'knowledge_scopes' | 'skill_refs' | 'role_bindings'> &
-  Partial<Pick<AgentCenterDetail['meta'], 'knowledge_scopes' | 'skill_refs' | 'role_bindings'>>;
+type AgentCenterMetaWire = Omit<
+  AgentCenterDetail['meta'],
+  'knowledge_scopes' | 'skill_refs' | 'role_bindings' | 'workflow'
+> &
+  Partial<Pick<AgentCenterDetail['meta'], 'knowledge_scopes' | 'skill_refs' | 'role_bindings' | 'workflow'>>;
 
 export type AgentCenterDetailWire = Omit<AgentCenterDetail, 'assistant' | 'meta'> & {
   assistant: AssistantDetailWire;
@@ -132,6 +136,7 @@ const normalizeMeta = (meta: AgentCenterMetaWire): AgentCenterDetail['meta'] => 
   knowledge_scopes: meta.knowledge_scopes ?? [],
   skill_refs: meta.skill_refs ?? [],
   role_bindings: meta.role_bindings ?? [],
+  workflow: meta.workflow ?? createDefaultAgentWorkflow(),
 });
 
 /** Normalize collections omitted by Core when they are empty. */
