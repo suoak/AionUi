@@ -162,6 +162,8 @@
       "title": "工作流运行记录",
       "refresh": "刷新",
       "empty": "暂无工作流运行记录。",
+      "draftRevision": "草稿运行",
+      "publishedRevision": "发布版本 v{{revision}}",
       "approve": "批准",
       "reject": "拒绝",
       "approvalApproved": "已批准，工作流继续执行",

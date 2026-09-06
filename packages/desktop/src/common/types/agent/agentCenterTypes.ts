@@ -192,6 +192,9 @@ export type AgentWorkflowNextAction =
 export type AgentWorkflowRun = {
   id: string;
   assistant_id: string;
+  revision_id?: string;
+  revision: number;
+  preview_mode: AgentCenterPreviewMode;
   status: AgentWorkflowRunStatus;
   current_node_index: number;
   workflow: AgentWorkflowDefinition;

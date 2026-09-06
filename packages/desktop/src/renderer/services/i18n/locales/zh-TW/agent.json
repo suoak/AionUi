@@ -162,6 +162,8 @@
       "title": "工作流程執行記錄",
       "refresh": "重新整理",
       "empty": "尚無工作流程執行記錄。",
+      "draftRevision": "草稿執行",
+      "publishedRevision": "發佈版本 v{{revision}}",
       "approve": "核准",
       "reject": "拒絕",
       "approvalApproved": "已核准，工作流程繼續執行",

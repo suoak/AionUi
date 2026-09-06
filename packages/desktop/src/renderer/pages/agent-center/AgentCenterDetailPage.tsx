@@ -437,6 +437,11 @@ const AgentCenterDetailPage: React.FC = () => {
                             ? t('common.cancel')
                             : t(`agent.agentCenter.workflowRuns.status.${run.status}`)}
                         </Tag>
+                        <Tag size='small'>
+                          {run.preview_mode === 'published'
+                            ? t('agent.agentCenter.workflowRuns.publishedRevision', { revision: run.revision })
+                            : t('agent.agentCenter.workflowRuns.draftRevision')}
+                        </Tag>
                         <Text className='text-12px'>{run.id}</Text>
                       </div>
                       <Text type='secondary' className='text-12px'>
