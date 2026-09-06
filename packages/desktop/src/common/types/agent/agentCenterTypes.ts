@@ -200,6 +200,7 @@ export type AgentWorkflowRun = {
   workflow: AgentWorkflowDefinition;
   nodes: AgentWorkflowNodeRun[];
   variables: Record<string, unknown>;
+  output?: unknown;
   next_action?: AgentWorkflowNextAction;
   created_at: number;
   updated_at: number;

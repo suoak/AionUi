@@ -445,6 +445,16 @@ const AgentCenterDetailPage: React.FC = () => {
                         </Tag>
                       ))}
                     </div>
+                    {run.output !== undefined ? (
+                      <div className='mt-8px rounded-6px border border-[var(--color-border-2)] p-8px'>
+                        <Text bold className='text-12px'>
+                          {t('agent.agentCenter.workflowRuns.output')}
+                        </Text>
+                        <pre className='mb-0 mt-4px max-h-240px overflow-auto whitespace-pre-wrap text-12px text-t-secondary'>
+                          {formatWorkflowNodeOutput(run.output)}
+                        </pre>
+                      </div>
+                    ) : null}
                     {run.nodes.some((node) => node.output !== undefined || node.error) ? (
                       <Collapse className='mt-8px' bordered={false}>
                         <Collapse.Item header={t('common.technical_details')} name='node-details'>

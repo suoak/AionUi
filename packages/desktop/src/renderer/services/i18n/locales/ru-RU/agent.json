@@ -162,6 +162,7 @@
       "title": "Workflow runs",
       "refresh": "Refresh",
       "empty": "No workflow runs yet.",
+      "output": "Run output",
       "draftRevision": "Draft run",
       "publishedRevision": "Published v{{revision}}",
       "approve": "Approve",

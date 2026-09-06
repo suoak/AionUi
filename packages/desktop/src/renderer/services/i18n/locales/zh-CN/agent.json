@@ -162,6 +162,7 @@
       "title": "工作流运行记录",
       "refresh": "刷新",
       "empty": "暂无工作流运行记录。",
+      "output": "运行输出",
       "draftRevision": "草稿运行",
       "publishedRevision": "发布版本 v{{revision}}",
       "approve": "批准",

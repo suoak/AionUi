@@ -162,6 +162,7 @@
       "title": "工作流程執行記錄",
       "refresh": "重新整理",
       "empty": "尚無工作流程執行記錄。",
+      "output": "執行輸出",
       "draftRevision": "草稿執行",
       "publishedRevision": "發佈版本 v{{revision}}",
       "approve": "核准",

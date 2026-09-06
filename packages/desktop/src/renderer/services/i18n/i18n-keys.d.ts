@@ -121,6 +121,7 @@ export type I18nKey =
   | 'agent.agentCenter.workflowRuns.nodeStatus.running'
   | 'agent.agentCenter.workflowRuns.nodeStatus.skipped'
   | 'agent.agentCenter.workflowRuns.nodeStatus.waiting_approval'
+  | 'agent.agentCenter.workflowRuns.output'
   | 'agent.agentCenter.workflowRuns.publishedRevision'
   | 'agent.agentCenter.workflowRuns.refresh'
   | 'agent.agentCenter.workflowRuns.reject'
