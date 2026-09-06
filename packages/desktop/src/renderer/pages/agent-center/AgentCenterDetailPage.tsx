@@ -84,7 +84,9 @@ const AgentCenterDetailPage: React.FC = () => {
         workflowRefreshPendingRef.current = false;
       }
     };
-    const timer = window.setInterval(() => void refresh(), 3000);
+    const timer = window.setInterval(() => {
+      void refresh();
+    }, 3000);
     return () => {
       disposed = true;
       window.clearInterval(timer);
