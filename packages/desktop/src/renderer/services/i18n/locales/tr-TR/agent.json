@@ -49,6 +49,24 @@
   "warmup": {
     "clickToWake": "Bu üyeyi uyandırmak için tıklayın"
   },
+  "agentCenter": {
+    "title": "Aracı Merkezi",
+    "description": "Oluştur → talimatlar → yetenekler → önizleme → yayımla. Bilgi ürünleri bağımsız kalır.",
+    "emptyPinnedSkills": "Sabitlenmiş beceri yok. Düzenleme sayfasından bağlayabilirsiniz.",
+    "tryRunImprovementDescription": "Önizle → talimatları iyileştir → yeniden yayımla.",
+    "actions": {
+      "unpublish": "Yayından kaldır"
+    },
+    "unpublish": {
+      "confirmTitle": "Yayından kaldırılsın mı?",
+      "confirmDescription": "Yayımlanan sürüm geçmişte kalır ve aracı taslağa döner.",
+      "success": "Yayından kaldırıldı",
+      "error": "Yayından kaldırılamadı"
+    }
+  },
+  "skillEvolution": {
+    "title": "Beceri Evrimi"
+  },
   "runtimeRestart": {
     "tooltip": "Aracıyı yeniden bağla",
     "confirmContent": "Harici CLI yapılandırma değişikliklerini (kanal değiştirme gibi) alması için aracı sürecini yeniden başlatır. Sohbet geçmişi korunur ve mümkün olduğunda oturum sürdürülür.",

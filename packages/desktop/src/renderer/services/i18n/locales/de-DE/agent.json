@@ -49,6 +49,24 @@
   "warmup": {
     "clickToWake": "Klicken, um dieses Mitglied zu aktivieren"
   },
+  "agentCenter": {
+    "title": "Agenten-Center",
+    "description": "Erstellen → Anweisungen → Fähigkeiten → Vorschau → Veröffentlichen. Wissensprodukte bleiben unabhängig.",
+    "emptyPinnedSkills": "Keine angehefteten Skills. Skills können auf der Bearbeitungsseite verknüpft werden.",
+    "tryRunImprovementDescription": "Vorschau → Anweisungen verbessern → erneut veröffentlichen.",
+    "actions": {
+      "unpublish": "Veröffentlichung zurücknehmen"
+    },
+    "unpublish": {
+      "confirmTitle": "Veröffentlichung zurücknehmen?",
+      "confirmDescription": "Die veröffentlichte Version bleibt im Verlauf. Der Agent wird wieder zum Entwurf.",
+      "success": "Veröffentlichung zurückgenommen",
+      "error": "Zurücknehmen fehlgeschlagen"
+    }
+  },
+  "skillEvolution": {
+    "title": "Skill-Evolution"
+  },
   "runtimeRestart": {
     "tooltip": "Agent neu verbinden",
     "confirmContent": "Startet den Agentenprozess neu, damit externe CLI-Konfigurationsänderungen (z. B. Kanalwechsel) übernommen werden. Der Chat-Verlauf bleibt erhalten; die Sitzung wird nach Möglichkeit fortgesetzt.",

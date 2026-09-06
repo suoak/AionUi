@@ -1,4 +1,5 @@
 export { default as SiderAgentCenterEntry } from './SiderAgentCenterEntry';
+export { default as SiderSkillEvolutionEntry } from './SiderSkillEvolutionEntry';
 export { default as SiderAssistantEntry } from './SiderAssistantEntry';
 export { default as SiderScheduledEntry } from './SiderScheduledEntry';
 export { default as SiderSearchEntry } from './SiderSearchEntry';

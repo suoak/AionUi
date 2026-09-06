@@ -49,6 +49,24 @@
   "warmup": {
     "clickToWake": "Clique para ativar este membro"
   },
+  "agentCenter": {
+    "title": "Central de agentes",
+    "description": "Criar → instruções → capacidades → prévia → publicar. Os produtos de conhecimento permanecem independentes.",
+    "emptyPinnedSkills": "Nenhuma habilidade fixada. Vincule habilidades na página de edição.",
+    "tryRunImprovementDescription": "Prévia → aprimorar instruções → publicar novamente.",
+    "actions": {
+      "unpublish": "Despublicar"
+    },
+    "unpublish": {
+      "confirmTitle": "Despublicar agente?",
+      "confirmDescription": "A versão publicada permanece no histórico e o agente volta a ser rascunho.",
+      "success": "Agente despublicado",
+      "error": "Falha ao despublicar"
+    }
+  },
+  "skillEvolution": {
+    "title": "Evolução de habilidades"
+  },
   "runtimeRestart": {
     "tooltip": "Reconectar agente",
     "confirmContent": "Reinicia o processo do agente para adotar alterações externas de configuração da CLI (como troca de canal). O histórico do chat é mantido e a sessão é retomada quando possível.",

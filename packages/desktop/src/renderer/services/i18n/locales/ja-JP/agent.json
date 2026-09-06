@@ -49,6 +49,24 @@
   "warmup": {
     "clickToWake": "クリックしてこのメンバーを起動"
   },
+  "agentCenter": {
+    "title": "エージェントセンター",
+    "description": "作成 → 指示と個性 → 機能設定 → プレビュー → 公開と共有。ナレッジ製品は独立しています。",
+    "emptyPinnedSkills": "固定されたスキルはありません。編集ページで設定できます。",
+    "tryRunImprovementDescription": "プレビュー → 指示を改善 → 再公開。",
+    "actions": {
+      "unpublish": "公開を取り消す"
+    },
+    "unpublish": {
+      "confirmTitle": "公開を取り消しますか？",
+      "confirmDescription": "公開済みバージョンは履歴に保持され、エージェントは下書きに戻ります。",
+      "success": "公開を取り消しました",
+      "error": "公開の取り消しに失敗しました"
+    }
+  },
+  "skillEvolution": {
+    "title": "スキル進化"
+  },
   "runtimeRestart": {
     "tooltip": "エージェントに再接続",
     "confirmContent": "エージェントプロセスを再起動して、外部CLIの設定変更(チャネル切り替えなど)を反映します。チャット履歴は保持され、可能な場合はセッションが再開されます。",

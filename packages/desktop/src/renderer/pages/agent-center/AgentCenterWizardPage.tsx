@@ -687,19 +687,11 @@ const AgentCenterWizardPage: React.FC<{ mode: 'create' | 'edit' }> = ({ mode }) 
                 试跑后改进
               </Text>
               <Text type='secondary' className='text-12px'>
-                类似 ChatGPT 自定义 GPT：预览 → 改指令 → 再发布。也可从会话提炼技能。
+                {t('agent.agentCenter.tryRunImprovementDescription')}
               </Text>
               <div className='flex flex-wrap gap-8px'>
                 <Button size='mini' onClick={() => setStep(1)}>
                   根据试跑改进指令
-                </Button>
-                <Button
-                  size='mini'
-                  onClick={() =>
-                    navigate(`/agent-center/skill-evolution/new?assistant_id=${encodeURIComponent(agentId)}`)
-                  }
-                >
-                  从会话提炼技能
                 </Button>
                 <Button size='mini' onClick={() => setStep(4)}>
                   去发布

@@ -7,7 +7,7 @@ import type {
   SkillEvolutionSettings,
   SkillEvolutionStatus,
 } from '@/common/types/agent/skillEvolutionTypes';
-import { formatAgentCenterError } from './agentCenterErrors';
+import { formatAgentCenterError } from '../agent-center/agentCenterErrors';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 
@@ -45,6 +45,23 @@ const gateModeLabel: Record<string, string> = {
 };
 
 type Filter = 'all' | 'pending_review' | 'draft' | 'approved' | 'applied' | 'rejected' | 'experience' | 'settings';
+
+const renderGateBadge = (item: SkillEvolutionProposal) => {
+  if (item.gate_score == null) return null;
+  const rec = item.gate_recommendation ?? 'needs_review';
+  const color =
+    rec === 'approve'
+      ? 'var(--color-success-6)'
+      : rec === 'reject'
+        ? 'var(--color-danger-6)'
+        : 'var(--color-warning-6)';
+  return (
+    <span className='text-12px ml-8px' style={{ color }}>
+      门控 {item.gate_score}
+      {rec === 'approve' ? ' · 建议通过' : rec === 'reject' ? ' · 建议拒绝' : ' · 需复核'}
+    </span>
+  );
+};
 
 const SkillEvolutionListPage: React.FC = () => {
   const navigate = useNavigate();
@@ -261,23 +278,6 @@ const SkillEvolutionListPage: React.FC = () => {
     }
   };
 
-  const renderGateBadge = (item: SkillEvolutionProposal) => {
-    if (item.gate_score == null) return null;
-    const rec = item.gate_recommendation ?? 'needs_review';
-    const color =
-      rec === 'approve'
-        ? 'var(--color-success-6)'
-        : rec === 'reject'
-          ? 'var(--color-danger-6)'
-          : 'var(--color-warning-6)';
-    return (
-      <span className='text-12px ml-8px' style={{ color }}>
-        门控 {item.gate_score}
-        {rec === 'approve' ? ' · 建议通过' : rec === 'reject' ? ' · 建议拒绝' : ' · 需复核'}
-      </span>
-    );
-  };
-
   return (
     <div className='h-full overflow-auto p-24px'>
       {messageContext}
@@ -314,14 +314,13 @@ const SkillEvolutionListPage: React.FC = () => {
           ) : null}
         </div>
         <div className='flex gap-8px'>
-          <Button onClick={() => navigate('/agent-center')}>返回智能体中心</Button>
           <Button
             type='primary'
             onClick={() =>
               navigate(
                 assistantFilter
-                  ? `/agent-center/skill-evolution/new?assistant_id=${encodeURIComponent(assistantFilter)}`
-                  : '/agent-center/skill-evolution/new'
+                  ? `/skill-evolution/new?assistant_id=${encodeURIComponent(assistantFilter)}`
+                  : '/skill-evolution/new'
               )
             }
           >

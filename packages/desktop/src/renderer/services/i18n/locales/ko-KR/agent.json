@@ -49,6 +49,24 @@
   "warmup": {
     "clickToWake": "클릭하여 이 멤버를 깨우기"
   },
+  "agentCenter": {
+    "title": "에이전트 센터",
+    "description": "생성 → 지침과 개성 → 기능 설정 → 미리보기 → 게시 및 공유. 지식 제품은 독립적으로 유지됩니다.",
+    "emptyPinnedSkills": "고정된 스킬이 없습니다. 편집 페이지에서 연결할 수 있습니다.",
+    "tryRunImprovementDescription": "미리보기 → 지침 개선 → 다시 게시.",
+    "actions": {
+      "unpublish": "게시 취소"
+    },
+    "unpublish": {
+      "confirmTitle": "게시를 취소하시겠습니까?",
+      "confirmDescription": "게시된 버전은 기록에 유지되며 에이전트는 초안으로 돌아갑니다.",
+      "success": "게시가 취소되었습니다",
+      "error": "게시 취소 실패"
+    }
+  },
+  "skillEvolution": {
+    "title": "스킬 진화"
+  },
   "runtimeRestart": {
     "tooltip": "에이전트 다시 연결",
     "confirmContent": "에이전트 프로세스를 재시작하여 외부 CLI 구성 변경(채널 전환 등)을 적용합니다. 채팅 기록은 유지되며 가능하면 세션이 재개됩니다.",

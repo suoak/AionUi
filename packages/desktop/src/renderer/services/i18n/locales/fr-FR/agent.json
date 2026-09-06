@@ -49,6 +49,24 @@
   "warmup": {
     "clickToWake": "Cliquez pour réveiller ce membre"
   },
+  "agentCenter": {
+    "title": "Centre d’agents",
+    "description": "Créer → instructions → capacités → aperçu → publier. Les produits de connaissance restent indépendants.",
+    "emptyPinnedSkills": "Aucune compétence épinglée. Vous pouvez les associer depuis la page de modification.",
+    "tryRunImprovementDescription": "Aperçu → améliorer les instructions → republier.",
+    "actions": {
+      "unpublish": "Annuler la publication"
+    },
+    "unpublish": {
+      "confirmTitle": "Annuler la publication ?",
+      "confirmDescription": "La version publiée reste dans l’historique et l’agent repasse en brouillon.",
+      "success": "Publication annulée",
+      "error": "Échec de l’annulation"
+    }
+  },
+  "skillEvolution": {
+    "title": "Évolution des compétences"
+  },
   "runtimeRestart": {
     "tooltip": "Reconnecter l'agent",
     "confirmContent": "Redémarre le processus de l'agent pour qu'il prenne en compte les changements externes de configuration CLI (comme un changement de canal). L'historique du chat est conservé et la session est reprise si possible.",

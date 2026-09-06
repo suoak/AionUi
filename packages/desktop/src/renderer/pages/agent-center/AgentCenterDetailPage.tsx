@@ -1,8 +1,8 @@
-import { Button, Message, Tag, Typography } from '@arco-design/web-react';
+import { Button, Message, Modal, Tag, Typography } from '@arco-design/web-react';
 import { ipcBridge } from '@/common';
 import type { AgentCenterDetail, AgentVisibility } from '@/common/types/agent/agentCenterTypes';
-import type { ExperienceArticle, SkillEvolutionProposal } from '@/common/types/agent/skillEvolutionTypes';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
 import { formatAgentCenterError } from './agentCenterErrors';
 
@@ -20,29 +20,19 @@ const visibilityLabel: Record<AgentVisibility, string> = {
   enterprise: '企业',
 };
 
-const proposalStatusLabel: Record<string, string> = {
-  draft: '草稿',
-  pending_review: '待审核',
-  approved: '已通过',
-  rejected: '已拒绝',
-  applied: '已应用',
-  rolled_back: '已回滚',
-};
-
 /**
- * ChatGPT-inspired agent detail hub: instructions snippet, capability chips,
- * pinned skills, recent skill-evolution proposals, and improvement CTAs.
+ * ChatGPT-inspired agent detail hub: instructions, capabilities, skills, and
+ * lifecycle actions. Skill evolution is intentionally a separate product area.
  */
 const AgentCenterDetailPage: React.FC = () => {
   const { id = '' } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const [message, messageContext] = Message.useMessage({ maxCount: 5 });
   const messageRef = useRef(message);
   messageRef.current = message;
   const [detail, setDetail] = useState<AgentCenterDetail | null>(null);
   const [instructions, setInstructions] = useState('');
-  const [proposals, setProposals] = useState<SkillEvolutionProposal[]>([]);
-  const [experienceCount, setExperienceCount] = useState(0);
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
@@ -52,19 +42,9 @@ const AgentCenterDetailPage: React.FC = () => {
     setLoading(true);
     setLoadError(null);
     try {
-      const [agent, props, experience] = await Promise.all([
-        ipcBridge.agentCenter.get.invoke({ id }),
-        ipcBridge.skillEvolution.listProposals
-          .invoke({ assistant_id: id, limit: 20 })
-          .catch((): SkillEvolutionProposal[] => []),
-        ipcBridge.skillEvolution.listExperience
-          .invoke({ assistant_id: id, limit: 100 })
-          .catch((): ExperienceArticle[] => []),
-      ]);
+      const agent = await ipcBridge.agentCenter.get.invoke({ id });
       setDetail(agent);
       setInstructions(agent.assistant.rules?.content ?? '');
-      setProposals(props);
-      setExperienceCount(experience.length);
     } catch (error) {
       console.error(error);
       const msg = formatAgentCenterError(error, '加载智能体详情失败');
@@ -134,6 +114,30 @@ const AgentCenterDetailPage: React.FC = () => {
     }
   };
 
+  const handleUnpublish = () => {
+    if (!id) return;
+    Modal.confirm({
+      title: t('agent.agentCenter.unpublish.confirmTitle'),
+      content: t('agent.agentCenter.unpublish.confirmDescription'),
+      okText: t('agent.agentCenter.actions.unpublish'),
+      cancelText: t('common.cancel'),
+      onOk: async () => {
+        setBusy(true);
+        try {
+          await ipcBridge.agentCenter.unpublish.invoke({ id });
+          messageRef.current.success(t('agent.agentCenter.unpublish.success'));
+          await load();
+        } catch (error) {
+          console.error(error);
+          messageRef.current.error(formatAgentCenterError(error, t('agent.agentCenter.unpublish.error')));
+          throw error;
+        } finally {
+          setBusy(false);
+        }
+      },
+    });
+  };
+
   if (!id) {
     return (
       <div className='p-24px'>
@@ -190,32 +194,11 @@ const AgentCenterDetailPage: React.FC = () => {
                   {detail.meta.status === 'draft' ? '发布' : '重新发布'}
                 </Button>
               ) : null}
-            </div>
-          </div>
-
-          <div className='rounded-8px border border-[var(--color-border-2)] p-16px mb-16px bg-[var(--color-fill-1)]'>
-            <Text bold className='block mb-8px'>
-              改进闭环
-            </Text>
-            <Text type='secondary' className='text-12px block mb-12px'>
-              试跑后可回来改指令、从会话提炼技能，再发布 pin。经验库不会注入日常对话。
-            </Text>
-            <div className='flex flex-wrap gap-8px'>
-              <Button size='small' onClick={() => navigate(`/agent-center/${id}/edit`, { state: { focusStep: 1 } })}>
-                根据试跑改进指令
-              </Button>
-              <Button
-                size='small'
-                onClick={() => navigate(`/agent-center/skill-evolution/new?assistant_id=${encodeURIComponent(id)}`)}
-              >
-                从会话提炼技能
-              </Button>
-              <Button
-                size='small'
-                onClick={() => navigate(`/agent-center/skill-evolution?assistant_id=${encodeURIComponent(id)}`)}
-              >
-                查看技能提案（{proposals.length}）
-              </Button>
+              {detail.meta.status === 'published' ? (
+                <Button status='danger' loading={busy} onClick={handleUnpublish}>
+                  {t('agent.agentCenter.actions.unpublish')}
+                </Button>
+              ) : null}
             </div>
           </div>
 
@@ -258,7 +241,7 @@ const AgentCenterDetailPage: React.FC = () => {
               </Text>
               {detail.meta.skill_refs.length === 0 ? (
                 <Text type='secondary' className='text-12px'>
-                  暂无 pin。审核通过技能进化提案并「写入 Skills Hub」时可自动绑定。
+                  {t('agent.agentCenter.emptyPinnedSkills')}
                 </Text>
               ) : (
                 <div className='flex flex-col gap-8px'>
@@ -276,57 +259,7 @@ const AgentCenterDetailPage: React.FC = () => {
                   ))}
                 </div>
               )}
-              <Text type='secondary' className='text-12px mt-12px block'>
-                经验库文章：{experienceCount}（仅技能进化使用，不注入对话）
-              </Text>
             </div>
-          </div>
-
-          <div className='rounded-8px border border-[var(--color-border-2)] p-16px'>
-            <div className='flex items-center justify-between mb-8px gap-8px'>
-              <Text bold>建议改进 · 最近技能提案</Text>
-              <Button
-                size='mini'
-                type='text'
-                onClick={() => navigate(`/agent-center/skill-evolution?assistant_id=${encodeURIComponent(id)}`)}
-              >
-                全部
-              </Button>
-            </div>
-            {proposals.length === 0 ? (
-              <Text type='secondary' className='text-12px'>
-                尚无提案。试跑几轮对话后，可用「从会话提炼技能」沉淀可复用 SKILL.md。
-              </Text>
-            ) : (
-              <div className='flex flex-col gap-8px'>
-                {proposals.slice(0, 8).map((p) => (
-                  <div
-                    key={p.id}
-                    className='rounded-6px border border-[var(--color-border-1)] p-10px flex items-center justify-between gap-8px'
-                  >
-                    <div className='min-w-0'>
-                      <div className='text-13px font-medium truncate'>{p.title}</div>
-                      <Text type='secondary' className='text-12px'>
-                        {proposalStatusLabel[p.status] ?? p.status}
-                        {p.target_skill_key ? ` · ${p.target_skill_key}` : ''}
-                      </Text>
-                    </div>
-                    {(p.status === 'draft' || p.status === 'pending_review' || p.status === 'rejected') && (
-                      <Button
-                        size='mini'
-                        onClick={() =>
-                          navigate(`/agent-center/skill-evolution?assistant_id=${encodeURIComponent(id)}`, {
-                            state: { highlightId: p.id },
-                          })
-                        }
-                      >
-                        再次智能提炼
-                      </Button>
-                    )}
-                  </div>
-                ))}
-              </div>
-            )}
           </div>
         </>
       ) : null}

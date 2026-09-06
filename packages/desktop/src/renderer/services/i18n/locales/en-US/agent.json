@@ -49,6 +49,24 @@
   "warmup": {
     "clickToWake": "Click to wake this member"
   },
+  "agentCenter": {
+    "title": "Agent Center",
+    "description": "Create → instructions and personality → capabilities → preview → publish and share. Knowledge products remain independent.",
+    "emptyPinnedSkills": "No pinned skills. Bind skills from the edit page.",
+    "tryRunImprovementDescription": "Preview, refine the instructions, then publish again.",
+    "actions": {
+      "unpublish": "Unpublish"
+    },
+    "unpublish": {
+      "confirmTitle": "Unpublish agent?",
+      "confirmDescription": "The published version remains in history. The agent returns to draft and can be edited or published again.",
+      "success": "Agent unpublished",
+      "error": "Failed to unpublish"
+    }
+  },
+  "skillEvolution": {
+    "title": "Skill Evolution"
+  },
   "runtimeRestart": {
     "tooltip": "Reconnect agent",
     "confirmContent": "Restart the agent process so it picks up external CLI config changes (such as a channel switch). Chat history is kept and the session resumes when possible.",

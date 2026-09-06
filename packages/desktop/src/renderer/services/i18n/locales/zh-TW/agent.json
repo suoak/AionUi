@@ -49,6 +49,24 @@
   "warmup": {
     "clickToWake": "點擊喚醒該成員"
   },
+  "agentCenter": {
+    "title": "智能體中心",
+    "description": "建立 → 指令與個性 → 能力設定 → 試跑預覽 → 發布與分享。知識庫產品保持獨立。",
+    "emptyPinnedSkills": "暫無釘選技能，可在編輯頁中綁定。",
+    "tryRunImprovementDescription": "預覽 → 修改指令 → 再次發布。",
+    "actions": {
+      "unpublish": "取消發布"
+    },
+    "unpublish": {
+      "confirmTitle": "確認取消發布？",
+      "confirmDescription": "已發布版本會保留在版本歷史中；智能體將恢復為草稿，可繼續編輯或再次發布。",
+      "success": "已取消發布",
+      "error": "取消發布失敗"
+    }
+  },
+  "skillEvolution": {
+    "title": "技能進化"
+  },
   "runtimeRestart": {
     "tooltip": "重新連接代理",
     "confirmContent": "重新啟動代理進程,使其讀取最新的 CLI 設定(例如切換渠道後)。聊天記錄會保留,並盡可能恢復原會話。",

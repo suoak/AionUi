@@ -49,6 +49,24 @@
   "warmup": {
     "clickToWake": "Haz clic para activar este miembro"
   },
+  "agentCenter": {
+    "title": "Centro de agentes",
+    "description": "Crear → instrucciones → capacidades → vista previa → publicar. Los productos de conocimiento permanecen independientes.",
+    "emptyPinnedSkills": "No hay habilidades fijadas. Puedes vincularlas en la página de edición.",
+    "tryRunImprovementDescription": "Vista previa → mejorar instrucciones → volver a publicar.",
+    "actions": {
+      "unpublish": "Retirar publicación"
+    },
+    "unpublish": {
+      "confirmTitle": "¿Retirar la publicación?",
+      "confirmDescription": "La versión publicada permanece en el historial y el agente vuelve a borrador.",
+      "success": "Publicación retirada",
+      "error": "No se pudo retirar la publicación"
+    }
+  },
+  "skillEvolution": {
+    "title": "Evolución de habilidades"
+  },
   "runtimeRestart": {
     "tooltip": "Reconectar agente",
     "confirmContent": "Reinicia el proceso del agente para que adopte los cambios externos de configuración de la CLI (como un cambio de canal). El historial del chat se conserva y la sesión se reanuda cuando es posible.",

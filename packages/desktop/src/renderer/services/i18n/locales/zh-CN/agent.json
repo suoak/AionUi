@@ -49,6 +49,24 @@
   "warmup": {
     "clickToWake": "点击唤醒该成员"
   },
+  "agentCenter": {
+    "title": "智能体中心",
+    "description": "创建 → 指令与个性 → 能力配置 → 试跑预览 → 发布与共享。知识库产品保持独立，不在此捆绑。",
+    "emptyPinnedSkills": "暂无 pin 技能，可在编辑页中绑定。",
+    "tryRunImprovementDescription": "预览 → 改指令 → 再发布。",
+    "actions": {
+      "unpublish": "撤销发布"
+    },
+    "unpublish": {
+      "confirmTitle": "确认撤销发布？",
+      "confirmDescription": "已发布版本会保留在版本历史中；智能体将恢复为草稿，可继续编辑或再次发布。",
+      "success": "已撤销发布",
+      "error": "撤销发布失败"
+    }
+  },
+  "skillEvolution": {
+    "title": "技能进化"
+  },
   "runtimeRestart": {
     "tooltip": "重连代理",
     "confirmContent": "将重启代理进程，以读取最新的 CLI 配置（例如切换渠道后）。聊天记录不会丢失，代理会尽可能恢复当前会话。",
