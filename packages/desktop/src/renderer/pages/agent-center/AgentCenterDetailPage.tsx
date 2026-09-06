@@ -1,7 +1,11 @@
-import { Button, Message, Modal, Tag, Typography } from '@arco-design/web-react';
+import { Button, Collapse, Message, Modal, Tag, Typography } from '@arco-design/web-react';
 import { ipcBridge } from '@/common';
 import type { AgentCenterDetail, AgentVisibility, AgentWorkflowRun } from '@/common/types/agent/agentCenterTypes';
-import { hasActiveWorkflowRuns } from '@/common/types/agent/agentWorkflow';
+import {
+  formatWorkflowNodeOutput,
+  getWorkflowNodeDurationMs,
+  hasActiveWorkflowRuns,
+} from '@/common/types/agent/agentWorkflow';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -28,7 +32,7 @@ const visibilityLabel: Record<AgentVisibility, string> = {
 const AgentCenterDetailPage: React.FC = () => {
   const { id = '' } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [message, messageContext] = Message.useMessage({ maxCount: 5 });
   const messageRef = useRef(message);
   messageRef.current = message;
@@ -449,6 +453,48 @@ const AgentCenterDetailPage: React.FC = () => {
                         </Tag>
                       ))}
                     </div>
+                    {run.nodes.some((node) => node.output !== undefined || node.error) ? (
+                      <Collapse className='mt-8px' bordered={false}>
+                        <Collapse.Item header={t('common.technical_details')} name='node-details'>
+                          <div className='flex flex-col gap-8px'>
+                            {run.nodes
+                              .filter((node) => node.output !== undefined || node.error)
+                              .map((node) => {
+                                const duration = getWorkflowNodeDurationMs(node);
+                                return (
+                                  <div key={node.node_id} className='rounded-6px bg-[var(--color-fill-2)] p-8px'>
+                                    <div className='flex items-center gap-6px'>
+                                      <Text bold className='text-12px'>
+                                        {t(`agent.agentCenter.workflow.nodes.${node.kind}`)}
+                                      </Text>
+                                      {duration !== undefined ? (
+                                        <Text type='secondary' className='text-12px'>
+                                          {new Intl.NumberFormat(i18n.language, {
+                                            style: 'unit',
+                                            unit: 'second',
+                                            unitDisplay: 'short',
+                                            maximumFractionDigits: 1,
+                                          }).format(duration / 1000)}
+                                        </Text>
+                                      ) : null}
+                                    </div>
+                                    {node.error ? (
+                                      <Text type='error' className='mt-4px block text-12px'>
+                                        {node.error}
+                                      </Text>
+                                    ) : null}
+                                    {node.output !== undefined ? (
+                                      <pre className='mb-0 mt-4px max-h-160px overflow-auto whitespace-pre-wrap text-12px text-t-secondary'>
+                                        {formatWorkflowNodeOutput(node.output)}
+                                      </pre>
+                                    ) : null}
+                                  </div>
+                                );
+                              })}
+                          </div>
+                        </Collapse.Item>
+                      </Collapse>
+                    ) : null}
                     {run.next_action?.kind === 'invoke_tool' ? (
                       <div className='mt-8px rounded-6px border border-[var(--color-border-2)] p-8px'>
                         <Text className='text-12px block'>

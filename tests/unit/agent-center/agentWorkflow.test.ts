@@ -3,7 +3,9 @@ import {
   createAgentWorkflow,
   createDefaultAgentWorkflow,
   createDefaultWorkflowNodes,
+  formatWorkflowNodeOutput,
   getAgentPublishReadiness,
+  getWorkflowNodeDurationMs,
   getWorkflowNodeIssues,
   hasActiveWorkflowRuns,
   insertWorkflowNode,
@@ -17,6 +19,12 @@ describe('Agent workflow contract', () => {
     expect(hasActiveWorkflowRuns([{ status: 'running' }])).toBe(true);
     expect(hasActiveWorkflowRuns([{ status: 'waiting_approval' }])).toBe(true);
     expect(hasActiveWorkflowRuns([{ status: 'completed' }, { status: 'failed' }, { status: 'cancelled' }])).toBe(false);
+  });
+
+  it('formats completed node timing and structured output for inspection', () => {
+    expect(getWorkflowNodeDurationMs({ started_at: 1000, completed_at: 2250 })).toBe(1250);
+    expect(getWorkflowNodeDurationMs({ started_at: 2250, completed_at: 1000 })).toBeUndefined();
+    expect(formatWorkflowNodeOutput({ result: 'created' })).toBe('{\n  "result": "created"\n}');
   });
 
   it('creates the extensible single-agent execution path', () => {

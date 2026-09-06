@@ -8,6 +8,7 @@ import type {
   AgentWorkflowDefinition,
   AgentWorkflowNodeDefinition,
   AgentWorkflowNodeKind,
+  AgentWorkflowNodeRun,
   AgentWorkflowOutputFormat,
   AgentWorkflowRun,
 } from './agentCenterTypes';
@@ -16,6 +17,18 @@ const ACTIVE_WORKFLOW_STATUSES = new Set<AgentWorkflowRun['status']>(['running',
 
 export const hasActiveWorkflowRuns = (runs: ReadonlyArray<Pick<AgentWorkflowRun, 'status'>>): boolean =>
   runs.some((run) => ACTIVE_WORKFLOW_STATUSES.has(run.status));
+
+export const getWorkflowNodeDurationMs = (
+  node: Pick<AgentWorkflowNodeRun, 'started_at' | 'completed_at'>
+): number | undefined => {
+  if (node.started_at === undefined || node.completed_at === undefined || node.completed_at < node.started_at) {
+    return undefined;
+  }
+  return node.completed_at - node.started_at;
+};
+
+export const formatWorkflowNodeOutput = (output: unknown): string =>
+  typeof output === 'string' ? output : (JSON.stringify(output, null, 2) ?? '');
 
 export const createDefaultWorkflowNodes = (): AgentWorkflowNodeDefinition[] => [
   { id: 'start', kind: 'start' },
