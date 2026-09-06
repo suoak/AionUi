@@ -113,29 +113,16 @@ const AgentCenterDetailPage: React.FC = () => {
 
   const handleTryRun = async () => {
     if (!id) return;
-    setBusy(true);
-    try {
-      const run = await ipcBridge.agentCenter.startWorkflowRun.invoke({ id });
-      if (run.next_action?.kind !== 'run_agent') {
-        await load();
-        return;
-      }
-      navigate('/guid', {
-        state: {
-          selectedAssistantId: run.assistant_id,
-          agentCenterRunPlan: run.next_action.create_conversation,
-          agentWorkflowRunId: run.id,
-          agentCenterPreviewMode: detail?.meta.status === 'published' ? 'published' : 'draft',
-          focusPrefill: true,
-          agentCenterReturnTo: `/agent-center/${id}`,
-        },
-      });
-    } catch (error) {
-      console.error(error);
-      messageRef.current.error(formatAgentCenterError(error, '准备试跑失败'));
-    } finally {
-      setBusy(false);
-    }
+    navigate('/guid', {
+      state: {
+        selectedAssistantId: id,
+        agentWorkflowStartAssistantId: id,
+        agentWorkflowInputPlaceholder: detail?.meta.workflow.input.placeholder,
+        agentCenterPreviewMode: detail?.meta.status === 'published' ? 'published' : 'draft',
+        focusPrefill: true,
+        agentCenterReturnTo: `/agent-center/${id}`,
+      },
+    });
   };
 
   const handleApproval = async (runId: string, decision: 'approve' | 'reject') => {

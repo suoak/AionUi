@@ -10,10 +10,20 @@ import type { IMcpServer } from '@/common/config/storage';
 import { useGuidSend, type GuidSendDeps } from '@/renderer/pages/guid/hooks/useGuidSend';
 
 const createConversationInvokeMock = vi.fn();
+const startWorkflowRunInvokeMock = vi.fn();
+const cancelWorkflowRunInvokeMock = vi.fn();
 const swrMutateMock = vi.fn();
 
 vi.mock('@/common', () => ({
   ipcBridge: {
+    agentCenter: {
+      startWorkflowRun: {
+        invoke: (...args: unknown[]) => startWorkflowRunInvokeMock(...args),
+      },
+      cancelWorkflowRun: {
+        invoke: (...args: unknown[]) => cancelWorkflowRunInvokeMock(...args),
+      },
+    },
     conversation: {
       create: {
         invoke: (...args: unknown[]) => createConversationInvokeMock(...args),
@@ -78,13 +88,37 @@ describe('useGuidSend', () => {
   beforeEach(() => {
     createConversationInvokeMock.mockReset();
     createConversationInvokeMock.mockResolvedValue({ id: 'conv-1' });
+    startWorkflowRunInvokeMock.mockReset();
+    startWorkflowRunInvokeMock.mockResolvedValue({
+      id: 'run-1',
+      next_action: {
+        kind: 'run_agent',
+        create_conversation: {
+          assistant: {
+            id: 'assistant-1',
+            conversation_overrides: {
+              model: 'frozen-model',
+              permission: 'default',
+              skill_ids: ['frozen-skill'],
+              mcp_ids: ['mcp-user'],
+            },
+          },
+          extra: {
+            agent_workflow_run_id: 'run-1',
+            agent_workflow: { schema_version: 1 },
+          },
+        },
+      },
+    });
+    cancelWorkflowRunInvokeMock.mockReset();
+    cancelWorkflowRunInvokeMock.mockResolvedValue(undefined);
     swrMutateMock.mockReset();
     swrMutateMock.mockResolvedValue(undefined);
   });
 
   it('passes selected mode into assistant conversation overrides when creating a preset ACP conversation', async () => {
     const deps = createDeps();
-    (deps as any).selectedThoughtLevelValue = 'high';
+    deps.selectedThoughtLevelValue = 'high';
 
     const { result } = renderHook(() => useGuidSend(deps));
 
@@ -336,6 +370,52 @@ describe('useGuidSend', () => {
       await result.current.handleSend();
     });
 
+    expect(createConversationInvokeMock).not.toHaveBeenCalled();
+  });
+
+  it('starts a workflow on send and preserves its frozen conversation plan', async () => {
+    const deps = createDeps();
+    deps.agentWorkflowStartAssistantId = 'assistant-1';
+
+    const { result } = renderHook(() => useGuidSend(deps));
+    await act(async () => {
+      await result.current.handleSend();
+    });
+
+    expect(startWorkflowRunInvokeMock).toHaveBeenCalledWith({ id: 'assistant-1', input: 'hello' });
+    const payload = createConversationInvokeMock.mock.calls[0][0];
+    expect(payload.assistant.conversation_overrides.model).toBe('frozen-model');
+    expect(payload.assistant.conversation_overrides.skill_ids).toEqual(['frozen-skill']);
+    expect(payload.extra.agent_workflow_run_id).toBe('run-1');
+  });
+
+  it('cancels a workflow run when its conversation cannot be created', async () => {
+    const deps = createDeps();
+    deps.agentWorkflowStartAssistantId = 'assistant-1';
+    createConversationInvokeMock.mockRejectedValueOnce(new Error('create failed'));
+
+    const { result } = renderHook(() => useGuidSend(deps));
+    await expect(
+      act(async () => {
+        await result.current.handleSend();
+      })
+    ).rejects.toThrow('create failed');
+
+    expect(cancelWorkflowRunInvokeMock).toHaveBeenCalledWith({ id: 'run-1' });
+  });
+
+  it('requires text before starting a required-input workflow', async () => {
+    const deps = createDeps();
+    deps.agentWorkflowStartAssistantId = 'assistant-1';
+    deps.input = '   ';
+
+    const { result } = renderHook(() => useGuidSend(deps));
+    expect(result.current.isButtonDisabled).toBe(true);
+    await act(async () => {
+      await result.current.handleSend();
+    });
+
+    expect(startWorkflowRunInvokeMock).not.toHaveBeenCalled();
     expect(createConversationInvokeMock).not.toHaveBeenCalled();
   });
 

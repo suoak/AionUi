@@ -39,6 +39,7 @@ import React, { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useSta
 import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate } from 'react-router-dom';
 import useSWR from 'swr';
+import type { AgentCenterRunPlan } from '@/common/types/agent/agentCenterTypes';
 import styles from './index.module.css';
 
 type GuidNavigationState = {
@@ -50,7 +51,9 @@ type GuidNavigationState = {
   focusPrefill?: boolean;
   workspace?: string;
   agentCenterPreviewMode?: 'draft' | 'published';
-  agentCenterRunPlan?: unknown;
+  agentCenterRunPlan?: AgentCenterRunPlan['create_conversation'];
+  agentWorkflowStartAssistantId?: string;
+  agentWorkflowInputPlaceholder?: string;
   agentCenterReturnTo?: string;
   [key: string]: unknown;
 };
@@ -273,6 +276,8 @@ const GuidPage: React.FC = () => {
     navigate,
     t,
     localeKey,
+    agentCenterRunPlan: navState?.agentCenterRunPlan,
+    agentWorkflowStartAssistantId: navState?.agentWorkflowStartAssistantId,
   });
 
   // --- Coordinated handlers (depend on multiple hooks) ---
@@ -704,14 +709,20 @@ const GuidPage: React.FC = () => {
           />
 
           <GuidInputCard
-            focusRequestKey={navState?.focusPrefill && navState.prefillPrompt ? location.key : undefined}
+            focusRequestKey={
+              navState?.focusPrefill && (navState.prefillPrompt || navState.agentWorkflowStartAssistantId)
+                ? location.key
+                : undefined
+            }
             input={guidInput.input}
             onInputChange={handleInputChange}
             onKeyDown={handleInputKeyDown}
             onPaste={guidInput.onPaste}
             onFocus={guidInput.handleTextareaFocus}
             onBlur={guidInput.handleTextareaBlur}
-            placeholder={typewriterPlaceholder || t('conversation.welcome.placeholder')}
+            placeholder={
+              navState?.agentWorkflowInputPlaceholder || typewriterPlaceholder || t('conversation.welcome.placeholder')
+            }
             isInputActive={guidInput.isInputFocused}
             isFileDragging={guidInput.isFileDragging}
             activeBorderColor={activeBorderColor}
