@@ -148,6 +148,19 @@ const AgentCenterDetailPage: React.FC = () => {
     });
   };
 
+  const handleRetryRun = async (runId: string) => {
+    setBusy(true);
+    try {
+      await ipcBridge.agentCenter.retryWorkflowRun.invoke({ id: runId });
+      await load();
+    } catch (error) {
+      console.error(error);
+      messageRef.current.error(formatAgentCenterError(error, t('common.error')));
+    } finally {
+      setBusy(false);
+    }
+  };
+
   const handlePublish = async () => {
     if (!id) return;
     setBusy(true);
@@ -446,6 +459,16 @@ const AgentCenterDetailPage: React.FC = () => {
                       <div className='mt-8px flex justify-end'>
                         <Button size='mini' status='danger' loading={busy} onClick={() => handleCancelRun(run.id)}>
                           {t('common.cancel')}
+                        </Button>
+                      </div>
+                    ) : null}
+                    {run.status === 'failed' && run.nodes[run.current_node_index]?.kind === 'tool' ? (
+                      <div className='mt-8px flex items-center justify-between gap-8px'>
+                        <Text type='error' className='text-12px'>
+                          {run.nodes[run.current_node_index]?.error}
+                        </Text>
+                        <Button size='mini' loading={busy} onClick={() => void handleRetryRun(run.id)}>
+                          {t('common.retry')}
                         </Button>
                       </div>
                     ) : null}

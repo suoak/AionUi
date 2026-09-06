@@ -465,6 +465,10 @@ export const agentCenter = {
     (p) => `/api/agent-center/workflow-runs/${encodeURIComponent(p.id)}/cancel`,
     () => ({})
   ),
+  retryWorkflowRun: httpPost<AgentWorkflowRun, { id: string }>(
+    (p) => `/api/agent-center/workflow-runs/${encodeURIComponent(p.id)}/retry`,
+    () => ({})
+  ),
 };
 
 // ---------------------------------------------------------------------------
