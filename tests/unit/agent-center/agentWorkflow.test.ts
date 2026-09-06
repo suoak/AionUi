@@ -63,10 +63,21 @@ describe('Agent workflow contract', () => {
 
   it('rejects a tool node whose MCP server is no longer enabled', () => {
     const nodes = updateWorkflowNode(insertWorkflowNode(createDefaultWorkflowNodes(), 'tool', 'tool-1'), 'tool-1', {
-      config: { tool_id: 'github' },
+      config: { mcp_server_id: 'github', tool_name: 'create_issue' },
     });
 
-    expect(getWorkflowNodeIssues(nodes, ['filesystem'])).toEqual([{ nodeId: 'tool-1', field: 'toolId' }]);
+    expect(getWorkflowNodeIssues(nodes, ['filesystem'])).toEqual([{ nodeId: 'tool-1', field: 'mcpServerId' }]);
+  });
+
+  it('requires a concrete tool name and JSON object arguments', () => {
+    const nodes = updateWorkflowNode(insertWorkflowNode(createDefaultWorkflowNodes(), 'tool', 'tool-1'), 'tool-1', {
+      config: { mcp_server_id: 'github', arguments_json: '[]' },
+    });
+
+    expect(getWorkflowNodeIssues(nodes)).toEqual([
+      { nodeId: 'tool-1', field: 'toolName' },
+      { nodeId: 'tool-1', field: 'toolArguments' },
+    ]);
   });
 
   it('removes configurable nodes but preserves required nodes', () => {

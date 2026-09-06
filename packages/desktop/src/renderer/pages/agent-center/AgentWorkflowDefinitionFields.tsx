@@ -121,17 +121,31 @@ const AgentWorkflowDefinitionFields: React.FC<AgentWorkflowDefinitionFieldsProps
                 </div>
               </div>
               {node.kind === 'tool' ? (
-                <Select
-                  value={node.config?.tool_id || undefined}
-                  placeholder={t('agent.agentCenter.workflow.nodeEditor.toolPlaceholder')}
-                  onChange={(value) => updateConfig(node, 'tool_id', value as string)}
-                >
-                  {toolOptions.map((tool) => (
-                    <Select.Option key={tool.id} value={tool.id}>
-                      {tool.name}
-                    </Select.Option>
-                  ))}
-                </Select>
+                <div className='flex flex-col gap-8px'>
+                  <Text type='secondary'>{t('mcp.servers')}</Text>
+                  <Select
+                    value={node.config?.mcp_server_id || node.config?.tool_id || undefined}
+                    placeholder={t('agent.agentCenter.workflow.nodeEditor.toolPlaceholder')}
+                    onChange={(value) => updateConfig(node, 'mcp_server_id', value as string)}
+                  >
+                    {toolOptions.map((tool) => (
+                      <Select.Option key={tool.id} value={tool.id}>
+                        {tool.name}
+                      </Select.Option>
+                    ))}
+                  </Select>
+                  <Text type='secondary'>{t('agent.agentCenter.workflow.nodes.tool')}</Text>
+                  <Input
+                    value={node.config?.tool_name ?? ''}
+                    onChange={(value) => updateConfig(node, 'tool_name', value)}
+                  />
+                  <Text type='secondary'>{t('mcp.parametersJson')}</Text>
+                  <Input.TextArea
+                    value={node.config?.arguments_json ?? ''}
+                    onChange={(value) => updateConfig(node, 'arguments_json', value)}
+                    autoSize={{ minRows: 2, maxRows: 6 }}
+                  />
+                </div>
               ) : null}
               {node.kind === 'approval' ? (
                 <Input.TextArea

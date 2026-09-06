@@ -168,6 +168,33 @@ const AgentCenterDetailPage: React.FC = () => {
     });
   };
 
+  const handleEdit = () => {
+    if (!id || !detail) return;
+    if (detail.meta.status !== 'published') {
+      navigate(`/agent-center/${id}/edit`);
+      return;
+    }
+    Modal.confirm({
+      title: t('agent.agentCenter.unpublish.confirmTitle'),
+      content: t('agent.agentCenter.unpublish.confirmDescription'),
+      okText: t('agent.agentCenter.actions.unpublish'),
+      cancelText: t('common.cancel'),
+      onOk: async () => {
+        setBusy(true);
+        try {
+          await ipcBridge.agentCenter.unpublish.invoke({ id });
+          navigate(`/agent-center/${id}/edit`);
+        } catch (error) {
+          console.error(error);
+          messageRef.current.error(formatAgentCenterError(error, t('agent.agentCenter.unpublish.error')));
+          throw error;
+        } finally {
+          setBusy(false);
+        }
+      },
+    });
+  };
+
   if (!id) {
     return (
       <div className='p-24px'>
@@ -216,7 +243,7 @@ const AgentCenterDetailPage: React.FC = () => {
               <Button type='primary' loading={busy} onClick={() => void handleTryRun()}>
                 试跑
               </Button>
-              <Button loading={busy} onClick={() => navigate(`/agent-center/${id}/edit`)}>
+              <Button loading={busy} onClick={handleEdit}>
                 编辑
               </Button>
               {detail.meta.status === 'draft' || detail.meta.status === 'published' ? (

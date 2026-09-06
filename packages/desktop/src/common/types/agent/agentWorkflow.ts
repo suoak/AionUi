@@ -78,18 +78,39 @@ export const moveWorkflowNode = (
 export const removeWorkflowNode = (nodes: AgentWorkflowNodeDefinition[], id: string): AgentWorkflowNodeDefinition[] =>
   nodes.filter((node) => node.id !== id || ['start', 'agent', 'output'].includes(node.kind));
 
-export type WorkflowNodeIssue = { nodeId: string; field: 'toolId' | 'approvalMessage' | 'expression' };
+export type WorkflowNodeIssue = {
+  nodeId: string;
+  field: 'mcpServerId' | 'toolName' | 'toolArguments' | 'approvalMessage' | 'expression';
+};
+
+const hasValidToolArguments = (raw: string | undefined): boolean => {
+  if (!raw?.trim()) return true;
+  try {
+    const value: unknown = JSON.parse(raw);
+    return typeof value === 'object' && value !== null && !Array.isArray(value);
+  } catch {
+    return false;
+  }
+};
 
 export const getWorkflowNodeIssues = (
   nodes: AgentWorkflowNodeDefinition[],
   allowedToolIds?: readonly string[]
 ): WorkflowNodeIssue[] =>
   nodes.flatMap<WorkflowNodeIssue>((node) => {
-    if (
-      node.kind === 'tool' &&
-      (!node.config?.tool_id?.trim() || (allowedToolIds && !allowedToolIds.includes(node.config.tool_id)))
-    ) {
-      return [{ nodeId: node.id, field: 'toolId' as const }];
+    if (node.kind === 'tool') {
+      const serverId = node.config?.mcp_server_id?.trim() || node.config?.tool_id?.trim();
+      const issues: WorkflowNodeIssue[] = [];
+      if (!serverId || (allowedToolIds && !allowedToolIds.includes(serverId))) {
+        issues.push({ nodeId: node.id, field: 'mcpServerId' });
+      }
+      if (!node.config?.tool_name?.trim()) {
+        issues.push({ nodeId: node.id, field: 'toolName' });
+      }
+      if (!hasValidToolArguments(node.config?.arguments_json)) {
+        issues.push({ nodeId: node.id, field: 'toolArguments' });
+      }
+      return issues;
     }
     if (node.kind === 'approval' && !node.config?.message?.trim()) {
       return [{ nodeId: node.id, field: 'approvalMessage' as const }];
