@@ -10,6 +10,14 @@ export type AgentMcpPolicy = 'allowlist' | 'inherit_user_enabled';
 export type SkillVersionPolicy = 'pin' | 'latest';
 export type AgentAclRole = 'owner' | 'editor' | 'user';
 export type AgentWorkflowOutputFormat = 'markdown' | 'plain_text' | 'json';
+export type AgentWorkflowNodeKind = 'start' | 'agent' | 'tool' | 'approval' | 'condition' | 'output';
+
+export type AgentWorkflowNodeDefinition = {
+  id: string;
+  kind: AgentWorkflowNodeKind;
+  label?: string;
+  config?: Record<string, string>;
+};
 
 export type AgentWorkflowDefinition = {
   schema_version: 1;
@@ -22,7 +30,7 @@ export type AgentWorkflowDefinition = {
   output: {
     format: AgentWorkflowOutputFormat;
   };
-  nodes: Array<{ id: string; kind: string }>;
+  nodes: AgentWorkflowNodeDefinition[];
   edges: Array<{ source: string; target: string }>;
 };
 

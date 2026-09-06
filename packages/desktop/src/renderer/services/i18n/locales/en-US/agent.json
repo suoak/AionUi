@@ -69,11 +69,13 @@
         "name": "Name",
         "instructions": "Instructions",
         "input": "Input guidance",
+        "nodes": "Workflow nodes",
         "ready": "Ready",
         "missing": "Missing",
         "nameMissing": "Add a name before publishing.",
         "instructionsMissing": "Add instructions before publishing.",
-        "inputMissing": "Describe the required input before publishing."
+        "inputMissing": "Describe the required input before publishing.",
+        "nodesMissing": "Complete every configurable workflow node before publishing."
       }
     },
     "templates": {
@@ -126,11 +128,24 @@
     "workflow": {
       "description": "Define a contract around the existing Agent Runtime. This MVP runs one agent and remains extensible.",
       "executionPath": "Execution path",
-      "futureHint": "Manual trigger is available now. Nodes and edges can later add tools, approval, conditions, and sub-workflows.",
+      "futureHint": "Linear tool, approval, and condition nodes are available. Branching and sub-workflows come next.",
       "nodes": {
         "start": "Start",
         "agent": "Agent",
+        "tool": "Tool",
+        "approval": "Approval",
+        "condition": "Condition",
         "output": "Output"
+      },
+      "nodeEditor": {
+        "title": "Workflow nodes",
+        "description": "Add governed steps after the agent. The declared order becomes the execution contract.",
+        "addNode": "Add {{type}}",
+        "moveUp": "Move up",
+        "moveDown": "Move down",
+        "toolPlaceholder": "Select an enabled MCP server",
+        "approvalPlaceholder": "Describe what a reviewer must approve before execution continues.",
+        "conditionPlaceholder": "Enter a guard expression, for example: risk_score > 70"
       },
       "inputLabel": "Input guidance",
       "inputPlaceholder": "Tell users what context or files to provide.",

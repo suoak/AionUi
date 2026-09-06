@@ -2,7 +2,13 @@ import { describe, expect, it } from 'vitest';
 import {
   createAgentWorkflow,
   createDefaultAgentWorkflow,
+  createDefaultWorkflowNodes,
   getAgentPublishReadiness,
+  getWorkflowNodeIssues,
+  insertWorkflowNode,
+  moveWorkflowNode,
+  removeWorkflowNode,
+  updateWorkflowNode,
 } from '@/common/types/agent/agentWorkflow';
 
 describe('Agent workflow contract', () => {
@@ -22,8 +28,51 @@ describe('Agent workflow contract', () => {
   });
 
   it('blocks publication when required builder content is blank', () => {
-    const readiness = getAgentPublishReadiness({ name: ' ', instructions: '', inputPlaceholder: '\n' });
+    const readiness = getAgentPublishReadiness({
+      name: ' ',
+      instructions: '',
+      inputPlaceholder: '\n',
+      nodes: createDefaultWorkflowNodes(),
+    });
 
-    expect(readiness.every((item) => !item.ready)).toBe(true);
+    expect(readiness.filter((item) => item.key !== 'nodes').every((item) => !item.ready)).toBe(true);
+    expect(readiness.find((item) => item.key === 'nodes')?.ready).toBe(true);
+  });
+
+  it('inserts and reorders configurable nodes without moving fixed boundary nodes', () => {
+    const withTool = insertWorkflowNode(createDefaultWorkflowNodes(), 'tool', 'tool-1');
+    const withApproval = insertWorkflowNode(withTool, 'approval', 'approval-1');
+
+    expect(moveWorkflowNode(withApproval, 'approval-1', -1).map((node) => node.id)).toEqual([
+      'start',
+      'agent',
+      'approval-1',
+      'tool-1',
+      'output',
+    ]);
+    expect(moveWorkflowNode(withApproval, 'tool-1', -1)).toBe(withApproval);
+  });
+
+  it('reports incomplete configurable nodes and clears the issue after configuration', () => {
+    const nodes = insertWorkflowNode(createDefaultWorkflowNodes(), 'condition', 'condition-1');
+    const configured = updateWorkflowNode(nodes, 'condition-1', { config: { expression: 'risk_score > 70' } });
+
+    expect(getWorkflowNodeIssues(nodes)).toEqual([{ nodeId: 'condition-1', field: 'expression' }]);
+    expect(getWorkflowNodeIssues(configured)).toEqual([]);
+  });
+
+  it('rejects a tool node whose MCP server is no longer enabled', () => {
+    const nodes = updateWorkflowNode(insertWorkflowNode(createDefaultWorkflowNodes(), 'tool', 'tool-1'), 'tool-1', {
+      config: { tool_id: 'github' },
+    });
+
+    expect(getWorkflowNodeIssues(nodes, ['filesystem'])).toEqual([{ nodeId: 'tool-1', field: 'toolId' }]);
+  });
+
+  it('removes configurable nodes but preserves required nodes', () => {
+    const nodes = insertWorkflowNode(createDefaultWorkflowNodes(), 'tool', 'tool-1');
+
+    expect(removeWorkflowNode(nodes, 'tool-1').map((node) => node.id)).toEqual(['start', 'agent', 'output']);
+    expect(removeWorkflowNode(nodes, 'agent')).toEqual(nodes);
   });
 });

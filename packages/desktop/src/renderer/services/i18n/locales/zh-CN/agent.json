@@ -69,11 +69,13 @@
         "name": "智能体名称",
         "instructions": "核心指令",
         "input": "输入说明",
+        "nodes": "工作流节点",
         "ready": "已就绪",
         "missing": "待完善",
         "nameMissing": "发布前请填写智能体名称。",
         "instructionsMissing": "发布前请填写核心指令。",
-        "inputMissing": "发布前请说明用户需要提供什么输入。"
+        "inputMissing": "发布前请说明用户需要提供什么输入。",
+        "nodesMissing": "发布前请完成所有可配置工作流节点。"
       }
     },
     "templates": {
@@ -126,11 +128,24 @@
     "workflow": {
       "description": "在现有 Agent Runtime 外定义输入输出契约。MVP 运行单个智能体，同时保留可扩展结构。",
       "executionPath": "执行路径",
-      "futureHint": "当前支持手动触发；节点和边未来可增加工具、审批、条件与子工作流。",
+      "futureHint": "当前支持线性工具、审批和条件节点；下一阶段扩展分支与子工作流。",
       "nodes": {
         "start": "开始",
         "agent": "智能体",
+        "tool": "工具",
+        "approval": "审批",
+        "condition": "条件",
         "output": "输出"
+      },
+      "nodeEditor": {
+        "title": "工作流节点",
+        "description": "在智能体之后增加受控步骤，排列顺序会成为执行契约。",
+        "addNode": "添加{{type}}",
+        "moveUp": "上移",
+        "moveDown": "下移",
+        "toolPlaceholder": "选择已启用的 MCP 服务器",
+        "approvalPlaceholder": "说明继续执行前需要审批人确认的内容。",
+        "conditionPlaceholder": "输入守卫表达式，例如：risk_score > 70"
       },
       "inputLabel": "输入说明",
       "inputPlaceholder": "告诉用户需要提供哪些上下文或文件。",
