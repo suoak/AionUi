@@ -52,8 +52,11 @@ import type {
 import type {
   AgentCenterRevision,
   AgentCenterRunPlan,
+  AgentWorkflowRun,
+  AdvanceAgentWorkflowRunRequest,
   CreateAgentCenterRequest,
   PublishAgentCenterRequest,
+  StartAgentWorkflowRunRequest,
   UpdateAgentCenterRequest,
 } from '../types/agent/agentCenterTypes';
 import {
@@ -430,6 +433,36 @@ export const agentCenter = {
   run: httpPost<AgentCenterRunPlan, { id: string }>(
     (p) => `/api/agent-center/agents/${encodeURIComponent(p.id)}/run`,
     () => ({})
+  ),
+  startWorkflowRun: httpPost<AgentWorkflowRun, StartAgentWorkflowRunRequest & { id: string }>(
+    (p) => `/api/agent-center/agents/${encodeURIComponent(p.id)}/workflow-runs`,
+    (p) => {
+      const { id: _id, ...body } = p;
+      return body;
+    }
+  ),
+  listWorkflowRuns: httpGet<AgentWorkflowRun[], { id: string }>(
+    (p) => `/api/agent-center/agents/${encodeURIComponent(p.id)}/workflow-runs`
+  ),
+  getWorkflowRun: httpGet<AgentWorkflowRun, { id: string }>(
+    (p) => `/api/agent-center/workflow-runs/${encodeURIComponent(p.id)}`
+  ),
+  advanceWorkflowRun: httpPost<AgentWorkflowRun, AdvanceAgentWorkflowRunRequest & { id: string }>(
+    (p) => `/api/agent-center/workflow-runs/${encodeURIComponent(p.id)}/advance`,
+    (p) => {
+      const { id: _id, ...body } = p;
+      return body;
+    }
+  ),
+  decideWorkflowApproval: httpPost<
+    AgentWorkflowRun,
+    { id: string; decision: 'approve' | 'reject'; comment?: string }
+  >(
+    (p) => `/api/agent-center/workflow-runs/${encodeURIComponent(p.id)}/approval`,
+    (p) => {
+      const { id: _id, ...body } = p;
+      return body;
+    }
   ),
 };
 

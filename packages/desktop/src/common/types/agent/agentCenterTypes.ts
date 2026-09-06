@@ -155,3 +155,52 @@ export interface AgentCenterRunPlan {
     extra?: Record<string, unknown>;
   };
 }
+
+export type AgentWorkflowRunStatus = 'running' | 'waiting_approval' | 'completed' | 'rejected' | 'failed';
+export type AgentWorkflowNodeRunStatus =
+  | 'pending'
+  | 'running'
+  | 'waiting_approval'
+  | 'completed'
+  | 'skipped'
+  | 'rejected'
+  | 'failed';
+
+export type AgentWorkflowNodeRun = {
+  node_id: string;
+  kind: AgentWorkflowNodeKind;
+  status: AgentWorkflowNodeRunStatus;
+  output?: unknown;
+  error?: string;
+  started_at?: number;
+  completed_at?: number;
+};
+
+export type AgentWorkflowNextAction =
+  | { kind: 'run_agent'; create_conversation: AgentCenterRunPlan['create_conversation'] }
+  | { kind: 'invoke_tool'; tool_id: string }
+  | { kind: 'await_approval'; node_id: string; message: string };
+
+export type AgentWorkflowRun = {
+  id: string;
+  assistant_id: string;
+  status: AgentWorkflowRunStatus;
+  current_node_index: number;
+  workflow: AgentWorkflowDefinition;
+  nodes: AgentWorkflowNodeRun[];
+  variables: Record<string, unknown>;
+  next_action?: AgentWorkflowNextAction;
+  created_at: number;
+  updated_at: number;
+};
+
+export type StartAgentWorkflowRunRequest = {
+  input?: unknown;
+  variables?: Record<string, unknown>;
+};
+
+export type AdvanceAgentWorkflowRunRequest = {
+  success?: boolean;
+  output?: unknown;
+  error?: string;
+};

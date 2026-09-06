@@ -158,6 +158,32 @@
       "contractSummary": "Input: {{input}} · Output: {{output}}",
       "defaultInput": "Text request"
     },
+    "workflowRuns": {
+      "title": "Workflow runs",
+      "refresh": "Refresh",
+      "empty": "No workflow runs yet.",
+      "approve": "Approve",
+      "reject": "Reject",
+      "approvalApproved": "Approval accepted",
+      "approvalRejected": "Workflow rejected",
+      "approvalError": "Failed to update approval",
+      "status": {
+        "running": "Running",
+        "waiting_approval": "Waiting for approval",
+        "completed": "Completed",
+        "rejected": "Rejected",
+        "failed": "Failed"
+      },
+      "nodeStatus": {
+        "pending": "Pending",
+        "running": "Running",
+        "waiting_approval": "Waiting",
+        "completed": "Completed",
+        "skipped": "Skipped",
+        "rejected": "Rejected",
+        "failed": "Failed"
+      }
+    },
     "actions": {
       "unpublish": "Отменить публикацию"
     },

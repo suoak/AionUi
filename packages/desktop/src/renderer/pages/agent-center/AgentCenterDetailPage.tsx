@@ -1,6 +1,6 @@
 import { Button, Message, Modal, Tag, Typography } from '@arco-design/web-react';
 import { ipcBridge } from '@/common';
-import type { AgentCenterDetail, AgentVisibility } from '@/common/types/agent/agentCenterTypes';
+import type { AgentCenterDetail, AgentVisibility, AgentWorkflowRun } from '@/common/types/agent/agentCenterTypes';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -36,14 +36,19 @@ const AgentCenterDetailPage: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
+  const [workflowRuns, setWorkflowRuns] = useState<AgentWorkflowRun[]>([]);
 
   const load = useCallback(async () => {
     if (!id) return;
     setLoading(true);
     setLoadError(null);
     try {
-      const agent = await ipcBridge.agentCenter.get.invoke({ id });
+      const [agent, runs] = await Promise.all([
+        ipcBridge.agentCenter.get.invoke({ id }),
+        ipcBridge.agentCenter.listWorkflowRuns.invoke({ id }),
+      ]);
       setDetail(agent);
+      setWorkflowRuns(runs);
       setInstructions(agent.assistant.rules?.content ?? '');
     } catch (error) {
       console.error(error);
@@ -78,12 +83,17 @@ const AgentCenterDetailPage: React.FC = () => {
     if (!id) return;
     setBusy(true);
     try {
-      const plan = await ipcBridge.agentCenter.run.invoke({ id });
+      const run = await ipcBridge.agentCenter.startWorkflowRun.invoke({ id });
+      if (run.next_action?.kind !== 'run_agent') {
+        await load();
+        return;
+      }
       navigate('/guid', {
         state: {
-          selectedAssistantId: plan.assistant_id,
-          agentCenterRunPlan: plan.create_conversation,
-          agentCenterPreviewMode: plan.preview_mode,
+          selectedAssistantId: run.assistant_id,
+          agentCenterRunPlan: run.next_action.create_conversation,
+          agentWorkflowRunId: run.id,
+          agentCenterPreviewMode: detail?.meta.status === 'published' ? 'published' : 'draft',
           focusPrefill: true,
           agentCenterReturnTo: `/agent-center/${id}`,
         },
@@ -91,6 +101,26 @@ const AgentCenterDetailPage: React.FC = () => {
     } catch (error) {
       console.error(error);
       messageRef.current.error(formatAgentCenterError(error, '准备试跑失败'));
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  const handleApproval = async (runId: string, decision: 'approve' | 'reject') => {
+    setBusy(true);
+    try {
+      await ipcBridge.agentCenter.decideWorkflowApproval.invoke({ id: runId, decision });
+      messageRef.current.success(
+        t(
+          decision === 'approve'
+            ? 'agent.agentCenter.workflowRuns.approvalApproved'
+            : 'agent.agentCenter.workflowRuns.approvalRejected'
+        )
+      );
+      await load();
+    } catch (error) {
+      console.error(error);
+      messageRef.current.error(formatAgentCenterError(error, t('agent.agentCenter.workflowRuns.approvalError')));
     } finally {
       setBusy(false);
     }
@@ -287,6 +317,58 @@ const AgentCenterDetailPage: React.FC = () => {
                 ),
               })}
             </Text>
+          </div>
+          <div className='rounded-8px border border-[var(--color-border-2)] p-16px mt-16px'>
+            <div className='flex items-center justify-between gap-8px mb-8px'>
+              <Text bold>{t('agent.agentCenter.workflowRuns.title')}</Text>
+              <Button size='mini' onClick={() => void load()}>
+                {t('agent.agentCenter.workflowRuns.refresh')}
+              </Button>
+            </div>
+            {workflowRuns.length === 0 ? (
+              <Text type='secondary' className='text-12px'>
+                {t('agent.agentCenter.workflowRuns.empty')}
+              </Text>
+            ) : (
+              <div className='flex flex-col gap-8px'>
+                {workflowRuns.slice(0, 10).map((run) => (
+                  <div key={run.id} className='rounded-6px bg-[var(--color-fill-1)] p-10px'>
+                    <div className='flex items-center justify-between gap-8px flex-wrap'>
+                      <div className='flex items-center gap-6px min-w-0'>
+                        <Tag size='small' color={run.status === 'completed' ? 'green' : run.status === 'failed' ? 'red' : 'arcoblue'}>
+                          {t(`agent.agentCenter.workflowRuns.status.${run.status}`)}
+                        </Tag>
+                        <Text className='text-12px'>{run.id}</Text>
+                      </div>
+                      <Text type='secondary' className='text-12px'>
+                        {new Date(run.updated_at).toLocaleString()}
+                      </Text>
+                    </div>
+                    <div className='flex gap-4px flex-wrap mt-8px'>
+                      {run.nodes.map((node) => (
+                        <Tag key={node.node_id} size='small'>
+                          {t(`agent.agentCenter.workflow.nodes.${node.kind}`)} ·{' '}
+                          {t(`agent.agentCenter.workflowRuns.nodeStatus.${node.status}`)}
+                        </Tag>
+                      ))}
+                    </div>
+                    {run.next_action?.kind === 'await_approval' ? (
+                      <div className='mt-8px flex items-center justify-between gap-8px flex-wrap'>
+                        <Text className='text-12px'>{run.next_action.message}</Text>
+                        <div className='flex gap-6px'>
+                          <Button size='mini' type='primary' loading={busy} onClick={() => void handleApproval(run.id, 'approve')}>
+                            {t('agent.agentCenter.workflowRuns.approve')}
+                          </Button>
+                          <Button size='mini' status='danger' loading={busy} onClick={() => void handleApproval(run.id, 'reject')}>
+                            {t('agent.agentCenter.workflowRuns.reject')}
+                          </Button>
+                        </div>
+                      </div>
+                    ) : null}
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         </>
       ) : null}

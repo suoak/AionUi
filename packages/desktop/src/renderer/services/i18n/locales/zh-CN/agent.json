@@ -158,6 +158,32 @@
       "contractSummary": "输入：{{input}} · 输出：{{output}}",
       "defaultInput": "文本请求"
     },
+    "workflowRuns": {
+      "title": "工作流运行记录",
+      "refresh": "刷新",
+      "empty": "暂无工作流运行记录。",
+      "approve": "批准",
+      "reject": "拒绝",
+      "approvalApproved": "已批准，工作流继续执行",
+      "approvalRejected": "已拒绝工作流",
+      "approvalError": "更新审批状态失败",
+      "status": {
+        "running": "运行中",
+        "waiting_approval": "等待审批",
+        "completed": "已完成",
+        "rejected": "已拒绝",
+        "failed": "失败"
+      },
+      "nodeStatus": {
+        "pending": "待执行",
+        "running": "执行中",
+        "waiting_approval": "等待审批",
+        "completed": "已完成",
+        "skipped": "已跳过",
+        "rejected": "已拒绝",
+        "failed": "失败"
+      }
+    },
     "actions": {
       "unpublish": "撤销发布"
     },

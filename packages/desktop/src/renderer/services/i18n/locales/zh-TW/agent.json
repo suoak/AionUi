@@ -156,7 +156,33 @@
         "json": "JSON"
       },
       "contractSummary": "输入：{{input}} · 输出：{{output}}",
-      "defaultInput": "文本请求"
+      "defaultInput": "文字請求"
+    },
+    "workflowRuns": {
+      "title": "工作流程執行記錄",
+      "refresh": "重新整理",
+      "empty": "尚無工作流程執行記錄。",
+      "approve": "核准",
+      "reject": "拒絕",
+      "approvalApproved": "已核准，工作流程繼續執行",
+      "approvalRejected": "已拒絕工作流程",
+      "approvalError": "更新審批狀態失敗",
+      "status": {
+        "running": "執行中",
+        "waiting_approval": "等待審批",
+        "completed": "已完成",
+        "rejected": "已拒絕",
+        "failed": "失敗"
+      },
+      "nodeStatus": {
+        "pending": "待執行",
+        "running": "執行中",
+        "waiting_approval": "等待審批",
+        "completed": "已完成",
+        "skipped": "已略過",
+        "rejected": "已拒絕",
+        "failed": "失敗"
+      }
     },
     "actions": {
       "unpublish": "取消發布"
