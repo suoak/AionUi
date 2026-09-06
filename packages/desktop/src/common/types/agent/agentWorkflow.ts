@@ -9,7 +9,13 @@ import type {
   AgentWorkflowNodeDefinition,
   AgentWorkflowNodeKind,
   AgentWorkflowOutputFormat,
+  AgentWorkflowRun,
 } from './agentCenterTypes';
+
+const ACTIVE_WORKFLOW_STATUSES = new Set<AgentWorkflowRun['status']>(['running', 'waiting_approval']);
+
+export const hasActiveWorkflowRuns = (runs: ReadonlyArray<Pick<AgentWorkflowRun, 'status'>>): boolean =>
+  runs.some((run) => ACTIVE_WORKFLOW_STATUSES.has(run.status));
 
 export const createDefaultWorkflowNodes = (): AgentWorkflowNodeDefinition[] => [
   { id: 'start', kind: 'start' },

@@ -1,6 +1,7 @@
 import { Button, Message, Modal, Tag, Typography } from '@arco-design/web-react';
 import { ipcBridge } from '@/common';
 import type { AgentCenterDetail, AgentVisibility, AgentWorkflowRun } from '@/common/types/agent/agentCenterTypes';
+import { hasActiveWorkflowRuns } from '@/common/types/agent/agentWorkflow';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -37,6 +38,7 @@ const AgentCenterDetailPage: React.FC = () => {
   const [loadError, setLoadError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   const [workflowRuns, setWorkflowRuns] = useState<AgentWorkflowRun[]>([]);
+  const workflowRefreshPendingRef = useRef(false);
 
   const load = useCallback(async () => {
     if (!id) return;
@@ -64,6 +66,30 @@ const AgentCenterDetailPage: React.FC = () => {
   useEffect(() => {
     void load();
   }, [load]);
+
+  const hasActiveRuns = useMemo(() => hasActiveWorkflowRuns(workflowRuns), [workflowRuns]);
+
+  useEffect(() => {
+    if (!id || !hasActiveRuns) return;
+    let disposed = false;
+    const refresh = async () => {
+      if (workflowRefreshPendingRef.current) return;
+      workflowRefreshPendingRef.current = true;
+      try {
+        const runs = await ipcBridge.agentCenter.listWorkflowRuns.invoke({ id });
+        if (!disposed) setWorkflowRuns(runs);
+      } catch (error) {
+        console.error(error);
+      } finally {
+        workflowRefreshPendingRef.current = false;
+      }
+    };
+    const timer = window.setInterval(() => void refresh(), 3000);
+    return () => {
+      disposed = true;
+      window.clearInterval(timer);
+    };
+  }, [hasActiveRuns, id]);
 
   const chips = useMemo(() => {
     if (!detail) return [] as string[];

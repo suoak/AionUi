@@ -5,6 +5,7 @@ import {
   createDefaultWorkflowNodes,
   getAgentPublishReadiness,
   getWorkflowNodeIssues,
+  hasActiveWorkflowRuns,
   insertWorkflowNode,
   moveWorkflowNode,
   removeWorkflowNode,
@@ -12,6 +13,12 @@ import {
 } from '@/common/types/agent/agentWorkflow';
 
 describe('Agent workflow contract', () => {
+  it('refreshes while a run is active and stops after terminal states', () => {
+    expect(hasActiveWorkflowRuns([{ status: 'running' }])).toBe(true);
+    expect(hasActiveWorkflowRuns([{ status: 'waiting_approval' }])).toBe(true);
+    expect(hasActiveWorkflowRuns([{ status: 'completed' }, { status: 'failed' }, { status: 'cancelled' }])).toBe(false);
+  });
+
   it('creates the extensible single-agent execution path', () => {
     const workflow = createDefaultAgentWorkflow();
 
