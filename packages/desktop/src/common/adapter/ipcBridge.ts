@@ -454,10 +454,7 @@ export const agentCenter = {
       return body;
     }
   ),
-  decideWorkflowApproval: httpPost<
-    AgentWorkflowRun,
-    { id: string; decision: 'approve' | 'reject'; comment?: string }
-  >(
+  decideWorkflowApproval: httpPost<AgentWorkflowRun, { id: string; decision: 'approve' | 'reject'; comment?: string }>(
     (p) => `/api/agent-center/workflow-runs/${encodeURIComponent(p.id)}/approval`,
     (p) => {
       const { id: _id, ...body } = p;

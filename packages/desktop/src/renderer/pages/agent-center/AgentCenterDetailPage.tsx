@@ -335,7 +335,10 @@ const AgentCenterDetailPage: React.FC = () => {
                   <div key={run.id} className='rounded-6px bg-[var(--color-fill-1)] p-10px'>
                     <div className='flex items-center justify-between gap-8px flex-wrap'>
                       <div className='flex items-center gap-6px min-w-0'>
-                        <Tag size='small' color={run.status === 'completed' ? 'green' : run.status === 'failed' ? 'red' : 'arcoblue'}>
+                        <Tag
+                          size='small'
+                          color={run.status === 'completed' ? 'green' : run.status === 'failed' ? 'red' : 'arcoblue'}
+                        >
                           {t(`agent.agentCenter.workflowRuns.status.${run.status}`)}
                         </Tag>
                         <Text className='text-12px'>{run.id}</Text>
@@ -356,10 +359,20 @@ const AgentCenterDetailPage: React.FC = () => {
                       <div className='mt-8px flex items-center justify-between gap-8px flex-wrap'>
                         <Text className='text-12px'>{run.next_action.message}</Text>
                         <div className='flex gap-6px'>
-                          <Button size='mini' type='primary' loading={busy} onClick={() => void handleApproval(run.id, 'approve')}>
+                          <Button
+                            size='mini'
+                            type='primary'
+                            loading={busy}
+                            onClick={() => void handleApproval(run.id, 'approve')}
+                          >
                             {t('agent.agentCenter.workflowRuns.approve')}
                           </Button>
-                          <Button size='mini' status='danger' loading={busy} onClick={() => void handleApproval(run.id, 'reject')}>
+                          <Button
+                            size='mini'
+                            status='danger'
+                            loading={busy}
+                            onClick={() => void handleApproval(run.id, 'reject')}
+                          >
                             {t('agent.agentCenter.workflowRuns.reject')}
                           </Button>
                         </div>
