@@ -21,6 +21,8 @@ describe('resolveFeedbackModule', () => {
     ['/scheduled', 'scheduled-task'],
     ['/scheduled/job-42', 'scheduled-task'],
     ['/assistants', 'assistant-preset'],
+    ['/skill-evolution', 'skills-plugin'],
+    ['/skill-evolution/new', 'skills-plugin'],
     ['/settings/agent', 'agent-detection'],
     ['/settings/agent/claude/repair', 'agent-detection'],
     ['/settings/model', 'model-auth'],
