@@ -126,6 +126,28 @@ const AgentCenterDetailPage: React.FC = () => {
     }
   };
 
+  const handleCancelRun = (runId: string) => {
+    Modal.confirm({
+      title: t('common.confirm'),
+      content: `${t('common.cancel')} ${runId}?`,
+      okText: t('common.cancel'),
+      cancelText: t('common.close'),
+      onOk: async () => {
+        setBusy(true);
+        try {
+          await ipcBridge.agentCenter.cancelWorkflowRun.invoke({ id: runId });
+          await load();
+        } catch (error) {
+          console.error(error);
+          messageRef.current.error(formatAgentCenterError(error, t('common.error')));
+          throw error;
+        } finally {
+          setBusy(false);
+        }
+      },
+    });
+  };
+
   const handlePublish = async () => {
     if (!id) return;
     setBusy(true);
@@ -366,7 +388,9 @@ const AgentCenterDetailPage: React.FC = () => {
                           size='small'
                           color={run.status === 'completed' ? 'green' : run.status === 'failed' ? 'red' : 'arcoblue'}
                         >
-                          {t(`agent.agentCenter.workflowRuns.status.${run.status}`)}
+                          {run.status === 'cancelled'
+                            ? t('common.cancel')
+                            : t(`agent.agentCenter.workflowRuns.status.${run.status}`)}
                         </Tag>
                         <Text className='text-12px'>{run.id}</Text>
                       </div>
@@ -378,10 +402,23 @@ const AgentCenterDetailPage: React.FC = () => {
                       {run.nodes.map((node) => (
                         <Tag key={node.node_id} size='small'>
                           {t(`agent.agentCenter.workflow.nodes.${node.kind}`)} ·{' '}
-                          {t(`agent.agentCenter.workflowRuns.nodeStatus.${node.status}`)}
+                          {node.status === 'cancelled'
+                            ? t('common.cancel')
+                            : t(`agent.agentCenter.workflowRuns.nodeStatus.${node.status}`)}
                         </Tag>
                       ))}
                     </div>
+                    {run.next_action?.kind === 'invoke_tool' ? (
+                      <div className='mt-8px rounded-6px border border-[var(--color-border-2)] p-8px'>
+                        <Text className='text-12px block'>
+                          {t('agent.agentCenter.workflow.nodes.tool')}: {run.next_action.mcp_server_id} /{' '}
+                          {run.next_action.tool_name}
+                        </Text>
+                        <pre className='mb-0 mt-6px max-h-120px overflow-auto whitespace-pre-wrap text-12px text-t-secondary'>
+                          {JSON.stringify(run.next_action.arguments, null, 2)}
+                        </pre>
+                      </div>
+                    ) : null}
                     {run.next_action?.kind === 'await_approval' ? (
                       <div className='mt-8px flex items-center justify-between gap-8px flex-wrap'>
                         <Text className='text-12px'>{run.next_action.message}</Text>
@@ -403,6 +440,13 @@ const AgentCenterDetailPage: React.FC = () => {
                             {t('agent.agentCenter.workflowRuns.reject')}
                           </Button>
                         </div>
+                      </div>
+                    ) : null}
+                    {run.status === 'running' || run.status === 'waiting_approval' ? (
+                      <div className='mt-8px flex justify-end'>
+                        <Button size='mini' status='danger' loading={busy} onClick={() => handleCancelRun(run.id)}>
+                          {t('common.cancel')}
+                        </Button>
                       </div>
                     ) : null}
                   </div>

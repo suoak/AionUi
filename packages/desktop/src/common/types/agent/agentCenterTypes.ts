@@ -156,7 +156,7 @@ export interface AgentCenterRunPlan {
   };
 }
 
-export type AgentWorkflowRunStatus = 'running' | 'waiting_approval' | 'completed' | 'rejected' | 'failed';
+export type AgentWorkflowRunStatus = 'running' | 'waiting_approval' | 'completed' | 'rejected' | 'failed' | 'cancelled';
 export type AgentWorkflowNodeRunStatus =
   | 'pending'
   | 'running'
@@ -164,7 +164,8 @@ export type AgentWorkflowNodeRunStatus =
   | 'completed'
   | 'skipped'
   | 'rejected'
-  | 'failed';
+  | 'failed'
+  | 'cancelled';
 
 export type AgentWorkflowNodeRun = {
   node_id: string;
@@ -178,7 +179,14 @@ export type AgentWorkflowNodeRun = {
 
 export type AgentWorkflowNextAction =
   | { kind: 'run_agent'; create_conversation: AgentCenterRunPlan['create_conversation'] }
-  | { kind: 'invoke_tool'; mcp_server_id: string; tool_name: string; arguments: Record<string, unknown> }
+  | {
+      kind: 'invoke_tool';
+      node_id: string;
+      execution_id: string;
+      mcp_server_id: string;
+      tool_name: string;
+      arguments: Record<string, unknown>;
+    }
   | { kind: 'await_approval'; node_id: string; message: string };
 
 export type AgentWorkflowRun = {
@@ -200,6 +208,8 @@ export type StartAgentWorkflowRunRequest = {
 };
 
 export type AdvanceAgentWorkflowRunRequest = {
+  node_id?: string;
+  execution_id?: string;
   success?: boolean;
   output?: unknown;
   error?: string;
