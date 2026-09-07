@@ -29,9 +29,7 @@ describe('Agent workflow output schema editor', () => {
 
     fireEvent.click(screen.getByText('agent.agentCenter.workflow.outputSchema.addField'));
 
-    expect(baseProps.onOutputSchemaChange).toHaveBeenCalledWith([
-      { name: 'field_1', type: 'string', required: true },
-    ]);
+    expect(baseProps.onOutputSchemaChange).toHaveBeenCalledWith([{ name: 'field_1', type: 'string', required: true }]);
   });
 
   it('hides schema controls for non-JSON output formats', () => {
