@@ -4,12 +4,14 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Button, Input, Select, Tag, Typography } from '@arco-design/web-react';
+import { Button, Checkbox, Input, Select, Tag, Typography } from '@arco-design/web-react';
 import React, { useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import type {
   AgentWorkflowNodeDefinition,
   AgentWorkflowNodeKind,
+  AgentWorkflowOutputFieldDefinition,
+  AgentWorkflowOutputFieldType,
   AgentWorkflowOutputFormat,
 } from '@/common/types/agent/agentCenterTypes';
 import {
@@ -26,6 +28,8 @@ type AgentWorkflowDefinitionFieldsProps = {
   onInputPlaceholderChange: (value: string) => void;
   outputFormat: AgentWorkflowOutputFormat;
   onOutputFormatChange: (value: AgentWorkflowOutputFormat) => void;
+  outputSchema: AgentWorkflowOutputFieldDefinition[];
+  onOutputSchemaChange: (value: AgentWorkflowOutputFieldDefinition[]) => void;
   nodes: AgentWorkflowNodeDefinition[];
   onNodesChange: (nodes: AgentWorkflowNodeDefinition[]) => void;
   toolOptions: Array<{ id: string; name: string }>;
@@ -38,6 +42,8 @@ const AgentWorkflowDefinitionFields: React.FC<AgentWorkflowDefinitionFieldsProps
   onInputPlaceholderChange,
   outputFormat,
   onOutputFormatChange,
+  outputSchema,
+  onOutputSchemaChange,
   nodes,
   onNodesChange,
   toolOptions,
@@ -52,6 +58,18 @@ const AgentWorkflowDefinitionFields: React.FC<AgentWorkflowDefinitionFieldsProps
 
   const updateConfig = (node: AgentWorkflowNodeDefinition, key: string, value: string) => {
     onNodesChange(updateWorkflowNode(nodes, node.id, { config: { ...node.config, [key]: value } }));
+  };
+
+  const addOutputField = () => {
+    let sequence = outputSchema.length + 1;
+    while (outputSchema.some((field) => field.name === `field_${sequence}`)) sequence += 1;
+    onOutputSchemaChange([...outputSchema, { name: `field_${sequence}`, type: 'string', required: true }]);
+  };
+
+  const updateOutputField = (index: number, patch: Partial<AgentWorkflowOutputFieldDefinition>) => {
+    onOutputSchemaChange(
+      outputSchema.map((field, fieldIndex) => (fieldIndex === index ? { ...field, ...patch } : field))
+    );
   };
 
   return (
@@ -183,6 +201,70 @@ const AgentWorkflowDefinitionFields: React.FC<AgentWorkflowDefinitionFieldsProps
           <Select.Option value='json'>{t('agent.agentCenter.workflow.outputFormats.json')}</Select.Option>
         </Select>
       </label>
+      {outputFormat === 'json' ? (
+        <div className='rounded-8px border border-[var(--color-border-2)] p-12px flex flex-col gap-10px'>
+          <div className='flex items-center justify-between gap-8px'>
+            <div>
+              <Text bold>{t('agent.agentCenter.workflow.outputSchema.title')}</Text>
+              <Text type='secondary' className='block text-12px'>
+                {t('agent.agentCenter.workflow.outputSchema.description')}
+              </Text>
+            </div>
+            <Button size='small' disabled={outputSchema.length >= 20} onClick={addOutputField}>
+              {t('agent.agentCenter.workflow.outputSchema.addField')}
+            </Button>
+          </div>
+          {outputSchema.length === 0 ? (
+            <Text type='secondary' className='text-12px'>
+              {t('agent.agentCenter.workflow.outputSchema.empty')}
+            </Text>
+          ) : null}
+          {outputSchema.map((field, index) => (
+            <div key={index} className='rounded-6px bg-[var(--color-fill-1)] p-10px flex flex-col gap-8px'>
+              <div className='grid grid-cols-[minmax(0,1fr)_140px_auto_auto] gap-8px items-center'>
+                <Input
+                  value={field.name}
+                  maxLength={64}
+                  status={
+                    !/^[A-Za-z_][A-Za-z0-9_]{0,63}$/.test(field.name) ||
+                    outputSchema.findIndex((candidate) => candidate.name === field.name) !== index
+                      ? 'error'
+                      : undefined
+                  }
+                  placeholder={t('agent.agentCenter.workflow.outputSchema.namePlaceholder')}
+                  onChange={(name) => updateOutputField(index, { name })}
+                />
+                <Select
+                  value={field.type}
+                  onChange={(type) => updateOutputField(index, { type: type as AgentWorkflowOutputFieldType })}
+                >
+                  {(['string', 'number', 'integer', 'boolean'] as const).map((type) => (
+                    <Select.Option key={type} value={type}>
+                      {t(`agent.agentCenter.workflow.outputSchema.types.${type}`)}
+                    </Select.Option>
+                  ))}
+                </Select>
+                <Checkbox checked={field.required} onChange={(required) => updateOutputField(index, { required })}>
+                  {t('agent.agentCenter.workflow.outputSchema.required')}
+                </Checkbox>
+                <Button
+                  size='mini'
+                  status='danger'
+                  onClick={() => onOutputSchemaChange(outputSchema.filter((_, fieldIndex) => fieldIndex !== index))}
+                >
+                  {t('common.remove')}
+                </Button>
+              </div>
+              <Input
+                value={field.description ?? ''}
+                maxLength={200}
+                placeholder={t('agent.agentCenter.workflow.outputSchema.descriptionPlaceholder')}
+                onChange={(description) => updateOutputField(index, { description: description || undefined })}
+              />
+            </div>
+          ))}
+        </div>
+      ) : null}
     </div>
   );
 };

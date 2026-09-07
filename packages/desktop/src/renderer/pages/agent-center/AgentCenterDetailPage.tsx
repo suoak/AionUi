@@ -398,6 +398,23 @@ const AgentCenterDetailPage: React.FC = () => {
                 ),
               })}
             </Text>
+            {detail.meta.workflow.output.schema?.length ? (
+              <div className='mt-8px'>
+                <Text type='secondary' className='text-12px block mb-6px'>
+                  {t('agent.agentCenter.workflow.outputSchema.summary', {
+                    count: detail.meta.workflow.output.schema.length,
+                  })}
+                </Text>
+                <div className='flex items-center gap-6px flex-wrap'>
+                  {detail.meta.workflow.output.schema.map((field) => (
+                    <Tag key={field.name} size='small'>
+                      {field.name}: {t(`agent.agentCenter.workflow.outputSchema.types.${field.type}`)}
+                      {field.required ? ' *' : ''}
+                    </Tag>
+                  ))}
+                </div>
+              </div>
+            ) : null}
           </div>
           <div className='rounded-8px border border-[var(--color-border-2)] p-16px mt-16px'>
             <div className='flex items-center justify-between gap-8px mb-8px'>

@@ -7,6 +7,7 @@ import {
   getAgentPublishReadiness,
   getWorkflowNodeDurationMs,
   getWorkflowNodeIssues,
+  hasValidWorkflowOutputSchema,
   hasActiveWorkflowRuns,
   insertWorkflowNode,
   moveWorkflowNode,
@@ -36,10 +37,45 @@ describe('Agent workflow contract', () => {
   });
 
   it('normalizes optional input guidance while preserving output format', () => {
-    const workflow = createAgentWorkflow('   ', 'json');
+    const workflow = createAgentWorkflow('   ', 'json', createDefaultWorkflowNodes(), [
+      { name: 'severity', type: 'string', required: true },
+    ]);
 
     expect(workflow.input.placeholder).toBeUndefined();
     expect(workflow.output.format).toBe('json');
+    expect(workflow.output.schema).toEqual([{ name: 'severity', type: 'string', required: true }]);
+  });
+
+  it('rejects duplicate and unsafe structured output fields', () => {
+    expect(hasValidWorkflowOutputSchema('json', [{ name: 'risk score', type: 'number', required: true }])).toBe(false);
+    expect(
+      hasValidWorkflowOutputSchema('json', [
+        { name: 'severity', type: 'string', required: true },
+        { name: 'severity', type: 'number', required: false },
+      ])
+    ).toBe(false);
+  });
+
+  it('ignores retained schema fields when the output format is not JSON', () => {
+    const schema = [{ name: 'severity', type: 'string' as const, required: true }];
+
+    expect(hasValidWorkflowOutputSchema('markdown', schema)).toBe(true);
+    expect(
+      createAgentWorkflow('Input', 'markdown', createDefaultWorkflowNodes(), schema).output.schema
+    ).toBeUndefined();
+  });
+
+  it('blocks publication when the structured output schema is invalid', () => {
+    const readiness = getAgentPublishReadiness({
+      name: 'Defect analyst',
+      instructions: 'Analyze the defect',
+      inputPlaceholder: 'Describe the defect',
+      nodes: createDefaultWorkflowNodes(),
+      outputFormat: 'json',
+      outputSchema: [{ name: 'invalid field', type: 'string', required: true }],
+    });
+
+    expect(readiness.find((item) => item.key === 'output')?.ready).toBe(false);
   });
 
   it('blocks publication when required builder content is blank', () => {

@@ -5,6 +5,7 @@ import type {
   AgentMcpPolicy,
   AgentVisibility,
   AgentWorkflowNodeDefinition,
+  AgentWorkflowOutputFieldDefinition,
   AgentWorkflowOutputFormat,
   CreateAgentCenterRequest,
 } from '@/common/types/agent/agentCenterTypes';
@@ -12,6 +13,7 @@ import {
   createAgentWorkflow,
   createDefaultWorkflowNodes,
   getAgentPublishReadiness,
+  hasValidWorkflowOutputSchema,
 } from '@/common/types/agent/agentWorkflow';
 import type { AgentWorkflowTemplate } from '@/common/types/agent/agentWorkflowTemplates';
 import { WorkMateInlineSearchInput, WorkMateSteps } from '@renderer/components/base';
@@ -92,6 +94,7 @@ const AgentCenterWizardPage: React.FC<{ mode: 'create' | 'edit' }> = ({ mode }) 
   const [changelog, setChangelog] = useState('');
   const [workflowInputPlaceholder, setWorkflowInputPlaceholder] = useState('');
   const [workflowOutputFormat, setWorkflowOutputFormat] = useState<AgentWorkflowOutputFormat>('markdown');
+  const [workflowOutputSchema, setWorkflowOutputSchema] = useState<AgentWorkflowOutputFieldDefinition[]>([]);
   const [workflowNodes, setWorkflowNodes] = useState<AgentWorkflowNodeDefinition[]>(createDefaultWorkflowNodes);
   const [skillOptions, setSkillOptions] = useState<SkillOption[]>([]);
   const [mcpOptions, setMcpOptions] = useState<Array<{ id: string; name: string; description?: string }>>([]);
@@ -277,6 +280,7 @@ const AgentCenterWizardPage: React.FC<{ mode: 'create' | 'edit' }> = ({ mode }) 
         setVersion(detail.meta.version);
         setWorkflowInputPlaceholder(detail.meta.workflow.input.placeholder ?? '');
         setWorkflowOutputFormat(detail.meta.workflow.output.format);
+        setWorkflowOutputSchema(detail.meta.workflow.output.schema ?? []);
         setWorkflowNodes(detail.meta.workflow.nodes);
       } catch (error) {
         console.error(error);
@@ -344,11 +348,25 @@ const AgentCenterWizardPage: React.FC<{ mode: 'create' | 'edit' }> = ({ mode }) 
       visibility,
       mcp_policy: mcpPolicy,
       skill_refs: skillRefs,
-      workflow: createAgentWorkflow(workflowInputPlaceholder, workflowOutputFormat, workflowNodes),
+      workflow: createAgentWorkflow(
+        workflowInputPlaceholder,
+        workflowOutputFormat,
+        workflowNodes,
+        workflowOutputSchema
+      ),
       mcp_ids: mcpPolicy === 'allowlist' ? selectedMcpIds : undefined,
       // KnowHub stays out of primary UX; API field remains optional and empty.
     }),
-    [visibility, mcpPolicy, skillRefs, selectedMcpIds, workflowInputPlaceholder, workflowOutputFormat, workflowNodes]
+    [
+      visibility,
+      mcpPolicy,
+      skillRefs,
+      selectedMcpIds,
+      workflowInputPlaceholder,
+      workflowOutputFormat,
+      workflowOutputSchema,
+      workflowNodes,
+    ]
   );
 
   const buildAssistantDefaults = useCallback((): NonNullable<CreateAgentCenterRequest['defaults']> => {
@@ -381,6 +399,11 @@ const AgentCenterWizardPage: React.FC<{ mode: 'create' | 'edit' }> = ({ mode }) 
       setStep(0);
       return null;
     }
+    if (!hasValidWorkflowOutputSchema(workflowOutputFormat, workflowOutputSchema)) {
+      messageRef.current.warning(t('agent.agentCenter.builder.readiness.outputMissing'));
+      setStep(3);
+      return null;
+    }
     if (defaultModelMode === 'fixed' && !defaultModelValue.trim()) {
       messageRef.current.warning('固定默认模型时请选择一个模型');
       setStep(2);
@@ -402,6 +425,8 @@ const AgentCenterWizardPage: React.FC<{ mode: 'create' | 'edit' }> = ({ mode }) 
         instructions,
         inputPlaceholder: workflowInputPlaceholder,
         nodes: workflowNodes,
+        outputFormat: workflowOutputFormat,
+        outputSchema: workflowOutputSchema,
         allowedToolIds: mcpPolicy === 'allowlist' ? selectedMcpIds : undefined,
       }).find((item) => !item.ready);
       if (firstMissing) {
@@ -513,9 +538,20 @@ const AgentCenterWizardPage: React.FC<{ mode: 'create' | 'edit' }> = ({ mode }) 
         instructions,
         inputPlaceholder: workflowInputPlaceholder,
         nodes: workflowNodes,
+        outputFormat: workflowOutputFormat,
+        outputSchema: workflowOutputSchema,
         allowedToolIds: mcpPolicy === 'allowlist' ? selectedMcpIds : undefined,
       }),
-    [name, instructions, workflowInputPlaceholder, workflowNodes, mcpPolicy, selectedMcpIds]
+    [
+      name,
+      instructions,
+      workflowInputPlaceholder,
+      workflowNodes,
+      workflowOutputFormat,
+      workflowOutputSchema,
+      mcpPolicy,
+      selectedMcpIds,
+    ]
   );
 
   const handleTemplateSelect = (template: AgentWorkflowTemplate) => {
@@ -525,6 +561,7 @@ const AgentCenterWizardPage: React.FC<{ mode: 'create' | 'edit' }> = ({ mode }) 
     setRecommendedPrompts(template.starters);
     setWorkflowInputPlaceholder(template.inputPlaceholder);
     setWorkflowOutputFormat(template.outputFormat);
+    setWorkflowOutputSchema([]);
     setWorkflowNodes(createDefaultWorkflowNodes());
     messageRef.current.success(t('agent.agentCenter.templates.applied', { name: template.name }));
   };
@@ -694,6 +731,8 @@ const AgentCenterWizardPage: React.FC<{ mode: 'create' | 'edit' }> = ({ mode }) 
           onInputPlaceholderChange={setWorkflowInputPlaceholder}
           outputFormat={workflowOutputFormat}
           onOutputFormatChange={setWorkflowOutputFormat}
+          outputSchema={workflowOutputSchema}
+          onOutputSchemaChange={setWorkflowOutputSchema}
           nodes={workflowNodes}
           onNodesChange={setWorkflowNodes}
           toolOptions={

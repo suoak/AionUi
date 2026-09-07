@@ -75,7 +75,9 @@
         "nameMissing": "Add a name before publishing.",
         "instructionsMissing": "Add instructions before publishing.",
         "inputMissing": "Describe the required input before publishing.",
-        "nodesMissing": "Complete every configurable workflow node before publishing."
+        "nodesMissing": "Complete every configurable workflow node before publishing.",
+        "output": "Output schema",
+        "outputMissing": "Fix duplicate or invalid JSON output fields before publishing."
       }
     },
     "templates": {
@@ -156,7 +158,23 @@
         "json": "JSON"
       },
       "contractSummary": "Input: {{input}} · Output: {{output}}",
-      "defaultInput": "Text request"
+      "defaultInput": "Text request",
+      "outputSchema": {
+        "title": "JSON output schema",
+        "description": "Declare the exact fields the agent may return. Field names use letters, numbers, and underscores.",
+        "addField": "Add field",
+        "empty": "No fields declared; any valid JSON value is accepted.",
+        "namePlaceholder": "Field name, for example severity",
+        "descriptionPlaceholder": "Describe this field for the agent",
+        "required": "Required",
+        "summary": "JSON schema: {{count}} fields",
+        "types": {
+          "string": "String",
+          "number": "Number",
+          "integer": "Integer",
+          "boolean": "Boolean"
+        }
+      }
     },
     "workflowRuns": {
       "title": "Workflow runs",

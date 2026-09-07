@@ -10,6 +10,13 @@ export type AgentMcpPolicy = 'allowlist' | 'inherit_user_enabled';
 export type SkillVersionPolicy = 'pin' | 'latest';
 export type AgentAclRole = 'owner' | 'editor' | 'user';
 export type AgentWorkflowOutputFormat = 'markdown' | 'plain_text' | 'json';
+export type AgentWorkflowOutputFieldType = 'string' | 'number' | 'integer' | 'boolean';
+export type AgentWorkflowOutputFieldDefinition = {
+  name: string;
+  type: AgentWorkflowOutputFieldType;
+  required: boolean;
+  description?: string;
+};
 export type AgentWorkflowNodeKind = 'start' | 'agent' | 'tool' | 'approval' | 'condition' | 'output';
 
 export type AgentWorkflowNodeDefinition = {
@@ -29,6 +36,7 @@ export type AgentWorkflowDefinition = {
   };
   output: {
     format: AgentWorkflowOutputFormat;
+    schema?: AgentWorkflowOutputFieldDefinition[];
   };
   nodes: AgentWorkflowNodeDefinition[];
   edges: Array<{ source: string; target: string }>;

@@ -75,7 +75,9 @@
         "nameMissing": "Add a name before publishing.",
         "instructionsMissing": "Add instructions before publishing.",
         "inputMissing": "Describe the required input before publishing.",
-        "nodesMissing": "Complete every configurable workflow node before publishing."
+        "nodesMissing": "Complete every configurable workflow node before publishing.",
+        "output": "Esquema de salida",
+        "outputMissing": "Corrige los campos de salida JSON duplicados o no v?lidos antes de publicar."
       }
     },
     "templates": {
@@ -156,7 +158,23 @@
         "json": "JSON"
       },
       "contractSummary": "Input: {{input}} · Output: {{output}}",
-      "defaultInput": "Text request"
+      "defaultInput": "Text request",
+      "outputSchema": {
+        "title": "Esquema de salida JSON",
+        "description": "Declara los campos exactos que puede devolver el agente. Los nombres admiten letras, n?meros y guiones bajos.",
+        "addField": "A?adir campo",
+        "empty": "No hay campos declarados; se acepta cualquier valor JSON v?lido.",
+        "namePlaceholder": "Nombre del campo, por ejemplo severity",
+        "descriptionPlaceholder": "Describe este campo para el agente",
+        "required": "Obligatorio",
+        "summary": "Esquema JSON: {{count}} campos",
+        "types": {
+          "string": "Cadena",
+          "number": "N?mero",
+          "integer": "Entero",
+          "boolean": "Booleano"
+        }
+      }
     },
     "workflowRuns": {
       "title": "Workflow runs",

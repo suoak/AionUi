@@ -75,7 +75,9 @@
         "nameMissing": "发布前请填写智能体名称。",
         "instructionsMissing": "发布前请填写核心指令。",
         "inputMissing": "发布前请说明用户需要提供什么输入。",
-        "nodesMissing": "发布前请完成所有可配置工作流节点。"
+        "nodesMissing": "发布前请完成所有可配置工作流节点。",
+        "output": "?? Schema",
+        "outputMissing": "???????????? JSON ?????"
       }
     },
     "templates": {
@@ -156,7 +158,23 @@
         "json": "JSON"
       },
       "contractSummary": "输入：{{input}} · 输出：{{output}}",
-      "defaultInput": "文本请求"
+      "defaultInput": "文本请求",
+      "outputSchema": {
+        "title": "JSON ?? Schema",
+        "description": "??????????????????????????????",
+        "addField": "????",
+        "empty": "??????????????? JSON ??",
+        "namePlaceholder": "?????? severity",
+        "descriptionPlaceholder": "?????????????",
+        "required": "??",
+        "summary": "JSON Schema?{{count}} ???",
+        "types": {
+          "string": "???",
+          "number": "??",
+          "integer": "??",
+          "boolean": "???"
+        }
+      }
     },
     "workflowRuns": {
       "title": "工作流运行记录",

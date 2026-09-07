@@ -75,7 +75,9 @@
         "nameMissing": "Add a name before publishing.",
         "instructionsMissing": "Add instructions before publishing.",
         "inputMissing": "Describe the required input before publishing.",
-        "nodesMissing": "Complete every configurable workflow node before publishing."
+        "nodesMissing": "Complete every configurable workflow node before publishing.",
+        "output": "??kt? ?emas?",
+        "outputMissing": "Yay?mlamadan ?nce yinelenen veya ge?ersiz JSON ??kt? alanlar?n? d?zeltin."
       }
     },
     "templates": {
@@ -156,7 +158,23 @@
         "json": "JSON"
       },
       "contractSummary": "Input: {{input}} · Output: {{output}}",
-      "defaultInput": "Text request"
+      "defaultInput": "Text request",
+      "outputSchema": {
+        "title": "JSON ??kt? ?emas?",
+        "description": "Arac?n?n d?nd?rebilece?i alanlar? tan?mlay?n. Alan adlar?nda harf, rakam ve alt ?izgi kullan?labilir.",
+        "addField": "Alan ekle",
+        "empty": "Alan tan?mlanmad?; t?m ge?erli JSON de?erleri kabul edilir.",
+        "namePlaceholder": "Alan ad?, ?rne?in severity",
+        "descriptionPlaceholder": "Bu alan? arac? i?in a??klay?n",
+        "required": "Zorunlu",
+        "summary": "JSON ?emas?: {{count}} alan",
+        "types": {
+          "string": "Metin",
+          "number": "Say?",
+          "integer": "Tam say?",
+          "boolean": "Boole"
+        }
+      }
     },
     "workflowRuns": {
       "title": "Workflow runs",

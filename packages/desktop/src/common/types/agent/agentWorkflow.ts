@@ -9,6 +9,7 @@ import type {
   AgentWorkflowNodeDefinition,
   AgentWorkflowNodeKind,
   AgentWorkflowNodeRun,
+  AgentWorkflowOutputFieldDefinition,
   AgentWorkflowOutputFormat,
   AgentWorkflowRun,
 } from './agentCenterTypes';
@@ -51,7 +52,8 @@ export const createDefaultAgentWorkflow = (): AgentWorkflowDefinition => ({
 export const createAgentWorkflow = (
   inputPlaceholder: string,
   outputFormat: AgentWorkflowOutputFormat,
-  nodes: AgentWorkflowNodeDefinition[] = createDefaultWorkflowNodes()
+  nodes: AgentWorkflowNodeDefinition[] = createDefaultWorkflowNodes(),
+  outputSchema: AgentWorkflowOutputFieldDefinition[] = []
 ): AgentWorkflowDefinition => ({
   ...createDefaultAgentWorkflow(),
   input: {
@@ -59,7 +61,10 @@ export const createAgentWorkflow = (
     required: true,
     placeholder: inputPlaceholder.trim() || undefined,
   },
-  output: { format: outputFormat },
+  output: {
+    format: outputFormat,
+    schema: outputFormat === 'json' && outputSchema.length > 0 ? outputSchema : undefined,
+  },
   nodes,
   edges: buildLinearWorkflowEdges(nodes),
 });
@@ -141,8 +146,23 @@ export const getWorkflowNodeIssues = (
   });
 
 export type AgentPublishReadiness = {
-  key: 'name' | 'instructions' | 'input' | 'nodes';
+  key: 'name' | 'instructions' | 'input' | 'nodes' | 'output';
   ready: boolean;
+};
+
+export const hasValidWorkflowOutputSchema = (
+  format: AgentWorkflowOutputFormat,
+  schema: readonly AgentWorkflowOutputFieldDefinition[]
+): boolean => {
+  if (format !== 'json') return true;
+  if (schema.length > 20) return false;
+  const names = new Set<string>();
+  return schema.every((field) => {
+    const name = field.name;
+    if (!/^[A-Za-z_][A-Za-z0-9_]{0,63}$/.test(name) || names.has(name)) return false;
+    names.add(name);
+    return !field.description || [...field.description].length <= 200;
+  });
 };
 
 /** Required checks are intentionally small so drafts remain flexible. */
@@ -151,10 +171,20 @@ export const getAgentPublishReadiness = (values: {
   instructions: string;
   inputPlaceholder: string;
   nodes: AgentWorkflowNodeDefinition[];
+  outputFormat?: AgentWorkflowOutputFormat;
+  outputSchema?: AgentWorkflowOutputFieldDefinition[];
   allowedToolIds?: readonly string[];
 }): AgentPublishReadiness[] => [
   { key: 'name', ready: values.name.trim().length > 0 },
   { key: 'instructions', ready: values.instructions.trim().length > 0 },
   { key: 'input', ready: values.inputPlaceholder.trim().length > 0 },
   { key: 'nodes', ready: getWorkflowNodeIssues(values.nodes, values.allowedToolIds).length === 0 },
+  ...(values.outputFormat === undefined
+    ? []
+    : [
+        {
+          key: 'output' as const,
+          ready: hasValidWorkflowOutputSchema(values.outputFormat, values.outputSchema ?? []),
+        },
+      ]),
 ];
