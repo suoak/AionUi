@@ -15,6 +15,7 @@ import type {
 } from './agentCenterTypes';
 
 const ACTIVE_WORKFLOW_STATUSES = new Set<AgentWorkflowRun['status']>(['running', 'waiting_approval']);
+export const MAX_WORKFLOW_TOOL_ATTEMPTS = 3;
 
 export const hasActiveWorkflowRuns = (runs: ReadonlyArray<Pick<AgentWorkflowRun, 'status'>>): boolean =>
   runs.some((run) => ACTIVE_WORKFLOW_STATUSES.has(run.status));
@@ -30,6 +31,10 @@ export const getWorkflowNodeDurationMs = (
 
 export const formatWorkflowNodeOutput = (output: unknown): string =>
   typeof output === 'string' ? output : (JSON.stringify(output, null, 2) ?? '');
+
+export const canRetryWorkflowToolNode = (
+  node: Pick<AgentWorkflowNodeRun, 'kind' | 'status' | 'attempt'> | undefined
+): boolean => node?.kind === 'tool' && node.status === 'failed' && (node.attempt ?? 1) < MAX_WORKFLOW_TOOL_ATTEMPTS;
 
 export const createDefaultWorkflowNodes = (): AgentWorkflowNodeDefinition[] => [
   { id: 'start', kind: 'start' },

@@ -188,6 +188,12 @@
       "approvalApproved": "Approval accepted",
       "approvalRejected": "Workflow rejected",
       "approvalError": "Failed to update approval",
+      "retryConfirmTitle": "Bu araç yeniden çalıştırılsın mı?",
+      "retryConfirmDescription": "Önce {{attempt}}. denemenin dış sistemi değiştirip değiştirmediğini doğrulayın. Yeniden deneme yeni bir yürütme başlatır ve yan etkileri tekrarlayabilir (en fazla {{max}} deneme).",
+      "attempt": "Deneme {{attempt}}/{{max}}",
+      "attemptNumber": "Deneme {{attempt}}",
+      "attemptHistory": "Önceki denemeler",
+      "retryLimitReached": "En fazla {{max}} deneme sınırına ulaşıldı",
       "status": {
         "running": "Running",
         "waiting_approval": "Waiting for approval",

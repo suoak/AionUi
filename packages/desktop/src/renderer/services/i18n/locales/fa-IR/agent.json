@@ -188,6 +188,12 @@
       "approvalApproved": "Approval accepted",
       "approvalRejected": "Workflow rejected",
       "approvalError": "Failed to update approval",
+      "retryConfirmTitle": "این ابزار دوباره اجرا شود؟",
+      "retryConfirmDescription": "ابتدا بررسی کنید که آیا تلاش {{attempt}} سیستم خارجی را تغییر داده است. تلاش مجدد یک اجرای تازه آغاز می‌کند و ممکن است عوارض جانبی را تکرار کند (حداکثر {{max}} تلاش).",
+      "attempt": "تلاش {{attempt}}/{{max}}",
+      "attemptNumber": "تلاش {{attempt}}",
+      "attemptHistory": "تلاش‌های قبلی",
+      "retryLimitReached": "حداکثر {{max}} تلاش انجام شده است",
       "status": {
         "running": "Running",
         "waiting_approval": "Waiting for approval",

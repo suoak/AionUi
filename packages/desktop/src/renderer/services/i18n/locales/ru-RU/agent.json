@@ -188,6 +188,12 @@
       "approvalApproved": "Approval accepted",
       "approvalRejected": "Workflow rejected",
       "approvalError": "Failed to update approval",
+      "retryConfirmTitle": "Запустить этот инструмент снова?",
+      "retryConfirmDescription": "Сначала проверьте, изменил ли внешний сервис запуск {{attempt}}. Повтор создаст новый запуск и может продублировать побочные эффекты (не более {{max}} попыток).",
+      "attempt": "Попытка {{attempt}}/{{max}}",
+      "attemptNumber": "Попытка {{attempt}}",
+      "attemptHistory": "Предыдущие попытки",
+      "retryLimitReached": "Достигнут предел в {{max}} попытки",
       "status": {
         "running": "Running",
         "waiting_approval": "Waiting for approval",

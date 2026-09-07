@@ -188,6 +188,12 @@
       "approvalApproved": "Approval accepted",
       "approvalRejected": "Workflow rejected",
       "approvalError": "Failed to update approval",
+      "retryConfirmTitle": "Запустити цей інструмент знову?",
+      "retryConfirmDescription": "Спочатку перевірте, чи змінила спроба {{attempt}} зовнішню систему. Повтор створить новий запуск і може дублювати побічні ефекти (щонайбільше {{max}} спроби).",
+      "attempt": "Спроба {{attempt}}/{{max}}",
+      "attemptNumber": "Спроба {{attempt}}",
+      "attemptHistory": "Попередні спроби",
+      "retryLimitReached": "Досягнуто межі у {{max}} спроби",
       "status": {
         "running": "Running",
         "waiting_approval": "Waiting for approval",

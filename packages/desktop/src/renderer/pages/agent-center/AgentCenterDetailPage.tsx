@@ -2,6 +2,8 @@ import { Button, Collapse, Message, Modal, Tag, Typography } from '@arco-design/
 import { ipcBridge } from '@/common';
 import type { AgentCenterDetail, AgentVisibility, AgentWorkflowRun } from '@/common/types/agent/agentCenterTypes';
 import {
+  MAX_WORKFLOW_TOOL_ATTEMPTS,
+  canRetryWorkflowToolNode,
   formatWorkflowNodeOutput,
   getWorkflowNodeDurationMs,
   hasActiveWorkflowRuns,
@@ -167,17 +169,30 @@ const AgentCenterDetailPage: React.FC = () => {
     });
   };
 
-  const handleRetryRun = async (runId: string) => {
-    setBusy(true);
-    try {
-      await ipcBridge.agentCenter.retryWorkflowRun.invoke({ id: runId });
-      await load();
-    } catch (error) {
-      console.error(error);
-      messageRef.current.error(formatAgentCenterError(error, t('common.error')));
-    } finally {
-      setBusy(false);
-    }
+  const handleRetryRun = (run: AgentWorkflowRun) => {
+    const node = run.nodes[run.current_node_index];
+    Modal.confirm({
+      title: t('agent.agentCenter.workflowRuns.retryConfirmTitle'),
+      content: t('agent.agentCenter.workflowRuns.retryConfirmDescription', {
+        attempt: node?.attempt ?? 1,
+        max: MAX_WORKFLOW_TOOL_ATTEMPTS,
+      }),
+      okText: t('common.retry'),
+      cancelText: t('common.cancel'),
+      onOk: async () => {
+        setBusy(true);
+        try {
+          await ipcBridge.agentCenter.retryWorkflowRun.invoke({ id: run.id });
+          await load();
+        } catch (error) {
+          console.error(error);
+          messageRef.current.error(formatAgentCenterError(error, t('common.error')));
+          throw error;
+        } finally {
+          setBusy(false);
+        }
+      },
+    });
   };
 
   const handlePublish = async () => {
@@ -486,6 +501,14 @@ const AgentCenterDetailPage: React.FC = () => {
                                       <Text bold className='text-12px'>
                                         {t(`agent.agentCenter.workflow.nodes.${node.kind}`)}
                                       </Text>
+                                      {node.kind === 'tool' ? (
+                                        <Tag size='small'>
+                                          {t('agent.agentCenter.workflowRuns.attempt', {
+                                            attempt: node.attempt ?? 1,
+                                            max: MAX_WORKFLOW_TOOL_ATTEMPTS,
+                                          })}
+                                        </Tag>
+                                      ) : null}
                                       {duration !== undefined ? (
                                         <Text type='secondary' className='text-12px'>
                                           {new Intl.NumberFormat(i18n.language, {
@@ -506,6 +529,50 @@ const AgentCenterDetailPage: React.FC = () => {
                                       <pre className='mb-0 mt-4px max-h-160px overflow-auto whitespace-pre-wrap text-12px text-t-secondary'>
                                         {formatWorkflowNodeOutput(node.output)}
                                       </pre>
+                                    ) : null}
+                                    {node.attempts?.length ? (
+                                      <div className='mt-8px border-t border-[var(--color-border-2)] pt-8px'>
+                                        <Text bold className='text-12px'>
+                                          {t('agent.agentCenter.workflowRuns.attemptHistory')}
+                                        </Text>
+                                        <div className='mt-6px flex flex-col gap-6px'>
+                                          {node.attempts.map((attempt) => (
+                                            <div
+                                              key={`${attempt.attempt}-${attempt.execution_id ?? 'legacy'}`}
+                                              className='rounded-6px bg-[var(--color-fill-1)] p-6px'
+                                            >
+                                              <div className='flex items-center gap-6px flex-wrap'>
+                                                <Tag size='small'>
+                                                  {t('agent.agentCenter.workflowRuns.attemptNumber', {
+                                                    attempt: attempt.attempt,
+                                                  })}
+                                                </Tag>
+                                                <Tag
+                                                  size='small'
+                                                  color={attempt.status === 'failed' ? 'red' : undefined}
+                                                >
+                                                  {t(`agent.agentCenter.workflowRuns.nodeStatus.${attempt.status}`)}
+                                                </Tag>
+                                                {attempt.execution_id ? (
+                                                  <Text type='secondary' className='text-12px'>
+                                                    {attempt.execution_id}
+                                                  </Text>
+                                                ) : null}
+                                              </div>
+                                              {attempt.error ? (
+                                                <Text type='error' className='mt-4px block text-12px'>
+                                                  {attempt.error}
+                                                </Text>
+                                              ) : null}
+                                              {attempt.output !== undefined ? (
+                                                <pre className='mb-0 mt-4px max-h-120px overflow-auto whitespace-pre-wrap text-12px text-t-secondary'>
+                                                  {formatWorkflowNodeOutput(attempt.output)}
+                                                </pre>
+                                              ) : null}
+                                            </div>
+                                          ))}
+                                        </div>
+                                      </div>
                                     ) : null}
                                   </div>
                                 );
@@ -561,9 +628,17 @@ const AgentCenterDetailPage: React.FC = () => {
                           {run.nodes[run.current_node_index]?.error}
                         </Text>
                         {run.nodes[run.current_node_index]?.kind === 'tool' ? (
-                          <Button size='mini' loading={busy} onClick={() => void handleRetryRun(run.id)}>
-                            {t('common.retry')}
-                          </Button>
+                          canRetryWorkflowToolNode(run.nodes[run.current_node_index]) ? (
+                            <Button size='mini' loading={busy} onClick={() => handleRetryRun(run)}>
+                              {t('common.retry')}
+                            </Button>
+                          ) : (
+                            <Text type='secondary' className='text-12px'>
+                              {t('agent.agentCenter.workflowRuns.retryLimitReached', {
+                                max: MAX_WORKFLOW_TOOL_ATTEMPTS,
+                              })}
+                            </Text>
+                          )
                         ) : null}
                       </div>
                     ) : null}

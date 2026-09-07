@@ -175,10 +175,23 @@ export type AgentWorkflowNodeRunStatus =
   | 'failed'
   | 'cancelled';
 
+export type AgentWorkflowNodeRunAttempt = {
+  attempt: number;
+  execution_id?: string;
+  status: AgentWorkflowNodeRunStatus;
+  output?: unknown;
+  error?: string;
+  started_at?: number;
+  completed_at?: number;
+};
+
 export type AgentWorkflowNodeRun = {
   node_id: string;
   kind: AgentWorkflowNodeKind;
   status: AgentWorkflowNodeRunStatus;
+  attempt?: number;
+  execution_id?: string;
+  attempts?: AgentWorkflowNodeRunAttempt[];
   output?: unknown;
   error?: string;
   started_at?: number;

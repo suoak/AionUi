@@ -188,6 +188,12 @@
       "approvalApproved": "Approval accepted",
       "approvalRejected": "Workflow rejected",
       "approvalError": "Failed to update approval",
+      "retryConfirmTitle": "このツールを再実行しますか？",
+      "retryConfirmDescription": "まず、試行 {{attempt}} が外部システムを変更済みでないか確認してください。再試行は新しい実行を開始し、副作用が重複する可能性があります（最大 {{max}} 回）。",
+      "attempt": "試行 {{attempt}}/{{max}}",
+      "attemptNumber": "試行 {{attempt}}",
+      "attemptHistory": "過去の試行",
+      "retryLimitReached": "最大 {{max}} 回の試行に達しました",
       "status": {
         "running": "Running",
         "waiting_approval": "Waiting for approval",

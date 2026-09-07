@@ -188,6 +188,12 @@
       "approvalApproved": "Approval accepted",
       "approvalRejected": "Workflow rejected",
       "approvalError": "Failed to update approval",
+      "retryConfirmTitle": "Run this tool again?",
+      "retryConfirmDescription": "First verify whether attempt {{attempt}} already changed the external system. Retrying starts a new execution and may repeat side effects (maximum {{max}} attempts).",
+      "attempt": "Attempt {{attempt}}/{{max}}",
+      "attemptNumber": "Attempt {{attempt}}",
+      "attemptHistory": "Previous attempts",
+      "retryLimitReached": "Maximum of {{max}} attempts reached",
       "status": {
         "running": "Running",
         "waiting_approval": "Waiting for approval",

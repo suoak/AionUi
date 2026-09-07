@@ -188,6 +188,12 @@
       "approvalApproved": "已核准，工作流程繼續執行",
       "approvalRejected": "已拒絕工作流程",
       "approvalError": "更新審批狀態失敗",
+      "retryConfirmTitle": "確認再次執行此工具？",
+      "retryConfirmDescription": "請先到外部系統確認第 {{attempt}} 次執行是否已產生變更。重試會建立新的執行，可能造成重複副作用（最多 {{max}} 次）。",
+      "attempt": "第 {{attempt}}/{{max}} 次嘗試",
+      "attemptNumber": "第 {{attempt}} 次嘗試",
+      "attemptHistory": "歷史嘗試記錄",
+      "retryLimitReached": "已達最多 {{max}} 次嘗試",
       "status": {
         "running": "執行中",
         "waiting_approval": "等待審批",
