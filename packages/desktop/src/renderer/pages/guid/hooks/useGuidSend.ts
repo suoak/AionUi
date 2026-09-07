@@ -121,6 +121,7 @@ export const useGuidSend = (deps: GuidSendDeps): GuidSendResult => {
 
     let workflowRunId: string | undefined;
     let workflowConversationPlan = agentCenterRunPlan;
+    let initialInput = input;
     if (agentWorkflowStartAssistantId) {
       const run = await ipcBridge.agentCenter.startWorkflowRun.invoke({
         id: agentWorkflowStartAssistantId,
@@ -132,6 +133,7 @@ export const useGuidSend = (deps: GuidSendDeps): GuidSendResult => {
         throw new Error('Workflow run did not provide an agent action');
       }
       workflowConversationPlan = run.next_action.create_conversation;
+      initialInput = run.next_action.message || input;
     }
 
     const assistantConversationId = workflowConversationPlan?.assistant?.id ?? selectedAssistantId;
@@ -252,7 +254,7 @@ export const useGuidSend = (deps: GuidSendDeps): GuidSendResult => {
         // auto-sending a blank first turn.
         if (input.trim()) {
           const initialMessage = {
-            input,
+            input: initialInput,
             files: files.length > 0 ? files : undefined,
           };
           sessionStorage.setItem(`aionrs_initial_message_${conversation.id}`, JSON.stringify(initialMessage));
@@ -309,7 +311,7 @@ export const useGuidSend = (deps: GuidSendDeps): GuidSendResult => {
       // auto-sending a blank first turn.
       if (input.trim()) {
         const initialMessage = {
-          input,
+          input: initialInput,
           files: files.length > 0 ? files : undefined,
         };
         sessionStorage.setItem(`acp_initial_message_${conversation.id}`, JSON.stringify(initialMessage));

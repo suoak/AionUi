@@ -178,7 +178,7 @@ export type AgentWorkflowNodeRun = {
 };
 
 export type AgentWorkflowNextAction =
-  | { kind: 'run_agent'; create_conversation: AgentCenterRunPlan['create_conversation'] }
+  | { kind: 'run_agent'; create_conversation: AgentCenterRunPlan['create_conversation']; message?: string }
   | {
       kind: 'invoke_tool';
       node_id: string;

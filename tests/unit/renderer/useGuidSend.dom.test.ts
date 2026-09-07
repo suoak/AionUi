@@ -93,6 +93,7 @@ describe('useGuidSend', () => {
       id: 'run-1',
       next_action: {
         kind: 'run_agent',
+        message: 'hello\n\n---\nWorkflow output contract: Return only one valid JSON value.',
         create_conversation: {
           assistant: {
             id: 'assistant-1',
@@ -374,6 +375,7 @@ describe('useGuidSend', () => {
   });
 
   it('starts a workflow on send and preserves its frozen conversation plan', async () => {
+    const setItemSpy = vi.spyOn(Storage.prototype, 'setItem');
     const deps = createDeps();
     deps.agentWorkflowStartAssistantId = 'assistant-1';
 
@@ -387,6 +389,35 @@ describe('useGuidSend', () => {
     expect(payload.assistant.conversation_overrides.model).toBe('frozen-model');
     expect(payload.assistant.conversation_overrides.skill_ids).toEqual(['frozen-skill']);
     expect(payload.extra.agent_workflow_run_id).toBe('run-1');
+    expect(setItemSpy).toHaveBeenCalledWith(
+      'acp_initial_message_conv-1',
+      expect.stringContaining('Workflow output contract: Return only one valid JSON value.')
+    );
+    setItemSpy.mockRestore();
+  });
+
+  it('uses the original input when an older backend omits the workflow message', async () => {
+    const setItemSpy = vi.spyOn(Storage.prototype, 'setItem');
+    startWorkflowRunInvokeMock.mockResolvedValueOnce({
+      id: 'run-legacy',
+      next_action: {
+        kind: 'run_agent',
+        create_conversation: {
+          assistant: { id: 'assistant-1', conversation_overrides: {} },
+          extra: { agent_workflow_run_id: 'run-legacy' },
+        },
+      },
+    });
+    const deps = createDeps();
+    deps.agentWorkflowStartAssistantId = 'assistant-1';
+
+    const { result } = renderHook(() => useGuidSend(deps));
+    await act(async () => {
+      await result.current.handleSend();
+    });
+
+    expect(setItemSpy).toHaveBeenCalledWith('acp_initial_message_conv-1', JSON.stringify({ input: 'hello' }));
+    setItemSpy.mockRestore();
   });
 
   it('cancels a workflow run when its conversation cannot be created', async () => {

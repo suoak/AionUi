@@ -538,14 +538,16 @@ const AgentCenterDetailPage: React.FC = () => {
                         </Button>
                       </div>
                     ) : null}
-                    {run.status === 'failed' && run.nodes[run.current_node_index]?.kind === 'tool' ? (
+                    {run.status === 'failed' ? (
                       <div className='mt-8px flex items-center justify-between gap-8px'>
                         <Text type='error' className='text-12px'>
                           {run.nodes[run.current_node_index]?.error}
                         </Text>
-                        <Button size='mini' loading={busy} onClick={() => void handleRetryRun(run.id)}>
-                          {t('common.retry')}
-                        </Button>
+                        {run.nodes[run.current_node_index]?.kind === 'tool' ? (
+                          <Button size='mini' loading={busy} onClick={() => void handleRetryRun(run.id)}>
+                            {t('common.retry')}
+                          </Button>
+                        ) : null}
                       </div>
                     ) : null}
                   </div>
