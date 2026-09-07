@@ -1,4 +1,5 @@
 import { fireEvent, render, screen } from '@testing-library/react';
+import React from 'react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import AgentWorkflowDefinitionFields from '@/renderer/pages/agent-center/AgentWorkflowDefinitionFields';
 import { createDefaultWorkflowNodes } from '@/common/types/agent/agentWorkflow';
