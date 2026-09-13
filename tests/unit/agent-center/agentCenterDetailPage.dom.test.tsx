@@ -176,6 +176,22 @@ describe('AgentCenterDetailPage workflow refresh', () => {
     expect(screen.getByText('agent.agentCenter.workflowRuns.status.running')).toBeInTheDocument();
   });
 
+  it('polls until an agent cancellation is confirmed', async () => {
+    vi.useFakeTimers();
+    const requested: AgentWorkflowRun = { ...activeRun, status: 'cancelled', cancellation_status: 'requested' };
+    mocks.listRuns
+      .mockResolvedValueOnce([requested])
+      .mockResolvedValueOnce([{ ...requested, cancellation_status: 'confirmed' }]);
+    render(<AgentCenterDetailPage />);
+    await flushResolvedRequests();
+    expect(screen.getByText('agent.agentCenter.workflowRuns.cancellationRequested')).toBeInTheDocument();
+
+    await act(async () => vi.advanceTimersByTimeAsync(3000));
+
+    expect(mocks.listRuns).toHaveBeenCalledTimes(2);
+    expect(screen.queryByText('agent.agentCenter.workflowRuns.cancellationRequested')).not.toBeInTheDocument();
+  });
+
   it('keeps the last known runs when a background refresh fails', async () => {
     vi.useFakeTimers();
     vi.spyOn(console, 'error').mockImplementation(() => undefined);
