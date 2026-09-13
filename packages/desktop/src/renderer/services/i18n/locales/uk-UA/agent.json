@@ -190,6 +190,8 @@
       "approvalError": "Failed to update approval",
       "retryConfirmTitle": "Запустити цей інструмент знову?",
       "retryConfirmDescription": "Спочатку перевірте, чи змінила спроба {{attempt}} зовнішню систему. Повтор створить новий запуск і може дублювати побічні ефекти (щонайбільше {{max}} спроби).",
+      "agentRetryConfirmTitle": "Повторити цей крок агента?",
+      "agentRetryConfirmDescription": "Повтор використовує початкові зафіксовані модель, навички, інструменти, дозволи й повідомлення та створює нову розмову для спроби {{attempt}} (щонайбільше {{max}}).",
       "attempt": "Спроба {{attempt}}/{{max}}",
       "attemptNumber": "Спроба {{attempt}}",
       "attemptHistory": "Попередні спроби",

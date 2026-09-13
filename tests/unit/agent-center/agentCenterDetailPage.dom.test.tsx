@@ -36,6 +36,10 @@ vi.mock('react-i18next', () => ({
       if (key === 'common.retry') return 'Retry';
       if (key === 'common.cancel') return 'Cancel';
       if (key.endsWith('retryConfirmTitle')) return 'Run this tool again?';
+      if (key.endsWith('agentRetryConfirmTitle')) return 'Retry this agent step?';
+      if (key.endsWith('agentRetryConfirmDescription')) {
+        return `Use frozen snapshot for attempt ${values?.attempt}; maximum ${values?.max}.`;
+      }
       if (key.endsWith('retryConfirmDescription')) {
         return `Verify attempt ${values?.attempt}; maximum ${values?.max}.`;
       }
@@ -180,5 +184,61 @@ describe('AgentCenterDetailPage tool retry safety', () => {
 
     expect(await screen.findByText('awexec-old')).toBeInTheDocument();
     expect(screen.getByText('request outcome unknown')).toBeInTheDocument();
+  });
+
+  it('opens the frozen conversation plan after confirming an agent retry', async () => {
+    const agentRun: AgentWorkflowRun = {
+      ...failedRun,
+      current_node_index: 1,
+      nodes: [
+        failedRun.nodes[0],
+        {
+          node_id: 'agent',
+          kind: 'agent',
+          status: 'failed',
+          attempt: 1,
+          execution_id: 'awexec-agent-1',
+          error: 'agent turn failed',
+        },
+        failedRun.nodes[2],
+        failedRun.nodes[3],
+      ],
+    };
+    const retriedAgentRun: AgentWorkflowRun = {
+      ...agentRun,
+      status: 'running',
+      next_action: {
+        kind: 'run_agent',
+        execution_id: 'awexec-agent-2',
+        message: 'original frozen message',
+        create_conversation: {
+          assistant: { id: 'assistant-1', conversation_overrides: { model: 'frozen-model' } },
+          extra: {
+            agent_workflow_run_id: 'awrun-1',
+            agent_workflow_execution_id: 'awexec-agent-2',
+          },
+        },
+      },
+    };
+    mocks.listRuns.mockResolvedValue([agentRun]);
+    mocks.retryRun.mockResolvedValue(retriedAgentRun);
+    const confirm = vi
+      .spyOn(Modal, 'confirm')
+      .mockImplementation(() => ({ close: () => {}, update: () => {} }) as unknown as ReturnType<typeof Modal.confirm>);
+    await renderDetail();
+    fireEvent.click(screen.getByRole('button', { name: 'Retry' }));
+
+    await (confirm.mock.calls[0][0] as ConfirmConfig).onOk?.();
+
+    expect(mocks.navigate).toHaveBeenCalledWith(
+      '/guid',
+      expect.objectContaining({
+        state: expect.objectContaining({
+          agentWorkflowResumeRunId: 'awrun-1',
+          agentWorkflowResumeExecutionId: 'awexec-agent-2',
+          prefillPrompt: 'original frozen message',
+        }),
+      })
+    );
   });
 });

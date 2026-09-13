@@ -11,6 +11,7 @@ import { useGuidSend, type GuidSendDeps } from '@/renderer/pages/guid/hooks/useG
 
 const createConversationInvokeMock = vi.fn();
 const startWorkflowRunInvokeMock = vi.fn();
+const advanceWorkflowRunInvokeMock = vi.fn();
 const cancelWorkflowRunInvokeMock = vi.fn();
 const swrMutateMock = vi.fn();
 
@@ -19,6 +20,9 @@ vi.mock('@/common', () => ({
     agentCenter: {
       startWorkflowRun: {
         invoke: (...args: unknown[]) => startWorkflowRunInvokeMock(...args),
+      },
+      advanceWorkflowRun: {
+        invoke: (...args: unknown[]) => advanceWorkflowRunInvokeMock(...args),
       },
       cancelWorkflowRun: {
         invoke: (...args: unknown[]) => cancelWorkflowRunInvokeMock(...args),
@@ -113,6 +117,8 @@ describe('useGuidSend', () => {
     });
     cancelWorkflowRunInvokeMock.mockReset();
     cancelWorkflowRunInvokeMock.mockResolvedValue(undefined);
+    advanceWorkflowRunInvokeMock.mockReset();
+    advanceWorkflowRunInvokeMock.mockResolvedValue(undefined);
     swrMutateMock.mockReset();
     swrMutateMock.mockResolvedValue(undefined);
   });
@@ -420,6 +426,47 @@ describe('useGuidSend', () => {
     setItemSpy.mockRestore();
   });
 
+  it('launches an agent retry from its frozen plan and original workflow message', async () => {
+    const setItemSpy = vi.spyOn(Storage.prototype, 'setItem');
+    const deps = createDeps();
+    deps.input = 'edited input that must not replace the frozen message';
+    deps.agentCenterRunPlan = {
+      name: 'Frozen retry conversation',
+      assistant: {
+        id: 'assistant-1',
+        conversation_overrides: {
+          model: 'frozen-retry-model',
+          skill_ids: ['frozen-retry-skill'],
+        },
+      },
+      extra: {
+        agent_workflow_run_id: 'run-retry',
+        agent_workflow_execution_id: 'awexec-new',
+      },
+    };
+    deps.agentWorkflowResumeRunId = 'run-retry';
+    deps.agentWorkflowResumeExecutionId = 'awexec-new';
+    deps.agentWorkflowResumeMessage = 'original frozen workflow message';
+
+    const { result } = renderHook(() => useGuidSend(deps));
+    await act(async () => {
+      await result.current.handleSend();
+    });
+
+    expect(startWorkflowRunInvokeMock).not.toHaveBeenCalled();
+    const payload = createConversationInvokeMock.mock.calls[0][0];
+    expect(payload.name).toBe('Frozen retry conversation');
+    expect(payload.assistant.conversation_overrides.model).toBe('frozen-retry-model');
+    expect(payload.assistant.conversation_overrides.skill_ids).toEqual(['frozen-retry-skill']);
+    expect(payload.extra.agent_workflow_run_id).toBe('run-retry');
+    expect(payload.extra.agent_workflow_execution_id).toBe('awexec-new');
+    expect(setItemSpy).toHaveBeenCalledWith(
+      'acp_initial_message_conv-1',
+      JSON.stringify({ input: 'original frozen workflow message' })
+    );
+    setItemSpy.mockRestore();
+  });
+
   it('cancels a workflow run when its conversation cannot be created', async () => {
     const deps = createDeps();
     deps.agentWorkflowStartAssistantId = 'assistant-1';
@@ -433,6 +480,36 @@ describe('useGuidSend', () => {
     ).rejects.toThrow('create failed');
 
     expect(cancelWorkflowRunInvokeMock).toHaveBeenCalledWith({ id: 'run-1' });
+  });
+
+  it('fails only the current agent attempt when retry conversation creation fails', async () => {
+    const deps = createDeps();
+    deps.agentCenterRunPlan = {
+      assistant: { id: 'assistant-1', conversation_overrides: {} },
+      extra: {
+        agent_workflow_run_id: 'run-retry',
+        agent_workflow_execution_id: 'awexec-new',
+      },
+    };
+    deps.agentWorkflowResumeRunId = 'run-retry';
+    deps.agentWorkflowResumeExecutionId = 'awexec-new';
+    deps.agentWorkflowResumeMessage = 'original frozen workflow message';
+    createConversationInvokeMock.mockRejectedValueOnce(new Error('create failed'));
+
+    const { result } = renderHook(() => useGuidSend(deps));
+    await expect(
+      act(async () => {
+        await result.current.handleSend();
+      })
+    ).rejects.toThrow('create failed');
+
+    expect(advanceWorkflowRunInvokeMock).toHaveBeenCalledWith({
+      id: 'run-retry',
+      execution_id: 'awexec-new',
+      success: false,
+      error: 'conversation.createFailed',
+    });
+    expect(cancelWorkflowRunInvokeMock).not.toHaveBeenCalled();
   });
 
   it('requires text before starting a required-input workflow', async () => {

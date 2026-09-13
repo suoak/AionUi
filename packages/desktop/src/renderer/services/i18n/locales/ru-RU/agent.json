@@ -190,6 +190,8 @@
       "approvalError": "Failed to update approval",
       "retryConfirmTitle": "Запустить этот инструмент снова?",
       "retryConfirmDescription": "Сначала проверьте, изменил ли внешний сервис запуск {{attempt}}. Повтор создаст новый запуск и может продублировать побочные эффекты (не более {{max}} попыток).",
+      "agentRetryConfirmTitle": "Повторить этот шаг агента?",
+      "agentRetryConfirmDescription": "Повтор использует исходные зафиксированные модель, навыки, инструменты, разрешения и сообщение и создаёт новый диалог для попытки {{attempt}} (не более {{max}}).",
       "attempt": "Попытка {{attempt}}/{{max}}",
       "attemptNumber": "Попытка {{attempt}}",
       "attemptHistory": "Предыдущие попытки",

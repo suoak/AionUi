@@ -190,6 +190,8 @@
       "approvalError": "更新审批状态失败",
       "retryConfirmTitle": "确认再次运行此工具？",
       "retryConfirmDescription": "请先到外部系统核验第 {{attempt}} 次执行是否已经产生变更。重试会创建新的执行，可能造成重复副作用（最多 {{max}} 次）。",
+      "agentRetryConfirmTitle": "确认重试此智能体节点？",
+      "agentRetryConfirmDescription": "重试将继续使用原运行冻结的模型、技能、工具、权限和消息，并为第 {{attempt}} 次尝试创建新会话（最多 {{max}} 次）。",
       "attempt": "第 {{attempt}}/{{max}} 次尝试",
       "attemptNumber": "第 {{attempt}} 次尝试",
       "attemptHistory": "历史尝试记录",

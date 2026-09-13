@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import {
-  canRetryWorkflowToolNode,
+  canRetryWorkflowNode,
   createAgentWorkflow,
   createDefaultAgentWorkflow,
   createDefaultWorkflowNodes,
@@ -30,10 +30,10 @@ describe('Agent workflow contract', () => {
   });
 
   it('allows only failed tool nodes below the retry safety limit', () => {
-    expect(canRetryWorkflowToolNode({ kind: 'tool', status: 'failed', attempt: 2 })).toBe(true);
-    expect(canRetryWorkflowToolNode({ kind: 'tool', status: 'failed', attempt: 3 })).toBe(false);
-    expect(canRetryWorkflowToolNode({ kind: 'agent', status: 'failed', attempt: 1 })).toBe(false);
-    expect(canRetryWorkflowToolNode(undefined)).toBe(false);
+    expect(canRetryWorkflowNode({ kind: 'tool', status: 'failed', attempt: 2 })).toBe(true);
+    expect(canRetryWorkflowNode({ kind: 'agent', status: 'failed', attempt: 1 })).toBe(true);
+    expect(canRetryWorkflowNode({ kind: 'tool', status: 'failed', attempt: 3 })).toBe(false);
+    expect(canRetryWorkflowNode(undefined)).toBe(false);
   });
 
   it('creates the extensible single-agent execution path', () => {

@@ -53,6 +53,9 @@ type GuidNavigationState = {
   agentCenterPreviewMode?: 'draft' | 'published';
   agentCenterRunPlan?: AgentCenterRunPlan['create_conversation'];
   agentWorkflowStartAssistantId?: string;
+  agentWorkflowResumeRunId?: string;
+  agentWorkflowResumeExecutionId?: string;
+  agentWorkflowResumeMessage?: string;
   agentWorkflowInputPlaceholder?: string;
   agentCenterReturnTo?: string;
   [key: string]: unknown;
@@ -278,6 +281,9 @@ const GuidPage: React.FC = () => {
     localeKey,
     agentCenterRunPlan: navState?.agentCenterRunPlan,
     agentWorkflowStartAssistantId: navState?.agentWorkflowStartAssistantId,
+    agentWorkflowResumeRunId: navState?.agentWorkflowResumeRunId,
+    agentWorkflowResumeExecutionId: navState?.agentWorkflowResumeExecutionId,
+    agentWorkflowResumeMessage: navState?.agentWorkflowResumeMessage,
   });
 
   // --- Coordinated handlers (depend on multiple hooks) ---

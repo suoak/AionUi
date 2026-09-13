@@ -190,6 +190,8 @@
       "approvalError": "Failed to update approval",
       "retryConfirmTitle": "Run this tool again?",
       "retryConfirmDescription": "First verify whether attempt {{attempt}} already changed the external system. Retrying starts a new execution and may repeat side effects (maximum {{max}} attempts).",
+      "agentRetryConfirmTitle": "Retry this agent step?",
+      "agentRetryConfirmDescription": "The retry uses the original frozen model, skills, tools, permissions, and message. It starts a new conversation for attempt {{attempt}} (maximum {{max}} attempts).",
       "attempt": "Attempt {{attempt}}/{{max}}",
       "attemptNumber": "Attempt {{attempt}}",
       "attemptHistory": "Previous attempts",

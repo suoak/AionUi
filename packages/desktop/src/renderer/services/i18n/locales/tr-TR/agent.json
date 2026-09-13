@@ -190,6 +190,8 @@
       "approvalError": "Failed to update approval",
       "retryConfirmTitle": "Bu araç yeniden çalıştırılsın mı?",
       "retryConfirmDescription": "Önce {{attempt}}. denemenin dış sistemi değiştirip değiştirmediğini doğrulayın. Yeniden deneme yeni bir yürütme başlatır ve yan etkileri tekrarlayabilir (en fazla {{max}} deneme).",
+      "agentRetryConfirmTitle": "Bu aracı adımı yeniden denensin mi?",
+      "agentRetryConfirmDescription": "Yeniden deneme özgün sabitlenmiş modeli, becerileri, araçları, izinleri ve mesajı kullanır ve {{attempt}}. deneme için yeni bir konuşma başlatır (en fazla {{max}}).",
       "attempt": "Deneme {{attempt}}/{{max}}",
       "attemptNumber": "Deneme {{attempt}}",
       "attemptHistory": "Önceki denemeler",

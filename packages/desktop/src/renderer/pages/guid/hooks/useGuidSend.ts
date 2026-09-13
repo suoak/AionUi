@@ -58,6 +58,9 @@ export type GuidSendDeps = {
   localeKey: string;
   agentCenterRunPlan?: AgentCenterRunPlan['create_conversation'];
   agentWorkflowStartAssistantId?: string;
+  agentWorkflowResumeRunId?: string;
+  agentWorkflowResumeExecutionId?: string;
+  agentWorkflowResumeMessage?: string;
 };
 
 export type GuidSendResult = {
@@ -101,6 +104,9 @@ export const useGuidSend = (deps: GuidSendDeps): GuidSendResult => {
     localeKey,
     agentCenterRunPlan,
     agentWorkflowStartAssistantId,
+    agentWorkflowResumeRunId,
+    agentWorkflowResumeExecutionId,
+    agentWorkflowResumeMessage,
   } = deps;
   const sendingRef = useRef(false);
 
@@ -119,9 +125,9 @@ export const useGuidSend = (deps: GuidSendDeps): GuidSendResult => {
     const isCustomWorkspace = !!dir;
     const finalWorkspace = dir || '';
 
-    let workflowRunId: string | undefined;
+    let workflowRunId = agentWorkflowResumeRunId;
     let workflowConversationPlan = agentCenterRunPlan;
-    let initialInput = input;
+    let initialInput = agentWorkflowResumeMessage ?? input;
     if (agentWorkflowStartAssistantId) {
       const run = await ipcBridge.agentCenter.startWorkflowRun.invoke({
         id: agentWorkflowStartAssistantId,
@@ -203,7 +209,16 @@ export const useGuidSend = (deps: GuidSendDeps): GuidSendResult => {
     const cancelUnstartedWorkflow = async () => {
       if (!workflowRunId || conversationCreated) return;
       try {
-        await ipcBridge.agentCenter.cancelWorkflowRun.invoke({ id: workflowRunId });
+        if (agentWorkflowResumeRunId) {
+          await ipcBridge.agentCenter.advanceWorkflowRun.invoke({
+            id: workflowRunId,
+            execution_id: agentWorkflowResumeExecutionId,
+            success: false,
+            error: t('conversation.createFailed'),
+          });
+        } else {
+          await ipcBridge.agentCenter.cancelWorkflowRun.invoke({ id: workflowRunId });
+        }
       } catch (error) {
         console.error('Failed to cancel workflow run after conversation creation failed:', error);
       }
@@ -252,7 +267,7 @@ export const useGuidSend = (deps: GuidSendDeps): GuidSendResult => {
         // Empty input = "start chat": create the conversation but do not stash an
         // initial message, so the window opens idle on the empty state instead of
         // auto-sending a blank first turn.
-        if (input.trim()) {
+        if (initialInput.trim()) {
           const initialMessage = {
             input: initialInput,
             files: files.length > 0 ? files : undefined,
@@ -309,7 +324,7 @@ export const useGuidSend = (deps: GuidSendDeps): GuidSendResult => {
       // Empty input = "start chat": create the conversation but do not stash an
       // initial message, so the window opens idle on the empty state instead of
       // auto-sending a blank first turn.
-      if (input.trim()) {
+      if (initialInput.trim()) {
         const initialMessage = {
           input: initialInput,
           files: files.length > 0 ? files : undefined,
@@ -345,6 +360,9 @@ export const useGuidSend = (deps: GuidSendDeps): GuidSendResult => {
     localeKey,
     agentCenterRunPlan,
     agentWorkflowStartAssistantId,
+    agentWorkflowResumeRunId,
+    agentWorkflowResumeExecutionId,
+    agentWorkflowResumeMessage,
   ]);
 
   const sendMessageHandler = useCallback(() => {

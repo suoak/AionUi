@@ -190,6 +190,8 @@
       "approvalError": "Failed to update approval",
       "retryConfirmTitle": "¿Ejecutar esta herramienta de nuevo?",
       "retryConfirmDescription": "Comprueba primero si el intento {{attempt}} ya modificó el sistema externo. Reintentar inicia una nueva ejecución y puede repetir efectos secundarios (máximo {{max}} intentos).",
+      "agentRetryConfirmTitle": "¿Reintentar este paso del agente?",
+      "agentRetryConfirmDescription": "El reintento usa el modelo, las habilidades, las herramientas, los permisos y el mensaje originales, e inicia una conversación nueva para el intento {{attempt}} (máximo {{max}}).",
       "attempt": "Intento {{attempt}}/{{max}}",
       "attemptNumber": "Intento {{attempt}}",
       "attemptHistory": "Intentos anteriores",

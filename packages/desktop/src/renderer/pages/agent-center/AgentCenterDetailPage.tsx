@@ -2,8 +2,8 @@ import { Button, Collapse, Message, Modal, Tag, Typography } from '@arco-design/
 import { ipcBridge } from '@/common';
 import type { AgentCenterDetail, AgentVisibility, AgentWorkflowRun } from '@/common/types/agent/agentCenterTypes';
 import {
-  MAX_WORKFLOW_TOOL_ATTEMPTS,
-  canRetryWorkflowToolNode,
+  MAX_WORKFLOW_NODE_ATTEMPTS,
+  canRetryWorkflowNode,
   formatWorkflowNodeOutput,
   getWorkflowNodeDurationMs,
   hasActiveWorkflowRuns,
@@ -171,19 +171,44 @@ const AgentCenterDetailPage: React.FC = () => {
 
   const handleRetryRun = (run: AgentWorkflowRun) => {
     const node = run.nodes[run.current_node_index];
+    const isAgentRetry = node?.kind === 'agent';
     Modal.confirm({
-      title: t('agent.agentCenter.workflowRuns.retryConfirmTitle'),
-      content: t('agent.agentCenter.workflowRuns.retryConfirmDescription', {
-        attempt: node?.attempt ?? 1,
-        max: MAX_WORKFLOW_TOOL_ATTEMPTS,
-      }),
+      title: t(
+        isAgentRetry
+          ? 'agent.agentCenter.workflowRuns.agentRetryConfirmTitle'
+          : 'agent.agentCenter.workflowRuns.retryConfirmTitle'
+      ),
+      content: t(
+        isAgentRetry
+          ? 'agent.agentCenter.workflowRuns.agentRetryConfirmDescription'
+          : 'agent.agentCenter.workflowRuns.retryConfirmDescription',
+        {
+          attempt: node?.attempt ?? 1,
+          max: MAX_WORKFLOW_NODE_ATTEMPTS,
+        }
+      ),
       okText: t('common.retry'),
       cancelText: t('common.cancel'),
       onOk: async () => {
         setBusy(true);
         try {
-          await ipcBridge.agentCenter.retryWorkflowRun.invoke({ id: run.id });
-          await load();
+          const retried = await ipcBridge.agentCenter.retryWorkflowRun.invoke({ id: run.id });
+          if (retried.next_action?.kind === 'run_agent') {
+            navigate('/guid', {
+              state: {
+                selectedAssistantId: retried.assistant_id,
+                agentCenterRunPlan: retried.next_action.create_conversation,
+                agentWorkflowResumeRunId: retried.id,
+                agentWorkflowResumeExecutionId: retried.next_action.execution_id,
+                agentWorkflowResumeMessage: retried.next_action.message,
+                prefillPrompt: retried.next_action.message,
+                focusPrefill: true,
+                agentCenterReturnTo: `/agent-center/${retried.assistant_id}`,
+              },
+            });
+          } else {
+            await load();
+          }
         } catch (error) {
           console.error(error);
           messageRef.current.error(formatAgentCenterError(error, t('common.error')));
@@ -505,7 +530,7 @@ const AgentCenterDetailPage: React.FC = () => {
                                         <Tag size='small'>
                                           {t('agent.agentCenter.workflowRuns.attempt', {
                                             attempt: node.attempt ?? 1,
-                                            max: MAX_WORKFLOW_TOOL_ATTEMPTS,
+                                            max: MAX_WORKFLOW_NODE_ATTEMPTS,
                                           })}
                                         </Tag>
                                       ) : null}
@@ -627,15 +652,16 @@ const AgentCenterDetailPage: React.FC = () => {
                         <Text type='error' className='text-12px'>
                           {run.nodes[run.current_node_index]?.error}
                         </Text>
-                        {run.nodes[run.current_node_index]?.kind === 'tool' ? (
-                          canRetryWorkflowToolNode(run.nodes[run.current_node_index]) ? (
+                        {run.nodes[run.current_node_index]?.kind === 'agent' ||
+                        run.nodes[run.current_node_index]?.kind === 'tool' ? (
+                          canRetryWorkflowNode(run.nodes[run.current_node_index]) ? (
                             <Button size='mini' loading={busy} onClick={() => handleRetryRun(run)}>
                               {t('common.retry')}
                             </Button>
                           ) : (
                             <Text type='secondary' className='text-12px'>
                               {t('agent.agentCenter.workflowRuns.retryLimitReached', {
-                                max: MAX_WORKFLOW_TOOL_ATTEMPTS,
+                                max: MAX_WORKFLOW_NODE_ATTEMPTS,
                               })}
                             </Text>
                           )

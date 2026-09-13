@@ -190,6 +190,8 @@
       "approvalError": "Failed to update approval",
       "retryConfirmTitle": "Dieses Werkzeug erneut ausführen?",
       "retryConfirmDescription": "Prüfen Sie zuerst im externen System, ob Versuch {{attempt}} bereits Änderungen bewirkt hat. Ein erneuter Lauf kann Nebenwirkungen wiederholen (maximal {{max}} Versuche).",
+      "agentRetryConfirmTitle": "Diesen Agentenschritt erneut versuchen?",
+      "agentRetryConfirmDescription": "Der neue Versuch verwendet das ursprünglich fixierte Modell, die Skills, Werkzeuge, Berechtigungen und Nachricht und startet eine neue Unterhaltung für Versuch {{attempt}} (maximal {{max}}).",
       "attempt": "Versuch {{attempt}}/{{max}}",
       "attemptNumber": "Versuch {{attempt}}",
       "attemptHistory": "Frühere Versuche",

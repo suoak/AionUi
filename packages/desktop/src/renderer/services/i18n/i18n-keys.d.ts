@@ -122,6 +122,8 @@ export type I18nKey =
   | 'agent.agentCenter.workflow.outputSchema.types.integer'
   | 'agent.agentCenter.workflow.outputSchema.types.number'
   | 'agent.agentCenter.workflow.outputSchema.types.string'
+  | 'agent.agentCenter.workflowRuns.agentRetryConfirmDescription'
+  | 'agent.agentCenter.workflowRuns.agentRetryConfirmTitle'
   | 'agent.agentCenter.workflowRuns.approvalApproved'
   | 'agent.agentCenter.workflowRuns.approvalError'
   | 'agent.agentCenter.workflowRuns.approvalRejected'
