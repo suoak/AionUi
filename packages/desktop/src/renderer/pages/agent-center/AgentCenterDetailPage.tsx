@@ -14,6 +14,8 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { formatAgentCenterError } from './agentCenterErrors';
 
 const { Title, Text } = Typography;
+const ACTIVE_WORKFLOW_REFRESH_MS = 3000;
+const IDLE_WORKFLOW_REFRESH_MS = 15000;
 
 const statusLabel: Record<string, string> = {
   draft: '草稿',
@@ -44,10 +46,16 @@ const AgentCenterDetailPage: React.FC = () => {
   const [loadError, setLoadError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   const [workflowRuns, setWorkflowRuns] = useState<AgentWorkflowRun[]>([]);
-  const workflowRefreshPendingRef = useRef(false);
+  const [pageVisible, setPageVisible] = useState(() => document.visibilityState !== 'hidden');
+  const workflowRefreshPendingRef = useRef<{ id: string; request: number } | null>(null);
+  const workflowRefreshRequestRef = useRef(0);
+  const loadRequestRef = useRef(0);
+  const previousPageVisibleRef = useRef(pageVisible);
 
   const load = useCallback(async () => {
     if (!id) return;
+    const loadRequest = ++loadRequestRef.current;
+    const workflowRequest = ++workflowRefreshRequestRef.current;
     setLoading(true);
     setLoadError(null);
     try {
@@ -55,49 +63,68 @@ const AgentCenterDetailPage: React.FC = () => {
         ipcBridge.agentCenter.get.invoke({ id }),
         ipcBridge.agentCenter.listWorkflowRuns.invoke({ id }),
       ]);
+      if (loadRequest !== loadRequestRef.current) return;
       setDetail(agent);
-      setWorkflowRuns(runs);
+      if (workflowRequest === workflowRefreshRequestRef.current) setWorkflowRuns(runs);
       setInstructions(agent.assistant.rules?.content ?? '');
     } catch (error) {
+      if (loadRequest !== loadRequestRef.current) return;
       console.error(error);
       const msg = formatAgentCenterError(error, '加载智能体详情失败');
       setDetail(null);
       setLoadError(msg);
       messageRef.current.error(msg);
     } finally {
-      setLoading(false);
+      if (loadRequest === loadRequestRef.current) setLoading(false);
     }
   }, [id]);
 
   useEffect(() => {
     void load();
+    return () => {
+      loadRequestRef.current += 1;
+      workflowRefreshRequestRef.current += 1;
+      if (workflowRefreshPendingRef.current?.id === id) workflowRefreshPendingRef.current = null;
+    };
   }, [load]);
 
   const hasActiveRuns = useMemo(() => hasActiveWorkflowRuns(workflowRuns), [workflowRuns]);
 
+  const refreshWorkflowRuns = useCallback(async () => {
+    if (!id || workflowRefreshPendingRef.current?.id === id) return;
+    const request = ++workflowRefreshRequestRef.current;
+    workflowRefreshPendingRef.current = { id, request };
+    try {
+      const runs = await ipcBridge.agentCenter.listWorkflowRuns.invoke({ id });
+      if (request === workflowRefreshRequestRef.current) setWorkflowRuns(runs);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      if (workflowRefreshPendingRef.current?.request === request) workflowRefreshPendingRef.current = null;
+    }
+  }, [id]);
+
   useEffect(() => {
-    if (!id || !hasActiveRuns) return;
-    let disposed = false;
-    const refresh = async () => {
-      if (workflowRefreshPendingRef.current) return;
-      workflowRefreshPendingRef.current = true;
-      try {
-        const runs = await ipcBridge.agentCenter.listWorkflowRuns.invoke({ id });
-        if (!disposed) setWorkflowRuns(runs);
-      } catch (error) {
-        console.error(error);
-      } finally {
-        workflowRefreshPendingRef.current = false;
-      }
-    };
-    const timer = window.setInterval(() => {
-      void refresh();
-    }, 3000);
-    return () => {
-      disposed = true;
-      window.clearInterval(timer);
-    };
-  }, [hasActiveRuns, id]);
+    const handleVisibilityChange = () => setPageVisible(document.visibilityState !== 'hidden');
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    return () => document.removeEventListener('visibilitychange', handleVisibilityChange);
+  }, []);
+
+  useEffect(() => {
+    if (!id || !pageVisible) return;
+    const timer = window.setInterval(
+      () => {
+        void refreshWorkflowRuns();
+      },
+      hasActiveRuns ? ACTIVE_WORKFLOW_REFRESH_MS : IDLE_WORKFLOW_REFRESH_MS
+    );
+    return () => window.clearInterval(timer);
+  }, [hasActiveRuns, id, pageVisible, refreshWorkflowRuns]);
+
+  useEffect(() => {
+    if (pageVisible && !previousPageVisibleRef.current) void refreshWorkflowRuns();
+    previousPageVisibleRef.current = pageVisible;
+  }, [pageVisible, refreshWorkflowRuns]);
 
   const chips = useMemo(() => {
     if (!detail) return [] as string[];

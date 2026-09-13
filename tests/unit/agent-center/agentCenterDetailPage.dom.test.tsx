@@ -1,5 +1,5 @@
 import { Modal } from '@arco-design/web-react';
-import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { act, cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import React from 'react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import type {
@@ -128,7 +128,116 @@ beforeEach(() => {
 
 afterEach(() => {
   cleanup();
+  vi.useRealTimers();
   vi.restoreAllMocks();
+});
+
+const activeRun: AgentWorkflowRun = {
+  ...failedRun,
+  status: 'running',
+  current_node_index: 1,
+  nodes: failedRun.nodes.map((node, index) => (index === 1 ? { ...node, status: 'running', output: undefined } : node)),
+};
+
+const flushResolvedRequests = async () => {
+  await act(async () => {
+    await Promise.resolve();
+    await Promise.resolve();
+  });
+};
+
+describe('AgentCenterDetailPage workflow refresh', () => {
+  it('refreshes active runs quickly and switches to the terminal result', async () => {
+    vi.useFakeTimers();
+    mocks.listRuns.mockResolvedValueOnce([activeRun]).mockResolvedValueOnce([{ ...activeRun, status: 'completed' }]);
+    render(<AgentCenterDetailPage />);
+    await flushResolvedRequests();
+
+    await act(async () => vi.advanceTimersByTimeAsync(3000));
+
+    expect(mocks.listRuns).toHaveBeenCalledTimes(2);
+    expect(screen.getByText('agent.agentCenter.workflowRuns.status.completed')).toBeInTheDocument();
+  });
+
+  it('checks idle pages for runs started in another window', async () => {
+    vi.useFakeTimers();
+    mocks.listRuns.mockResolvedValueOnce([failedRun]).mockResolvedValueOnce([activeRun]);
+    render(<AgentCenterDetailPage />);
+    await flushResolvedRequests();
+
+    await act(async () => vi.advanceTimersByTimeAsync(14999));
+    expect(mocks.listRuns).toHaveBeenCalledOnce();
+    await act(async () => vi.advanceTimersByTimeAsync(1));
+
+    expect(mocks.listRuns).toHaveBeenCalledTimes(2);
+    expect(screen.getByText('agent.agentCenter.workflowRuns.status.running')).toBeInTheDocument();
+  });
+
+  it('keeps the last known runs when a background refresh fails', async () => {
+    vi.useFakeTimers();
+    vi.spyOn(console, 'error').mockImplementation(() => undefined);
+    mocks.listRuns.mockResolvedValueOnce([activeRun]).mockRejectedValueOnce(new Error('temporary outage'));
+    render(<AgentCenterDetailPage />);
+    await flushResolvedRequests();
+
+    await act(async () => vi.advanceTimersByTimeAsync(3000));
+
+    expect(mocks.listRuns).toHaveBeenCalledTimes(2);
+    expect(screen.getByText('awrun-1')).toBeInTheDocument();
+    expect(screen.getByText('agent.agentCenter.workflowRuns.status.running')).toBeInTheDocument();
+  });
+
+  it('pauses while hidden and refreshes immediately when visible again', async () => {
+    vi.useFakeTimers();
+    let visibility: DocumentVisibilityState = 'visible';
+    vi.spyOn(document, 'visibilityState', 'get').mockImplementation(() => visibility);
+    mocks.listRuns.mockResolvedValue([activeRun]);
+    render(<AgentCenterDetailPage />);
+    await flushResolvedRequests();
+
+    visibility = 'hidden';
+    await act(async () => {
+      document.dispatchEvent(new Event('visibilitychange'));
+      await Promise.resolve();
+    });
+    await act(async () => vi.advanceTimersByTimeAsync(6000));
+    expect(mocks.listRuns).toHaveBeenCalledOnce();
+
+    visibility = 'visible';
+    await act(async () => {
+      document.dispatchEvent(new Event('visibilitychange'));
+      await Promise.resolve();
+      await Promise.resolve();
+    });
+    expect(mocks.listRuns).toHaveBeenCalledTimes(2);
+  });
+
+  it('does not let an older background response overwrite a manual refresh', async () => {
+    vi.useFakeTimers();
+    let resolveBackground: ((runs: AgentWorkflowRun[]) => void) | undefined;
+    mocks.listRuns
+      .mockResolvedValueOnce([activeRun])
+      .mockImplementationOnce(
+        () =>
+          new Promise<AgentWorkflowRun[]>((resolve) => {
+            resolveBackground = resolve;
+          })
+      )
+      .mockResolvedValueOnce([{ ...activeRun, status: 'completed' }]);
+    render(<AgentCenterDetailPage />);
+    await flushResolvedRequests();
+    await act(async () => vi.advanceTimersByTimeAsync(3000));
+
+    fireEvent.click(screen.getByRole('button', { name: 'agent.agentCenter.workflowRuns.refresh' }));
+    await flushResolvedRequests();
+    expect(screen.getByText('agent.agentCenter.workflowRuns.status.completed')).toBeInTheDocument();
+
+    await act(async () => {
+      resolveBackground?.([activeRun]);
+      await Promise.resolve();
+    });
+    expect(screen.getByText('agent.agentCenter.workflowRuns.status.completed')).toBeInTheDocument();
+  });
 });
 
 describe('AgentCenterDetailPage tool retry safety', () => {
