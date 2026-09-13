@@ -38,7 +38,7 @@ vi.mock('react-i18next', () => ({
       if (key.endsWith('retryConfirmTitle')) return 'Run this tool again?';
       if (key.endsWith('agentRetryConfirmTitle')) return 'Retry this agent step?';
       if (key.endsWith('agentRetryConfirmDescription')) {
-        return `Use frozen snapshot for attempt ${values?.attempt}; maximum ${values?.max}.`;
+        return `Review the previous conversation and external systems before using the frozen snapshot for attempt ${values?.attempt}; maximum ${values?.max}.`;
       }
       if (key.endsWith('retryConfirmDescription')) {
         return `Verify attempt ${values?.attempt}; maximum ${values?.max}.`;
@@ -152,6 +152,11 @@ describe('AgentCenterDetailPage tool retry safety', () => {
     await renderDetail();
     fireEvent.click(screen.getByRole('button', { name: 'Retry' }));
 
+    expect(confirm).toHaveBeenCalledWith(
+      expect.objectContaining({
+        content: expect.stringContaining('Review the previous conversation and external systems'),
+      })
+    );
     await (confirm.mock.calls[0][0] as ConfirmConfig).onOk?.();
 
     await waitFor(() => expect(mocks.retryRun).toHaveBeenCalledWith({ id: 'awrun-1' }));
