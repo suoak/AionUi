@@ -190,25 +190,22 @@ const AgentCenterDetailPage: React.FC = () => {
       okText: t('common.retry'),
       cancelText: t('common.cancel'),
       onOk: async () => {
+        if (isAgentRetry) {
+          navigate('/guid', {
+            state: {
+              selectedAssistantId: run.assistant_id,
+              agentWorkflowRetryRunId: run.id,
+              prefillPrompt: node?.agent_plan?.message,
+              focusPrefill: true,
+              agentCenterReturnTo: `/agent-center/${run.assistant_id}`,
+            },
+          });
+          return;
+        }
         setBusy(true);
         try {
-          const retried = await ipcBridge.agentCenter.retryWorkflowRun.invoke({ id: run.id });
-          if (retried.next_action?.kind === 'run_agent') {
-            navigate('/guid', {
-              state: {
-                selectedAssistantId: retried.assistant_id,
-                agentCenterRunPlan: retried.next_action.create_conversation,
-                agentWorkflowResumeRunId: retried.id,
-                agentWorkflowResumeExecutionId: retried.next_action.execution_id,
-                agentWorkflowResumeMessage: retried.next_action.message,
-                prefillPrompt: retried.next_action.message,
-                focusPrefill: true,
-                agentCenterReturnTo: `/agent-center/${retried.assistant_id}`,
-              },
-            });
-          } else {
-            await load();
-          }
+          await ipcBridge.agentCenter.retryWorkflowRun.invoke({ id: run.id });
+          await load();
         } catch (error) {
           console.error(error);
           messageRef.current.error(formatAgentCenterError(error, t('common.error')));

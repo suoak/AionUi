@@ -11,6 +11,7 @@ import { useGuidSend, type GuidSendDeps } from '@/renderer/pages/guid/hooks/useG
 
 const createConversationInvokeMock = vi.fn();
 const startWorkflowRunInvokeMock = vi.fn();
+const retryWorkflowRunInvokeMock = vi.fn();
 const advanceWorkflowRunInvokeMock = vi.fn();
 const cancelWorkflowRunInvokeMock = vi.fn();
 const swrMutateMock = vi.fn();
@@ -20,6 +21,9 @@ vi.mock('@/common', () => ({
     agentCenter: {
       startWorkflowRun: {
         invoke: (...args: unknown[]) => startWorkflowRunInvokeMock(...args),
+      },
+      retryWorkflowRun: {
+        invoke: (...args: unknown[]) => retryWorkflowRunInvokeMock(...args),
       },
       advanceWorkflowRun: {
         invoke: (...args: unknown[]) => advanceWorkflowRunInvokeMock(...args),
@@ -111,6 +115,29 @@ describe('useGuidSend', () => {
           extra: {
             agent_workflow_run_id: 'run-1',
             agent_workflow: { schema_version: 1 },
+          },
+        },
+      },
+    });
+    retryWorkflowRunInvokeMock.mockReset();
+    retryWorkflowRunInvokeMock.mockResolvedValue({
+      id: 'run-retry',
+      next_action: {
+        kind: 'run_agent',
+        execution_id: 'awexec-new',
+        message: 'original frozen workflow message',
+        create_conversation: {
+          name: 'Frozen retry conversation',
+          assistant: {
+            id: 'assistant-1',
+            conversation_overrides: {
+              model: 'frozen-retry-model',
+              skill_ids: ['frozen-retry-skill'],
+            },
+          },
+          extra: {
+            agent_workflow_run_id: 'run-retry',
+            agent_workflow_execution_id: 'awexec-new',
           },
         },
       },
@@ -430,23 +457,7 @@ describe('useGuidSend', () => {
     const setItemSpy = vi.spyOn(Storage.prototype, 'setItem');
     const deps = createDeps();
     deps.input = 'edited input that must not replace the frozen message';
-    deps.agentCenterRunPlan = {
-      name: 'Frozen retry conversation',
-      assistant: {
-        id: 'assistant-1',
-        conversation_overrides: {
-          model: 'frozen-retry-model',
-          skill_ids: ['frozen-retry-skill'],
-        },
-      },
-      extra: {
-        agent_workflow_run_id: 'run-retry',
-        agent_workflow_execution_id: 'awexec-new',
-      },
-    };
-    deps.agentWorkflowResumeRunId = 'run-retry';
-    deps.agentWorkflowResumeExecutionId = 'awexec-new';
-    deps.agentWorkflowResumeMessage = 'original frozen workflow message';
+    deps.agentWorkflowRetryRunId = 'run-retry';
 
     const { result } = renderHook(() => useGuidSend(deps));
     await act(async () => {
@@ -454,6 +465,7 @@ describe('useGuidSend', () => {
     });
 
     expect(startWorkflowRunInvokeMock).not.toHaveBeenCalled();
+    expect(retryWorkflowRunInvokeMock).toHaveBeenCalledWith({ id: 'run-retry' });
     const payload = createConversationInvokeMock.mock.calls[0][0];
     expect(payload.name).toBe('Frozen retry conversation');
     expect(payload.assistant.conversation_overrides.model).toBe('frozen-retry-model');
@@ -484,16 +496,7 @@ describe('useGuidSend', () => {
 
   it('fails only the current agent attempt when retry conversation creation fails', async () => {
     const deps = createDeps();
-    deps.agentCenterRunPlan = {
-      assistant: { id: 'assistant-1', conversation_overrides: {} },
-      extra: {
-        agent_workflow_run_id: 'run-retry',
-        agent_workflow_execution_id: 'awexec-new',
-      },
-    };
-    deps.agentWorkflowResumeRunId = 'run-retry';
-    deps.agentWorkflowResumeExecutionId = 'awexec-new';
-    deps.agentWorkflowResumeMessage = 'original frozen workflow message';
+    deps.agentWorkflowRetryRunId = 'run-retry';
     createConversationInvokeMock.mockRejectedValueOnce(new Error('create failed'));
 
     const { result } = renderHook(() => useGuidSend(deps));

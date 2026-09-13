@@ -58,6 +58,7 @@ export type GuidSendDeps = {
   localeKey: string;
   agentCenterRunPlan?: AgentCenterRunPlan['create_conversation'];
   agentWorkflowStartAssistantId?: string;
+  agentWorkflowRetryRunId?: string;
   agentWorkflowResumeRunId?: string;
   agentWorkflowResumeExecutionId?: string;
   agentWorkflowResumeMessage?: string;
@@ -104,6 +105,7 @@ export const useGuidSend = (deps: GuidSendDeps): GuidSendResult => {
     localeKey,
     agentCenterRunPlan,
     agentWorkflowStartAssistantId,
+    agentWorkflowRetryRunId,
     agentWorkflowResumeRunId,
     agentWorkflowResumeExecutionId,
     agentWorkflowResumeMessage,
@@ -126,6 +128,7 @@ export const useGuidSend = (deps: GuidSendDeps): GuidSendResult => {
     const finalWorkspace = dir || '';
 
     let workflowRunId = agentWorkflowResumeRunId;
+    let workflowExecutionId = agentWorkflowResumeExecutionId;
     let workflowConversationPlan = agentCenterRunPlan;
     let initialInput = agentWorkflowResumeMessage ?? input;
     if (agentWorkflowStartAssistantId) {
@@ -138,6 +141,15 @@ export const useGuidSend = (deps: GuidSendDeps): GuidSendResult => {
         await ipcBridge.agentCenter.cancelWorkflowRun.invoke({ id: run.id });
         throw new Error('Workflow run did not provide an agent action');
       }
+      workflowConversationPlan = run.next_action.create_conversation;
+      initialInput = run.next_action.message || input;
+    } else if (agentWorkflowRetryRunId) {
+      const run = await ipcBridge.agentCenter.retryWorkflowRun.invoke({ id: agentWorkflowRetryRunId });
+      workflowRunId = run.id;
+      if (run.next_action?.kind !== 'run_agent') {
+        throw new Error('Workflow retry did not provide an agent action');
+      }
+      workflowExecutionId = run.next_action.execution_id;
       workflowConversationPlan = run.next_action.create_conversation;
       initialInput = run.next_action.message || input;
     }
@@ -209,10 +221,10 @@ export const useGuidSend = (deps: GuidSendDeps): GuidSendResult => {
     const cancelUnstartedWorkflow = async () => {
       if (!workflowRunId || conversationCreated) return;
       try {
-        if (agentWorkflowResumeRunId) {
+        if (agentWorkflowRetryRunId || agentWorkflowResumeRunId) {
           await ipcBridge.agentCenter.advanceWorkflowRun.invoke({
             id: workflowRunId,
-            execution_id: agentWorkflowResumeExecutionId,
+            execution_id: workflowExecutionId,
             success: false,
             error: t('conversation.createFailed'),
           });
@@ -360,6 +372,7 @@ export const useGuidSend = (deps: GuidSendDeps): GuidSendResult => {
     localeKey,
     agentCenterRunPlan,
     agentWorkflowStartAssistantId,
+    agentWorkflowRetryRunId,
     agentWorkflowResumeRunId,
     agentWorkflowResumeExecutionId,
     agentWorkflowResumeMessage,
