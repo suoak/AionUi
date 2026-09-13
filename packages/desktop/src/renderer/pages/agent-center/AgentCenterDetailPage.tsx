@@ -509,12 +509,20 @@ const AgentCenterDetailPage: React.FC = () => {
                         </pre>
                       </div>
                     ) : null}
-                    {run.nodes.some((node) => node.output !== undefined || node.error) ? (
+                    {run.nodes.some(
+                      (node) => node.output !== undefined || node.error || node.conversation_id || node.attempts?.length
+                    ) ? (
                       <Collapse className='mt-8px' bordered={false}>
                         <Collapse.Item header={t('common.technical_details')} name='node-details'>
                           <div className='flex flex-col gap-8px'>
                             {run.nodes
-                              .filter((node) => node.output !== undefined || node.error)
+                              .filter(
+                                (node) =>
+                                  node.output !== undefined ||
+                                  node.error ||
+                                  node.conversation_id ||
+                                  node.attempts?.length
+                              )
                               .map((node) => {
                                 const duration = getWorkflowNodeDurationMs(node);
                                 return (
@@ -539,6 +547,11 @@ const AgentCenterDetailPage: React.FC = () => {
                                             unitDisplay: 'short',
                                             maximumFractionDigits: 1,
                                           }).format(duration / 1000)}
+                                        </Text>
+                                      ) : null}
+                                      {node.conversation_id ? (
+                                        <Text type='secondary' className='text-12px'>
+                                          {node.conversation_id}
                                         </Text>
                                       ) : null}
                                     </div>
@@ -578,6 +591,11 @@ const AgentCenterDetailPage: React.FC = () => {
                                                 {attempt.execution_id ? (
                                                   <Text type='secondary' className='text-12px'>
                                                     {attempt.execution_id}
+                                                  </Text>
+                                                ) : null}
+                                                {attempt.conversation_id ? (
+                                                  <Text type='secondary' className='text-12px'>
+                                                    {attempt.conversation_id}
                                                   </Text>
                                                 ) : null}
                                               </div>

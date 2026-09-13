@@ -178,6 +178,7 @@ export type AgentWorkflowNodeRunStatus =
 export type AgentWorkflowNodeRunAttempt = {
   attempt: number;
   execution_id?: string;
+  conversation_id?: string;
   status: AgentWorkflowNodeRunStatus;
   output?: unknown;
   error?: string;
@@ -191,6 +192,7 @@ export type AgentWorkflowNodeRun = {
   status: AgentWorkflowNodeRunStatus;
   attempt?: number;
   execution_id?: string;
+  conversation_id?: string;
   attempts?: AgentWorkflowNodeRunAttempt[];
   agent_plan?: {
     create_conversation: AgentCenterRunPlan['create_conversation'];

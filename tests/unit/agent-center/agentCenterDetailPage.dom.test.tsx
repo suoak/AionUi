@@ -168,6 +168,7 @@ describe('AgentCenterDetailPage tool retry safety', () => {
         {
           attempt: 1,
           execution_id: 'awexec-old',
+          conversation_id: 'conversation-old',
           status: 'failed',
           error: 'request outcome unknown',
         },
@@ -183,6 +184,7 @@ describe('AgentCenterDetailPage tool retry safety', () => {
     fireEvent.click(screen.getByText('common.technical_details'));
 
     expect(await screen.findByText('awexec-old')).toBeInTheDocument();
+    expect(screen.getByText('conversation-old')).toBeInTheDocument();
     expect(screen.getByText('request outcome unknown')).toBeInTheDocument();
   });
 
