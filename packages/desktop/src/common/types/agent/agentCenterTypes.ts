@@ -165,6 +165,7 @@ export interface AgentCenterRunPlan {
 }
 
 export type AgentWorkflowRunStatus = 'running' | 'waiting_approval' | 'completed' | 'rejected' | 'failed' | 'cancelled';
+export type AgentWorkflowCancellationStatus = 'requested' | 'confirmed' | 'failed';
 export type AgentWorkflowNodeRunStatus =
   | 'pending'
   | 'running'
@@ -228,6 +229,7 @@ export type AgentWorkflowRun = {
   revision: number;
   preview_mode: AgentCenterPreviewMode;
   status: AgentWorkflowRunStatus;
+  cancellation_status?: AgentWorkflowCancellationStatus;
   current_node_index: number;
   workflow: AgentWorkflowDefinition;
   nodes: AgentWorkflowNodeRun[];

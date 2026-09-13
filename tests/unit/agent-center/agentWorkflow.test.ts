@@ -20,6 +20,8 @@ describe('Agent workflow contract', () => {
   it('refreshes while a run is active and stops after terminal states', () => {
     expect(hasActiveWorkflowRuns([{ status: 'running' }])).toBe(true);
     expect(hasActiveWorkflowRuns([{ status: 'waiting_approval' }])).toBe(true);
+    expect(hasActiveWorkflowRuns([{ status: 'cancelled', cancellation_status: 'requested' }])).toBe(true);
+    expect(hasActiveWorkflowRuns([{ status: 'cancelled', cancellation_status: 'failed' }])).toBe(false);
     expect(hasActiveWorkflowRuns([{ status: 'completed' }, { status: 'failed' }, { status: 'cancelled' }])).toBe(false);
   });
 

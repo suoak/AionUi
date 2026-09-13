@@ -17,8 +17,14 @@ import type {
 const ACTIVE_WORKFLOW_STATUSES = new Set<AgentWorkflowRun['status']>(['running', 'waiting_approval']);
 export const MAX_WORKFLOW_NODE_ATTEMPTS = 3;
 
-export const hasActiveWorkflowRuns = (runs: ReadonlyArray<Pick<AgentWorkflowRun, 'status'>>): boolean =>
-  runs.some((run) => ACTIVE_WORKFLOW_STATUSES.has(run.status));
+export const hasActiveWorkflowRuns = (
+  runs: ReadonlyArray<Pick<AgentWorkflowRun, 'status' | 'cancellation_status'>>
+): boolean =>
+  runs.some(
+    (run) =>
+      ACTIVE_WORKFLOW_STATUSES.has(run.status) ||
+      (run.status === 'cancelled' && run.cancellation_status === 'requested')
+  );
 
 export const getWorkflowNodeDurationMs = (
   node: Pick<AgentWorkflowNodeRun, 'started_at' | 'completed_at'>

@@ -11,6 +11,7 @@ import type {
 const mocks = vi.hoisted(() => ({
   get: vi.fn(),
   listRuns: vi.fn(),
+  cancelRun: vi.fn(),
   retryRun: vi.fn(),
   navigate: vi.fn(),
 }));
@@ -20,6 +21,7 @@ vi.mock('@/common', () => ({
     agentCenter: {
       get: { invoke: mocks.get },
       listWorkflowRuns: { invoke: mocks.listRuns },
+      cancelWorkflowRun: { invoke: mocks.cancelRun },
       retryWorkflowRun: { invoke: mocks.retryRun },
     },
   },
@@ -122,6 +124,7 @@ const renderDetail = async () => {
 beforeEach(() => {
   mocks.get.mockReset().mockResolvedValue(detail);
   mocks.listRuns.mockReset().mockResolvedValue([failedRun]);
+  mocks.cancelRun.mockReset().mockResolvedValue(failedRun);
   mocks.retryRun.mockReset().mockResolvedValue(failedRun);
   mocks.navigate.mockReset();
 });
@@ -237,6 +240,31 @@ describe('AgentCenterDetailPage workflow refresh', () => {
       await Promise.resolve();
     });
     expect(screen.getByText('agent.agentCenter.workflowRuns.status.completed')).toBeInTheDocument();
+  });
+});
+
+describe('AgentCenterDetailPage cancellation recovery', () => {
+  it('lets the user retry a failed agent cancellation after confirmation', async () => {
+    const failedCancellationRun: AgentWorkflowRun = {
+      ...activeRun,
+      status: 'cancelled',
+      cancellation_status: 'failed',
+      nodes: activeRun.nodes.map((node, index) => (index === 1 ? { ...node, status: 'cancelled' } : node)),
+    };
+    mocks.listRuns.mockResolvedValue([failedCancellationRun]);
+    const confirm = vi
+      .spyOn(Modal, 'confirm')
+      .mockImplementation(() => ({ close: () => {}, update: () => {} }) as unknown as ReturnType<typeof Modal.confirm>);
+    await renderDetail();
+
+    fireEvent.click(screen.getByRole('button', { name: 'agent.agentCenter.workflowRuns.retryCancellation' }));
+
+    expect(confirm).toHaveBeenCalledOnce();
+    expect(mocks.cancelRun).not.toHaveBeenCalled();
+    await act(async () => {
+      await (confirm.mock.calls[0][0] as ConfirmConfig).onOk?.();
+    });
+    expect(mocks.cancelRun).toHaveBeenCalledWith({ id: 'awrun-1' });
   });
 });
 

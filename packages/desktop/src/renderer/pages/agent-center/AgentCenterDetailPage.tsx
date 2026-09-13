@@ -174,16 +174,19 @@ const AgentCenterDetailPage: React.FC = () => {
     }
   };
 
-  const handleCancelRun = (runId: string) => {
+  const handleCancelRun = (run: AgentWorkflowRun) => {
+    const retryCancellation = run.status === 'cancelled' && run.cancellation_status === 'failed';
     Modal.confirm({
-      title: t('common.confirm'),
-      content: `${t('common.cancel')} ${runId}?`,
-      okText: t('common.cancel'),
+      title: retryCancellation ? t('agent.agentCenter.workflowRuns.retryCancellation') : t('common.confirm'),
+      content: retryCancellation
+        ? t('agent.agentCenter.workflowRuns.retryCancellationDescription')
+        : `${t('common.cancel')} ${run.id}?`,
+      okText: retryCancellation ? t('agent.agentCenter.workflowRuns.retryCancellation') : t('common.cancel'),
       cancelText: t('common.close'),
       onOk: async () => {
         setBusy(true);
         try {
-          await ipcBridge.agentCenter.cancelWorkflowRun.invoke({ id: runId });
+          await ipcBridge.agentCenter.cancelWorkflowRun.invoke({ id: run.id });
           await load();
         } catch (error) {
           console.error(error);
@@ -499,11 +502,23 @@ const AgentCenterDetailPage: React.FC = () => {
                       <div className='flex items-center gap-6px min-w-0'>
                         <Tag
                           size='small'
-                          color={run.status === 'completed' ? 'green' : run.status === 'failed' ? 'red' : 'arcoblue'}
+                          color={
+                            run.status === 'completed'
+                              ? 'green'
+                              : run.status === 'failed' || run.cancellation_status === 'failed'
+                                ? 'red'
+                                : run.cancellation_status === 'requested'
+                                  ? 'orange'
+                                  : 'arcoblue'
+                          }
                         >
-                          {run.status === 'cancelled'
-                            ? t('common.cancel')
-                            : t(`agent.agentCenter.workflowRuns.status.${run.status}`)}
+                          {run.status === 'cancelled' && run.cancellation_status === 'requested'
+                            ? t('agent.agentCenter.workflowRuns.cancellationRequested')
+                            : run.status === 'cancelled' && run.cancellation_status === 'failed'
+                              ? t('agent.agentCenter.workflowRuns.cancellationFailed')
+                              : run.status === 'cancelled'
+                                ? t('common.cancel')
+                                : t(`agent.agentCenter.workflowRuns.status.${run.status}`)}
                         </Tag>
                         <Tag size='small'>
                           {run.preview_mode === 'published'
@@ -684,8 +699,15 @@ const AgentCenterDetailPage: React.FC = () => {
                     ) : null}
                     {run.status === 'running' || run.status === 'waiting_approval' ? (
                       <div className='mt-8px flex justify-end'>
-                        <Button size='mini' status='danger' loading={busy} onClick={() => handleCancelRun(run.id)}>
+                        <Button size='mini' status='danger' loading={busy} onClick={() => handleCancelRun(run)}>
                           {t('common.cancel')}
+                        </Button>
+                      </div>
+                    ) : null}
+                    {run.status === 'cancelled' && run.cancellation_status === 'failed' ? (
+                      <div className='mt-8px flex justify-end'>
+                        <Button size='mini' status='danger' loading={busy} onClick={() => handleCancelRun(run)}>
+                          {t('agent.agentCenter.workflowRuns.retryCancellation')}
                         </Button>
                       </div>
                     ) : null}
