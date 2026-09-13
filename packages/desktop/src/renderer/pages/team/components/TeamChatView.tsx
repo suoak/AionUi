@@ -237,11 +237,11 @@ const TeamChatView: React.FC<TeamChatViewProps> = ({
           // Only offer "retry start" when this slot's runtime failed; it triggers
           // a directed per-member attach (not warmupSession/ensure_session).
           onRetryStart: isRuntimeFailed ? buildTeamRetryStartHandler({ team_id, slot_id }) : undefined,
+          onInterruptSend: interruptAndSend,
           // Focus coordination: the active tab owns its column's sendbox focus,
           // and focusing that sendbox syncs the active tab back.
           isActive: slot_id === activeSlotId,
           onFocus: () => switchTab(slot_id),
-          onInterruptSend: interruptAndSend,
         }
       : undefined;
   const content = (() => {

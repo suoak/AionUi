@@ -193,7 +193,7 @@ const WorkMateCollapseComponent: React.FC<WorkMateCollapseProps> & { Item: typeo
             <div
               onClick={() => handleToggle(name, disabled)}
               className={classNames(
-                'flex items-center gap-3 text-left transition-colors py-5px cursor-pointer',
+                'flex items-center gap-3 text-start transition-colors py-5px cursor-pointer',
                 headerClassName
               )}
             >

@@ -55,7 +55,7 @@ const ContextUsageIndicator: React.FC<ContextUsageIndicatorProps> = ({
     if (!hasWindow) {
       return {
         percentage: 0,
-        displayTotal: formatTokenCount(total, false, locale),
+        displayTotal: formatTokenCount(total, locale),
         displayLimit: '0',
         isWarning: false,
         isDanger: false,
@@ -66,8 +66,8 @@ const ContextUsageIndicator: React.FC<ContextUsageIndicatorProps> = ({
 
     return {
       percentage: pct,
-      displayTotal: formatTokenCount(total, false, locale),
-      displayLimit: formatTokenCount(context_limit, true, locale),
+      displayTotal: formatTokenCount(total, locale),
+      displayLimit: formatTokenCount(context_limit, locale, true),
       isWarning: pct > 70,
       isDanger: pct > 90,
     };
@@ -100,27 +100,27 @@ const ContextUsageIndicator: React.FC<ContextUsageIndicatorProps> = ({
   if (breakdown) {
     if (typeof breakdown.input_tokens === 'number') {
       breakdownParts.push(
-        `${t('conversation.contextUsage.input', 'Input')} ${formatTokenCount(breakdown.input_tokens, false, locale)}`
+        `${t('conversation.contextUsage.input', 'Input')} ${formatTokenCount(breakdown.input_tokens, locale)}`
       );
     }
     if (typeof breakdown.output_tokens === 'number') {
       breakdownParts.push(
-        `${t('conversation.contextUsage.output', 'Output')} ${formatTokenCount(breakdown.output_tokens, false, locale)}`
+        `${t('conversation.contextUsage.output', 'Output')} ${formatTokenCount(breakdown.output_tokens, locale)}`
       );
     }
     if (breakdown.cached_read_tokens) {
       breakdownParts.push(
-        `${t('conversation.contextUsage.cachedRead', 'Cache read')} ${formatTokenCount(breakdown.cached_read_tokens, false, locale)}`
+        `${t('conversation.contextUsage.cachedRead', 'Cache read')} ${formatTokenCount(breakdown.cached_read_tokens, locale)}`
       );
     }
     if (breakdown.cached_write_tokens) {
       breakdownParts.push(
-        `${t('conversation.contextUsage.cachedWrite', 'Cache write')} ${formatTokenCount(breakdown.cached_write_tokens, false, locale)}`
+        `${t('conversation.contextUsage.cachedWrite', 'Cache write')} ${formatTokenCount(breakdown.cached_write_tokens, locale)}`
       );
     }
     if (breakdown.thought_tokens) {
       breakdownParts.push(
-        `${t('conversation.contextUsage.thought', 'Thinking')} ${formatTokenCount(breakdown.thought_tokens, false, locale)}`
+        `${t('conversation.contextUsage.thought', 'Thinking')} ${formatTokenCount(breakdown.thought_tokens, locale)}`
       );
     }
   }
@@ -136,8 +136,7 @@ const ContextUsageIndicator: React.FC<ContextUsageIndicatorProps> = ({
     <>
       {conversationSpend > 0 && (
         <div className='text-12px text-t-secondary mt-4px'>
-          {t('conversation.contextUsage.sessionSpend', 'Session spend')}{' '}
-          {formatTokenCount(conversationSpend, false, locale)}
+          {t('conversation.contextUsage.sessionSpend', 'Session spend')} {formatTokenCount(conversationSpend, locale)}
         </div>
       )}
       {tokenUsage.cost && (
@@ -222,8 +221,9 @@ const ContextUsageIndicator: React.FC<ContextUsageIndicatorProps> = ({
 };
 
 /**
- * Format an agent-reported cumulative session cost, e.g. "$0.42".
- * Falls back to "0.42 USD" when the currency code is not renderable.
+ * Smallest amount that four fraction digits can still render honestly. Below
+ * it, rounding to 4dp yields 0, and the currency's own minimum fraction digits
+ * (2 for USD) then print it as "$0.00".
  */
 export function formatCostAmount(cost: TokenUsageCost, locale?: string): string {
   const options: Intl.NumberFormatOptions =
@@ -242,12 +242,10 @@ export function formatPercentage(value: number, locale?: string): string {
 }
 
 /**
- * 格式化 token 数量显示
- * @param count token 数量
- * @param hideZeroDecimals 是否隐藏小数点为0的情况（如 1.0M 显示为 1M），默认为 false
- * @returns 格式化后的字符串，如 "37.0K" 或 "1.2M"，当 hideZeroDecimals 为 true 时 "1.0M" 显示为 "1M"
+ * Format the context-usage percentage in the app language, e.g. "4.8%" (en-US)
+ * or "4,8 %" (fr-FR).
  */
-export function formatTokenCount(count: number, hideZeroDecimals = false, locale?: string): string {
+export function formatTokenCount(count: number, locale?: string, hideZeroDecimals = false): string {
   const withSuffix = (value: number, suffix: string): string => {
     if (hideZeroDecimals && value.toFixed(1).endsWith('.0')) {
       return `${formatNumber(Math.floor(value), locale, { maximumFractionDigits: 0 })}${suffix}`;

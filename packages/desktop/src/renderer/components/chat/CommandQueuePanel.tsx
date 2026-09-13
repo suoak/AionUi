@@ -217,7 +217,7 @@ const QueueItemCard: React.FC<QueueItemCardProps> = ({
         touchAction: dragViaCard && !dragDisabled && !isRecent ? 'none' : undefined,
       }}
     >
-      <div className='flex items-center gap-6px min-w-0 flex-1 relative pl-8px'>
+      <div className='flex items-center gap-6px min-w-0 flex-1 relative ps-8px'>
         <div className='flex items-center gap-5px w-18px shrink-0 relative'>
           {isRecent ? null : (
             <button

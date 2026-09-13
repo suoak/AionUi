@@ -138,7 +138,7 @@
   border: 0;
   border-radius: 0;
   background: transparent;
-  text-align: left;
+  text-align: start;
   transition: background-color 0.16s ease;
 }
 
@@ -159,7 +159,7 @@
 }
 
 .optionButton :global(.arco-btn-loading-icon) {
-  margin-right: 8px;
+  margin-inline-end: 8px;
 }
 
 .optionLabel {

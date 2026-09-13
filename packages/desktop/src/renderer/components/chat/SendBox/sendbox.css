@@ -356,9 +356,9 @@ body[arco-theme='dark'] .sendbox-panel .send-button-custom--disabled svg * {
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
   color: var(--color-text-2);
-  text-align: right;
+  text-align: end;
   min-width: 34px;
-  padding-left: 2px;
+  padding-inline-start: 2px;
 }
 
 .speech-input-button {
@@ -656,8 +656,8 @@ body[arco-theme='dark'] .sendbox-panel .send-button-custom--disabled svg * {
      hit area) grows to the right edge instead of shrinking to placeholder width. */
   .sendbox-panel .arco-textarea-wrapper,
   .sendbox-panel .arco-textarea {
-    padding-left: 0 !important;
-    padding-right: 0 !important;
+    padding-inline-start: 0 !important;
+    padding-inline-end: 0 !important;
     width: 100% !important;
   }
 
