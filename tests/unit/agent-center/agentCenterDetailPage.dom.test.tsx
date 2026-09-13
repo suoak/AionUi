@@ -152,11 +152,6 @@ describe('AgentCenterDetailPage tool retry safety', () => {
     await renderDetail();
     fireEvent.click(screen.getByRole('button', { name: 'Retry' }));
 
-    expect(confirm).toHaveBeenCalledWith(
-      expect.objectContaining({
-        content: expect.stringContaining('Review the previous conversation and external systems'),
-      })
-    );
     await (confirm.mock.calls[0][0] as ConfirmConfig).onOk?.();
 
     await waitFor(() => expect(mocks.retryRun).toHaveBeenCalledWith({ id: 'awrun-1' }));
@@ -223,6 +218,11 @@ describe('AgentCenterDetailPage tool retry safety', () => {
     await renderDetail();
     fireEvent.click(screen.getByRole('button', { name: 'Retry' }));
 
+    expect(confirm).toHaveBeenCalledWith(
+      expect.objectContaining({
+        content: expect.stringContaining('Review the previous conversation and external systems'),
+      })
+    );
     await (confirm.mock.calls[0][0] as ConfirmConfig).onOk?.();
 
     expect(mocks.navigate).toHaveBeenCalledWith(
