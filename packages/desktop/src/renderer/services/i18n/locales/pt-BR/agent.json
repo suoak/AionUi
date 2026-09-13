@@ -191,7 +191,7 @@
       "retryConfirmTitle": "Executar esta ferramenta novamente?",
       "retryConfirmDescription": "Primeiro, verifique se a tentativa {{attempt}} já alterou o sistema externo. A repetição inicia uma nova execução e pode duplicar efeitos colaterais (máximo de {{max}} tentativas).",
       "agentRetryConfirmTitle": "Tentar novamente esta etapa do agente?",
-      "agentRetryConfirmDescription": "A nova tentativa usa o modelo, as habilidades, as ferramentas, as permissões e a mensagem originais e inicia uma nova conversa para a tentativa {{attempt}} (máximo de {{max}}).",
+      "agentRetryConfirmDescription": "Primeiro, revise a conversa anterior e verifique se ela alterou algum sistema externo. A nova tentativa usa o modelo, as habilidades, as ferramentas, as permissões e a mensagem originais e inicia uma nova conversa para a tentativa {{attempt}} (máximo de {{max}}).",
       "attempt": "Tentativa {{attempt}}/{{max}}",
       "attemptNumber": "Tentativa {{attempt}}",
       "attemptHistory": "Tentativas anteriores",

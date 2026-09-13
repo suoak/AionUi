@@ -191,7 +191,7 @@
       "retryConfirmTitle": "確認再次執行此工具？",
       "retryConfirmDescription": "請先到外部系統確認第 {{attempt}} 次執行是否已產生變更。重試會建立新的執行，可能造成重複副作用（最多 {{max}} 次）。",
       "agentRetryConfirmTitle": "確認重試此智能體節點？",
-      "agentRetryConfirmDescription": "重試會繼續使用原執行凍結的模型、技能、工具、權限和訊息，並為第 {{attempt}} 次嘗試建立新會話（最多 {{max}} 次）。",
+      "agentRetryConfirmDescription": "請先檢查上一次會話，並確認是否已經變更外部系統。重試會繼續使用原執行凍結的模型、技能、工具、權限和訊息，並為第 {{attempt}} 次嘗試建立新會話（最多 {{max}} 次）。",
       "attempt": "第 {{attempt}}/{{max}} 次嘗試",
       "attemptNumber": "第 {{attempt}} 次嘗試",
       "attemptHistory": "歷史嘗試記錄",

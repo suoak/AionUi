@@ -191,7 +191,7 @@
       "retryConfirmTitle": "このツールを再実行しますか？",
       "retryConfirmDescription": "まず、試行 {{attempt}} が外部システムを変更済みでないか確認してください。再試行は新しい実行を開始し、副作用が重複する可能性があります（最大 {{max}} 回）。",
       "agentRetryConfirmTitle": "このエージェント手順を再試行しますか？",
-      "agentRetryConfirmDescription": "再試行では元のモデル、スキル、ツール、権限、メッセージを固定したまま、試行 {{attempt}} 用の新しい会話を開始します（最大 {{max}} 回）。",
+      "agentRetryConfirmDescription": "まず前回の会話を確認し、外部システムが変更されていないか検証してください。再試行では元のモデル、スキル、ツール、権限、メッセージを固定したまま、試行 {{attempt}} 用の新しい会話を開始します（最大 {{max}} 回）。",
       "attempt": "試行 {{attempt}}/{{max}}",
       "attemptNumber": "試行 {{attempt}}",
       "attemptHistory": "過去の試行",

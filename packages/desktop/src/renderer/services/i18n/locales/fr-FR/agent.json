@@ -191,7 +191,7 @@
       "retryConfirmTitle": "Réexécuter cet outil ?",
       "retryConfirmDescription": "Vérifiez d’abord si la tentative {{attempt}} a déjà modifié le système externe. La relance crée une nouvelle exécution et peut répéter des effets secondaires ({{max}} tentatives maximum).",
       "agentRetryConfirmTitle": "Réessayer cette étape de l’agent ?",
-      "agentRetryConfirmDescription": "La nouvelle tentative utilise le modèle, les compétences, les outils, les autorisations et le message d’origine, puis crée une nouvelle conversation pour la tentative {{attempt}} ({{max}} maximum).",
+      "agentRetryConfirmDescription": "Vérifiez d’abord la conversation précédente et si elle a modifié un système externe. La nouvelle tentative utilise le modèle, les compétences, les outils, les autorisations et le message d’origine, puis crée une nouvelle conversation pour la tentative {{attempt}} ({{max}} maximum).",
       "attempt": "Tentative {{attempt}}/{{max}}",
       "attemptNumber": "Tentative {{attempt}}",
       "attemptHistory": "Tentatives précédentes",
