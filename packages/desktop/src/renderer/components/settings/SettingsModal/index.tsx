@@ -377,7 +377,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ visible, onCancel, defaul
             )}
             onClick={() => setActiveTab(item.key)}
           >
-            <span className='mr-12px text-16px line-height-[10px]'>{item.icon}</span>
+            <span className='me-12px text-16px line-height-[10px]'>{item.icon}</span>
             <span className='text-14px font-500 flex-1 lh-22px'>{item.label}</span>
           </div>
         ))}

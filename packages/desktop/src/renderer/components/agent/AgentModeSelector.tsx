@@ -367,7 +367,7 @@ const AgentModeSelector: React.FC<AgentModeSelectorProps> = ({
 
   // Render dropdown with mode selection menu
   return (
-    <div className='ml-16px'>
+    <div className='ms-16px'>
       <Dropdown
         trigger='click'
         popupVisible={dropdownVisible}

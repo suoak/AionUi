@@ -26,7 +26,7 @@ const UsageBreakdownList: React.FC<UsageBreakdownListProps> = ({ rows, emptyLabe
           <div className='mb-4px flex items-center justify-between gap-8px text-12px'>
             <span className='truncate text-t-primary'>{row.label}</span>
             <span className='shrink-0 text-t-secondary'>
-              {formatTokenCount(row.total_tokens, false, locale)} · {formatTokenCount(row.turn_count, false, locale)}
+              {formatTokenCount(row.total_tokens, locale)} · {formatTokenCount(row.turn_count, locale)}
             </span>
           </div>
           <div className='h-6px overflow-hidden rounded-999px bg-fill-2'>

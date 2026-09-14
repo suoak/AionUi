@@ -38,7 +38,7 @@ const PreferenceRow: React.FC<{
       <div className='flex items-center gap-8px'>
         <span className='text-14px text-t-primary'>
           {label}
-          {required && <span className='text-red-500 ml-2px'>*</span>}
+          {required && <span className='text-red-500 ms-2px'>*</span>}
         </span>
         {extra}
       </div>
@@ -316,9 +316,8 @@ const LarkConfigForm: React.FC<LarkConfigFormProps> = ({ pluginStatus, modelSele
   };
 
   // Calculate remaining time
-  const getRemainingTime = (expiresAt: number) => {
-    const remaining = Math.max(0, Math.ceil((expiresAt - Date.now()) / 1000 / 60));
-    return `${remaining} min`;
+  const getRemainingMinutes = (expiresAt: number) => {
+    return Math.max(0, Math.ceil((expiresAt - Date.now()) / 1000 / 60));
   };
 
   const hasExistingUsers = authorizedUsers.length > 0;
@@ -562,7 +561,7 @@ const LarkConfigForm: React.FC<LarkConfigFormProps> = ({ pluginStatus, modelSele
         <div className='flex justify-end'>
           {pluginStatus?.hasToken && !appId.trim() && !appSecret.trim() ? (
             // Credentials already saved but not entered in UI - show info message
-            <span className='text-12px text-t-tertiary mr-12px self-center'>
+            <span className='text-12px text-t-tertiary me-12px self-center'>
               {t('settings.lark.credentialsSaved', 'Credentials already configured. Enter new values to update.')}
             </span>
           ) : null}
@@ -713,7 +712,7 @@ const LarkConfigForm: React.FC<LarkConfigFormProps> = ({ pluginStatus, modelSele
 
       {/* Pending Pairings */}
       {pluginStatus?.enabled && authorizedUsers.length === 0 && (
-        <div className='bg-fill-1 rd-12px pt-16px pr-16px pb-16px pl-0'>
+        <div className='bg-fill-1 rd-12px pt-16px pe-16px pb-16px ps-0'>
           <SectionHeader
             title={t('settings.assistant.pendingPairings', 'Pending Pairing Requests')}
             action={
@@ -757,7 +756,7 @@ const LarkConfigForm: React.FC<LarkConfigFormProps> = ({ pluginStatus, modelSele
                       {t('settings.assistant.pairingCode', 'Code')}:{' '}
                       <code className='bg-fill-3 px-4px rd-2px'>{pairing.code}</code>
                       <span className='mx-8px'>|</span>
-                      {t('settings.assistant.expiresIn', 'Expires in')}: {getRemainingTime(pairing.expiresAt)}
+                      {t('settings.assistant.expiresInMinutes', { count: getRemainingMinutes(pairing.expiresAt) })}
                     </div>
                   </div>
                   <div className='flex items-center gap-8px'>
@@ -788,7 +787,7 @@ const LarkConfigForm: React.FC<LarkConfigFormProps> = ({ pluginStatus, modelSele
 
       {/* Authorized Users */}
       {authorizedUsers.length > 0 && (
-        <div className='bg-fill-1 rd-12px pt-16px pr-16px pb-16px pl-0'>
+        <div className='bg-fill-1 rd-12px pt-16px pe-16px pb-16px ps-0'>
           <SectionHeader
             title={t('settings.assistant.authorizedUsers', 'Authorized Users')}
             action={

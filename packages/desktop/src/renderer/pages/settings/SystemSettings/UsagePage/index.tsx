@@ -238,7 +238,7 @@ const UsagePage: React.FC = () => {
                 data-testid={`usage-model-filter-${row.key}`}
                 onClick={() => setModelFilter(row.key)}
               >
-                {row.label} · {formatTokenCount(row.total_tokens, false, locale)}
+                {row.label} · {formatTokenCount(row.total_tokens, locale)}
               </Button>
             ))}
           </div>
@@ -247,7 +247,7 @@ const UsagePage: React.FC = () => {
         <div className='grid grid-cols-2 gap-10px md:grid-cols-4'>
           <UsageSummaryCard
             label={t('settings.usage.totalTokens')}
-            value={formatTokenCount(totals.total_tokens, false, locale)}
+            value={formatTokenCount(totals.total_tokens, locale)}
             hint={t('settings.usage.turnsAndConversations', {
               turns: totals.turn_count,
               conversations: totals.conversation_count,
@@ -255,7 +255,7 @@ const UsagePage: React.FC = () => {
           />
           <UsageSummaryCard
             label={t('settings.usage.todayTokens')}
-            value={formatTokenCount(todayTotals.total_tokens, false, locale)}
+            value={formatTokenCount(todayTotals.total_tokens, locale)}
             hint={t('settings.usage.turnsAndConversations', {
               turns: todayTotals.turn_count,
               conversations: todayTotals.conversation_count,
@@ -263,23 +263,23 @@ const UsagePage: React.FC = () => {
           />
           <UsageSummaryCard
             label={t('settings.usage.inputTokens')}
-            value={formatTokenCount(totals.input_tokens, false, locale)}
+            value={formatTokenCount(totals.input_tokens, locale)}
           />
           <UsageSummaryCard
             label={t('settings.usage.outputTokens')}
-            value={formatTokenCount(totals.output_tokens, false, locale)}
+            value={formatTokenCount(totals.output_tokens, locale)}
           />
           <UsageSummaryCard
             label={t('settings.usage.thoughtTokens')}
-            value={formatTokenCount(totals.thought_tokens, false, locale)}
+            value={formatTokenCount(totals.thought_tokens, locale)}
           />
           <UsageSummaryCard
             label={t('conversation.contextUsage.cachedRead')}
-            value={formatTokenCount(totals.cached_read_tokens, false, locale)}
+            value={formatTokenCount(totals.cached_read_tokens, locale)}
           />
           <UsageSummaryCard
             label={t('conversation.contextUsage.cachedWrite')}
-            value={formatTokenCount(totals.cached_write_tokens, false, locale)}
+            value={formatTokenCount(totals.cached_write_tokens, locale)}
           />
         </div>
 
@@ -369,7 +369,7 @@ const UsagePage: React.FC = () => {
                       </span>
                     </span>
                     <span className='shrink-0 text-12px text-t-secondary'>
-                      {formatTokenCount(row.total_tokens, false, locale)}
+                      {formatTokenCount(row.total_tokens, locale)}
                     </span>
                   </Button>
                 ))}

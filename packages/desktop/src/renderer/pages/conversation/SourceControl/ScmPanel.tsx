@@ -276,7 +276,7 @@ const ScmSectionStack: React.FC<{
   );
 
   const changesBody = (
-    <div className='flex-1 min-h-0 overflow-auto pl-4px pr-4px pb-8px'>
+    <div className='flex-1 min-h-0 overflow-auto ps-4px pe-4px pb-8px'>
       <ScmChangesView
         repo={selectedRepo}
         status={view.statuses[selectedRepo.repo_id]}
@@ -524,13 +524,13 @@ const RepoRow: React.FC<{
     className={`flex items-center gap-6px px-8px py-3px rd-4px cursor-pointer hover:bg-2 min-w-0 ${
       isSelected ? 'bg-2' : ''
     }`}
-    style={indent ? { paddingLeft: 8 + indent } : undefined}
+    style={indent ? { paddingInlineStart: 8 + indent } : undefined}
   >
     {leading}
     <span className='flex-1 min-w-0 overflow-hidden text-ellipsis whitespace-nowrap text-13px text-t-primary'>
       {repo.pe_name || repo.label}
     </span>
-    {/* Branch info is pinned to the right of the row (`ml-auto`), the branch
+    {/* Branch info is pinned to the right of the row (`ms-auto`), the branch
         name preceded by a branch glyph. `flex-1` on the repo name above
         claims the slack so the two never touch; both truncate under pressure.
         Rendered only when a head name is known — a detached/unknown head

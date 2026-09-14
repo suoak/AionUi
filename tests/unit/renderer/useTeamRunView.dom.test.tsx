@@ -210,6 +210,20 @@ describe('useTeamRunView', () => {
     expect(result.current.state.activeRun).toBeUndefined();
   });
 
+  it('full_snapshot_restores_a_paused_teammate_with_its_retained_queue', async () => {
+    const pausedWorker = slotWork('worker', { state: 'paused', queued_background_count: 2 });
+    teamEventMocks.invoke.getRunState.mockResolvedValue({
+      session_generation: 'generation-1',
+      active_run: null,
+      slot_work: [pausedWorker],
+    });
+
+    const { result } = renderHook(() => useTeamRunView('team-1'));
+
+    await waitFor(() => expect(result.current.state.slotWorkBySlot.worker).toEqual(pausedWorker));
+    expect(result.current.state.activeRun).toBeUndefined();
+  });
+
   it('treats omitted slot work in a new team snapshot as empty', async () => {
     const { result } = renderHook(() => useTeamRunView('team-1'));
     const runUpdated = teamEventMocks.handlers.runUpdated as TeamRunHandler;

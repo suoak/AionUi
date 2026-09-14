@@ -56,9 +56,8 @@ interface WeixinConfigFormProps {
   onStatusChange: (status: IChannelPluginStatus | null) => void;
 }
 
-const getRemainingTime = (expiresAt: number) => {
-  const remaining = Math.max(0, Math.ceil((expiresAt - Date.now()) / 1000 / 60));
-  return `${remaining} min`;
+const getRemainingMinutes = (expiresAt: number) => {
+  return Math.max(0, Math.ceil((expiresAt - Date.now()) / 1000 / 60));
 };
 
 const formatTime = (timestamp: number, locale: string) => formatDateTime(timestamp, locale);
@@ -493,7 +492,7 @@ const WeixinConfigForm: React.FC<WeixinConfigFormProps> = ({ pluginStatus, model
 
       {/* Pending Pairing Requests */}
       {pluginStatus?.connected && (
-        <div className='bg-fill-1 rd-12px pt-16px pr-16px pb-16px pl-0'>
+        <div className='bg-fill-1 rd-12px pt-16px pe-16px pb-16px ps-0'>
           <SectionHeader
             title={t('settings.assistant.pendingPairings', 'Pending Pairing Requests')}
             action={
@@ -536,7 +535,7 @@ const WeixinConfigForm: React.FC<WeixinConfigFormProps> = ({ pluginStatus, model
                       {t('settings.assistant.pairingCode', 'Code')}:{' '}
                       <code className='bg-fill-3 px-4px rd-2px'>{pairing.code}</code>
                       <span className='mx-8px'>|</span>
-                      {t('settings.assistant.expiresIn', 'Expires in')}: {getRemainingTime(pairing.expiresAt)}
+                      {t('settings.assistant.expiresInMinutes', { count: getRemainingMinutes(pairing.expiresAt) })}
                     </div>
                   </div>
                   <div className='flex items-center gap-8px'>
@@ -567,7 +566,7 @@ const WeixinConfigForm: React.FC<WeixinConfigFormProps> = ({ pluginStatus, model
 
       {/* Authorized Users */}
       {authorizedUsers.length > 0 && (
-        <div className='bg-fill-1 rd-12px pt-16px pr-16px pb-16px pl-0'>
+        <div className='bg-fill-1 rd-12px pt-16px pe-16px pb-16px ps-0'>
           <SectionHeader
             title={t('settings.assistant.authorizedUsers', 'Authorized Users')}
             action={
