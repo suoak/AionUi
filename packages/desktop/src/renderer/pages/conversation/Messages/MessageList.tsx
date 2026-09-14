@@ -227,6 +227,7 @@ const MessageItem: React.FC<{
   showCopyRow?: boolean;
   localFileAliases?: Readonly<Record<string, string>>;
   isLastMessage?: boolean;
+  streaming?: boolean;
   hasForkAnchor?: boolean;
   turnTexts?: string[];
 }> = React.memo(
@@ -263,6 +264,7 @@ const MessageItem: React.FC<{
       showCopyRow,
       localFileAliases,
       isLastMessage,
+      streaming,
       hasForkAnchor,
       turnTexts,
     }: {
@@ -272,6 +274,7 @@ const MessageItem: React.FC<{
       showCopyRow?: boolean;
       localFileAliases?: Readonly<Record<string, string>>;
       isLastMessage?: boolean;
+      streaming?: boolean;
       hasForkAnchor?: boolean;
       turnTexts?: string[];
     }) => {
@@ -284,6 +287,7 @@ const MessageItem: React.FC<{
               showCopyRow={showCopyRow}
               localFileAliases={localFileAliases}
               isLastMessage={isLastMessage}
+              streaming={streaming}
               hasForkAnchor={hasForkAnchor}
               turnTexts={turnTexts}
             ></MessageText>
@@ -330,6 +334,7 @@ const MessageItem: React.FC<{
     prev.showCopyRow === next.showCopyRow &&
     prev.localFileAliases === next.localFileAliases &&
     prev.isLastMessage === next.isLastMessage &&
+    prev.streaming === next.streaming &&
     prev.hasForkAnchor === next.hasForkAnchor &&
     (prev.turnTexts === next.turnTexts ||
       (prev.turnTexts?.length === next.turnTexts?.length &&
@@ -743,6 +748,9 @@ const MessageList: React.FC<{ className?: string; emptySlot?: React.ReactNode }>
         showCopyRow={showCopyRow}
         localFileAliases={message.type === 'text' ? localFileAliasesByMessageId[message.id] : undefined}
         isLastMessage={message.id === lastMessageId}
+        streaming={
+          isProcessing && message.type === 'text' && message.position === 'left' && message.id === lastMessageId
+        }
         hasForkAnchor={forkAnchoredIds.has(message.id)}
         turnTexts={aiTurnTextsById.get(message.id)}
       ></MessageItem>

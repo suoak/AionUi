@@ -5,6 +5,7 @@
  */
 
 import ReactMarkdown, { defaultUrlTransform } from 'react-markdown';
+import { Streamdown } from 'streamdown';
 
 import rehypeKatex from 'rehype-katex';
 import rehypeRaw from 'rehype-raw';
@@ -30,6 +31,9 @@ import { MARKDOWN_REMARK_PLUGINS, MarkdownTable, MarkdownTd } from './markdownCo
 import ShadowView from './ShadowView';
 import { resolveLocalFileLinkPath, resolveLocalFileLinkReference, resolveMarkdownLocalFilePath } from './markdownUtils';
 import type { LocalFileLinkReference } from './markdownUtils';
+import { prepareTolerantChatMarkdown } from './markdownSafety';
+
+const transformMarkdownUrl = (url: string): string => (resolveLocalFileLinkPath(url) ? url : defaultUrlTransform(url));
 
 const isLocalFilePath = (src: string): boolean => {
   if (src.startsWith('http://') || src.startsWith('https://')) return false;
@@ -146,6 +150,8 @@ type MarkdownViewProps = {
   localFileBasePath?: string;
   /** Enable raw HTML rendering in markdown content. Use with caution — only for trusted sources. */
   allowHtml?: boolean;
+  /** Set by chat messages so incomplete streamed syntax is repaired, then parsed again when settled. */
+  streaming?: boolean;
 };
 
 const MarkdownView: React.FC<MarkdownViewProps> = React.memo(
@@ -158,6 +164,7 @@ const MarkdownView: React.FC<MarkdownViewProps> = React.memo(
     localFileAliases,
     localFileBasePath,
     allowHtml,
+    streaming,
     children: childrenProp,
   }) => {
     const { t } = useTranslation();
@@ -168,10 +175,10 @@ const MarkdownView: React.FC<MarkdownViewProps> = React.memo(
         let text = childrenProp.replace(/file:\/\//g, '');
         text = normalizeLocalFileLinkDestinations(text, localFileAliases, localFileBasePath);
         text = convertLatexDelimiters(text);
-        return text;
+        return streaming === undefined ? text : prepareTolerantChatMarkdown(text);
       }
       return childrenProp;
-    }, [childrenProp, localFileAliases, localFileBasePath]);
+    }, [childrenProp, localFileAliases, localFileBasePath, streaming]);
 
     const handleLinkClick = useCallback(
       (e: React.MouseEvent<HTMLAnchorElement>) => {
@@ -225,9 +232,8 @@ const MarkdownView: React.FC<MarkdownViewProps> = React.memo(
               </LocalFileLink>
             );
           }
-          return (
-            <a {...anchorProps} href={anchorProps.href} target='_blank' rel='noreferrer' onClick={handleLinkClick} />
-          );
+          const safeHref = transformMarkdownUrl(rawHref);
+          return <a {...anchorProps} href={safeHref} target='_blank' rel='noreferrer' onClick={handleLinkClick} />;
         },
         table: MarkdownTable,
         td: MarkdownTd,
@@ -246,7 +252,14 @@ const MarkdownView: React.FC<MarkdownViewProps> = React.memo(
               />
             );
           }
-          return <MarkdownImage {...imgProps} src={imgProps.src || ''} alt={imgProps.alt || ''} local={false} />;
+          return (
+            <MarkdownImage
+              {...imgProps}
+              src={transformMarkdownUrl(imgProps.src || '')}
+              alt={imgProps.alt || ''}
+              local={false}
+            />
+          );
         },
       }),
       [codeStyle, hiddenCodeCopyButton, handleLinkClick, localFileAliases, localFileBasePath, onLocalFileLink]
@@ -258,14 +271,29 @@ const MarkdownView: React.FC<MarkdownViewProps> = React.memo(
       <div className={classNames('relative w-full', className)}>
         <ShadowView>
           <div ref={onRef} className='markdown-shadow-body'>
-            <ReactMarkdown
-              remarkPlugins={MARKDOWN_REMARK_PLUGINS}
-              rehypePlugins={rehypePlugins}
-              components={components}
-              urlTransform={(url) => (resolveLocalFileLinkPath(url) ? url : defaultUrlTransform(url))}
-            >
-              {normalizedChildren}
-            </ReactMarkdown>
+            {streaming ? (
+              <Streamdown
+                key='streaming'
+                mode='streaming'
+                parseIncompleteMarkdown
+                controls={false}
+                remarkPlugins={MARKDOWN_REMARK_PLUGINS}
+                rehypePlugins={rehypePlugins}
+                components={components}
+              >
+                {normalizedChildren}
+              </Streamdown>
+            ) : (
+              <ReactMarkdown
+                key={streaming === false ? 'settled' : 'standard'}
+                remarkPlugins={MARKDOWN_REMARK_PLUGINS}
+                rehypePlugins={rehypePlugins}
+                components={components}
+                urlTransform={transformMarkdownUrl}
+              >
+                {normalizedChildren}
+              </ReactMarkdown>
+            )}
           </div>
         </ShadowView>
       </div>

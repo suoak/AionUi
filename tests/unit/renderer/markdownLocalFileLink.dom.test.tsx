@@ -127,6 +127,22 @@ describe('MarkdownView local file links', () => {
     );
   });
 
+  it('preserves local file destinations while a response is streaming', async () => {
+    const onLocalFileLink = vi.fn();
+
+    render(
+      <MarkdownView streaming onLocalFileLink={onLocalFileLink}>
+        {'[report.xlsx](C:\\Users\\admin\\report.xlsx)'}
+      </MarkdownView>
+    );
+
+    fireEvent.click(await screen.findByRole('button', { name: 'report.xlsx' }));
+    expect(onLocalFileLink).toHaveBeenCalledWith(
+      'C:/Users/admin/report.xlsx',
+      expect.objectContaining({ filePath: 'C:/Users/admin/report.xlsx' })
+    );
+  });
+
   it('opens angle-wrapped Windows paths containing spaces and parentheses', () => {
     const onLocalFileLink = vi.fn();
 
@@ -245,6 +261,55 @@ describe('MarkdownView local file links', () => {
 
     const link = screen.getByRole('link', { name: 'docs' });
     expect(link).toHaveAttribute('href', 'https://csbu-workmate.com/docs');
+  });
+
+  it('keeps prose visible when a malformed link absorbs a table separator into its destination', () => {
+    const source = '[issue](https://example.com/bug/1711145|status=closed) trailing text';
+
+    const { container } = render(<MarkdownView streaming={false}>{source}</MarkdownView>);
+
+    expect(screen.queryByRole('link', { name: 'issue' })).not.toBeInTheDocument();
+    expect(container).toHaveTextContent(source);
+  });
+
+  it('expands a ragged GFM table so extra body cells are not discarded', () => {
+    render(
+      <MarkdownView streaming={false}>
+        {'| Name | Status |\n| - | - |\n| Issue 1 | Open | must remain visible |'}
+      </MarkdownView>
+    );
+
+    expect(screen.getAllByRole('columnheader')).toHaveLength(3);
+    expect(screen.getByRole('cell', { name: 'must remain visible' })).toBeInTheDocument();
+  });
+
+  it('does not rewrite malformed-link examples inside code', () => {
+    const source = '[issue](https://example.com/bug|status=closed)';
+
+    render(<MarkdownView streaming={false}>{`\`${source}\`\n\n\`\`\`md\n${source}\n\`\`\``}</MarkdownView>);
+
+    expect(screen.getAllByText(source)).toHaveLength(2);
+  });
+
+  it('repairs incomplete streaming syntax and performs a fresh static parse when streaming settles', async () => {
+    const { rerender } = render(<MarkdownView streaming>{'**streaming text'}</MarkdownView>);
+
+    expect(await screen.findByText('streaming text')).toHaveClass('font-semibold');
+
+    rerender(
+      <MarkdownView streaming={false}>{'**streaming text** and [docs](https://example.com/docs)'}</MarkdownView>
+    );
+
+    await waitFor(() => {
+      expect(screen.getByRole('link', { name: 'docs' })).toHaveAttribute('href', 'https://example.com/docs');
+    });
+    expect(screen.getByText('streaming text')).toHaveProperty('tagName', 'STRONG');
+  });
+
+  it('keeps unsafe generated links inert while a response is streaming', async () => {
+    render(<MarkdownView streaming>{'[unsafe](javascript:alert(1))'}</MarkdownView>);
+
+    expect((await screen.findByText('unsafe')).closest('a')).toHaveAttribute('href', '');
   });
 
   it('keeps markdown link titles separate from destinations', () => {
