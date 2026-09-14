@@ -529,7 +529,7 @@ const ToolsModalContent: React.FC = () => {
                 tooltip={
                   <div className='space-y-4px'>
                     <div>{t('settings.imageGenSupportedTooltipTitle')}</div>
-                    <ul className='list-disc pl-16px m-0'>
+                    <ul className='list-disc ps-16px m-0'>
                       <li>{t('settings.imageGenSupportedTooltipGemini')}</li>
                       <li>{t('settings.imageGenSupportedTooltipOpenRouter')}</li>
                       <li>{t('settings.imageGenSupportedTooltipAntigravity')}</li>

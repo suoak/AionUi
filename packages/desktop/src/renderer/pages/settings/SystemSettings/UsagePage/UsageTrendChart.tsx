@@ -52,7 +52,7 @@ const UsageTrendChart: React.FC<UsageTrendChartProps> = ({ points, emptyLabel, i
                 <div
                   className='flex w-70% max-w-18px flex-col justify-end overflow-hidden rounded-4px'
                   style={{ height: `${height}%` }}
-                  title={`${point.date}: ${formatTokenCount(point.total_tokens, false, locale)}`}
+                  title={`${point.date}: ${formatTokenCount(point.total_tokens, locale)}`}
                 >
                   <div className='w-full bg-primary-6' style={{ height: `${Math.round(outputShare * 100)}%` }} />
                   <div className='min-h-2px w-full flex-1 bg-primary-3' />

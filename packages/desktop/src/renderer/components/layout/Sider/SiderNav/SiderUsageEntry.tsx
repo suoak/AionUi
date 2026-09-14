@@ -33,7 +33,7 @@ const SiderUsageEntry: React.FC<SiderUsageEntryProps> = ({
   const locale = i18n?.language;
   const { events } = useTokenUsageStats('all');
   const todayTokens = useMemo(() => summarizeUsageEvents(filterUsageToday(events)).total_tokens, [events]);
-  const todayLabel = formatTokenCount(todayTokens, false, locale);
+  const todayLabel = formatTokenCount(todayTokens, locale);
   const tooltip = t('settings.usage.siderTooltip', { tokens: todayLabel, defaultValue: 'Usage · {{tokens}} today' });
 
   if (collapsed) {
