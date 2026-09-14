@@ -1,5 +1,50 @@
 # Changelog
 
+## [2.3.0](https://github.com/suoak/AionUi/compare/v2.2.10...v2.3.0) (2026-09-14)
+
+### Desktop
+
+#### Features
+
+- **agent-workflow:** provide a guided builder for linear agent and MCP tool workflows, reusable templates, structured inputs, and output schemas.
+- **agent-workflow:** add executable run controls, live status, conversation bindings, revision provenance, node results, final output, cancellation, and explicit retry flows.
+- **agent-center:** make create, inspect, edit, publish, unpublish, test, and improve a coherent lifecycle while keeping Skill Evolution as a separate product area.
+
+#### Bug Fixes
+
+- **agent-workflow:** preserve truthful cancellation and retry state, recover interrupted runs, validate required input, and avoid blocking workflow controls during tool execution.
+- **markdown:** preserve incomplete streamed Markdown, malformed-link prose, ragged table cells, safe URLs, and local artifact links without changing settled document rendering.
+- **i18n:** keep workflow creation, run inspection, and navigation complete across all supported languages.
+
+#### 内网更新说明
+
+<!-- internal-release-notes:start -->
+
+**由运营管理部提供**
+
+- 智能体中心新增可执行工作流：支持向导式创建、智能体与工具节点、输入输出约束、模板复用和试运行。
+- 工作流运行过程可查看实时状态、节点结果、最终输出和版本来源，并支持取消及风险确认后的重试。
+- 完善智能体创建、编辑、发布、撤销发布、试用和持续改进闭环；技能进化保持独立入口和独立业务流程。
+- 提升流式回复稳定性，避免不完整格式、异常链接或不规则表格导致内容丢失，同时保持本地文件链接可用。
+- 桌面端后端组件和文档工具已升级到经过跨平台验证的稳定版本。
+
+<!-- internal-release-notes:end -->
+
+### Core ([v0.2.12](https://github.com/suoak/AionCore/releases/tag/v0.2.12))
+
+- **agent-workflow:** persist workflow contracts and run state; execute agent and MCP tool nodes with input/output validation.
+- **agent-workflow:** record conversation, revision, retry, cancellation, recovery, and final-output state for reliable inspection.
+- **agent-center:** support unpublishing and tolerate individual invalid assistant metadata without failing the entire list.
+- **team:** report whether confirmed runtime configuration changes were durably persisted.
+- **branding:** consume the independently published suoak aionrs runtime packages.
+
+### Office CLI ([v1.0.165](https://github.com/suoak/OfficeCLI/releases/tag/v1.0.165))
+
+- Improve resident-process startup, canonical pipe identity, and SDK reliability across Windows, macOS, and Linux.
+- Keep WorkMate-owned installer, SDK, skill, and release links under the independent suoak distribution.
+
+---
+
 ## [2.2.10](https://github.com/suoak/AionUi/compare/v2.2.9...v2.2.10) (2026-09-05)
 
 ### Features
