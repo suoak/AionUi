@@ -288,7 +288,7 @@ const ConversationRow: React.FC<ConversationRowProps> = (props) => {
                     }
                     if (key === 'evolveSkill') {
                       // HashRouter: avoid useNavigate so unit tests without Router still render.
-                      window.location.hash = `#/agent-center/skill-evolution/new?conversation_id=${encodeURIComponent(conversation.id)}`;
+                      window.location.hash = `#/skill-evolution/new?conversation_id=${encodeURIComponent(conversation.id)}`;
                       return;
                     }
                     if (key === 'export') {

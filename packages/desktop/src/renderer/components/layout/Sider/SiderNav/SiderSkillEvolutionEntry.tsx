@@ -6,20 +6,20 @@
 
 import React from 'react';
 import { Tooltip } from '@arco-design/web-react';
-import { Robot } from '@icon-park/react';
+import { Magic } from '@icon-park/react';
 import classNames from 'classnames';
 import { useTranslation } from 'react-i18next';
 import type { SiderTooltipProps } from '@renderer/utils/ui/siderTooltip';
 
-interface SiderAgentCenterEntryProps {
+type SiderSkillEvolutionEntryProps = {
   isMobile: boolean;
   isActive: boolean;
   collapsed: boolean;
   siderTooltipProps: SiderTooltipProps;
   onClick: () => void;
-}
+};
 
-const SiderAgentCenterEntry: React.FC<SiderAgentCenterEntryProps> = ({
+const SiderSkillEvolutionEntry: React.FC<SiderSkillEvolutionEntryProps> = ({
   isMobile,
   isActive,
   collapsed,
@@ -27,7 +27,7 @@ const SiderAgentCenterEntry: React.FC<SiderAgentCenterEntryProps> = ({
   onClick,
 }) => {
   const { t } = useTranslation();
-  const label = t('agent.agentCenter.title');
+  const label = t('agent.skillEvolution.title');
 
   if (collapsed) {
     return (
@@ -39,13 +39,7 @@ const SiderAgentCenterEntry: React.FC<SiderAgentCenterEntryProps> = ({
           )}
           onClick={onClick}
         >
-          <Robot
-            theme='outline'
-            size='20'
-            fill='currentColor'
-            className='block leading-none shrink-0'
-            style={{ lineHeight: 0 }}
-          />
+          <Magic theme='outline' size='20' fill='currentColor' className='block leading-none shrink-0' />
         </div>
       </Tooltip>
     );
@@ -62,13 +56,7 @@ const SiderAgentCenterEntry: React.FC<SiderAgentCenterEntryProps> = ({
         onClick={onClick}
       >
         <span className='size-22px flex items-center justify-center shrink-0 text-t-primary'>
-          <Robot
-            theme='outline'
-            size='16'
-            fill='currentColor'
-            className='block leading-none'
-            style={{ lineHeight: 0 }}
-          />
+          <Magic theme='outline' size='16' fill='currentColor' className='block leading-none' />
         </span>
         <span className='collapsed-hidden text-t-primary text-14px font-[500] leading-24px'>{label}</span>
       </div>
@@ -76,4 +64,4 @@ const SiderAgentCenterEntry: React.FC<SiderAgentCenterEntryProps> = ({
   );
 };
 
-export default SiderAgentCenterEntry;
+export default SiderSkillEvolutionEntry;

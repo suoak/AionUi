@@ -12,6 +12,7 @@ import {
   SiderSearchEntry,
   SiderScheduledEntry,
   SiderAgentCenterEntry,
+  SiderSkillEvolutionEntry,
   SiderAssistantEntry,
   SiderUsageEntry,
 } from './SiderNav';
@@ -122,6 +123,19 @@ const Sider: React.FC<SiderProps> = ({ onSessionClick, collapsed = false }) => {
     closePreview();
     setIsBatchMode(false);
     Promise.resolve(navigate('/agent-center')).catch((error) => {
+      console.error('Navigation failed:', error);
+    });
+    if (onSessionClick) {
+      onSessionClick();
+    }
+  };
+
+  const handleSkillEvolutionClick = () => {
+    cleanupSiderTooltips();
+    blurActiveElement();
+    closePreview();
+    setIsBatchMode(false);
+    Promise.resolve(navigate('/skill-evolution')).catch((error) => {
       console.error('Navigation failed:', error);
     });
     if (onSessionClick) {
@@ -240,6 +254,13 @@ const Sider: React.FC<SiderProps> = ({ onSessionClick, collapsed = false }) => {
               collapsed={collapsed}
               siderTooltipProps={siderTooltipProps}
               onClick={handleAgentCenterClick}
+            />
+            <SiderSkillEvolutionEntry
+              isMobile={isMobile}
+              isActive={pathname.startsWith('/skill-evolution')}
+              collapsed={collapsed}
+              siderTooltipProps={siderTooltipProps}
+              onClick={handleSkillEvolutionClick}
             />
             <SiderAssistantEntry
               isMobile={isMobile}

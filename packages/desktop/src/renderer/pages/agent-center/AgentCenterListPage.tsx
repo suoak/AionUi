@@ -1,7 +1,8 @@
-import { Button, Message, Tabs, Typography } from '@arco-design/web-react';
+import { Button, Message, Modal, Tabs, Typography } from '@arco-design/web-react';
 import { ipcBridge } from '@/common';
 import type { AgentCenterListItem, AgentVisibility } from '@/common/types/agent/agentCenterTypes';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { formatAgentCenterError } from './agentCenterErrors';
 
@@ -24,6 +25,7 @@ const visibilityLabel: Record<AgentVisibility, string> = {
 
 const AgentCenterListPage: React.FC = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const [scope, setScope] = useState<Scope>('mine');
   const [items, setItems] = useState<AgentCenterListItem[]>([]);
   const [loading, setLoading] = useState(false);
@@ -93,6 +95,29 @@ const AgentCenterListPage: React.FC = () => {
     }
   };
 
+  const handleUnpublish = (id: string) => {
+    Modal.confirm({
+      title: t('agent.agentCenter.unpublish.confirmTitle'),
+      content: t('agent.agentCenter.unpublish.confirmDescription'),
+      okText: t('agent.agentCenter.actions.unpublish'),
+      cancelText: t('common.cancel'),
+      onOk: async () => {
+        setBusyId(id);
+        try {
+          await ipcBridge.agentCenter.unpublish.invoke({ id });
+          messageRef.current.success(t('agent.agentCenter.unpublish.success'));
+          await load();
+        } catch (error) {
+          console.error(error);
+          messageRef.current.error(formatAgentCenterError(error, t('agent.agentCenter.unpublish.error')));
+          throw error;
+        } finally {
+          setBusyId(null);
+        }
+      },
+    });
+  };
+
   return (
     <div className='h-full overflow-auto p-24px'>
       {messageContext}
@@ -101,17 +126,11 @@ const AgentCenterListPage: React.FC = () => {
           <Title heading={4} className='!mb-4px'>
             智能体中心
           </Title>
-          <Text type='secondary'>
-            创建 → 指令与个性 → 能力配置 → 试跑预览 →
-            发布与共享。知识库产品保持独立，不在此捆绑。技能进化是独立模块，可从列表入口打开。
-          </Text>
+          <Text type='secondary'>{t('agent.agentCenter.description')}</Text>
         </div>
-        <div className='flex gap-8px'>
-          <Button onClick={() => navigate('/agent-center/skill-evolution')}>技能进化</Button>
-          <Button type='primary' onClick={() => navigate('/agent-center/new')}>
-            创建智能体
-          </Button>
-        </div>
+        <Button type='primary' onClick={() => navigate('/agent-center/new')}>
+          创建智能体
+        </Button>
       </div>
 
       <Tabs activeTab={scope} onChange={(key) => setScope(key as Scope)}>
@@ -177,7 +196,14 @@ const AgentCenterListPage: React.FC = () => {
                   <Button size='small' loading={busy} onClick={() => void handlePublish(id)}>
                     发布
                   </Button>
-                ) : null}
+                ) : (
+                  scope === 'mine' &&
+                  item.meta.status === 'published' && (
+                    <Button size='small' status='danger' disabled={busy} onClick={() => handleUnpublish(id)}>
+                      {t('agent.agentCenter.actions.unpublish')}
+                    </Button>
+                  )
+                )}
               </div>
             </div>
           );

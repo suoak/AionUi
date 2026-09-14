@@ -50,14 +50,21 @@ import type {
   UpdateAssistantRequest,
 } from '../types/agent/assistantTypes';
 import type {
-  AgentCenterDetail,
-  AgentCenterListItem,
   AgentCenterRevision,
   AgentCenterRunPlan,
+  AgentWorkflowRun,
+  AdvanceAgentWorkflowRunRequest,
   CreateAgentCenterRequest,
   PublishAgentCenterRequest,
+  StartAgentWorkflowRunRequest,
   UpdateAgentCenterRequest,
 } from '../types/agent/agentCenterTypes';
+import {
+  normalizeAgentCenterDetail,
+  normalizeAgentCenterListItem,
+  type AgentCenterDetailWire,
+  type AgentCenterListItemWire,
+} from '../types/agent/agentCenterNormalization';
 import type {
   ApplySkillEvolutionRequest,
   ApplySkillEvolutionResponse,
@@ -376,33 +383,90 @@ export const assistants = {
 // ---------------------------------------------------------------------------
 
 export const agentCenter = {
-  list: httpGet<AgentCenterListItem[], { scope?: string; team_id?: string } | undefined>((p) => {
-    const params = new URLSearchParams();
-    params.set('scope', p?.scope ?? 'mine');
-    if (p?.team_id) params.set('team_id', p.team_id);
-    return `/api/agent-center/agents?${params.toString()}`;
-  }),
-  get: httpGet<AgentCenterDetail, { id: string }>((p) => `/api/agent-center/agents/${encodeURIComponent(p.id)}`),
-  create: httpPost<AgentCenterDetail, CreateAgentCenterRequest>('/api/agent-center/agents'),
-  update: httpPut<AgentCenterDetail, UpdateAgentCenterRequest & { id: string }>(
-    (p) => `/api/agent-center/agents/${encodeURIComponent(p.id)}`,
-    (p) => {
-      const { id: _id, ...body } = p;
-      return body;
-    }
+  list: withResponseMap(
+    httpGet<AgentCenterListItemWire[], { scope?: string; team_id?: string } | undefined>((p) => {
+      const params = new URLSearchParams();
+      params.set('scope', p?.scope ?? 'mine');
+      if (p?.team_id) params.set('team_id', p.team_id);
+      return `/api/agent-center/agents?${params.toString()}`;
+    }),
+    (items) => items.map(normalizeAgentCenterListItem)
   ),
-  publish: httpPost<AgentCenterDetail, PublishAgentCenterRequest & { id: string }>(
-    (p) => `/api/agent-center/agents/${encodeURIComponent(p.id)}/publish`,
-    (p) => {
-      const { id: _id, ...body } = p;
-      return body;
-    }
+  get: withResponseMap(
+    httpGet<AgentCenterDetailWire, { id: string }>((p) => `/api/agent-center/agents/${encodeURIComponent(p.id)}`),
+    normalizeAgentCenterDetail
+  ),
+  create: withResponseMap(
+    httpPost<AgentCenterDetailWire, CreateAgentCenterRequest>('/api/agent-center/agents'),
+    normalizeAgentCenterDetail
+  ),
+  update: withResponseMap(
+    httpPut<AgentCenterDetailWire, UpdateAgentCenterRequest & { id: string }>(
+      (p) => `/api/agent-center/agents/${encodeURIComponent(p.id)}`,
+      (p) => {
+        const { id: _id, ...body } = p;
+        return body;
+      }
+    ),
+    normalizeAgentCenterDetail
+  ),
+  publish: withResponseMap(
+    httpPost<AgentCenterDetailWire, PublishAgentCenterRequest & { id: string }>(
+      (p) => `/api/agent-center/agents/${encodeURIComponent(p.id)}/publish`,
+      (p) => {
+        const { id: _id, ...body } = p;
+        return body;
+      }
+    ),
+    normalizeAgentCenterDetail
+  ),
+  unpublish: withResponseMap(
+    httpPost<AgentCenterDetailWire, { id: string }>(
+      (p) => `/api/agent-center/agents/${encodeURIComponent(p.id)}/unpublish`,
+      () => ({})
+    ),
+    normalizeAgentCenterDetail
   ),
   versions: httpGet<AgentCenterRevision[], { id: string }>(
     (p) => `/api/agent-center/agents/${encodeURIComponent(p.id)}/versions`
   ),
   run: httpPost<AgentCenterRunPlan, { id: string }>(
     (p) => `/api/agent-center/agents/${encodeURIComponent(p.id)}/run`,
+    () => ({})
+  ),
+  startWorkflowRun: httpPost<AgentWorkflowRun, StartAgentWorkflowRunRequest & { id: string }>(
+    (p) => `/api/agent-center/agents/${encodeURIComponent(p.id)}/workflow-runs`,
+    (p) => {
+      const { id: _id, ...body } = p;
+      return body;
+    }
+  ),
+  listWorkflowRuns: httpGet<AgentWorkflowRun[], { id: string }>(
+    (p) => `/api/agent-center/agents/${encodeURIComponent(p.id)}/workflow-runs`
+  ),
+  getWorkflowRun: httpGet<AgentWorkflowRun, { id: string }>(
+    (p) => `/api/agent-center/workflow-runs/${encodeURIComponent(p.id)}`
+  ),
+  advanceWorkflowRun: httpPost<AgentWorkflowRun, AdvanceAgentWorkflowRunRequest & { id: string }>(
+    (p) => `/api/agent-center/workflow-runs/${encodeURIComponent(p.id)}/advance`,
+    (p) => {
+      const { id: _id, ...body } = p;
+      return body;
+    }
+  ),
+  decideWorkflowApproval: httpPost<AgentWorkflowRun, { id: string; decision: 'approve' | 'reject'; comment?: string }>(
+    (p) => `/api/agent-center/workflow-runs/${encodeURIComponent(p.id)}/approval`,
+    (p) => {
+      const { id: _id, ...body } = p;
+      return body;
+    }
+  ),
+  cancelWorkflowRun: httpPost<AgentWorkflowRun, { id: string }>(
+    (p) => `/api/agent-center/workflow-runs/${encodeURIComponent(p.id)}/cancel`,
+    () => ({})
+  ),
+  retryWorkflowRun: httpPost<AgentWorkflowRun, { id: string }>(
+    (p) => `/api/agent-center/workflow-runs/${encodeURIComponent(p.id)}/retry`,
     () => ({})
   ),
 };

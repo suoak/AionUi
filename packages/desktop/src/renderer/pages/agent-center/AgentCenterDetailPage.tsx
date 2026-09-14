@@ -1,12 +1,21 @@
-import { Button, Message, Tag, Typography } from '@arco-design/web-react';
+import { Button, Collapse, Message, Modal, Tag, Typography } from '@arco-design/web-react';
 import { ipcBridge } from '@/common';
-import type { AgentCenterDetail, AgentVisibility } from '@/common/types/agent/agentCenterTypes';
-import type { ExperienceArticle, SkillEvolutionProposal } from '@/common/types/agent/skillEvolutionTypes';
+import type { AgentCenterDetail, AgentVisibility, AgentWorkflowRun } from '@/common/types/agent/agentCenterTypes';
+import {
+  MAX_WORKFLOW_NODE_ATTEMPTS,
+  canRetryWorkflowNode,
+  formatWorkflowNodeOutput,
+  getWorkflowNodeDurationMs,
+  hasActiveWorkflowRuns,
+} from '@/common/types/agent/agentWorkflow';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
 import { formatAgentCenterError } from './agentCenterErrors';
 
 const { Title, Text } = Typography;
+const ACTIVE_WORKFLOW_REFRESH_MS = 3000;
+const IDLE_WORKFLOW_REFRESH_MS = 15000;
 
 const statusLabel: Record<string, string> = {
   draft: '草稿',
@@ -20,65 +29,102 @@ const visibilityLabel: Record<AgentVisibility, string> = {
   enterprise: '企业',
 };
 
-const proposalStatusLabel: Record<string, string> = {
-  draft: '草稿',
-  pending_review: '待审核',
-  approved: '已通过',
-  rejected: '已拒绝',
-  applied: '已应用',
-  rolled_back: '已回滚',
-};
-
 /**
- * ChatGPT-inspired agent detail hub: instructions snippet, capability chips,
- * pinned skills, recent skill-evolution proposals, and improvement CTAs.
+ * ChatGPT-inspired agent detail hub: instructions, capabilities, skills, and
+ * lifecycle actions. Skill evolution is intentionally a separate product area.
  */
 const AgentCenterDetailPage: React.FC = () => {
   const { id = '' } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const { t, i18n } = useTranslation();
   const [message, messageContext] = Message.useMessage({ maxCount: 5 });
   const messageRef = useRef(message);
   messageRef.current = message;
   const [detail, setDetail] = useState<AgentCenterDetail | null>(null);
   const [instructions, setInstructions] = useState('');
-  const [proposals, setProposals] = useState<SkillEvolutionProposal[]>([]);
-  const [experienceCount, setExperienceCount] = useState(0);
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
+  const [workflowRuns, setWorkflowRuns] = useState<AgentWorkflowRun[]>([]);
+  const [pageVisible, setPageVisible] = useState(() => document.visibilityState !== 'hidden');
+  const workflowRefreshPendingRef = useRef<{ id: string; request: number } | null>(null);
+  const workflowRefreshRequestRef = useRef(0);
+  const loadRequestRef = useRef(0);
+  const previousPageVisibleRef = useRef(pageVisible);
 
   const load = useCallback(async () => {
     if (!id) return;
+    const loadRequest = ++loadRequestRef.current;
+    const workflowRequest = ++workflowRefreshRequestRef.current;
     setLoading(true);
     setLoadError(null);
     try {
-      const [agent, props, experience] = await Promise.all([
+      const [agent, runs] = await Promise.all([
         ipcBridge.agentCenter.get.invoke({ id }),
-        ipcBridge.skillEvolution.listProposals
-          .invoke({ assistant_id: id, limit: 20 })
-          .catch((): SkillEvolutionProposal[] => []),
-        ipcBridge.skillEvolution.listExperience
-          .invoke({ assistant_id: id, limit: 100 })
-          .catch((): ExperienceArticle[] => []),
+        ipcBridge.agentCenter.listWorkflowRuns.invoke({ id }),
       ]);
+      if (loadRequest !== loadRequestRef.current) return;
       setDetail(agent);
+      if (workflowRequest === workflowRefreshRequestRef.current) setWorkflowRuns(runs);
       setInstructions(agent.assistant.rules?.content ?? '');
-      setProposals(props);
-      setExperienceCount(experience.length);
     } catch (error) {
+      if (loadRequest !== loadRequestRef.current) return;
       console.error(error);
       const msg = formatAgentCenterError(error, '加载智能体详情失败');
       setDetail(null);
       setLoadError(msg);
       messageRef.current.error(msg);
     } finally {
-      setLoading(false);
+      if (loadRequest === loadRequestRef.current) setLoading(false);
     }
   }, [id]);
 
   useEffect(() => {
     void load();
+    return () => {
+      loadRequestRef.current += 1;
+      workflowRefreshRequestRef.current += 1;
+      if (workflowRefreshPendingRef.current?.id === id) workflowRefreshPendingRef.current = null;
+    };
   }, [load]);
+
+  const hasActiveRuns = useMemo(() => hasActiveWorkflowRuns(workflowRuns), [workflowRuns]);
+
+  const refreshWorkflowRuns = useCallback(async () => {
+    if (!id || workflowRefreshPendingRef.current?.id === id) return;
+    const request = ++workflowRefreshRequestRef.current;
+    workflowRefreshPendingRef.current = { id, request };
+    try {
+      const runs = await ipcBridge.agentCenter.listWorkflowRuns.invoke({ id });
+      if (request === workflowRefreshRequestRef.current) setWorkflowRuns(runs);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      if (workflowRefreshPendingRef.current?.request === request) workflowRefreshPendingRef.current = null;
+    }
+  }, [id]);
+
+  useEffect(() => {
+    const handleVisibilityChange = () => setPageVisible(document.visibilityState !== 'hidden');
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    return () => document.removeEventListener('visibilitychange', handleVisibilityChange);
+  }, []);
+
+  useEffect(() => {
+    if (!id || !pageVisible) return;
+    const timer = window.setInterval(
+      () => {
+        void refreshWorkflowRuns();
+      },
+      hasActiveRuns ? ACTIVE_WORKFLOW_REFRESH_MS : IDLE_WORKFLOW_REFRESH_MS
+    );
+    return () => window.clearInterval(timer);
+  }, [hasActiveRuns, id, pageVisible, refreshWorkflowRuns]);
+
+  useEffect(() => {
+    if (pageVisible && !previousPageVisibleRef.current) void refreshWorkflowRuns();
+    previousPageVisibleRef.current = pageVisible;
+  }, [pageVisible, refreshWorkflowRuns]);
 
   const chips = useMemo(() => {
     if (!detail) return [] as string[];
@@ -96,24 +142,109 @@ const AgentCenterDetailPage: React.FC = () => {
 
   const handleTryRun = async () => {
     if (!id) return;
+    navigate('/guid', {
+      state: {
+        selectedAssistantId: id,
+        agentWorkflowStartAssistantId: id,
+        agentWorkflowInputPlaceholder: detail?.meta.workflow.input.placeholder,
+        agentCenterPreviewMode: detail?.meta.status === 'published' ? 'published' : 'draft',
+        focusPrefill: true,
+        agentCenterReturnTo: `/agent-center/${id}`,
+      },
+    });
+  };
+
+  const handleApproval = async (runId: string, decision: 'approve' | 'reject') => {
     setBusy(true);
     try {
-      const plan = await ipcBridge.agentCenter.run.invoke({ id });
-      navigate('/guid', {
-        state: {
-          selectedAssistantId: plan.assistant_id,
-          agentCenterRunPlan: plan.create_conversation,
-          agentCenterPreviewMode: plan.preview_mode,
-          focusPrefill: true,
-          agentCenterReturnTo: `/agent-center/${id}`,
-        },
-      });
+      await ipcBridge.agentCenter.decideWorkflowApproval.invoke({ id: runId, decision });
+      messageRef.current.success(
+        t(
+          decision === 'approve'
+            ? 'agent.agentCenter.workflowRuns.approvalApproved'
+            : 'agent.agentCenter.workflowRuns.approvalRejected'
+        )
+      );
+      await load();
     } catch (error) {
       console.error(error);
-      messageRef.current.error(formatAgentCenterError(error, '准备试跑失败'));
+      messageRef.current.error(formatAgentCenterError(error, t('agent.agentCenter.workflowRuns.approvalError')));
     } finally {
       setBusy(false);
     }
+  };
+
+  const handleCancelRun = (run: AgentWorkflowRun) => {
+    const retryCancellation = run.status === 'cancelled' && run.cancellation_status === 'failed';
+    Modal.confirm({
+      title: retryCancellation ? t('agent.agentCenter.workflowRuns.retryCancellation') : t('common.confirm'),
+      content: retryCancellation
+        ? t('agent.agentCenter.workflowRuns.retryCancellationDescription')
+        : `${t('common.cancel')} ${run.id}?`,
+      okText: retryCancellation ? t('agent.agentCenter.workflowRuns.retryCancellation') : t('common.cancel'),
+      cancelText: t('common.close'),
+      onOk: async () => {
+        setBusy(true);
+        try {
+          await ipcBridge.agentCenter.cancelWorkflowRun.invoke({ id: run.id });
+          await load();
+        } catch (error) {
+          console.error(error);
+          messageRef.current.error(formatAgentCenterError(error, t('common.error')));
+          throw error;
+        } finally {
+          setBusy(false);
+        }
+      },
+    });
+  };
+
+  const handleRetryRun = (run: AgentWorkflowRun) => {
+    const node = run.nodes[run.current_node_index];
+    const isAgentRetry = node?.kind === 'agent';
+    Modal.confirm({
+      title: t(
+        isAgentRetry
+          ? 'agent.agentCenter.workflowRuns.agentRetryConfirmTitle'
+          : 'agent.agentCenter.workflowRuns.retryConfirmTitle'
+      ),
+      content: t(
+        isAgentRetry
+          ? 'agent.agentCenter.workflowRuns.agentRetryConfirmDescription'
+          : 'agent.agentCenter.workflowRuns.retryConfirmDescription',
+        {
+          attempt: node?.attempt ?? 1,
+          max: MAX_WORKFLOW_NODE_ATTEMPTS,
+        }
+      ),
+      okText: t('common.retry'),
+      cancelText: t('common.cancel'),
+      onOk: async () => {
+        if (isAgentRetry) {
+          navigate('/guid', {
+            state: {
+              selectedAssistantId: run.assistant_id,
+              agentWorkflowRetryRunId: run.id,
+              prefillPrompt: node?.agent_plan?.message,
+              focusPrefill: true,
+              agentCenterReturnTo: `/agent-center/${run.assistant_id}`,
+            },
+          });
+          return;
+        }
+        setBusy(true);
+        try {
+          await ipcBridge.agentCenter.retryWorkflowRun.invoke({ id: run.id });
+          await load();
+        } catch (error) {
+          console.error(error);
+          messageRef.current.error(formatAgentCenterError(error, t('common.error')));
+          throw error;
+        } finally {
+          setBusy(false);
+        }
+      },
+    });
   };
 
   const handlePublish = async () => {
@@ -132,6 +263,57 @@ const AgentCenterDetailPage: React.FC = () => {
     } finally {
       setBusy(false);
     }
+  };
+
+  const handleUnpublish = () => {
+    if (!id) return;
+    Modal.confirm({
+      title: t('agent.agentCenter.unpublish.confirmTitle'),
+      content: t('agent.agentCenter.unpublish.confirmDescription'),
+      okText: t('agent.agentCenter.actions.unpublish'),
+      cancelText: t('common.cancel'),
+      onOk: async () => {
+        setBusy(true);
+        try {
+          await ipcBridge.agentCenter.unpublish.invoke({ id });
+          messageRef.current.success(t('agent.agentCenter.unpublish.success'));
+          await load();
+        } catch (error) {
+          console.error(error);
+          messageRef.current.error(formatAgentCenterError(error, t('agent.agentCenter.unpublish.error')));
+          throw error;
+        } finally {
+          setBusy(false);
+        }
+      },
+    });
+  };
+
+  const handleEdit = () => {
+    if (!id || !detail) return;
+    if (detail.meta.status !== 'published') {
+      navigate(`/agent-center/${id}/edit`);
+      return;
+    }
+    Modal.confirm({
+      title: t('agent.agentCenter.unpublish.confirmTitle'),
+      content: t('agent.agentCenter.unpublish.confirmDescription'),
+      okText: t('agent.agentCenter.actions.unpublish'),
+      cancelText: t('common.cancel'),
+      onOk: async () => {
+        setBusy(true);
+        try {
+          await ipcBridge.agentCenter.unpublish.invoke({ id });
+          navigate(`/agent-center/${id}/edit`);
+        } catch (error) {
+          console.error(error);
+          messageRef.current.error(formatAgentCenterError(error, t('agent.agentCenter.unpublish.error')));
+          throw error;
+        } finally {
+          setBusy(false);
+        }
+      },
+    });
   };
 
   if (!id) {
@@ -182,7 +364,7 @@ const AgentCenterDetailPage: React.FC = () => {
               <Button type='primary' loading={busy} onClick={() => void handleTryRun()}>
                 试跑
               </Button>
-              <Button loading={busy} onClick={() => navigate(`/agent-center/${id}/edit`)}>
+              <Button loading={busy} onClick={handleEdit}>
                 编辑
               </Button>
               {detail.meta.status === 'draft' || detail.meta.status === 'published' ? (
@@ -190,32 +372,11 @@ const AgentCenterDetailPage: React.FC = () => {
                   {detail.meta.status === 'draft' ? '发布' : '重新发布'}
                 </Button>
               ) : null}
-            </div>
-          </div>
-
-          <div className='rounded-8px border border-[var(--color-border-2)] p-16px mb-16px bg-[var(--color-fill-1)]'>
-            <Text bold className='block mb-8px'>
-              改进闭环
-            </Text>
-            <Text type='secondary' className='text-12px block mb-12px'>
-              试跑后可回来改指令、从会话提炼技能，再发布 pin。经验库不会注入日常对话。
-            </Text>
-            <div className='flex flex-wrap gap-8px'>
-              <Button size='small' onClick={() => navigate(`/agent-center/${id}/edit`, { state: { focusStep: 1 } })}>
-                根据试跑改进指令
-              </Button>
-              <Button
-                size='small'
-                onClick={() => navigate(`/agent-center/skill-evolution/new?assistant_id=${encodeURIComponent(id)}`)}
-              >
-                从会话提炼技能
-              </Button>
-              <Button
-                size='small'
-                onClick={() => navigate(`/agent-center/skill-evolution?assistant_id=${encodeURIComponent(id)}`)}
-              >
-                查看技能提案（{proposals.length}）
-              </Button>
+              {detail.meta.status === 'published' ? (
+                <Button status='danger' loading={busy} onClick={handleUnpublish}>
+                  {t('agent.agentCenter.actions.unpublish')}
+                </Button>
+              ) : null}
             </div>
           </div>
 
@@ -258,7 +419,7 @@ const AgentCenterDetailPage: React.FC = () => {
               </Text>
               {detail.meta.skill_refs.length === 0 ? (
                 <Text type='secondary' className='text-12px'>
-                  暂无 pin。审核通过技能进化提案并「写入 Skills Hub」时可自动绑定。
+                  {t('agent.agentCenter.emptyPinnedSkills')}
                 </Text>
               ) : (
                 <div className='flex flex-col gap-8px'>
@@ -276,53 +437,301 @@ const AgentCenterDetailPage: React.FC = () => {
                   ))}
                 </div>
               )}
-              <Text type='secondary' className='text-12px mt-12px block'>
-                经验库文章：{experienceCount}（仅技能进化使用，不注入对话）
-              </Text>
             </div>
           </div>
-
           <div className='rounded-8px border border-[var(--color-border-2)] p-16px'>
-            <div className='flex items-center justify-between mb-8px gap-8px'>
-              <Text bold>建议改进 · 最近技能提案</Text>
-              <Button
-                size='mini'
-                type='text'
-                onClick={() => navigate(`/agent-center/skill-evolution?assistant_id=${encodeURIComponent(id)}`)}
-              >
-                全部
+            <Text bold className='block mb-8px'>
+              {t('agent.agentCenter.workflow.executionPath')}
+            </Text>
+            <div className='flex items-center gap-8px flex-wrap mb-8px'>
+              {detail.meta.workflow.nodes.map((node, index) => (
+                <React.Fragment key={node.id}>
+                  {index > 0 ? <Text type='secondary'>→</Text> : null}
+                  <Tag color={node.kind === 'agent' ? 'purple' : node.kind === 'output' ? 'green' : 'arcoblue'}>
+                    {t(`agent.agentCenter.workflow.nodes.${node.kind as 'start' | 'agent' | 'output'}`)}
+                  </Tag>
+                </React.Fragment>
+              ))}
+            </div>
+            <Text type='secondary' className='text-12px block'>
+              {t('agent.agentCenter.workflow.contractSummary', {
+                input: detail.meta.workflow.input.placeholder || t('agent.agentCenter.workflow.defaultInput'),
+                output: t(
+                  `agent.agentCenter.workflow.outputFormats.${
+                    detail.meta.workflow.output.format === 'plain_text'
+                      ? 'plainText'
+                      : detail.meta.workflow.output.format
+                  }`
+                ),
+              })}
+            </Text>
+            {detail.meta.workflow.output.schema?.length ? (
+              <div className='mt-8px'>
+                <Text type='secondary' className='text-12px block mb-6px'>
+                  {t('agent.agentCenter.workflow.outputSchema.summary', {
+                    count: detail.meta.workflow.output.schema.length,
+                  })}
+                </Text>
+                <div className='flex items-center gap-6px flex-wrap'>
+                  {detail.meta.workflow.output.schema.map((field) => (
+                    <Tag key={field.name} size='small'>
+                      {field.name}: {t(`agent.agentCenter.workflow.outputSchema.types.${field.type}`)}
+                      {field.required ? ' *' : ''}
+                    </Tag>
+                  ))}
+                </div>
+              </div>
+            ) : null}
+          </div>
+          <div className='rounded-8px border border-[var(--color-border-2)] p-16px mt-16px'>
+            <div className='flex items-center justify-between gap-8px mb-8px'>
+              <Text bold>{t('agent.agentCenter.workflowRuns.title')}</Text>
+              <Button size='mini' onClick={() => void load()}>
+                {t('agent.agentCenter.workflowRuns.refresh')}
               </Button>
             </div>
-            {proposals.length === 0 ? (
+            {workflowRuns.length === 0 ? (
               <Text type='secondary' className='text-12px'>
-                尚无提案。试跑几轮对话后，可用「从会话提炼技能」沉淀可复用 SKILL.md。
+                {t('agent.agentCenter.workflowRuns.empty')}
               </Text>
             ) : (
               <div className='flex flex-col gap-8px'>
-                {proposals.slice(0, 8).map((p) => (
-                  <div
-                    key={p.id}
-                    className='rounded-6px border border-[var(--color-border-1)] p-10px flex items-center justify-between gap-8px'
-                  >
-                    <div className='min-w-0'>
-                      <div className='text-13px font-medium truncate'>{p.title}</div>
+                {workflowRuns.slice(0, 10).map((run) => (
+                  <div key={run.id} className='rounded-6px bg-[var(--color-fill-1)] p-10px'>
+                    <div className='flex items-center justify-between gap-8px flex-wrap'>
+                      <div className='flex items-center gap-6px min-w-0'>
+                        <Tag
+                          size='small'
+                          color={
+                            run.status === 'completed'
+                              ? 'green'
+                              : run.status === 'failed' || run.cancellation_status === 'failed'
+                                ? 'red'
+                                : run.cancellation_status === 'requested'
+                                  ? 'orange'
+                                  : 'arcoblue'
+                          }
+                        >
+                          {run.status === 'cancelled' && run.cancellation_status === 'requested'
+                            ? t('agent.agentCenter.workflowRuns.cancellationRequested')
+                            : run.status === 'cancelled' && run.cancellation_status === 'failed'
+                              ? t('agent.agentCenter.workflowRuns.cancellationFailed')
+                              : run.status === 'cancelled'
+                                ? t('common.cancel')
+                                : t(`agent.agentCenter.workflowRuns.status.${run.status}`)}
+                        </Tag>
+                        <Tag size='small'>
+                          {run.preview_mode === 'published'
+                            ? t('agent.agentCenter.workflowRuns.publishedRevision', { revision: run.revision })
+                            : t('agent.agentCenter.workflowRuns.draftRevision')}
+                        </Tag>
+                        <Text className='text-12px'>{run.id}</Text>
+                      </div>
                       <Text type='secondary' className='text-12px'>
-                        {proposalStatusLabel[p.status] ?? p.status}
-                        {p.target_skill_key ? ` · ${p.target_skill_key}` : ''}
+                        {new Date(run.updated_at).toLocaleString()}
                       </Text>
                     </div>
-                    {(p.status === 'draft' || p.status === 'pending_review' || p.status === 'rejected') && (
-                      <Button
-                        size='mini'
-                        onClick={() =>
-                          navigate(`/agent-center/skill-evolution?assistant_id=${encodeURIComponent(id)}`, {
-                            state: { highlightId: p.id },
-                          })
-                        }
-                      >
-                        再次智能提炼
-                      </Button>
-                    )}
+                    <div className='flex gap-4px flex-wrap mt-8px'>
+                      {run.nodes.map((node) => (
+                        <Tag key={node.node_id} size='small'>
+                          {t(`agent.agentCenter.workflow.nodes.${node.kind}`)} ·{' '}
+                          {node.status === 'cancelled'
+                            ? t('common.cancel')
+                            : t(`agent.agentCenter.workflowRuns.nodeStatus.${node.status}`)}
+                        </Tag>
+                      ))}
+                    </div>
+                    {run.output !== undefined ? (
+                      <div className='mt-8px rounded-6px border border-[var(--color-border-2)] p-8px'>
+                        <Text bold className='text-12px'>
+                          {t('agent.agentCenter.workflowRuns.output')}
+                        </Text>
+                        <pre className='mb-0 mt-4px max-h-240px overflow-auto whitespace-pre-wrap text-12px text-t-secondary'>
+                          {formatWorkflowNodeOutput(run.output)}
+                        </pre>
+                      </div>
+                    ) : null}
+                    {run.nodes.some(
+                      (node) => node.output !== undefined || node.error || node.conversation_id || node.attempts?.length
+                    ) ? (
+                      <Collapse className='mt-8px' bordered={false}>
+                        <Collapse.Item header={t('common.technical_details')} name='node-details'>
+                          <div className='flex flex-col gap-8px'>
+                            {run.nodes
+                              .filter(
+                                (node) =>
+                                  node.output !== undefined ||
+                                  node.error ||
+                                  node.conversation_id ||
+                                  node.attempts?.length
+                              )
+                              .map((node) => {
+                                const duration = getWorkflowNodeDurationMs(node);
+                                return (
+                                  <div key={node.node_id} className='rounded-6px bg-[var(--color-fill-2)] p-8px'>
+                                    <div className='flex items-center gap-6px'>
+                                      <Text bold className='text-12px'>
+                                        {t(`agent.agentCenter.workflow.nodes.${node.kind}`)}
+                                      </Text>
+                                      {node.kind === 'tool' ? (
+                                        <Tag size='small'>
+                                          {t('agent.agentCenter.workflowRuns.attempt', {
+                                            attempt: node.attempt ?? 1,
+                                            max: MAX_WORKFLOW_NODE_ATTEMPTS,
+                                          })}
+                                        </Tag>
+                                      ) : null}
+                                      {duration !== undefined ? (
+                                        <Text type='secondary' className='text-12px'>
+                                          {new Intl.NumberFormat(i18n.language, {
+                                            style: 'unit',
+                                            unit: 'second',
+                                            unitDisplay: 'short',
+                                            maximumFractionDigits: 1,
+                                          }).format(duration / 1000)}
+                                        </Text>
+                                      ) : null}
+                                      {node.conversation_id ? (
+                                        <Text type='secondary' className='text-12px'>
+                                          {node.conversation_id}
+                                        </Text>
+                                      ) : null}
+                                    </div>
+                                    {node.error ? (
+                                      <Text type='error' className='mt-4px block text-12px'>
+                                        {node.error}
+                                      </Text>
+                                    ) : null}
+                                    {node.output !== undefined ? (
+                                      <pre className='mb-0 mt-4px max-h-160px overflow-auto whitespace-pre-wrap text-12px text-t-secondary'>
+                                        {formatWorkflowNodeOutput(node.output)}
+                                      </pre>
+                                    ) : null}
+                                    {node.attempts?.length ? (
+                                      <div className='mt-8px border-t border-[var(--color-border-2)] pt-8px'>
+                                        <Text bold className='text-12px'>
+                                          {t('agent.agentCenter.workflowRuns.attemptHistory')}
+                                        </Text>
+                                        <div className='mt-6px flex flex-col gap-6px'>
+                                          {node.attempts.map((attempt) => (
+                                            <div
+                                              key={`${attempt.attempt}-${attempt.execution_id ?? 'legacy'}`}
+                                              className='rounded-6px bg-[var(--color-fill-1)] p-6px'
+                                            >
+                                              <div className='flex items-center gap-6px flex-wrap'>
+                                                <Tag size='small'>
+                                                  {t('agent.agentCenter.workflowRuns.attemptNumber', {
+                                                    attempt: attempt.attempt,
+                                                  })}
+                                                </Tag>
+                                                <Tag
+                                                  size='small'
+                                                  color={attempt.status === 'failed' ? 'red' : undefined}
+                                                >
+                                                  {t(`agent.agentCenter.workflowRuns.nodeStatus.${attempt.status}`)}
+                                                </Tag>
+                                                {attempt.execution_id ? (
+                                                  <Text type='secondary' className='text-12px'>
+                                                    {attempt.execution_id}
+                                                  </Text>
+                                                ) : null}
+                                                {attempt.conversation_id ? (
+                                                  <Text type='secondary' className='text-12px'>
+                                                    {attempt.conversation_id}
+                                                  </Text>
+                                                ) : null}
+                                              </div>
+                                              {attempt.error ? (
+                                                <Text type='error' className='mt-4px block text-12px'>
+                                                  {attempt.error}
+                                                </Text>
+                                              ) : null}
+                                              {attempt.output !== undefined ? (
+                                                <pre className='mb-0 mt-4px max-h-120px overflow-auto whitespace-pre-wrap text-12px text-t-secondary'>
+                                                  {formatWorkflowNodeOutput(attempt.output)}
+                                                </pre>
+                                              ) : null}
+                                            </div>
+                                          ))}
+                                        </div>
+                                      </div>
+                                    ) : null}
+                                  </div>
+                                );
+                              })}
+                          </div>
+                        </Collapse.Item>
+                      </Collapse>
+                    ) : null}
+                    {run.next_action?.kind === 'invoke_tool' ? (
+                      <div className='mt-8px rounded-6px border border-[var(--color-border-2)] p-8px'>
+                        <Text className='text-12px block'>
+                          {t('agent.agentCenter.workflow.nodes.tool')}: {run.next_action.mcp_server_id} /{' '}
+                          {run.next_action.tool_name}
+                        </Text>
+                        <pre className='mb-0 mt-6px max-h-120px overflow-auto whitespace-pre-wrap text-12px text-t-secondary'>
+                          {JSON.stringify(run.next_action.arguments, null, 2)}
+                        </pre>
+                      </div>
+                    ) : null}
+                    {run.next_action?.kind === 'await_approval' ? (
+                      <div className='mt-8px flex items-center justify-between gap-8px flex-wrap'>
+                        <Text className='text-12px'>{run.next_action.message}</Text>
+                        <div className='flex gap-6px'>
+                          <Button
+                            size='mini'
+                            type='primary'
+                            loading={busy}
+                            onClick={() => void handleApproval(run.id, 'approve')}
+                          >
+                            {t('agent.agentCenter.workflowRuns.approve')}
+                          </Button>
+                          <Button
+                            size='mini'
+                            status='danger'
+                            loading={busy}
+                            onClick={() => void handleApproval(run.id, 'reject')}
+                          >
+                            {t('agent.agentCenter.workflowRuns.reject')}
+                          </Button>
+                        </div>
+                      </div>
+                    ) : null}
+                    {run.status === 'running' || run.status === 'waiting_approval' ? (
+                      <div className='mt-8px flex justify-end'>
+                        <Button size='mini' status='danger' loading={busy} onClick={() => handleCancelRun(run)}>
+                          {t('common.cancel')}
+                        </Button>
+                      </div>
+                    ) : null}
+                    {run.status === 'cancelled' && run.cancellation_status === 'failed' ? (
+                      <div className='mt-8px flex justify-end'>
+                        <Button size='mini' status='danger' loading={busy} onClick={() => handleCancelRun(run)}>
+                          {t('agent.agentCenter.workflowRuns.retryCancellation')}
+                        </Button>
+                      </div>
+                    ) : null}
+                    {run.status === 'failed' ? (
+                      <div className='mt-8px flex items-center justify-between gap-8px'>
+                        <Text type='error' className='text-12px'>
+                          {run.nodes[run.current_node_index]?.error}
+                        </Text>
+                        {run.nodes[run.current_node_index]?.kind === 'agent' ||
+                        run.nodes[run.current_node_index]?.kind === 'tool' ? (
+                          canRetryWorkflowNode(run.nodes[run.current_node_index]) ? (
+                            <Button size='mini' loading={busy} onClick={() => handleRetryRun(run)}>
+                              {t('common.retry')}
+                            </Button>
+                          ) : (
+                            <Text type='secondary' className='text-12px'>
+                              {t('agent.agentCenter.workflowRuns.retryLimitReached', {
+                                max: MAX_WORKFLOW_NODE_ATTEMPTS,
+                              })}
+                            </Text>
+                          )
+                        ) : null}
+                      </div>
+                    ) : null}
                   </div>
                 ))}
               </div>

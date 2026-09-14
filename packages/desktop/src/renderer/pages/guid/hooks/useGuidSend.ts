@@ -7,6 +7,7 @@
 import { ipcBridge } from '@/common';
 import { type ChatFileRef, chatFileRefPath } from '@/common/types/chatFile';
 import type { IMcpServer, TProviderWithModel } from '@/common/config/storage';
+import type { AgentCenterRunPlan } from '@/common/types/agent/agentCenterTypes';
 import { toSessionMcpServer } from '@/renderer/hooks/mcp/catalog';
 import { emitter } from '@/renderer/utils/emitter';
 import { updateWorkspaceTime } from '@/renderer/utils/workspace/workspaceHistory';
@@ -55,6 +56,12 @@ export type GuidSendDeps = {
   navigate: NavigateFunction;
   t: TFunction;
   localeKey: string;
+  agentCenterRunPlan?: AgentCenterRunPlan['create_conversation'];
+  agentWorkflowStartAssistantId?: string;
+  agentWorkflowRetryRunId?: string;
+  agentWorkflowResumeRunId?: string;
+  agentWorkflowResumeExecutionId?: string;
+  agentWorkflowResumeMessage?: string;
 };
 
 export type GuidSendResult = {
@@ -96,6 +103,12 @@ export const useGuidSend = (deps: GuidSendDeps): GuidSendResult => {
     navigate,
     t,
     localeKey,
+    agentCenterRunPlan,
+    agentWorkflowStartAssistantId,
+    agentWorkflowRetryRunId,
+    agentWorkflowResumeRunId,
+    agentWorkflowResumeExecutionId,
+    agentWorkflowResumeMessage,
   } = deps;
   const sendingRef = useRef(false);
 
@@ -103,23 +116,55 @@ export const useGuidSend = (deps: GuidSendDeps): GuidSendResult => {
     if (!selectedAssistantId) {
       return;
     }
+    if (agentWorkflowStartAssistantId && !input.trim()) {
+      return;
+    }
+    if (selectedAssistantBackend === 'aionrs' && !current_model) {
+      Message.warning(t('conversation.noModelConfigured'));
+      return;
+    }
 
     const isCustomWorkspace = !!dir;
     const finalWorkspace = dir || '';
 
-    const assistantConversationId = selectedAssistantId;
+    let workflowRunId = agentWorkflowResumeRunId;
+    let workflowExecutionId = agentWorkflowResumeExecutionId;
+    let workflowConversationPlan = agentCenterRunPlan;
+    let initialInput = agentWorkflowResumeMessage ?? input;
+    if (agentWorkflowStartAssistantId) {
+      const run = await ipcBridge.agentCenter.startWorkflowRun.invoke({
+        id: agentWorkflowStartAssistantId,
+        input,
+      });
+      workflowRunId = run.id;
+      if (run.next_action?.kind !== 'run_agent') {
+        await ipcBridge.agentCenter.cancelWorkflowRun.invoke({ id: run.id });
+        throw new Error('Workflow run did not provide an agent action');
+      }
+      workflowConversationPlan = run.next_action.create_conversation;
+      initialInput = run.next_action.message || input;
+    } else if (agentWorkflowRetryRunId) {
+      const run = await ipcBridge.agentCenter.retryWorkflowRun.invoke({ id: agentWorkflowRetryRunId });
+      workflowRunId = run.id;
+      if (run.next_action?.kind !== 'run_agent') {
+        throw new Error('Workflow retry did not provide an agent action');
+      }
+      workflowExecutionId = run.next_action.execution_id;
+      workflowConversationPlan = run.next_action.create_conversation;
+      initialInput = run.next_action.message || input;
+    }
+
+    const assistantConversationId = workflowConversationPlan?.assistant?.id ?? selectedAssistantId;
     const assistantBackend = selectedAssistantBackend;
     const enabled_skills_to_send = guidEnabledSkills ?? assistantDefaultSkillIds;
     const excludeBuiltinSkills = guidDisabledBuiltinSkills ?? assistantDefaultDisabledBuiltinSkillIds;
-    const selectedAllMcpServerIds = selectedMcpServerIds ?? [];
+    const plannedMcpServerIds = workflowConversationPlan?.assistant?.conversation_overrides?.mcp_ids;
+    const selectedAllMcpServerIds = plannedMcpServerIds ?? selectedMcpServerIds ?? [];
     const selectedMcpServerIdSet = new Set(selectedAllMcpServerIds);
     const selectedUserMcpServerIds = availableMcpServers
       .filter((server) => selectedMcpServerIdSet.has(server.id) && server.builtin !== true)
       .map((server) => server.id);
-    const selectedAllSessionMcpServers = availableMcpServers
-      .filter((server) => selectedMcpServerIdSet.has(server.id))
-      .map((server) => toSessionMcpServer(server));
-    const selectedSessionMcpServers = availableMcpServers
+    const selectedBuiltinSessionMcpServers = availableMcpServers
       .filter((server) => selectedMcpServerIdSet.has(server.id) && server.builtin === true)
       .map((server) => toSessionMcpServer(server));
     const defaultSelectedMcpServerIds = assistantDefaultMcpIds;
@@ -127,12 +172,15 @@ export const useGuidSend = (deps: GuidSendDeps): GuidSendResult => {
       .filter((server) => (defaultSelectedMcpServerIds ?? []).includes(server.id) && server.builtin !== true)
       .map((server) => server.id);
     const assistantOverrideMcpIds =
-      selectedMcpServerIds !== undefined ? selectedAllMcpServerIds : defaultSelectedMcpServerIds;
+      plannedMcpServerIds ??
+      (selectedMcpServerIds !== undefined ? selectedAllMcpServerIds : defaultSelectedMcpServerIds);
     const selectedUserMcpServerIdsToSend =
-      selectedMcpServerIds !== undefined ? selectedUserMcpServerIds : defaultSelectedUserMcpServerIds;
+      plannedMcpServerIds !== undefined || selectedMcpServerIds !== undefined
+        ? selectedUserMcpServerIds
+        : defaultSelectedUserMcpServerIds;
     const selectedSessionMcpServersToSend =
-      selectedMcpServerIds !== undefined
-        ? selectedAllSessionMcpServers
+      plannedMcpServerIds !== undefined || selectedMcpServerIds !== undefined
+        ? selectedBuiltinSessionMcpServers
         : availableMcpServers
             .filter((server) => (defaultSelectedMcpServerIds ?? []).includes(server.id))
             .map((server) => toSessionMcpServer(server));
@@ -161,7 +209,7 @@ export const useGuidSend = (deps: GuidSendDeps): GuidSendResult => {
     // model from the user's own config.
     const assistantOverrideModel =
       selectedAcpModel || (assistantBackend === 'aionrs' ? current_model?.use_model : undefined) || undefined;
-    const assistantOverrides = {
+    const assistantOverrides = workflowConversationPlan?.assistant?.conversation_overrides ?? {
       model: assistantOverrideModel,
       permission: selectedMode || undefined,
       thought_level: selectedThoughtLevelValue || undefined,
@@ -169,22 +217,37 @@ export const useGuidSend = (deps: GuidSendDeps): GuidSendResult => {
       disabled_builtin_skill_ids: excludeBuiltinSkills,
       mcp_ids: assistantOverrideMcpIds,
     };
+    let conversationCreated = false;
+    const cancelUnstartedWorkflow = async () => {
+      if (!workflowRunId || conversationCreated) return;
+      try {
+        if (agentWorkflowRetryRunId || agentWorkflowResumeRunId) {
+          await ipcBridge.agentCenter.advanceWorkflowRun.invoke({
+            id: workflowRunId,
+            execution_id: workflowExecutionId,
+            success: false,
+            error: t('conversation.createFailed'),
+          });
+        } else {
+          await ipcBridge.agentCenter.cancelWorkflowRun.invoke({ id: workflowRunId });
+        }
+      } catch (error) {
+        console.error('Failed to cancel workflow run after conversation creation failed:', error);
+      }
+    };
 
     if (assistantBackend === 'aionrs') {
-      if (!current_model) {
-        Message.warning(t('conversation.noModelConfigured'));
-        return;
-      }
       try {
         const conversation = await ipcBridge.conversation.create.invoke({
-          name: input,
+          name: workflowConversationPlan?.name ?? input,
           model: current_model,
           assistant: {
             id: assistantConversationId,
-            locale: localeKey,
+            locale: workflowConversationPlan?.assistant?.locale ?? localeKey,
             conversation_overrides: assistantOverrides,
           },
           extra: {
+            ...workflowConversationPlan?.extra,
             default_files: files.map(chatFileRefPath),
             workspace: finalWorkspace,
             custom_workspace: isCustomWorkspace,
@@ -195,8 +258,10 @@ export const useGuidSend = (deps: GuidSendDeps): GuidSendResult => {
 
         if (!conversation || !conversation.id) {
           Message.error(t('conversation.createFailed'));
+          await cancelUnstartedWorkflow();
           return;
         }
+        conversationCreated = true;
 
         if (isCustomWorkspace) {
           updateWorkspaceTime(finalWorkspace);
@@ -214,9 +279,9 @@ export const useGuidSend = (deps: GuidSendDeps): GuidSendResult => {
         // Empty input = "start chat": create the conversation but do not stash an
         // initial message, so the window opens idle on the empty state instead of
         // auto-sending a blank first turn.
-        if (input.trim()) {
+        if (initialInput.trim()) {
           const initialMessage = {
-            input,
+            input: initialInput,
             files: files.length > 0 ? files : undefined,
           };
           sessionStorage.setItem(`aionrs_initial_message_${conversation.id}`, JSON.stringify(initialMessage));
@@ -224,6 +289,7 @@ export const useGuidSend = (deps: GuidSendDeps): GuidSendResult => {
 
         await navigate(`/conversation/${conversation.id}`);
       } catch (error: unknown) {
+        await cancelUnstartedWorkflow();
         console.error('Failed to create CSBU WorkMate conversation:', error);
         throw error;
       }
@@ -232,25 +298,27 @@ export const useGuidSend = (deps: GuidSendDeps): GuidSendResult => {
 
     try {
       const conversation = await ipcBridge.conversation.create.invoke({
-        name: input,
+        name: workflowConversationPlan?.name ?? input,
         assistant: {
           id: assistantConversationId,
-          locale: localeKey,
+          locale: workflowConversationPlan?.assistant?.locale ?? localeKey,
           conversation_overrides: assistantOverrides,
         },
         extra: {
+          ...workflowConversationPlan?.extra,
           workspace: finalWorkspace,
           custom_workspace: isCustomWorkspace,
           default_files: files.map(chatFileRefPath),
           selected_mcp_server_ids: selectedUserMcpServerIdsToSend,
-          selected_session_mcp_servers:
-            selectedMcpServerIds !== undefined ? selectedSessionMcpServers : selectedSessionMcpServersToSend,
+          selected_session_mcp_servers: selectedSessionMcpServersToSend,
         },
       });
       if (!conversation || !conversation.id) {
         console.error('Failed to create ACP conversation - conversation object is null or missing id');
+        await cancelUnstartedWorkflow();
         return;
       }
+      conversationCreated = true;
 
       if (isCustomWorkspace) {
         updateWorkspaceTime(finalWorkspace);
@@ -268,9 +336,9 @@ export const useGuidSend = (deps: GuidSendDeps): GuidSendResult => {
       // Empty input = "start chat": create the conversation but do not stash an
       // initial message, so the window opens idle on the empty state instead of
       // auto-sending a blank first turn.
-      if (input.trim()) {
+      if (initialInput.trim()) {
         const initialMessage = {
-          input,
+          input: initialInput,
           files: files.length > 0 ? files : undefined,
         };
         sessionStorage.setItem(`acp_initial_message_${conversation.id}`, JSON.stringify(initialMessage));
@@ -278,6 +346,7 @@ export const useGuidSend = (deps: GuidSendDeps): GuidSendResult => {
 
       await navigate(`/conversation/${conversation.id}`);
     } catch (error: unknown) {
+      await cancelUnstartedWorkflow();
       console.error('Failed to create ACP conversation:', error);
       throw error;
     }
@@ -301,6 +370,12 @@ export const useGuidSend = (deps: GuidSendDeps): GuidSendResult => {
     navigate,
     t,
     localeKey,
+    agentCenterRunPlan,
+    agentWorkflowStartAssistantId,
+    agentWorkflowRetryRunId,
+    agentWorkflowResumeRunId,
+    agentWorkflowResumeExecutionId,
+    agentWorkflowResumeMessage,
   ]);
 
   const sendMessageHandler = useCallback(() => {
@@ -343,7 +418,7 @@ export const useGuidSend = (deps: GuidSendDeps): GuidSendResult => {
   // Calculate button disabled state. Empty input is allowed once an assistant is
   // picked — that path creates an empty conversation ("start chat") rather than
   // sending a message, so the gate only blocks while loading or with no assistant.
-  const isButtonDisabled = loading || !selectedAssistantId;
+  const isButtonDisabled = loading || !selectedAssistantId || Boolean(agentWorkflowStartAssistantId && !input.trim());
 
   return {
     handleSend,

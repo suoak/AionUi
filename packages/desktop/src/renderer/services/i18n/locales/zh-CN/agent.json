@@ -49,6 +49,187 @@
   "warmup": {
     "clickToWake": "点击唤醒该成员"
   },
+  "agentCenter": {
+    "title": "智能体中心",
+    "description": "创建 → 指令与个性 → 能力配置 → 试跑预览 → 发布与共享。知识库产品保持独立，不在此捆绑。",
+    "emptyPinnedSkills": "暂无 pin 技能，可在编辑页中绑定。",
+    "tryRunImprovementDescription": "预览 → 改指令 → 再发布。",
+    "builder": {
+      "steps": {
+        "basic": "基本信息",
+        "instructions": "指令与个性",
+        "capabilities": "能力配置",
+        "workflow": "工作流",
+        "preview": "试跑预览",
+        "publish": "发布与共享"
+      },
+      "stepProgress": "步骤 {{current}} / {{total}} · {{title}}",
+      "readiness": {
+        "title": "发布就绪检查",
+        "name": "智能体名称",
+        "instructions": "核心指令",
+        "input": "输入说明",
+        "nodes": "工作流节点",
+        "ready": "已就绪",
+        "missing": "待完善",
+        "nameMissing": "发布前请填写智能体名称。",
+        "instructionsMissing": "发布前请填写核心指令。",
+        "inputMissing": "发布前请说明用户需要提供什么输入。",
+        "nodesMissing": "发布前请完成所有可配置工作流节点。",
+        "output": "?? Schema",
+        "outputMissing": "???????????? JSON ?????"
+      }
+    },
+    "templates": {
+      "title": "从企业工作流模板开始",
+      "description": "选择成熟起点，再按业务调整指令与能力。",
+      "applied": "已应用“{{name}}”模板",
+      "codeReview": {
+        "name": "代码 Review 智能体",
+        "description": "审查正确性、安全性、可维护性和测试。",
+        "instructions": "你是一名资深代码审查专家。请结合仓库上下文审查变更，优先检查正确性、安全性、回归风险、可维护性和测试缺口。按严重程度列出发现，给出文件与行号、影响及可执行修复建议。不要臆造问题。",
+        "inputPlaceholder": "粘贴代码差异、PR 链接，或说明待审查文件和目标。",
+        "starter": "审查这次变更，并优先列出阻断性问题。"
+      },
+      "defectAnalysis": {
+        "name": "缺陷分析智能体",
+        "description": "将现象与证据转化为可复现的根因分析。",
+        "instructions": "你是一名缺陷分析专家。请区分事实与假设，重建复现条件，对可能根因排序，提出最小安全修复方案，并定义验证与回归检查。缺少证据时先提问。",
+        "inputPlaceholder": "提供故障现象、复现步骤、日志、环境和近期变更。",
+        "starter": "分析这个缺陷并找出最可能的根因。"
+      },
+      "documentAnalysis": {
+        "name": "文档分析智能体",
+        "description": "提取决策、风险、行动项和待确认问题。",
+        "instructions": "你是一名文档分析专家。请忠实总结并提取决策、义务、风险、行动项、负责人、截止时间和未解决问题。区分原文事实与分析判断，并指出冲突。",
+        "inputPlaceholder": "粘贴文档内容或附加文件，并说明分析目标。",
+        "starter": "分析这份文档，输出管理摘要和行动项。"
+      },
+      "testPlan": {
+        "name": "测试方案智能体",
+        "description": "设计基于风险的功能、集成与回归覆盖。",
+        "instructions": "你是一名资深测试架构师。请将需求转化为基于风险的测试方案，覆盖正常路径、边界、失败、权限、兼容性、数据准备、可观测性和回归影响。标记优先级、自动化候选项和预期结果。",
+        "inputPlaceholder": "提供需求、验收标准、架构说明或代码变更。",
+        "starter": "为这项需求生成有优先级的测试方案。"
+      },
+      "weeklyReport": {
+        "name": "周报智能体",
+        "description": "把工作记录整理为进展、风险和下周计划。",
+        "instructions": "你是一名企业汇报助手。只使用提供的事实，按成果与量化结果、风险与阻塞、待决策事项和下周优先级组织周报，保持专业并删除重复细节。",
+        "inputPlaceholder": "粘贴本周任务、提交记录、会议纪要、成果和阻塞项。",
+        "starter": "把这些记录整理成一份简洁周报。"
+      },
+      "technicalResearch": {
+        "name": "技术调研智能体",
+        "description": "用证据、权衡和建议比较技术选项。",
+        "instructions": "你是一名技术调研负责人。请明确决策目标，比较可靠证据，识别约束与权衡并给出可执行建议。区分已验证事实与推断，有来源时提供引用，并说明不确定性。",
+        "inputPlaceholder": "说明调研问题、约束、候选方案和期望决策。",
+        "starter": "调研这个主题，并结合权衡给出推荐方案。"
+      }
+    },
+    "workflow": {
+      "description": "在现有 Agent Runtime 外定义输入输出契约。MVP 运行单个智能体，同时保留可扩展结构。",
+      "executionPath": "执行路径",
+      "futureHint": "当前支持线性工具、审批和条件节点；下一阶段扩展分支与子工作流。",
+      "nodes": {
+        "start": "开始",
+        "agent": "智能体",
+        "tool": "工具",
+        "approval": "审批",
+        "condition": "条件",
+        "output": "输出"
+      },
+      "nodeEditor": {
+        "title": "工作流节点",
+        "description": "在智能体之后增加受控步骤，排列顺序会成为执行契约。",
+        "addNode": "添加{{type}}",
+        "moveUp": "上移",
+        "moveDown": "下移",
+        "toolPlaceholder": "选择已启用的 MCP 服务器",
+        "approvalPlaceholder": "说明继续执行前需要审批人确认的内容。",
+        "conditionPlaceholder": "输入守卫表达式，例如：risk_score > 70"
+      },
+      "inputLabel": "输入说明",
+      "inputPlaceholder": "告诉用户需要提供哪些上下文或文件。",
+      "outputLabel": "输出格式",
+      "outputFormats": {
+        "markdown": "结构化 Markdown",
+        "plainText": "纯文本",
+        "json": "JSON"
+      },
+      "contractSummary": "输入：{{input}} · 输出：{{output}}",
+      "defaultInput": "文本请求",
+      "outputSchema": {
+        "title": "JSON ?? Schema",
+        "description": "??????????????????????????????",
+        "addField": "????",
+        "empty": "??????????????? JSON ??",
+        "namePlaceholder": "?????? severity",
+        "descriptionPlaceholder": "?????????????",
+        "required": "??",
+        "summary": "JSON Schema?{{count}} ???",
+        "types": {
+          "string": "???",
+          "number": "??",
+          "integer": "??",
+          "boolean": "???"
+        }
+      }
+    },
+    "workflowRuns": {
+      "title": "工作流运行记录",
+      "refresh": "刷新",
+      "empty": "暂无工作流运行记录。",
+      "output": "运行输出",
+      "draftRevision": "草稿运行",
+      "publishedRevision": "发布版本 v{{revision}}",
+      "approve": "批准",
+      "reject": "拒绝",
+      "approvalApproved": "已批准，工作流继续执行",
+      "approvalRejected": "已拒绝工作流",
+      "approvalError": "更新审批状态失败",
+      "cancellationRequested": "正在停止智能体…",
+      "cancellationFailed": "智能体可能仍在运行",
+      "retryCancellation": "再次尝试停止",
+      "retryCancellationDescription": "工作流已取消，但智能体尚未确认停止。是否再次取消当前会话？",
+      "retryConfirmTitle": "确认再次运行此工具？",
+      "retryConfirmDescription": "请先到外部系统核验第 {{attempt}} 次执行是否已经产生变更。重试会创建新的执行，可能造成重复副作用（最多 {{max}} 次）。",
+      "agentRetryConfirmTitle": "确认重试此智能体节点？",
+      "agentRetryConfirmDescription": "请先检查上一次会话，并确认是否已经改变外部系统。重试将继续使用原运行冻结的模型、技能、工具、权限和消息，并为第 {{attempt}} 次尝试创建新会话（最多 {{max}} 次）。",
+      "attempt": "第 {{attempt}}/{{max}} 次尝试",
+      "attemptNumber": "第 {{attempt}} 次尝试",
+      "attemptHistory": "历史尝试记录",
+      "retryLimitReached": "已达到最多 {{max}} 次尝试",
+      "status": {
+        "running": "运行中",
+        "waiting_approval": "等待审批",
+        "completed": "已完成",
+        "rejected": "已拒绝",
+        "failed": "失败"
+      },
+      "nodeStatus": {
+        "pending": "待执行",
+        "running": "执行中",
+        "waiting_approval": "等待审批",
+        "completed": "已完成",
+        "skipped": "已跳过",
+        "rejected": "已拒绝",
+        "failed": "失败"
+      }
+    },
+    "actions": {
+      "unpublish": "撤销发布"
+    },
+    "unpublish": {
+      "confirmTitle": "确认撤销发布？",
+      "confirmDescription": "已发布版本会保留在版本历史中；智能体将恢复为草稿，可继续编辑或再次发布。",
+      "success": "已撤销发布",
+      "error": "撤销发布失败"
+    }
+  },
+  "skillEvolution": {
+    "title": "技能进化"
+  },
   "runtimeRestart": {
     "tooltip": "重连代理",
     "confirmContent": "将重启代理进程，以读取最新的 CLI 配置（例如切换渠道后）。聊天记录不会丢失，代理会尽可能恢复当前会话。",

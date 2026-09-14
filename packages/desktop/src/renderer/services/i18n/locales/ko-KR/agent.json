@@ -49,6 +49,187 @@
   "warmup": {
     "clickToWake": "클릭하여 이 멤버를 깨우기"
   },
+  "agentCenter": {
+    "title": "에이전트 센터",
+    "description": "생성 → 지침과 개성 → 기능 설정 → 미리보기 → 게시 및 공유. 지식 제품은 독립적으로 유지됩니다.",
+    "emptyPinnedSkills": "고정된 스킬이 없습니다. 편집 페이지에서 연결할 수 있습니다.",
+    "tryRunImprovementDescription": "미리보기 → 지침 개선 → 다시 게시.",
+    "builder": {
+      "steps": {
+        "basic": "Basics",
+        "instructions": "Instructions",
+        "capabilities": "Capabilities",
+        "workflow": "Workflow",
+        "preview": "Preview",
+        "publish": "Publish"
+      },
+      "stepProgress": "Step {{current}} / {{total}} · {{title}}",
+      "readiness": {
+        "title": "Publish readiness",
+        "name": "Name",
+        "instructions": "Instructions",
+        "input": "Input guidance",
+        "nodes": "Workflow nodes",
+        "ready": "Ready",
+        "missing": "Missing",
+        "nameMissing": "Add a name before publishing.",
+        "instructionsMissing": "Add instructions before publishing.",
+        "inputMissing": "Describe the required input before publishing.",
+        "nodesMissing": "Complete every configurable workflow node before publishing.",
+        "output": "?? ???",
+        "outputMissing": "???? ?? ????? ??? JSON ?? ??? ?????."
+      }
+    },
+    "templates": {
+      "title": "Start with an enterprise workflow",
+      "description": "Choose a proven starting point, then tailor its instructions and capabilities.",
+      "applied": "Applied “{{name}}” template",
+      "codeReview": {
+        "name": "Code Review Agent",
+        "description": "Review correctness, security, maintainability, and tests.",
+        "instructions": "You are a senior code reviewer. Review the supplied change using repository context. Prioritize correctness, security, regressions, maintainability, and missing tests. Report findings by severity with concrete file and line references, impact, and a practical fix. Do not invent problems.",
+        "inputPlaceholder": "Paste a diff, pull request link, or describe the files and review goal.",
+        "starter": "Review this change and list blocking issues first."
+      },
+      "defectAnalysis": {
+        "name": "Defect Analysis Agent",
+        "description": "Turn symptoms and evidence into reproducible root-cause analysis.",
+        "instructions": "You are a defect analysis specialist. Separate facts from hypotheses. Reconstruct reproduction conditions, rank likely root causes, propose the smallest safe fix, and define verification and regression checks. Ask for missing evidence.",
+        "inputPlaceholder": "Provide symptoms, reproduction steps, logs, environment, and recent changes.",
+        "starter": "Analyze this defect and identify the most likely root cause."
+      },
+      "documentAnalysis": {
+        "name": "Document Analysis Agent",
+        "description": "Extract decisions, risks, actions, and open questions.",
+        "instructions": "You are a document analysis specialist. Summarize faithfully and extract decisions, obligations, risks, action items, owners, deadlines, and unresolved questions. Separate source facts from interpretation and identify conflicts.",
+        "inputPlaceholder": "Paste document text or attach files, then state the analysis goal.",
+        "starter": "Produce an executive summary and action items for this document."
+      },
+      "testPlan": {
+        "name": "Test Plan Agent",
+        "description": "Design risk-based functional, integration, and regression coverage.",
+        "instructions": "You are a senior test architect. Convert requirements into a risk-based test plan covering happy paths, boundaries, failures, permissions, compatibility, data setup, observability, and regression impact. Mark priorities, automation candidates, and expected results.",
+        "inputPlaceholder": "Provide requirements, acceptance criteria, architecture notes, or a change diff.",
+        "starter": "Create a prioritized test plan for this requirement."
+      },
+      "weeklyReport": {
+        "name": "Weekly Report Agent",
+        "description": "Turn work notes into concise progress, risks, and next steps.",
+        "instructions": "You are an enterprise reporting assistant. Use only supplied facts. Organize achievements and outcomes, risks and blockers, decisions needed, and next-week priorities. Keep it professional and remove duplicate detail.",
+        "inputPlaceholder": "Paste this week's tasks, commits, meeting notes, outcomes, and blockers.",
+        "starter": "Turn these notes into a concise weekly report."
+      },
+      "technicalResearch": {
+        "name": "Technical Research Agent",
+        "description": "Compare options with evidence, tradeoffs, and a recommendation.",
+        "instructions": "You are a technical research lead. Clarify the decision, compare reliable evidence, identify constraints and tradeoffs, and give an actionable recommendation. Separate verified facts from inference, cite sources when available, and state uncertainty.",
+        "inputPlaceholder": "Describe the question, constraints, options, and desired decision.",
+        "starter": "Research this topic and recommend an option with tradeoffs."
+      }
+    },
+    "workflow": {
+      "description": "Define a contract around the existing Agent Runtime. This MVP runs one agent and remains extensible.",
+      "executionPath": "Execution path",
+      "futureHint": "Linear tool, approval, and condition nodes are available. Branching and sub-workflows come next.",
+      "nodes": {
+        "start": "Start",
+        "agent": "Agent",
+        "tool": "Tool",
+        "approval": "Approval",
+        "condition": "Condition",
+        "output": "Output"
+      },
+      "nodeEditor": {
+        "title": "Workflow nodes",
+        "description": "Add governed steps after the agent. The declared order becomes the execution contract.",
+        "addNode": "Add {{type}}",
+        "moveUp": "Move up",
+        "moveDown": "Move down",
+        "toolPlaceholder": "Select an enabled MCP server",
+        "approvalPlaceholder": "Describe what a reviewer must approve before execution continues.",
+        "conditionPlaceholder": "Enter a guard expression, for example: risk_score > 70"
+      },
+      "inputLabel": "Input guidance",
+      "inputPlaceholder": "Tell users what context or files to provide.",
+      "outputLabel": "Output format",
+      "outputFormats": {
+        "markdown": "Structured Markdown",
+        "plainText": "Plain text",
+        "json": "JSON"
+      },
+      "contractSummary": "Input: {{input}} · Output: {{output}}",
+      "defaultInput": "Text request",
+      "outputSchema": {
+        "title": "JSON ?? ???",
+        "description": "????? ??? ? ?? ??? ?????. ?? ???? ???, ??, ??? ??? ? ????.",
+        "addField": "?? ??",
+        "empty": "??? ??? ?? ?? ??? JSON ?? ?????.",
+        "namePlaceholder": "?? ??(?: severity)",
+        "descriptionPlaceholder": "?????? ? ??? ?????",
+        "required": "??",
+        "summary": "JSON ???: {{count}}? ??",
+        "types": {
+          "string": "???",
+          "number": "??",
+          "integer": "??",
+          "boolean": "???"
+        }
+      }
+    },
+    "workflowRuns": {
+      "title": "Workflow runs",
+      "refresh": "Refresh",
+      "empty": "No workflow runs yet.",
+      "output": "Run output",
+      "draftRevision": "Draft run",
+      "publishedRevision": "Published v{{revision}}",
+      "approve": "Approve",
+      "reject": "Reject",
+      "approvalApproved": "Approval accepted",
+      "approvalRejected": "Workflow rejected",
+      "approvalError": "Failed to update approval",
+      "cancellationRequested": "에이전트를 중지하는 중…",
+      "cancellationFailed": "에이전트가 아직 실행 중일 수 있습니다",
+      "retryCancellation": "다시 중지 시도",
+      "retryCancellationDescription": "워크플로는 취소되었지만 에이전트 중지가 확인되지 않았습니다. 활성 대화를 다시 취소하시겠습니까?",
+      "retryConfirmTitle": "이 도구를 다시 실행할까요?",
+      "retryConfirmDescription": "먼저 {{attempt}}번째 실행이 외부 시스템을 이미 변경했는지 확인하세요. 재시도는 새 실행을 시작하며 부작용이 중복될 수 있습니다(최대 {{max}}회).",
+      "agentRetryConfirmTitle": "이 에이전트 단계를 다시 시도할까요?",
+      "agentRetryConfirmDescription": "먼저 이전 대화를 검토하고 외부 시스템이 변경되었는지 확인하세요. 재시도는 원래 고정된 모델, 스킬, 도구, 권한 및 메시지를 사용하여 {{attempt}}번째 시도를 위한 새 대화를 시작합니다(최대 {{max}}회).",
+      "attempt": "시도 {{attempt}}/{{max}}",
+      "attemptNumber": "시도 {{attempt}}",
+      "attemptHistory": "이전 시도",
+      "retryLimitReached": "최대 {{max}}회 시도에 도달했습니다",
+      "status": {
+        "running": "Running",
+        "waiting_approval": "Waiting for approval",
+        "completed": "Completed",
+        "rejected": "Rejected",
+        "failed": "Failed"
+      },
+      "nodeStatus": {
+        "pending": "Pending",
+        "running": "Running",
+        "waiting_approval": "Waiting",
+        "completed": "Completed",
+        "skipped": "Skipped",
+        "rejected": "Rejected",
+        "failed": "Failed"
+      }
+    },
+    "actions": {
+      "unpublish": "게시 취소"
+    },
+    "unpublish": {
+      "confirmTitle": "게시를 취소하시겠습니까?",
+      "confirmDescription": "게시된 버전은 기록에 유지되며 에이전트는 초안으로 돌아갑니다.",
+      "success": "게시가 취소되었습니다",
+      "error": "게시 취소 실패"
+    }
+  },
+  "skillEvolution": {
+    "title": "스킬 진화"
+  },
   "runtimeRestart": {
     "tooltip": "에이전트 다시 연결",
     "confirmContent": "에이전트 프로세스를 재시작하여 외부 CLI 구성 변경(채널 전환 등)을 적용합니다. 채팅 기록은 유지되며 가능하면 세션이 재개됩니다.",

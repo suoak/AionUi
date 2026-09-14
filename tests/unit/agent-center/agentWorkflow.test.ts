@@ -1,0 +1,150 @@
+import { describe, expect, it } from 'vitest';
+import {
+  canRetryWorkflowNode,
+  createAgentWorkflow,
+  createDefaultAgentWorkflow,
+  createDefaultWorkflowNodes,
+  formatWorkflowNodeOutput,
+  getAgentPublishReadiness,
+  getWorkflowNodeDurationMs,
+  getWorkflowNodeIssues,
+  hasValidWorkflowOutputSchema,
+  hasActiveWorkflowRuns,
+  insertWorkflowNode,
+  moveWorkflowNode,
+  removeWorkflowNode,
+  updateWorkflowNode,
+} from '@/common/types/agent/agentWorkflow';
+
+describe('Agent workflow contract', () => {
+  it('refreshes while a run is active and stops after terminal states', () => {
+    expect(hasActiveWorkflowRuns([{ status: 'running' }])).toBe(true);
+    expect(hasActiveWorkflowRuns([{ status: 'waiting_approval' }])).toBe(true);
+    expect(hasActiveWorkflowRuns([{ status: 'cancelled', cancellation_status: 'requested' }])).toBe(true);
+    expect(hasActiveWorkflowRuns([{ status: 'cancelled', cancellation_status: 'failed' }])).toBe(false);
+    expect(hasActiveWorkflowRuns([{ status: 'completed' }, { status: 'failed' }, { status: 'cancelled' }])).toBe(false);
+  });
+
+  it('formats completed node timing and structured output for inspection', () => {
+    expect(getWorkflowNodeDurationMs({ started_at: 1000, completed_at: 2250 })).toBe(1250);
+    expect(getWorkflowNodeDurationMs({ started_at: 2250, completed_at: 1000 })).toBeUndefined();
+    expect(formatWorkflowNodeOutput({ result: 'created' })).toBe('{\n  "result": "created"\n}');
+  });
+
+  it('allows only failed tool nodes below the retry safety limit', () => {
+    expect(canRetryWorkflowNode({ kind: 'tool', status: 'failed', attempt: 2 })).toBe(true);
+    expect(canRetryWorkflowNode({ kind: 'agent', status: 'failed', attempt: 1 })).toBe(true);
+    expect(canRetryWorkflowNode({ kind: 'tool', status: 'failed', attempt: 3 })).toBe(false);
+    expect(canRetryWorkflowNode(undefined)).toBe(false);
+  });
+
+  it('creates the extensible single-agent execution path', () => {
+    const workflow = createDefaultAgentWorkflow();
+
+    expect(workflow.nodes.map((node) => node.kind)).toEqual(['start', 'agent', 'output']);
+    expect(workflow.edges).toHaveLength(2);
+    expect(workflow.trigger).toBe('manual');
+  });
+
+  it('normalizes optional input guidance while preserving output format', () => {
+    const workflow = createAgentWorkflow('   ', 'json', createDefaultWorkflowNodes(), [
+      { name: 'severity', type: 'string', required: true },
+    ]);
+
+    expect(workflow.input.placeholder).toBeUndefined();
+    expect(workflow.output.format).toBe('json');
+    expect(workflow.output.schema).toEqual([{ name: 'severity', type: 'string', required: true }]);
+  });
+
+  it('rejects duplicate and unsafe structured output fields', () => {
+    expect(hasValidWorkflowOutputSchema('json', [{ name: 'risk score', type: 'number', required: true }])).toBe(false);
+    expect(
+      hasValidWorkflowOutputSchema('json', [
+        { name: 'severity', type: 'string', required: true },
+        { name: 'severity', type: 'number', required: false },
+      ])
+    ).toBe(false);
+  });
+
+  it('ignores retained schema fields when the output format is not JSON', () => {
+    const schema = [{ name: 'severity', type: 'string' as const, required: true }];
+
+    expect(hasValidWorkflowOutputSchema('markdown', schema)).toBe(true);
+    expect(
+      createAgentWorkflow('Input', 'markdown', createDefaultWorkflowNodes(), schema).output.schema
+    ).toBeUndefined();
+  });
+
+  it('blocks publication when the structured output schema is invalid', () => {
+    const readiness = getAgentPublishReadiness({
+      name: 'Defect analyst',
+      instructions: 'Analyze the defect',
+      inputPlaceholder: 'Describe the defect',
+      nodes: createDefaultWorkflowNodes(),
+      outputFormat: 'json',
+      outputSchema: [{ name: 'invalid field', type: 'string', required: true }],
+    });
+
+    expect(readiness.find((item) => item.key === 'output')?.ready).toBe(false);
+  });
+
+  it('blocks publication when required builder content is blank', () => {
+    const readiness = getAgentPublishReadiness({
+      name: ' ',
+      instructions: '',
+      inputPlaceholder: '\n',
+      nodes: createDefaultWorkflowNodes(),
+    });
+
+    expect(readiness.filter((item) => item.key !== 'nodes').every((item) => !item.ready)).toBe(true);
+    expect(readiness.find((item) => item.key === 'nodes')?.ready).toBe(true);
+  });
+
+  it('inserts and reorders configurable nodes without moving fixed boundary nodes', () => {
+    const withTool = insertWorkflowNode(createDefaultWorkflowNodes(), 'tool', 'tool-1');
+    const withApproval = insertWorkflowNode(withTool, 'approval', 'approval-1');
+
+    expect(moveWorkflowNode(withApproval, 'approval-1', -1).map((node) => node.id)).toEqual([
+      'start',
+      'agent',
+      'approval-1',
+      'tool-1',
+      'output',
+    ]);
+    expect(moveWorkflowNode(withApproval, 'tool-1', -1)).toBe(withApproval);
+  });
+
+  it('reports incomplete configurable nodes and clears the issue after configuration', () => {
+    const nodes = insertWorkflowNode(createDefaultWorkflowNodes(), 'condition', 'condition-1');
+    const configured = updateWorkflowNode(nodes, 'condition-1', { config: { expression: 'risk_score > 70' } });
+
+    expect(getWorkflowNodeIssues(nodes)).toEqual([{ nodeId: 'condition-1', field: 'expression' }]);
+    expect(getWorkflowNodeIssues(configured)).toEqual([]);
+  });
+
+  it('rejects a tool node whose MCP server is no longer enabled', () => {
+    const nodes = updateWorkflowNode(insertWorkflowNode(createDefaultWorkflowNodes(), 'tool', 'tool-1'), 'tool-1', {
+      config: { mcp_server_id: 'github', tool_name: 'create_issue' },
+    });
+
+    expect(getWorkflowNodeIssues(nodes, ['filesystem'])).toEqual([{ nodeId: 'tool-1', field: 'mcpServerId' }]);
+  });
+
+  it('requires a concrete tool name and JSON object arguments', () => {
+    const nodes = updateWorkflowNode(insertWorkflowNode(createDefaultWorkflowNodes(), 'tool', 'tool-1'), 'tool-1', {
+      config: { mcp_server_id: 'github', arguments_json: '[]' },
+    });
+
+    expect(getWorkflowNodeIssues(nodes)).toEqual([
+      { nodeId: 'tool-1', field: 'toolName' },
+      { nodeId: 'tool-1', field: 'toolArguments' },
+    ]);
+  });
+
+  it('removes configurable nodes but preserves required nodes', () => {
+    const nodes = insertWorkflowNode(createDefaultWorkflowNodes(), 'tool', 'tool-1');
+
+    expect(removeWorkflowNode(nodes, 'tool-1').map((node) => node.id)).toEqual(['start', 'agent', 'output']);
+    expect(removeWorkflowNode(nodes, 'agent')).toEqual(nodes);
+  });
+});

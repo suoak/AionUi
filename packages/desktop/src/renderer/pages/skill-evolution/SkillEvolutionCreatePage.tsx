@@ -108,12 +108,9 @@ const SkillEvolutionCreatePage: React.FC = () => {
       message.success(
         `智能提炼完成${res.model_used ? `（模型 ${res.model_used}）` : ''}，经验库已写入 ${res.experience_articles.length} 篇${res.gate_note ? `；${res.gate_note}` : ''}`
       );
-      navigate(
-        assistantId
-          ? `/agent-center/skill-evolution?assistant_id=${encodeURIComponent(assistantId)}`
-          : '/agent-center/skill-evolution',
-        { state: { highlightId: res.proposal.id } }
-      );
+      navigate(assistantId ? `/skill-evolution?assistant_id=${encodeURIComponent(assistantId)}` : '/skill-evolution', {
+        state: { highlightId: res.proposal.id },
+      });
     } catch (error) {
       console.error(error);
       const msg = error instanceof Error ? error.message : '智能提炼失败';
@@ -146,7 +143,7 @@ const SkillEvolutionCreatePage: React.FC = () => {
         action: 'create',
       });
       message.success(submitNow ? '提案已创建并提交审核' : '提案草稿已保存');
-      navigate('/agent-center/skill-evolution', { state: { highlightId: created.id } });
+      navigate('/skill-evolution', { state: { highlightId: created.id } });
     } catch (error) {
       console.error(error);
       message.error('创建失败（请确认会话归属与 Core 版本）');
@@ -158,7 +155,7 @@ const SkillEvolutionCreatePage: React.FC = () => {
   return (
     <div className='h-full overflow-auto p-24px max-w-880px'>
       {messageContext}
-      <Button type='text' className='!px-0 mb-8px' onClick={() => navigate('/agent-center/skill-evolution')}>
+      <Button type='text' className='!px-0 mb-8px' onClick={() => navigate('/skill-evolution')}>
         ← 返回技能进化
       </Button>
       <Title heading={4} className='!mb-4px'>
@@ -288,7 +285,7 @@ const SkillEvolutionCreatePage: React.FC = () => {
           <Button type='outline' loading={busy} onClick={() => void handleCreate()}>
             手工创建提案
           </Button>
-          <Button disabled={busy || evolving} onClick={() => navigate('/agent-center/skill-evolution')}>
+          <Button disabled={busy || evolving} onClick={() => navigate('/skill-evolution')}>
             取消
           </Button>
         </div>

@@ -5,6 +5,7 @@ import AppLoader from '@renderer/components/layout/AppLoader';
 import { useCrossSessionRateLimitNotice } from '@/renderer/hooks/system/useCrossSessionRateLimitNotice';
 import { useAuth } from '@renderer/hooks/context/AuthContext';
 import { DESKTOP_PET_FEATURE_ENABLED, TEAM_MODE_ENABLED } from '@/common/config/constants';
+import { legacySkillEvolutionPath } from '@renderer/pages/skill-evolution/routes';
 const Conversation = React.lazy(() => import('@renderer/pages/conversation'));
 const Guid = React.lazy(() => import('@renderer/pages/guid'));
 const AgentSettings = React.lazy(() => import('@renderer/pages/settings/AgentSettings'));
@@ -13,8 +14,8 @@ const AssistantSettings = React.lazy(() => import('@renderer/pages/settings/Assi
 const AgentCenterListPage = React.lazy(() => import('@renderer/pages/agent-center/AgentCenterListPage'));
 const AgentCenterDetailPage = React.lazy(() => import('@renderer/pages/agent-center/AgentCenterDetailPage'));
 const AgentCenterWizardPage = React.lazy(() => import('@renderer/pages/agent-center/AgentCenterWizardPage'));
-const SkillEvolutionListPage = React.lazy(() => import('@renderer/pages/agent-center/SkillEvolutionListPage'));
-const SkillEvolutionCreatePage = React.lazy(() => import('@renderer/pages/agent-center/SkillEvolutionCreatePage'));
+const SkillEvolutionListPage = React.lazy(() => import('@renderer/pages/skill-evolution/SkillEvolutionListPage'));
+const SkillEvolutionCreatePage = React.lazy(() => import('@renderer/pages/skill-evolution/SkillEvolutionCreatePage'));
 const SkillsSettings = React.lazy(() => import('@renderer/pages/settings/SkillsSettings/SkillsHubSettings'));
 const SkillDetailPage = React.lazy(() => import('@renderer/pages/settings/SkillsSettings/SkillDetailPage'));
 const OfficialOnlineSkillDetail = React.lazy(
@@ -66,6 +67,11 @@ const CapabilitiesRedirect: React.FC = () => {
   return <Navigate to={tab === 'tools' ? '/settings/tools' : '/settings/skills'} replace />;
 };
 
+const SkillEvolutionRedirect: React.FC<{ create?: boolean }> = ({ create = false }) => {
+  const { search } = useLocation();
+  return <Navigate to={legacySkillEvolutionPath(create, search)} replace />;
+};
+
 const ProtectedLayout: React.FC<{ layout: React.ReactElement }> = ({ layout }) => {
   const { status, user } = useAuth();
   // Mounted once for every authenticated route: the loop warning has to reach
@@ -106,6 +112,8 @@ const PanelRoute: React.FC<{ layout: React.ReactElement }> = ({ layout }) => {
           <Route path='/settings/model' element={withRouteFallback(ModeSettings)} />
           <Route path='/assistants' element={withRouteFallback(AssistantSettings)} />
           <Route path='/agent-center' element={withRouteFallback(AgentCenterListPage)} />
+          <Route path='/skill-evolution' element={withRouteFallback(SkillEvolutionListPage)} />
+          <Route path='/skill-evolution/new' element={withRouteFallback(SkillEvolutionCreatePage)} />
           <Route
             path='/agent-center/new'
             element={
@@ -115,8 +123,8 @@ const PanelRoute: React.FC<{ layout: React.ReactElement }> = ({ layout }) => {
             }
           />
 
-          <Route path='/agent-center/skill-evolution' element={withRouteFallback(SkillEvolutionListPage)} />
-          <Route path='/agent-center/skill-evolution/new' element={withRouteFallback(SkillEvolutionCreatePage)} />
+          <Route path='/agent-center/skill-evolution' element={<SkillEvolutionRedirect />} />
+          <Route path='/agent-center/skill-evolution/new' element={<SkillEvolutionRedirect create />} />
           <Route path='/agent-center/:id' element={withRouteFallback(AgentCenterDetailPage)} />
           <Route
             path='/agent-center/:id/edit'

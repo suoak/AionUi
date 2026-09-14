@@ -362,6 +362,31 @@ describe('GuidPage', () => {
     expect(capturedGuidInputCardProps.at(-1)?.focusRequestKey).toBeUndefined();
   });
 
+  it('forwards workflow launch context and focuses its required input', () => {
+    const conversationPlan = {
+      assistant: { id: 'assistant-1' },
+      extra: { agent_workflow_run_id: 'run-1' },
+    };
+    locationMock.state = {
+      selectedAssistantId: 'assistant-1',
+      agentCenterRunPlan: conversationPlan,
+      agentWorkflowStartAssistantId: 'assistant-1',
+      agentWorkflowInputPlaceholder: 'Describe the incident',
+      focusPrefill: true,
+    };
+
+    render(<GuidPage />);
+
+    expect(capturedGuidSendDeps.at(-1)).toMatchObject({
+      agentCenterRunPlan: conversationPlan,
+      agentWorkflowStartAssistantId: 'assistant-1',
+    });
+    expect(capturedGuidInputCardProps.at(-1)).toMatchObject({
+      placeholder: 'Describe the incident',
+      focusRequestKey: 'guid-location',
+    });
+  });
+
   it('keeps replacing attachments supplied by an ordinary Guid prefill', () => {
     locationMock.state = {
       prefillPrompt: 'Replace prompt and attachments',
