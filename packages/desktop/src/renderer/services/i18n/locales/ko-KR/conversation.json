@@ -921,5 +921,36 @@
     "progress": "{{completed}}/{{total}}",
     "expand": "계획 펼치기",
     "collapse": "계획 접기"
+  },
+  "taskSession": {
+    "mode": { "agent": "에이전트", "plan": "계획", "goal": "목표" },
+    "status": {
+      "draft": "초안",
+      "ready": "준비됨",
+      "running": "실행 중",
+      "waiting_approval": "승인 대기",
+      "paused": "재개 필요",
+      "completed": "완료",
+      "failed": "실패",
+      "cancelled": "취소됨"
+    },
+    "saveError": "작업 모드를 저장하지 못했습니다",
+    "contract": {
+      "open": "계획 준비됨",
+      "title": "계획 및 승인",
+      "contentPlaceholder": "변경 불가능한 계획 또는 목표 입력",
+      "criteriaPlaceholder": "줄마다 승인 기준 하나",
+      "submit": "승인 요청",
+      "approve": "승인",
+      "reject": "거부",
+      "execute": "승인된 계획 실행",
+      "version": "버전 {{version}}",
+      "success": "작업 계약 업데이트됨",
+      "error": "작업 계약 작업 실패",
+      "pass": "통과",
+      "fail": "실패",
+      "review": "확인 필요",
+      "userEvidence": "사용자가 확인함"
+    }
   }
 }

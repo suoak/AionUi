@@ -921,5 +921,36 @@
     "progress": "{{completed}}/{{total}}",
     "expand": "プランを展開",
     "collapse": "プランを折りたたむ"
+  },
+  "taskSession": {
+    "mode": { "agent": "エージェント", "plan": "プラン", "goal": "ゴール" },
+    "status": {
+      "draft": "下書き",
+      "ready": "準備完了",
+      "running": "実行中",
+      "waiting_approval": "承認待ち",
+      "paused": "再開が必要",
+      "completed": "完了",
+      "failed": "失敗",
+      "cancelled": "キャンセル済み"
+    },
+    "saveError": "タスクモードを保存できませんでした",
+    "contract": {
+      "open": "計画準備完了",
+      "title": "計画と承認",
+      "contentPlaceholder": "変更不可の計画または目標を入力",
+      "criteriaPlaceholder": "1行に1つの受入基準",
+      "submit": "承認に提出",
+      "approve": "承認",
+      "reject": "却下",
+      "execute": "承認済み計画を実行",
+      "version": "バージョン {{version}}",
+      "success": "タスク契約を更新しました",
+      "error": "タスク契約の操作に失敗しました",
+      "pass": "合格",
+      "fail": "不合格",
+      "review": "要確認",
+      "userEvidence": "ユーザーが確認しました"
+    }
   }
 }

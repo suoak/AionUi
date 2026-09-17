@@ -921,5 +921,36 @@
     "progress": "{{completed}}/{{total}}",
     "expand": "گسترش برنامه",
     "collapse": "جمع کردن برنامه"
+  },
+  "taskSession": {
+    "mode": { "agent": "عامل", "plan": "برنامه", "goal": "هدف" },
+    "status": {
+      "draft": "پیش‌نویس",
+      "ready": "آماده",
+      "running": "در حال اجرا",
+      "waiting_approval": "در انتظار تأیید",
+      "paused": "نیازمند ادامه",
+      "completed": "تکمیل‌شده",
+      "failed": "ناموفق",
+      "cancelled": "لغوشده"
+    },
+    "saveError": "ذخیره حالت وظیفه ناموفق بود",
+    "contract": {
+      "open": "طرح آماده است",
+      "title": "طرح و تأیید",
+      "contentPlaceholder": "طرح یا هدف تغییرناپذیر را وارد کنید",
+      "criteriaPlaceholder": "در هر خط یک معیار پذیرش",
+      "submit": "ارسال برای تأیید",
+      "approve": "تأیید",
+      "reject": "رد",
+      "execute": "اجرای طرح تأییدشده",
+      "version": "نسخه {{version}}",
+      "success": "قرارداد وظیفه به‌روزرسانی شد",
+      "error": "عملیات قرارداد وظیفه ناموفق بود",
+      "pass": "قبول",
+      "fail": "رد",
+      "review": "نیازمند بررسی",
+      "userEvidence": "توسط کاربر تأیید شد"
+    }
   }
 }

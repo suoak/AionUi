@@ -59,6 +59,19 @@ import type {
   StartAgentWorkflowRunRequest,
   UpdateAgentCenterRequest,
 } from '../types/agent/agentCenterTypes';
+import type {
+  AcceptanceCriterion,
+  AcceptanceCriterionStatus,
+  AcceptanceEvidence,
+  CreateTaskSessionInput,
+  SubmitTaskArtifactInput,
+  SubmitTaskArtifactResponse,
+  TaskApproval,
+  TaskArtifact,
+  TaskRun,
+  TaskSession,
+  UpdateTaskSessionInput,
+} from '../types/agent/taskSession';
 import {
   normalizeAgentCenterDetail,
   normalizeAgentCenterListItem,
@@ -966,6 +979,83 @@ export const conversation = {
     check: httpGet<{ approved: boolean }, { conversation_id: string; action: string; command_type?: string }>(
       (p) =>
         `/api/conversations/${p.conversation_id}/approvals/check?action=${encodeURIComponent(p.action)}${p.command_type ? `&command_type=${encodeURIComponent(p.command_type)}` : ''}`
+    ),
+  },
+};
+
+export const taskSession = {
+  create: httpPost<TaskSession, CreateTaskSessionInput>('/api/task-sessions'),
+  list: httpGet<TaskSession[], { conversation_id?: string }>((params) =>
+    params.conversation_id
+      ? `/api/task-sessions?conversation_id=${encodeURIComponent(params.conversation_id)}`
+      : '/api/task-sessions'
+  ),
+  get: httpGet<TaskSession, { id: string }>((params) => `/api/task-sessions/${encodeURIComponent(params.id)}`),
+  update: httpPatch<TaskSession, { id: string; updates: UpdateTaskSessionInput }>(
+    (params) => `/api/task-sessions/${encodeURIComponent(params.id)}`,
+    (params) => params.updates
+  ),
+  artifact: {
+    submit: httpPost<SubmitTaskArtifactResponse, { id: string; artifact: SubmitTaskArtifactInput }>(
+      (params) => `/api/task-sessions/${encodeURIComponent(params.id)}/artifacts`,
+      (params) => params.artifact
+    ),
+    list: httpGet<TaskArtifact[], { id: string }>(
+      (params) => `/api/task-sessions/${encodeURIComponent(params.id)}/artifacts`
+    ),
+  },
+  approval: {
+    list: httpGet<TaskApproval[], { id: string }>(
+      (params) => `/api/task-sessions/${encodeURIComponent(params.id)}/approvals`
+    ),
+    decide: httpPost<
+      TaskApproval,
+      {
+        id: string;
+        approval_id: string;
+        decision: 'approve' | 'reject';
+        artifact_id: string;
+        artifact_hash: string;
+        comment?: string;
+      }
+    >(
+      (params) =>
+        `/api/task-sessions/${encodeURIComponent(params.id)}/approvals/${encodeURIComponent(params.approval_id)}/decision`,
+      (params) => ({
+        decision: params.decision,
+        artifact_id: params.artifact_id,
+        artifact_hash: params.artifact_hash,
+        comment: params.comment,
+      })
+    ),
+  },
+  execute: httpPost<TaskRun, { id: string; approval_id: string; artifact_id: string; artifact_hash: string }>(
+    (params) => `/api/task-sessions/${encodeURIComponent(params.id)}/execute`,
+    (params) => ({
+      approval_id: params.approval_id,
+      artifact_id: params.artifact_id,
+      artifact_hash: params.artifact_hash,
+    })
+  ),
+  run: {
+    list: httpGet<TaskRun[], { id: string }>((params) => `/api/task-sessions/${encodeURIComponent(params.id)}/runs`),
+  },
+  acceptanceCriterion: {
+    list: httpGet<AcceptanceCriterion[], { id: string }>(
+      (params) => `/api/task-sessions/${encodeURIComponent(params.id)}/acceptance-criteria`
+    ),
+    verify: httpPatch<
+      AcceptanceCriterion,
+      {
+        id: string;
+        criterion_id: string;
+        status: AcceptanceCriterionStatus;
+        evidence: AcceptanceEvidence[];
+      }
+    >(
+      (params) =>
+        `/api/task-sessions/${encodeURIComponent(params.id)}/acceptance-criteria/${encodeURIComponent(params.criterion_id)}`,
+      (params) => ({ status: params.status, evidence: params.evidence })
     ),
   },
 };

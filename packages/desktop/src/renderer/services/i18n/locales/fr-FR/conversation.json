@@ -921,5 +921,36 @@
     "progress": "{{completed}}/{{total}}",
     "expand": "Développer le plan",
     "collapse": "Réduire le plan"
+  },
+  "taskSession": {
+    "mode": { "agent": "Agent", "plan": "Plan", "goal": "Objectif" },
+    "status": {
+      "draft": "Brouillon",
+      "ready": "Prêt",
+      "running": "En cours",
+      "waiting_approval": "En attente d’approbation",
+      "paused": "Reprise nécessaire",
+      "completed": "Terminé",
+      "failed": "Échec",
+      "cancelled": "Annulé"
+    },
+    "saveError": "Impossible d’enregistrer le mode de tâche",
+    "contract": {
+      "open": "Plan prêt",
+      "title": "Plan et approbation",
+      "contentPlaceholder": "Saisissez le plan ou l’objectif immuable",
+      "criteriaPlaceholder": "Un critère d’acceptation par ligne",
+      "submit": "Soumettre pour approbation",
+      "approve": "Approuver",
+      "reject": "Rejeter",
+      "execute": "Exécuter le plan approuvé",
+      "version": "Version {{version}}",
+      "success": "Contrat de tâche mis à jour",
+      "error": "Échec de l’action du contrat",
+      "pass": "Réussite",
+      "fail": "Échec",
+      "review": "Vérification requise",
+      "userEvidence": "Confirmé par l’utilisateur"
+    }
   }
 }

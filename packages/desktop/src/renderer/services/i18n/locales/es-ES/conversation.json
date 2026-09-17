@@ -922,5 +922,36 @@
     "progress": "{{completed}}/{{total}}",
     "expand": "Expandir plan",
     "collapse": "Contraer plan"
+  },
+  "taskSession": {
+    "mode": { "agent": "Agente", "plan": "Plan", "goal": "Objetivo" },
+    "status": {
+      "draft": "Borrador",
+      "ready": "Listo",
+      "running": "En ejecución",
+      "waiting_approval": "Esperando aprobación",
+      "paused": "Necesita reanudarse",
+      "completed": "Completado",
+      "failed": "Fallido",
+      "cancelled": "Cancelado"
+    },
+    "saveError": "No se pudo guardar el modo de tarea",
+    "contract": {
+      "open": "Plan listo",
+      "title": "Plan y aprobación",
+      "contentPlaceholder": "Introduce el plan o objetivo inmutable",
+      "criteriaPlaceholder": "Un criterio de aceptación por línea",
+      "submit": "Enviar para aprobación",
+      "approve": "Aprobar",
+      "reject": "Rechazar",
+      "execute": "Ejecutar plan aprobado",
+      "version": "Versión {{version}}",
+      "success": "Contrato de tarea actualizado",
+      "error": "Falló la acción del contrato",
+      "pass": "Aprobar",
+      "fail": "Fallar",
+      "review": "Necesita verificación",
+      "userEvidence": "Confirmado por el usuario"
+    }
   }
 }

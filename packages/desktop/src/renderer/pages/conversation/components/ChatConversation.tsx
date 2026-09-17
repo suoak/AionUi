@@ -6,6 +6,7 @@
 
 import { ipcBridge } from '@/common';
 import type { IConversationMcpStatus, IProvider, TChatConversation, TProviderWithModel } from '@/common/config/storage';
+import type { AcceptanceCriterionStatus, TaskArtifactKind, TaskSessionMode } from '@/common/types/agent/taskSession';
 import { uuid } from '@/common/utils';
 import addChatIcon from '@/renderer/assets/icons/add-chat.svg';
 import { CronJobManager } from '@/renderer/pages/cron';
@@ -14,7 +15,19 @@ import { classifyConfigSetError, useAcpConfigOptions } from '@/renderer/hooks/ag
 import { useLayoutContext } from '@/renderer/hooks/context/LayoutContext';
 import { usePresetAssistantInfo } from '@/renderer/hooks/agent/usePresetAssistantInfo';
 import { iconColors } from '@/renderer/styles/colors';
-import { Button, Dropdown, Menu, Message, Tooltip, Typography } from '@arco-design/web-react';
+import {
+  Button,
+  Dropdown,
+  Input,
+  Menu,
+  Message,
+  Modal,
+  Radio,
+  Space,
+  Tag,
+  Tooltip,
+  Typography,
+} from '@arco-design/web-react';
 import { History } from '@icon-park/react';
 import React, { useCallback, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -48,6 +61,262 @@ const configErrorMessageKey = (error: unknown) => {
   if (errorKind === 'config_update_in_progress') return 'agent.config.busy';
   if (errorKind === 'config_persistence_failed') return 'agent.config.persistenceFailed';
   return 'agent.config.failed';
+};
+
+const TaskSessionControl: React.FC<{ conversation: TChatConversation; agentType: string }> = ({
+  conversation,
+  agentType,
+}) => {
+  const { t } = useTranslation();
+  const [saving, setSaving] = useState(false);
+  const [contractVisible, setContractVisible] = useState(false);
+  const [artifactKind, setArtifactKind] = useState<TaskArtifactKind>('plan');
+  const [artifactContent, setArtifactContent] = useState('');
+  const [criteriaText, setCriteriaText] = useState('');
+  const { data, mutate } = useSWR(['taskSession', conversation.id], () =>
+    ipcBridge.taskSession.list.invoke({ conversation_id: conversation.id })
+  );
+  const taskSession = data?.[0];
+  const mode = taskSession?.mode;
+  const { data: contractData, mutate: mutateContract } = useSWR(
+    taskSession && mode !== 'agent' ? ['taskContract', taskSession.id] : null,
+    async () => {
+      const [artifacts, approvals, criteria] = await Promise.all([
+        ipcBridge.taskSession.artifact.list.invoke({ id: taskSession!.id }),
+        ipcBridge.taskSession.approval.list.invoke({ id: taskSession!.id }),
+        ipcBridge.taskSession.acceptanceCriterion.list.invoke({ id: taskSession!.id }),
+      ]);
+      return { artifacts, approvals, criteria };
+    }
+  );
+  const pendingApproval = contractData?.approvals.find((approval) => approval.status === 'pending');
+  const pendingArtifact = contractData?.artifacts.find((artifact) => artifact.id === pendingApproval?.artifact_id);
+  const approvedPlanApproval = contractData?.approvals.find(
+    (approval) => approval.approval_type === 'plan' && approval.status === 'approved' && !approval.run_id
+  );
+  const approvedPlan = contractData?.artifacts.find(
+    (artifact) => artifact.id === approvedPlanApproval?.artifact_id && artifact.status === 'approved'
+  );
+  const currentGoalArtifact = contractData?.artifacts.find(
+    (artifact) => artifact.kind === 'goal' && artifact.status !== 'superseded'
+  );
+
+  const refreshContract = async () => {
+    await Promise.all([mutate(), mutateContract()]);
+  };
+
+  const handleContractAction = async (action: () => Promise<unknown>) => {
+    if (saving) return;
+    setSaving(true);
+    try {
+      await action();
+      await refreshContract();
+      Message.success(t('conversation.taskSession.contract.success'));
+    } catch (error) {
+      console.error('[TaskSession] Contract action failed:', error);
+      Message.error(t('conversation.taskSession.contract.error'));
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const submitArtifact = () =>
+    handleContractAction(async () => {
+      if (!taskSession) return;
+      const acceptanceCriteria = criteriaText
+        .split('\n')
+        .map((criterion) => criterion.trim())
+        .filter(Boolean);
+      await ipcBridge.taskSession.artifact.submit.invoke({
+        id: taskSession.id,
+        artifact: {
+          kind: artifactKind,
+          content: artifactContent,
+          acceptance_criteria: artifactKind === 'goal' ? acceptanceCriteria : [],
+        },
+      });
+      setArtifactContent('');
+      setCriteriaText('');
+    });
+
+  const decideApproval = (decision: 'approve' | 'reject') =>
+    handleContractAction(async () => {
+      if (!taskSession || !pendingApproval) return;
+      await ipcBridge.taskSession.approval.decide.invoke({
+        id: taskSession.id,
+        approval_id: pendingApproval.id,
+        decision,
+        artifact_id: pendingApproval.artifact_id,
+        artifact_hash: pendingApproval.artifact_hash,
+      });
+    });
+
+  const executePlan = () =>
+    handleContractAction(async () => {
+      if (!taskSession || !approvedPlanApproval || !approvedPlan) return;
+      await ipcBridge.taskSession.execute.invoke({
+        id: taskSession.id,
+        approval_id: approvedPlanApproval.id,
+        artifact_id: approvedPlan.id,
+        artifact_hash: approvedPlan.content_hash,
+      });
+    });
+
+  const verifyCriterion = (criterionId: string, status: AcceptanceCriterionStatus) =>
+    handleContractAction(async () => {
+      if (!taskSession) return;
+      await ipcBridge.taskSession.acceptanceCriterion.verify.invoke({
+        id: taskSession.id,
+        criterion_id: criterionId,
+        status,
+        evidence: [{ kind: 'user_confirmation', summary: t('conversation.taskSession.contract.userEvidence') }],
+      });
+    });
+
+  const handleModeChange = async (nextMode: TaskSessionMode) => {
+    if (saving || (taskSession && nextMode === mode)) return;
+    setSaving(true);
+    try {
+      if (taskSession) {
+        await ipcBridge.taskSession.update.invoke({ id: taskSession.id, updates: { mode: nextMode } });
+      } else {
+        await ipcBridge.taskSession.create.invoke({
+          title: conversation.name,
+          project_id: conversation.project_id,
+          conversation_id: conversation.id,
+          mode: nextMode,
+          objective: '',
+          acceptance_criteria: [],
+          status: 'ready',
+          agent_type: agentType,
+        });
+      }
+      setArtifactKind('plan');
+      await mutate();
+    } catch (error) {
+      console.error('[TaskSession] Failed to persist task mode:', error);
+      Message.error(t('conversation.taskSession.saveError'));
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  return (
+    <div className='flex items-center gap-6px shrink-0' data-testid='task-session-control'>
+      <Radio.Group
+        type='button'
+        size='mini'
+        value={mode}
+        disabled={saving}
+        onChange={(value) => void handleModeChange(value as TaskSessionMode)}
+      >
+        <Radio value='agent'>{t('conversation.taskSession.mode.agent')}</Radio>
+        <Radio value='plan'>{t('conversation.taskSession.mode.plan')}</Radio>
+        <Radio value='goal'>{t('conversation.taskSession.mode.goal')}</Radio>
+      </Radio.Group>
+      {taskSession ? (
+        <Tag size='small' bordered>
+          {t(`conversation.taskSession.status.${taskSession.status}`)}
+        </Tag>
+      ) : null}
+      {taskSession && mode !== 'agent' ? (
+        <Button size='mini' type='outline' onClick={() => setContractVisible(true)}>
+          {t('conversation.taskSession.contract.open')}
+        </Button>
+      ) : null}
+      <Modal
+        visible={contractVisible}
+        title={t('conversation.taskSession.contract.title')}
+        footer={null}
+        unmountOnExit
+        onCancel={() => setContractVisible(false)}
+      >
+        <Space direction='vertical' className='w-full'>
+          <Radio.Group
+            type='button'
+            value={artifactKind}
+            onChange={(value) => setArtifactKind(value as TaskArtifactKind)}
+          >
+            <Radio value='plan'>{t('conversation.taskSession.mode.plan')}</Radio>
+            {mode === 'goal' ? <Radio value='goal'>{t('conversation.taskSession.mode.goal')}</Radio> : null}
+          </Radio.Group>
+          <Input.TextArea
+            value={artifactContent}
+            autoSize={{ minRows: 5, maxRows: 12 }}
+            placeholder={t('conversation.taskSession.contract.contentPlaceholder')}
+            onChange={setArtifactContent}
+          />
+          {artifactKind === 'goal' ? (
+            <Input.TextArea
+              value={criteriaText}
+              autoSize={{ minRows: 3, maxRows: 8 }}
+              placeholder={t('conversation.taskSession.contract.criteriaPlaceholder')}
+              onChange={setCriteriaText}
+            />
+          ) : null}
+          <Button
+            type='primary'
+            loading={saving}
+            disabled={!artifactContent.trim()}
+            onClick={() => void submitArtifact()}
+          >
+            {t('conversation.taskSession.contract.submit')}
+          </Button>
+          {pendingApproval ? (
+            <div className='rounded border border-color-border-2 p-12px'>
+              {pendingArtifact ? (
+                <Space direction='vertical'>
+                  <Tag>{t('conversation.taskSession.contract.version', { version: pendingArtifact.version })}</Tag>
+                  <Typography.Text type='secondary'>
+                    {new Date(pendingArtifact.created_at).toLocaleString()}
+                  </Typography.Text>
+                  <Typography.Paragraph>{pendingArtifact.content}</Typography.Paragraph>
+                </Space>
+              ) : null}
+              <Space>
+                <Button type='primary' loading={saving} onClick={() => void decideApproval('approve')}>
+                  {t('conversation.taskSession.contract.approve')}
+                </Button>
+                <Button status='danger' loading={saving} onClick={() => void decideApproval('reject')}>
+                  {t('conversation.taskSession.contract.reject')}
+                </Button>
+              </Space>
+            </div>
+          ) : null}
+          {approvedPlan && approvedPlanApproval ? (
+            <div className='rounded border border-color-border-2 p-12px'>
+              <Tag>{t('conversation.taskSession.contract.version', { version: approvedPlan.version })}</Tag>
+              <Typography.Text type='secondary' className='ml-8px'>
+                {new Date(approvedPlan.created_at).toLocaleString()}
+              </Typography.Text>
+              <Typography.Paragraph className='mt-8px'>{approvedPlan.content}</Typography.Paragraph>
+              <Button type='primary' loading={saving} onClick={() => void executePlan()}>
+                {t('conversation.taskSession.contract.execute')}
+              </Button>
+            </div>
+          ) : null}
+          {contractData?.criteria
+            .filter((criterion) => criterion.goal_artifact_id === currentGoalArtifact?.id)
+            .map((criterion) => (
+              <div key={criterion.id} className='rounded border border-color-border-2 p-12px'>
+                <Typography.Paragraph>{criterion.description}</Typography.Paragraph>
+                <Space>
+                  <Button size='mini' onClick={() => void verifyCriterion(criterion.id, 'passed')}>
+                    {t('conversation.taskSession.contract.pass')}
+                  </Button>
+                  <Button size='mini' status='danger' onClick={() => void verifyCriterion(criterion.id, 'failed')}>
+                    {t('conversation.taskSession.contract.fail')}
+                  </Button>
+                  <Button size='mini' onClick={() => void verifyCriterion(criterion.id, 'needs_verification')}>
+                    {t('conversation.taskSession.contract.review')}
+                  </Button>
+                </Space>
+              </div>
+            ))}
+        </Space>
+      </Modal>
+    </div>
+  );
 };
 
 const _AssociatedConversation: React.FC<{ conversation_id: string }> = ({ conversation_id }) => {
@@ -210,6 +479,7 @@ const AionrsConversationPanel: React.FC<{ conversation: AionrsConversation; slid
     sider: <ChatSlider conversation={conversation} />,
     headerExtra: (
       <div className='flex items-center gap-8px'>
+        <TaskSessionControl conversation={conversation} agentType='aionrs' />
         <ConversationTrajectoryButton conversationId={conversation.id} />
         <CronJobManager conversation_id={conversation.id} cron_job_id={cronJobId} />
         {!isMobile && (
@@ -412,6 +682,10 @@ const ChatConversation: React.FC<{
     <div className='flex items-center gap-8px'>
       {conversation && (
         <>
+          <TaskSessionControl
+            conversation={conversation}
+            agentType={resolvedConversationBackend || conversation.type}
+          />
           <ConversationTrajectoryButton conversationId={conversation.id} />
           <div className='shrink-0'>
             <CronJobManager conversation_id={conversation.id} cron_job_id={cronJobId} />

@@ -921,5 +921,36 @@
     "progress": "{{completed}}/{{total}}",
     "expand": "Expand plan",
     "collapse": "Collapse plan"
+  },
+  "taskSession": {
+    "mode": { "agent": "Agent", "plan": "Plan", "goal": "Goal" },
+    "status": {
+      "draft": "Draft",
+      "ready": "Ready",
+      "running": "Running",
+      "waiting_approval": "Waiting for approval",
+      "paused": "Needs resume",
+      "completed": "Completed",
+      "failed": "Failed",
+      "cancelled": "Cancelled"
+    },
+    "saveError": "Failed to save task mode",
+    "contract": {
+      "open": "Plan ready",
+      "title": "Plan and approval",
+      "contentPlaceholder": "Enter the immutable plan or goal",
+      "criteriaPlaceholder": "One acceptance criterion per line",
+      "submit": "Submit for approval",
+      "approve": "Approve",
+      "reject": "Reject",
+      "execute": "Execute approved plan",
+      "version": "Version {{version}}",
+      "success": "Task contract updated",
+      "error": "Task contract action failed",
+      "pass": "Pass",
+      "fail": "Fail",
+      "review": "Needs verification",
+      "userEvidence": "Confirmed by the user"
+    }
   }
 }

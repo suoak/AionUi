@@ -923,5 +923,36 @@
     "progress": "{{completed}}/{{total}}",
     "expand": "Planı genişlet",
     "collapse": "Planı daralt"
+  },
+  "taskSession": {
+    "mode": { "agent": "Ajan", "plan": "Plan", "goal": "Hedef" },
+    "status": {
+      "draft": "Taslak",
+      "ready": "Hazır",
+      "running": "Çalışıyor",
+      "waiting_approval": "Onay bekliyor",
+      "paused": "Devam ettirme gerekli",
+      "completed": "Tamamlandı",
+      "failed": "Başarısız",
+      "cancelled": "İptal edildi"
+    },
+    "saveError": "Görev modu kaydedilemedi",
+    "contract": {
+      "open": "Plan hazır",
+      "title": "Plan ve onay",
+      "contentPlaceholder": "Değişmez planı veya hedefi girin",
+      "criteriaPlaceholder": "Her satıra bir kabul ölçütü",
+      "submit": "Onaya gönder",
+      "approve": "Onayla",
+      "reject": "Reddet",
+      "execute": "Onaylı planı çalıştır",
+      "version": "Sürüm {{version}}",
+      "success": "Görev sözleşmesi güncellendi",
+      "error": "Görev sözleşmesi işlemi başarısız",
+      "pass": "Geçti",
+      "fail": "Başarısız",
+      "review": "Doğrulama gerekli",
+      "userEvidence": "Kullanıcı tarafından onaylandı"
+    }
   }
 }

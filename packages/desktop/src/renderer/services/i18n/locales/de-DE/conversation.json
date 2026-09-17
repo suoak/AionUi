@@ -922,5 +922,36 @@
     "progress": "{{completed}}/{{total}}",
     "expand": "Plan ausklappen",
     "collapse": "Plan einklappen"
+  },
+  "taskSession": {
+    "mode": { "agent": "Agent", "plan": "Plan", "goal": "Ziel" },
+    "status": {
+      "draft": "Entwurf",
+      "ready": "Bereit",
+      "running": "Wird ausgeführt",
+      "waiting_approval": "Wartet auf Genehmigung",
+      "paused": "Fortsetzung erforderlich",
+      "completed": "Abgeschlossen",
+      "failed": "Fehlgeschlagen",
+      "cancelled": "Abgebrochen"
+    },
+    "saveError": "Aufgabenmodus konnte nicht gespeichert werden",
+    "contract": {
+      "open": "Plan bereit",
+      "title": "Plan und Genehmigung",
+      "contentPlaceholder": "Unveränderlichen Plan oder Ziel eingeben",
+      "criteriaPlaceholder": "Ein Abnahmekriterium pro Zeile",
+      "submit": "Zur Genehmigung einreichen",
+      "approve": "Genehmigen",
+      "reject": "Ablehnen",
+      "execute": "Genehmigten Plan ausführen",
+      "version": "Version {{version}}",
+      "success": "Aufgabenvertrag aktualisiert",
+      "error": "Aktion am Aufgabenvertrag fehlgeschlagen",
+      "pass": "Bestanden",
+      "fail": "Fehlgeschlagen",
+      "review": "Prüfung erforderlich",
+      "userEvidence": "Vom Benutzer bestätigt"
+    }
   }
 }

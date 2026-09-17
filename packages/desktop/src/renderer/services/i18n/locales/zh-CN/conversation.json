@@ -921,5 +921,36 @@
     "progress": "{{completed}}/{{total}}",
     "expand": "展开计划",
     "collapse": "收起计划"
+  },
+  "taskSession": {
+    "mode": { "agent": "执行", "plan": "计划", "goal": "目标" },
+    "status": {
+      "draft": "草稿",
+      "ready": "就绪",
+      "running": "执行中",
+      "waiting_approval": "等待审批",
+      "paused": "需要恢复",
+      "completed": "已完成",
+      "failed": "失败",
+      "cancelled": "已取消"
+    },
+    "saveError": "保存任务模式失败",
+    "contract": {
+      "open": "计划已就绪",
+      "title": "计划与审批",
+      "contentPlaceholder": "输入不可变的计划或目标",
+      "criteriaPlaceholder": "每行一条验收标准",
+      "submit": "提交审批",
+      "approve": "批准",
+      "reject": "拒绝",
+      "execute": "执行已批准计划",
+      "version": "版本 {{version}}",
+      "success": "任务契约已更新",
+      "error": "任务契约操作失败",
+      "pass": "通过",
+      "fail": "失败",
+      "review": "需要验证",
+      "userEvidence": "用户已确认"
+    }
   }
 }

@@ -921,5 +921,36 @@
     "progress": "{{completed}}/{{total}}",
     "expand": "展開計劃",
     "collapse": "收合計劃"
+  },
+  "taskSession": {
+    "mode": { "agent": "執行", "plan": "計劃", "goal": "目標" },
+    "status": {
+      "draft": "草稿",
+      "ready": "就緒",
+      "running": "執行中",
+      "waiting_approval": "等待核准",
+      "paused": "需要恢復",
+      "completed": "已完成",
+      "failed": "失敗",
+      "cancelled": "已取消"
+    },
+    "saveError": "儲存任務模式失敗",
+    "contract": {
+      "open": "計畫已就緒",
+      "title": "計畫與核准",
+      "contentPlaceholder": "輸入不可變的計畫或目標",
+      "criteriaPlaceholder": "每行一項驗收標準",
+      "submit": "提交核准",
+      "approve": "核准",
+      "reject": "拒絕",
+      "execute": "執行已核准計畫",
+      "version": "版本 {{version}}",
+      "success": "任務契約已更新",
+      "error": "任務契約操作失敗",
+      "pass": "通過",
+      "fail": "失敗",
+      "review": "需要驗證",
+      "userEvidence": "使用者已確認"
+    }
   }
 }
