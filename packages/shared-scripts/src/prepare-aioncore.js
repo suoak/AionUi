@@ -16,6 +16,7 @@
  */
 
 const { execSync, execFileSync } = require('child_process');
+const crypto = require('crypto');
 const fs = require('fs');
 const os = require('os');
 const path = require('path');
@@ -208,6 +209,39 @@ function getAssetName(platform, arch, tag) {
 
 function getDownloadUrl(assetName, tag) {
   return `https://github.com/${GITHUB_OWNER}/${GITHUB_REPO}/releases/download/${tag}/${assetName}`;
+}
+
+function parseAioncoreChecksum(checksums, assetName) {
+  for (const line of checksums.split(/\r?\n/)) {
+    const match = line.trim().match(/^([a-fA-F0-9]{64})\s+\*?(.+)$/);
+    if (match?.[2] === assetName) return match[1].toLowerCase();
+  }
+  throw new Error(`Checksum entry not found for ${assetName}`);
+}
+
+function sha256File(filePath) {
+  const hash = crypto.createHash('sha256');
+  const descriptor = fs.openSync(filePath, 'r');
+  try {
+    const buffer = Buffer.alloc(64 * 1024);
+    let bytesRead;
+    while ((bytesRead = fs.readSync(descriptor, buffer, 0, buffer.length, null)) > 0) {
+      hash.update(buffer.subarray(0, bytesRead));
+    }
+  } finally {
+    fs.closeSync(descriptor);
+  }
+  return hash.digest('hex');
+}
+
+function verifyAioncoreChecksum(filePath, expectedChecksum) {
+  const actualChecksum = sha256File(filePath);
+  if (actualChecksum !== expectedChecksum.toLowerCase()) {
+    throw new Error(
+      `AionCore checksum mismatch for ${path.basename(filePath)}: expected ${expectedChecksum}, got ${actualChecksum}`
+    );
+  }
+  return actualChecksum;
 }
 
 function downloadFile(url, outputPath) {
@@ -409,12 +443,16 @@ function downloadAndExtract(platform, arch, tag) {
   const url = getDownloadUrl(assetName, tag);
   const tempDir = path.join(os.tmpdir(), 'aioncore-prepare', tag, `${platform}-${arch}`);
   const archivePath = path.join(tempDir, assetName);
+  const checksumsPath = path.join(tempDir, 'aioncore-checksums.txt');
   const extractDir = path.join(tempDir, 'extracted');
 
   removeDirectorySafe(tempDir);
   ensureDirectory(tempDir);
 
+  downloadFile(getDownloadUrl('aioncore-checksums.txt', tag), checksumsPath);
   downloadFile(url, archivePath);
+  const expectedChecksum = parseAioncoreChecksum(fs.readFileSync(checksumsPath, 'utf8'), assetName);
+  verifyAioncoreChecksum(archivePath, expectedChecksum);
   extractArchive(archivePath, extractDir, platform);
 
   const binaryName = getBinaryName(platform);
@@ -586,6 +624,9 @@ function prepareAioncore(options) {
 module.exports = {
   getActionsArtifactMissingMessage,
   getActionsArtifactName,
+  getAssetName,
+  parseAioncoreChecksum,
   prepareAioncore,
+  verifyAioncoreChecksum,
   verifyPreparedAioncoreBundle,
 };

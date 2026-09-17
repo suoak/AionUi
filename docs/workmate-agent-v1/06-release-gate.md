@@ -49,7 +49,7 @@ Release notes 至少列出：TaskSession migration/API、不可变 Plan/Goal art
 
 ## WorkMate pin 与 smoke
 
-只有公开 Release 的六个平台归档和 checksum 均存在后，才把 `package.json#aioncoreVersion` 从 `v0.2.12` 改为 `v0.2.13`。`scripts/resolveAioncoreVersion.js` 与 `scripts/prepareAioncore.js` 会消费该唯一 pin；不得用分支构建或本地二进制伪装正式依赖。
+只有公开 Release 的六个平台归档和 checksum 均存在后，才把 `package.json#aioncoreVersion` 从 `v0.2.12` 改为 `v0.2.13`。`scripts/resolveAioncoreVersion.js` 与 `scripts/prepareAioncore.js` 会消费该唯一 pin；release 下载路径会先按精确资产名读取 `aioncore-checksums.txt` 并校验 SHA-256，缺失或不匹配时 fail closed。不得用分支构建或本地二进制伪装正式依赖。
 
 pin PR 的 smoke 矩阵：
 
