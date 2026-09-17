@@ -25,6 +25,13 @@ const { verifyBundledAioncoreResources } = require('./verify-bundled-aioncore-re
 const GITHUB_OWNER = 'suoak';
 const GITHUB_REPO = 'AionCore';
 
+class AioncoreIntegrityError extends Error {
+  constructor(message, options) {
+    super(message, options);
+    this.name = 'AioncoreIntegrityError';
+  }
+}
+
 const ACTIONS_ARTIFACT_TARGETS = {
   'darwin-arm64': {
     artifactName: 'aioncore-manual-macos-arm64',
@@ -244,6 +251,18 @@ function verifyAioncoreChecksum(filePath, expectedChecksum) {
   return actualChecksum;
 }
 
+function verifyDownloadedAioncoreRelease(checksumsPath, archivePath, assetName) {
+  try {
+    const checksums = fs.readFileSync(checksumsPath, 'utf8');
+    const expectedChecksum = parseAioncoreChecksum(checksums, assetName);
+    return verifyAioncoreChecksum(archivePath, expectedChecksum);
+  } catch (error) {
+    throw new AioncoreIntegrityError(`AionCore release integrity verification failed for ${assetName}`, {
+      cause: error,
+    });
+  }
+}
+
 function downloadFile(url, outputPath) {
   console.log(`  Downloading aioncore from ${url}`);
   if (process.platform === 'win32') {
@@ -449,10 +468,13 @@ function downloadAndExtract(platform, arch, tag) {
   removeDirectorySafe(tempDir);
   ensureDirectory(tempDir);
 
-  downloadFile(getDownloadUrl('aioncore-checksums.txt', tag), checksumsPath);
+  try {
+    downloadFile(getDownloadUrl('aioncore-checksums.txt', tag), checksumsPath);
+  } catch (error) {
+    throw new AioncoreIntegrityError(`AionCore checksum file is unavailable for ${tag}`, { cause: error });
+  }
   downloadFile(url, archivePath);
-  const expectedChecksum = parseAioncoreChecksum(fs.readFileSync(checksumsPath, 'utf8'), assetName);
-  verifyAioncoreChecksum(archivePath, expectedChecksum);
+  verifyDownloadedAioncoreRelease(checksumsPath, archivePath, assetName);
   extractArchive(archivePath, extractDir, platform);
 
   const binaryName = getBinaryName(platform);
@@ -479,7 +501,7 @@ function downloadAndExtract(platform, arch, tag) {
  * @returns {{ prepared: true; dir: string; sourceType: string }}
  */
 function prepareAioncore(options) {
-  const { projectRoot, platform, arch, version = 'latest' } = options;
+  const { projectRoot, platform, arch, version = 'latest', downloadRelease = downloadAndExtract } = options;
   const runtimeKey = `${platform}-${arch}`;
   const actionsRunId = (process.env.CSBU_WORKMATE_BACKEND_RUN_ID || '').trim();
 
@@ -561,13 +583,14 @@ function prepareAioncore(options) {
   // 2. Download from GitHub releases.
   if (!sourcePath && tag) {
     try {
-      const result = downloadAndExtract(platform, arch, tag);
+      const result = downloadRelease(platform, arch, tag);
       sourcePath = result.binaryPath;
       tempDir = result.tempDir;
       sourceType = 'download';
       sourceDetail = { url: result.url };
       console.log(`  Downloaded from GitHub releases`);
     } catch (error) {
+      if (error instanceof AioncoreIntegrityError) throw error;
       console.warn(`  Download failed: ${error.message}`);
     }
   }
@@ -622,11 +645,13 @@ function prepareAioncore(options) {
 }
 
 module.exports = {
+  AioncoreIntegrityError,
   getActionsArtifactMissingMessage,
   getActionsArtifactName,
   getAssetName,
   parseAioncoreChecksum,
   prepareAioncore,
   verifyAioncoreChecksum,
+  verifyDownloadedAioncoreRelease,
   verifyPreparedAioncoreBundle,
 };

@@ -5,9 +5,12 @@ import path from 'node:path';
 import { afterEach, describe, expect, it } from 'vitest';
 
 const {
+  AioncoreIntegrityError,
   getAssetName,
   parseAioncoreChecksum,
+  prepareAioncore,
   verifyAioncoreChecksum,
+  verifyDownloadedAioncoreRelease,
 } = require('../../../packages/shared-scripts/src/prepare-aioncore.js');
 
 const temporaryDirectories: string[] = [];
@@ -51,6 +54,54 @@ describe('AionCore checksum verification', () => {
     writeFileSync(archive, 'archive');
     expect(() => parseAioncoreChecksum(`${'a'.repeat(64)}  other.zip\n`, 'aioncore.zip')).toThrow('Checksum entry');
     expect(() => verifyAioncoreChecksum(archive, '0'.repeat(64))).toThrow('checksum mismatch');
+  });
+
+  it('fails closed for a missing checksum file', () => {
+    const root = createRoot();
+    const archive = path.join(root, 'aioncore.zip');
+    writeFileSync(archive, 'archive');
+
+    expect(() =>
+      verifyDownloadedAioncoreRelease(path.join(root, 'missing-checksums.txt'), archive, 'aioncore.zip')
+    ).toThrow(AioncoreIntegrityError);
+  });
+
+  it('fails closed for a missing artifact row and invalid checksum format', () => {
+    const root = createRoot();
+    const archive = path.join(root, 'aioncore.zip');
+    const checksums = path.join(root, 'aioncore-checksums.txt');
+    writeFileSync(archive, 'archive');
+
+    writeFileSync(checksums, `${'a'.repeat(64)}  other.zip\n`);
+    expect(() => verifyDownloadedAioncoreRelease(checksums, archive, 'aioncore.zip')).toThrow(AioncoreIntegrityError);
+
+    writeFileSync(checksums, `not-a-sha256  aioncore.zip\n`);
+    expect(() => verifyDownloadedAioncoreRelease(checksums, archive, 'aioncore.zip')).toThrow(AioncoreIntegrityError);
+  });
+
+  it('does not fall back to an unverified local binary after an integrity failure', () => {
+    const root = createRoot();
+    const localBinary = path.join(root, 'aioncore.exe');
+    writeFileSync(localBinary, 'unverified local fallback');
+    const previousLocalBinary = process.env.CSBU_WORKMATE_BACKEND_LOCAL_BINARY;
+    process.env.CSBU_WORKMATE_BACKEND_LOCAL_BINARY = localBinary;
+
+    try {
+      expect(() =>
+        prepareAioncore({
+          projectRoot: root,
+          platform: 'win32',
+          arch: 'x64',
+          version: 'v0.2.13',
+          downloadRelease: () => {
+            throw new AioncoreIntegrityError('checksum file missing');
+          },
+        })
+      ).toThrow('checksum file missing');
+    } finally {
+      if (previousLocalBinary === undefined) delete process.env.CSBU_WORKMATE_BACKEND_LOCAL_BINARY;
+      else process.env.CSBU_WORKMATE_BACKEND_LOCAL_BINARY = previousLocalBinary;
+    }
   });
 
   it('accepts the exact archive digest', () => {
