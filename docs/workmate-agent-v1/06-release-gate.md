@@ -45,14 +45,14 @@ every_table_is_classified_for_aionpro_adoption
 
 现有 Release workflow 成功生成六个平台归档和 `aioncore-checksums.txt`。已下载全部七个文件到独立验证目录，检查 checksum 格式、重复项、缺失项和额外项，并重算每个归档的 SHA-256：
 
-| Artifact | SHA-256 | 结果 |
-| --- | --- | --- |
-| `aioncore-v0.2.13-x86_64-unknown-linux-gnu.tar.gz` | `cc01675b13ffb19040eed9ea9dc13eb3dd7d139cc0bff0301dda22f668afe138` | PASS |
+| Artifact                                            | SHA-256                                                            | 结果 |
+| --------------------------------------------------- | ------------------------------------------------------------------ | ---- |
+| `aioncore-v0.2.13-x86_64-unknown-linux-gnu.tar.gz`  | `cc01675b13ffb19040eed9ea9dc13eb3dd7d139cc0bff0301dda22f668afe138` | PASS |
 | `aioncore-v0.2.13-aarch64-unknown-linux-gnu.tar.gz` | `c361e3b237992b5476b048b56f3afd5c1bcd8034f96f00fdabbaa06bc324a988` | PASS |
-| `aioncore-v0.2.13-x86_64-apple-darwin.tar.gz` | `1f61addc4ac38ff7dc912d05b2aa7cf2ca61da3aef4802fe876814e43a4ae2a7` | PASS |
-| `aioncore-v0.2.13-aarch64-apple-darwin.tar.gz` | `2bcc7def5d58c2e1f2bb17acd82d574c5b3cb3cd5d3ad4c855c3bad1072e2d14` | PASS |
-| `aioncore-v0.2.13-x86_64-pc-windows-msvc.zip` | `25d69a63dadafa2cbb87d94228256ca70c6efa177714bf3bd7838ebbee7d3e15` | PASS |
-| `aioncore-v0.2.13-aarch64-pc-windows-msvc.zip` | `84cf68f350ec8930a94f2e59cdebf23c4e1d31fd3ec3201e1b37ea01abc62282` | PASS |
+| `aioncore-v0.2.13-x86_64-apple-darwin.tar.gz`       | `1f61addc4ac38ff7dc912d05b2aa7cf2ca61da3aef4802fe876814e43a4ae2a7` | PASS |
+| `aioncore-v0.2.13-aarch64-apple-darwin.tar.gz`      | `2bcc7def5d58c2e1f2bb17acd82d574c5b3cb3cd5d3ad4c855c3bad1072e2d14` | PASS |
+| `aioncore-v0.2.13-x86_64-pc-windows-msvc.zip`       | `25d69a63dadafa2cbb87d94228256ca70c6efa177714bf3bd7838ebbee7d3e15` | PASS |
+| `aioncore-v0.2.13-aarch64-pc-windows-msvc.zip`      | `84cf68f350ec8930a94f2e59cdebf23c4e1d31fd3ec3201e1b37ea01abc62282` | PASS |
 
 WorkMate 当前平台的真实下载记录：
 
@@ -83,20 +83,20 @@ result: PASS; source=download; installed binary reports aioncore 0.2.13
 
 Packaged smoke 使用真实 packaged exe、AionCore v0.2.13 和一次性 user-data sandbox，结果如下：
 
-| 场景 | 结果 |
-| --- | --- |
-| Existing Conversation 打开 | PASS |
-| Agent stream / complete | PASS |
-| Plan reject 后不可执行 | PASS |
-| Plan approve 后只能 claim/run 一次 | PASS |
-| running 重启后变为 paused、无 replay | PASS |
-| waiting approval 重启后按设计变为 paused，approval 仍 pending、run 为 0 | PASS |
-| Goal 部分 criteria passed 时不 completed；全部 passed 后 completed | PASS |
-| Codex 实际执行 | PASS |
-| MCP endpoint（2 个已配置 server） | PASS |
-| Agent Center / Workflow / Skill Evolution 打开 | PASS |
-| Claude / Aion Agent catalog | PRESENT；未单独执行 live turn |
-| CodeBuddy CLI | 2.154.0 可运行，但 live turn 因未登录而 BLOCKED |
+| 场景                                                                    | 结果                                            |
+| ----------------------------------------------------------------------- | ----------------------------------------------- |
+| Existing Conversation 打开                                              | PASS                                            |
+| Agent stream / complete                                                 | PASS                                            |
+| Plan reject 后不可执行                                                  | PASS                                            |
+| Plan approve 后只能 claim/run 一次                                      | PASS                                            |
+| running 重启后变为 paused、无 replay                                    | PASS                                            |
+| waiting approval 重启后按设计变为 paused，approval 仍 pending、run 为 0 | PASS                                            |
+| Goal 部分 criteria passed 时不 completed；全部 passed 后 completed      | PASS                                            |
+| Codex 实际执行                                                          | PASS                                            |
+| MCP endpoint（2 个已配置 server）                                       | PASS                                            |
+| Agent Center / Workflow / Skill Evolution 打开                          | PASS                                            |
+| Claude / Aion Agent catalog                                             | PRESENT；未单独执行 live turn                   |
+| CodeBuddy CLI                                                           | 2.154.0 可运行，但 live turn 因未登录而 BLOCKED |
 
 ## 唯一外部阻塞
 

@@ -6,31 +6,31 @@ Conversation 继续表示“用户与 Agent 的消息及其 runtime”；TaskSes
 
 ## 数据模型
 
-| 字段 | 类型 / 约束 | 说明 |
-| --- | --- | --- |
-| `id` | text PK | 服务端生成 UUID |
-| `user_id` | text FK, required | 所有查询以当前用户隔离 |
-| `title` | text, required | 最大 200 字符 |
-| `project_id` | nullable FK | 项目删除时置空 |
-| `conversation_id` | nullable FK | 绑定现有 Conversation，创建/更新时校验归属 |
-| `mode` | `agent | plan | goal` | M1 只持久化模式 |
-| `objective` | text | 最大 20,000 字符 |
-| `acceptance_criteria` | JSON string array | 最多 100 项，每项最大 2,000 字符 |
-| `status` | 八态 enum | 由后端验证转换 |
-| `agent_type` | text, required | provider identity；最大 100 字符 |
-| `agent_session_id` | nullable text | 预留 backend session 关联 |
-| `created_at` / `updated_at` | integer ms | 服务端时间 |
+| 字段                        | 类型 / 约束       | 说明                                       |
+| --------------------------- | ----------------- | ------------------------------------------ | ----- | --------------- |
+| `id`                        | text PK           | 服务端生成 UUID                            |
+| `user_id`                   | text FK, required | 所有查询以当前用户隔离                     |
+| `title`                     | text, required    | 最大 200 字符                              |
+| `project_id`                | nullable FK       | 项目删除时置空                             |
+| `conversation_id`           | nullable FK       | 绑定现有 Conversation，创建/更新时校验归属 |
+| `mode`                      | `agent            | plan                                       | goal` | M1 只持久化模式 |
+| `objective`                 | text              | 最大 20,000 字符                           |
+| `acceptance_criteria`       | JSON string array | 最多 100 项，每项最大 2,000 字符           |
+| `status`                    | 八态 enum         | 由后端验证转换                             |
+| `agent_type`                | text, required    | provider identity；最大 100 字符           |
+| `agent_session_id`          | nullable text     | 预留 backend session 关联                  |
+| `created_at` / `updated_at` | integer ms        | 服务端时间                                 |
 
 未来的 `runs`、`approvals`、`checkpoints`、`artifacts`、`review` 是关系预留，不在 M1 建表或塞入一个无类型 JSON 大字段。
 
 ## API
 
-| Method | Path | 行为 |
-| --- | --- | --- |
-| `POST` | `/api/task-sessions` | 创建 draft/ready TaskSession；可绑定当前用户的 Conversation |
-| `GET` | `/api/task-sessions?conversation_id=...` | 列出当前用户任务，可按 Conversation 过滤 |
-| `GET` | `/api/task-sessions/{id}` | 获取当前用户任务 |
-| `PATCH` | `/api/task-sessions/{id}` | 更新字段并验证状态转换、文本限制和 Conversation 归属 |
+| Method  | Path                                     | 行为                                                        |
+| ------- | ---------------------------------------- | ----------------------------------------------------------- |
+| `POST`  | `/api/task-sessions`                     | 创建 draft/ready TaskSession；可绑定当前用户的 Conversation |
+| `GET`   | `/api/task-sessions?conversation_id=...` | 列出当前用户任务，可按 Conversation 过滤                    |
+| `GET`   | `/api/task-sessions/{id}`                | 获取当前用户任务                                            |
+| `PATCH` | `/api/task-sessions/{id}`                | 更新字段并验证状态转换、文本限制和 Conversation 归属        |
 
 不存在、跨用户访问或绑定其他用户的 Conversation 都按 not-found / validation error 失败，不泄露对象是否存在。
 

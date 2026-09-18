@@ -4,11 +4,11 @@
 
 ## 仓库与版本
 
-| 项目 | 当前值 | 上游关系 |
-| --- | --- | --- |
-| WorkMate | `main` / `53b4892f105bad33cad2f7ccac491ded1354b351` / `v2.3.0` | `upstream/main` 为 `6744099b279b991c17e31c243f0920477bd31cb6`；merge-base 与该提交相同，WorkMate 领先 305、落后 0 |
-| AionCore | 独立仓库 `E:\code\AionCore`，`main` / `e2eddc433965f301dcfda7d6c8a41cae006f65be` / `v0.2.12` | `upstream/main` 为 `4ee474d169f129c2040f90a09922f7b92bba11da`；当前分支领先 348、落后 2 |
-| PI-Desktop 研究快照 | `b48c11d13d4025f7a11917969b5f056dcbdef53d` | 仅阅读 ADR 和共享类型，不引入其运行时 |
+| 项目                | 当前值                                                                                       | 上游关系                                                                                                          |
+| ------------------- | -------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- |
+| WorkMate            | `main` / `53b4892f105bad33cad2f7ccac491ded1354b351` / `v2.3.0`                               | `upstream/main` 为 `6744099b279b991c17e31c243f0920477bd31cb6`；merge-base 与该提交相同，WorkMate 领先 305、落后 0 |
+| AionCore            | 独立仓库 `E:\code\AionCore`，`main` / `e2eddc433965f301dcfda7d6c8a41cae006f65be` / `v0.2.12` | `upstream/main` 为 `4ee474d169f129c2040f90a09922f7b92bba11da`；当前分支领先 348、落后 2                           |
+| PI-Desktop 研究快照 | `b48c11d13d4025f7a11917969b5f056dcbdef53d`                                                   | 仅阅读 ADR 和共享类型，不引入其运行时                                                                             |
 
 WorkMate 的 `origin` 是 `suoak/AionUi`，`upstream` 是 `iOfficeAI/AionUi`。AionCore 的 `origin` 是 `suoak/AionCore`，`upstream` 是 `iOfficeAI/AionCore`。WorkMate 根包名为 `csbu-workmate`、版本 `2.3.0`，使用 `packages/*` workspace，并通过 `package.json#aioncoreVersion` 固定 AionCore `v0.2.12`。AionCore 是独立 Cargo workspace，版本 `0.2.12`、Rust edition 2024，现有 27 个 crate；它不是 WorkMate 仓库内的第二套 Host。
 
@@ -33,12 +33,12 @@ WorkMate renderer
 
 ## Agent 现状
 
-| Agent | 检测与启动 | Session / 恢复 | 流与工具 | 权限 |
-| --- | --- | --- | --- | --- |
-| Codex | agent catalog 保存命令元数据；runtime resolver 校验命令；factory 以 backend label 路由 direct CLI | `aionui-session` Codex backend；持久 session anchor，factory 从 snapshot / backend session id 恢复 | Session events 降为 AionCore `AgentStreamEvent`，经 Conversation WS 输出；工具事件在 session reducer 内统一 | CLI sandbox/approval 配置经 Session build inputs；确认仍由 Conversation API 暴露 |
-| Claude | 与 Codex 相同的 catalog + direct CLI 路由 | `--session-id` 创建，`--resume` 恢复；持久 session anchor | Claude adapter 解析流、tool use、usage、turn result，再降为统一事件 | CLI permission mode + Conversation confirmation |
-| CodeBuddy | catalog 内置 ACP 命令，runtime resolver 后启动 | ACP session/new、session/load 与持久 snapshot | `AcpAgentManager` 负责 handshake、流和 tool call | ACP permission request 经统一 confirmation API |
-| Aion Agent | `agent_type = aionrs`，factory 独立构建 `AionrsAgentManager` | Aionrs session store；`AgentInstance` 标为 persistent | 内置 manager 输出相同 `AgentStreamEvent` | inline confirmations + Conversation confirmation API |
+| Agent      | 检测与启动                                                                                        | Session / 恢复                                                                                     | 流与工具                                                                                                    | 权限                                                                             |
+| ---------- | ------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- |
+| Codex      | agent catalog 保存命令元数据；runtime resolver 校验命令；factory 以 backend label 路由 direct CLI | `aionui-session` Codex backend；持久 session anchor，factory 从 snapshot / backend session id 恢复 | Session events 降为 AionCore `AgentStreamEvent`，经 Conversation WS 输出；工具事件在 session reducer 内统一 | CLI sandbox/approval 配置经 Session build inputs；确认仍由 Conversation API 暴露 |
+| Claude     | 与 Codex 相同的 catalog + direct CLI 路由                                                         | `--session-id` 创建，`--resume` 恢复；持久 session anchor                                          | Claude adapter 解析流、tool use、usage、turn result，再降为统一事件                                         | CLI permission mode + Conversation confirmation                                  |
+| CodeBuddy  | catalog 内置 ACP 命令，runtime resolver 后启动                                                    | ACP session/new、session/load 与持久 snapshot                                                      | `AcpAgentManager` 负责 handshake、流和 tool call                                                            | ACP permission request 经统一 confirmation API                                   |
+| Aion Agent | `agent_type = aionrs`，factory 独立构建 `AionrsAgentManager`                                      | Aionrs session store；`AgentInstance` 标为 persistent                                              | 内置 manager 输出相同 `AgentStreamEvent`                                                                    | inline confirmations + Conversation confirmation API                             |
 
 AionCore 已有 `IAgentTask` 和 `AgentInstance`，涵盖 send、cancel、status、subscribe、media capability、mid-turn delivery，并统一 Acp/Aionrs/Session。M1 不新增 Rust agent trait 或 event bus；TypeScript `AgentAdapter` 是现有 Conversation/Agent runtime 的上层端口。
 

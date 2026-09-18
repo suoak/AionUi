@@ -20,16 +20,16 @@ type AgentAdapter = {
 };
 ```
 
-| Contract 语义 | 复用的现有能力 |
-| --- | --- |
-| createSession | `POST /api/conversations`，随后显式 `runtime/ensure`，启动失败不会被隐藏 |
-| resumeSession | `POST /api/conversations/{id}/runtime/ensure` |
-| send | Conversation messages API |
-| cancel | Conversation cancel API，携带 turn id |
-| getStatus | Conversation 的后端 runtime summary；不存在即报错，不猜测 idle |
+| Contract 语义    | 复用的现有能力                                                                          |
+| ---------------- | --------------------------------------------------------------------------------------- |
+| createSession    | `POST /api/conversations`，随后显式 `runtime/ensure`，启动失败不会被隐藏                |
+| resumeSession    | `POST /api/conversations/{id}/runtime/ensure`                                           |
+| send             | Conversation messages API                                                               |
+| cancel           | Conversation cancel API，携带 turn id                                                   |
+| getStatus        | Conversation 的后端 runtime summary；不存在即报错，不猜测 idle                          |
 | approve / reject | 同一 confirmation endpoint，decision 由 provider schema 决定；默认 `always_allow=false` |
-| getUsage | Conversation usage API |
-| subscribe | 订阅现有 `message.stream`，只做事件投影 |
+| getUsage         | Conversation usage API                                                                  |
+| subscribe        | 订阅现有 `message.stream`，只做事件投影                                                 |
 
 `createAgentAdapter(identity, capabilities, port)` 采用依赖注入，Codex、CodeBuddy、Aion Agent、Claude 均使用同一个实现；差异由 identity、capabilities 和 AionCore factory 决定。没有 `CodexAdapter` / `CodeBuddyAdapter` 三份重复代码。
 
@@ -39,12 +39,12 @@ type AgentAdapter = {
 
 M1 声明的是 provider 家族在当前 AionCore 接入上的保守基线，不代表每个模型、账号或会话都已授权；未知 agent 除流通道外全部 false，并且每次返回能力副本，避免一个 provider 修改对象后污染另一个 provider。
 
-| Provider | streaming | file R/W | shell | MCP | skills | subagents | resume | checkpoint | native plan/goal | image |
-| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| Codex | ✓ | ✓ | ✓ | ✓ | ✓ | — | ✓ | — | — | ✓ |
-| Claude | ✓ | ✓ | ✓ | ✓ | ✓ | — | ✓ | — | — | ✓ |
-| CodeBuddy | ✓ | ✓ | ✓ | ✓ | ✓ | — | ✓ | — | — | — |
-| Aion Agent (`aionrs`) | ✓ | ✓ | ✓ | ✓ | ✓ | — | ✓ | — | — | —（模型动态能力） |
+| Provider              | streaming | file R/W | shell | MCP | skills | subagents | resume | checkpoint | native plan/goal |             image |
+| --------------------- | --------: | -------: | ----: | --: | -----: | --------: | -----: | ---------: | ---------------: | ----------------: |
+| Codex                 |         ✓ |        ✓ |     ✓ |   ✓ |      ✓ |         — |      ✓ |          — |                — |                 ✓ |
+| Claude                |         ✓ |        ✓ |     ✓ |   ✓ |      ✓ |         — |      ✓ |          — |                — |                 ✓ |
+| CodeBuddy             |         ✓ |        ✓ |     ✓ |   ✓ |      ✓ |         — |      ✓ |          — |                — |                 — |
+| Aion Agent (`aionrs`) |         ✓ |        ✓ |     ✓ |   ✓ |      ✓ |         — |      ✓ |          — |                — | —（模型动态能力） |
 
 依据来自当前 AionCore factory、session adapters、agent catalog/migrations 与 prompt capability 迁移，而非 CLI 名称猜测。调度器未来必须取后端会话能力与静态声明的交集；静态 true 不能绕过 permission 或 workspace policy。
 
