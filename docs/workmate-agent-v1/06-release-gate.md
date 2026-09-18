@@ -1,62 +1,109 @@
 # M1.5 Release Gate
 
-> 状态：`BLOCKED_EXTERNAL`。代码准备可以在本地完成，但发布、tag、WorkMate pin 与打包 smoke 必须在 AionCore CI 绿灯和公开 Release 存在后执行。本轮不创建 tag、不发布、不修改 pin。
+> 状态：`BLOCKED_EXTERNAL`（2026-09-18）。AionCore 发布链路、WorkMate pin、构建和核心 packaged smoke 已完成；唯一未通过的必选项是 CodeBuddy live smoke。本机 CodeBuddy CLI 可运行，但没有登录凭据，命令明确返回 `Authentication required. Please use /login command to sign in to your account`。
 
-## 版本与范围
+## AionCore 发布证据
 
-- 当前 AionCore manifest：`0.2.12`；WorkMate `package.json#aioncoreVersion`：`v0.2.12`。
-- `release-please-config.json` 使用 `simple` release、`include-v-in-tag: true`，且 pre-1.0 feature 采用 patch bump；因此建议版本为 `0.2.13`，tag 为 `v0.2.13`。
-- 变更 crate：`aionui-api-types`、`aionui-db`、`aionui-conversation`、`aionui-app`。本次没有增加 crate。
-- 数据库升级：`059 -> 060` 新增 `task_sessions`；`060 -> 061` 新增 Plan/Goal artifact、approval、run、acceptance criterion 表。已有 migration 未被修改。
-- AionCore 候选提交：`8ca310e9`（M1/M2 执行合同与并发测试）、`790a91fa`（显式 workspace CI 门禁）。提交仅存在于本地，尚未 push。
+- 开发分支：`feat/task-session-release-gate`
+- 远程候选提交：`6905fcff01ef429dd5543c5845943c8dba39e066`
+- 功能合并提交：`e7251b4e2073b09c532357102c053cbfdeeec14a`
+- Release 提交：`321e9dc268e7c4bc8eaf358dad4a483dde606f4d`
+- Release tag：`v0.2.13`
+- Release：https://github.com/suoak/AionCore/releases/tag/v0.2.13
+- PR CI：https://github.com/suoak/AionCore/actions/runs/35249612218
+- Release commit CI：https://github.com/suoak/AionCore/actions/runs/35288957558
+- Release workflow：https://github.com/suoak/AionCore/actions/runs/35292420454
 
-## 本机证据与阻塞
-
-- `cargo fmt --all -- --check`：可运行。
-- `scripts/migration/check-immutability.test.ps1` 与 `check-immutability.ps1`：通过。
-- `cargo check -p aionui-api-types -p aionui-db -p aionui-conversation`：在编译依赖 build script 前被环境阻塞，明确错误为 MSVC `link.exe` 不存在。
-- Docker daemon、WSL 与 `bash` 均不可用。虽然安装了 GNU Rust target/toolchain，现有 MinGW 8.1 SJLJ 与 Rust 1.95 的 unwind ABI 不兼容，GNU check 同样在链接 build script 时失败。该结果不是测试通过，不能作为发布绿灯。
-
-## CI / 构建机必须通过
-
-在 AionCore PR/commit 上执行 `.github/workflows/ci.yml` 的完整门禁：
+Release commit CI 的以下检查全部通过：
 
 ```text
 cargo fmt --all -- --check
 cargo check --workspace
-cargo clippy --workspace --all-targets -- -D warnings
+cargo clippy --workspace -- -D warnings
 cargo nextest run --workspace
 cargo test --workspace
-bash scripts/migration/check-immutability.test.sh
-bash scripts/migration/check-immutability.sh
+Migration Immutability
 ```
 
-重点验收：fresh DB、`059 -> 060 -> 061`、TaskSession CRUD/归属、状态机、重启只暂停不重放、artifact 版本与 hash 绑定、跨用户拒绝、Plan/Goal 路由。并发审批和并发执行测试使用文件型 SQLite 多连接池；同一个 pending approval 或 execution contract 只能有一个请求成功，失败方必须得到 conflict，且数据库中只能存在一个 run。
+并发和恢复证据包括：
 
-## Release 产物
+```text
+concurrent_approval_claim_allows_exactly_one_resolution
+concurrent_execution_claim_allows_exactly_one_run
+startup_recovery_pauses_only_incomplete_execution
+```
 
-CI 绿后由 release-please 生成版本提交和 `v0.2.13` tag；`.github/workflows/release.yml` 必须成功产出：
+并发测试使用文件型 SQLite、多独立连接、conditional update、transaction 和持久化状态转换，不依赖 process mutex。Migration `060_task_sessions.sql` 和 `061_task_execution_contracts.sql` 已覆盖 fresh DB 与已有 pre-060 DB；`060` 外键指向 `projects(project_id)`。迁移测试包括：
 
-- `aioncore-v0.2.13-x86_64-unknown-linux-gnu.tar.gz`
-- `aioncore-v0.2.13-aarch64-unknown-linux-gnu.tar.gz`
-- `aioncore-v0.2.13-x86_64-apple-darwin.tar.gz`
-- `aioncore-v0.2.13-aarch64-apple-darwin.tar.gz`
-- `aioncore-v0.2.13-x86_64-pc-windows-msvc.zip`
-- `aioncore-v0.2.13-aarch64-pc-windows-msvc.zip`
-- `aioncore-checksums.txt`
+```text
+migration_060_applies_to_the_059_foreign_key_shape
+migration_061_adds_the_plan_goal_contract_tables
+every_table_is_classified_for_aionpro_adoption
+```
 
-Release notes 至少列出：TaskSession migration/API、不可变 Plan/Goal artifact、approval hash 绑定、一次性 run、Goal 验收证据、启动恢复不重放，以及 WorkMate 需要升级 pin。
+## Release artifacts 与 checksum
 
-## WorkMate pin 与 smoke
+现有 Release workflow 成功生成六个平台归档和 `aioncore-checksums.txt`。已下载全部七个文件到独立验证目录，检查 checksum 格式、重复项、缺失项和额外项，并重算每个归档的 SHA-256：
 
-只有公开 Release 的六个平台归档和 checksum 均存在后，才把 `package.json#aioncoreVersion` 从 `v0.2.12` 改为 `v0.2.13`。`scripts/resolveAioncoreVersion.js` 与 `scripts/prepareAioncore.js` 会消费该唯一 pin；release 下载路径会先按精确资产名读取 `aioncore-checksums.txt` 并校验 SHA-256，缺失或不匹配时 fail closed。不得用分支构建或本地二进制伪装正式依赖。
+| Artifact | SHA-256 | 结果 |
+| --- | --- | --- |
+| `aioncore-v0.2.13-x86_64-unknown-linux-gnu.tar.gz` | `cc01675b13ffb19040eed9ea9dc13eb3dd7d139cc0bff0301dda22f668afe138` | PASS |
+| `aioncore-v0.2.13-aarch64-unknown-linux-gnu.tar.gz` | `c361e3b237992b5476b048b56f3afd5c1bcd8034f96f00fdabbaa06bc324a988` | PASS |
+| `aioncore-v0.2.13-x86_64-apple-darwin.tar.gz` | `1f61addc4ac38ff7dc912d05b2aa7cf2ca61da3aef4802fe876814e43a4ae2a7` | PASS |
+| `aioncore-v0.2.13-aarch64-apple-darwin.tar.gz` | `2bcc7def5d58c2e1f2bb17acd82d574c5b3cb3cd5d3ad4c855c3bad1072e2d14` | PASS |
+| `aioncore-v0.2.13-x86_64-pc-windows-msvc.zip` | `25d69a63dadafa2cbb87d94228256ca70c6efa177714bf3bd7838ebbee7d3e15` | PASS |
+| `aioncore-v0.2.13-aarch64-pc-windows-msvc.zip` | `84cf68f350ec8930a94f2e59cdebf23c4e1d31fd3ec3201e1b37ea01abc62282` | PASS |
 
-pin PR 的 smoke 矩阵：
+WorkMate 当前平台的真实下载记录：
 
-1. x64/arm64 目标分别下载 archive，并按 `aioncore-checksums.txt` 校验。
-2. 全新 profile 启动 WorkMate，确认 Core ready、migration 到 061；分别验证 Codex、CodeBuddy、Aion Agent、Claude 的普通 Agent 对话与 MCP 工具调用。
-3. 旧的 059 数据库升级后创建/更新/重启 TaskSession，确认无自动消息或工具重放。
-4. Plan 提交、拒绝、重新提交、批准、执行；篡改 artifact/hash、重复批准、重复执行均失败。
-5. Goal 锁定目标/标准，执行后未验证保持 paused，全部 passed 后 completed。
+```text
+URL: https://github.com/suoak/AionCore/releases/download/v0.2.13/aioncore-v0.2.13-x86_64-pc-windows-msvc.zip
+artifact: aioncore-v0.2.13-x86_64-pc-windows-msvc.zip
+expected SHA-256: 25d69a63dadafa2cbb87d94228256ca70c6efa177714bf3bd7838ebbee7d3e15
+actual SHA-256:   25d69a63dadafa2cbb87d94228256ca70c6efa177714bf3bd7838ebbee7d3e15
+result: PASS; source=download; installed binary reports aioncore 0.2.13
+```
 
-Release Gate 关闭条件是：AionCore CI 绿、Release 公开且产物完整、WorkMate pin PR 合入、目标平台 smoke 有记录。当前四项均未完成，不能声称 M1.5 发布完成。
+`prepare-aioncore.js` 的缺失 checksum 文件、缺失 artifact 项、无效格式和 checksum mismatch 均 fail closed；完整性错误不会降级为未校验的本地 binary fallback。
+
+## WorkMate 验证
+
+- 分支：`build/aioncore-v0.2.13`
+- checksum fail-closed commit：`3ce6dbde6`
+- pin commit：`df949fbad`（`package.json#aioncoreVersion = v0.2.13`）
+- packaged smoke test commit：`b441b6c0a`
+- TypeScript：PASS
+- i18n types / consistency：PASS
+- 相关 Vitest：29 PASS，3 SKIP
+- 完整 Vitest：560 files PASS、1 SKIP；5512 tests PASS、12 SKIP
+- Electron production build：PASS
+- Windows x64 packaged build：PASS
+- unpacked app：`out/win-unpacked/CSBU WorkMate.exe`
+- installer：`out/CSBU-WorkMate-2.3.0-win-x64.exe`
+
+Packaged smoke 使用真实 packaged exe、AionCore v0.2.13 和一次性 user-data sandbox，结果如下：
+
+| 场景 | 结果 |
+| --- | --- |
+| Existing Conversation 打开 | PASS |
+| Agent stream / complete | PASS |
+| Plan reject 后不可执行 | PASS |
+| Plan approve 后只能 claim/run 一次 | PASS |
+| running 重启后变为 paused、无 replay | PASS |
+| waiting approval 重启后按设计变为 paused，approval 仍 pending、run 为 0 | PASS |
+| Goal 部分 criteria passed 时不 completed；全部 passed 后 completed | PASS |
+| Codex 实际执行 | PASS |
+| MCP endpoint（2 个已配置 server） | PASS |
+| Agent Center / Workflow / Skill Evolution 打开 | PASS |
+| Claude / Aion Agent catalog | PRESENT；未单独执行 live turn |
+| CodeBuddy CLI | 2.154.0 可运行，但 live turn 因未登录而 BLOCKED |
+
+## 唯一外部阻塞
+
+CodeBuddy 是本门禁的必选 smoke 项。本机没有 `codebuddy` 原生命令，但标准 `npx -y --package @tencent-ai/codebuddy-code codebuddy` 路径可下载并运行；执行最小无工具 live prompt 时返回认证错误。完成 CodeBuddy 登录后，需要重新运行 CodeBuddy packaged live turn（send / stream / complete）。在该项实际 PASS 前：
+
+```text
+M1.5 = BLOCKED_EXTERNAL
+```
+
+不得因为其他项目已通过而标记 `CLOSED`，也不得开始 M3。
