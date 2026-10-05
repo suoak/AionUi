@@ -27,18 +27,18 @@ afterEach(() => {
 
 describe('AionCore release asset mapping', () => {
   it.each([
-    ['win32', 'x64', 'aioncore-v0.2.13-x86_64-pc-windows-msvc.zip'],
-    ['win32', 'arm64', 'aioncore-v0.2.13-aarch64-pc-windows-msvc.zip'],
-    ['darwin', 'x64', 'aioncore-v0.2.13-x86_64-apple-darwin.tar.gz'],
-    ['darwin', 'arm64', 'aioncore-v0.2.13-aarch64-apple-darwin.tar.gz'],
-    ['linux', 'x64', 'aioncore-v0.2.13-x86_64-unknown-linux-gnu.tar.gz'],
-    ['linux', 'arm64', 'aioncore-v0.2.13-aarch64-unknown-linux-gnu.tar.gz'],
+    ['win32', 'x64', 'aioncore-v0.2.14-x86_64-pc-windows-msvc.zip'],
+    ['win32', 'arm64', 'aioncore-v0.2.14-aarch64-pc-windows-msvc.zip'],
+    ['darwin', 'x64', 'aioncore-v0.2.14-x86_64-apple-darwin.tar.gz'],
+    ['darwin', 'arm64', 'aioncore-v0.2.14-aarch64-apple-darwin.tar.gz'],
+    ['linux', 'x64', 'aioncore-v0.2.14-x86_64-unknown-linux-gnu.tar.gz'],
+    ['linux', 'arm64', 'aioncore-v0.2.14-aarch64-unknown-linux-gnu.tar.gz'],
   ])('maps %s-%s to its release asset', (platform, arch, expected) => {
-    expect(getAssetName(platform, arch, 'v0.2.13')).toBe(expected);
+    expect(getAssetName(platform, arch, 'v0.2.14')).toBe(expected);
   });
 
   it('rejects unsupported targets', () => {
-    expect(getAssetName('freebsd', 'x64', 'v0.2.13')).toBeNull();
+    expect(getAssetName('freebsd', 'x64', 'v0.2.14')).toBeNull();
   });
 });
 
@@ -92,7 +92,7 @@ describe('AionCore checksum verification', () => {
           projectRoot: root,
           platform: 'win32',
           arch: 'x64',
-          version: 'v0.2.13',
+          version: 'v0.2.14',
           downloadRelease: () => {
             throw new AioncoreIntegrityError('checksum file missing');
           },
