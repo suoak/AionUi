@@ -251,7 +251,12 @@ const TaskSessionControl: React.FC<{ conversation: TChatConversation; agentType:
         </Tag>
       ) : null}
       {taskSession && mode !== 'agent' ? (
-        <Button size='mini' type='outline' onClick={() => setContractVisible(true)}>
+        <Button
+          size='mini'
+          type='outline'
+          data-testid='task-session-contract-open'
+          onClick={() => setContractVisible(true)}
+        >
           {t('conversation.taskSession.contract.open')}
         </Button>
       ) : null}
@@ -283,12 +288,13 @@ const TaskSessionControl: React.FC<{ conversation: TChatConversation; agentType:
                 type='primary'
                 loading={saving}
                 disabled={!artifactContent.trim()}
+                data-testid='task-session-automatic-plan-start'
                 onClick={() => void startAutomaticPlanning()}
               >
                 {t('conversation.taskSession.planning.start')}
               </Button>
             ) : (
-              <Typography.Text type='secondary'>
+              <Typography.Text type='secondary' data-testid='task-session-automatic-plan-unavailable'>
                 {t('conversation.taskSession.planning.automaticUnavailable')}
               </Typography.Text>
             )

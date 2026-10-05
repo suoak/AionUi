@@ -546,6 +546,14 @@ jobs:
             Write-Host "Verified executable metadata: $($target.FullName)"
           }
 
+      - name: M3 packaged strict planning release gate (Windows x64)
+        if: >-
+          startsWith(matrix.platform, 'windows') &&
+          matrix.arch == 'x64' &&
+          steps.windows-build.outputs.result == 'success'
+        shell: pwsh
+        run: npm run test:e2e:m3-release-gate
+
       - name: Clean up non-installer Windows artifacts
         if: >-
           startsWith(matrix.platform, 'windows') && inputs.upload_installers_only &&
