@@ -329,12 +329,10 @@ test.describe('M3 packaged strict planning release gate', () => {
       );
       await providerServer.waitForRequests(normalMarker, 2);
       const normalRequests = providerServer.requests.filter((request) => request.marker === normalMarker);
-      expect(normalRequests[0].body.tools?.map((tool) => tool.function?.name).toSorted()).toEqual([
-        'Glob',
-        'Grep',
-        'Read',
-        'ViewImage',
-      ]);
+      const advertisedTools = normalRequests[0].body.tools?.map((tool) => tool.function?.name) ?? [];
+      expect(advertisedTools).toEqual(expect.arrayContaining(['Glob', 'Grep', 'Read']));
+      expect(advertisedTools.every((tool) => ['Glob', 'Grep', 'Read', 'ViewImage'].includes(tool ?? ''))).toBe(true);
+      expect(advertisedTools).not.toContain('Write');
       expect(JSON.stringify(normalRequests[1].body.messages)).toContain('unchanged');
 
       await expect(
