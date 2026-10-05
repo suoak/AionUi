@@ -428,13 +428,13 @@ test.describe('M3 packaged strict planning release gate', () => {
       const restart = await createAionScenario(page, provider, aion!.id, workspace, restartMarker);
       const pendingPlanning = httpPost(page, `/api/task-sessions/${restart.task.id}/automatic-plan`, {
         prompt: `${restartMarker}: inspect the workspace and create a plan.`,
-      });
+      }).catch(() => undefined);
       await providerServer.waitForRequests(restartMarker, 1);
       expect((await httpGet<TaskSession>(page, `/api/task-sessions/${restart.task.id}`)).status).toBe('running');
       const userDataDir = await electronApp.evaluate(({ app }) => app.getPath('userData'));
       await electronApp.close();
       providerServer.release(restartMarker);
-      await pendingPlanning.catch(() => undefined);
+      await pendingPlanning;
 
       const packaged = resolvePackagedExecutable();
       restartedApp = await electron.launch({
