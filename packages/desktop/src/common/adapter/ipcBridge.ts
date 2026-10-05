@@ -64,6 +64,8 @@ import type {
   AcceptanceCriterionStatus,
   AcceptanceEvidence,
   CreateTaskSessionInput,
+  PlanningIsolation,
+  StartAutomaticPlanningInput,
   SubmitTaskArtifactInput,
   SubmitTaskArtifactResponse,
   TaskApproval,
@@ -991,6 +993,13 @@ export const taskSession = {
       : '/api/task-sessions'
   ),
   get: httpGet<TaskSession, { id: string }>((params) => `/api/task-sessions/${encodeURIComponent(params.id)}`),
+  planningIsolation: httpGet<PlanningIsolation, { id: string }>(
+    (params) => `/api/task-sessions/${encodeURIComponent(params.id)}/planning-isolation`
+  ),
+  automaticPlan: httpPost<SubmitTaskArtifactResponse, { id: string; input: StartAutomaticPlanningInput }>(
+    (params) => `/api/task-sessions/${encodeURIComponent(params.id)}/automatic-plan`,
+    (params) => params.input
+  ),
   update: httpPatch<TaskSession, { id: string; updates: UpdateTaskSessionInput }>(
     (params) => `/api/task-sessions/${encodeURIComponent(params.id)}`,
     (params) => params.updates

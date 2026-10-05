@@ -951,6 +951,13 @@
       "fail": "Fail",
       "review": "Needs verification",
       "userEvidence": "Confirmed by the user"
+    },
+    "planning": {
+      "guaranteed": "🛡 Strict read-only planning",
+      "bestEffort": "⚠ Best-effort isolation",
+      "unsupported": "Planning isolation unsupported",
+      "automaticUnavailable": "Automatic planning unavailable",
+      "start": "Start planning"
     }
   }
 }

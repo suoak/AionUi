@@ -13,6 +13,25 @@ export const TASK_SESSION_STATUSES = [
 ] as const;
 export type TaskSessionStatus = (typeof TASK_SESSION_STATUSES)[number];
 
+export type PlanningIsolationLevel = 'guaranteed' | 'best_effort' | 'unsupported';
+export type AgentIntegrationMode =
+  | 'native_sandbox'
+  | 'native_permission_mode'
+  | 'generic_acp'
+  | 'in_process_tool_registry'
+  | 'unknown';
+
+export type PlanningIsolation = {
+  level: PlanningIsolationLevel;
+  integration_mode: AgentIntegrationMode;
+  automatic_planning_enabled: boolean;
+  reason: string;
+  evidence: string[];
+};
+
+export const canStartAutomaticPlanning = (isolation?: PlanningIsolation): boolean =>
+  isolation?.level === 'guaranteed' && isolation.automatic_planning_enabled;
+
 export type TaskSession = {
   id: string;
   title: string;
@@ -118,6 +137,10 @@ export type SubmitTaskArtifactInput = {
   kind: TaskArtifactKind;
   content: string;
   acceptance_criteria?: string[];
+};
+
+export type StartAutomaticPlanningInput = {
+  prompt: string;
 };
 
 export type SubmitTaskArtifactResponse = {

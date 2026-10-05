@@ -951,6 +951,13 @@
       "fail": "不合格",
       "review": "要確認",
       "userEvidence": "ユーザーが確認しました"
+    },
+    "planning": {
+      "guaranteed": "🛡 厳格な読み取り専用プランニング",
+      "bestEffort": "⚠ ベストエフォート分離",
+      "unsupported": "プランニング分離は未対応です",
+      "automaticUnavailable": "自動プランニングは利用できません",
+      "start": "プランニングを開始"
     }
   }
 }

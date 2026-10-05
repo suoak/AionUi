@@ -952,6 +952,13 @@
       "fail": "Fallar",
       "review": "Necesita verificación",
       "userEvidence": "Confirmado por el usuario"
+    },
+    "planning": {
+      "guaranteed": "🛡 Planificación estricta de solo lectura",
+      "bestEffort": "⚠ Aislamiento de mejor esfuerzo",
+      "unsupported": "El aislamiento de planificación no es compatible",
+      "automaticUnavailable": "La planificación automática no está disponible",
+      "start": "Iniciar planificación"
     }
   }
 }

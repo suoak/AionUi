@@ -951,6 +951,13 @@
       "fail": "실패",
       "review": "확인 필요",
       "userEvidence": "사용자가 확인함"
+    },
+    "planning": {
+      "guaranteed": "🛡 엄격한 읽기 전용 계획",
+      "bestEffort": "⚠ 최선형 격리",
+      "unsupported": "계획 격리를 지원하지 않음",
+      "automaticUnavailable": "자동 계획을 사용할 수 없음",
+      "start": "계획 시작"
     }
   }
 }

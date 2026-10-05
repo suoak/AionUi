@@ -951,6 +951,13 @@
       "fail": "失败",
       "review": "需要验证",
       "userEvidence": "用户已确认"
+    },
+    "planning": {
+      "guaranteed": "🛡 严格只读规划",
+      "bestEffort": "⚠ 尽力隔离",
+      "unsupported": "不支持规划隔离",
+      "automaticUnavailable": "自动规划不可用",
+      "start": "开始规划"
     }
   }
 }

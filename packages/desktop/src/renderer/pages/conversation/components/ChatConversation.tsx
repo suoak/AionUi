@@ -6,7 +6,13 @@
 
 import { ipcBridge } from '@/common';
 import type { IConversationMcpStatus, IProvider, TChatConversation, TProviderWithModel } from '@/common/config/storage';
-import type { AcceptanceCriterionStatus, TaskArtifactKind, TaskSessionMode } from '@/common/types/agent/taskSession';
+import type {
+  AcceptanceCriterionStatus,
+  PlanningIsolationLevel,
+  TaskArtifactKind,
+  TaskSessionMode,
+} from '@/common/types/agent/taskSession';
+import { canStartAutomaticPlanning } from '@/common/types/agent/taskSession';
 import { uuid } from '@/common/utils';
 import addChatIcon from '@/renderer/assets/icons/add-chat.svg';
 import { CronJobManager } from '@/renderer/pages/cron';
@@ -78,6 +84,10 @@ const TaskSessionControl: React.FC<{ conversation: TChatConversation; agentType:
   );
   const taskSession = data?.[0];
   const mode = taskSession?.mode;
+  const { data: planningIsolation, mutate: mutatePlanningIsolation } = useSWR(
+    taskSession && mode === 'plan' ? ['taskPlanningIsolation', taskSession.id] : null,
+    () => ipcBridge.taskSession.planningIsolation.invoke({ id: taskSession!.id })
+  );
   const { data: contractData, mutate: mutateContract } = useSWR(
     taskSession && mode !== 'agent' ? ['taskContract', taskSession.id] : null,
     async () => {
@@ -102,8 +112,14 @@ const TaskSessionControl: React.FC<{ conversation: TChatConversation; agentType:
   );
 
   const refreshContract = async () => {
-    await Promise.all([mutate(), mutateContract()]);
+    await Promise.all([mutate(), mutateContract(), mutatePlanningIsolation()]);
   };
+
+  const planningIsolationKey = {
+    guaranteed: 'conversation.taskSession.planning.guaranteed',
+    best_effort: 'conversation.taskSession.planning.bestEffort',
+    unsupported: 'conversation.taskSession.planning.unsupported',
+  } as const satisfies Record<PlanningIsolationLevel, string>;
 
   const handleContractAction = async (action: () => Promise<unknown>) => {
     if (saving) return;
@@ -137,6 +153,16 @@ const TaskSessionControl: React.FC<{ conversation: TChatConversation; agentType:
       });
       setArtifactContent('');
       setCriteriaText('');
+    });
+
+  const startAutomaticPlanning = () =>
+    handleContractAction(async () => {
+      if (!taskSession || !canStartAutomaticPlanning(planningIsolation)) return;
+      await ipcBridge.taskSession.automaticPlan.invoke({
+        id: taskSession.id,
+        input: { prompt: artifactContent },
+      });
+      setArtifactContent('');
     });
 
   const decideApproval = (decision: 'approve' | 'reject') =>
@@ -219,6 +245,11 @@ const TaskSessionControl: React.FC<{ conversation: TChatConversation; agentType:
           {t(`conversation.taskSession.status.${taskSession.status}`)}
         </Tag>
       ) : null}
+      {mode === 'plan' && planningIsolation ? (
+        <Tag size='small' bordered>
+          {t(planningIsolationKey[planningIsolation.level])}
+        </Tag>
+      ) : null}
       {taskSession && mode !== 'agent' ? (
         <Button size='mini' type='outline' onClick={() => setContractVisible(true)}>
           {t('conversation.taskSession.contract.open')}
@@ -246,6 +277,22 @@ const TaskSessionControl: React.FC<{ conversation: TChatConversation; agentType:
             placeholder={t('conversation.taskSession.contract.contentPlaceholder')}
             onChange={setArtifactContent}
           />
+          {mode === 'plan' && planningIsolation ? (
+            canStartAutomaticPlanning(planningIsolation) ? (
+              <Button
+                type='primary'
+                loading={saving}
+                disabled={!artifactContent.trim()}
+                onClick={() => void startAutomaticPlanning()}
+              >
+                {t('conversation.taskSession.planning.start')}
+              </Button>
+            ) : (
+              <Typography.Text type='secondary'>
+                {t('conversation.taskSession.planning.automaticUnavailable')}
+              </Typography.Text>
+            )
+          ) : null}
           {artifactKind === 'goal' ? (
             <Input.TextArea
               value={criteriaText}
@@ -255,7 +302,7 @@ const TaskSessionControl: React.FC<{ conversation: TChatConversation; agentType:
             />
           ) : null}
           <Button
-            type='primary'
+            type={mode === 'plan' && canStartAutomaticPlanning(planningIsolation) ? 'outline' : 'primary'}
             loading={saving}
             disabled={!artifactContent.trim()}
             onClick={() => void submitArtifact()}

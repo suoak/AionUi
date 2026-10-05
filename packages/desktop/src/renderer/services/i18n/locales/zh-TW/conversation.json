@@ -951,6 +951,13 @@
       "fail": "失敗",
       "review": "需要驗證",
       "userEvidence": "使用者已確認"
+    },
+    "planning": {
+      "guaranteed": "🛡 嚴格唯讀規劃",
+      "bestEffort": "⚠ 盡力隔離",
+      "unsupported": "不支援規劃隔離",
+      "automaticUnavailable": "自動規劃無法使用",
+      "start": "開始規劃"
     }
   }
 }

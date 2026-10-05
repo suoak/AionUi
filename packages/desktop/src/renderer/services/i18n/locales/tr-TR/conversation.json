@@ -953,6 +953,13 @@
       "fail": "Başarısız",
       "review": "Doğrulama gerekli",
       "userEvidence": "Kullanıcı tarafından onaylandı"
+    },
+    "planning": {
+      "guaranteed": "🛡 Katı salt okunur planlama",
+      "bestEffort": "⚠ En iyi çaba yalıtımı",
+      "unsupported": "Planlama yalıtımı desteklenmiyor",
+      "automaticUnavailable": "Otomatik planlama kullanılamıyor",
+      "start": "Planlamayı başlat"
     }
   }
 }

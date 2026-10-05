@@ -952,6 +952,13 @@
       "fail": "Fehlgeschlagen",
       "review": "Prüfung erforderlich",
       "userEvidence": "Vom Benutzer bestätigt"
+    },
+    "planning": {
+      "guaranteed": "🛡 Strikte schreibgeschützte Planung",
+      "bestEffort": "⚠ Bestmögliche Isolation",
+      "unsupported": "Planungsisolation wird nicht unterstützt",
+      "automaticUnavailable": "Automatische Planung nicht verfügbar",
+      "start": "Planung starten"
     }
   }
 }
