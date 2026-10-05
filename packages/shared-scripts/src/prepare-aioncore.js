@@ -16,6 +16,7 @@
  */
 
 const { execSync, execFileSync } = require('child_process');
+const crypto = require('crypto');
 const fs = require('fs');
 const os = require('os');
 const path = require('path');
@@ -23,6 +24,13 @@ const { verifyBundledAioncoreResources } = require('./verify-bundled-aioncore-re
 
 const GITHUB_OWNER = 'suoak';
 const GITHUB_REPO = 'AionCore';
+
+class AioncoreIntegrityError extends Error {
+  constructor(message, options) {
+    super(message, options);
+    this.name = 'AioncoreIntegrityError';
+  }
+}
 
 const ACTIONS_ARTIFACT_TARGETS = {
   'darwin-arm64': {
@@ -208,6 +216,51 @@ function getAssetName(platform, arch, tag) {
 
 function getDownloadUrl(assetName, tag) {
   return `https://github.com/${GITHUB_OWNER}/${GITHUB_REPO}/releases/download/${tag}/${assetName}`;
+}
+
+function parseAioncoreChecksum(checksums, assetName) {
+  for (const line of checksums.split(/\r?\n/)) {
+    const match = line.trim().match(/^([a-fA-F0-9]{64})\s+\*?(.+)$/);
+    if (match?.[2] === assetName) return match[1].toLowerCase();
+  }
+  throw new Error(`Checksum entry not found for ${assetName}`);
+}
+
+function sha256File(filePath) {
+  const hash = crypto.createHash('sha256');
+  const descriptor = fs.openSync(filePath, 'r');
+  try {
+    const buffer = Buffer.alloc(64 * 1024);
+    let bytesRead;
+    while ((bytesRead = fs.readSync(descriptor, buffer, 0, buffer.length, null)) > 0) {
+      hash.update(buffer.subarray(0, bytesRead));
+    }
+  } finally {
+    fs.closeSync(descriptor);
+  }
+  return hash.digest('hex');
+}
+
+function verifyAioncoreChecksum(filePath, expectedChecksum) {
+  const actualChecksum = sha256File(filePath);
+  if (actualChecksum !== expectedChecksum.toLowerCase()) {
+    throw new Error(
+      `AionCore checksum mismatch for ${path.basename(filePath)}: expected ${expectedChecksum}, got ${actualChecksum}`
+    );
+  }
+  return actualChecksum;
+}
+
+function verifyDownloadedAioncoreRelease(checksumsPath, archivePath, assetName) {
+  try {
+    const checksums = fs.readFileSync(checksumsPath, 'utf8');
+    const expectedChecksum = parseAioncoreChecksum(checksums, assetName);
+    return verifyAioncoreChecksum(archivePath, expectedChecksum);
+  } catch (error) {
+    throw new AioncoreIntegrityError(`AionCore release integrity verification failed for ${assetName}`, {
+      cause: error,
+    });
+  }
 }
 
 function downloadFile(url, outputPath) {
@@ -409,12 +462,19 @@ function downloadAndExtract(platform, arch, tag) {
   const url = getDownloadUrl(assetName, tag);
   const tempDir = path.join(os.tmpdir(), 'aioncore-prepare', tag, `${platform}-${arch}`);
   const archivePath = path.join(tempDir, assetName);
+  const checksumsPath = path.join(tempDir, 'aioncore-checksums.txt');
   const extractDir = path.join(tempDir, 'extracted');
 
   removeDirectorySafe(tempDir);
   ensureDirectory(tempDir);
 
+  try {
+    downloadFile(getDownloadUrl('aioncore-checksums.txt', tag), checksumsPath);
+  } catch (error) {
+    throw new AioncoreIntegrityError(`AionCore checksum file is unavailable for ${tag}`, { cause: error });
+  }
   downloadFile(url, archivePath);
+  verifyDownloadedAioncoreRelease(checksumsPath, archivePath, assetName);
   extractArchive(archivePath, extractDir, platform);
 
   const binaryName = getBinaryName(platform);
@@ -441,7 +501,7 @@ function downloadAndExtract(platform, arch, tag) {
  * @returns {{ prepared: true; dir: string; sourceType: string }}
  */
 function prepareAioncore(options) {
-  const { projectRoot, platform, arch, version = 'latest' } = options;
+  const { projectRoot, platform, arch, version = 'latest', downloadRelease = downloadAndExtract } = options;
   const runtimeKey = `${platform}-${arch}`;
   const actionsRunId = (process.env.CSBU_WORKMATE_BACKEND_RUN_ID || '').trim();
 
@@ -523,13 +583,14 @@ function prepareAioncore(options) {
   // 2. Download from GitHub releases.
   if (!sourcePath && tag) {
     try {
-      const result = downloadAndExtract(platform, arch, tag);
+      const result = downloadRelease(platform, arch, tag);
       sourcePath = result.binaryPath;
       tempDir = result.tempDir;
       sourceType = 'download';
       sourceDetail = { url: result.url };
       console.log(`  Downloaded from GitHub releases`);
     } catch (error) {
+      if (error instanceof AioncoreIntegrityError) throw error;
       console.warn(`  Download failed: ${error.message}`);
     }
   }
@@ -584,8 +645,13 @@ function prepareAioncore(options) {
 }
 
 module.exports = {
+  AioncoreIntegrityError,
   getActionsArtifactMissingMessage,
   getActionsArtifactName,
+  getAssetName,
+  parseAioncoreChecksum,
   prepareAioncore,
+  verifyAioncoreChecksum,
+  verifyDownloadedAioncoreRelease,
   verifyPreparedAioncoreBundle,
 };

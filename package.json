@@ -61,6 +61,7 @@
     "debug:mcp:validate": "bunx tsx scripts/debug-mcp.ts validate",
     "debug:custom-agent": "bunx tsx scripts/debug-custom-agent.ts",
     "test:e2e": "playwright test --config playwright.config.ts",
+    "test:e2e:m3-release-gate": "cross-env E2E_PACKAGED=1 playwright test --config playwright.config.ts tests/e2e/features/conversations/m3-strict-planning-release-gate.e2e.ts --reporter=list",
     "test:e2e:team": "playwright test --config playwright.config.ts tests/e2e/cases/teams/*.e2e.ts --reporter=list",
     "test:e2e:team:create": "playwright test --config playwright.config.ts tests/e2e/cases/teams/team-create.e2e.ts --reporter=list",
     "test:e2e:team:lifecycle": "playwright test --config playwright.config.ts tests/e2e/cases/teams/team-agent-lifecycle.e2e.ts --reporter=list",
@@ -263,7 +264,7 @@
   "engines": {
     "node": ">=22 <25"
   },
-  "aioncoreVersion": "v0.2.12",
+  "aioncoreVersion": "v0.2.14",
   "electronRebuild": {
     "electronVersion": "^37.10.3"
   },

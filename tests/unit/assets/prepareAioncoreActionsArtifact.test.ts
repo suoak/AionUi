@@ -21,21 +21,22 @@ function writeExecutable(filePath: string, contents: string) {
   chmodSync(filePath, 0o755);
 }
 
-function createFakeToolchain(root: string, { curlFails = false } = {}) {
+function createFakeToolchain(root: string) {
   const binDir = join(root, 'bin');
   mkdirSync(binDir, { recursive: true });
 
   writeExecutable(
     join(binDir, 'curl'),
-    curlFails
-      ? '#!/usr/bin/env bash\nexit 1\n'
-      : `#!/usr/bin/env bash
+    `#!/usr/bin/env bash
 set -euo pipefail
 out=''
+url=''
 while [[ $# -gt 0 ]]; do
   if [[ "$1" == '-o' ]]; then
     shift
     out="$1"
+  elif [[ "$1" == http* ]]; then
+    url="$1"
   fi
   shift || true
 done
@@ -44,7 +45,13 @@ if [[ -z "$out" ]]; then
   exit 0
 fi
 mkdir -p "$(dirname "$out")"
-printf 'archive' > "$out"
+if [[ "$url" == */aioncore-checksums.txt ]]; then
+  printf '%s  %s\n' \
+    '0eb3e36bfb24dcd9bb1d1bece1531216b59539a8fde17ee80224af0653c92aa3' \
+    'aioncore-v0.1.46-x86_64-unknown-linux-gnu.tar.gz' > "$out"
+else
+  printf 'archive' > "$out"
+fi
 `
   );
   writeExecutable(join(binDir, 'wget'), '#!/usr/bin/env bash\nexit 1\n');
@@ -184,7 +191,7 @@ describe('prepare-aioncore GitHub Actions artifact resolver', () => {
     const tmp = mkdtempSync(join(tmpdir(), 'csbu-workmate-local-binary-gate-'));
     const localBinary = join(tmp, 'aioncore');
     writeExecutable(localBinary, '#!/usr/bin/env bash\nexit 0\n');
-    const fakeBin = createFakeToolchain(tmp, { curlFails: true });
+    const fakeBin = createFakeToolchain(tmp);
     const previousPath = process.env.PATH;
     process.env.PATH = `${fakeBin}${delimiter}${previousPath || ''}`;
     process.env.CSBU_WORKMATE_BACKEND_LOCAL_BINARY = localBinary;
@@ -196,6 +203,9 @@ describe('prepare-aioncore GitHub Actions artifact resolver', () => {
           platform: 'linux',
           arch: 'x64',
           version: 'v0.1.46',
+          downloadRelease: () => {
+            throw new Error('simulated release download failure');
+          },
         })
       ).toThrow(/managed-resources\/manifest\.json/);
     } finally {

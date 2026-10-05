@@ -432,6 +432,11 @@ jobs:
               ;;
           esac
 
+      - name: M3 packaged strict planning release gate (Windows x64)
+        if: matrix.platform == 'windows-x64'
+        shell: pwsh
+        run: npm run test:e2e:m3-release-gate
+
       - name: Silent install smoke test (Windows x64)
         if: matrix.platform == 'windows-x64'
         shell: pwsh
