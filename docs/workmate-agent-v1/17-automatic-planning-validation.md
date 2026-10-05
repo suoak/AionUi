@@ -66,15 +66,21 @@ Do not publish a new AionCore version or change the formal WorkMate AionCore pin
 
 Local validation on 2026-10-05:
 
-| Check                                                                     | Result                                                                 |
-| ------------------------------------------------------------------------- | ---------------------------------------------------------------------- |
-| `cargo fmt --all -- --check`                                              | Passed                                                                 |
-| Aion runtime policy-transition test                                       | Passed: 1 test                                                         |
-| `cargo test -p aionui-ai-agent strict_planning`                           | Passed: 4 tests                                                        |
-| `cargo test -p aionui-conversation automatic_planning`                    | Passed: 2 tests                                                        |
-| WorkMate changed-file `oxfmt --check` and `oxlint --quiet`                | Passed                                                                 |
-| `node scripts/check-i18n.js`                                              | Passed for all 13 locales and generated key types                      |
-| `vitest run tests/unit/common-adapter/taskSessionPlanning.test.ts`        | Deferred to CI: local checkout has no installed workspace dependencies |
-| WorkMate TypeScript, complete unit suite, and repository-wide lint/format | Pending GitHub push CI                                                 |
+| Check                                                                     | Result                                                                               |
+| ------------------------------------------------------------------------- | ------------------------------------------------------------------------------------ |
+| `cargo fmt --all -- --check`                                              | Passed                                                                               |
+| Aion runtime policy-transition test                                       | Passed: 1 test                                                                       |
+| `cargo test -p aionui-ai-agent strict_planning`                           | Passed: 4 tests                                                                      |
+| `cargo test -p aionui-conversation automatic_planning`                    | Passed: 2 tests                                                                      |
+| WorkMate changed-file `oxfmt --check` and `oxlint --quiet`                | Passed                                                                               |
+| `node scripts/check-i18n.js`                                              | Passed for all 13 locales and generated key types                                    |
+| `vitest run tests/unit/common-adapter/taskSessionPlanning.test.ts`        | Passed in GitHub Push Checks; local checkout has no installed workspace dependencies |
+| WorkMate TypeScript, complete unit suite, and repository-wide lint/format | Passed in GitHub Push Checks                                                         |
 
-Record the CI run URL here before treating a particular build as release evidence. Until then, the code path may implement the contract, but release readiness remains pending.
+Remote validation on 2026-10-05:
+
+- [AionCore CI run 37283736988](https://github.com/suoak/AionCore/actions/runs/37283736988): passed, including migration immutability, format, clippy, check, nextest, and cargo test.
+- [AionCore Native Presentation run 37283737003](https://github.com/suoak/AionCore/actions/runs/37283737003): passed.
+- [WorkMate Push Checks run 37283723416](https://github.com/suoak/AionUi/actions/runs/37283723416): passed, including lint, format, TypeScript, i18n, and unit tests.
+
+These runs validate the development branches only. Release readiness still requires the normal review and release decision; no AionCore release or formal WorkMate pin change is part of M3.2 implementation.
