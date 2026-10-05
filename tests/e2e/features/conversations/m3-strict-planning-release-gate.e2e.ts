@@ -6,7 +6,7 @@ import path from 'node:path';
 import { _electron as electron, type ElectronApplication, type Page } from 'playwright';
 import { test, expect } from '../../fixtures';
 import { httpGet, httpPost } from '../../helpers/httpBridge';
-import { createAionrsConversationViaBridge, type TProviderWithModel } from '../../helpers/chatAionrs';
+import type { TProviderWithModel } from '../../helpers/chatAionrs';
 import type {
   PlanningIsolation,
   SubmitTaskArtifactResponse,
@@ -204,14 +204,20 @@ async function createAionScenario(
   workspace: string,
   marker: string
 ): Promise<{ conversationId: string; task: TaskSession }> {
-  const conversationId = await createAionrsConversationViaBridge(page, {
+  const conversation = await httpPost<{ id: string }>(page, '/api/conversations', {
+    type: 'aionrs',
     name: `M3 packaged ${marker}`,
-    workspace,
-    provider,
-    sessionMode: 'default',
+    assistant: { id: assistantId },
+    model: {
+      provider_id: provider.id,
+      model: provider.useModel,
+      use_model: provider.useModel,
+    },
+    extra: { workspace, custom_workspace: true, session_mode: 'default' },
   });
-  const task = await createTaskSession(page, conversationId, assistantId, `M3 packaged ${marker}`);
-  return { conversationId, task };
+  expect(conversation.id).toBeTruthy();
+  const task = await createTaskSession(page, conversation.id, assistantId, `M3 packaged ${marker}`);
+  return { conversationId: conversation.id, task };
 }
 
 async function assertUiAutomaticPlanning(page: Page, conversationId: string, enabled: boolean): Promise<void> {
