@@ -369,7 +369,11 @@ test.describe('M3 packaged strict planning release gate', () => {
       ).rejects.toThrow();
       expect(await httpGet<TaskRun[]>(page, `/api/task-sessions/${normal.task.id}/runs`)).toHaveLength(1);
 
-      const verifyDeniedTool = async (label: string, tool: { name: string; input: Record<string, unknown> }) => {
+      const verifyDeniedTool = async (
+        label: string,
+        tool: { name: string; input: Record<string, unknown> },
+        expectedDenial: 'policy_denied' | 'unknown_tool'
+      ) => {
         const marker = `M3-${label}-${Date.now()}`;
         providerServer.register({ marker, tool });
         const scenario = await createAionScenario(page, provider, aion!.id, workspace, marker);
@@ -381,17 +385,19 @@ test.describe('M3 packaged strict planning release gate', () => {
         expect(result.approval.status).toBe('pending');
         await providerServer.waitForRequests(marker, 2);
         const requests = providerServer.requests.filter((request) => request.marker === marker);
-        expect(JSON.stringify(requests[1].body.messages)).toContain('policy_denied');
+        expect(JSON.stringify(requests[1].body.messages)).toContain(expectedDenial);
         expect(sha256(sentinel)).toBe(beforeHash);
       };
-      await verifyDeniedTool('MUTATION', {
-        name: 'Write',
-        input: { file_path: sentinel, content: 'mutated\n' },
-      });
-      await verifyDeniedTool('UNKNOWN', {
-        name: 'UnclassifiedMutationAlias',
-        input: { file_path: sentinel, content: 'mutated\n' },
-      });
+      await verifyDeniedTool(
+        'MUTATION',
+        { name: 'Write', input: { file_path: sentinel, content: 'mutated\n' } },
+        'policy_denied'
+      );
+      await verifyDeniedTool(
+        'UNKNOWN',
+        { name: 'UnclassifiedMutationAlias', input: { file_path: sentinel, content: 'mutated\n' } },
+        'unknown_tool'
+      );
 
       const verifyRuntimeFailsClosed = async (
         runtime: 'codex' | 'claude' | 'codebuddy',
