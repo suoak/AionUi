@@ -20,18 +20,18 @@ Accordingly, this audit records unknowns as **UNVERIFIED**, not as supported cap
 
 ## Capability verdict
 
-| Question | Current verified answer | Evidence |
-| --- | --- | --- |
-| Is current KnowHub access tenant-bound or single-space? | **UNVERIFIED** | No KnowHub client/server contract is present |
-| Can the current user enumerate accessible spaces? | **UNVERIFIED / unavailable in WorkMate** | Generic MCP `tools/list` discovers tools, not user-authorized spaces |
-| Can KnowHub search one explicit space? | **UNVERIFIED** | `KnowledgeScopeRef` is storage-only and has no execution path |
-| Can KnowHub search multiple explicit spaces atomically? | **UNVERIFIED** | No request/response schema exists |
-| Can KnowHub search all knowledge accessible to the caller? | **UNVERIFIED** | No `all_accessible` or equivalent server endpoint exists in the audited source |
-| Does every result carry tenant/space/KB/document provenance? | **UNVERIFIED** | No KnowHub result type exists |
-| Does every result carry version or `updated_at`? | **UNVERIFIED** | No freshness contract exists |
-| Where is permission enforcement performed? | **UNVERIFIED** | Core scopes MCP configuration by local user, but that does not prove remote document authorization |
-| How is MCP token identity mapped to the WorkMate user? | **UNVERIFIED** | OAuth is stored per Core user/server URL; KnowHub subject/tenant mapping is not exposed |
-| Are KnowHub tools provably read-only? | **NO in the current integration** | MCP tool metadata contains only name, description and input schema |
+| Question                                                     | Current verified answer                  | Evidence                                                                                           |
+| ------------------------------------------------------------ | ---------------------------------------- | -------------------------------------------------------------------------------------------------- |
+| Is current KnowHub access tenant-bound or single-space?      | **UNVERIFIED**                           | No KnowHub client/server contract is present                                                       |
+| Can the current user enumerate accessible spaces?            | **UNVERIFIED / unavailable in WorkMate** | Generic MCP `tools/list` discovers tools, not user-authorized spaces                               |
+| Can KnowHub search one explicit space?                       | **UNVERIFIED**                           | `KnowledgeScopeRef` is storage-only and has no execution path                                      |
+| Can KnowHub search multiple explicit spaces atomically?      | **UNVERIFIED**                           | No request/response schema exists                                                                  |
+| Can KnowHub search all knowledge accessible to the caller?   | **UNVERIFIED**                           | No `all_accessible` or equivalent server endpoint exists in the audited source                     |
+| Does every result carry tenant/space/KB/document provenance? | **UNVERIFIED**                           | No KnowHub result type exists                                                                      |
+| Does every result carry version or `updated_at`?             | **UNVERIFIED**                           | No freshness contract exists                                                                       |
+| Where is permission enforcement performed?                   | **UNVERIFIED**                           | Core scopes MCP configuration by local user, but that does not prove remote document authorization |
+| How is MCP token identity mapped to the WorkMate user?       | **UNVERIFIED**                           | OAuth is stored per Core user/server URL; KnowHub subject/tenant mapping is not exposed            |
+| Are KnowHub tools provably read-only?                        | **NO in the current integration**        | MCP tool metadata contains only name, description and input schema                                 |
 
 ## What the existing MCP stack actually proves
 
@@ -175,4 +175,3 @@ For one cross-space topic, the server/provider must return authorized results fr
 M5 can now design and implement the provider-neutral `ContextProvider`, query/result/snapshot contracts, persistence, policy seam and test doubles. A production `KnowHubContextProvider` and real packaged KnowHub E2E remain blocked until the actual KnowHub MCP/API contract and an authorized test environment are available.
 
 This is a capability blocker, not permission to approximate `all_accessible` in the renderer or to claim multi-space support from the existing `knowledge_scopes` array.
-

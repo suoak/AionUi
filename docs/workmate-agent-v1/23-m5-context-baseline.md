@@ -34,23 +34,23 @@ Task execution is connected to the conversation by `TaskSession.conversation_id`
 
 ## Reuse matrix
 
-| Existing capability | Owner | Current behavior | M5 decision |
-| --- | --- | --- | --- |
-| `TaskSession` task/project/conversation identity | AionCore conversation API | Persists and validates user-owned task bindings | Reuse as the query/snapshot ownership root |
-| Conversation workspace resolution | AionCore conversation + agent runtime | Resolves a validated custom or managed workspace before runtime creation | Reuse through a future `WorkspaceContextProvider` |
-| Project and folder identity | AionCore project service | User-scoped project lookup, attached roots and stable project refs | Reuse for deterministic provider discovery |
-| Filesystem providers and filename search | AionCore project runtime | Provider-neutral filesystem operations and bounded filename search | Reuse primitives; do not treat filename search as enterprise knowledge retrieval |
-| Git/SCM provider | AionCore project runtime | Provider-neutral repository discovery, status, diff and original content | Reuse through a future `GitContextProvider` |
-| Conversation history/messages | AionCore conversation service | User-scoped persisted conversation stream and replay | Reuse as conversation context; keep separate from enterprise knowledge provenance |
-| Preset context + prompt pipeline | AionCore agent runtime | First-message hook injects frozen preset context and skills | Extend with a bounded, typed context block after retrieval; do not concatenate provider-specific payloads in the UI |
-| User MCP server catalog | AionCore MCP | User-scoped CRUD, stdio/SSE/HTTP transport, connection test and `tools/list` persistence | Reuse as transport/configuration, not as the Context abstraction |
-| Session MCP injection | AionCore agent runtime | Resolves selected/enabled servers into a neutral session shape; malformed/unavailable servers are skipped | Reuse only after provider capability and policy checks; current best-effort skipping is insufficient for required context |
-| MCP OAuth token store | AionCore MCP | OAuth operations are scoped by Core user and server URL | Reuse transport auth plumbing; identity-to-KnowHub authorization semantics remain unproven |
-| Agent Center `knowledge_scopes` | AionCore + WorkMate types | Persists `knowhub_space_id`, optional node IDs and access string | Treat as dormant metadata only; it has no runtime consumer and must not define M5 authorization |
-| Planning policy | AionCore agent runtime | Allows trusted `McpRead`, denies `McpWrite`, and denies unknown/untrusted metadata | Reuse and extend with explicit `knowledge.read`; strict Aion planning must remain fail closed |
-| Trace/checkpoint/evidence | AionCore conversation + DB | Ordered trace, restart-persistent checkpoints, redacted evidence; DB already permits `mcp` and `knowledge` evidence kinds | Reuse directly for context query/use evidence |
-| Immutable plan + hash-bound approval | AionCore task session | Approval binds the exact plan artifact hash | Reuse unchanged; changed context requiring a changed plan produces a new artifact and approval |
-| Review API/UI | AionCore + WorkMate | Aggregate run review and focused views, with lazy retained-output loading | Extend the existing Review surface with Context/Evidence; do not create a separate KnowHub history system |
+| Existing capability                              | Owner                                 | Current behavior                                                                                                          | M5 decision                                                                                                               |
+| ------------------------------------------------ | ------------------------------------- | ------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------- |
+| `TaskSession` task/project/conversation identity | AionCore conversation API             | Persists and validates user-owned task bindings                                                                           | Reuse as the query/snapshot ownership root                                                                                |
+| Conversation workspace resolution                | AionCore conversation + agent runtime | Resolves a validated custom or managed workspace before runtime creation                                                  | Reuse through a future `WorkspaceContextProvider`                                                                         |
+| Project and folder identity                      | AionCore project service              | User-scoped project lookup, attached roots and stable project refs                                                        | Reuse for deterministic provider discovery                                                                                |
+| Filesystem providers and filename search         | AionCore project runtime              | Provider-neutral filesystem operations and bounded filename search                                                        | Reuse primitives; do not treat filename search as enterprise knowledge retrieval                                          |
+| Git/SCM provider                                 | AionCore project runtime              | Provider-neutral repository discovery, status, diff and original content                                                  | Reuse through a future `GitContextProvider`                                                                               |
+| Conversation history/messages                    | AionCore conversation service         | User-scoped persisted conversation stream and replay                                                                      | Reuse as conversation context; keep separate from enterprise knowledge provenance                                         |
+| Preset context + prompt pipeline                 | AionCore agent runtime                | First-message hook injects frozen preset context and skills                                                               | Extend with a bounded, typed context block after retrieval; do not concatenate provider-specific payloads in the UI       |
+| User MCP server catalog                          | AionCore MCP                          | User-scoped CRUD, stdio/SSE/HTTP transport, connection test and `tools/list` persistence                                  | Reuse as transport/configuration, not as the Context abstraction                                                          |
+| Session MCP injection                            | AionCore agent runtime                | Resolves selected/enabled servers into a neutral session shape; malformed/unavailable servers are skipped                 | Reuse only after provider capability and policy checks; current best-effort skipping is insufficient for required context |
+| MCP OAuth token store                            | AionCore MCP                          | OAuth operations are scoped by Core user and server URL                                                                   | Reuse transport auth plumbing; identity-to-KnowHub authorization semantics remain unproven                                |
+| Agent Center `knowledge_scopes`                  | AionCore + WorkMate types             | Persists `knowhub_space_id`, optional node IDs and access string                                                          | Treat as dormant metadata only; it has no runtime consumer and must not define M5 authorization                           |
+| Planning policy                                  | AionCore agent runtime                | Allows trusted `McpRead`, denies `McpWrite`, and denies unknown/untrusted metadata                                        | Reuse and extend with explicit `knowledge.read`; strict Aion planning must remain fail closed                             |
+| Trace/checkpoint/evidence                        | AionCore conversation + DB            | Ordered trace, restart-persistent checkpoints, redacted evidence; DB already permits `mcp` and `knowledge` evidence kinds | Reuse directly for context query/use evidence                                                                             |
+| Immutable plan + hash-bound approval             | AionCore task session                 | Approval binds the exact plan artifact hash                                                                               | Reuse unchanged; changed context requiring a changed plan produces a new artifact and approval                            |
+| Review API/UI                                    | AionCore + WorkMate                   | Aggregate run review and focused views, with lazy retained-output loading                                                 | Extend the existing Review surface with Context/Evidence; do not create a separate KnowHub history system                 |
 
 ## MCP versus agent-runtime responsibilities
 
@@ -124,18 +124,17 @@ M4 already provides the correct audit root. M5 should persist a compact context 
 
 ## Baseline gaps and gates
 
-| Gap | Consequence | Gate before implementation claim |
-| --- | --- | --- |
-| No KnowHub adapter or contract | No real knowledge retrieval exists | Obtain and test the real MCP/API contract |
-| `knowledge_scopes` is persistence-only | Configuring a space does not affect runtime | Add a runtime consumer behind `ContextProvider` |
-| No trusted MCP tool capability metadata | Tool name/description cannot prove read-only behavior | Signed/server-owned classification or a dedicated audited adapter |
-| No all-accessible contract | Client cannot safely aggregate spaces | Prefer one server-side permission-filtered endpoint |
-| No stable result provenance model | Evidence cannot answer where knowledge came from | Require canonical tenant/space/KB/document identity |
-| No snapshot persistence/linkage | Restart and approval audit cannot reproduce context | Add context snapshot plus immutable plan/run links |
-| Project is not in runtime context | Provider discovery cannot be deterministic | Add task/project/workspace inputs to `ContextResolver` |
-| Best-effort MCP injection skips failures | Required knowledge could disappear silently | Add required `needs_context` fail-closed semantics |
+| Gap                                      | Consequence                                           | Gate before implementation claim                                  |
+| ---------------------------------------- | ----------------------------------------------------- | ----------------------------------------------------------------- |
+| No KnowHub adapter or contract           | No real knowledge retrieval exists                    | Obtain and test the real MCP/API contract                         |
+| `knowledge_scopes` is persistence-only   | Configuring a space does not affect runtime           | Add a runtime consumer behind `ContextProvider`                   |
+| No trusted MCP tool capability metadata  | Tool name/description cannot prove read-only behavior | Signed/server-owned classification or a dedicated audited adapter |
+| No all-accessible contract               | Client cannot safely aggregate spaces                 | Prefer one server-side permission-filtered endpoint               |
+| No stable result provenance model        | Evidence cannot answer where knowledge came from      | Require canonical tenant/space/KB/document identity               |
+| No snapshot persistence/linkage          | Restart and approval audit cannot reproduce context   | Add context snapshot plus immutable plan/run links                |
+| Project is not in runtime context        | Provider discovery cannot be deterministic            | Add task/project/workspace inputs to `ContextResolver`            |
+| Best-effort MCP injection skips failures | Required knowledge could disappear silently           | Add required `needs_context` fail-closed semantics                |
 
 ## Scope boundary
 
 This baseline does not start Agent Router, Enterprise Workflow, native OAuth, full enterprise RBAC, analytics, KnowHub writes or automatic knowledge deposition. M5 remains read-only `Knowledge -> Agent`, using a deterministic resolver plus project mapping and optional user confirmation.
-
