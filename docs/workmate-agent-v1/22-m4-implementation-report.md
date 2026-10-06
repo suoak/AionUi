@@ -38,20 +38,20 @@ AionCore provides aggregate and focused trace/changes/approvals/verification end
 
 ## Verification recorded so far
 
-| Check                                            | Result                       |
-| ------------------------------------------------ | ---------------------------- |
-| AionCore `cargo check -p aionui-app`             | Passed                       |
-| Failed/cancelled terminal review repository test | Passed                       |
-| File/policy/redaction/checkpoint trace tests     | Passed: 2                    |
-| Successful Goal execution Review integration     | Passed                       |
-| Concurrent 24-writer sequence plus reopen test   | Passed earlier in the M4 run |
-| Migration 062 compatibility tests                | Passed earlier in the M4 run |
-| WorkMate TypeScript `tsc --noEmit`               | Passed                       |
-| Changed-file oxlint                              | Passed, 0 warnings/errors    |
-| Review Center DOM/diff retrieval test            | Passed                       |
-| 13-locale i18n structure and generated key sync  | Passed                       |
-| Windows x64 release build with local AionCore    | Passed                       |
-| Packaged strict planning + M4 Review E2E         | Passed: 1                    |
+| Check                                            | Result                                                             |
+| ------------------------------------------------ | ------------------------------------------------------------------ |
+| AionCore `cargo check -p aionui-app`             | Passed                                                             |
+| Failed/cancelled terminal review repository test | Passed                                                             |
+| File/policy/redaction/checkpoint trace tests     | Passed: 2                                                          |
+| Successful Goal execution Review integration     | Passed                                                             |
+| Concurrent 24-writer sequence plus reopen test   | Passed earlier in the M4 run                                       |
+| Migration 062 compatibility tests                | Passed earlier in the M4 run                                       |
+| WorkMate TypeScript `tsc --noEmit`               | Passed                                                             |
+| Changed-file oxlint                              | Passed, 0 warnings/errors                                          |
+| Review Center DOM/diff retrieval test            | Passed                                                             |
+| 13-locale i18n structure and generated key sync  | Passed                                                             |
+| Windows x64 release build with local AionCore    | Passed                                                             |
+| Packaged strict planning + M4 Review E2E         | Passed: 1                                                          |
 | Packaged AionCore SHA-256                        | `CED9D8330A9BEDB54C52DB686406538364AECB757D398C49A8CB961A3680E79F` |
 
 The packaged E2E verifies a completed planning run, approval/hash binding, an execution run with a real read-only tool ALLOW decision, aggregate Review retrieval, Review modal navigation, fail-closed mutation and unknown-tool planning, and persistence of a restart-interrupted planning run as `paused` with `run.interrupted` trace evidence.
