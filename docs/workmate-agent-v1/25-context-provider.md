@@ -2,7 +2,7 @@
 
 ## Status
 
-The provider-neutral M5 foundation is implemented on the AionCore `feat/m5-enterprise-context` branch. It does not claim that KnowHub is available. A production `KnowHubContextProvider` remains blocked by the missing MCP/API contract and authorized integration environment documented in `24-knowhub-capability-audit.md`.
+The provider-neutral M5 foundation was merged into AionCore `main` by PR #134 at commit `205dea9e`. It does not claim that KnowHub is available. A production `KnowHubContextProvider` remains blocked by the missing MCP/API contract and authorized integration environment documented in `24-knowhub-capability-audit.md`.
 
 The contract keeps the Agent runtime independent from KnowHub and leaves room for later `WorkspaceContextProvider`, `GitContextProvider`, Jira, OA, and test-platform adapters.
 
