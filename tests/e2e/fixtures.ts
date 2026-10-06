@@ -196,9 +196,13 @@ function shouldUsePackagedMode(): boolean {
 async function launchApp(): Promise<ElectronApplication> {
   const projectRoot = path.resolve(__dirname, '../..');
   const usePackaged = shouldUsePackagedMode();
+  // Some test runners use Electron itself as their Node host. Never leak that
+  // host-only switch into the application process: a packaged Electron binary
+  // would otherwise start in Node mode and exit before Playwright can attach.
+  const { ELECTRON_RUN_AS_NODE: _electronRunAsNode, ...hostEnv } = process.env;
 
   const commonEnv = {
-    ...process.env,
+    ...hostEnv,
     CSBU_WORKMATE_EXTENSIONS_PATH: process.env.CSBU_WORKMATE_EXTENSIONS_PATH || path.join(projectRoot, 'examples'),
     CSBU_WORKMATE_EXTENSION_STATES_FILE: process.env.CSBU_WORKMATE_EXTENSION_STATES_FILE || e2eStateFile,
     CSBU_WORKMATE_DISABLE_AUTO_UPDATE: '1',
