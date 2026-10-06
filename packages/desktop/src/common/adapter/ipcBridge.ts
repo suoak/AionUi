@@ -72,6 +72,7 @@ import type {
   TaskArtifact,
   TaskRun,
   TaskSession,
+  TaskReview,
   UpdateTaskSessionInput,
 } from '../types/agent/taskSession';
 import {
@@ -1048,6 +1049,9 @@ export const taskSession = {
   ),
   run: {
     list: httpGet<TaskRun[], { id: string }>((params) => `/api/task-sessions/${encodeURIComponent(params.id)}/runs`),
+    review: httpGet<TaskReview, { id: string; run_id: string }>(
+      (params) => `/api/task-sessions/${encodeURIComponent(params.id)}/runs/${encodeURIComponent(params.run_id)}/review`
+    ),
   },
   acceptanceCriterion: {
     list: httpGet<AcceptanceCriterion[], { id: string }>(

@@ -107,13 +107,75 @@ export type TaskRun = {
   id: string;
   task_session_id: string;
   conversation_id: string;
-  plan_artifact_id: string;
+  run_kind: 'planning' | 'execution';
+  plan_artifact_id?: string;
   goal_artifact_id?: string;
-  approval_id: string;
+  approval_id?: string;
   status: TaskRunStatus;
   started_at: number;
   finished_at?: number;
   error_message?: string;
+  agent_id?: string;
+  agent_runtime?: string;
+  model?: string;
+  mode?: TaskSessionMode;
+  planning_isolation?: PlanningIsolationLevel;
+  result_summary?: string;
+  usage?: Record<string, unknown>;
+};
+
+export type TaskTraceEvent = {
+  event_id: string;
+  task_id: string;
+  run_id: string;
+  sequence: number;
+  timestamp: number;
+  event_type: string;
+  payload: Record<string, unknown>;
+};
+
+export type TaskCheckpoint = {
+  id: string;
+  task_id: string;
+  run_id: string;
+  checkpoint_type: string;
+  sequence: number;
+  artifact_id?: string;
+  state: Record<string, unknown>;
+  created_at: number;
+};
+
+export type TaskEvidence = {
+  id: string;
+  task_id: string;
+  run_id: string;
+  trace_event_id?: string;
+  criterion_id?: string;
+  kind: string;
+  summary: string;
+  reference?: string;
+  metadata: Record<string, unknown>;
+  created_at: number;
+};
+
+export type TaskReview = {
+  task: TaskSession;
+  run: TaskRun;
+  artifacts: TaskArtifact[];
+  approvals: TaskApproval[];
+  acceptance_criteria: AcceptanceCriterion[];
+  trace: TaskTraceEvent[];
+  checkpoints: TaskCheckpoint[];
+  evidence: TaskEvidence[];
+  summary: {
+    status: TaskRunStatus;
+    files_changed: number;
+    tool_calls: number;
+    policy_decisions: number;
+    denied_decisions: number;
+    criteria_passed: number;
+    criteria_total: number;
+  };
 };
 
 export type AcceptanceEvidence = {
