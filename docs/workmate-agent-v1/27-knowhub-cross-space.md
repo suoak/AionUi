@@ -37,15 +37,15 @@ Client-supplied subject, tenant, space, or knowledge-base identifiers are select
 
 The adapter may advertise a capability only when the real operation passes the corresponding integration tests:
 
-| Provider capability | Required KnowHub evidence                                                                                          |
-| ------------------- | ------------------------------------------------------------------------------------------------------------------ |
-| `single_scope`      | An authenticated query can select one authorized scope and rejects an unauthorized scope without disclosure        |
-| `multi_scope`       | One request can search an explicit authorized scope set with result-level authorization and provenance             |
-| `all_accessible`    | The server derives and searches the caller's entire readable corpus without a client-maintained space list          |
-| `permission_aware`  | Search and fetch enforce the authenticated subject's current document permission                                   |
-| `provenance`        | Every hit identifies its provider, canonical source, space, knowledge base, and document                            |
-| `freshness`         | Every hit supplies a real version or update time; unavailable values remain null                                    |
-| `content_fetch`     | Fetch reauthorizes the exact source and returns bounded content or a stable reference                               |
+| Provider capability | Required KnowHub evidence                                                                                   |
+| ------------------- | ----------------------------------------------------------------------------------------------------------- |
+| `single_scope`      | An authenticated query can select one authorized scope and rejects an unauthorized scope without disclosure |
+| `multi_scope`       | One request can search an explicit authorized scope set with result-level authorization and provenance      |
+| `all_accessible`    | The server derives and searches the caller's entire readable corpus without a client-maintained space list  |
+| `permission_aware`  | Search and fetch enforce the authenticated subject's current document permission                            |
+| `provenance`        | Every hit identifies its provider, canonical source, space, knowledge base, and document                    |
+| `freshness`         | Every hit supplies a real version or update time; unavailable values remain null                            |
+| `content_fetch`     | Fetch reauthorizes the exact source and returns bounded content or a stable reference                       |
 
 An adapter must advertise only the proven subset. `multi_scope` does not imply `all_accessible`, and transport authentication does not imply `permission_aware`.
 
