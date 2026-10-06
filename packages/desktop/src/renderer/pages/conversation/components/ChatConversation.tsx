@@ -57,6 +57,7 @@ import { isLegacyReadOnlyConversationType } from '../utils/conversationRuntime';
 import { resolveConversationBackend } from '../utils/conversationAssistantIdentity';
 import LegacyReadOnlyConversation from '../platforms/legacy/LegacyReadOnlyConversation';
 import SingleChatEmptyState from './SingleChatEmptyState';
+import TaskReviewPanel from './TaskReviewPanel';
 import { useActiveLease } from '../hooks/useActiveLease';
 // import SkillRuleGenerator from './components/SkillRuleGenerator'; // Temporarily hidden
 
@@ -76,6 +77,7 @@ const TaskSessionControl: React.FC<{ conversation: TChatConversation; agentType:
   const { t } = useTranslation();
   const [saving, setSaving] = useState(false);
   const [contractVisible, setContractVisible] = useState(false);
+  const [reviewVisible, setReviewVisible] = useState(false);
   const [artifactKind, setArtifactKind] = useState<TaskArtifactKind>('plan');
   const [artifactContent, setArtifactContent] = useState('');
   const [criteriaText, setCriteriaText] = useState('');
@@ -259,6 +261,19 @@ const TaskSessionControl: React.FC<{ conversation: TChatConversation; agentType:
         >
           {t('conversation.taskSession.contract.open')}
         </Button>
+      ) : null}
+      {taskSession ? (
+        <Button size='mini' type='outline' data-testid='task-review-open' onClick={() => setReviewVisible(true)}>
+          {t('conversation.taskSession.review.open')}
+        </Button>
+      ) : null}
+      {taskSession ? (
+        <TaskReviewPanel
+          visible={reviewVisible}
+          taskId={taskSession.id}
+          conversationId={conversation.id}
+          onCancel={() => setReviewVisible(false)}
+        />
       ) : null}
       <Modal
         visible={contractVisible}

@@ -11,6 +11,7 @@ import type {
   PlanningIsolation,
   SubmitTaskArtifactResponse,
   TaskApproval,
+  TaskReview,
   TaskRun,
   TaskSession,
 } from '@/common/types/agent/taskSession';
@@ -97,14 +98,16 @@ class ScriptedOpenAiServer {
       return;
     }
 
+    const scenarioRequestIndex = this.requests.filter((item) => item.marker === scenario.marker).length;
     this.requests.push({ marker: scenario.marker, body });
-    const hasToolResult = body.messages?.some((message) => message.role === 'tool') ?? false;
-    if (scenario.hold && !hasToolResult) {
+    if (scenario.hold && scenarioRequestIndex === 0) {
       this.heldResponses.set(scenario.marker, response);
       request.once('aborted', () => this.heldResponses.delete(scenario.marker));
       return;
     }
-    if (scenario.tool && !hasToolResult) {
+    // Exercise one read-only tool in both the planning run and the later
+    // execution run. Each tool result is followed by a plain-text response.
+    if (scenario.tool && (scenarioRequestIndex === 0 || scenarioRequestIndex === 2)) {
       this.sendToolCall(response, scenario.tool.name, scenario.tool.input);
       return;
     }
@@ -342,7 +345,9 @@ test.describe('M3 packaged strict planning release gate', () => {
           artifact_hash: normalResult.artifact.content_hash,
         })
       ).rejects.toThrow();
-      expect(await httpGet<TaskRun[]>(page, `/api/task-sessions/${normal.task.id}/runs`)).toHaveLength(0);
+      const planningRuns = await httpGet<TaskRun[]>(page, `/api/task-sessions/${normal.task.id}/runs`);
+      expect(planningRuns).toHaveLength(1);
+      expect(planningRuns[0]).toEqual(expect.objectContaining({ run_kind: 'planning', status: 'completed' }));
       expect(providerServer.requests.filter((request) => request.marker === normalMarker)).toHaveLength(2);
       await httpPost<TaskApproval>(
         page,
@@ -359,7 +364,7 @@ test.describe('M3 packaged strict planning release gate', () => {
         artifact_hash: normalResult.artifact.content_hash,
       });
       expect(run.status).toBe('completed');
-      await providerServer.waitForRequests(normalMarker, 3);
+      await providerServer.waitForRequests(normalMarker, 4);
       await expect(
         httpPost(page, `/api/task-sessions/${normal.task.id}/execute`, {
           approval_id: normalResult.approval.id,
@@ -367,7 +372,24 @@ test.describe('M3 packaged strict planning release gate', () => {
           artifact_hash: normalResult.artifact.content_hash,
         })
       ).rejects.toThrow();
-      expect(await httpGet<TaskRun[]>(page, `/api/task-sessions/${normal.task.id}/runs`)).toHaveLength(1);
+      expect(await httpGet<TaskRun[]>(page, `/api/task-sessions/${normal.task.id}/runs`)).toHaveLength(2);
+      const review = await httpGet<TaskReview>(page, `/api/task-sessions/${normal.task.id}/runs/${run.id}/review`);
+      expect(review.run.id).toBe(run.id);
+      expect(review.run.status).toBe('completed');
+      expect(review.approvals).toContainEqual(
+        expect.objectContaining({ artifact_hash: normalResult.artifact.content_hash })
+      );
+      expect(review.trace.map((event) => event.event_type)).toEqual(
+        expect.arrayContaining(['run.started', 'tool.allowed', 'run.completed'])
+      );
+      await openRoute(page, `/conversation/${normal.conversationId}`);
+      await page.getByTestId('task-review-open').click();
+      const reviewPanel = page.locator('.arco-modal');
+      await expect(reviewPanel).toBeVisible();
+      await expect(reviewPanel.getByText(/^(Overview|概览)$/)).toBeVisible();
+      await reviewPanel.getByText(/^(Changes|变更)$/).click();
+      await expect(reviewPanel.getByText(/^(Workspace changes: None|工作区变更：无)$/)).toBeVisible();
+      await page.keyboard.press('Escape');
 
       const verifyDeniedTool = async (
         label: string,
@@ -437,11 +459,12 @@ test.describe('M3 packaged strict planning release gate', () => {
       await pendingPlanning;
 
       const packaged = resolvePackagedExecutable();
+      const { ELECTRON_RUN_AS_NODE: _electronRunAsNode, ...restartEnv } = process.env;
       restartedApp = await electron.launch({
         executablePath: packaged.executablePath,
         cwd: packaged.cwd,
         env: {
-          ...process.env,
+          ...restartEnv,
           CSBU_WORKMATE_CDP_PORT: '0',
           CSBU_WORKMATE_DISABLE_AUTO_UPDATE: '1',
           CSBU_WORKMATE_DISABLE_DEVTOOLS: '1',
@@ -454,7 +477,16 @@ test.describe('M3 packaged strict planning release gate', () => {
       const restartedPage = await resolveMainWindow(restartedApp);
       const recovered = await httpGet<TaskSession>(restartedPage, `/api/task-sessions/${restart.task.id}`);
       expect(recovered.status).toBe('paused');
-      expect(await httpGet<TaskRun[]>(restartedPage, `/api/task-sessions/${restart.task.id}/runs`)).toHaveLength(0);
+      const recoveredRuns = await httpGet<TaskRun[]>(restartedPage, `/api/task-sessions/${restart.task.id}/runs`);
+      expect(recoveredRuns).toHaveLength(1);
+      expect(recoveredRuns[0]).toEqual(expect.objectContaining({ run_kind: 'planning', status: 'paused' }));
+      const recoveredReview = await httpGet<TaskReview>(
+        restartedPage,
+        `/api/task-sessions/${restart.task.id}/runs/${recoveredRuns[0].id}/review`
+      );
+      expect(recoveredReview.trace.map((event) => event.event_type)).toEqual(
+        expect.arrayContaining(['run.started', 'run.interrupted'])
+      );
       expect(
         await httpGet<TaskApproval[]>(restartedPage, `/api/task-sessions/${restart.task.id}/approvals`)
       ).toHaveLength(0);
