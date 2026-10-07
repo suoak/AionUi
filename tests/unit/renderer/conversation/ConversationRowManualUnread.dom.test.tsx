@@ -54,6 +54,7 @@ const conversation = {
 const makeProps = (overrides: Partial<ConversationRowProps> = {}): ConversationRowProps => ({
   conversation,
   isGenerating: false,
+  isWaitingConfirmation: false,
   hasUnread: false,
   isManualUnread: false,
   collapsed: false,
@@ -69,6 +70,7 @@ const makeProps = (overrides: Partial<ConversationRowProps> = {}): ConversationR
   onEditStart: vi.fn(),
   onCreateCronTask: vi.fn(),
   onDelete: vi.fn(),
+  onArchive: vi.fn(),
   onTogglePin: vi.fn(),
   onToggleManualUnread: vi.fn(),
   getJobStatus: () => 'none',
@@ -76,6 +78,21 @@ const makeProps = (overrides: Partial<ConversationRowProps> = {}): ConversationR
 });
 
 describe('conversation mark-as-unread menu item', () => {
+  it('keeps Archive visible and places destructive Delete in the menu', async () => {
+    render(<ConversationRow {...makeProps()} />);
+
+    expect(await screen.findByText('conversation.history.archive')).toBeInTheDocument();
+    expect(screen.getByText('conversation.history.deleteTitle')).toBeInTheDocument();
+  });
+
+  it('passes the visible runtime activity state to Delete', async () => {
+    const onDelete = vi.fn();
+    render(<ConversationRow {...makeProps({ isGenerating: true, onDelete })} />);
+
+    fireEvent.click(await screen.findByText('conversation.history.deleteTitle'));
+    await waitFor(() => expect(onDelete).toHaveBeenCalledWith(conversation, true));
+  });
+
   it('offers "Mark as unread" when the conversation is not manually unread', async () => {
     render(<ConversationRow {...makeProps({ isManualUnread: false })} />);
 

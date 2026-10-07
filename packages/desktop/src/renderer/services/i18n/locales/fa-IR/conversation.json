@@ -130,6 +130,8 @@
     "newConversationInProject": "چت جدید در این پروژه",
     "createCronTask": "ایجاد کار زمان‌بندی‌شده",
     "deleteConfirm": "آیا مطمئن هستید که می‌خواهید این چت را حذف کنید؟",
+    "deleteConfirmContent": "این عمل قابل بازگشت نیست.",
+    "activeTaskDeleteBlocked": "این گفتگو هنوز یک وظیفهٔ فعال دارد. پیش از حذف، وظیفه را متوقف کنید.",
     "exportTargetFolder": "خروجی به پوشه",
     "removeProject": "حذف پروژه",
     "exportFailed": "خروجی ناموفق بود",

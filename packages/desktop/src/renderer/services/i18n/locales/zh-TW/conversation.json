@@ -130,6 +130,8 @@
     "newConversationInProject": "在此專案中新建對話",
     "createCronTask": "建立排程任務",
     "deleteConfirm": "確定要刪除此對話嗎？",
+    "deleteConfirmContent": "此操作無法復原。",
+    "activeTaskDeleteBlocked": "此對話仍有進行中的任務。請先停止任務，再刪除對話。",
     "exportTargetFolder": "Export To Folder",
     "removeProject": "移除專案",
     "exportFailed": "Export failed",

@@ -130,6 +130,8 @@
     "newConversationInProject": "在此项目中新建对话",
     "createCronTask": "创建定时任务",
     "deleteConfirm": "确定删除该对话吗？",
+    "deleteConfirmContent": "此操作无法撤销。",
+    "activeTaskDeleteBlocked": "此对话仍有正在进行的任务。请先停止任务，再删除对话。",
     "exportTargetFolder": "导出到文件夹",
     "removeProject": "移除项目",
     "exportFailed": "导出失败",

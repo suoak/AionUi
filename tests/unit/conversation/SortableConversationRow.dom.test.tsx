@@ -48,7 +48,9 @@ const onConversationClick = vi.fn();
 const rowProps: ConversationRowProps = {
   conversation: pinnedConversation,
   isGenerating: false,
+  isWaitingConfirmation: false,
   hasUnread: false,
+  isManualUnread: false,
   collapsed: false,
   tooltipEnabled: false,
   batchMode: false,
@@ -62,7 +64,9 @@ const rowProps: ConversationRowProps = {
   onEditStart: vi.fn(),
   onCreateCronTask: vi.fn(),
   onDelete: vi.fn(),
+  onArchive: vi.fn(),
   onTogglePin: vi.fn(),
+  onToggleManualUnread: vi.fn(),
   getJobStatus: () => 'none',
 };
 

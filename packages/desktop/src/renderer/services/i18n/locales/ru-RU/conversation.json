@@ -132,6 +132,8 @@
     "newConversationInProject": "Новая беседа в этом проекте",
     "createCronTask": "Создать запланированную задачу",
     "deleteConfirm": "Вы уверены, что хотите удалить этот чат?",
+    "deleteConfirmContent": "Это действие нельзя отменить.",
+    "activeTaskDeleteBlocked": "В этом разговоре ещё есть активная задача. Остановите её перед удалением.",
     "exportTargetFolder": "Экспортировать в папку",
     "removeProject": "Удалить проект",
     "exportFailed": "Ошибка экспорта",

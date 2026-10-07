@@ -130,6 +130,8 @@
     "newConversationInProject": "Nouveau chat dans ce projet",
     "createCronTask": "Créer une tâche planifiée",
     "deleteConfirm": "Êtes-vous sûr de vouloir supprimer ce chat ?",
+    "deleteConfirmContent": "Cette action est irréversible.",
+    "activeTaskDeleteBlocked": "Cette conversation contient encore une tâche active. Arrêtez la tâche avant de la supprimer.",
     "exportTargetFolder": "Exporter vers le dossier",
     "removeProject": "Supprimer le projet",
     "exportFailed": "Échec de l'export",

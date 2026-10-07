@@ -130,6 +130,8 @@
     "newConversationInProject": "Novo chat neste projeto",
     "createCronTask": "Criar tarefa agendada",
     "deleteConfirm": "Tem certeza de que deseja excluir este chat?",
+    "deleteConfirmContent": "Esta ação não pode ser desfeita.",
+    "activeTaskDeleteBlocked": "Esta conversa ainda tem uma tarefa ativa. Interrompa a tarefa antes de excluí-la.",
     "exportTargetFolder": "Exportar Para a Pasta",
     "removeProject": "Remover projeto",
     "exportFailed": "A exportação falhou",
