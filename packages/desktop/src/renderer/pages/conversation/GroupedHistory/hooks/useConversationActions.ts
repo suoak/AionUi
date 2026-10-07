@@ -5,6 +5,7 @@
  */
 
 import { ipcBridge } from '@/common';
+import { isBackendHttpError } from '@/common/adapter/httpBridge';
 import type { TChatConversation } from '@/common/config/storage';
 import { requestConversationSendBoxPrefill } from '@/renderer/hooks/chat/useSendBoxDraft';
 import { refreshConversationCache } from '@/renderer/pages/conversation/utils/conversationCache';
@@ -87,12 +88,52 @@ export const useConversationActions = ({
       }
 
       emitter.emit('conversation.deleted', conversation_id);
+      emitter.emit('chat.history.refresh');
       if (id === conversation_id) {
         void navigate('/');
       }
       return true;
     },
     [id, navigate]
+  );
+
+  const handleDelete = useCallback(
+    (conversation: TChatConversation, active: boolean) => {
+      setDropdownVisibleId(null);
+      if (active) {
+        Message.error(t('conversation.history.activeTaskDeleteBlocked'));
+        return;
+      }
+
+      Modal.confirm({
+        title: t('conversation.history.deleteConfirm'),
+        content: t('conversation.history.deleteConfirmContent'),
+        okText: t('conversation.history.confirmDelete'),
+        cancelText: t('common.cancel'),
+        okButtonProps: { status: 'danger' },
+        onOk: async () => {
+          try {
+            const deleted = await removeConversation(conversation.id);
+            if (deleted) {
+              Message.success(t('conversation.history.deleteSuccess'));
+            } else {
+              Message.error(t('conversation.history.deleteFailed'));
+            }
+          } catch (error) {
+            if (isBackendHttpError(error) && error.code === 'CONVERSATION_ACTIVE') {
+              Message.error(t('conversation.history.activeTaskDeleteBlocked'));
+              return;
+            }
+            console.error('Failed to delete conversation:', error);
+            Message.error(t('conversation.history.deleteFailed'));
+          }
+        },
+        style: { borderRadius: '12px' },
+        alignCenter: true,
+        getPopupContainer: () => document.body,
+      });
+    },
+    [removeConversation, t]
   );
 
   const handleBatchArchive = useCallback(() => {
@@ -325,6 +366,7 @@ export const useConversationActions = ({
     handleConversationClick,
     handleBatchArchive,
     handleArchive,
+    handleDelete,
     handleEditStart,
     handleRenameConfirm,
     handleRenameCancel,

@@ -1,5 +1,37 @@
 # Changelog
 
+## [2.4.0](https://github.com/suoak/AionUi/compare/v2.3.0...v2.4.0) (2026-10-08)
+
+### Desktop
+
+#### Features
+
+- **codex:** add Codex-managed ChatGPT authentication, native thread resume, dynamic model and reasoning selection, account usage, rate limits, and structured diagnostics.
+
+#### Bug Fixes
+
+- **conversation:** restore permanent deletion to the Recent Conversation menu with explicit confirmation and fail-closed active-task handling.
+- **conversation:** remove WorkMate-owned task sessions, runs, runtime bindings, traces, reviews, checkpoints, evidence, and approvals without touching Codex-owned credentials or private thread storage.
+
+#### 内网更新说明
+
+<!-- internal-release-notes:start -->
+
+**由运营管理部提供**
+
+- 新增 Codex 管理的 ChatGPT 登录、原生会话恢复、动态模型与推理强度选择，并提供用量、限额和诊断信息。
+- 最近对话菜单恢复“删除”，删除前必须二次确认；存在活动任务时会拒绝删除。
+- 完成的对话删除时会同步清理 WorkMate 自身管理的任务与审查记录，不操作 Codex 凭据或私有会话存储。
+
+<!-- internal-release-notes:end -->
+
+### Core ([v0.2.17](https://github.com/suoak/AionCore/releases/tag/v0.2.17))
+
+- Reject conversation deletion while a runtime or task session is active.
+- Delete the completed WorkMate execution aggregate transactionally before deleting its conversation.
+
+---
+
 ## [2.3.0](https://github.com/suoak/AionUi/compare/v2.2.10...v2.3.0) (2026-09-14)
 
 ### Desktop

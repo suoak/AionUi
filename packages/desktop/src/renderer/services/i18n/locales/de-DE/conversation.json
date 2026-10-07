@@ -130,6 +130,8 @@
     "newConversationInProject": "Neuer Chat in diesem Projekt",
     "createCronTask": "Geplante Aufgabe erstellen",
     "deleteConfirm": "Diesen Chat wirklich löschen?",
+    "deleteConfirmContent": "Diese Aktion kann nicht rückgängig gemacht werden.",
+    "activeTaskDeleteBlocked": "Diese Unterhaltung enthält noch eine aktive Aufgabe. Beenden Sie die Aufgabe vor dem Löschen.",
     "exportTargetFolder": "In Ordner exportieren",
     "removeProject": "Projekt entfernen",
     "exportFailed": "Export fehlgeschlagen",

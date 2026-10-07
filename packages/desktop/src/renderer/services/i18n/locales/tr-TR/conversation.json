@@ -130,6 +130,8 @@
     "newConversationInProject": "Bu projede yeni konuşma",
     "createCronTask": "Zamanlanmış Görev Oluştur",
     "deleteConfirm": "Bu sohbeti silmek istediğinizden emin misiniz?",
+    "deleteConfirmContent": "Bu işlem geri alınamaz.",
+    "activeTaskDeleteBlocked": "Bu konuşmada hâlâ etkin bir görev var. Silmeden önce görevi durdurun.",
     "exportTargetFolder": "Export To Folder",
     "removeProject": "Projeyi kaldır",
     "exportFailed": "Export failed",

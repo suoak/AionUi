@@ -130,6 +130,8 @@
     "newConversationInProject": "このプロジェクト内で新しい会話",
     "createCronTask": "スケジュールタスクを作成",
     "deleteConfirm": "このチャットを削除してもよろしいですか？",
+    "deleteConfirmContent": "この操作は元に戻せません。",
+    "activeTaskDeleteBlocked": "この会話には実行中のタスクがあります。削除する前にタスクを停止してください。",
     "exportTargetFolder": "Export To Folder",
     "removeProject": "プロジェクトを削除",
     "exportFailed": "Export failed",

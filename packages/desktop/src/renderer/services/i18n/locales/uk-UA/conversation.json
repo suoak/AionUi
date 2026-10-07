@@ -132,6 +132,8 @@
     "newConversationInProject": "Нова розмова в цьому проєкті",
     "createCronTask": "Створити заплановане завдання",
     "deleteConfirm": "Ви впевнені, що хочете видалити цей чат?",
+    "deleteConfirmContent": "Цю дію неможливо скасувати.",
+    "activeTaskDeleteBlocked": "У цій розмові ще є активне завдання. Зупиніть його перед видаленням.",
     "exportTargetFolder": "Експортувати до папки",
     "removeProject": "Видалити проєкт",
     "exportFailed": "Помилка експорту",

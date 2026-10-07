@@ -5,11 +5,13 @@
  */
 
 import type { TChatConversation } from '@/common/config/storage';
-import { act, renderHook } from '@testing-library/react';
+import { act, renderHook, waitFor } from '@testing-library/react';
+import { Message, Modal } from '@arco-design/web-react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-const { navigateMock, requestPrefillMock, routeState } = vi.hoisted(() => ({
+const { navigateMock, removeMock, requestPrefillMock, routeState } = vi.hoisted(() => ({
   navigateMock: vi.fn(),
+  removeMock: vi.fn(),
   requestPrefillMock: vi.fn(),
   routeState: { id: 'current-conversation' as string | undefined },
 }));
@@ -32,7 +34,7 @@ vi.mock('react-router-dom', async () => {
 vi.mock('@/common', () => ({
   ipcBridge: {
     conversation: {
-      remove: { invoke: vi.fn() },
+      remove: { invoke: removeMock },
       update: { invoke: vi.fn() },
     },
   },
@@ -77,6 +79,9 @@ const renderActions = (onSessionClick?: () => void) =>
       setSelectedConversationIds: vi.fn(),
       toggleSelectedConversation: vi.fn(),
       markAsRead: vi.fn(),
+      markManualUnread: vi.fn(),
+      clearManualUnread: vi.fn(),
+      isManualUnread: vi.fn(() => false),
     })
   );
 
@@ -124,4 +129,45 @@ describe('create scheduled task conversation action', () => {
       });
     }
   );
+});
+
+describe('delete conversation action', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    removeMock.mockResolvedValue(true);
+  });
+
+  it('blocks a visibly active conversation before confirmation', () => {
+    const confirm = vi.spyOn(Modal, 'confirm');
+    const error = vi.spyOn(Message, 'error').mockImplementation(() => ({ close: vi.fn() }) as never);
+    const { result } = renderActions();
+
+    act(() => result.current.handleDelete(makeConversation('active', 'acp'), true));
+
+    expect(confirm).not.toHaveBeenCalled();
+    expect(error).toHaveBeenCalledWith('conversation.history.activeTaskDeleteBlocked');
+    expect(removeMock).not.toHaveBeenCalled();
+  });
+
+  it('shows confirmation and deletes only after confirmation', async () => {
+    let onOk: (() => Promise<void>) | undefined;
+    vi.spyOn(Modal, 'confirm').mockImplementation((config) => {
+      onOk = config.onOk as () => Promise<void>;
+      return { close: vi.fn(), update: vi.fn() } as never;
+    });
+    vi.spyOn(Message, 'success').mockImplementation(() => ({ close: vi.fn() }) as never);
+    const { result } = renderActions();
+
+    act(() => result.current.handleDelete(makeConversation('completed', 'acp'), false));
+
+    expect(removeMock).not.toHaveBeenCalled();
+    expect(Modal.confirm).toHaveBeenCalledWith(
+      expect.objectContaining({
+        title: 'conversation.history.deleteConfirm',
+        content: 'conversation.history.deleteConfirmContent',
+      })
+    );
+    await act(async () => onOk?.());
+    await waitFor(() => expect(removeMock).toHaveBeenCalledWith({ id: 'completed' }));
+  });
 });
