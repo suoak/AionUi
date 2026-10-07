@@ -88,6 +88,7 @@ export const useConversationActions = ({
       }
 
       emitter.emit('conversation.deleted', conversation_id);
+      emitter.emit('chat.history.refresh');
       if (id === conversation_id) {
         void navigate('/');
       }
