@@ -15,17 +15,17 @@ The verified runtime baseline is `codex-cli 0.160.1`. Its generated protocol sch
 
 ## Baseline audit answers
 
-| # | Question | Repository answer |
-| - | -------- | ----------------- |
-| 1 | What is the WorkMate authority? | `TaskSession` is the business task and remains authoritative for objective, mode, approval, status, runs, trace, evidence, and review. A conversation is its interaction binding. |
-| 2 | What is the Codex continuation identity? | A Codex Thread ID is the opaque runtime continuation anchor. It is stored in the conversation's `acp_session.session_id` and projected as `TaskSession.runtime_binding.runtime_session_id`; it is never a TaskSession ID. |
-| 3 | How is a thread created? | A fresh `SessionSpec` starts `codex app-server`, initializes it, and calls `thread/start`. The returned ID is kept in memory, but becomes a durable binding only when the first `turn/started` proves that the thread has a rollout. |
-| 4 | How is a thread resumed? | A rebuilt process calls `thread/resume` with only the persisted `threadId` and conservative startup configuration. WorkMate does not send stored messages as replacement history and does not use the schema's unstable cloud-only `history` input. |
-| 5 | What happens to a zero-turn thread? | It is not advertised as durable. An exact-version probe created a thread, restarted app-server before any turn, and received `-32600 no rollout found for thread id` on resume. For `0.160.1`, zero-turn resume is therefore `VERSION_SPECIFIC / NOT_RESUMABLE`. |
-| 6 | How do turns map to runs? | `turn/start` is the native unit of one Codex interaction. Planning and approved execution each already own one `TaskRun`, so their Codex turn is linked into that run's Trace. Ordinary chat turns remain conversation turns and do not create a duplicate Run abstraction. |
-| 7 | How is terminal state decided? | `turn/completed.turn.status` is authoritative: `completed`, `failed`, and `interrupted` map to completed, failed, and cancelled outcomes. Receipt of the notification alone is not success. |
-| 8 | How does cancellation work? | The adapter records `turn/started.turn.id` and sends `turn/interrupt {threadId, turnId}`. A duplicate cancel with no active turn is an idempotent no-op. Process kill is only the bounded timeout/restart fallback, never the first cancellation mechanism. |
-| 9 | What survives failures and restart? | TaskSession, conversation history, artifacts, Trace, and the Thread binding survive process/app restart. A missing Thread marks the binding `resume_failed`; WorkMate neither deletes the TaskSession nor silently starts a replacement thread or replays a possibly mutating turn. |
+| #   | Question                                 | Repository answer                                                                                                                                                                                                                                                                   |
+| --- | ---------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1   | What is the WorkMate authority?          | `TaskSession` is the business task and remains authoritative for objective, mode, approval, status, runs, trace, evidence, and review. A conversation is its interaction binding.                                                                                                   |
+| 2   | What is the Codex continuation identity? | A Codex Thread ID is the opaque runtime continuation anchor. It is stored in the conversation's `acp_session.session_id` and projected as `TaskSession.runtime_binding.runtime_session_id`; it is never a TaskSession ID.                                                           |
+| 3   | How is a thread created?                 | A fresh `SessionSpec` starts `codex app-server`, initializes it, and calls `thread/start`. The returned ID is kept in memory, but becomes a durable binding only when the first `turn/started` proves that the thread has a rollout.                                                |
+| 4   | How is a thread resumed?                 | A rebuilt process calls `thread/resume` with only the persisted `threadId` and conservative startup configuration. WorkMate does not send stored messages as replacement history and does not use the schema's unstable cloud-only `history` input.                                 |
+| 5   | What happens to a zero-turn thread?      | It is not advertised as durable. An exact-version probe created a thread, restarted app-server before any turn, and received `-32600 no rollout found for thread id` on resume. For `0.160.1`, zero-turn resume is therefore `VERSION_SPECIFIC / NOT_RESUMABLE`.                    |
+| 6   | How do turns map to runs?                | `turn/start` is the native unit of one Codex interaction. Planning and approved execution each already own one `TaskRun`, so their Codex turn is linked into that run's Trace. Ordinary chat turns remain conversation turns and do not create a duplicate Run abstraction.         |
+| 7   | How is terminal state decided?           | `turn/completed.turn.status` is authoritative: `completed`, `failed`, and `interrupted` map to completed, failed, and cancelled outcomes. Receipt of the notification alone is not success.                                                                                         |
+| 8   | How does cancellation work?              | The adapter records `turn/started.turn.id` and sends `turn/interrupt {threadId, turnId}`. A duplicate cancel with no active turn is an idempotent no-op. Process kill is only the bounded timeout/restart fallback, never the first cancellation mechanism.                         |
+| 9   | What survives failures and restart?      | TaskSession, conversation history, artifacts, Trace, and the Thread binding survive process/app restart. A missing Thread marks the binding `resume_failed`; WorkMate neither deletes the TaskSession nor silently starts a replacement thread or replays a possibly mutating turn. |
 
 ## Contract
 
@@ -51,14 +51,14 @@ Deleting or losing a Codex Thread must never delete its TaskSession. Clearing a 
 
 ### Protocol mapping
 
-| Codex method/event | WorkMate owner | Durable effect |
-| ------------------ | -------------- | -------------- |
-| `thread/start` / `thread/started` | `CodexConnection` | In-memory candidate only until the first turn starts |
-| `thread/resume {threadId}` | `CodexConnection` | Reattaches the stored continuation; never reconstructs from UI history or a path |
-| `turn/start {threadId,input}` | `AgentAdapter` / conversation turn | Starts one serialized operation on the thread |
-| `turn/started {threadId,turn.id}` | session pump | Atomically binds the first durable Thread ID and writes `runtime.turn.bound` into an attached TaskRun Trace |
-| `turn/completed {threadId,turn.status}` | session pump / relay | Settles the conversation turn and attached TaskRun according to the actual status |
-| `turn/interrupt {threadId,turnId}` | cancel path | Cancels exactly the active turn; repeated cancellation is safe |
+| Codex method/event                      | WorkMate owner                     | Durable effect                                                                                              |
+| --------------------------------------- | ---------------------------------- | ----------------------------------------------------------------------------------------------------------- |
+| `thread/start` / `thread/started`       | `CodexConnection`                  | In-memory candidate only until the first turn starts                                                        |
+| `thread/resume {threadId}`              | `CodexConnection`                  | Reattaches the stored continuation; never reconstructs from UI history or a path                            |
+| `turn/start {threadId,input}`           | `AgentAdapter` / conversation turn | Starts one serialized operation on the thread                                                               |
+| `turn/started {threadId,turn.id}`       | session pump                       | Atomically binds the first durable Thread ID and writes `runtime.turn.bound` into an attached TaskRun Trace |
+| `turn/completed {threadId,turn.status}` | session pump / relay               | Settles the conversation turn and attached TaskRun according to the actual status                           |
+| `turn/interrupt {threadId,turnId}`      | cancel path                        | Cancels exactly the active turn; repeated cancellation is safe                                              |
 
 ### Resume and failure rules
 
