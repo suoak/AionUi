@@ -25,10 +25,11 @@ This document freezes the official WorkMate `v2.4.0` Windows x64 package for the
 | WorkMate tag                        | `v2.4.0`                                                                                  |
 | WorkMate merged-main gate           | [Push Checks 37651166730](https://github.com/suoak/AionUi/actions/runs/37651166730)       |
 | WorkMate release workflow           | [Build and Release 37651991570](https://github.com/suoak/AionUi/actions/runs/37651991570) |
+| WorkMate final-asset workflow       | [Build and Release 37660674214](https://github.com/suoak/AionUi/actions/runs/37660674214) |
 | WorkMate release URL                | [`v2.4.0`](https://github.com/suoak/AionUi/releases/tag/v2.4.0)                           |
 | Windows installer                   | `CSBU-WorkMate-2.4.0-win-x64.exe`                                                         |
-| Installer size                      | `204187595` bytes                                                                         |
-| Installer SHA-256                   | `8c04c76a94eb8f8fc8c10f6e17df7e88ea12f56c595484866d157b8d1b0efecc`                        |
+| Installer size                      | `204187617` bytes                                                                         |
+| Installer SHA-256                   | `e8584f4581e6e4d8842e377f8607cd645bac983b2b57724c48e1353863fc71c9`                        |
 | AionCore version                    | `v0.2.17`                                                                                 |
 | AionCore release commit             | `6fa1d3e83f8f8ec1cf07b74dd092d7f122e6ab10`                                                |
 | AionCore release                    | [`v0.2.17`](https://github.com/suoak/AionCore/releases/tag/v0.2.17)                       |
@@ -64,11 +65,13 @@ The Windows x64 AionCore archive is `aioncore-v0.2.17-x86_64-pc-windows-msvc.zip
 | Release changelog repair     | PR [#172](https://github.com/suoak/AionUi/pull/172)                                                             | Packaging-only repair; passed and merged                                                         |
 | Final merged-main validation | [Push Checks 37651166730](https://github.com/suoak/AionUi/actions/runs/37651166730)                             | Passed                                                                                           |
 | Official release build       | [Build and Release 37651991570, attempt 2](https://github.com/suoak/AionUi/actions/runs/37651991570/attempts/2) | Passed; all platform builds and both Windows fresh-install smoke jobs passed                     |
-| Published updater metadata   | [Build and Release 37660674214](https://github.com/suoak/AionUi/actions/runs/37660674214)                       | Signed updater metadata verification passed after publication                                    |
+| Release-event final assets   | [Build and Release 37660674214](https://github.com/suoak/AionUi/actions/runs/37660674214)                       | Passed; signing self-check, all builds, both Windows install smokes, and final upload passed     |
 
 The first release attempt [37645778050](https://github.com/suoak/AionUi/actions/runs/37645778050) built every platform and passed both Windows fresh-install smoke jobs, then failed closed before creating a release because `CHANGELOG.md` lacked the `2.4.0` section. PR #172 repaired only that packaging metadata. No package from the failed attempt is an acceptance candidate.
 
-The successful release published 31 assets. The Windows x64 installer size and SHA-256 above were independently verified after downloading the published asset; both matched GitHub's immutable asset metadata.
+The successful release published 31 assets. Publication triggered the configured release-event workflow, which rebuilt and replaced the release assets once. The frozen identity above is the final public asset produced by that completed workflow, not the superseded initial upload.
+
+The final Windows x64 installer was independently downloaded after workflow `37660674214` completed. Its byte size and SHA-256 matched GitHub's asset metadata, and its independently computed SHA-512 matched the final public `latest.yml` entry. The workflow's signing step also verified every generated manifest/signature pair with the configured Ed25519 public key before the final upload.
 
 ## Conversation delete release inclusion
 

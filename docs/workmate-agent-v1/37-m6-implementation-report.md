@@ -69,7 +69,7 @@ The detailed ownership and FK table is in [38-conversation-delete-hotfix.md](./3
 
 AionCore `v0.2.17` is published from `6fa1d3e83f8f8ec1cf07b74dd092d7f122e6ab10`. Its official release workflow built six platform archives, and every archive SHA-256 matched `aioncore-checksums.txt`.
 
-WorkMate [`v2.4.0`](https://github.com/suoak/AionUi/releases/tag/v2.4.0) is published from `d7e6961838fb3348fd9f4e380ad4a4808eb893bb`. PR #171, the final merged-main gates, release attempt 2, both Windows fresh-install smoke jobs, and the post-publication updater-metadata signature check passed. The immutable Windows installer identity is tracked in document 36.
+WorkMate [`v2.4.0`](https://github.com/suoak/AionUi/releases/tag/v2.4.0) is published from `d7e6961838fb3348fd9f4e380ad4a4808eb893bb`. PR #171, the final merged-main gates, release attempt 2, and the release-event final-asset workflow passed. Both release runs passed the Windows fresh-install smoke jobs; the final-asset workflow also passed its manifest signing self-check before upload. The immutable final Windows installer identity and independent public-asset verification are tracked in document 36.
 
 ## Known limitations and deferred work
 
