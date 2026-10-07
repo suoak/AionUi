@@ -174,6 +174,46 @@ export type ManagedAgent = Omit<AgentMetadata, 'available' | 'handshake'> & {
   handshake?: AgentHandshake;
 };
 
+export type CodexAuthState = 'UNKNOWN' | 'SIGNED_OUT' | 'AUTHENTICATING' | 'SIGNED_IN' | 'ERROR';
+
+export type CodexLoginAttempt = {
+  login_id: string;
+  started_at: number;
+  state: 'waiting' | 'cancelling' | 'failed';
+};
+
+export type CodexAccountSnapshot = {
+  auth_state: CodexAuthState;
+  auth_mode?: string;
+  account_type?: string;
+  email?: string;
+  plan_type?: string;
+  requires_openai_auth: boolean;
+  workspace_routing?: unknown;
+  updated_at: number;
+  generation: number;
+  active_login?: CodexLoginAttempt;
+};
+
+export type CodexAccountWarning = {
+  code: string;
+  message: string;
+};
+
+export type CodexAccountView = {
+  account: CodexAccountSnapshot;
+  rate_limits?: Record<string, unknown>;
+  token_usage?: Record<string, unknown>;
+  warnings: CodexAccountWarning[];
+  installed_version?: string;
+  required_version: string;
+};
+
+export type CodexLoginStartResponse = {
+  account: CodexAccountSnapshot;
+  authorization_url: string;
+};
+
 /**
  * Fetcher for MANAGED_AGENTS_SWR_KEY — the Agent settings management view.
  * Hits `/api/agents/management` so user-disabled and missing rows remain

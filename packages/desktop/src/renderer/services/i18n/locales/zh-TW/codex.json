@@ -1,5 +1,27 @@
 {
   "sendbox": {},
+  "account": {
+    "title": "ChatGPT 帳號",
+    "statusUnknown": "正在檢查",
+    "statusSignedOut": "未登入",
+    "statusAuthenticating": "等待授權",
+    "statusSignedIn": "已登入",
+    "statusError": "需要處理",
+    "signedOutDescription": "使用 ChatGPT 登入後，即可使用你的 Codex 方案用量。",
+    "managedDescription": "驗證憑證由 Codex 安全管理。",
+    "accountLabel": "帳號",
+    "planLabel": "方案",
+    "primaryLimitLabel": "主要用量",
+    "secondaryLimitLabel": "次要用量",
+    "tokenUsageLabel": "累計 Token 用量",
+    "unknownValue": "未知",
+    "optionalUsageUnavailable": "部分用量詳情暫時無法取得。",
+    "actionError": "Codex 帳號操作失敗，請檢查 Codex 安裝後再試一次。",
+    "loginAction": "使用 ChatGPT 登入",
+    "cancelAction": "取消登入",
+    "logoutAction": "登出",
+    "refreshAction": "重新整理"
+  },
   "network": {
     "cloudflare_blocked": "Cloudflare 保護導致無法存取 {{service}}。建議：1）使用 VPN 2）切換網路 3）稍後重試 4）切換至其他 AI 服務",
     "network_timeout": "網路逾時，正在自動重試連線...",

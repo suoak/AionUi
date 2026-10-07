@@ -13,6 +13,8 @@ import AgentRepairPanel from '@/renderer/pages/settings/AgentSettings/AgentRepai
 import type { ManagedAgent } from '@/renderer/utils/model/agentTypes';
 import { acpConversation } from '@/common/adapter/ipcBridge';
 
+const openExternalUrlMock = vi.hoisted(() => vi.fn().mockResolvedValue(undefined));
+
 vi.mock('@/common/adapter/ipcBridge', () => ({
   acpConversation: {
     getAgentOverrides: {
@@ -21,7 +23,16 @@ vi.mock('@/common/adapter/ipcBridge', () => ({
     setAgentOverrides: {
       invoke: vi.fn(),
     },
+    getCodexAccount: { invoke: vi.fn() },
+    refreshCodexAccount: { invoke: vi.fn() },
+    startCodexLogin: { invoke: vi.fn() },
+    cancelCodexLogin: { invoke: vi.fn() },
+    logoutCodexAccount: { invoke: vi.fn() },
   },
+}));
+
+vi.mock('@/renderer/utils/platform', () => ({
+  openExternalUrl: (...args: unknown[]) => openExternalUrlMock(...args),
 }));
 
 vi.mock('react-i18next', () => ({
@@ -46,6 +57,7 @@ describe('AgentRepairPanel', () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
+    openExternalUrlMock.mockResolvedValue(undefined);
     vi.spyOn(Message, 'success').mockImplementation(() => undefined as never);
   });
 
@@ -233,5 +245,141 @@ describe('AgentRepairPanel', () => {
     expect(screen.queryByText('settings.repair.pathLabel')).toBeNull();
     expect(screen.queryByText('settings.repair.envLabel')).toBeNull();
     expect(screen.queryByRole('button', { name: /repair\.saveAndTest/ })).toBeNull();
+  });
+
+  it('starts one managed ChatGPT login and opens only the returned authorization URL', async () => {
+    const user = userEvent.setup();
+    const codexAgent = { ...mockAgent, backend: 'codex' };
+    vi.mocked(acpConversation.getAgentOverrides.invoke).mockResolvedValue({});
+    vi.mocked(acpConversation.getCodexAccount.invoke).mockResolvedValue({
+      account: {
+        auth_state: 'SIGNED_OUT',
+        requires_openai_auth: true,
+        updated_at: 1,
+        generation: 0,
+      },
+      warnings: [],
+      required_version: '0.160.1',
+    });
+    vi.mocked(acpConversation.startCodexLogin.invoke).mockResolvedValue({
+      account: {
+        auth_state: 'AUTHENTICATING',
+        requires_openai_auth: true,
+        updated_at: 2,
+        generation: 0,
+        active_login: { login_id: 'login-1', started_at: 2, state: 'waiting' },
+      },
+      authorization_url: 'https://auth.openai.com/codex/example',
+    });
+
+    render(<AgentRepairPanel agent={codexAgent} onSaved={vi.fn()} />);
+
+    const login = await screen.findByRole('button', { name: 'codex.account.loginAction' });
+    await user.click(login);
+
+    await waitFor(() => {
+      expect(acpConversation.startCodexLogin.invoke).toHaveBeenCalledTimes(1);
+      expect(openExternalUrlMock).toHaveBeenCalledWith('https://auth.openai.com/codex/example');
+    });
+  });
+
+  it('rejects a non-HTTPS authorization URL without passing it to the operating system', async () => {
+    const user = userEvent.setup();
+    vi.mocked(acpConversation.getAgentOverrides.invoke).mockResolvedValue({});
+    vi.mocked(acpConversation.getCodexAccount.invoke).mockResolvedValue({
+      account: {
+        auth_state: 'SIGNED_OUT',
+        requires_openai_auth: true,
+        updated_at: 1,
+        generation: 0,
+      },
+      warnings: [],
+      required_version: '0.160.1',
+    });
+    vi.mocked(acpConversation.startCodexLogin.invoke).mockResolvedValue({
+      account: {
+        auth_state: 'AUTHENTICATING',
+        requires_openai_auth: true,
+        updated_at: 2,
+        generation: 0,
+      },
+      authorization_url: 'file:///unsafe-auth',
+    });
+
+    render(<AgentRepairPanel agent={{ ...mockAgent, backend: 'codex' }} onSaved={vi.fn()} />);
+    await user.click(await screen.findByRole('button', { name: 'codex.account.loginAction' }));
+
+    expect(await screen.findByText('codex.account.actionError')).toBeInTheDocument();
+    expect(openExternalUrlMock).not.toHaveBeenCalled();
+  });
+
+  it('shows cancel instead of a duplicate login while authentication is active', async () => {
+    vi.mocked(acpConversation.getAgentOverrides.invoke).mockResolvedValue({});
+    vi.mocked(acpConversation.getCodexAccount.invoke).mockResolvedValue({
+      account: {
+        auth_state: 'AUTHENTICATING',
+        requires_openai_auth: true,
+        updated_at: 1,
+        generation: 0,
+        active_login: { login_id: 'login-1', started_at: 1, state: 'waiting' },
+      },
+      warnings: [],
+      required_version: '0.160.1',
+    });
+
+    render(<AgentRepairPanel agent={{ ...mockAgent, backend: 'codex' }} onSaved={vi.fn()} />);
+
+    expect(await screen.findByRole('button', { name: 'codex.account.cancelAction' })).toBeEnabled();
+    expect(screen.queryByRole('button', { name: 'codex.account.loginAction' })).toBeNull();
+  });
+
+  it('renders masked signed-in identity, plan and official rate-limit snapshot', async () => {
+    vi.mocked(acpConversation.getAgentOverrides.invoke).mockResolvedValue({});
+    vi.mocked(acpConversation.getCodexAccount.invoke).mockResolvedValue({
+      account: {
+        auth_state: 'SIGNED_IN',
+        account_type: 'chatgpt',
+        email: 'alice@example.com',
+        plan_type: 'plus',
+        requires_openai_auth: true,
+        updated_at: 1,
+        generation: 1,
+      },
+      rate_limits: { rateLimits: { primary: { usedPercent: 12 }, secondary: { usedPercent: 34 } } },
+      token_usage: { summary: { lifetimeTokens: 12345 } },
+      warnings: [],
+      required_version: '0.160.1',
+    });
+
+    render(<AgentRepairPanel agent={{ ...mockAgent, backend: 'codex' }} onSaved={vi.fn()} />);
+
+    expect(await screen.findByText('a****@example.com')).toBeInTheDocument();
+    expect(screen.getByText('plus')).toBeInTheDocument();
+    expect(screen.getByText('12%')).toBeInTheDocument();
+    expect(screen.getByText('34%')).toBeInTheDocument();
+    expect(screen.getByText('12,345')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'codex.account.logoutAction' })).toBeEnabled();
+  });
+
+  it('shows a normalized action error when account refresh fails', async () => {
+    const user = userEvent.setup();
+    vi.mocked(acpConversation.getAgentOverrides.invoke).mockResolvedValue({});
+    vi.mocked(acpConversation.getCodexAccount.invoke).mockResolvedValue({
+      account: {
+        auth_state: 'SIGNED_OUT',
+        requires_openai_auth: true,
+        updated_at: 1,
+        generation: 0,
+      },
+      warnings: [],
+      required_version: '0.160.1',
+    });
+    vi.mocked(acpConversation.refreshCodexAccount.invoke).mockRejectedValue(new Error('secret backend detail'));
+
+    render(<AgentRepairPanel agent={{ ...mockAgent, backend: 'codex' }} onSaved={vi.fn()} />);
+    await user.click(await screen.findByRole('button', { name: 'codex.account.refreshAction' }));
+
+    expect(await screen.findByText('codex.account.actionError')).toBeInTheDocument();
+    expect(screen.queryByText('secret backend detail')).toBeNull();
   });
 });

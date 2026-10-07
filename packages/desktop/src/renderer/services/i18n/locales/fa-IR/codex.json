@@ -1,5 +1,27 @@
 {
   "sendbox": {},
+  "account": {
+    "title": "حساب ChatGPT",
+    "statusUnknown": "در حال بررسی",
+    "statusSignedOut": "خارج شده",
+    "statusAuthenticating": "در انتظار مجوز",
+    "statusSignedIn": "وارد شده",
+    "statusError": "نیازمند بررسی",
+    "signedOutDescription": "برای استفاده از سهمیه طرح Codex با ChatGPT وارد شوید.",
+    "managedDescription": "احراز هویت به‌صورت امن توسط Codex مدیریت می‌شود.",
+    "accountLabel": "حساب",
+    "planLabel": "طرح",
+    "primaryLimitLabel": "مصرف اصلی",
+    "secondaryLimitLabel": "مصرف ثانویه",
+    "tokenUsageLabel": "مجموع مصرف توکن",
+    "unknownValue": "نامشخص",
+    "optionalUsageUnavailable": "برخی جزئیات مصرف موقتاً در دسترس نیست.",
+    "actionError": "عملیات حساب Codex ناموفق بود. نصب Codex را بررسی و دوباره تلاش کنید.",
+    "loginAction": "ورود با ChatGPT",
+    "cancelAction": "لغو ورود",
+    "logoutAction": "خروج",
+    "refreshAction": "تازه‌سازی"
+  },
   "network": {
     "cloudflare_blocked": " محافظت Cloudflare دسترسی به {{service}} را مسدود کرد. پیشنهادات: ۱) از VPN استفاده کنید ۲) شبکه را عوض کنید ۳) بعداً دوباره تلاش کنید ۴) به سرویس‌های هوش مصنوعی دیگر سوئیچ کنید",
     "network_timeout": "زمان اتصال به پایان رسید، در حال تلاش مجدد خودکار...",

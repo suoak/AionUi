@@ -5,12 +5,17 @@
  */
 
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { Alert, Button, Input, Message, Typography } from '@arco-design/web-react';
+import { Alert, Button, Input, Message, Tag, Typography } from '@arco-design/web-react';
 import { useTranslation } from 'react-i18next';
 import { acpConversation } from '@/common/adapter/ipcBridge';
-import { formatManagedAgentDiagnosticMessage, type ManagedAgent } from '@/renderer/utils/model/agentTypes';
+import {
+  formatManagedAgentDiagnosticMessage,
+  type CodexAccountView,
+  type ManagedAgent,
+} from '@/renderer/utils/model/agentTypes';
 import EnvVarEditor, { type EnvVarRow } from './EnvVarEditor';
 import { uuid } from '@/common/utils';
+import { openExternalUrl } from '@/renderer/utils/platform';
 
 type AgentRepairPanelProps = {
   agent: ManagedAgent;
@@ -25,6 +30,27 @@ type DiagnosticBanner = {
   type: 'success' | 'warning' | 'error' | 'info';
   title: string;
   content: string;
+};
+
+const asRecord = (value: unknown): Record<string, unknown> | undefined =>
+  value && typeof value === 'object' && !Array.isArray(value) ? (value as Record<string, unknown>) : undefined;
+
+const numberValue = (value: unknown): number | undefined => (typeof value === 'number' ? value : undefined);
+
+export const maskCodexEmail = (email?: string): string | undefined => {
+  if (!email) return undefined;
+  const at = email.indexOf('@');
+  if (at <= 0) return email;
+  const local = email.slice(0, at);
+  return `${local.slice(0, 1)}${'*'.repeat(Math.max(3, local.length - 1))}${email.slice(at)}`;
+};
+
+export const openCodexAuthorizationUrl = async (authorizationUrl: string): Promise<void> => {
+  const parsed = new URL(authorizationUrl);
+  if (parsed.protocol !== 'https:') {
+    throw new Error('Unsupported Codex authorization URL');
+  }
+  await openExternalUrl(authorizationUrl);
 };
 
 const resolveDiagnosticBanner = (t: ReturnType<typeof useTranslation>['t'], agent: ManagedAgent): DiagnosticBanner => {
@@ -88,9 +114,71 @@ const AgentRepairPanel: React.FC<AgentRepairPanelProps> = ({ agent, onSaved }) =
   const [envRows, setEnvRows] = useState<EnvVarRow[]>([]);
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState('');
+  const [codexAccount, setCodexAccount] = useState<CodexAccountView | null>(null);
+  const [codexAccountError, setCodexAccountError] = useState(false);
+  const [codexAction, setCodexAction] = useState<'login' | 'cancel' | 'logout' | 'refresh' | null>(null);
   const savingRef = useRef(false);
   const initialHasOverridesRef = useRef(false);
   const isInternalAionCli = agent.agent_type === 'aionrs' && agent.agent_source === 'internal';
+  const isCodex = agent.backend === 'codex';
+
+  const loadCodexAccount = useCallback(async () => {
+    try {
+      const view = await acpConversation.getCodexAccount.invoke();
+      setCodexAccount(view);
+      setCodexAccountError(false);
+    } catch {
+      setCodexAccountError(true);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!isCodex) return;
+    void loadCodexAccount();
+  }, [isCodex, loadCodexAccount]);
+
+  useEffect(() => {
+    if (!isCodex) return;
+    const timer = window.setInterval(
+      () => {
+        void loadCodexAccount();
+      },
+      codexAccount?.account.auth_state === 'AUTHENTICATING' ? 1500 : 5000
+    );
+    return () => window.clearInterval(timer);
+  }, [codexAccount?.account.auth_state, isCodex, loadCodexAccount]);
+
+  const runCodexAction = useCallback(
+    async (action: 'login' | 'cancel' | 'logout' | 'refresh') => {
+      if (codexAction) return;
+      setCodexAction(action);
+      setCodexAccountError(false);
+      try {
+        if (action === 'login') {
+          const started = await acpConversation.startCodexLogin.invoke();
+          setCodexAccount((current) =>
+            current
+              ? { ...current, account: started.account }
+              : { account: started.account, warnings: [], required_version: '' }
+          );
+          await openCodexAuthorizationUrl(started.authorization_url);
+        } else {
+          const view =
+            action === 'cancel'
+              ? await acpConversation.cancelCodexLogin.invoke()
+              : action === 'logout'
+                ? await acpConversation.logoutCodexAccount.invoke()
+                : await acpConversation.refreshCodexAccount.invoke();
+          setCodexAccount(view);
+        }
+      } catch {
+        setCodexAccountError(true);
+      } finally {
+        setCodexAction(null);
+      }
+    },
+    [codexAction]
+  );
 
   // Load current overrides on mount. The repair page is itself the explicit
   // entry point, so there's no separate unlock step.
@@ -170,6 +258,118 @@ const AgentRepairPanel: React.FC<AgentRepairPanelProps> = ({ agent, onSaved }) =
 
   const banner = resolveDiagnosticBanner(t, agent);
 
+  const rateLimitRoot = asRecord(codexAccount?.rate_limits?.rateLimits);
+  const primaryLimit = asRecord(rateLimitRoot?.primary);
+  const secondaryLimit = asRecord(rateLimitRoot?.secondary);
+  const usageSummary = asRecord(codexAccount?.token_usage?.summary);
+  const authState = codexAccount?.account.auth_state ?? 'UNKNOWN';
+  const accountStatusKey = {
+    UNKNOWN: 'codex.account.statusUnknown',
+    SIGNED_OUT: 'codex.account.statusSignedOut',
+    AUTHENTICATING: 'codex.account.statusAuthenticating',
+    SIGNED_IN: 'codex.account.statusSignedIn',
+    ERROR: 'codex.account.statusError',
+  }[authState];
+  const statusColor =
+    authState === 'SIGNED_IN'
+      ? 'green'
+      : authState === 'AUTHENTICATING'
+        ? 'gold'
+        : authState === 'ERROR'
+          ? 'red'
+          : 'gray';
+
+  const codexAccountBlock = isCodex ? (
+    <section data-testid='codex-account-card' className='rounded-8px border border-border-2 bg-base p-12px'>
+      <div className='flex items-center justify-between gap-8px'>
+        <Typography.Text className='text-14px font-medium text-t-primary'>{t('codex.account.title')}</Typography.Text>
+        <Tag color={statusColor}>{t(accountStatusKey)}</Tag>
+      </div>
+      <Typography.Text className='mt-4px block text-12px text-t-secondary'>
+        {authState === 'SIGNED_OUT' ? t('codex.account.signedOutDescription') : t('codex.account.managedDescription')}
+      </Typography.Text>
+
+      {authState === 'SIGNED_IN' ? (
+        <div className='mt-10px grid gap-6px text-12px text-t-secondary'>
+          {codexAccount?.account.email ? (
+            <div>
+              <span>{t('codex.account.accountLabel')}: </span>
+              <span className='text-t-primary'>{maskCodexEmail(codexAccount.account.email)}</span>
+            </div>
+          ) : null}
+          <div>
+            <span>{t('codex.account.planLabel')}: </span>
+            <span className='text-t-primary'>{codexAccount?.account.plan_type ?? t('codex.account.unknownValue')}</span>
+          </div>
+          {numberValue(primaryLimit?.usedPercent) !== undefined ? (
+            <div>
+              <span>{t('codex.account.primaryLimitLabel')}: </span>
+              <span className='text-t-primary'>{primaryLimit?.usedPercent as number}%</span>
+            </div>
+          ) : null}
+          {numberValue(secondaryLimit?.usedPercent) !== undefined ? (
+            <div>
+              <span>{t('codex.account.secondaryLimitLabel')}: </span>
+              <span className='text-t-primary'>{secondaryLimit?.usedPercent as number}%</span>
+            </div>
+          ) : null}
+          {numberValue(usageSummary?.lifetimeTokens) !== undefined ? (
+            <div>
+              <span>{t('codex.account.tokenUsageLabel')}: </span>
+              <span className='text-t-primary'>{(usageSummary?.lifetimeTokens as number).toLocaleString()}</span>
+            </div>
+          ) : null}
+          {codexAccount?.warnings.length ? (
+            <Typography.Text className='text-11px text-warning-6'>
+              {t('codex.account.optionalUsageUnavailable')}
+            </Typography.Text>
+          ) : null}
+        </div>
+      ) : null}
+
+      {codexAccountError ? <Alert type='warning' className='mt-8px' content={t('codex.account.actionError')} /> : null}
+
+      <div className='mt-10px flex flex-wrap gap-8px'>
+        {authState === 'SIGNED_OUT' || authState === 'ERROR' || authState === 'UNKNOWN' ? (
+          <Button
+            type='primary'
+            loading={codexAction === 'login'}
+            disabled={codexAction !== null}
+            onClick={() => void runCodexAction('login')}
+          >
+            {t('codex.account.loginAction')}
+          </Button>
+        ) : null}
+        {authState === 'AUTHENTICATING' ? (
+          <Button
+            loading={codexAction === 'cancel'}
+            disabled={codexAction !== null}
+            onClick={() => void runCodexAction('cancel')}
+          >
+            {t('codex.account.cancelAction')}
+          </Button>
+        ) : null}
+        {authState === 'SIGNED_IN' ? (
+          <Button
+            status='danger'
+            loading={codexAction === 'logout'}
+            disabled={codexAction !== null}
+            onClick={() => void runCodexAction('logout')}
+          >
+            {t('codex.account.logoutAction')}
+          </Button>
+        ) : null}
+        <Button
+          loading={codexAction === 'refresh'}
+          disabled={codexAction !== null}
+          onClick={() => void runCodexAction('refresh')}
+        >
+          {t('codex.account.refreshAction')}
+        </Button>
+      </div>
+    </section>
+  ) : null;
+
   // A launch-path override only makes sense for direct-CLI agents. Bridge-launched
   // rows (e.g. `npx`) keep the bridge's own arguments (`-y <package> …`) in `args`;
   // pointing the launch path at a resolved binary would forward those bridge args to
@@ -247,6 +447,8 @@ const AgentRepairPanel: React.FC<AgentRepairPanelProps> = ({ agent, onSaved }) =
       {/* Status-aware diagnostic banner: explains where the agent stands and
           which field below to use. */}
       <Alert type={banner.type} title={banner.title} content={banner.content} className='!rounded-8px' />
+
+      {codexAccountBlock}
 
       {!isInternalAionCli && isActionable && showPath ? pathBlock : null}
       {!isInternalAionCli && isActionable ? envBlock : null}

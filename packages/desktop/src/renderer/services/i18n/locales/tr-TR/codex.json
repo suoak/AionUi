@@ -1,5 +1,27 @@
 {
   "sendbox": {},
+  "account": {
+    "title": "ChatGPT Hesabı",
+    "statusUnknown": "Kontrol ediliyor",
+    "statusSignedOut": "Oturum kapalı",
+    "statusAuthenticating": "Yetkilendirme bekleniyor",
+    "statusSignedIn": "Oturum açık",
+    "statusError": "İşlem gerekli",
+    "signedOutDescription": "Codex plan kullanımınızı kullanmak için ChatGPT ile oturum açın.",
+    "managedDescription": "Kimlik doğrulama Codex tarafından güvenli biçimde yönetilir.",
+    "accountLabel": "Hesap",
+    "planLabel": "Plan",
+    "primaryLimitLabel": "Birincil kullanım",
+    "secondaryLimitLabel": "İkincil kullanım",
+    "tokenUsageLabel": "Toplam token kullanımı",
+    "unknownValue": "Bilinmiyor",
+    "optionalUsageUnavailable": "Bazı kullanım ayrıntıları geçici olarak kullanılamıyor.",
+    "actionError": "Codex hesap işlemi başarısız oldu. Codex kurulumunu kontrol edip tekrar deneyin.",
+    "loginAction": "ChatGPT ile oturum aç",
+    "cancelAction": "Oturum açmayı iptal et",
+    "logoutAction": "Oturumu kapat",
+    "refreshAction": "Yenile"
+  },
   "network": {
     "cloudflare_blocked": "Cloudflare koruması {{service}} erişimini engelledi. Öneriler: 1) VPN kullanın 2) Ağı değiştirin 3) Daha sonra tekrar deneyin 4) Diğer AI servislerine geçin",
     "network_timeout": "Ağ zaman aşımı, bağlantı otomatik olarak tekrar deneniyor...",
