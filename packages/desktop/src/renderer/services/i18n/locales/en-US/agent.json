@@ -31,7 +31,11 @@
     "switchSuccess": "Model switched successfully",
     "switchFailed": "Failed to switch model",
     "searchPlaceholder": "Search models",
-    "noResults": "No matching models"
+    "noResults": "No matching models",
+    "refresh": "Refresh models",
+    "retry": "Retry",
+    "loadFailed": "Unable to load Codex models.",
+    "refreshFailed": "Unable to refresh Codex models"
   },
   "config": {
     "setting": "Applying setting...",

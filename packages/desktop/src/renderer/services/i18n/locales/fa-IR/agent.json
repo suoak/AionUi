@@ -31,7 +31,11 @@
     "switchSuccess": "مدل با موفقیت جابه‌جا شد",
     "switchFailed": "جابه‌جایی مدل ناموفق بود",
     "searchPlaceholder": "جستجوی مدل‌ها",
-    "noResults": "مدلی مطابقت ندارد"
+    "noResults": "مدلی مطابقت ندارد",
+    "refresh": "به‌روزرسانی مدل‌ها",
+    "retry": "تلاش دوباره",
+    "loadFailed": "بارگذاری مدل‌های Codex ممکن نیست.",
+    "refreshFailed": "به‌روزرسانی مدل‌های Codex ممکن نیست"
   },
   "config": {
     "setting": "در حال اعمال تنظیم...",

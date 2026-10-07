@@ -10,7 +10,7 @@ import { useLayoutContext } from '@/renderer/hooks/context/LayoutContext';
 import { getModelDisplayLabel } from '@/renderer/utils/model/agentLogo';
 import { iconColors } from '@/renderer/styles/colors';
 import { Dropdown, Menu, Message, Tooltip } from '@arco-design/web-react';
-import { Brain, Down } from '@icon-park/react';
+import { Brain, Down, Refresh } from '@icon-park/react';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import RuntimeSelectorPill, { RuntimeSelectorLoadingIndicator } from './RuntimeSelectorPill';
@@ -94,6 +94,7 @@ const AcpModelSelector: React.FC<{
     setStatus,
     setConfigOption,
     isConfigOptionBlocked = () => false,
+    refreshModels = async () => {},
   } = useAcpModelInfo({
     conversation_id,
     backend,
@@ -158,6 +159,19 @@ const AcpModelSelector: React.FC<{
   const renderLogo = () => <Brain theme='outline' size='14' fill={iconColors.secondary} className='shrink-0' />;
 
   const [triggering, setTriggering] = useState(false);
+  const [refreshingModels, setRefreshingModels] = useState(false);
+
+  const handleRefreshModels = useCallback(async () => {
+    if (refreshingModels) return;
+    setRefreshingModels(true);
+    try {
+      await refreshModels();
+    } catch {
+      Message.error(t('agent.model.refreshFailed'));
+    } finally {
+      setRefreshingModels(false);
+    }
+  }, [refreshModels, refreshingModels, t]);
 
   // Optimistic spinner clears as soon as warmup leaves 'dormant' (a Pending/
   // Ready/Failed event took over the visual), handing back to event-driven state.
@@ -218,6 +232,20 @@ const AcpModelSelector: React.FC<{
   }
 
   if (!model_info) {
+    if (backend === 'codex') {
+      return (
+        <Tooltip content={t('agent.model.loadFailed')} position='top'>
+          <RuntimeSelectorPill
+            testId='acp-model-selector-retry'
+            className='sendbox-model-btn header-model-btn agent-mode-compact-pill'
+            label={t('agent.model.retry')}
+            leading={renderLogo()}
+            loading={refreshingModels}
+            onClick={() => void handleRefreshModels()}
+          />
+        </Tooltip>
+      );
+    }
     return renderReadonlyPill(t('conversation.welcome.useCliModel'), t('conversation.welcome.modelSwitchNotSupported'));
   }
 
@@ -293,6 +321,14 @@ const AcpModelSelector: React.FC<{
               onSelect={handleModelSelect}
             />
           )}
+          {backend === 'codex' ? (
+            <Menu.Item key='refresh-models' disabled={refreshingModels} onClick={() => void handleRefreshModels()}>
+              <span className='flex items-center gap-8px'>
+                <Refresh theme='outline' size={14} />
+                {t('agent.model.refresh')}
+              </span>
+            </Menu.Item>
+          ) : null}
         </Menu>
       }
     >
