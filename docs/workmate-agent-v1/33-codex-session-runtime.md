@@ -6,7 +6,7 @@
 M5   = PARTIAL / OPEN
 M6   = OPEN
 M6.1 = IMPLEMENTED / CLOUD AND PACKAGED BUILD VERIFIED / REAL AUTH ACCEPTANCE PENDING
-M6.2 = IMPLEMENTED / CLOUD AND PACKAGED VALIDATION PENDING / REAL SESSION ACCEPTANCE PENDING
+M6.2 = IMPLEMENTED / CLOUD AND PACKAGED FIXTURE VERIFIED / REAL SESSION ACCEPTANCE PENDING
 ```
 
 M6.2 makes Codex continuation identity explicit without changing Plan semantics, inventing a third Run model, or treating a Codex thread as a WorkMate task. Model discovery remains M6.3. Account-usage diagnostics remain outside this slice. M6.1's interactive OAuth acceptance does not block implementation or fixture-based packaging, but M6 cannot close without one real authenticated session and restart-resume acceptance.
@@ -111,6 +111,20 @@ The required cloud suite covers:
 
 The exact `0.160.1` zero-turn probe is additional compatibility evidence, not a substitute for the repository suite.
 
+### Immutable cloud evidence
+
+Recorded on 2026-10-07:
+
+- AionCore PR [#137](https://github.com/suoak/AionCore/pull/137) merged as `ebcb7411d5b023fdbad2ac137b47b05b8469f103`.
+- AionCore CI run [37568782056](https://github.com/suoak/AionCore/actions/runs/37568782056) passed format, check, Clippy, migration, `cargo nextest run --workspace`, and `cargo test --workspace`.
+- AionCore Windows x64 manual build [37571103049](https://github.com/suoak/AionCore/actions/runs/37571103049), pinned to that merge revision, passed its build matrix and summary.
+- WorkMate PR [#165](https://github.com/suoak/AionUi/pull/165) merged as `f5693b1e0d6c5727aa9c171df217975c7f562e08`.
+- WorkMate PR checks [37567188193](https://github.com/suoak/AionUi/actions/runs/37567188193) passed coverage, code quality, i18n, release tests, Ubuntu/macOS/Windows unit tests, and Linux/macOS/Windows builds. The merged `main` push checks passed in run [37568847797](https://github.com/suoak/AionUi/actions/runs/37568847797).
+- WorkMate Windows x64 manual build [37573535393](https://github.com/suoak/AionUi/actions/runs/37573535393), pinned to the WorkMate merge revision and AionCore run `37571103049`, passed code quality, package build, fresh-install smoke, and build summary.
+- The packaged artifacts are `windows-build-x64-f5693b1` and `windows-installer-diagnostics-x64-fresh-f5693b1`.
+
+This evidence closes the cloud suite and packaged fixture/smoke gates. It does not claim that an authenticated Codex account retained native context across a real WorkMate/app-server restart.
+
 ## Packaged validation
 
 Fixture-based packaged validation may run without completing M6.1 OAuth. It must prove startup, typed API/UI projection, installer integrity, and controlled multi-turn/restart/cancel/error paths. Real native-continuation acceptance requires an authenticated account:
@@ -125,4 +139,4 @@ Fixture-based packaged validation may run without completing M6.1 OAuth. It must
 8. inspect logs, support artifacts, Trace, and Review for credential or authorization-URL leakage;
 9. record package/Core/WorkMate/Codex revisions, OS, UTC time, tester, and signed result.
 
-M6.2 remains open until GitHub CI, the packaged fixture chain, and this real authenticated restart-resume acceptance are all recorded. M6 closure additionally requires the pending M6.1 real login acceptance.
+M6.2 remains open until the real authenticated restart-resume acceptance above is recorded. M6 closure additionally requires the pending M6.1 real login acceptance.
