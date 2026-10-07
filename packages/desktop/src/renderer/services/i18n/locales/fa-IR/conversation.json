@@ -388,6 +388,10 @@
         "body": "ایجنت دیگر این جلسه را نمی‌شناسد. یک چت جدید شروع کنید یا ایجنت را دوباره متصل کنید.",
         "title": "جلسه ایجنت از دست رفت"
       },
+      "RUNTIME_SESSION_NOT_FOUND": {
+        "body": "Codex could not resume this runtime thread. The task and history were preserved; start a new runtime session explicitly.",
+        "title": "Codex runtime session was not found"
+      },
       "USER_LLM_PROVIDER_AWS_SSO_EXPIRED": {
         "body": "جلسه AWS SSO شما منقضی شده است. برای پروفایل مربوطه «aws sso login» را اجرا کنید، سپس پیام را دوباره بفرستید.",
         "title": "جلسه AWS SSO منقضی شده است"

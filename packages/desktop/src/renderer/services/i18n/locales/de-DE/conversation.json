@@ -388,6 +388,10 @@
         "body": "Der Agent meldete, dass diese Sitzung nicht gefunden wurde oder ihm nicht mehr bekannt ist.",
         "title": "Die Agent-Sitzung ging verloren"
       },
+      "RUNTIME_SESSION_NOT_FOUND": {
+        "body": "Codex could not resume this runtime thread. The task and history were preserved; start a new runtime session explicitly.",
+        "title": "Codex runtime session was not found"
+      },
       "USER_LLM_PROVIDER_AWS_SSO_EXPIRED": {
         "body": "Deine AWS-SSO-Sitzung ist abgelaufen. Führe 'aws sso login' für das passende profile aus und sende die Nachricht anschließend erneut.",
         "title": "AWS-SSO-Sitzung abgelaufen"

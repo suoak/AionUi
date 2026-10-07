@@ -388,6 +388,10 @@
         "body": "Agent 报告找不到当前会话，或已不再识别该会话。",
         "title": "Agent 会话已丢失"
       },
+      "RUNTIME_SESSION_NOT_FOUND": {
+        "body": "Codex 无法恢复此运行时线程。任务和历史记录已保留，请显式启动新的运行时会话。",
+        "title": "未找到 Codex 运行时会话"
+      },
       "USER_LLM_PROVIDER_AWS_SSO_EXPIRED": {
         "body": "AWS SSO 会话已过期。请在终端为对应 profile 运行 'aws sso login'，然后重新发送消息。",
         "title": "AWS SSO 会话已过期"
