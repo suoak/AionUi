@@ -3,7 +3,7 @@
 ## Status
 
 ```text
-M6.4 = IMPLEMENTED / CLOUD AND PACKAGED FIXTURE VALIDATION PENDING
+M6.4 = IMPLEMENTED / CLOUD AND PACKAGED FIXTURE VERIFIED / REAL USAGE ACCEPTANCE PENDING
 M6   = OPEN
 ```
 
@@ -122,7 +122,20 @@ The release gate is:
 4. The manual Windows x64 WorkMate build pins that exact AionCore workflow artifact.
 5. Packaged install/smoke diagnostics prove the pinned runtime is present, launches, and contains no credential-bearing diagnostic output.
 
-Cloud run, PR, commit, and artifact evidence will be recorded here after the gates complete. These fixtures validate deterministic behavior; they do not replace real-account acceptance.
+Validation completed on 2026-10-07:
+
+| Gate                     | Evidence                                                                                                                              | Result                                                                                                                                          |
+| ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
+| AionCore change          | PR [#139](https://github.com/suoak/AionCore/pull/139), head `0dde25cac276317ef96c370d80f78a8694972c7c24`                              | Stable projections, sparse merge/debounce, thread fencing, terminal precedence, diagnostics, redaction, and bounded Review snapshot implemented |
+| AionCore CI              | [run 37599606037](https://github.com/suoak/AionCore/actions/runs/37599606037)                                                         | Format, check, Clippy, workspace nextest, and doctests passed                                                                                   |
+| AionCore native contract | [run 37599605991](https://github.com/suoak/AionCore/actions/runs/37599605991)                                                         | Windows, macOS, and Linux presentation-contract jobs passed                                                                                     |
+| AionCore Windows x64     | [run 37601041448](https://github.com/suoak/AionCore/actions/runs/37601041448), artifact `aioncore-manual-windows-x64` (`11473710888`) | Passed; this exact run was pinned into WorkMate packaging                                                                                       |
+| WorkMate implementation  | PR [#168](https://github.com/suoak/AionUi/pull/168), implementation/package head `e585bfad68cedf80a0961b22699924e1d1347fce`           | Stable TypeScript contract, lightweight Agent Center health UI, all-locale copy, renderer fixtures, and this contract implemented               |
+| WorkMate quality         | [run 37599231216](https://github.com/suoak/AionUi/actions/runs/37599231216)                                                           | Lint, format, typecheck, i18n, and 5,519 tests passed; 9 skipped                                                                                |
+| Pinned Windows package   | [run 37606217756](https://github.com/suoak/AionUi/actions/runs/37606217756), artifact `windows-build-x64-e585bfa` (`11475358034`)     | Build passed with Core run `37601041448`                                                                                                        |
+| Fresh-install smoke      | same package run, artifact `windows-installer-diagnostics-x64-fresh-e585bfa` (`11475562529`)                                          | Fresh installation passed; downloaded diagnostics contained the success status and no token/header/credential-pattern match                     |
+
+The Core fixtures prove mappings, multiple buckets, tri-state allowance, sparse notification behavior and bounded rereads, account invalidation, account activity, exact `total`/`last` thread usage, stale-thread fencing, rate-limit error precedence, structured diagnostics, redaction, and bounded TaskRun/Review persistence. The pinned packaged artifact proves that exact tested Core runtime is present and launchable in WorkMate. These deterministic fixtures do not replace real-account acceptance.
 
 ## Deferred acceptance and exclusions
 
