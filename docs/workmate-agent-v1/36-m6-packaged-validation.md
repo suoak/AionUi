@@ -12,103 +12,99 @@ M6 = OPEN
 M7 = NOT STARTED
 ```
 
-This document freezes the one Windows x64 package that may be used for the joint M6 real-account acceptance. Cloud fixtures and packaged smoke tests are complete. Gates that require a real ChatGPT account remain pending and must not be inferred from fixture evidence.
+This document freezes the official WorkMate `v2.4.0` Windows x64 package for the joint M6 real-account acceptance. Cloud fixtures, multi-platform builds, and packaged smoke gates establish the candidate; they do not substitute for a real ChatGPT account.
 
 ## Acceptance candidate identity
 
-| Field                       | Frozen value                                                                         |
-| --------------------------- | ------------------------------------------------------------------------------------ |
-| Acceptance preparation date | 2026-10-07                                                                           |
-| Operating system            | Windows x64 (`windows-2022` build and fresh-install smoke runner)                    |
-| WorkMate version            | `2.3.0`                                                                              |
-| WorkMate commit             | `34f83ef7737079a6a3d607a5a3135ae71f85b14d`                                           |
-| WorkMate main gate          | [Push Checks 37624317056](https://github.com/suoak/AionUi/actions/runs/37624317056)  |
-| WorkMate package workflow   | [Manual Build 37624382086](https://github.com/suoak/AionUi/actions/runs/37624382086) |
-| Package artifact            | `windows-build-x64-34f83ef` (`11483529431`)                                          |
-| Package artifact SHA-256    | `061806d2a3a5bfb951a6f0d221414ba58dcc60930d28c5aba3c317370d573892`                   |
-| Installer filename          | `CSBU-WorkMate-2.3.0-win-x64.exe`                                                    |
-| Installer size              | `204220375` bytes                                                                    |
-| Installer SHA-256           | `2d6daaa1660b8415b9d82725f38550f9541e9f4d80331efa2f59f50e4b3ab3b2`                   |
-| Installer file version      | `2.3.0`                                                                              |
-| AionCore version            | `v0.2.16`                                                                            |
-| AionCore release tag        | [`v0.2.16`](https://github.com/suoak/AionCore/releases/tag/v0.2.16)                  |
-| AionCore release commit     | `1c59adf182775fb3a39addad2a37f4e2768e81d5`                                           |
-| AionCore release workflow   | [Release 37620450285](https://github.com/suoak/AionCore/actions/runs/37620450285)    |
-| Codex version               | `PENDING` — record the packaged runtime's diagnostic value during real acceptance    |
-| Auth mode                   | Codex-managed ChatGPT OAuth; real result `PENDING`                                   |
+| Field | Frozen value |
+| --- | --- |
+| Acceptance preparation date | 2026-10-08 |
+| Operating system | Windows x64 |
+| WorkMate version | `2.4.0` |
+| WorkMate release commit | `d7e6961838fb3348fd9f4e380ad4a4808eb893bb` |
+| WorkMate tag | `v2.4.0` |
+| WorkMate merged-main gate | [Push Checks 37651166730](https://github.com/suoak/AionUi/actions/runs/37651166730) |
+| WorkMate release workflow | [Build and Release 37651991570](https://github.com/suoak/AionUi/actions/runs/37651991570) |
+| WorkMate release URL | [`v2.4.0`](https://github.com/suoak/AionUi/releases/tag/v2.4.0) |
+| Windows installer | `CSBU-WorkMate-2.4.0-win-x64.exe` |
+| Installer size | `204187595` bytes |
+| Installer SHA-256 | `8c04c76a94eb8f8fc8c10f6e17df7e88ea12f56c595484866d157b8d1b0efecc` |
+| AionCore version | `v0.2.17` |
+| AionCore release commit | `6fa1d3e83f8f8ec1cf07b74dd092d7f122e6ab10` |
+| AionCore release | [`v0.2.17`](https://github.com/suoak/AionCore/releases/tag/v0.2.17) |
+| AionCore release workflow | [Release 37642048121](https://github.com/suoak/AionCore/actions/runs/37642048121) |
+| Codex distribution | Not bundled; WorkMate resolves the user-installed `codex` executable from `PATH` |
+| Codex protocol baseline | `0.160.1`, the release against which the direct app-server contract was verified |
+| Codex version on acceptance machine | `PENDING` — record `codex --version` during real acceptance |
+| Auth mode | Codex-managed ChatGPT OAuth; real result `PENDING` |
 
-The manual build used `branch=main`, `platform=windows-x64`, `skip_code_quality=false`, no version override, and an empty `aioncore_run_id`. The candidate therefore resolves the stable `v0.2.16` release pin and does not contain a feature-branch, local-replacement, or temporary CI AionCore binary.
+The candidate is built only from the official `v2.4.0` tag. A local build, feature-branch binary, previous artifact, or package with a different SHA-256 is not this candidate.
 
 ## Release integration evidence
 
-### AionCore main and release
+### AionCore
 
-| Gate                         | Evidence                                                                                               | Result                                                  |
-| ---------------------------- | ------------------------------------------------------------------------------------------------------ | ------------------------------------------------------- |
-| M6.4 implementation          | PR [#139](https://github.com/suoak/AionCore/pull/139)                                                  | Merged into the stacked M6.3 branch                     |
-| M6 main integration          | PR [#138](https://github.com/suoak/AionCore/pull/138), main `45379501ad1efa736ccbf75a6c85ea78e9847e0b` | Merged; M6.1–M6.4 runtime changes present               |
-| Merged-main CI               | [CI 37617135563](https://github.com/suoak/AionCore/actions/runs/37617135563)                           | Passed                                                  |
-| Merged-main native matrix    | [Native Presentation 37617135505](https://github.com/suoak/AionCore/actions/runs/37617135505)          | Passed on the configured Windows/macOS/Linux matrix     |
-| Release PR                   | PR [#140](https://github.com/suoak/AionCore/pull/140)                                                  | `v0.2.16` release metadata and Cargo lock update merged |
-| Release commit CI            | [CI 37620423487](https://github.com/suoak/AionCore/actions/runs/37620423487)                           | Passed                                                  |
-| Release commit native matrix | [Native Presentation 37620423481](https://github.com/suoak/AionCore/actions/runs/37620423481)          | Passed                                                  |
-| Official release             | [Release 37620450285](https://github.com/suoak/AionCore/actions/runs/37620450285)                      | Passed; six platform archives and checksums published   |
+| Gate | Evidence | Result |
+| --- | --- | --- |
+| Conversation-delete implementation | PR [#141](https://github.com/suoak/AionCore/pull/141) | Merged as `b3cfa6479d4ddbd7847319ec91eb034948d844ee` |
+| Core implementation CI | [CI 37635198116](https://github.com/suoak/AionCore/actions/runs/37635198116) | Passed |
+| Core release PR | PR [#142](https://github.com/suoak/AionCore/pull/142) | Passed and merged |
+| Core release | [Release 37642048121](https://github.com/suoak/AionCore/actions/runs/37642048121) | Passed; six platform archives plus checksum manifest published |
+| Release integrity | `aioncore-checksums.txt` compared with GitHub asset digests | All six SHA-256 values matched |
 
-The release contains:
+The Windows x64 AionCore archive is `aioncore-v0.2.17-x86_64-pc-windows-msvc.zip` with SHA-256 `f2eb06d244933fb355c0ae5dd66c0d34d1fcc90bda82585079568f8829d4290a`.
 
-- `aioncore-v0.2.16-aarch64-apple-darwin.tar.gz`
-- `aioncore-v0.2.16-x86_64-apple-darwin.tar.gz`
-- `aioncore-v0.2.16-aarch64-pc-windows-msvc.zip`
-- `aioncore-v0.2.16-x86_64-pc-windows-msvc.zip`
-- `aioncore-v0.2.16-aarch64-unknown-linux-gnu.tar.gz`
-- `aioncore-v0.2.16-x86_64-unknown-linux-gnu.tar.gz`
-- `aioncore-checksums.txt`
+### WorkMate
 
-All six archive hashes in `aioncore-checksums.txt` exactly matched GitHub's SHA-256 digest for the corresponding uploaded release asset. The Windows x64 archive hash is `703968556f892fc30f8511d52a2fe137a916be8286a5754eca249abb1c950efd`. WorkMate's checksum-mismatch behavior remains fail closed.
+| Gate | Evidence | Result |
+| --- | --- | --- |
+| Delete and version PR | PR [#171](https://github.com/suoak/AionUi/pull/171) | Passed and merged |
+| PR validation | [PR Checks 37635922590, attempt 2](https://github.com/suoak/AionUi/actions/runs/37635922590/attempts/2) | Code quality, coverage, i18n, release scripts, unit tests, and Linux/macOS/Windows builds passed |
+| Merged-main validation | [Push Checks 37644871014](https://github.com/suoak/AionUi/actions/runs/37644871014) | Passed |
+| Release changelog repair | PR [#172](https://github.com/suoak/AionUi/pull/172) | Packaging-only repair; passed and merged |
+| Final merged-main validation | [Push Checks 37651166730](https://github.com/suoak/AionUi/actions/runs/37651166730) | Passed |
+| Official release build | [Build and Release 37651991570, attempt 2](https://github.com/suoak/AionUi/actions/runs/37651991570/attempts/2) | Passed; all platform builds and both Windows fresh-install smoke jobs passed |
+| Published updater metadata | [Build and Release 37660674214](https://github.com/suoak/AionUi/actions/runs/37660674214) | Signed updater metadata verification passed after publication |
 
-### WorkMate pin and package
+The first release attempt [37645778050](https://github.com/suoak/AionUi/actions/runs/37645778050) built every platform and passed both Windows fresh-install smoke jobs, then failed closed before creating a release because `CHANGELOG.md` lacked the `2.4.0` section. PR #172 repaired only that packaging metadata. No package from the failed attempt is an acceptance candidate.
 
-| Gate                          | Evidence                                                                                               | Result                                                                                                                      |
-| ----------------------------- | ------------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------- |
-| Independent stable pin        | PR [#169](https://github.com/suoak/AionUi/pull/169), commit `056ceec24d11d769a218408d1692efd4caa82e3d` | Only `aioncoreVersion: v0.2.15 -> v0.2.16`                                                                                  |
-| Pin Push Checks               | [37622792758](https://github.com/suoak/AionUi/actions/runs/37622792758)                                | Passed                                                                                                                      |
-| Pin PR Checks                 | [37622827075](https://github.com/suoak/AionUi/actions/runs/37622827075)                                | Code quality, i18n, coverage, release scripts, multi-platform tests/builds, Windows packaged gate, and install smoke passed |
-| Final WorkMate main           | `34f83ef7737079a6a3d607a5a3135ae71f85b14d`                                                             | Clean and synchronized with `origin/main` at candidate creation                                                             |
-| Final main gate               | [37624317056](https://github.com/suoak/AionUi/actions/runs/37624317056)                                | Passed                                                                                                                      |
-| Stable AionCore preparation   | final package job in [37624382086](https://github.com/suoak/AionUi/actions/runs/37624382086)           | Passed using the official release pin                                                                                       |
-| Windows production build      | same workflow                                                                                          | Passed                                                                                                                      |
-| Packaged strict-planning gate | same workflow                                                                                          | Passed                                                                                                                      |
-| Fresh-install smoke           | same workflow                                                                                          | Passed                                                                                                                      |
+The successful release published 31 assets. The Windows x64 installer size and SHA-256 above were independently verified after downloading the published asset; both matched GitHub's immutable asset metadata.
 
-The fresh-install diagnostics artifact is `windows-installer-diagnostics-x64-fresh-34f83ef` (`11484127763`) with SHA-256 `4de2ac7e6826fbeb30286bc168d4cfd84459b3e616ead7ce58efa2b1276baf2a`. Its status records `Mode: fresh` and a successful finish. A scan of its status, process, and volume diagnostics found no access token, refresh token, ID token, bearer header, cookie, OAuth code/state, or credential pattern.
+## Conversation delete release inclusion
+
+WorkMate `v2.4.0` restores the destructive Recent Conversation action after Rename, Pin/Unpin, and Archive. It requires explicit confirmation and delegates to `conversation.remove -> DELETE /api/conversations/:id`.
+
+Deletion fails closed while the runtime or M4 task aggregate is active. Completed WorkMate-owned task runs are deleted before their task-session root so restrictive artifact and approval references cannot leave partial state; trace, review, checkpoint, evidence, context snapshot, runtime binding, approval, artifact, and criteria descendants are then removed by the authoritative transaction and schema cascades. Codex credentials, rollout files, and private thread storage are outside WorkMate ownership and are never deleted.
+
+The ownership and foreign-key audit is recorded in [38-conversation-delete-hotfix.md](./38-conversation-delete-hotfix.md).
 
 ## Joint real-account acceptance
 
-Use only the installer identified above. Any code change, AionCore release change, WorkMate commit change, or rebuilt installer with a different hash invalidates this candidate.
+Use only the installer and SHA-256 frozen above. Any code change, tag move, AionCore release change, or rebuilt installer invalidates this candidate and requires a new patch release.
 
-| Gate                          | Required evidence                                                                                                                  | Status                                           |
-| ----------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------ |
-| 0 — Fresh install             | Packaged WorkMate, AionCore, and Codex app-server start; initial auth state recorded; no development dependency or credential leak | `PACKAGED SMOKE PASS / REAL ENVIRONMENT PENDING` |
-| 1 — ChatGPT OAuth             | `SIGNED_OUT -> AUTHENTICATING -> SIGNED_IN`, official browser flow, final state confirmed by `account/read`                        | `PENDING`                                        |
-| 2 — Live authentication probe | Exact response `WORKMATE_CODEX_AUTH_OK`                                                                                            | `PENDING`                                        |
-| 3 — Real model catalog        | `model/list` returns at least one selectable model; count, paging, Auto/default, and efforts recorded                              | `PENDING`                                        |
-| 4 — Explicit model selection  | One advertised model and supported effort execute a real turn; requested and selected values agree                                 | `PENDING`                                        |
-| 5 — Review evidence           | Review records Codex runtime, actual effective model, and actual reasoning value                                                   | `PENDING`                                        |
-| 6 — Multi-turn same thread    | Probe `WORKMATE-M6-REAL-7391` survives a second turn and Thread ID remains unchanged                                               | `PENDING`                                        |
-| 7 — WorkMate restart          | Entire packaged application restarts; app-server generation changes while the task and binding remain                              | `PENDING`                                        |
-| 8 — Native resume             | Recovery uses `thread/resume {threadId}` and not a new thread plus conversation replay                                             | `PENDING`                                        |
-| 9 — Semantic resume           | Exact probe is returned after restart and Thread ID is identical                                                                   | `PENDING`                                        |
-| 10 — Resume effective model   | Runtime-returned effective model is reconciled with UI/Review after resume                                                         | `PENDING`                                        |
-| 11 — Real rate limits         | `account/rateLimits/read` fields recorded with sensitive values minimized; null allowance displays `UNKNOWN`                       | `PENDING`                                        |
-| 12 — Real account usage       | Provider fields recorded, or legitimately `UNAVAILABLE` without auth/runtime failure                                               | `PENDING`                                        |
-| 13 — Thread usage             | Active Thread ID and returned input/cached/output/reasoning/total counters recorded; absent values remain null                     | `PENDING`                                        |
-| 14 — Diagnostics              | Installed/version/app-server/protocol/auth/account/models/limits/usage/workspace/resume checks use `PASS/WARN/FAIL/NOT_APPLICABLE` | `PENDING`                                        |
-| 15 — Logout                   | `account/logout -> account/read -> SIGNED_OUT`                                                                                     | `PENDING`                                        |
-| 16 — Logout invalidation      | Account, model, rate-limit, and usage snapshots no longer appear valid for the old account                                         | `PENDING`                                        |
-| 17 — Post-logout execution    | New Codex turn fails as `NOT_AUTHENTICATED` and offers ChatGPT login                                                               | `PENDING`                                        |
-| 18 — Secret scan              | Logs, Trace, Review, diagnostics, persisted state, and installer diagnostics contain no credentials or full auth URL               | `PENDING`                                        |
+| Gate | Required evidence | Status |
+| --- | --- | --- |
+| 0 — Fresh install | Packaged WorkMate and AionCore start; user-installed Codex version is recorded; no development dependency or credential leak | `PACKAGED CLOUD PASS / REAL ENVIRONMENT PENDING` |
+| 1 — ChatGPT OAuth | `SIGNED_OUT -> AUTHENTICATING -> SIGNED_IN`; official browser flow; authoritative `account/read` | `PENDING` |
+| 2 — Live authentication probe | Exact response `WORKMATE_CODEX_AUTH_OK` | `PENDING` |
+| 3 — Real model catalog | `model/list` returns selectable models; paging, Auto/default, and efforts recorded | `PENDING` |
+| 4 — Explicit model selection | An advertised model and supported effort complete a real turn | `PENDING` |
+| 5 — Review evidence | Review records Codex runtime and actual effective model/reasoning | `PENDING` |
+| 6 — Multi-turn same thread | Probe `WORKMATE-M6-REAL-7391` survives a second turn and Thread ID is unchanged | `PENDING` |
+| 7 — WorkMate restart | Packaged app restarts while task and persisted runtime binding remain | `PENDING` |
+| 8 — Native resume | Recovery uses `thread/resume {threadId}`, not transcript replay | `PENDING` |
+| 9 — Semantic resume | Exact probe is returned after restart and Thread ID is identical | `PENDING` |
+| 10 — Resume effective model | Runtime-returned effective model is reconciled with UI and Review | `PENDING` |
+| 11 — Real rate limits | Provider fields recorded; null allowance displays `UNKNOWN` | `PENDING` |
+| 12 — Real account usage | Provider fields recorded or legitimately `UNAVAILABLE` without auth/runtime failure | `PENDING` |
+| 13 — Thread usage | Thread ID and input/cached/output/reasoning/total counters recorded | `PENDING` |
+| 14 — Diagnostics | Installed/version/app-server/protocol/auth/account/models/limits/usage/workspace/resume checks use stable verdicts | `PENDING` |
+| 15 — Logout | `account/logout -> account/read -> SIGNED_OUT` | `PENDING` |
+| 16 — Logout invalidation | Account, model, rate-limit, and usage snapshots are invalidated | `PENDING` |
+| 17 — Post-logout execution | A new Codex turn fails as `NOT_AUTHENTICATED` and offers ChatGPT login | `PENDING` |
+| 18 — Secret scan | Logs, Trace, Review, diagnostics, persisted state, and installer diagnostics contain no credentials or full auth URL | `PENDING` |
 
-Deliberately exhausting a real account is not required. The `RATE_LIMITED -> late completed -> terminal failure/no replay` race remains covered by the M6.4 regression fixture.
+Deliberately exhausting a real account is not required. The `RATE_LIMITED -> late completed -> terminal failure/no replay` race remains fixture-covered.
 
 ## Closure ledger
 
@@ -119,6 +115,7 @@ M6.3 real catalog/selection/effective-model gates = PENDING
 M6.4 real limits/usage/diagnostics/invalidation gates = PENDING
 
 M6 = OPEN
+M7 = NOT STARTED
 ```
 
-No M6 status may be changed to `CLOSED` until one end-to-end run of this exact candidate completes all applicable gates. Optional provider endpoints may produce a documented `WARN` or `NOT_APPLICABLE`; core authentication, model catalog, session continuity, live inference, native resume, logout, and security gates may not be downgraded.
+No M6 status may be changed to `CLOSED` until one end-to-end run of this exact published candidate completes all applicable gates.
