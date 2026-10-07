@@ -232,6 +232,14 @@ const AcpModelSelector: React.FC<{
   }
 
   if (!model_info) {
+    // Team warmup owns the empty-runtime state. A Codex catalog retry only
+    // makes sense once there is no teammate runtime to wake first.
+    if (warmup) {
+      return renderReadonlyPill(
+        t('conversation.welcome.useCliModel'),
+        t('conversation.welcome.modelSwitchNotSupported')
+      );
+    }
     if (backend === 'codex') {
       return (
         <Tooltip content={t('agent.model.loadFailed')} position='top'>
