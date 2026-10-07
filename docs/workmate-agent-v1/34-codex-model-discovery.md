@@ -136,8 +136,8 @@ Local development checks passed for the Core compile and 146 Codex protocol test
 
 Recorded on 2026-10-07:
 
-- AionCore PR [#138](https://github.com/suoak/AionCore/pull/138) at `e8540283bc504db4340f0714ed012a1ce83eb24a` contains the runtime implementation and protocol fixtures.
-- AionCore CI run [37584775603](https://github.com/suoak/AionCore/actions/runs/37584775603) passed format, check, Clippy, migration immutability, `cargo nextest run --workspace`, and `cargo test --workspace`.
+- AionCore PR [#138](https://github.com/suoak/AionCore/pull/138) contains the runtime implementation and protocol fixtures at `e8540283bc504db4340f0714ed012a1ce83eb24a`; final validation head `28fdb8b45ec350ecd1949418a1f057bcdb9db428` adds only the CI harness correction described below.
+- AionCore CI run [37592366500](https://github.com/suoak/AionCore/actions/runs/37592366500) passed format, check, Clippy, migration immutability, `cargo nextest run --workspace`, and the non-duplicated `cargo test --workspace --doc` pass. The split keeps unit/integration coverage in nextest and doctest coverage in Cargo instead of running every unit test twice in two different harness models.
 - AionCore Windows x64 manual build [37585063992](https://github.com/suoak/AionCore/actions/runs/37585063992), pinned to that revision, passed and produced `aioncore-manual-windows-x64` (artifact `11466532454`).
 - WorkMate PR [#167](https://github.com/suoak/AionUi/pull/167) at `57052e0912e7f7eb4db3a68990f8c05dbeebb6e0` passed Push Checks [37585839244](https://github.com/suoak/AionUi/actions/runs/37585839244) and the full PR matrix [37585844281](https://github.com/suoak/AionUi/actions/runs/37585844281), including code quality, i18n, coverage, release tests, multi-platform unit tests, and Linux/macOS/Windows build tests.
 - WorkMate Windows x64 manual build [37586615096](https://github.com/suoak/AionUi/actions/runs/37586615096) bundled Core run `37585063992` and passed code quality, package construction, executable metadata, packaged release gate, fresh-install smoke, and summary.
