@@ -101,10 +101,10 @@ Formal acceptance is the GitHub CI result for the Core and WorkMate branches/PRs
 
 The implementation and packaged-build chain are merged and green at these immutable revisions:
 
-| Repository | Revision | Evidence |
-| ---------- | -------- | -------- |
-| AionCore | `60e38d4886e19349c780d625e46e34f2e54b4773` (`#136`) | [PR CI](https://github.com/suoak/AionCore/actions/runs/37556478501), [main CI](https://github.com/suoak/AionCore/actions/runs/37559797188), and [native presentation contracts](https://github.com/suoak/AionCore/actions/runs/37559797196) passed |
-| WorkMate | `febfb8ef98dae3cb4cf1cd2dcbf0804d9fb781bd` (`#163`) | [PR checks](https://github.com/suoak/AionUi/actions/runs/37556551898) and [push checks](https://github.com/suoak/AionUi/actions/runs/37556549259) passed |
+| Repository | Revision                                            | Evidence                                                                                                                                                                                                                                           |
+| ---------- | --------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| AionCore   | `60e38d4886e19349c780d625e46e34f2e54b4773` (`#136`) | [PR CI](https://github.com/suoak/AionCore/actions/runs/37556478501), [main CI](https://github.com/suoak/AionCore/actions/runs/37559797188), and [native presentation contracts](https://github.com/suoak/AionCore/actions/runs/37559797196) passed |
+| WorkMate   | `febfb8ef98dae3cb4cf1cd2dcbf0804d9fb781bd` (`#163`) | [PR checks](https://github.com/suoak/AionUi/actions/runs/37556551898) and [push checks](https://github.com/suoak/AionUi/actions/runs/37556549259) passed                                                                                           |
 
 The Windows packaging chain also passed entirely in GitHub Actions:
 
