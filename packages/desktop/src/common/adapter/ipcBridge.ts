@@ -1763,6 +1763,21 @@ export const acpConversation = {
     httpGet<import('@/renderer/utils/model/agentTypes').ManagedAgent[], void>('/api/agents/management'),
     (agents) => agents.map(normalizeAgentBranding)
   ),
+  getCodexAccount: httpGet<import('@/renderer/utils/model/agentTypes').CodexAccountView, void>(
+    '/api/agents/codex/account'
+  ),
+  refreshCodexAccount: httpPost<import('@/renderer/utils/model/agentTypes').CodexAccountView, void>(
+    '/api/agents/codex/account/refresh'
+  ),
+  startCodexLogin: httpPost<import('@/renderer/utils/model/agentTypes').CodexLoginStartResponse, void>(
+    '/api/agents/codex/account/login'
+  ),
+  cancelCodexLogin: httpPost<import('@/renderer/utils/model/agentTypes').CodexAccountView, void>(
+    '/api/agents/codex/account/login/cancel'
+  ),
+  logoutCodexAccount: httpPost<import('@/renderer/utils/model/agentTypes').CodexAccountView, void>(
+    '/api/agents/codex/account/logout'
+  ),
   getAgentOverrides: httpGet<
     { command_override?: string; env_override: { name: string; value: string }[] },
     { id: string }

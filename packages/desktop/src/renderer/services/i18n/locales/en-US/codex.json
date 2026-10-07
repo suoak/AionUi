@@ -1,5 +1,27 @@
 {
   "sendbox": {},
+  "account": {
+    "title": "ChatGPT Account",
+    "statusUnknown": "Checking",
+    "statusSignedOut": "Signed out",
+    "statusAuthenticating": "Waiting for authorization",
+    "statusSignedIn": "Signed in",
+    "statusError": "Needs attention",
+    "signedOutDescription": "Sign in with ChatGPT to use your Codex plan usage.",
+    "managedDescription": "Authentication is securely managed by Codex.",
+    "accountLabel": "Account",
+    "planLabel": "Plan",
+    "primaryLimitLabel": "Primary usage",
+    "secondaryLimitLabel": "Secondary usage",
+    "tokenUsageLabel": "Lifetime token usage",
+    "unknownValue": "Unknown",
+    "optionalUsageUnavailable": "Some usage details are temporarily unavailable.",
+    "actionError": "The Codex account action failed. Check your Codex installation and try again.",
+    "loginAction": "Sign in with ChatGPT",
+    "cancelAction": "Cancel sign-in",
+    "logoutAction": "Sign out",
+    "refreshAction": "Refresh"
+  },
   "network": {
     "cloudflare_blocked": "Cloudflare protection blocked access to {{service}}. Suggestions: 1) Use VPN 2) Switch network 3) Retry later 4) Switch to other AI services",
     "network_timeout": "Network timeout, automatically retrying connection...",

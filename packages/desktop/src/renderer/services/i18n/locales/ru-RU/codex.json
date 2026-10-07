@@ -1,5 +1,27 @@
 {
   "sendbox": {},
+  "account": {
+    "title": "Аккаунт ChatGPT",
+    "statusUnknown": "Проверка",
+    "statusSignedOut": "Выход выполнен",
+    "statusAuthenticating": "Ожидание авторизации",
+    "statusSignedIn": "Вход выполнен",
+    "statusError": "Требуется внимание",
+    "signedOutDescription": "Войдите через ChatGPT, чтобы использовать лимиты плана Codex.",
+    "managedDescription": "Аутентификация безопасно управляется Codex.",
+    "accountLabel": "Аккаунт",
+    "planLabel": "План",
+    "primaryLimitLabel": "Основное использование",
+    "secondaryLimitLabel": "Дополнительное использование",
+    "tokenUsageLabel": "Общее использование токенов",
+    "unknownValue": "Неизвестно",
+    "optionalUsageUnavailable": "Некоторые сведения об использовании временно недоступны.",
+    "actionError": "Операция с аккаунтом Codex не выполнена. Проверьте установку Codex и повторите попытку.",
+    "loginAction": "Войти через ChatGPT",
+    "cancelAction": "Отменить вход",
+    "logoutAction": "Выйти",
+    "refreshAction": "Обновить"
+  },
   "network": {
     "cloudflare_blocked": "Защита Cloudflare заблокировала доступ к {{service}}. Варианты: 1) Использовать VPN 2) Сменить сеть 3) Попробовать позже 4) Переключиться на другие ИИ-сервисы",
     "network_timeout": "Таймаут сети, автоматическое повторное подключение...",

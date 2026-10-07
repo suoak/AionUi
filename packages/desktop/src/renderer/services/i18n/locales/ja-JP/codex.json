@@ -1,5 +1,27 @@
 {
   "sendbox": {},
+  "account": {
+    "title": "ChatGPT アカウント",
+    "statusUnknown": "確認中",
+    "statusSignedOut": "未ログイン",
+    "statusAuthenticating": "認証待ち",
+    "statusSignedIn": "ログイン済み",
+    "statusError": "確認が必要",
+    "signedOutDescription": "ChatGPT でログインすると Codex プランの使用量を利用できます。",
+    "managedDescription": "認証情報は Codex によって安全に管理されます。",
+    "accountLabel": "アカウント",
+    "planLabel": "プラン",
+    "primaryLimitLabel": "プライマリ使用量",
+    "secondaryLimitLabel": "セカンダリ使用量",
+    "tokenUsageLabel": "累計トークン使用量",
+    "unknownValue": "不明",
+    "optionalUsageUnavailable": "一部の使用量情報を一時的に取得できません。",
+    "actionError": "Codex アカウント操作に失敗しました。Codex のインストールを確認して再試行してください。",
+    "loginAction": "ChatGPT でログイン",
+    "cancelAction": "ログインをキャンセル",
+    "logoutAction": "ログアウト",
+    "refreshAction": "更新"
+  },
   "network": {
     "cloudflare_blocked": "Cloudflareの保護により{{service}}へのアクセスがブロックされました。対処: 1) VPN を利用 2) ネットワークを切替 3) 時間をおいて再試行 4) 別の AI サービスへ切替",
     "network_timeout": "ネットワークがタイムアウトしました。接続を自動的に再試行しています...",
