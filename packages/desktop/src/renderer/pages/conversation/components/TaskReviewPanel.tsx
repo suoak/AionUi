@@ -66,6 +66,7 @@ const TaskReviewPanel: React.FC<Props> = ({ visible, taskId, conversationId, onC
 
   const renderOverview = (data: TaskReview) => {
     const duration = data.run.finished_at ? Math.max(0, data.run.finished_at - data.run.started_at) : undefined;
+    const binding = data.task.runtime_binding;
     return (
       <Descriptions
         column={2}
@@ -76,6 +77,24 @@ const TaskReviewPanel: React.FC<Props> = ({ visible, taskId, conversationId, onC
           { label: t('conversation.taskSession.review.mode'), value: value(data.run.mode ?? data.task.mode) },
           { label: t('conversation.taskSession.review.agent'), value: value(data.run.agent_id) },
           { label: t('conversation.taskSession.review.runtime'), value: value(data.run.agent_runtime) },
+          {
+            label: t('conversation.taskSession.review.runtimeSession'),
+            value: binding ? (
+              <Typography.Text code copyable>
+                {binding.runtime_session_id}
+              </Typography.Text>
+            ) : (
+              value(undefined)
+            ),
+          },
+          {
+            label: t('conversation.taskSession.review.runtimeState'),
+            value: binding ? <Tag>{binding.state}</Tag> : value(undefined),
+          },
+          {
+            label: t('conversation.taskSession.review.runtimeVersion'),
+            value: value(binding?.runtime_version),
+          },
           { label: t('common.model'), value: value(data.run.model) },
           { label: t('conversation.taskSession.review.isolation'), value: value(data.run.planning_isolation) },
           { label: t('conversation.taskSession.review.started'), value: formatTime(data.run.started_at) },

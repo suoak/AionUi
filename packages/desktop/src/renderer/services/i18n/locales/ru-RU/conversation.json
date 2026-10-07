@@ -396,6 +396,10 @@
         "body": "Агент сообщил, что эта сессия не найдена или больше ему неизвестна.",
         "title": "Сессия агента потеряна"
       },
+      "RUNTIME_SESSION_NOT_FOUND": {
+        "body": "Codex could not resume this runtime thread. The task and history were preserved; start a new runtime session explicitly.",
+        "title": "Codex runtime session was not found"
+      },
       "USER_LLM_PROVIDER_AWS_SSO_EXPIRED": {
         "body": "Срок действия сеанса AWS SSO истёк. Выполните 'aws sso login' для соответствующего profile, затем отправьте сообщение ещё раз.",
         "title": "Сеанс AWS SSO истёк"
@@ -987,6 +991,9 @@
       "mode": "Mode",
       "agent": "Agent",
       "runtime": "Runtime",
+      "runtimeSession": "Runtime session",
+      "runtimeState": "Runtime state",
+      "runtimeVersion": "Runtime version",
       "isolation": "Planning isolation",
       "started": "Started",
       "finished": "Finished",

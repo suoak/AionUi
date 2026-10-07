@@ -388,6 +388,10 @@
         "body": "Agent 回報找不到目前會話，或已不再識別該會話。",
         "title": "Agent 會話已遺失"
       },
+      "RUNTIME_SESSION_NOT_FOUND": {
+        "body": "Codex could not resume this runtime thread. The task and history were preserved; start a new runtime session explicitly.",
+        "title": "Codex runtime session was not found"
+      },
       "USER_LLM_PROVIDER_AWS_SSO_EXPIRED": {
         "body": "AWS SSO 工作階段已過期。請在終端機為對應的 profile 執行 'aws sso login'，然後重新傳送訊息。",
         "title": "AWS SSO 工作階段已過期"
@@ -969,6 +973,9 @@
       "mode": "Mode",
       "agent": "Agent",
       "runtime": "Runtime",
+      "runtimeSession": "Runtime session",
+      "runtimeState": "Runtime state",
+      "runtimeVersion": "Runtime version",
       "isolation": "Planning isolation",
       "started": "Started",
       "finished": "Finished",

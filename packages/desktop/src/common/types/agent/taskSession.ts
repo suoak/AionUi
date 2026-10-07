@@ -32,6 +32,25 @@ export type PlanningIsolation = {
 export const canStartAutomaticPlanning = (isolation?: PlanningIsolation): boolean =>
   isolation?.level === 'guaranteed' && isolation.automatic_planning_enabled;
 
+export type RuntimeBindingState =
+  | 'bound'
+  | 'not_resumable'
+  | 'resume_failed'
+  | 'revalidation_required'
+  | 'unavailable'
+  | 'broken';
+
+export type RuntimeBinding = {
+  runtime_type: string;
+  integration_mode: string;
+  runtime_session_id: string;
+  state: RuntimeBindingState;
+  workspace_path?: string;
+  runtime_version?: string;
+  account_generation?: number;
+  last_observed_at?: number;
+};
+
 export type TaskSession = {
   id: string;
   title: string;
@@ -43,6 +62,7 @@ export type TaskSession = {
   status: TaskSessionStatus;
   agent_type: string;
   agent_session_id?: string;
+  runtime_binding?: RuntimeBinding;
   created_at: number;
   updated_at: number;
 };

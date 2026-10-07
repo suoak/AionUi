@@ -392,6 +392,10 @@
         "body": "El proveedor no reconoce este nombre de modelo. Elige un modelo disponible en ajustes y reintenta.",
         "title": "No se encontró el modelo seleccionado"
       },
+      "RUNTIME_SESSION_NOT_FOUND": {
+        "body": "Codex could not resume this runtime thread. The task and history were preserved; start a new runtime session explicitly.",
+        "title": "Codex runtime session was not found"
+      },
       "USER_LLM_PROVIDER_AWS_SSO_EXPIRED": {
         "body": "Your AWS SSO session has expired. Run 'aws sso login' for the matching profile, then send the message again.",
         "title": "AWS SSO session expired"
@@ -970,6 +974,9 @@
       "mode": "Mode",
       "agent": "Agent",
       "runtime": "Runtime",
+      "runtimeSession": "Runtime session",
+      "runtimeState": "Runtime state",
+      "runtimeVersion": "Runtime version",
       "isolation": "Planning isolation",
       "started": "Started",
       "finished": "Finished",

@@ -387,6 +387,10 @@
         "body": "Ajan bu oturumun bulunamadığını veya artık bilinmediğini bildirdi.",
         "title": "Ajan oturumu kayboldu"
       },
+      "RUNTIME_SESSION_NOT_FOUND": {
+        "body": "Codex could not resume this runtime thread. The task and history were preserved; start a new runtime session explicitly.",
+        "title": "Codex runtime session was not found"
+      },
       "USER_LLM_PROVIDER_AWS_SSO_EXPIRED": {
         "body": "AWS SSO oturumunuzun süresi doldu. Eşleşen profile için 'aws sso login' komutunu çalıştırın, ardından mesajı yeniden gönderin.",
         "title": "AWS SSO oturumunun süresi doldu"
@@ -971,6 +975,9 @@
       "mode": "Mode",
       "agent": "Agent",
       "runtime": "Runtime",
+      "runtimeSession": "Runtime session",
+      "runtimeState": "Runtime state",
+      "runtimeVersion": "Runtime version",
       "isolation": "Planning isolation",
       "started": "Started",
       "finished": "Finished",

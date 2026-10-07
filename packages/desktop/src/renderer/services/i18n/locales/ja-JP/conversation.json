@@ -388,6 +388,10 @@
         "body": "エージェントは、このセッションが見つからない、または認識されていないと報告しました。",
         "title": "エージェントセッションが失われました"
       },
+      "RUNTIME_SESSION_NOT_FOUND": {
+        "body": "Codex could not resume this runtime thread. The task and history were preserved; start a new runtime session explicitly.",
+        "title": "Codex runtime session was not found"
+      },
       "USER_LLM_PROVIDER_AWS_SSO_EXPIRED": {
         "body": "AWS SSO セッションの有効期限が切れています。対応する profile で 'aws sso login' を実行してから、もう一度メッセージを送信してください。",
         "title": "AWS SSO セッションの有効期限が切れています"
@@ -969,6 +973,9 @@
       "mode": "Mode",
       "agent": "Agent",
       "runtime": "Runtime",
+      "runtimeSession": "Runtime session",
+      "runtimeState": "Runtime state",
+      "runtimeVersion": "Runtime version",
       "isolation": "Planning isolation",
       "started": "Started",
       "finished": "Finished",
