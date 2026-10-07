@@ -5,7 +5,7 @@
 ```text
 M5   = PARTIAL / OPEN
 M6   = OPEN
-M6.1 = IMPLEMENTED / PACKAGED ACCEPTANCE PENDING
+M6.1 = IMPLEMENTED / CLOUD AND PACKAGED BUILD VERIFIED / REAL AUTH ACCEPTANCE PENDING
 ```
 
 M6.1 adds a real Codex-managed ChatGPT account path to AionCore and WorkMate. It does not add a WorkMate-owned OAuth client, a direct Responses provider, multi-account storage, or broad session/model changes. M6.1 can become `CLOSED` only after the signed Windows packaged acceptance described below; source and CI results alone do not close it.
@@ -96,6 +96,23 @@ AionCore tests cover the state projection, login ID correlation, stale completio
 WorkMate tests cover signed-out login, one-time browser launch, non-HTTPS rejection, authenticating duplicate prevention, signed-in masked identity/plan/limits/usage, logout visibility, and normalized action failure. The i18n consistency check and TypeScript compiler are required gates.
 
 Formal acceptance is the GitHub CI result for the Core and WorkMate branches/PRs. Local validation is supporting evidence only.
+
+### Recorded cloud evidence (2026-10-07)
+
+The implementation and packaged-build chain are merged and green at these immutable revisions:
+
+| Repository | Revision                                            | Evidence                                                                                                                                                                                                                                           |
+| ---------- | --------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| AionCore   | `60e38d4886e19349c780d625e46e34f2e54b4773` (`#136`) | [PR CI](https://github.com/suoak/AionCore/actions/runs/37556478501), [main CI](https://github.com/suoak/AionCore/actions/runs/37559797188), and [native presentation contracts](https://github.com/suoak/AionCore/actions/runs/37559797196) passed |
+| WorkMate   | `febfb8ef98dae3cb4cf1cd2dcbf0804d9fb781bd` (`#163`) | [PR checks](https://github.com/suoak/AionUi/actions/runs/37556551898) and [push checks](https://github.com/suoak/AionUi/actions/runs/37556549259) passed                                                                                           |
+
+The Windows packaging chain also passed entirely in GitHub Actions:
+
+- [AionCore manual Windows x64 build](https://github.com/suoak/AionCore/actions/runs/37559924286) built revision `60e38d48` successfully.
+- [WorkMate manual Windows x64 build](https://github.com/suoak/AionUi/actions/runs/37561357235) consumed that exact Core run and passed build, fresh-install smoke, and build summary at revision `febfb8e`.
+- The WorkMate run produced `windows-build-x64-febfb8e` and `windows-installer-diagnostics-x64-fresh-febfb8e`. These GitHub artifacts expire on 2026-10-14 UTC and should be retained elsewhere if acceptance will occur later.
+
+This evidence verifies source integration, automated behavior, cross-platform checks, Windows packaging, and a fresh installer smoke. It does not simulate or replace interactive ChatGPT authorization. M6.1 therefore remains open pending the signed real-account acceptance below.
 
 ## Windows packaged acceptance
 
