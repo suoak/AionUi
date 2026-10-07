@@ -38,6 +38,7 @@ export type UseAcpModelInfoResult = {
   setStatus: AcpConfigSetStatus;
   setConfigOption: (optionId: string, value: string) => Promise<AcpConfigOptionDto[]>;
   isConfigOptionBlocked: (optionId: string) => boolean;
+  refreshModels: () => Promise<void>;
 };
 
 function sameModelInfo(a: AcpModelInfo | null, b: AcpModelInfo | null): boolean {
@@ -159,6 +160,16 @@ export const useAcpModelInfo = ({
     [enabled, model, onSelectModelFailed, onSelectModelSuccess, setConfigOption]
   );
 
+  const refreshModels = useCallback(async () => {
+    if (!enabled || _backend !== 'codex') return;
+    await (prepareSetRuntime ?? prepareRuntime)?.();
+    await ipcBridge.acpConversation.setConfigOption.invoke({
+      conversation_id,
+      option_id: 'model_catalog_refresh',
+      value: 'refresh',
+    });
+  }, [_backend, conversation_id, enabled, prepareRuntime, prepareSetRuntime]);
+
   return {
     model_info,
     isRuntimeReady: runtimeConfig.isRuntimeReady,
@@ -172,5 +183,6 @@ export const useAcpModelInfo = ({
     setStatus,
     setConfigOption,
     isConfigOptionBlocked,
+    refreshModels,
   };
 };

@@ -27,6 +27,7 @@ type MockAcpModelInfoResult = {
   thoughtLevel: AcpDerivedOption | null;
   setStatus: AcpConfigSetStatus;
   setConfigOption: (optionId: string, value: string) => Promise<unknown>;
+  refreshModels: () => Promise<void>;
 };
 
 const modelInfo: AcpModelInfo = {
@@ -58,6 +59,7 @@ const makeResult = (overrides: Partial<MockAcpModelInfoResult> = {}): MockAcpMod
   thoughtLevel,
   setStatus: { state: 'idle' },
   setConfigOption: vi.fn().mockResolvedValue(undefined),
+  refreshModels: vi.fn().mockResolvedValue(undefined),
   ...overrides,
 });
 
@@ -88,6 +90,7 @@ vi.mock('@/renderer/utils/model/agentLogo', () => ({
 vi.mock('@icon-park/react', () => ({
   Brain: () => <span aria-hidden='true'>brain</span>,
   Down: () => <span aria-hidden='true'>v</span>,
+  Refresh: () => <span aria-hidden='true'>refresh</span>,
   Right: () => <span aria-hidden='true'>›</span>,
   Search: () => <span aria-hidden='true'>search</span>,
   Loading: ({ className }: { className?: string }) => <span aria-hidden='true' className={className} />,
@@ -221,6 +224,28 @@ describe('AcpModelSelector runtime options', () => {
     expect(screen.queryByTestId('acp-model-selector')).not.toBeInTheDocument();
     expect(slot).not.toHaveTextContent('Use CLI model');
     expect(slot.closest('[data-tooltip-content]')).toBeNull();
+  });
+
+  it('offers a Codex catalog retry when initial discovery failed', async () => {
+    const refreshModels = vi.fn().mockResolvedValue(undefined);
+    useAcpModelInfoMock.mockReturnValue(
+      makeResult({ model_info: null, canSwitch: false, isLoading: false, refreshModels })
+    );
+
+    render(<AcpModelSelector conversation_id='conversation-1' backend='codex' />);
+
+    fireEvent.click(screen.getByTestId('acp-model-selector-retry'));
+    await waitFor(() => expect(refreshModels).toHaveBeenCalledTimes(1));
+  });
+
+  it('refreshes the Codex catalog from the shared selector menu', async () => {
+    const refreshModels = vi.fn().mockResolvedValue(undefined);
+    useAcpModelInfoMock.mockReturnValue(makeResult({ refreshModels }));
+
+    render(<AcpModelSelector conversation_id='conversation-1' backend='codex' />);
+
+    fireEvent.click(screen.getByText('agent.model.refresh'));
+    await waitFor(() => expect(refreshModels).toHaveBeenCalledTimes(1));
   });
 
   it('passes team runtime preparation through to model info loading', () => {

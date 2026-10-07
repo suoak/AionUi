@@ -31,7 +31,11 @@
     "switchSuccess": "Модель успешно сменена",
     "switchFailed": "Не удалось сменить модель",
     "searchPlaceholder": "Поиск моделей",
-    "noResults": "Нет подходящих моделей"
+    "noResults": "Нет подходящих моделей",
+    "refresh": "Обновить модели",
+    "retry": "Повторить",
+    "loadFailed": "Не удалось загрузить модели Codex.",
+    "refreshFailed": "Не удалось обновить модели Codex"
   },
   "config": {
     "setting": "Применение настройки...",

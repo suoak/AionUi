@@ -31,7 +31,11 @@
     "switchSuccess": "Modelo alterado com sucesso",
     "switchFailed": "Falha ao alternar o modelo",
     "searchPlaceholder": "Buscar modelos",
-    "noResults": "Nenhum modelo correspondente"
+    "noResults": "Nenhum modelo correspondente",
+    "refresh": "Atualizar modelos",
+    "retry": "Tentar novamente",
+    "loadFailed": "Não foi possível carregar os modelos do Codex.",
+    "refreshFailed": "Não foi possível atualizar os modelos do Codex"
   },
   "config": {
     "setting": "Aplicando configuração...",

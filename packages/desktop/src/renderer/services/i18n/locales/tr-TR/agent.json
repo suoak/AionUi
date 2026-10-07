@@ -31,7 +31,11 @@
     "switchSuccess": "Model switched successfully",
     "switchFailed": "Failed to switch model",
     "searchPlaceholder": "Model ara",
-    "noResults": "Eşleşen model yok"
+    "noResults": "Eşleşen model yok",
+    "refresh": "Modelleri yenile",
+    "retry": "Tekrar dene",
+    "loadFailed": "Codex modelleri yüklenemiyor.",
+    "refreshFailed": "Codex modelleri yenilenemiyor"
   },
   "config": {
     "setting": "Ayar uygulanıyor...",

@@ -31,7 +31,11 @@
     "switchSuccess": "Modell erfolgreich gewechselt",
     "switchFailed": "Modellwechsel fehlgeschlagen",
     "searchPlaceholder": "Modelle suchen",
-    "noResults": "Keine passenden Modelle"
+    "noResults": "Keine passenden Modelle",
+    "refresh": "Modelle aktualisieren",
+    "retry": "Erneut versuchen",
+    "loadFailed": "Codex-Modelle konnten nicht geladen werden.",
+    "refreshFailed": "Codex-Modelle konnten nicht aktualisiert werden"
   },
   "config": {
     "setting": "Einstellung wird angewendet...",

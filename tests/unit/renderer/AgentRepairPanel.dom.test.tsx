@@ -258,6 +258,7 @@ describe('AgentRepairPanel', () => {
         updated_at: 1,
         generation: 0,
       },
+      diagnostics: { checks: [], fetched_at: 1, freshness: 'FRESH' },
       warnings: [],
       required_version: '0.160.1',
     });
@@ -293,6 +294,7 @@ describe('AgentRepairPanel', () => {
         updated_at: 1,
         generation: 0,
       },
+      diagnostics: { checks: [], fetched_at: 1, freshness: 'FRESH' },
       warnings: [],
       required_version: '0.160.1',
     });
@@ -323,6 +325,7 @@ describe('AgentRepairPanel', () => {
         generation: 0,
         active_login: { login_id: 'login-1', started_at: 1, state: 'waiting' },
       },
+      diagnostics: { checks: [], fetched_at: 1, freshness: 'FRESH' },
       warnings: [],
       required_version: '0.160.1',
     });
@@ -345,8 +348,30 @@ describe('AgentRepairPanel', () => {
         updated_at: 1,
         generation: 1,
       },
-      rate_limits: { rateLimits: { primary: { usedPercent: 12 }, secondary: { usedPercent: 34 } } },
-      token_usage: { summary: { lifetimeTokens: 12345 } },
+      rate_limits: {
+        ordinary_usage_allowed: null,
+        availability: 'UNKNOWN',
+        buckets: [
+          { key: 'codex', limit_id: 'codex', primary: { used_percent: 12 } },
+          { key: 'luna', limit_name: 'Luna', secondary: { used_percent: 34 } },
+        ],
+        reset_credits: { available_count: 2 },
+        fetched_at: 1,
+        source: 'READ',
+        freshness: 'FRESH',
+      },
+      usage: {
+        summary: { lifetime_tokens: 12345 },
+        daily_buckets: [],
+        fetched_at: 1,
+        source: 'READ',
+        freshness: 'FRESH',
+      },
+      diagnostics: {
+        checks: [{ id: 'server.process', status: 'PASS', summary: 'Content-free app-server diagnostics' }],
+        fetched_at: 1,
+        freshness: 'FRESH',
+      },
       warnings: [],
       required_version: '0.160.1',
     });
@@ -355,9 +380,11 @@ describe('AgentRepairPanel', () => {
 
     expect(await screen.findByText('a****@example.com')).toBeInTheDocument();
     expect(screen.getByText('plus')).toBeInTheDocument();
-    expect(screen.getByText('12%')).toBeInTheDocument();
-    expect(screen.getByText('34%')).toBeInTheDocument();
+    expect(screen.getByText(/12%/)).toBeInTheDocument();
+    expect(screen.getByText(/34%/)).toBeInTheDocument();
     expect(screen.getByText('12,345')).toBeInTheDocument();
+    expect(screen.getAllByTestId('codex-rate-limit-bucket')).toHaveLength(2);
+    expect(screen.getByText('Content-free app-server diagnostics')).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'codex.account.logoutAction' })).toBeEnabled();
   });
 
@@ -371,6 +398,7 @@ describe('AgentRepairPanel', () => {
         updated_at: 1,
         generation: 0,
       },
+      diagnostics: { checks: [], fetched_at: 1, freshness: 'FRESH' },
       warnings: [],
       required_version: '0.160.1',
     });

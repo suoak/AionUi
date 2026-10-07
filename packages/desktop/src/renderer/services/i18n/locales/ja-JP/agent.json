@@ -31,7 +31,11 @@
     "switchSuccess": "モデルを切り替えました",
     "switchFailed": "モデルの切り替えに失敗しました",
     "searchPlaceholder": "モデルを検索",
-    "noResults": "一致するモデルがありません"
+    "noResults": "一致するモデルがありません",
+    "refresh": "モデルを更新",
+    "retry": "再試行",
+    "loadFailed": "Codex モデルを読み込めません。",
+    "refreshFailed": "Codex モデルを更新できません"
   },
   "config": {
     "setting": "設定を適用しています...",
