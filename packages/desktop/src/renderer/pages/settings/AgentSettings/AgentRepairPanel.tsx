@@ -32,11 +32,6 @@ type DiagnosticBanner = {
   content: string;
 };
 
-const asRecord = (value: unknown): Record<string, unknown> | undefined =>
-  value && typeof value === 'object' && !Array.isArray(value) ? (value as Record<string, unknown>) : undefined;
-
-const numberValue = (value: unknown): number | undefined => (typeof value === 'number' ? value : undefined);
-
 export const maskCodexEmail = (email?: string): string | undefined => {
   if (!email) return undefined;
   const at = email.indexOf('@');
@@ -159,7 +154,12 @@ const AgentRepairPanel: React.FC<AgentRepairPanelProps> = ({ agent, onSaved }) =
           setCodexAccount((current) =>
             current
               ? { ...current, account: started.account }
-              : { account: started.account, warnings: [], required_version: '' }
+              : {
+                  account: started.account,
+                  warnings: [],
+                  required_version: '',
+                  diagnostics: { checks: [], fetched_at: 0, freshness: 'UNAVAILABLE' },
+                }
           );
           await openCodexAuthorizationUrl(started.authorization_url);
         } else {
@@ -258,11 +258,31 @@ const AgentRepairPanel: React.FC<AgentRepairPanelProps> = ({ agent, onSaved }) =
 
   const banner = resolveDiagnosticBanner(t, agent);
 
-  const rateLimitRoot = asRecord(codexAccount?.rate_limits?.rateLimits);
-  const primaryLimit = asRecord(rateLimitRoot?.primary);
-  const secondaryLimit = asRecord(rateLimitRoot?.secondary);
-  const usageSummary = asRecord(codexAccount?.token_usage?.summary);
-  const lifetimeTokens = numberValue(usageSummary?.lifetimeTokens);
+  const rateLimits = codexAccount?.rate_limits;
+  const usage = codexAccount?.usage;
+  const lifetimeTokens = usage?.summary.lifetime_tokens;
+  const availabilityKey = rateLimits
+    ? {
+        AVAILABLE: 'codex.account.availabilityAVAILABLE',
+        LIMITED: 'codex.account.availabilityLIMITED',
+        BLOCKED: 'codex.account.availabilityBLOCKED',
+        UNKNOWN: 'codex.account.availabilityUNKNOWN',
+      }[rateLimits.availability]
+    : undefined;
+  const freshnessKey = rateLimits
+    ? {
+        FRESH: 'codex.account.freshnessFRESH',
+        REFRESHING: 'codex.account.freshnessREFRESHING',
+        STALE: 'codex.account.freshnessSTALE',
+        UNAVAILABLE: 'codex.account.freshnessUNAVAILABLE',
+      }[rateLimits.freshness]
+    : undefined;
+  const diagnosticStatusKey = {
+    PASS: 'codex.account.diagnosticPASS',
+    WARN: 'codex.account.diagnosticWARN',
+    FAIL: 'codex.account.diagnosticFAIL',
+    NOT_APPLICABLE: 'codex.account.diagnosticNOT_APPLICABLE',
+  } as const;
   const authState = codexAccount?.account.auth_state ?? 'UNKNOWN';
   const accountStatusKey = {
     UNKNOWN: 'codex.account.statusUnknown',
@@ -302,16 +322,44 @@ const AgentRepairPanel: React.FC<AgentRepairPanelProps> = ({ agent, onSaved }) =
             <span>{t('codex.account.planLabel')}: </span>
             <span className='text-t-primary'>{codexAccount?.account.plan_type ?? t('codex.account.unknownValue')}</span>
           </div>
-          {numberValue(primaryLimit?.usedPercent) !== undefined ? (
+          {rateLimits ? (
             <div>
-              <span>{t('codex.account.primaryLimitLabel')}: </span>
-              <span className='text-t-primary'>{primaryLimit?.usedPercent as number}%</span>
+              <span>{t('codex.account.availabilityLabel')}: </span>
+              <Tag
+                color={
+                  rateLimits.availability === 'BLOCKED'
+                    ? 'red'
+                    : rateLimits.availability === 'LIMITED'
+                      ? 'orange'
+                      : rateLimits.availability === 'AVAILABLE'
+                        ? 'green'
+                        : 'gray'
+                }
+              >
+                {t(availabilityKey!)}
+              </Tag>
+              <Tag className='ml-4px'>{t(freshnessKey!)}</Tag>
             </div>
           ) : null}
-          {numberValue(secondaryLimit?.usedPercent) !== undefined ? (
+          {rateLimits?.buckets.map((bucket) => (
+            <div key={bucket.key} data-testid='codex-rate-limit-bucket'>
+              <span>{bucket.limit_name ?? bucket.limit_id ?? bucket.key}: </span>
+              <span className='text-t-primary'>
+                {[
+                  bucket.primary ? `${t('codex.account.primaryLimitLabel')} ${bucket.primary.used_percent}%` : null,
+                  bucket.secondary
+                    ? `${t('codex.account.secondaryLimitLabel')} ${bucket.secondary.used_percent}%`
+                    : null,
+                ]
+                  .filter(Boolean)
+                  .join(' · ') || t('codex.account.unknownValue')}
+              </span>
+            </div>
+          ))}
+          {rateLimits?.reset_credits ? (
             <div>
-              <span>{t('codex.account.secondaryLimitLabel')}: </span>
-              <span className='text-t-primary'>{secondaryLimit?.usedPercent as number}%</span>
+              <span>{t('codex.account.resetCreditsLabel')}: </span>
+              <span className='text-t-primary'>{rateLimits.reset_credits.available_count}</span>
             </div>
           ) : null}
           {lifetimeTokens !== undefined ? (
@@ -325,6 +373,20 @@ const AgentRepairPanel: React.FC<AgentRepairPanelProps> = ({ agent, onSaved }) =
               {t('codex.account.optionalUsageUnavailable')}
             </Typography.Text>
           ) : null}
+          <div className='mt-4px border-t border-border-2 pt-6px' data-testid='codex-diagnostics'>
+            <Typography.Text className='text-12px font-medium'>{t('codex.account.diagnosticsLabel')}</Typography.Text>
+            {codexAccount?.diagnostics?.checks.map((check) => (
+              <div key={check.id} className='mt-4px flex items-start gap-6px'>
+                <Tag color={check.status === 'FAIL' ? 'red' : check.status === 'WARN' ? 'orange' : 'gray'}>
+                  {t(diagnosticStatusKey[check.status])}
+                </Tag>
+                <span>
+                  {check.summary}
+                  {check.remediation ? ` — ${check.remediation}` : ''}
+                </span>
+              </div>
+            ))}
+          </div>
         </div>
       ) : null}
 

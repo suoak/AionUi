@@ -200,10 +200,66 @@ export type CodexAccountWarning = {
   message: string;
 };
 
+export type CodexSnapshotFreshness = 'FRESH' | 'REFRESHING' | 'STALE' | 'UNAVAILABLE';
+
+export type CodexRateLimitWindow = {
+  used_percent: number;
+  resets_at?: number;
+  window_duration_mins?: number;
+};
+
+export type CodexRateLimitBucket = {
+  key: string;
+  limit_id?: string;
+  limit_name?: string;
+  normal_model_slug?: string;
+  plan_type?: string;
+  primary?: CodexRateLimitWindow;
+  secondary?: CodexRateLimitWindow;
+  rate_limit_reached_type?: string;
+  spend_control_reached?: boolean;
+};
+
+export type CodexRateLimitsView = {
+  ordinary_usage_allowed: boolean | null;
+  availability: 'AVAILABLE' | 'LIMITED' | 'BLOCKED' | 'UNKNOWN';
+  buckets: CodexRateLimitBucket[];
+  reset_credits?: { available_count: number };
+  fetched_at: number;
+  source: 'READ' | 'NOTIFICATION_MERGE';
+  freshness: CodexSnapshotFreshness;
+};
+
+export type CodexAccountUsageView = {
+  summary: {
+    lifetime_tokens?: number;
+    peak_daily_tokens?: number;
+    longest_running_turn_sec?: number;
+    current_streak_days?: number;
+    longest_streak_days?: number;
+  };
+  daily_buckets: Array<{ start_date: string; tokens: number }>;
+  fetched_at: number;
+  source: 'READ' | 'NOTIFICATION_MERGE';
+  freshness: CodexSnapshotFreshness;
+};
+
+export type CodexDiagnosticsView = {
+  checks: Array<{
+    id: string;
+    status: 'PASS' | 'WARN' | 'FAIL' | 'NOT_APPLICABLE';
+    summary: string;
+    remediation?: string;
+  }>;
+  fetched_at: number;
+  freshness: CodexSnapshotFreshness;
+};
+
 export type CodexAccountView = {
   account: CodexAccountSnapshot;
-  rate_limits?: Record<string, unknown>;
-  token_usage?: Record<string, unknown>;
+  rate_limits?: CodexRateLimitsView;
+  usage?: CodexAccountUsageView;
+  diagnostics: CodexDiagnosticsView;
   warnings: CodexAccountWarning[];
   installed_version?: string;
   required_version: string;
