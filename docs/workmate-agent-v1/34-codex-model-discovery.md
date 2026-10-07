@@ -7,7 +7,7 @@ M5   = PARTIAL / OPEN
 M6   = OPEN
 M6.1 = IMPLEMENTED / CLOUD AND PACKAGED BUILD VERIFIED / REAL AUTH ACCEPTANCE PENDING
 M6.2 = IMPLEMENTED / CLOUD AND PACKAGED FIXTURE VERIFIED / REAL SESSION ACCEPTANCE PENDING
-M6.3 = IMPLEMENTED / CLOUD AND PACKAGED FIXTURE VALIDATION PENDING
+M6.3 = IMPLEMENTED / CLOUD AND PACKAGED FIXTURE VERIFIED / REAL MODEL ACCEPTANCE PENDING
 ```
 
 This slice covers Codex model discovery, projection, user selection, reasoning-effort validation, persistence, resume reconciliation, and per-turn review evidence. It does not implement M6.4 usage, rate-limit, or account diagnostics, a provider marketplace, automatic model routing, benchmarks, or experimental `turn/settings/update` behavior.
@@ -134,7 +134,16 @@ Local development checks passed for the Core compile and 146 Codex protocol test
 
 ## Packaged fixture evidence
 
-Pending GitHub run links and packaged artifact identifiers will be added after both branches are pushed and the cloud workflow completes. The fixture must prove the request, three-page pagination, projection, boundary selection, effort validation, persistence/resume, and `runtime.model.selected` Review evidence without asserting a particular GPT model name.
+Recorded on 2026-10-07:
+
+- AionCore PR [#138](https://github.com/suoak/AionCore/pull/138) at `e8540283bc504db4340f0714ed012a1ce83eb24a` contains the runtime implementation and protocol fixtures.
+- AionCore CI run [37584775603](https://github.com/suoak/AionCore/actions/runs/37584775603) passed format, check, Clippy, migration immutability, `cargo nextest run --workspace`, and `cargo test --workspace`.
+- AionCore Windows x64 manual build [37585063992](https://github.com/suoak/AionCore/actions/runs/37585063992), pinned to that revision, passed and produced `aioncore-manual-windows-x64` (artifact `11466532454`).
+- WorkMate PR [#167](https://github.com/suoak/AionUi/pull/167) at `57052e0912e7f7eb4db3a68990f8c05dbeebb6e0` passed Push Checks [37585839244](https://github.com/suoak/AionUi/actions/runs/37585839244) and the full PR matrix [37585844281](https://github.com/suoak/AionUi/actions/runs/37585844281), including code quality, i18n, coverage, release tests, multi-platform unit tests, and Linux/macOS/Windows build tests.
+- WorkMate Windows x64 manual build [37586615096](https://github.com/suoak/AionUi/actions/runs/37586615096) bundled Core run `37585063992` and passed code quality, package construction, executable metadata, packaged release gate, fresh-install smoke, and summary.
+- The packaged artifacts are `windows-build-x64-57052e0` (artifact `11466794843`) and `windows-installer-diagnostics-x64-fresh-57052e0` (artifact `11467118022`).
+
+The Core fixtures prove the exact `model/list` request, three-page pagination, projection, turn-boundary selection, effort validation, persistence/resume, and reduced `runtime.model.selected` Review evidence without asserting a particular GPT model name. The pinned Windows build and fresh-install smoke prove that the same Core runtime is present and launchable in the packaged WorkMate artifact. This closes the cloud and packaged-fixture gates; it does not substitute for the real-account acceptance below.
 
 ## Provider limits and real acceptance pending
 
