@@ -262,6 +262,7 @@ const AgentRepairPanel: React.FC<AgentRepairPanelProps> = ({ agent, onSaved }) =
   const primaryLimit = asRecord(rateLimitRoot?.primary);
   const secondaryLimit = asRecord(rateLimitRoot?.secondary);
   const usageSummary = asRecord(codexAccount?.token_usage?.summary);
+  const lifetimeTokens = numberValue(usageSummary?.lifetimeTokens);
   const authState = codexAccount?.account.auth_state ?? 'UNKNOWN';
   const accountStatusKey = {
     UNKNOWN: 'codex.account.statusUnknown',
@@ -313,10 +314,10 @@ const AgentRepairPanel: React.FC<AgentRepairPanelProps> = ({ agent, onSaved }) =
               <span className='text-t-primary'>{secondaryLimit?.usedPercent as number}%</span>
             </div>
           ) : null}
-          {numberValue(usageSummary?.lifetimeTokens) !== undefined ? (
+          {lifetimeTokens !== undefined ? (
             <div>
               <span>{t('codex.account.tokenUsageLabel')}: </span>
-              <span className='text-t-primary'>{(usageSummary?.lifetimeTokens as number).toLocaleString()}</span>
+              <span className='text-t-primary'>{lifetimeTokens.toLocaleString()}</span>
             </div>
           ) : null}
           {codexAccount?.warnings.length ? (
