@@ -2354,6 +2354,41 @@ export const cron = {
 };
 
 // ---------------------------------------------------------------------------
+// Agent action approvals — configuration writes an agent asked to make that
+// the user must approve (aioncore parks them; see /api/agent-approvals).
+// ---------------------------------------------------------------------------
+
+export type AgentActionKind = 'mcp' | 'provider' | 'settings' | 'agent' | 'assistant' | 'skill' | 'cron';
+export type AgentApprovalStatus = 'pending' | 'approved' | 'denied' | 'consumed' | 'expired';
+
+export interface IAgentApprovalRecord {
+  id: string;
+  user_id: string;
+  conversation_id: string;
+  kind: AgentActionKind;
+  method: string;
+  path: string;
+  /** Secret-redacted, truncated request body. */
+  summary: string;
+  status: AgentApprovalStatus;
+  created_at: number;
+  expires_at: number;
+}
+
+export const agentApproval = {
+  listPending: httpGet<IAgentApprovalRecord[]>('/api/agent-approvals'),
+  approve: httpPost<IAgentApprovalRecord, { id: string }>(
+    (p) => `/api/agent-approvals/${encodeURIComponent(p.id)}/approve`,
+    () => ({})
+  ),
+  deny: httpPost<IAgentApprovalRecord, { id: string }>(
+    (p) => `/api/agent-approvals/${encodeURIComponent(p.id)}/deny`,
+    () => ({})
+  ),
+  onChanged: wsEmitter<IAgentApprovalRecord>('agent.actionApproval'),
+};
+
+// ---------------------------------------------------------------------------
 // Cron types (re-exported for consumers)
 // ---------------------------------------------------------------------------
 

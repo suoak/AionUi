@@ -65,5 +65,24 @@
     "create": "erstellen",
     "modify": "ändern",
     "delete": "löschen"
+  },
+  "agentApproval": {
+    "title": "Ein Agent möchte Ihre Konfiguration ändern",
+    "description": "Ein Agent hat CSBU WorkMate gebeten, die folgende Änderung vorzunehmen. Genehmigen Sie sie nur, wenn Sie diese Änderung angefordert haben. Im Zweifel ablehnen.",
+    "approve": "Genehmigen",
+    "deny": "Ablehnen",
+    "conversation": "Aus Unterhaltung: {{id}}",
+    "expires": "Läuft ab um {{time}}",
+    "morePending": "{{count}} weitere warten",
+    "submitFailed": "Entscheidung konnte nicht gesendet werden. Bitte erneut versuchen.",
+    "kind": {
+      "mcp": "MCP-Server",
+      "provider": "Modellanbieter",
+      "settings": "Einstellungen",
+      "agent": "Agent",
+      "assistant": "Assistent",
+      "skill": "Skill",
+      "cron": "Geplante Aufgabe"
+    }
   }
 }

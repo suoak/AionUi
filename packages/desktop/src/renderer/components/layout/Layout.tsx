@@ -9,6 +9,7 @@ import { TEAM_MODE_ENABLED } from '@/common/config/constants';
 import PwaPullToRefresh from '@/renderer/components/layout/PwaPullToRefresh';
 import Titlebar from '@/renderer/components/layout/Titlebar';
 import UpdateNotificationCard from '@/renderer/components/settings/UpdateNotificationCard';
+import AgentActionApprovalHost from '@/renderer/components/agentApproval/AgentActionApprovalHost';
 import { Layout as ArcoLayout, Tooltip } from '@arco-design/web-react';
 import classNames from 'classnames';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
@@ -552,6 +553,7 @@ const Layout: React.FC<{
         </div>
       </NavigationHistoryProvider>
       <UpdateNotificationCard />
+      <AgentActionApprovalHost />
     </LayoutContext.Provider>
   );
 };

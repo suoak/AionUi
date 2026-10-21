@@ -65,5 +65,24 @@
     "create": "oluştur",
     "modify": "değiştir",
     "delete": "sil"
+  },
+  "agentApproval": {
+    "title": "Bir ajan yapılandırmanızı değiştirmek istiyor",
+    "description": "Bir ajan CSBU WorkMate'ten aşağıdaki değişikliği yapmasını istedi. Yalnızca bu değişikliği siz istediyseniz onaylayın. Emin değilseniz reddedin.",
+    "approve": "Onayla",
+    "deny": "Reddet",
+    "conversation": "Sohbetten: {{id}}",
+    "expires": "{{time}} saatinde sona erer",
+    "morePending": "{{count}} tane daha bekliyor",
+    "submitFailed": "Kararınız gönderilemedi. Lütfen tekrar deneyin.",
+    "kind": {
+      "mcp": "MCP sunucusu",
+      "provider": "Model sağlayıcı",
+      "settings": "Ayarlar",
+      "agent": "Ajan",
+      "assistant": "Asistan",
+      "skill": "Beceri",
+      "cron": "Zamanlanmış görev"
+    }
   }
 }
