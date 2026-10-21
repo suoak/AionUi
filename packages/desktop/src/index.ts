@@ -419,8 +419,11 @@ function registerCronResumeBridge(backendPort: number): void {
   const onResume = () => {
     void fetch(`http://127.0.0.1:${backendPort}/api/cron/internal/system-resume`, {
       method: 'POST',
+      // Node fetch in the main process bypasses the webRequest hook, so the
+      // per-launch local secret must be attached explicitly.
       headers: {
         'x-aionui-internal': '1',
+        ...backendManager.authHeaders(),
       },
     }).catch((error) => {
       console.error('[CSBU WorkMate] Failed to notify backend about system resume:', error);

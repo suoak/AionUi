@@ -51,6 +51,56 @@ describe('shouldAttachLocalSecret', () => {
     ).toBe(true);
   });
 
+  it('lets an extension settings iframe load its own assets but nothing else', () => {
+    const backendOrigin = `http://127.0.0.1:${PORT}`;
+    const fromExtFrame = (overrides: Partial<LocalSecretRequest>) =>
+      req({ isMainFrame: false, frameOrigin: backendOrigin, resourceType: 'script', ...overrides });
+    expect(
+      shouldAttachLocalSecret(
+        fromExtFrame({ url: `${backendOrigin}/api/extensions/demo/assets/settings/main.js` }),
+        ctx
+      )
+    ).toBe(true);
+    expect(
+      shouldAttachLocalSecret(
+        fromExtFrame({ resourceType: 'image', url: `${backendOrigin}/api/extensions/demo/assets/icon.png` }),
+        ctx
+      )
+    ).toBe(true);
+    // Script-initiated API calls from the extension page stay unauthenticated.
+    expect(
+      shouldAttachLocalSecret(fromExtFrame({ resourceType: 'xhr', url: `${backendOrigin}/api/providers` }), ctx)
+    ).toBe(false);
+    expect(
+      shouldAttachLocalSecret(
+        fromExtFrame({ method: 'POST', url: `${backendOrigin}/api/extensions/demo/assets/x` }),
+        ctx
+      )
+    ).toBe(false);
+    expect(
+      shouldAttachLocalSecret(
+        fromExtFrame({ url: `${backendOrigin}/api/extensions/demo/assets/../../../providers` }),
+        ctx
+      )
+    ).toBe(false);
+    // Never for webviews or windows that are not the app renderer.
+    expect(
+      shouldAttachLocalSecret(
+        fromExtFrame({ webContentsType: 'webview', url: `${backendOrigin}/api/extensions/demo/assets/a.js` }),
+        ctx
+      )
+    ).toBe(false);
+    expect(
+      shouldAttachLocalSecret(
+        fromExtFrame({
+          mainFrameUrl: 'https://evil.example/',
+          url: `${backendOrigin}/api/extensions/demo/assets/a.js`,
+        }),
+        ctx
+      )
+    ).toBe(false);
+  });
+
   it('never attaches to other hosts or ports', () => {
     expect(shouldAttachLocalSecret(req({ url: 'http://127.0.0.1:9999/api/conversations' }), ctx)).toBe(false);
     expect(shouldAttachLocalSecret(req({ url: `http://evil.example:${PORT}/api` }), ctx)).toBe(false);
