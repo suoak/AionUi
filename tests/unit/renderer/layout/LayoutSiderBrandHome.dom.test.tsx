@@ -52,6 +52,10 @@ vi.mock('@/common/config/constants', () => ({
 }));
 vi.mock('@/renderer/components/layout/PwaPullToRefresh', () => ({ default: () => null }));
 vi.mock('@/renderer/components/layout/Titlebar', () => ({ default: () => null }));
+vi.mock('@/renderer/components/agentApproval/AgentActionApprovalHost', () => ({
+  default: () => null,
+}));
+
 vi.mock('@/renderer/components/settings/UpdateNotificationCard', () => ({
   default: () => <div data-testid='update-notification-host' />,
 }));

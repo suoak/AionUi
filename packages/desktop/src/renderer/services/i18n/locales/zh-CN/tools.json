@@ -65,5 +65,24 @@
     "create": "创建",
     "modify": "修改",
     "delete": "删除"
+  },
+  "agentApproval": {
+    "title": "智能体请求修改配置",
+    "description": "有智能体请求 CSBU WorkMate 执行以下配置变更。仅当这是你要求的变更时才批准；不确定时请拒绝。",
+    "approve": "批准",
+    "deny": "拒绝",
+    "conversation": "来自会话：{{id}}",
+    "expires": "{{time}} 过期",
+    "morePending": "还有 {{count}} 个待处理",
+    "submitFailed": "提交失败，请重试。",
+    "kind": {
+      "mcp": "MCP 服务器",
+      "provider": "模型提供商",
+      "settings": "设置",
+      "agent": "智能体",
+      "assistant": "助手",
+      "skill": "技能",
+      "cron": "定时任务"
+    }
   }
 }

@@ -65,5 +65,24 @@
     "create": "建立",
     "modify": "修改",
     "delete": "刪除"
+  },
+  "agentApproval": {
+    "title": "智慧體請求修改設定",
+    "description": "有智慧體請求 CSBU WorkMate 執行以下設定變更。僅當這是你要求的變更時才核准；不確定時請拒絕。",
+    "approve": "核准",
+    "deny": "拒絕",
+    "conversation": "來自對話：{{id}}",
+    "expires": "{{time}} 到期",
+    "morePending": "還有 {{count}} 個待處理",
+    "submitFailed": "提交失敗，請重試。",
+    "kind": {
+      "mcp": "MCP 伺服器",
+      "provider": "模型供應商",
+      "settings": "設定",
+      "agent": "智慧體",
+      "assistant": "助理",
+      "skill": "技能",
+      "cron": "排程任務"
+    }
   }
 }

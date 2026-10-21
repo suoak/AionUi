@@ -65,5 +65,24 @@
     "create": "作成",
     "modify": "変更",
     "delete": "削除"
+  },
+  "agentApproval": {
+    "title": "エージェントが設定の変更を求めています",
+    "description": "エージェントが CSBU WorkMate に次の変更を依頼しました。ご自身が依頼した変更の場合のみ承認してください。不明な場合は拒否してください。",
+    "approve": "承認",
+    "deny": "拒否",
+    "conversation": "会話: {{id}}",
+    "expires": "{{time}} に期限切れ",
+    "morePending": "ほかに {{count}} 件待機中",
+    "submitFailed": "送信できませんでした。もう一度お試しください。",
+    "kind": {
+      "mcp": "MCP サーバー",
+      "provider": "モデルプロバイダー",
+      "settings": "設定",
+      "agent": "エージェント",
+      "assistant": "アシスタント",
+      "skill": "スキル",
+      "cron": "スケジュールタスク"
+    }
   }
 }
