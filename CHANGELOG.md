@@ -1,5 +1,35 @@
 # Changelog
 
+## [2.4.1](https://github.com/suoak/AionUi/compare/v2.4.0...v2.4.1) (2026-10-21)
+
+### Desktop
+
+#### Bug Fixes
+
+- **security:** bundle AionCore v0.2.18, which hardens which tools and permissions a conversation is exposed to.
+
+#### 内网更新说明
+
+<!-- internal-release-notes:start -->
+
+**由运营管理部提供**
+
+- 内置 Agent 不再读取工作区中的 `.aionrs.toml`，打开不可信仓库时不会再自动套用其中的自动批准、工具白名单、MCP 或 hook 配置。
+- 会话从 YOLO 切回“默认”后，工具调用会重新需要审批。
+- 客户端不能再改写会话的团队绑定、团队 MCP 配置，也不能修改固定权限模式的会话权限。
+- 已删除的 MCP 服务不会再被挂载到会话。
+
+<!-- internal-release-notes:end -->
+
+### Core ([v0.2.18](https://github.com/suoak/AionCore/releases/tag/v0.2.18))
+
+- Isolate the embedded aionrs runtime from workspace `.aionrs.toml` (tools, hooks and MCP servers are host-controlled only).
+- Restore runtime approval when a session leaves YOLO mode (aionrs v0.2.24).
+- Reject client changes to protected `conversation.extra` keys (`teamId`, `slot_id`, `role`, `team_mcp_stdio_config`, and `session_mode` for team-bound or fixed-permission conversations).
+- Never mount or snapshot soft-deleted MCP servers.
+
+---
+
 ## [2.4.0](https://github.com/suoak/AionUi/compare/v2.3.0...v2.4.0) (2026-10-08)
 
 ### Desktop
