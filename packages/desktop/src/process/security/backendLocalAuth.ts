@@ -70,6 +70,15 @@ function isTrustedRendererUrl(url: string | undefined, prefixes: string[]): bool
   return prefixes.some((prefix) => prefix.length > 0 && normalized.startsWith(normalizeUrlForPrefix(prefix)));
 }
 
+/**
+ * Static files an installed extension serves for its settings tab. The tab is
+ * an iframe whose document comes from the backend origin, so its own
+ * scripts/styles/images are cross-origin to the renderer; they still need the
+ * secret to load. Only GETs of this asset tree qualify — never other API
+ * routes, so the extension page cannot drive the local API.
+ */
+const EXTENSION_ASSET_PATH = /^\/api\/extensions\/[^/]+\/assets\//;
+
 /** Pure policy: should this request carry the local API secret? */
 export function shouldAttachLocalSecret(req: LocalSecretRequest, ctx: LocalSecretContext): boolean {
   const target = parseBackendUrl(req.url, ctx.backendPort);
@@ -81,6 +90,7 @@ export function shouldAttachLocalSecret(req: LocalSecretRequest, ctx: LocalSecre
     if (req.isMainFrame) return true;
     // Same-origin child frames of the renderer (non-opaque origin only).
     if (req.frameOrigin && req.frameOrigin !== 'null' && req.frameOrigin === req.mainFrameOrigin) return true;
+    if (req.method === 'GET' && target.protocol === 'http:' && EXTENSION_ASSET_PATH.test(target.pathname)) return true;
     // An iframe document the renderer embeds from the backend (read-only GET
     // navigation). Its own scripts are cross-origin to the renderer and get no
     // header for their subresource/XHR requests.
