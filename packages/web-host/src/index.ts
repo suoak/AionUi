@@ -11,6 +11,9 @@ export {
   buildSpawnArgs,
   buildSpawnEnv,
   findAvailablePort,
+  generateLocalApiSecret,
+  LOCAL_API_SECRET_HEADER,
+  LOCAL_AUTH_STDIN_ENV,
   startBackend,
   stopBackend,
 } from './backend-launcher.js';
@@ -45,6 +48,7 @@ export async function startWebHost(opts: WebHostOptions): Promise<WebHostHandle>
       stop: async () => {
         // no-op: external backend
       },
+      authHeaders: opts.backend.authHeaders,
     };
   }
 
@@ -67,6 +71,7 @@ export async function startWebHost(opts: WebHostOptions): Promise<WebHostHandle>
   return {
     port: staticHandle.port,
     backendPort: backendHandle.port,
+    backendAuthHeaders: () => backendHandle.authHeaders?.() ?? {},
     url: staticHandle.url,
     localUrl: staticHandle.localUrl,
     networkUrl: staticHandle.networkUrl,

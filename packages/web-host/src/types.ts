@@ -38,7 +38,9 @@ export type WebHostOptions = {
   dataDir?: string;
   logDir?: string;
   dirs?: BackendSystemDirs;
-  backend: { kind: 'ownBackend'; resolveBackend: BackendBinaryResolver } | { kind: 'useExistingBackend'; port: number };
+  backend:
+    | { kind: 'ownBackend'; resolveBackend: BackendBinaryResolver }
+    | { kind: 'useExistingBackend'; port: number; authHeaders?: () => Record<string, string> };
 };
 
 /**
@@ -47,6 +49,11 @@ export type WebHostOptions = {
 export type WebHostHandle = {
   port: number;
   backendPort: number;
+  /**
+   * Headers authenticating a trusted host-process call to the backend (the
+   * per-launch local secret). Never forward these to browser clients.
+   */
+  backendAuthHeaders: () => Record<string, string>;
   url: string;
   localUrl: string;
   networkUrl?: string;

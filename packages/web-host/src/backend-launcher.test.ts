@@ -36,6 +36,7 @@ import {
   buildSpawnArgs,
   buildSpawnEnv,
   findAvailablePort,
+  generateLocalApiSecret,
   BackendLifecycleManager,
   BackendStartupError,
 } from './backend-launcher.js';
@@ -81,7 +82,7 @@ function makeFakeChild(): ChildProcess {
   const child = new EventEmitter() as EventEmitter & Partial<ChildProcess>;
   child.stdout = new EventEmitter() as ChildProcess['stdout'];
   child.stderr = new EventEmitter() as ChildProcess['stderr'];
-  (child.stdin as unknown) = { end: vi.fn() };
+  (child.stdin as unknown) = { end: vi.fn(), on: vi.fn() };
   child.kill = vi.fn() as unknown as ChildProcess['kill'];
   child.pid = 99999;
   return child as ChildProcess;
@@ -454,6 +455,14 @@ describe('BackendLifecycleManager.start (success path)', () => {
       expect(opts.env.AIONUI_CACHE_DIR).toBe('/c');
       expect(opts.env.AIONUI_WORK_DIR).toBe('/w');
       expect(opts.env.AIONUI_LOG_DIR).toBe('/l');
+      // Per-launch local API secret: opt-in flag in env, value only on stdin.
+      expect(opts.env.AIONUI_LOCAL_AUTH_STDIN).toBe('1');
+      const secret = mgr.localApiSecret;
+      expect(secret).toMatch(/^[A-Za-z0-9_-]{43}$/);
+      expect(mgr.authHeaders()).toEqual({ 'x-aionui-local-secret': secret });
+      expect(spawnCall[1]).not.toContain(secret);
+      expect(Object.values(opts.env)).not.toContain(secret);
+      expect(child.stdin?.end).toHaveBeenCalledWith(`${secret}\n`);
       expect((spawnCall[2] as { detached?: boolean }).detached).toBe(process.platform !== 'win32');
       expect(mkdirSync).toHaveBeenCalledWith('/db/path', { recursive: true });
       expect(mkdirSync).toHaveBeenCalledWith('/log/dir', { recursive: true });
@@ -1440,5 +1449,14 @@ describe('BackendLifecycleManager.start peer retry', () => {
 
     await expect(mgr.start('/data/csbu-workmate-backend.db')).rejects.toBe(nonPeerError);
     expect(attemptStart).toHaveBeenCalledTimes(1);
+  });
+});
+
+describe('generateLocalApiSecret', () => {
+  it('mints distinct 256-bit base64url secrets', () => {
+    const a = generateLocalApiSecret();
+    const b = generateLocalApiSecret();
+    expect(a).toMatch(/^[A-Za-z0-9_-]{43}$/);
+    expect(a).not.toBe(b);
   });
 });
