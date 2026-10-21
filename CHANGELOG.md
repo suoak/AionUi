@@ -1,5 +1,39 @@
 # Changelog
 
+## [2.4.2](https://github.com/suoak/AionUi/compare/v2.4.1...v2.4.2) (2026-10-22)
+
+### Desktop
+
+#### Bug Fixes
+
+- **security:** authenticate every desktop call to the local AionCore with a per-launch secret ([#174](https://github.com/suoak/AionUi/pull/174)).
+- **security:** show an approval card when an agent requests configuration changes ([#175](https://github.com/suoak/AionUi/pull/175)).
+- **security:** authenticate the cron resume ping and extension settings assets to the local AionCore ([#176](https://github.com/suoak/AionUi/pull/176)).
+- **security:** bundle AionCore v0.2.19.
+
+#### 内网更新说明
+
+<!-- internal-release-notes:start -->
+
+**由运营管理部提供**
+
+- 本机服务接口每次启动都会生成新的访问密钥，没有密钥的请求会被拒绝；跨域访问只允许应用自身和本机地址。
+- 智能体只能访问允许的接口；它请求修改 MCP、模型服务、设置或定时任务时，会弹出审批卡片，确认后才生效；返回给智能体的密钥类字段会打码。
+- 智能体只能给你用 `@@` 选中的会话发消息，或回复给它发消息的会话。
+- 修复电脑睡眠唤醒后定时任务补跑失败、扩展设置页加载失败的问题。
+- 升级存在安全漏洞的依赖组件（包括 zip 9）。
+
+<!-- internal-release-notes:end -->
+
+### Core ([v0.2.19](https://github.com/suoak/AionCore/releases/tag/v0.2.19))
+
+- Require a per-launch local API secret on all HTTP and WebSocket requests and restrict CORS to the app and loopback origins (suoak/AionCore#145).
+- Scope agent tokens to an endpoint allowlist, route configuration writes through user approval and redact secrets in agent-facing responses (suoak/AionCore#146).
+- Limit cross-session messaging to `@@`-selected conversations or replies to the sender (suoak/AionCore#147).
+- Upgrade vulnerable dependencies (`quinn-proto`, `rustls`, `zip` 9); `cargo audit` reports 0 vulnerabilities (suoak/AionCore#148).
+
+---
+
 ## [2.4.1](https://github.com/suoak/AionUi/compare/v2.4.0...v2.4.1) (2026-10-21)
 
 ### Desktop
