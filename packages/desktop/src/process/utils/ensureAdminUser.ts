@@ -14,6 +14,7 @@
  */
 
 import { loadUserWebUIConfig, saveUserWebUIConfig } from './webuiConfig';
+import { getBackendAuthHeaders } from '@/common/adapter/backendAuth';
 
 type AuthStatusResponse = {
   success?: boolean;
@@ -55,7 +56,7 @@ export async function ensureAdminUser(backendPort: number): Promise<void> {
     });
     const seedRes = await fetch(`http://127.0.0.1:${backendPort}/api/auth/internal/users/system/credentials`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json', ...getBackendAuthHeaders() },
       body,
     });
     if (!seedRes.ok) {

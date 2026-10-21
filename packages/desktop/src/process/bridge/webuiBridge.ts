@@ -21,6 +21,7 @@ import {
   getDesktopWebUIStatus,
   setDesktopWebUIInitialPassword,
 } from '@process/utils/webuiConfig';
+import { getBackendAuthHeaders } from '@/common/adapter/backendAuth';
 
 type AdminUsernameResult = { username?: string };
 
@@ -32,7 +33,9 @@ async function fetchAdminUsername(): Promise<string> {
   const port = getBackendPort();
   if (!port) return 'admin';
   try {
-    const res = await fetch(`http://127.0.0.1:${port}/api/auth/internal/users/system`);
+    const res = await fetch(`http://127.0.0.1:${port}/api/auth/internal/users/system`, {
+      headers: getBackendAuthHeaders(),
+    });
     if (!res.ok) return 'admin';
     const json = (await res.json()) as { data?: AdminUsernameResult | null };
     return json.data?.username ?? 'admin';
@@ -64,7 +67,10 @@ async function maybeSeedInitialPassword(): Promise<void> {
     setDesktopWebUIInitialPassword(undefined);
     return;
   }
-  const resetRes = await fetch(`http://127.0.0.1:${port}/api/webui/reset-password`, { method: 'POST' });
+  const resetRes = await fetch(`http://127.0.0.1:${port}/api/webui/reset-password`, {
+    method: 'POST',
+    headers: getBackendAuthHeaders(),
+  });
   if (!resetRes.ok) {
     throw new Error(`[WebUI] /api/webui/reset-password returned ${resetRes.status}`);
   }

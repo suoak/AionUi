@@ -8,6 +8,13 @@ import { fileURLToPath } from 'node:url';
 import { openBrowserUrl, shouldAutoOpenBrowser } from './browser.js';
 import { ensureAdminPassword } from './ensureAdminPassword.js';
 
+/** Merge the backend's trusted-host auth headers into a fetch init. */
+function withBackendAuth(init: RequestInit | undefined, authHeaders: Record<string, string>): RequestInit {
+  const headers = new Headers(init?.headers);
+  for (const [name, value] of Object.entries(authHeaders)) headers.set(name, value);
+  return { ...init, headers };
+}
+
 // tarball layout:
 //   csbu-workmate-web/
 //   ├── csbu-workmate-web              ← bun-compiled standalone binary (process.execPath)
@@ -232,7 +239,9 @@ async function runStart(flags: Map<string, string | true>): Promise<void> {
     await ensureAdminPassword(
       { backendPort: handle.backendPort, resetCommand: RESET_COMMAND },
       {
-        fetch: (...args) => fetch(...args),
+        // Local-only bootstrap endpoints require the backend's per-launch
+        // secret; it stays inside this process and is never proxied.
+        fetch: (input, init) => fetch(input, withBackendAuth(init, handle.backendAuthHeaders())),
         log: (msg) => console.log(msg),
         warn: (msg) => console.warn(msg),
         sleep: (ms) => delay(ms),
@@ -332,9 +341,10 @@ async function runResetPassword(flags: Map<string, string | true>): Promise<void
       process.exit(1);
     }
 
-    const res = await fetch(`http://127.0.0.1:${handle.backendPort}/api/webui/reset-password`, {
-      method: 'POST',
-    });
+    const res = await fetch(
+      `http://127.0.0.1:${handle.backendPort}/api/webui/reset-password`,
+      withBackendAuth({ method: 'POST' }, handle.backendAuthHeaders())
+    );
     if (!res.ok) {
       console.error(`[csbu-workmate-web] /api/webui/reset-password returned ${res.status}`);
       process.exit(1);

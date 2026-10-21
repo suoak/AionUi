@@ -6,6 +6,7 @@
  * so existing renderer code works without changes.
  */
 
+import { getBackendAuthHeaders } from './backendAuth';
 import { refreshSession, WS_CLOSE_POLICY_VIOLATION } from './sessionRefresh';
 
 // ---------------------------------------------------------------------------
@@ -212,7 +213,9 @@ function sendHttpRequest(
   const url = `${getBaseUrl()}${path}`;
   return fetch(url, {
     method,
-    headers,
+    // Main-process calls carry the launcher's local secret; in the renderer
+    // this is empty and the main process's webRequest hook authenticates.
+    headers: { ...headers, ...getBackendAuthHeaders() },
     body: body !== undefined ? JSON.stringify(body) : undefined,
   });
 }

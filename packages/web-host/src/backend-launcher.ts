@@ -9,6 +9,7 @@
  */
 
 import { type ChildProcess, spawn } from 'node:child_process';
+import { randomBytes } from 'node:crypto';
 import { mkdirSync, statSync } from 'node:fs';
 import { connect, createServer, type Socket } from 'node:net';
 import { cleanupRegisteredAgentProcesses } from './agent-process-registry.js';
@@ -100,7 +101,30 @@ export type BackendLaunchOptions = {
 export type BackendHandle = {
   port: number;
   stop: () => Promise<void>;
+  /**
+   * Headers that authenticate a trusted host-process call (main process, CLI)
+   * to this backend. Empty when the backend runs without a local secret.
+   */
+  authHeaders?: () => Record<string, string>;
 };
+
+/**
+ * Header carrying the per-launch local API secret. Must match AionCore
+ * `aionui_auth::LOCAL_API_SECRET_HEADER`.
+ */
+export const LOCAL_API_SECRET_HEADER = 'x-aionui-local-secret';
+
+/**
+ * Env flag telling aioncore to read the local API secret from stdin. Carries no
+ * secret itself; the secret is the first stdin line. Must match AionCore
+ * `aionui_auth::LOCAL_AUTH_STDIN_ENV`.
+ */
+export const LOCAL_AUTH_STDIN_ENV = 'AIONUI_LOCAL_AUTH_STDIN';
+
+/** Mint a fresh per-launch local API secret (32 random bytes, base64url). */
+export function generateLocalApiSecret(): string {
+  return randomBytes(32).toString('base64url');
+}
 
 export type BackendStartupErrorDetails = {
   stage: BackendStartupStage;
@@ -515,6 +539,8 @@ async function probeHealthCheckTcpConnect(port: number, timeoutMs = 1_000): Prom
 export class BackendLifecycleManager {
   private childProcess: ChildProcess | null = null;
   private _port = 0;
+  /** Per-launch local API secret of the current child. Never logged. */
+  private _localApiSecret: string | null = null;
   private _status: BackendStatus = 'stopped';
   private _lastDbPath = '';
   private _lastLogDir?: string;
@@ -536,6 +562,20 @@ export class BackendLifecycleManager {
 
   get status(): BackendStatus {
     return this._status;
+  }
+
+  /**
+   * Headers that authenticate a trusted host-process call to the running
+   * backend (Electron main process, web-cli). Read on every call so a crash
+   * restart (new child, new secret) is picked up transparently.
+   */
+  authHeaders(): Record<string, string> {
+    return this._localApiSecret ? { [LOCAL_API_SECRET_HEADER]: this._localApiSecret } : {};
+  }
+
+  /** Current per-launch local API secret, or null before the first spawn. */
+  get localApiSecret(): string | null {
+    return this._localApiSecret;
   }
 
   private isPeerAlreadyRunningError(error: unknown): boolean {
@@ -686,10 +726,13 @@ export class BackendLifecycleManager {
       throw makeStartupError('spawn', 'aioncore startup directory preparation failed', error);
     }
 
+    // Per-launch local API secret: handed to aioncore over stdin (never argv,
+    // env, or logs) so only this process can act as the desktop user.
+    const localApiSecret = generateLocalApiSecret();
     try {
       this.childProcess = spawn(binaryPath, args, {
         stdio: ['pipe', 'pipe', 'pipe'],
-        env: buildSpawnEnv(dirs),
+        env: { ...buildSpawnEnv(dirs), [LOCAL_AUTH_STDIN_ENV]: '1' },
         cwd: dirs?.workDir ?? dbPath,
         detached: process.platform !== 'win32',
       });
@@ -698,7 +741,11 @@ export class BackendLifecycleManager {
       throw makeStartupError('spawn', 'aioncore process spawn threw before startup', error);
     }
 
-    this.childProcess.stdin?.end();
+    this._localApiSecret = localApiSecret;
+    // A child that dies before reading stdin surfaces EPIPE here; the exit
+    // handlers below report the real startup failure.
+    this.childProcess.stdin?.on('error', () => {});
+    this.childProcess.stdin?.end(`${localApiSecret}\n`);
 
     backendPid = this.childProcess.pid;
     const pid = backendPid;
@@ -1085,6 +1132,7 @@ export async function startBackend(opts: BackendLaunchOptions): Promise<BackendH
   return {
     port,
     stop: () => manager.stop(),
+    authHeaders: () => manager.authHeaders(),
   };
 }
 

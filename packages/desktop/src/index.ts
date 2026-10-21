@@ -44,6 +44,9 @@ import { ProcessConfig } from './process/utils/initStorage';
 import type { BackendStartupFailureInfo } from './common/types/platform/electron';
 import { registerWindowMaximizeListeners } from '@process/bridge';
 import { BackendLifecycleManager } from '@csbu-workmate/web-host';
+import { pathToFileURL } from 'node:url';
+import { setBackendAuthHeadersProvider } from './common/adapter/backendAuth';
+import { installBackendLocalAuth } from './process/security/backendLocalAuth';
 import { resolveBinaryPath } from '@process/backend';
 import './process/bridge/feedbackBridge';
 import { wasLaunchedAtLogin } from '@process/bridge/applicationBridge';
@@ -304,6 +307,25 @@ let backendStartupFailureInfo: BackendStartupFailureInfo | null = null;
 let rendererInitialLanguage: string | null = null;
 let backendMigrationsScheduled = false;
 let ensureAdminUserPromise: Promise<void> | null = null;
+
+// Main-process callers of the backend (httpBridge, ensureAdminUser, WebUI
+// bootstrap) authenticate with the launcher's per-launch secret. Read lazily so
+// a crash restart's new secret is picked up.
+setBackendAuthHeadersProvider(() => backendManager.authHeaders());
+
+/** URL prefixes of the app's own renderer pages (main window, pet windows). */
+function trustedRendererPrefixes(): string[] {
+  const prefixes = [pathToFileURL(path.join(__dirname, '../renderer') + path.sep).href];
+  const devUrl = process.env['ELECTRON_RENDERER_URL'];
+  if (!app.isPackaged && devUrl) {
+    try {
+      prefixes.push(new URL(devUrl).origin + '/');
+    } catch {
+      // ignore malformed dev URL
+    }
+  }
+  return prefixes;
+}
 
 ipcMain.on('get-backend-port', (event) => {
   event.returnValue = backendManager.port;
@@ -783,6 +805,14 @@ const handleAppReady = async (): Promise<void> => {
   }
 
   setSentryDeviceId();
+
+  // Renderer requests to aioncore get the per-launch local secret attached in
+  // the network layer; renderer JS never sees it.
+  installBackendLocalAuth(session.defaultSession, {
+    getBackendPort: () => backendManager.port,
+    getLocalSecret: () => backendManager.localApiSecret,
+    trustedRendererPrefixes: trustedRendererPrefixes(),
+  });
 
   // Allow the renderer's Local Font Access queries (window.queryLocalFonts),
   // used by the appearance font picker to enumerate installed fonts. Electron 37
