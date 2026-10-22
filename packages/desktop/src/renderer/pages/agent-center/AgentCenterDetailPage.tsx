@@ -12,6 +12,7 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
 import { formatAgentCenterError } from './agentCenterErrors';
+import { mcpPolicyChip } from './mcpPolicyCopy';
 
 const { Title, Text } = Typography;
 const ACTIVE_WORKFLOW_REFRESH_MS = 3000;
@@ -133,7 +134,7 @@ const AgentCenterDetailPage: React.FC = () => {
     out.push(statusLabel[detail.meta.status] ?? detail.meta.status);
     if (detail.meta.version > 0) out.push(`v${detail.meta.version}`);
     out.push(`Skills ${detail.meta.skill_refs.length}`);
-    out.push(detail.meta.mcp_policy === 'allowlist' ? 'MCP 白名单' : 'MCP 继承用户');
+    out.push(mcpPolicyChip(detail.meta.mcp_policy));
     const model = detail.assistant.defaults.model;
     if (model.mode === 'fixed' && model.value) out.push(`模型 ${model.value}`);
     else out.push('模型 自动');
