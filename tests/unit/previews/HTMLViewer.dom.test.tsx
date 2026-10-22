@@ -74,6 +74,17 @@ describe('HTMLViewer', () => {
     expect(container.querySelector('[class*="toolbar"]')).not.toBeInTheDocument();
   });
 
+  it('renders through srcdoc in an opaque-origin sandbox', () => {
+    const { container } = render(<HTMLViewer content='<h1>Isolated</h1>' file_path='/test/index.html' />);
+    const iframe = container.querySelector('iframe');
+    const sandbox = iframe?.getAttribute('sandbox') ?? '';
+    expect(sandbox.split(/\s+/)).toContain('allow-scripts');
+    expect(sandbox).not.toContain('allow-same-origin');
+    const doc = iframe?.getAttribute('srcdoc') ?? '';
+    expect(doc).toContain('<h1>Isolated</h1>');
+    expect(doc).toContain('<base href="file:///test/">');
+  });
+
   it('accepts file_path prop', () => {
     const { container } = render(<HTMLViewer content='<h1>Test</h1>' file_path='/test/index.html' />);
     expect(container.querySelector('iframe')).toBeInTheDocument();
@@ -81,6 +92,18 @@ describe('HTMLViewer', () => {
 });
 
 describe('HTMLRenderer', () => {
+  it('browser iframe preview has no allow-same-origin', () => {
+    Reflect.deleteProperty(window, 'electronAPI');
+    const { container } = render(<HTMLRenderer content='<h1>Web</h1>' />);
+    const iframe = container.querySelector('iframe');
+    expect(iframe).toBeInTheDocument();
+    const sandbox = iframe?.getAttribute('sandbox') ?? '';
+    expect(sandbox.split(/\s+/)).toEqual(
+      expect.arrayContaining(['allow-scripts', 'allow-forms', 'allow-popups', 'allow-modals'])
+    );
+    expect(sandbox).not.toContain('allow-same-origin');
+  });
+
   const electronAPI = {};
 
   afterEach(() => {
