@@ -929,7 +929,11 @@
     "collapse": "プランを折りたたむ"
   },
   "taskSession": {
-    "mode": { "agent": "エージェント", "plan": "プラン", "goal": "ゴール" },
+    "mode": {
+      "agent": "エージェント",
+      "plan": "プラン",
+      "goal": "ゴール"
+    },
     "status": {
       "draft": "下書き",
       "ready": "準備完了",
@@ -992,6 +996,33 @@
       "unsupported": "プランニング分離は未対応です",
       "automaticUnavailable": "自動プランニングは利用できません",
       "start": "プランニングを開始"
+    }
+  },
+  "toolSurface": {
+    "tooltip": "ツール",
+    "title": "セッションのツール",
+    "notReported": "現在のコアはツール一覧を報告していません",
+    "notReportedHint": "セッション開始後、コアが実際に利用できるツールを報告します。",
+    "externalHint": "このマシンから追加で読み込まれた MCP：{{servers}}（CSBU WorkMate の管理外、ブロックされません）",
+    "groupBuiltin": "組み込み",
+    "groupMcp": "MCP",
+    "groupSkill": "スキル",
+    "emptyGroup": "なし",
+    "externalTag": "外部",
+    "noServerTools": "ツールの報告なし",
+    "deferred": "遅延読み込み",
+    "total": "合計 {{count}} 件",
+    "toolSearchInert": "ToolSearch は登録されていますが、遅延読み込みのツールがないため結果を返しません。",
+    "status": {
+      "ok": "接続済み",
+      "failed": "失敗",
+      "missing": "見つかりません",
+      "disabled": "無効",
+      "unknown": "不明"
+    },
+    "isolation": {
+      "strict": "管理対象の MCP のみ",
+      "ambient": "ローカルの MCP を読み込む可能性あり"
     }
   }
 }

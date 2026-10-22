@@ -929,7 +929,11 @@
     "collapse": "계획 접기"
   },
   "taskSession": {
-    "mode": { "agent": "에이전트", "plan": "계획", "goal": "목표" },
+    "mode": {
+      "agent": "에이전트",
+      "plan": "계획",
+      "goal": "목표"
+    },
     "status": {
       "draft": "초안",
       "ready": "준비됨",
@@ -992,6 +996,33 @@
       "unsupported": "계획 격리를 지원하지 않음",
       "automaticUnavailable": "자동 계획을 사용할 수 없음",
       "start": "계획 시작"
+    }
+  },
+  "toolSurface": {
+    "tooltip": "도구",
+    "title": "세션 도구",
+    "notReported": "현재 코어가 도구 목록을 보고하지 않았습니다",
+    "notReportedHint": "세션이 시작되면 코어가 실제로 사용 가능한 도구를 보고합니다.",
+    "externalHint": "이 기기에서 추가로 로드된 MCP: {{servers}} (CSBU WorkMate가 관리하거나 차단하지 않음)",
+    "groupBuiltin": "기본 제공",
+    "groupMcp": "MCP",
+    "groupSkill": "스킬",
+    "emptyGroup": "없음",
+    "externalTag": "외부",
+    "noServerTools": "보고된 도구 없음",
+    "deferred": "지연 로드",
+    "total": "총 {{count}}개",
+    "toolSearchInert": "ToolSearch가 등록되어 있지만 지연 로드된 도구가 없어 결과를 반환하지 않습니다.",
+    "status": {
+      "ok": "연결됨",
+      "failed": "실패",
+      "missing": "없음",
+      "disabled": "비활성화됨",
+      "unknown": "알 수 없음"
+    },
+    "isolation": {
+      "strict": "관리되는 MCP만",
+      "ambient": "로컬 MCP를 로드할 수 있음"
     }
   }
 }

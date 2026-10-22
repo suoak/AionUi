@@ -930,7 +930,11 @@
     "collapse": "Contraer plan"
   },
   "taskSession": {
-    "mode": { "agent": "Agente", "plan": "Plan", "goal": "Objetivo" },
+    "mode": {
+      "agent": "Agente",
+      "plan": "Plan",
+      "goal": "Objetivo"
+    },
     "status": {
       "draft": "Borrador",
       "ready": "Listo",
@@ -993,6 +997,33 @@
       "unsupported": "El aislamiento de planificación no es compatible",
       "automaticUnavailable": "La planificación automática no está disponible",
       "start": "Iniciar planificación"
+    }
+  },
+  "toolSurface": {
+    "tooltip": "Herramientas",
+    "title": "Herramientas de la sesión",
+    "notReported": "El núcleo actual no ha informado una lista de herramientas",
+    "notReportedHint": "Cuando la sesión se inicie, el núcleo informará las herramientas realmente disponibles.",
+    "externalHint": "MCP adicionales cargados desde este equipo: {{servers}} (no gestionados ni bloqueados por CSBU WorkMate)",
+    "groupBuiltin": "Integradas",
+    "groupMcp": "MCP",
+    "groupSkill": "Habilidades",
+    "emptyGroup": "Ninguna",
+    "externalTag": "Externo",
+    "noServerTools": "Sin herramientas informadas",
+    "deferred": "Diferida",
+    "total": "{{count}} en total",
+    "toolSearchInert": "ToolSearch está registrado, pero ninguna herramienta está diferida, así que no devuelve nada.",
+    "status": {
+      "ok": "Conectado",
+      "failed": "Error",
+      "missing": "No encontrado",
+      "disabled": "Desactivado",
+      "unknown": "Desconocido"
+    },
+    "isolation": {
+      "strict": "Solo MCP gestionados",
+      "ambient": "Puede cargar MCP locales"
     }
   }
 }

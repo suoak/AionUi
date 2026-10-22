@@ -929,7 +929,11 @@
     "collapse": "Réduire le plan"
   },
   "taskSession": {
-    "mode": { "agent": "Agent", "plan": "Plan", "goal": "Objectif" },
+    "mode": {
+      "agent": "Agent",
+      "plan": "Plan",
+      "goal": "Objectif"
+    },
     "status": {
       "draft": "Brouillon",
       "ready": "Prêt",
@@ -992,6 +996,33 @@
       "unsupported": "Isolation de planification non prise en charge",
       "automaticUnavailable": "Planification automatique indisponible",
       "start": "Démarrer la planification"
+    }
+  },
+  "toolSurface": {
+    "tooltip": "Outils",
+    "title": "Outils de la session",
+    "notReported": "Le noyau actuel n'a pas signalé de liste d'outils",
+    "notReportedHint": "Au démarrage de la session, le noyau signale les outils réellement disponibles.",
+    "externalHint": "MCP supplémentaires chargés depuis cette machine : {{servers}} (non gérés ni bloqués par CSBU WorkMate)",
+    "groupBuiltin": "Intégrés",
+    "groupMcp": "MCP",
+    "groupSkill": "Compétences",
+    "emptyGroup": "Aucun",
+    "externalTag": "Externe",
+    "noServerTools": "Aucun outil signalé",
+    "deferred": "Différé",
+    "total": "{{count}} au total",
+    "toolSearchInert": "ToolSearch est enregistré, mais aucun outil n'est différé : il ne renvoie rien.",
+    "status": {
+      "ok": "Connecté",
+      "failed": "Échec",
+      "missing": "Introuvable",
+      "disabled": "Désactivé",
+      "unknown": "Inconnu"
+    },
+    "isolation": {
+      "strict": "MCP gérés uniquement",
+      "ambient": "Peut charger des MCP locaux"
     }
   }
 }
