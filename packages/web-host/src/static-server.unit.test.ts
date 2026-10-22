@@ -4,7 +4,7 @@ import http from 'node:http';
 import os from 'node:os';
 import path from 'node:path';
 import type { AddressInfo } from 'node:net';
-import { startStaticServer, type StaticServerHandle } from './static-server.js';
+import { rewriteUpgradeHost, startStaticServer, type StaticServerHandle } from './static-server.js';
 
 async function mkRendererFixture(): Promise<string> {
   const dir = await fs.mkdtemp(path.join(os.tmpdir(), 'ws-static-'));
@@ -419,5 +419,63 @@ describe('static-server', () => {
     // may still be undefined on CI machines without a LAN interface
     expect(typeof h2.networkUrl === 'string' || h2.networkUrl === undefined).toBe(true);
     await h2.stop();
+  });
+
+  it('/ws upgrade reaches the backend with a loopback Host even when the browser used a LAN address', async () => {
+    const net = await import('node:net');
+    const httpMod = await import('node:http');
+    const backendServer = httpMod.createServer();
+    let seenHost: string | undefined;
+    backendServer.on('upgrade', (req, socket) => {
+      seenHost = req.headers.host;
+      socket.write('HTTP/1.1 101 Switching Protocols\r\nUpgrade: websocket\r\nConnection: Upgrade\r\n\r\n');
+      socket.end();
+    });
+    await new Promise<void>((r) => backendServer.listen(0, '127.0.0.1', () => r()));
+    stopBackend = () => new Promise<void>((r) => backendServer.close(() => r()));
+    const backendPort = (backendServer.address() as { port: number }).port;
+    handle = await startStaticServer({ staticDir, backendPort, port: 0 });
+    const { port: publicPort } = handle;
+
+    await new Promise<void>((resolve, reject) => {
+      const sock = net.connect({ host: '127.0.0.1', port: publicPort }, () => {
+        // Header block split across writes: the proxy must wait for all of it.
+        sock.write('GET /ws HTTP/1.1\r\nHost: 192.168.1.23:25809\r\n');
+        setTimeout(() => {
+          sock.write('Cookie: ' + 'a'.repeat(6000) + '\r\nUpgrade: websocket\r\nConnection: Upgrade\r\n\r\n');
+        }, 20);
+      });
+      sock.on('data', (d) => {
+        if (d.toString('latin1').includes('101')) {
+          sock.destroy();
+          resolve();
+        }
+      });
+      sock.on('error', reject);
+      setTimeout(() => {
+        sock.destroy();
+        reject(new Error('timeout waiting for 101'));
+      }, 3000).unref();
+    });
+    expect(seenHost).toBe(`127.0.0.1:${backendPort}`);
+  });
+});
+
+describe('rewriteUpgradeHost', () => {
+  it('waits for the complete header block', () => {
+    expect(rewriteUpgradeHost(Buffer.from('GET /ws HTTP/1.1\r\nHost: evil\r\n'), 1)).toBeNull();
+  });
+
+  it('replaces every Host line with the backend loopback address and keeps the rest', () => {
+    const out = rewriteUpgradeHost(
+      Buffer.from('GET /ws HTTP/1.1\r\nhost: 10.0.0.2:25809\r\nUpgrade: websocket\r\nHOST : x\r\n\r\ntail'),
+      4242
+    );
+    expect(out?.toString('latin1')).toBe('GET /ws HTTP/1.1\r\nHost: 127.0.0.1:4242\r\nUpgrade: websocket\r\n\r\ntail');
+  });
+
+  it('adds a Host line when the client sent none', () => {
+    const out = rewriteUpgradeHost(Buffer.from('GET /ws HTTP/1.1\r\nUpgrade: websocket\r\n\r\n'), 7);
+    expect(out?.toString('latin1')).toBe('GET /ws HTTP/1.1\r\nHost: 127.0.0.1:7\r\nUpgrade: websocket\r\n\r\n');
   });
 });

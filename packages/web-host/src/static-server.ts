@@ -104,6 +104,30 @@ function forwardToBackend(req: IncomingMessage, res: ServerResponse, backendPort
 // haven't seen a newline after 4 KB the client is sending something weird —
 // hand it to the internal HTTP server and let it return 400.
 const PEEK_LIMIT_BYTES = 4096;
+// Upgrade requests carry cookies, so their full header block can exceed the
+// request-line peek limit; wait for it up to this size before splicing.
+const UPGRADE_HEAD_LIMIT_BYTES = 16384;
+
+/**
+ * Rewrite the `Host` header of a spliced upgrade request to the backend's
+ * loopback address, the same thing `forwardToBackend` does for plain HTTP.
+ * The backend only answers loopback `Host` values (DNS-rebinding defence), and
+ * in remote mode the browser sends the LAN address it used.
+ *
+ * Returns `null` while the header block is still incomplete. Bytes after the
+ * header block are kept as-is.
+ */
+export function rewriteUpgradeHost(buf: Buffer, backendPort: number): Buffer | null {
+  const headEnd = buf.indexOf('\r\n\r\n');
+  if (headEnd < 0) return null;
+  const head = buf.subarray(0, headEnd).toString('latin1');
+  const rest = buf.subarray(headEnd);
+  const lines = head.split('\r\n');
+  const hostLine = `Host: 127.0.0.1:${backendPort}`;
+  const kept = lines.filter((line, i) => i === 0 || !/^host\s*:/i.test(line));
+  kept.splice(1, 0, hostLine);
+  return Buffer.concat([Buffer.from(kept.join('\r\n'), 'latin1'), rest]);
+}
 
 /**
  * Splice `client` to a TCP endpoint on `targetPort`. Any bytes already read
@@ -234,9 +258,17 @@ export async function startStaticServer(opts: StaticServerOptions): Promise<Stat
       peeked = Buffer.concat([peeked, chunk]);
       const decision = peekWsRoute(peeked);
       if (decision === null && peeked.length < PEEK_LIMIT_BYTES) return;
+      if (decision === true) {
+        // Upgrades go straight to the backend: give them a loopback Host,
+        // waiting for the full header block (bounded by UPGRADE_HEAD_LIMIT_BYTES).
+        const rewritten = rewriteUpgradeHost(peeked, opts.backendPort);
+        if (rewritten === null && peeked.length < UPGRADE_HEAD_LIMIT_BYTES) return;
+        cleanup();
+        spliceToTcpEndpoint(client, opts.backendPort, rewritten ?? peeked);
+        return;
+      }
       cleanup();
-      const target = decision === true ? opts.backendPort : internalPort;
-      spliceToTcpEndpoint(client, target, peeked);
+      spliceToTcpEndpoint(client, internalPort, peeked);
     };
     const onEarlyError = (): void => {
       cleanup();
