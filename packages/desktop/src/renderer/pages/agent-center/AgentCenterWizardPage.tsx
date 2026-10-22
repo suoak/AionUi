@@ -39,6 +39,7 @@ import CapabilityTogglePicker from './CapabilityTogglePicker';
 import ConversationStartersFields from './ConversationStartersFields';
 import AgentWorkflowDefinitionFields from './AgentWorkflowDefinitionFields';
 import AgentWorkflowTemplatePicker from './AgentWorkflowTemplatePicker';
+import { INHERIT_MCP_COPY } from './mcpPolicyCopy';
 
 const { Title, Text } = Typography;
 
@@ -708,7 +709,7 @@ const AgentCenterWizardPage: React.FC<{ mode: 'create' | 'edit' }> = ({ mode }) 
             <Text type='secondary'>从已配置的 MCP 服务器多选。白名单留空 = 不挂载任何 MCP。</Text>
             <Select value={mcpPolicy} onChange={(v) => setMcpPolicy(v as AgentMcpPolicy)}>
               <Select.Option value='allowlist'>白名单（空 = 不挂载）</Select.Option>
-              <Select.Option value='inherit_user_enabled'>使用用户已启用 MCP</Select.Option>
+              <Select.Option value='inherit_user_enabled'>{INHERIT_MCP_COPY.option}</Select.Option>
             </Select>
             {mcpPolicy === 'allowlist' && (
               <CapabilityTogglePicker
@@ -763,7 +764,8 @@ const AgentCenterWizardPage: React.FC<{ mode: 'create' | 'edit' }> = ({ mode }) 
                   }`
                 : ''}
               {' · Skills '}
-              {skillRefs.length} · MCP {mcpPolicy === 'allowlist' ? `${selectedMcpIds.length} 项白名单` : '继承用户'}
+              {skillRefs.length} · MCP{' '}
+              {mcpPolicy === 'allowlist' ? `${selectedMcpIds.length} 项白名单` : INHERIT_MCP_COPY.short}
             </Text>
             {description ? <Text className='text-13px'>{description}</Text> : null}
             {instructions.trim() ? (
@@ -879,7 +881,7 @@ const AgentCenterWizardPage: React.FC<{ mode: 'create' | 'edit' }> = ({ mode }) 
                 ? selectedMcpIds.length
                   ? `白名单 ${selectedMcpIds.length} 项`
                   : '白名单为空 = 不挂载'
-                : '继承用户已启用'}
+                : INHERIT_MCP_COPY.option}
               {' · 引擎 '}
               {engineLabel}
             </Text>
