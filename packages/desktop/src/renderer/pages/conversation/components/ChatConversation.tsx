@@ -44,6 +44,7 @@ import AcpChat from '../platforms/acp/AcpChat';
 import ChatLayout from './ChatLayout';
 import ChatSlider from './ChatSlider.tsx';
 import ConversationTrajectoryButton from './Trajectory';
+import ConversationToolsButton from './ToolSurface/ConversationToolsButton';
 import AcpModelSelector from '@/renderer/components/agent/AcpModelSelector';
 import AcpRuntimeRestartButton from '@/renderer/components/agent/AcpRuntimeRestartButton';
 import { getConversationOrNull } from '@/renderer/pages/conversation/utils/conversationCache';
@@ -549,6 +550,7 @@ const AionrsConversationPanel: React.FC<{ conversation: AionrsConversation; slid
       <div className='flex items-center gap-8px'>
         <TaskSessionControl conversation={conversation} agentType='aionrs' />
         <ConversationTrajectoryButton conversationId={conversation.id} />
+        <ConversationToolsButton conversationId={conversation.id} />
         <CronJobManager conversation_id={conversation.id} cron_job_id={cronJobId} />
         {!isMobile && (
           <AionrsModelSelector
@@ -755,6 +757,7 @@ const ChatConversation: React.FC<{
             agentType={resolvedConversationBackend || conversation.type}
           />
           <ConversationTrajectoryButton conversationId={conversation.id} />
+          <ConversationToolsButton conversationId={conversation.id} />
           <div className='shrink-0'>
             <CronJobManager conversation_id={conversation.id} cron_job_id={cronJobId} />
           </div>

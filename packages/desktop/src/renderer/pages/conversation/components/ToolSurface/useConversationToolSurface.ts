@@ -25,11 +25,11 @@ const fromCapabilities = (surface: IConversationToolSurface | undefined): Conver
  */
 export const useConversationToolSurface = (conversation_id: string): ConversationToolSurfaceState => {
   const [state, setState] = useState<ConversationToolSurfaceState>(() =>
-    ipcBridge.conversation.getCapabilities ? { status: 'loading' } : { status: 'unavailable' }
+    ipcBridge.conversation?.getCapabilities ? { status: 'loading' } : { status: 'unavailable' }
   );
 
   useEffect(() => {
-    const getCapabilities = ipcBridge.conversation.getCapabilities;
+    const getCapabilities = ipcBridge.conversation?.getCapabilities;
     if (!getCapabilities) {
       setState({ status: 'unavailable' });
       return;
@@ -50,7 +50,7 @@ export const useConversationToolSurface = (conversation_id: string): Conversatio
   }, [conversation_id]);
 
   useEffect(() => {
-    if (!ipcBridge.conversation.capabilitiesChanged?.on) return;
+    if (!ipcBridge.conversation?.capabilitiesChanged?.on) return;
     return ipcBridge.conversation.capabilitiesChanged.on((event) => {
       if (event.conversation_id !== conversation_id) return;
       setState(fromCapabilities(event.capabilities.tool_surface));

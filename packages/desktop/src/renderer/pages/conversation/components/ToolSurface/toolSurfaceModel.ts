@@ -81,14 +81,15 @@ export const groupToolSurface = (surface: IConversationToolSurface): ToolSurface
     else builtin.push(entry);
   }
 
-  const mcp = Array.from(mcpByServer.values())
-    .map((group) => ({ ...group, tools: [...group.tools].sort(byName) }))
-    .sort((a, b) => Number(b.external) - Number(a.external) || a.server.localeCompare(b.server));
+  for (const group of mcpByServer.values()) group.tools = group.tools.toSorted(byName);
+  const mcp = Array.from(mcpByServer.values()).toSorted(
+    (a, b) => Number(b.external) - Number(a.external) || a.server.localeCompare(b.server)
+  );
 
   return {
-    builtin: builtin.sort(byName),
+    builtin: builtin.toSorted(byName),
     mcp,
-    skill: skill.sort(byName),
+    skill: skill.toSorted(byName),
     externalServers,
     total: entries.length,
   };
