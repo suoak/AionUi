@@ -2514,9 +2514,15 @@ export type ToolEnforcementLevel = 'native' | 'approval-gate' | 'observe-only';
 export type CancellationState = 'requested' | 'cancelling' | 'converged_idle' | 'force_terminated' | 'failed';
 
 /** Where a reported tool surface came from (Core E2 `ToolSurfaceSource`). */
-export type ToolSurfaceSource = 'claude_init' | 'aionrs_registry' | 'codex_mcp_status';
+export type ToolSurfaceSource = 'claude_init' | 'aionrs_registry' | 'codex_mcp_status' | 'launch_config';
 export type ToolSurfaceKind = 'builtin' | 'mcp' | 'skill';
 export type McpIsolation = 'strict' | 'ambient';
+/**
+ * Whether the backend reported what it actually loaded (`reported`, the
+ * default when omitted) or only its launch configuration is known
+ * (`unavailable`: generic ACP, Antigravity).
+ */
+export type McpDiscovery = 'reported' | 'unavailable';
 
 /** One MCP server as the running agent reported it. */
 export interface IToolSurfaceMcpServer {
@@ -2549,6 +2555,7 @@ export interface IConversationToolSurface {
   entries?: IToolSurfaceEntry[];
   tool_search_inert?: boolean;
   external_mcp_servers?: string[];
+  mcp_discovery?: McpDiscovery;
 }
 
 export interface IConversationCapabilities {
