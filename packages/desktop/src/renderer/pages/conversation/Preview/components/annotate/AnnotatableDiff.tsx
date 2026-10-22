@@ -77,8 +77,10 @@ const AnnotatableDiff: React.FC<Props> = ({ patch, scope, readOnly: readOnlyProp
     [files, scope?.file_path]
   );
   const rows = file?.rows ?? [];
-  const readOnly = readOnlyProp || !scope || !file || file.isBinary;
-  const review = useReviewThreads(readOnly && !scope ? undefined : scope);
+  const review = useReviewThreads(scope);
+  // Annotating needs a loaded thread list: until then (or on a Core without the
+  // review API) the diff is a plain read-only diff with no annotation entry.
+  const readOnly = readOnlyProp || !scope || !file || file.isBinary || !review.ready;
   const { byRow, detached } = useMemo(() => placeThreads(rows, review.threads), [rows, review.threads]);
   const unresolved = countUnresolved(review.threads);
 
@@ -208,7 +210,7 @@ const AnnotatableDiff: React.FC<Props> = ({ patch, scope, readOnly: readOnlyProp
     >
       <div className={styles.toolbar}>
         <span className='truncate text-12px text-t-primary'>{file.filePath}</span>
-        {scope ? (
+        {scope && review.ready ? (
           <Tag size='small' color={unresolved > 0 ? 'orangered' : 'gray'} data-review-unresolved={unresolved}>
             {t('preview.annotate.unresolved', { count: unresolved })}
           </Tag>

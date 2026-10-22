@@ -5,6 +5,7 @@
  */
 
 import { ipcBridge } from '@/common';
+import { isBackendHttpError } from '@/common/adapter/httpBridge';
 import type { CreateReviewThreadInput, ReviewThread } from '@/common/types/agent/taskSession';
 import { useCallback } from 'react';
 import useSWR from 'swr';
@@ -21,6 +22,18 @@ export type ReviewScope = {
   run_id?: string;
 };
 
+/**
+ * Whether an error means this Core has no review-thread API at all (an older
+ * Core such as 0.2.20 answers its generic 404 for the unknown route). Annotation
+ * is then hidden and the diff stays a plain read-only diff.
+ */
+export const isReviewUnsupported = (error: unknown): boolean =>
+  isBackendHttpError(error) &&
+  (error.status === 404 || error.status === 405) &&
+  error.code !== 'REVIEW_THREAD_NOT_FOUND';
+
+const MAX_RETRIES = 3;
+
 export const reviewThreadsKey = (scope: ReviewScope) =>
   ['reviewThreads', scope.scope_kind, scope.scope_id, scope.file_path] as const;
 
@@ -29,13 +42,23 @@ export const reviewThreadsKey = (scope: ReviewScope) =>
  * refetch after the file changes moves the threads (or marks them outdated).
  */
 export const useReviewThreads = (scope: ReviewScope | undefined) => {
-  const { data, error, isLoading, mutate } = useSWR(scope ? reviewThreadsKey(scope) : null, () =>
-    ipcBridge.review.list.invoke({
-      scope_kind: scope!.scope_kind,
-      scope_id: scope!.scope_id,
-      file_path: scope!.file_path,
-    })
+  const { data, error, isLoading, mutate } = useSWR(
+    scope ? reviewThreadsKey(scope) : null,
+    () =>
+      ipcBridge.review.list.invoke({
+        scope_kind: scope!.scope_kind,
+        scope_id: scope!.scope_id,
+        file_path: scope!.file_path,
+      }),
+    {
+      // An unsupported Core will not grow the route by retrying.
+      onErrorRetry: (err, _key, _config, revalidate, { retryCount }) => {
+        if (isReviewUnsupported(err) || retryCount >= MAX_RETRIES) return;
+        setTimeout(() => void revalidate({ retryCount }), 2000 * 2 ** retryCount);
+      },
+    }
   );
+  const unsupported = isReviewUnsupported(error);
 
   const replace = useCallback(
     (thread: ReviewThread) =>
@@ -87,8 +110,11 @@ export const useReviewThreads = (scope: ReviewScope | undefined) => {
   );
 
   return {
-    threads: data ?? [],
-    error,
+    threads: Array.isArray(data) ? data : [],
+    /** The list loaded, so this Core supports annotations for the scope. */
+    ready: Array.isArray(data),
+    unsupported,
+    error: unsupported ? undefined : error,
     isLoading,
     refresh: () => mutate(),
     create,

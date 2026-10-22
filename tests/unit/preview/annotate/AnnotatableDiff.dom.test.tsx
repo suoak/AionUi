@@ -28,6 +28,7 @@ vi.mock('@/renderer/components/Markdown', () => ({
   default: ({ children }: { children?: React.ReactNode }) => <div>{children}</div>,
 }));
 
+import { BackendHttpError } from '@/common/adapter/httpBridge';
 import { AnnotatableDiff, type ReviewScope } from '@/renderer/pages/conversation/Preview/components/annotate';
 
 const PATCH = [
@@ -75,6 +76,8 @@ const row = (newNumber: number) => document.querySelector(`[data-diff-new="${new
 const addButton = (newNumber: number) => row(newNumber).querySelector('button') as HTMLElement;
 const root = () => document.querySelector('[data-annotatable-diff]') as HTMLElement;
 
+const ready = () => waitFor(() => expect(document.querySelector('[data-review-unresolved]')).not.toBeNull());
+
 beforeEach(() => {
   mocks.list.mockResolvedValue([]);
 });
@@ -99,6 +102,7 @@ describe('AnnotatableDiff', () => {
   it('drag selection stops at the hunk edge and creates a thread with its diff context', async () => {
     mocks.create.mockImplementation(async (input: Record<string, unknown>) => thread({ id: 'new', ...input }));
     renderDiff();
+    await ready();
     fireEvent.mouseDown(addButton(2));
     fireEvent.mouseEnter(row(4));
     fireEvent.mouseEnter(row(12)); // other hunk: ignored
@@ -131,6 +135,7 @@ describe('AnnotatableDiff', () => {
 
   it('Esc in the composer cancels the selection without saving', async () => {
     renderDiff();
+    await ready();
     fireEvent.mouseDown(addButton(3));
     fireEvent.mouseUp(window);
     const composer = await screen.findByRole('textbox');
@@ -143,6 +148,7 @@ describe('AnnotatableDiff', () => {
 
   it('C annotates the hovered line and Esc on the diff cancels', async () => {
     renderDiff();
+    await ready();
     fireEvent.mouseEnter(row(1));
     fireEvent.keyDown(root(), { key: 'c' });
     expect(await screen.findByRole('textbox')).toBeTruthy();
@@ -163,6 +169,32 @@ describe('AnnotatableDiff', () => {
     );
     expect(document.querySelectorAll('[data-review-thread]')).toHaveLength(3);
     expect(document.querySelector('[data-review-detached] [data-review-thread]')).not.toBeNull();
+  });
+
+  it('degrades to a plain read-only diff on a Core without the review API', async () => {
+    mocks.list.mockRejectedValue(
+      new BackendHttpError({
+        method: 'GET',
+        path: '/api/review-threads',
+        status: 404,
+        body: { success: false, code: 'NOT_FOUND', error: 'Route not found.' },
+      })
+    );
+    renderDiff();
+    await waitFor(() => expect(mocks.list).toHaveBeenCalledTimes(1));
+    // Let SWR settle: no retry, no error notice, no annotation entry.
+    await act(async () => {
+      await new Promise((resolve) => setTimeout(resolve, 50));
+    });
+    expect(mocks.list).toHaveBeenCalledTimes(1);
+    expect(document.querySelector('[data-review-unresolved]')).toBeNull();
+    expect(screen.queryByText('preview.annotate.loadFailed')).toBeNull();
+    expect(row(2).querySelector('button')).toBeNull();
+    fireEvent.mouseEnter(row(2));
+    fireEvent.keyDown(root(), { key: 'c' });
+    expect(document.querySelector('[data-review-composer]')).toBeNull();
+    // The diff itself still renders.
+    expect(row(3).dataset.diffOld).toBe('2');
   });
 
   it('follows the dark theme and is read-only without a scope', async () => {
