@@ -2513,11 +2513,50 @@ export type ConversationInputStatus = 'held' | 'dispatching' | 'accepted' | 'app
 export type ToolEnforcementLevel = 'native' | 'approval-gate' | 'observe-only';
 export type CancellationState = 'requested' | 'cancelling' | 'converged_idle' | 'force_terminated' | 'failed';
 
+/** Where a reported tool surface came from (Core E2 `ToolSurfaceSource`). */
+export type ToolSurfaceSource = 'claude_init' | 'aionrs_registry' | 'codex_mcp_status';
+export type ToolSurfaceKind = 'builtin' | 'mcp' | 'skill';
+export type McpIsolation = 'strict' | 'ambient';
+
+/** One MCP server as the running agent reported it. */
+export interface IToolSurfaceMcpServer {
+  name: string;
+  /** Backend wording, e.g. `connected`, `failed`, `missing: …`. */
+  status?: string;
+  /** Loaded from machine-ambient config, not managed by the conversation. */
+  external?: boolean;
+}
+
+/** One normalized tool / skill (`canonical` is backend-independent). */
+export interface IToolSurfaceEntry {
+  name: string;
+  canonical: string;
+  kind: ToolSurfaceKind;
+  server?: string;
+  deferred?: boolean;
+}
+
+/**
+ * The tool surface the running agent actually exposes. Optional on the wire:
+ * older Core builds, and sessions that have not reported yet, omit it.
+ */
+export interface IConversationToolSurface {
+  source: ToolSurfaceSource;
+  tools: string[];
+  mcp_servers?: IToolSurfaceMcpServer[];
+  mcp_isolation: McpIsolation;
+  tool_policy?: string;
+  entries?: IToolSurfaceEntry[];
+  tool_search_inert?: boolean;
+  external_mcp_servers?: string[];
+}
+
 export interface IConversationCapabilities {
   followup: boolean;
   steer: boolean;
   inject: boolean;
   tool_enforcement: ToolEnforcementLevel;
+  tool_surface?: IConversationToolSurface;
   revision?: number;
   negotiated_at?: number;
 }
