@@ -755,7 +755,9 @@ const HTMLRenderer: React.FC<HTMLRendererProps> = ({
             width: '100%',
             height: '100%',
           }}
-          sandbox='allow-scripts allow-same-origin allow-forms allow-popups allow-modals'
+          // No allow-same-origin: preview scripts get an opaque origin, so they
+          // cannot read the WebUI cookies/storage or call the API as the user.
+          sandbox='allow-scripts allow-forms allow-popups allow-modals'
         />
       )}
     </div>

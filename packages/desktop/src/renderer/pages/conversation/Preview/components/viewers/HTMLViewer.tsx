@@ -6,7 +6,7 @@
 
 import { Message } from '@arco-design/web-react';
 import MonacoEditor from '@monaco-editor/react';
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 interface HTMLPreviewProps {
@@ -23,87 +23,10 @@ interface SelectedElement {
 }
 
 /**
- * HTML 预览组件
- * - 支持实时预览和代码编辑
- * - 支持元素选择器（类似 DevTools）
- * - 支持双向定位：预览 ↔ 代码
+ * 元素选择器脚本，注入到预览 iframe 中，通过 postMessage 回传选中的元素。
+ * Element inspector injected into the preview iframe; reports back via postMessage.
  */
-const HTMLPreview: React.FC<HTMLPreviewProps> = ({ content, file_path, hideToolbar = false }) => {
-  const { t } = useTranslation();
-  const iframeRef = useRef<HTMLIFrameElement>(null);
-  const [editMode, setEditMode] = useState(false);
-  const [htmlCode, setHtmlCode] = useState(content);
-  const [inspectorMode, setInspectorMode] = useState(false);
-  const [selectedElement, setSelectedElement] = useState<SelectedElement | null>(null);
-  const [contextMenu, setContextMenu] = useState<{ x: number; y: number; element: SelectedElement } | null>(null);
-  const [messageApi, messageContextHolder] = Message.useMessage();
-  const [currentTheme, setCurrentTheme] = useState<'light' | 'dark'>(() => {
-    return (document.documentElement.getAttribute('data-theme') as 'light' | 'dark') || 'light';
-  });
-
-  // 监听主题变化
-  useEffect(() => {
-    const updateTheme = () => {
-      const theme = (document.documentElement.getAttribute('data-theme') as 'light' | 'dark') || 'light';
-      setCurrentTheme(theme);
-    };
-
-    const observer = new MutationObserver(updateTheme);
-    observer.observe(document.documentElement, {
-      attributes: true,
-      attributeFilter: ['data-theme'],
-    });
-
-    return () => observer.disconnect();
-  }, []);
-
-  // 初始化 iframe 内容
-  useEffect(() => {
-    if (!iframeRef.current) return;
-
-    const iframe = iframeRef.current;
-    const iframeDoc = iframe.contentDocument || iframe.contentWindow?.document;
-
-    if (!iframeDoc) return;
-
-    // 写入 HTML 内容 / Write HTML content
-    iframeDoc.open();
-
-    // 注入 <base> 标签以支持相对路径 / Inject <base> tag to support relative paths
-    let finalHtml = htmlCode;
-    if (file_path) {
-      // 获取文件所在目录 / Get directory of the file
-      const fileDir = file_path.substring(0, file_path.lastIndexOf('/') + 1);
-      // 构造 file:// 协议的 base URL / Construct file:// protocol base URL
-      const base_url = `file://${fileDir}`;
-
-      // 检查是否已有 base 标签 / Check if base tag exists
-      if (!finalHtml.match(/<base\s+href=/i)) {
-        if (finalHtml.match(/<head>/i)) {
-          finalHtml = finalHtml.replace(/<head>/i, `<head><base href="${base_url}">`);
-        } else if (finalHtml.match(/<html>/i)) {
-          finalHtml = finalHtml.replace(/<html>/i, `<html><head><base href="${base_url}"></head>`);
-        } else {
-          finalHtml = `<head><base href="${base_url}"></head>${finalHtml}`;
-        }
-      }
-    }
-
-    iframeDoc.write(finalHtml);
-    iframeDoc.close();
-
-    // 注入元素选择器脚本
-    if (inspectorMode) {
-      injectInspectorScript(iframeDoc);
-    }
-  }, [htmlCode, inspectorMode]);
-
-  /**
-   * 注入元素选择器脚本到 iframe
-   */
-  const injectInspectorScript = (iframeDoc: Document) => {
-    const script = iframeDoc.createElement('script');
-    script.textContent = `
+const INSPECTOR_SCRIPT = `
       (function() {
         let hoveredElement = null;
         let overlay = null;
@@ -223,19 +146,85 @@ const HTMLPreview: React.FC<HTMLPreviewProps> = ({ content, file_path, hideToolb
         });
       })();
     `;
-    iframeDoc.body.appendChild(script);
-  };
+
+/**
+ * HTML 预览组件
+ * - 支持实时预览和代码编辑
+ * - 支持元素选择器（类似 DevTools）
+ * - 支持双向定位：预览 ↔ 代码
+ */
+const HTMLPreview: React.FC<HTMLPreviewProps> = ({ content, file_path, hideToolbar = false }) => {
+  const { t } = useTranslation();
+  const iframeRef = useRef<HTMLIFrameElement>(null);
+  const [editMode, setEditMode] = useState(false);
+  const [htmlCode, setHtmlCode] = useState(content);
+  const [inspectorMode, setInspectorMode] = useState(false);
+  const [selectedElement, setSelectedElement] = useState<SelectedElement | null>(null);
+  const [contextMenu, setContextMenu] = useState<{ x: number; y: number; element: SelectedElement } | null>(null);
+  const [messageApi, messageContextHolder] = Message.useMessage();
+  const [currentTheme, setCurrentTheme] = useState<'light' | 'dark'>(() => {
+    return (document.documentElement.getAttribute('data-theme') as 'light' | 'dark') || 'light';
+  });
+
+  // 监听主题变化
+  useEffect(() => {
+    const updateTheme = () => {
+      const theme = (document.documentElement.getAttribute('data-theme') as 'light' | 'dark') || 'light';
+      setCurrentTheme(theme);
+    };
+
+    const observer = new MutationObserver(updateTheme);
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['data-theme'],
+    });
+
+    return () => observer.disconnect();
+  }, []);
+
+  // 预览文档（srcdoc）。iframe 不带 allow-same-origin：预览里的脚本处于不透明
+  // origin，读不到应用的 cookie / storage，也不能以应用身份调用 API。
+  // Preview document (srcdoc). The iframe has no allow-same-origin: preview
+  // scripts run in an opaque origin, so they cannot read the app's cookies or
+  // storage, or call the API as the app.
+  const previewDoc = useMemo(() => {
+    // 注入 <base> 标签以支持相对路径 / Inject <base> tag to support relative paths
+    let finalHtml = htmlCode;
+    if (file_path) {
+      // 获取文件所在目录 / Get directory of the file
+      const fileDir = file_path.substring(0, file_path.lastIndexOf('/') + 1);
+      // 构造 file:// 协议的 base URL / Construct file:// protocol base URL
+      const base_url = `file://${fileDir}`;
+
+      // 检查是否已有 base 标签 / Check if base tag exists
+      if (!finalHtml.match(/<base\s+href=/i)) {
+        if (finalHtml.match(/<head>/i)) {
+          finalHtml = finalHtml.replace(/<head>/i, `<head><base href="${base_url}">`);
+        } else if (finalHtml.match(/<html>/i)) {
+          finalHtml = finalHtml.replace(/<html>/i, `<html><head><base href="${base_url}"></head>`);
+        } else {
+          finalHtml = `<head><base href="${base_url}"></head>${finalHtml}`;
+        }
+      }
+    }
+
+    // 注入元素选择器脚本（放在文档末尾，在内容解析之后运行）
+    // Inspector script goes last so it runs after the content is parsed.
+    return inspectorMode ? `${finalHtml}<script>${INSPECTOR_SCRIPT}</script>` : finalHtml;
+  }, [htmlCode, file_path, inspectorMode]);
 
   /**
    * 监听 iframe 消息
    */
   useEffect(() => {
     const handleMessage = (event: MessageEvent) => {
-      if (event.data.type === 'element-selected') {
+      // 只接受本预览 iframe 发来的消息 / Only trust messages from this preview frame
+      if (!iframeRef.current || event.source !== iframeRef.current.contentWindow) return;
+      if (event.data?.type === 'element-selected') {
         const elementInfo: SelectedElement = event.data.data;
         setSelectedElement(elementInfo);
         messageApi.info(t('preview.html.elementSelected', { path: elementInfo.path }));
-      } else if (event.data.type === 'element-contextmenu') {
+      } else if (event.data?.type === 'element-contextmenu') {
         const { element, x, y } = event.data.data;
 
         // 计算上下文菜单位置（相对于父窗口）
@@ -403,7 +392,8 @@ const HTMLPreview: React.FC<HTMLPreviewProps> = ({ content, file_path, hideToolb
           <iframe
             ref={iframeRef}
             className='w-full h-full border-0'
-            sandbox='allow-scripts allow-same-origin'
+            srcDoc={previewDoc}
+            sandbox='allow-scripts'
             title='HTML Preview'
           />
         </div>
