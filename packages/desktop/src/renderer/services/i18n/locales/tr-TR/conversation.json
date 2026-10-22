@@ -1013,6 +1013,7 @@
     "externalTag": "Harici",
     "noServerTools": "Bildirilen araç yok",
     "deferred": "Ertelenmiş",
+    "discoveryUnavailable": "Bu arka uç gerçekte yüklediği araçları ve MCP sunucularını bildirmiyor; aşağıda yalnızca CSBU WorkMate tarafından eklenenler var.",
     "total": "Toplam {{count}}",
     "toolSearchInert": "ToolSearch kayıtlı ancak ertelenmiş araç olmadığından hiçbir sonuç döndürmez.",
     "status": {

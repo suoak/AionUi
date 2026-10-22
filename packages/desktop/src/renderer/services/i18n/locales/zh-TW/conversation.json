@@ -1011,6 +1011,7 @@
     "externalTag": "外部",
     "noServerTools": "未回報工具",
     "deferred": "延遲載入",
+    "discoveryUnavailable": "此後端不回報實際載入的工具與 MCP，以下僅為 CSBU WorkMate 注入的設定。",
     "total": "共 {{count}} 項",
     "toolSearchInert": "ToolSearch 已註冊，但目前沒有延遲載入的工具，搜尋不會傳回結果。",
     "status": {

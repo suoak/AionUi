@@ -1011,6 +1011,7 @@
     "externalTag": "External",
     "noServerTools": "No tools reported",
     "deferred": "Deferred",
+    "discoveryUnavailable": "This backend does not report the tools and MCP servers it actually loaded; below is only what CSBU WorkMate injected.",
     "total": "{{count}} total",
     "toolSearchInert": "ToolSearch is registered but no tool is deferred, so it returns nothing.",
     "status": {

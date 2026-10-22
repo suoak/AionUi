@@ -1012,6 +1012,7 @@
     "externalTag": "Extern",
     "noServerTools": "Keine Werkzeuge gemeldet",
     "deferred": "Verzögert",
+    "discoveryUnavailable": "Dieses Backend meldet nicht, welche Tools und MCP-Server es tatsächlich geladen hat; unten steht nur, was CSBU WorkMate bereitgestellt hat.",
     "total": "{{count}} insgesamt",
     "toolSearchInert": "ToolSearch ist registriert, aber kein Werkzeug ist verzögert, daher liefert es nichts.",
     "status": {

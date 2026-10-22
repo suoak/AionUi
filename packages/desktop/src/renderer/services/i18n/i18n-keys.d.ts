@@ -1107,6 +1107,7 @@ export type I18nKey =
   | 'conversation.thinking.complete'
   | 'conversation.thinking.label'
   | 'conversation.toolSurface.deferred'
+  | 'conversation.toolSurface.discoveryUnavailable'
   | 'conversation.toolSurface.emptyGroup'
   | 'conversation.toolSurface.externalHint'
   | 'conversation.toolSurface.externalTag'

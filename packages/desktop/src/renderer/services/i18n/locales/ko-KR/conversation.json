@@ -1011,6 +1011,7 @@
     "externalTag": "외부",
     "noServerTools": "보고된 도구 없음",
     "deferred": "지연 로드",
+    "discoveryUnavailable": "이 백엔드는 실제로 로드한 도구와 MCP를 보고하지 않습니다. 아래는 CSBU WorkMate가 주입한 구성뿐입니다.",
     "total": "총 {{count}}개",
     "toolSearchInert": "ToolSearch가 등록되어 있지만 지연 로드된 도구가 없어 결과를 반환하지 않습니다.",
     "status": {
