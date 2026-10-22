@@ -151,6 +151,39 @@ describe('ConversationToolsButton', () => {
     expect(screen.getByTestId('tool-surface-toolsearch-inert')).toBeTruthy();
   });
 
+  it('marks a launch-config surface as not reporting its loaded tools (generic ACP / Antigravity)', async () => {
+    bridge.invoke.mockResolvedValue(
+      caps({
+        tool_surface: {
+          source: 'launch_config',
+          tools: [],
+          mcp_servers: [{ name: 'docs', external: false }],
+          mcp_isolation: 'ambient',
+          mcp_discovery: 'unavailable',
+        },
+      })
+    );
+    render(<ConversationToolsButton conversationId='c1' />);
+    await openDrawer();
+    expect(await screen.findByTestId('tool-surface-discovery-unavailable')).toBeTruthy();
+    expect(screen.queryByText('conversation.toolSurface.total')).toBeNull();
+    expect(screen.getByTestId('tool-surface-isolation').textContent).toBe('conversation.toolSurface.isolation.ambient');
+    expect(screen.queryByTestId('tool-surface-external-hint')).toBeNull();
+    const server = screen.getByTestId('tool-surface-mcp-server');
+    expect(server.getAttribute('data-server')).toBe('docs');
+  });
+
+  it('keeps the count and omits the discovery note when the backend reports what it loaded', async () => {
+    bridge.invoke.mockResolvedValue(
+      caps({ tool_surface: { source: 'codex_mcp_status', tools: ['shell'], mcp_isolation: 'ambient' } })
+    );
+    render(<ConversationToolsButton conversationId='c1' />);
+    await openDrawer();
+    expect(await screen.findByTestId('tool-surface-panel')).toBeTruthy();
+    expect(screen.queryByTestId('tool-surface-discovery-unavailable')).toBeNull();
+    expect(screen.getByText('conversation.toolSurface.total')).toBeTruthy();
+  });
+
   it('degrades to "not reported" when an older core omits tool_surface', async () => {
     bridge.invoke.mockResolvedValue(caps());
     render(<ConversationToolsButton conversationId='c1' />);
