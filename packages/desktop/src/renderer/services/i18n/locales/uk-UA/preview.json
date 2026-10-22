@@ -180,5 +180,34 @@
   "copyPath": "Копіювати шлях",
   "copyRelativePath": "Копіювати відносний шлях",
   "openLocation": "Показати в папці",
-  "openLocationFailed": "Не вдалося відкрити папку з файлом"
+  "openLocationFailed": "Не вдалося відкрити папку з файлом",
+  "annotate": {
+    "unresolved": "Невирішених: {{count}}",
+    "addComment": "Додати коментар",
+    "placeholder": "Залиште коментар (підтримується Markdown)",
+    "replyPlaceholder": "Напишіть відповідь…",
+    "save": "Коментувати",
+    "cancel": "Скасувати",
+    "reply": "Відповісти",
+    "resolve": "Вирішено",
+    "reopen": "Відкрити знову",
+    "delete": "Видалити",
+    "deleteConfirm": "Видалити цю примітку?",
+    "shortcutHint": "Enter — зберегти · Shift+Enter — новий рядок · Esc — скасувати",
+    "line": "Рядок {{line}}",
+    "lines": "Рядки {{start}}–{{end}}",
+    "movedFuzzy": "Код змінено",
+    "agentReply": "Відповідь Agent",
+    "detachedTitle": "Примітки поза цим diff",
+    "loadFailed": "Не вдалося завантажити примітки",
+    "saveFailed": "Не вдалося зберегти примітку",
+    "staleDiff": "Файл змінився після завантаження diff. Відкрийте diff знову й виберіть рядки ще раз.",
+    "emptyDiff": "Немає змін для показу",
+    "status": {
+      "open": "Відкрито",
+      "sent": "Надіслано",
+      "resolved": "Вирішено",
+      "outdated": "Застаріло"
+    }
+  }
 }

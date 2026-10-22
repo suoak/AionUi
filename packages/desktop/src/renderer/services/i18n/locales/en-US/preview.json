@@ -178,5 +178,34 @@
   "copyPath": "Copy Path",
   "copyRelativePath": "Copy Relative Path",
   "openLocation": "Show in folder",
-  "openLocationFailed": "Failed to open containing folder"
+  "openLocationFailed": "Failed to open containing folder",
+  "annotate": {
+    "unresolved": "{{count}} unresolved",
+    "addComment": "Add comment",
+    "placeholder": "Leave a comment (Markdown supported)",
+    "replyPlaceholder": "Write a reply…",
+    "save": "Comment",
+    "cancel": "Cancel",
+    "reply": "Reply",
+    "resolve": "Resolve",
+    "reopen": "Reopen",
+    "delete": "Delete",
+    "deleteConfirm": "Delete this annotation?",
+    "shortcutHint": "Enter to save · Shift+Enter for a new line · Esc to cancel",
+    "line": "Line {{line}}",
+    "lines": "Lines {{start}}–{{end}}",
+    "movedFuzzy": "Code changed",
+    "agentReply": "Agent reply",
+    "detachedTitle": "Annotations not shown in this diff",
+    "loadFailed": "Failed to load annotations",
+    "saveFailed": "Failed to save the annotation",
+    "staleDiff": "The file changed after this diff was loaded. Reopen the diff and select the lines again.",
+    "emptyDiff": "No changes to show",
+    "status": {
+      "open": "Open",
+      "sent": "Sent",
+      "resolved": "Resolved",
+      "outdated": "Outdated"
+    }
+  }
 }

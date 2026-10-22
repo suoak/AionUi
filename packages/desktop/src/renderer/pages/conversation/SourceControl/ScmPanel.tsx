@@ -39,7 +39,9 @@ import {
   diffAnchors,
   resourceKey,
   resourceName,
+  scmReviewScopeId,
   type ScmActionKind,
+  type ScmFileRef,
   type ScmRepository,
   type ScmResource,
 } from './scmModel';
@@ -172,6 +174,7 @@ export const ScmPanel: React.FC<ScmPanelProps> = ({ projectId }) => {
       {selected && (
         <ScmDiffPreviewBridge
           repoId={selected.repo.repo_id}
+          repoRoot={selected.repo.root}
           staging={selected.repo.capabilities.staging}
           resource={selected.resource}
         />
@@ -448,14 +451,17 @@ const ViewModeToggle: React.FC<{ mode: ScmViewMode; onChange: (mode: ScmViewMode
  */
 const ScmDiffPreviewBridge: React.FC<{
   repoId: string;
+  repoRoot: ScmFileRef;
   staging: boolean;
   resource: ScmResource;
-}> = ({ repoId, staging, resource }) => {
+}> = ({ repoId, repoRoot, staging, resource }) => {
   const { t } = useTranslation();
   const { openPreview } = usePreviewContext();
   const name = resourceName(resource);
   const { pe_id: peId, relative_path: relativePath } = resource.file;
   const { from, to } = diffAnchors(resource, staging);
+  const { pe_id: rootPeId, relative_path: rootPath } = repoRoot;
+  const repoRelativePath = resource.repo_relative_path || relativePath;
 
   useEffect(() => {
     let cancelled = false;
@@ -468,13 +474,32 @@ const ScmDiffPreviewBridge: React.FC<{
           to,
         });
         if (cancelled) return;
+        const hasPatch = result.binary !== true && !!result.patch && result.patch.length > 0;
         const body =
           result.binary === true
             ? t('conversation.explorer.scm.diff.binary')
-            : result.patch && result.patch.length > 0
-              ? result.patch
+            : hasPatch
+              ? result.patch!
               : t('conversation.explorer.scm.diff.empty');
-        openPreview(body, 'diff', { file_name: name, title: name });
+        // A real patch opens annotatable (M7 E4): the review scope names the repo by
+        // its pe root (never an absolute path) and the new side's base, so Core
+        // anchors against the working tree or leaves staged diffs to the context.
+        openPreview(
+          body,
+          'diff',
+          hasPatch
+            ? {
+                file_name: name,
+                title: name,
+                review: {
+                  scope_kind: 'scm',
+                  scope_id: scmReviewScopeId(rootPeId, rootPath),
+                  file_path: repoRelativePath,
+                  base: to === 'working' ? 'WORKTREE' : 'INDEX',
+                },
+              }
+            : { file_name: name, title: name }
+        );
       } catch {
         // Passive bridge: a failed diff fetch leaves the selection intact and opens
         // nothing. Error surfacing is the action-report path's job, not this effect's.
@@ -483,7 +508,7 @@ const ScmDiffPreviewBridge: React.FC<{
     return () => {
       cancelled = true;
     };
-  }, [repoId, peId, relativePath, from, to, name, openPreview, t]);
+  }, [repoId, peId, relativePath, from, to, name, rootPeId, rootPath, repoRelativePath, openPreview, t]);
 
   return null;
 };

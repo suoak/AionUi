@@ -178,5 +178,34 @@
   "copyPath": "複製路徑",
   "copyRelativePath": "複製相對路徑",
   "openLocation": "開啟檔案所在資料夾",
-  "openLocationFailed": "無法開啟所在資料夾"
+  "openLocationFailed": "無法開啟所在資料夾",
+  "annotate": {
+    "unresolved": "未解決 {{count}} 則",
+    "addComment": "新增註解",
+    "placeholder": "寫下註解（支援 Markdown）",
+    "replyPlaceholder": "撰寫回覆…",
+    "save": "註解",
+    "cancel": "取消",
+    "reply": "回覆",
+    "resolve": "解決",
+    "reopen": "重新開啟",
+    "delete": "刪除",
+    "deleteConfirm": "刪除這則註解？",
+    "shortcutHint": "Enter 儲存 · Shift+Enter 換行 · Esc 取消",
+    "line": "第 {{line}} 行",
+    "lines": "第 {{start}}–{{end}} 行",
+    "movedFuzzy": "程式碼已變更",
+    "agentReply": "Agent 回覆",
+    "detachedTitle": "不在目前 diff 中的註解",
+    "loadFailed": "註解載入失敗",
+    "saveFailed": "註解儲存失敗",
+    "staleDiff": "開啟 diff 後檔案又有變更，請重新開啟 diff 再選取行。",
+    "emptyDiff": "沒有可顯示的變更",
+    "status": {
+      "open": "未解決",
+      "sent": "已傳送",
+      "resolved": "已解決",
+      "outdated": "已過期"
+    }
+  }
 }

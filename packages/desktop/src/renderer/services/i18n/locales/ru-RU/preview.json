@@ -180,5 +180,34 @@
   "copyPath": "Копировать путь",
   "copyRelativePath": "Копировать относительный путь",
   "openLocation": "Показать в папке",
-  "openLocationFailed": "Не удалось открыть содержащую папку"
+  "openLocationFailed": "Не удалось открыть содержащую папку",
+  "annotate": {
+    "unresolved": "Нерешённых: {{count}}",
+    "addComment": "Добавить комментарий",
+    "placeholder": "Оставьте комментарий (поддерживается Markdown)",
+    "replyPlaceholder": "Напишите ответ…",
+    "save": "Комментировать",
+    "cancel": "Отмена",
+    "reply": "Ответить",
+    "resolve": "Решено",
+    "reopen": "Открыть снова",
+    "delete": "Удалить",
+    "deleteConfirm": "Удалить эту пометку?",
+    "shortcutHint": "Enter — сохранить · Shift+Enter — новая строка · Esc — отмена",
+    "line": "Строка {{line}}",
+    "lines": "Строки {{start}}–{{end}}",
+    "movedFuzzy": "Код изменён",
+    "agentReply": "Ответ Agent",
+    "detachedTitle": "Пометки вне этого diff",
+    "loadFailed": "Не удалось загрузить пометки",
+    "saveFailed": "Не удалось сохранить пометку",
+    "staleDiff": "Файл изменился после загрузки diff. Откройте diff заново и выберите строки ещё раз.",
+    "emptyDiff": "Нет изменений для показа",
+    "status": {
+      "open": "Открыто",
+      "sent": "Отправлено",
+      "resolved": "Решено",
+      "outdated": "Устарело"
+    }
+  }
 }

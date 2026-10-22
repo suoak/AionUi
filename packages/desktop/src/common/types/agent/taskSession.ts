@@ -230,3 +230,91 @@ export type SubmitTaskArtifactResponse = {
   approval: TaskApproval;
   acceptance_criteria: AcceptanceCriterion[];
 };
+
+// ── Diff annotations / review threads (M7 E4, Core `/api/review-threads*`) ──
+
+/** What a review thread's `scope_id` identifies. `scm` ids are `pe:{pe_id}[/{rel}]`. */
+export type ReviewScopeKind = 'scm' | 'worktree' | 'task_run';
+export type ReviewSide = 'new' | 'old';
+export type ReviewThreadStatus = 'open' | 'sent' | 'resolved' | 'outdated';
+
+/** The selected diff lines as rendered; Core re-derives the anchor when it can read the file. */
+export type ReviewDiffContext = {
+  hunk_header?: string;
+  /** `WORKTREE`, `INDEX` or a commit; Core defaults the new side to `WORKTREE`. */
+  base?: string;
+  before: string[];
+  lines: string[];
+  after: string[];
+};
+
+export type ReviewAnchor = {
+  v: number;
+  base?: string;
+  content_sha?: string;
+  hunk_header?: string;
+  before: string[];
+  lines: string[];
+  after: string[];
+  moved_fuzzy?: boolean;
+  original_lines?: string[];
+};
+
+export type ReviewComment = {
+  id: string;
+  thread_id: string;
+  author: 'user' | 'agent';
+  body: string;
+  created_at: number;
+  updated_at: number;
+};
+
+export type ReviewThread = {
+  id: string;
+  scope_kind: ReviewScopeKind;
+  scope_id: string;
+  conversation_id?: string | null;
+  task_session_id?: string | null;
+  run_id?: string | null;
+  file_path: string;
+  side: ReviewSide;
+  start_line: number;
+  end_line: number;
+  status: ReviewThreadStatus;
+  moved_fuzzy: boolean;
+  anchor: ReviewAnchor;
+  last_batch_id?: string | null;
+  comments: ReviewComment[];
+  created_at: number;
+  updated_at: number;
+  resolved_at?: number | null;
+};
+
+export type ListReviewThreadsInput = {
+  scope_kind: ReviewScopeKind;
+  scope_id: string;
+  file_path?: string;
+  status?: ReviewThreadStatus;
+};
+
+export type CreateReviewThreadInput = {
+  scope_kind: ReviewScopeKind;
+  scope_id: string;
+  conversation_id?: string;
+  task_session_id?: string;
+  run_id?: string;
+  file_path: string;
+  side: ReviewSide;
+  start_line: number;
+  end_line: number;
+  body: string;
+  diff_context: ReviewDiffContext;
+};
+
+export type UpdateReviewThreadInput = {
+  id: string;
+  body?: string;
+  start_line?: number;
+  end_line?: number;
+  diff_context?: ReviewDiffContext;
+};

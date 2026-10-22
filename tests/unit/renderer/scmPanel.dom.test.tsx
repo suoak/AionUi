@@ -300,7 +300,14 @@ describe('ScmPanel diff view', () => {
     // The fetched patch is opened as a `'diff'` tab in the shared preview panel,
     // titled by the file name — not rendered inline under this panel.
     await waitFor(() => expect(openPreviewMock).toHaveBeenCalledTimes(1));
-    expect(openPreviewMock).toHaveBeenCalledWith('unified patch text', 'diff', { file_name: 'a.ts', title: 'a.ts' });
+    // A real patch carries the annotation scope (M7 E4): the repo is named by its
+    // pe root, the file by its repo-relative path, and a working-tree diff anchors
+    // its new side against WORKTREE.
+    expect(openPreviewMock).toHaveBeenCalledWith('unified patch text', 'diff', {
+      file_name: 'a.ts',
+      title: 'a.ts',
+      review: { scope_kind: 'scm', scope_id: 'pe:pe1', file_path: 'src/a.ts', base: 'WORKTREE' },
+    });
   });
 
   it('never sends the staged anchor when opening a conflicted row (would return empty content)', async () => {

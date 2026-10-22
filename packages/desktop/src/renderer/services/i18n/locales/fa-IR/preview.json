@@ -178,5 +178,34 @@
   "copyPath": "کپی مسیر",
   "copyRelativePath": "کپی مسیر نسبی",
   "openLocation": "نمایش در پوشه",
-  "openLocationFailed": "باز کردن پوشه حاوی ناموفق بود"
+  "openLocationFailed": "باز کردن پوشه حاوی ناموفق بود",
+  "annotate": {
+    "unresolved": "{{count}} مورد حل‌نشده",
+    "addComment": "افزودن نظر",
+    "placeholder": "نظر بنویسید (پشتیبانی از Markdown)",
+    "replyPlaceholder": "پاسخ بنویسید…",
+    "save": "ثبت نظر",
+    "cancel": "لغو",
+    "reply": "پاسخ",
+    "resolve": "حل شد",
+    "reopen": "بازگشایی",
+    "delete": "حذف",
+    "deleteConfirm": "این یادداشت حذف شود؟",
+    "shortcutHint": "Enter برای ذخیره · Shift+Enter برای خط جدید · Esc برای لغو",
+    "line": "خط {{line}}",
+    "lines": "خطوط {{start}}–{{end}}",
+    "movedFuzzy": "کد تغییر کرده",
+    "agentReply": "پاسخ Agent",
+    "detachedTitle": "یادداشت‌های خارج از این diff",
+    "loadFailed": "بارگذاری یادداشت‌ها ناموفق بود",
+    "saveFailed": "ذخیره یادداشت ناموفق بود",
+    "staleDiff": "فایل پس از بارگذاری این diff تغییر کرده است. diff را دوباره باز کنید و خطوط را دوباره انتخاب کنید.",
+    "emptyDiff": "تغییری برای نمایش وجود ندارد",
+    "status": {
+      "open": "باز",
+      "sent": "ارسال‌شده",
+      "resolved": "حل‌شده",
+      "outdated": "منسوخ"
+    }
+  }
 }

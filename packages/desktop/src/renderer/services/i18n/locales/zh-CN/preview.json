@@ -178,5 +178,34 @@
   "copyPath": "复制路径",
   "copyRelativePath": "复制相对路径",
   "openLocation": "打开文件所在目录",
-  "openLocationFailed": "无法打开所在目录"
+  "openLocationFailed": "无法打开所在目录",
+  "annotate": {
+    "unresolved": "未解决 {{count}} 条",
+    "addComment": "添加批注",
+    "placeholder": "写下批注（支持 Markdown）",
+    "replyPlaceholder": "写回复…",
+    "save": "批注",
+    "cancel": "取消",
+    "reply": "回复",
+    "resolve": "解决",
+    "reopen": "重新打开",
+    "delete": "删除",
+    "deleteConfirm": "删除这条批注？",
+    "shortcutHint": "Enter 保存 · Shift+Enter 换行 · Esc 取消",
+    "line": "第 {{line}} 行",
+    "lines": "第 {{start}}–{{end}} 行",
+    "movedFuzzy": "代码已改动",
+    "agentReply": "Agent 答复",
+    "detachedTitle": "不在当前 diff 中的批注",
+    "loadFailed": "批注加载失败",
+    "saveFailed": "批注保存失败",
+    "staleDiff": "打开 diff 后文件又有改动，请重新打开 diff 再选择行。",
+    "emptyDiff": "没有可显示的改动",
+    "status": {
+      "open": "未解决",
+      "sent": "已发送",
+      "resolved": "已解决",
+      "outdated": "已过期"
+    }
+  }
 }
