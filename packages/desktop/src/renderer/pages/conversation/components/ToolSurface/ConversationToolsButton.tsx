@@ -103,6 +103,9 @@ export const ToolSurfacePanel: React.FC<{ state: ConversationToolSurfaceState }>
 
   const { surface } = state;
   const mcpToolCount = groups.mcp.reduce((sum, group) => sum + group.tools.length, 0);
+  // Launch-config surfaces (generic ACP, Antigravity) carry no tool list: an
+  // empty list there means "not reported", never "no tools".
+  const discoveryUnavailable = surface.mcp_discovery === 'unavailable';
   return (
     <div className='flex flex-col gap-16px' data-testid='tool-surface-panel'>
       {groups.externalServers.length > 0 ? (
@@ -112,8 +115,15 @@ export const ToolSurfacePanel: React.FC<{ state: ConversationToolSurfaceState }>
           content={t('conversation.toolSurface.externalHint', { servers: groups.externalServers.join(', ') })}
         />
       ) : null}
+      {discoveryUnavailable ? (
+        <Alert
+          type='info'
+          data-testid='tool-surface-discovery-unavailable'
+          content={t('conversation.toolSurface.discoveryUnavailable')}
+        />
+      ) : null}
       <div className='flex items-center gap-6px flex-wrap text-12px text-t-secondary'>
-        <span>{t('conversation.toolSurface.total', { count: groups.total })}</span>
+        {discoveryUnavailable ? null : <span>{t('conversation.toolSurface.total', { count: groups.total })}</span>}
         <Tag
           size='small'
           color={surface.mcp_isolation === 'strict' ? 'green' : 'orange'}

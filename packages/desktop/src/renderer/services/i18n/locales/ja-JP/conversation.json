@@ -1011,6 +1011,7 @@
     "externalTag": "外部",
     "noServerTools": "ツールの報告なし",
     "deferred": "遅延読み込み",
+    "discoveryUnavailable": "このバックエンドは実際に読み込んだツールと MCP を報告しません。以下は CSBU WorkMate が注入した設定のみです。",
     "total": "合計 {{count}} 件",
     "toolSearchInert": "ToolSearch は登録されていますが、遅延読み込みのツールがないため結果を返しません。",
     "status": {

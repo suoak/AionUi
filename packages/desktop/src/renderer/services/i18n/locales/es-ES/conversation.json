@@ -1012,6 +1012,7 @@
     "externalTag": "Externo",
     "noServerTools": "Sin herramientas informadas",
     "deferred": "Diferida",
+    "discoveryUnavailable": "Este backend no informa de las herramientas ni de los servidores MCP que realmente cargó; abajo solo aparece lo que CSBU WorkMate inyectó.",
     "total": "{{count}} en total",
     "toolSearchInert": "ToolSearch está registrado, pero ninguna herramienta está diferida, así que no devuelve nada.",
     "status": {
