@@ -764,7 +764,8 @@ const AgentCenterWizardPage: React.FC<{ mode: 'create' | 'edit' }> = ({ mode }) 
                   }`
                 : ''}
               {' · Skills '}
-              {skillRefs.length} · MCP {mcpPolicy === 'allowlist' ? `${selectedMcpIds.length} 项白名单` : INHERIT_MCP_COPY.short}
+              {skillRefs.length} · MCP{' '}
+              {mcpPolicy === 'allowlist' ? `${selectedMcpIds.length} 项白名单` : INHERIT_MCP_COPY.short}
             </Text>
             {description ? <Text className='text-13px'>{description}</Text> : null}
             {instructions.trim() ? (
