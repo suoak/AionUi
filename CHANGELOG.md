@@ -1,5 +1,47 @@
 # Changelog
 
+## [2.4.3](https://github.com/suoak/AionUi/compare/v2.4.2...v2.4.3) (2026-10-22)
+
+### Desktop
+
+#### Features
+
+- **conversation:** add a "Tools" drawer to each conversation that lists the tools and MCP servers the session can use, with a hint when external MCP servers are detected ([#180](https://github.com/suoak/AionUi/pull/180)).
+- **conversation:** the Tools drawer understands launch-config tool surfaces and notes when a backend does not report what it loaded; dormant until a Core build reports them ([#181](https://github.com/suoak/AionUi/pull/181)).
+
+#### Bug Fixes
+
+- **security:** HTML preview no longer runs with `allow-same-origin`, and WebSocket upgrades rewrite the Host header ([#178](https://github.com/suoak/AionUi/pull/178)).
+- **agent-center:** the inherit-MCP copy now matches real behavior — assistant team members only mount allowlisted MCP servers ([#179](https://github.com/suoak/AionUi/pull/179)).
+- **security:** bundle AionCore v0.2.20.
+
+#### 内网更新说明
+
+<!-- internal-release-notes:start -->
+
+**由运营管理部提供**
+
+- 智能体的读权限收窄，能读取的范围比之前更小。
+- 新增 Host 白名单：本机服务只接受允许的 Host 访问，可通过环境变量 `AIONCORE_ALLOWED_HOSTS` 增加允许的 Host。
+- 助手下的团队成员只挂载白名单里的 MCP。
+- 通过助手创建的 Claude 会话不再读取 `~/.claude` 里的 MCP 配置。
+- MCP 工具改为按需加载：智能体先通过 ToolSearch 查找，再调用。
+- 会话新增「工具」抽屉，可以查看当前会话能用的工具和 MCP。
+- HTML 预览去掉 `allow-same-origin`，预览页面无法再访问应用自身的数据。
+
+<!-- internal-release-notes:end -->
+
+### Core ([v0.2.20](https://github.com/suoak/AionCore/releases/tag/v0.2.20))
+
+- Skill isolation and MCP allowlist; an empty allowlist mounts nothing (suoak/AionCore#150).
+- Narrow agent read permissions, add a Host allowlist (`AIONCORE_ALLOWED_HOSTS`) and keep fixed permissions from being escalated (suoak/AionCore#151).
+- Claude sessions run with strict MCP config and report their real tool inventory (suoak/AionCore#152).
+- Normalized per-session tool surface for the Tools drawer (suoak/AionCore#153).
+- Codex sessions report loaded MCP servers and flag external ones (detect only) (suoak/AionCore#154).
+- Upgrade aionrs to v0.2.25; user MCP tools are deferred behind ToolSearch (suoak/AionCore#155).
+
+---
+
 ## [2.4.2](https://github.com/suoak/AionUi/compare/v2.4.1...v2.4.2) (2026-10-22)
 
 ### Desktop
