@@ -929,7 +929,11 @@
     "collapse": "Collapse plan"
   },
   "taskSession": {
-    "mode": { "agent": "Agent", "plan": "Plan", "goal": "Goal" },
+    "mode": {
+      "agent": "Agent",
+      "plan": "Plan",
+      "goal": "Goal"
+    },
     "status": {
       "draft": "Draft",
       "ready": "Ready",
@@ -992,6 +996,33 @@
       "unsupported": "Planning isolation unsupported",
       "automaticUnavailable": "Automatic planning unavailable",
       "start": "Start planning"
+    }
+  },
+  "toolSurface": {
+    "tooltip": "Tools",
+    "title": "Session tools",
+    "notReported": "The current core has not reported a tool list",
+    "notReportedHint": "Once the session starts, the core reports the tools that are actually available.",
+    "externalHint": "Extra MCP servers loaded from this machine: {{servers}} (not managed or blocked by CSBU WorkMate)",
+    "groupBuiltin": "Built-in",
+    "groupMcp": "MCP",
+    "groupSkill": "Skills",
+    "emptyGroup": "None",
+    "externalTag": "External",
+    "noServerTools": "No tools reported",
+    "deferred": "Deferred",
+    "total": "{{count}} total",
+    "toolSearchInert": "ToolSearch is registered but no tool is deferred, so it returns nothing.",
+    "status": {
+      "ok": "Connected",
+      "failed": "Failed",
+      "missing": "Missing",
+      "disabled": "Disabled",
+      "unknown": "Unknown"
+    },
+    "isolation": {
+      "strict": "Managed MCP only",
+      "ambient": "May load local MCP"
     }
   }
 }

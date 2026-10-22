@@ -930,7 +930,11 @@
     "collapse": "Plan einklappen"
   },
   "taskSession": {
-    "mode": { "agent": "Agent", "plan": "Plan", "goal": "Ziel" },
+    "mode": {
+      "agent": "Agent",
+      "plan": "Plan",
+      "goal": "Ziel"
+    },
     "status": {
       "draft": "Entwurf",
       "ready": "Bereit",
@@ -993,6 +997,33 @@
       "unsupported": "Planungsisolation wird nicht unterstützt",
       "automaticUnavailable": "Automatische Planung nicht verfügbar",
       "start": "Planung starten"
+    }
+  },
+  "toolSurface": {
+    "tooltip": "Werkzeuge",
+    "title": "Sitzungswerkzeuge",
+    "notReported": "Der aktuelle Kern hat keine Werkzeugliste gemeldet",
+    "notReportedHint": "Nach dem Start der Sitzung meldet der Kern die tatsächlich verfügbaren Werkzeuge.",
+    "externalHint": "Zusätzlich von diesem Rechner geladene MCP-Server: {{servers}} (nicht von CSBU WorkMate verwaltet, nicht blockiert)",
+    "groupBuiltin": "Integriert",
+    "groupMcp": "MCP",
+    "groupSkill": "Skills",
+    "emptyGroup": "Keine",
+    "externalTag": "Extern",
+    "noServerTools": "Keine Werkzeuge gemeldet",
+    "deferred": "Verzögert",
+    "total": "{{count}} insgesamt",
+    "toolSearchInert": "ToolSearch ist registriert, aber kein Werkzeug ist verzögert, daher liefert es nichts.",
+    "status": {
+      "ok": "Verbunden",
+      "failed": "Fehlgeschlagen",
+      "missing": "Fehlt",
+      "disabled": "Deaktiviert",
+      "unknown": "Unbekannt"
+    },
+    "isolation": {
+      "strict": "Nur verwaltete MCP",
+      "ambient": "Kann lokale MCP laden"
     }
   }
 }

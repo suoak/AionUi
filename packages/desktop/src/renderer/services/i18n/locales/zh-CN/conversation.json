@@ -929,7 +929,11 @@
     "collapse": "收起计划"
   },
   "taskSession": {
-    "mode": { "agent": "执行", "plan": "计划", "goal": "目标" },
+    "mode": {
+      "agent": "执行",
+      "plan": "计划",
+      "goal": "目标"
+    },
     "status": {
       "draft": "草稿",
       "ready": "就绪",
@@ -992,6 +996,33 @@
       "unsupported": "不支持规划隔离",
       "automaticUnavailable": "自动规划不可用",
       "start": "开始规划"
+    }
+  },
+  "toolSurface": {
+    "tooltip": "工具清单",
+    "title": "会话工具",
+    "notReported": "当前内核未上报工具清单",
+    "notReportedHint": "会话启动后，内核会上报实际可用的工具。",
+    "externalHint": "检测到本机额外加载的 MCP：{{servers}}（CSBU WorkMate 未管理，未拦截）",
+    "groupBuiltin": "内置",
+    "groupMcp": "MCP",
+    "groupSkill": "技能",
+    "emptyGroup": "无",
+    "externalTag": "外部",
+    "noServerTools": "未上报工具",
+    "deferred": "延迟加载",
+    "total": "共 {{count}} 项",
+    "toolSearchInert": "ToolSearch 已注册，但当前没有延迟加载的工具，搜索不会返回结果。",
+    "status": {
+      "ok": "已连接",
+      "failed": "失败",
+      "missing": "缺失",
+      "disabled": "已禁用",
+      "unknown": "未知"
+    },
+    "isolation": {
+      "strict": "仅托管 MCP",
+      "ambient": "可能加载本机 MCP"
     }
   }
 }

@@ -929,7 +929,11 @@
     "collapse": "جمع کردن برنامه"
   },
   "taskSession": {
-    "mode": { "agent": "عامل", "plan": "برنامه", "goal": "هدف" },
+    "mode": {
+      "agent": "عامل",
+      "plan": "برنامه",
+      "goal": "هدف"
+    },
     "status": {
       "draft": "پیش‌نویس",
       "ready": "آماده",
@@ -992,6 +996,33 @@
       "unsupported": "جداسازی برنامه‌ریزی پشتیبانی نمی‌شود",
       "automaticUnavailable": "برنامه‌ریزی خودکار در دسترس نیست",
       "start": "شروع برنامه‌ریزی"
+    }
+  },
+  "toolSurface": {
+    "tooltip": "ابزارها",
+    "title": "ابزارهای جلسه",
+    "notReported": "هسته فعلی فهرست ابزارها را گزارش نکرده است",
+    "notReportedHint": "پس از شروع جلسه، هسته ابزارهای واقعاً در دسترس را گزارش می‌کند.",
+    "externalHint": "MCPهای اضافی بارگذاری‌شده از این دستگاه: {{servers}} (توسط CSBU WorkMate مدیریت یا مسدود نمی‌شوند)",
+    "groupBuiltin": "داخلی",
+    "groupMcp": "MCP",
+    "groupSkill": "مهارت‌ها",
+    "emptyGroup": "هیچ",
+    "externalTag": "خارجی",
+    "noServerTools": "ابزاری گزارش نشده",
+    "deferred": "با تأخیر",
+    "total": "مجموع {{count}}",
+    "toolSearchInert": "ToolSearch ثبت شده است، اما هیچ ابزاری با تأخیر بارگذاری نمی‌شود، بنابراین نتیجه‌ای برنمی‌گرداند.",
+    "status": {
+      "ok": "متصل",
+      "failed": "ناموفق",
+      "missing": "یافت نشد",
+      "disabled": "غیرفعال",
+      "unknown": "نامشخص"
+    },
+    "isolation": {
+      "strict": "فقط MCP مدیریت‌شده",
+      "ambient": "ممکن است MCP محلی بارگذاری شود"
     }
   }
 }

@@ -931,7 +931,11 @@
     "collapse": "Planı daralt"
   },
   "taskSession": {
-    "mode": { "agent": "Ajan", "plan": "Plan", "goal": "Hedef" },
+    "mode": {
+      "agent": "Ajan",
+      "plan": "Plan",
+      "goal": "Hedef"
+    },
     "status": {
       "draft": "Taslak",
       "ready": "Hazır",
@@ -994,6 +998,33 @@
       "unsupported": "Planlama yalıtımı desteklenmiyor",
       "automaticUnavailable": "Otomatik planlama kullanılamıyor",
       "start": "Planlamayı başlat"
+    }
+  },
+  "toolSurface": {
+    "tooltip": "Araçlar",
+    "title": "Oturum araçları",
+    "notReported": "Mevcut çekirdek bir araç listesi bildirmedi",
+    "notReportedHint": "Oturum başladığında çekirdek gerçekten kullanılabilen araçları bildirir.",
+    "externalHint": "Bu makineden ek olarak yüklenen MCP: {{servers}} (CSBU WorkMate tarafından yönetilmiyor, engellenmiyor)",
+    "groupBuiltin": "Yerleşik",
+    "groupMcp": "MCP",
+    "groupSkill": "Beceriler",
+    "emptyGroup": "Yok",
+    "externalTag": "Harici",
+    "noServerTools": "Bildirilen araç yok",
+    "deferred": "Ertelenmiş",
+    "total": "Toplam {{count}}",
+    "toolSearchInert": "ToolSearch kayıtlı ancak ertelenmiş araç olmadığından hiçbir sonuç döndürmez.",
+    "status": {
+      "ok": "Bağlı",
+      "failed": "Başarısız",
+      "missing": "Eksik",
+      "disabled": "Devre dışı",
+      "unknown": "Bilinmiyor"
+    },
+    "isolation": {
+      "strict": "Yalnızca yönetilen MCP",
+      "ambient": "Yerel MCP yükleyebilir"
     }
   }
 }
