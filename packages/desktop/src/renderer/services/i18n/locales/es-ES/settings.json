@@ -1491,7 +1491,24 @@
     "channelWecom": "WeCom",
     "channelSlack": "Slack",
     "channelDiscord": "Discord",
-    "channelCron": "Tareas programadas"
+    "channelCron": "Tareas programadas",
+    "costLedgerTitle": "Registro de costes",
+    "costUnavailable": "No disponible",
+    "costUnavailableHint": "El proveedor no informó del coste; no se cuenta como 0",
+    "costPartial": "Parcial",
+    "costPartialHint": "Algunos turnos no informaron del coste; el importe solo incluye los informados",
+    "costTotal": "Total",
+    "unavailableTurns": "{{count}} turnos sin datos de uso",
+    "costRowTurns": "{{count}} turnos",
+    "notTaskLinked": "Sin tarea vinculada",
+    "notLinked": "Sin vincular",
+    "costTruncated": "Solo se muestran las primeras 50 entradas",
+    "groupBy": {
+      "task": "Por tarea",
+      "assistant": "Por asistente",
+      "day": "Diario",
+      "week": "Semanal"
+    }
   },
   "mcpToolsLoaded_one": "Se detectó {{count}} servidor MCP",
   "mcpToolsLoaded_other": "Se detectaron {{count}} servidores MCP",

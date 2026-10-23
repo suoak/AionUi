@@ -1491,7 +1491,24 @@
     "channelWecom": "WeCom",
     "channelSlack": "Slack",
     "channelDiscord": "Discord",
-    "channelCron": "Geplante Aufgaben"
+    "channelCron": "Geplante Aufgaben",
+    "costLedgerTitle": "Kostenbuch",
+    "costUnavailable": "Nicht verfügbar",
+    "costUnavailableHint": "Der Anbieter hat keine Kosten gemeldet; sie werden nicht als 0 gezählt",
+    "costPartial": "Teilweise",
+    "costPartialHint": "Für einige Runden wurden keine Kosten gemeldet; der Betrag umfasst nur gemeldete Runden",
+    "costTotal": "Gesamt",
+    "unavailableTurns": "{{count}} Runden ohne Nutzungsdaten",
+    "costRowTurns": "{{count}} Runden",
+    "notTaskLinked": "Keiner Aufgabe zugeordnet",
+    "notLinked": "Nicht zugeordnet",
+    "costTruncated": "Nur die ersten 50 Einträge",
+    "groupBy": {
+      "task": "Nach Aufgabe",
+      "assistant": "Nach Assistent",
+      "day": "Täglich",
+      "week": "Wöchentlich"
+    }
   },
   "mcpToolsLoaded_one": "{{count}} Tool geladen",
   "mcpToolsLoaded_other": "{{count}} Tools geladen",

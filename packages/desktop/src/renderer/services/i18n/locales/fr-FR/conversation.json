@@ -1074,6 +1074,16 @@
       "unsupported": "Isolation de planification non prise en charge",
       "automaticUnavailable": "Planification automatique indisponible",
       "start": "Démarrer la planification"
+    },
+    "replay": {
+      "tab": "Relecture",
+      "retentionGap": "Certains événements ont été supprimés par la politique de conservation ; la relecture est incomplète",
+      "removed": "{{count}} événements supprimés par la politique de conservation",
+      "progress": "{{loaded}} chargés · dernière séquence {{latest}}",
+      "jumpToError": "Aller à la première erreur",
+      "loadMore": "Charger plus",
+      "empty": "Aucun événement à rejouer pour cette exécution",
+      "selectHint": "Sélectionnez un événement pour voir les détails"
     }
   },
   "toolSurface": {

@@ -1491,7 +1491,24 @@
     "channelWecom": "WeCom",
     "channelSlack": "Slack",
     "channelDiscord": "Discord",
-    "channelCron": "وظایف زمان‌بندی‌شده"
+    "channelCron": "وظایف زمان‌بندی‌شده",
+    "costLedgerTitle": "دفتر هزینه",
+    "costUnavailable": "در دسترس نیست",
+    "costUnavailableHint": "ارائه‌دهنده هزینه‌ای گزارش نکرده است؛ صفر حساب نمی‌شود",
+    "costPartial": "جزئی",
+    "costPartialHint": "برخی نوبت‌ها هزینه گزارش نکرده‌اند؛ مبلغ فقط شامل موارد گزارش‌شده است",
+    "costTotal": "جمع",
+    "unavailableTurns": "{{count}} نوبت بدون داده مصرف",
+    "costRowTurns": "{{count}} نوبت",
+    "notTaskLinked": "به وظیفه‌ای پیوند نشده",
+    "notLinked": "پیوند نشده",
+    "costTruncated": "فقط ۵۰ مورد نخست نمایش داده می‌شود",
+    "groupBy": {
+      "task": "بر اساس وظیفه",
+      "assistant": "بر اساس دستیار",
+      "day": "روزانه",
+      "week": "هفتگی"
+    }
   },
   "mcpToolsLoaded_one": "{{count}} سرور MCP شناسایی شد",
   "mcpToolsLoaded_other": "{{count}} سرور MCP شناسایی شد",

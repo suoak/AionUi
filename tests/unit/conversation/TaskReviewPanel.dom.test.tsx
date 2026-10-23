@@ -8,11 +8,14 @@ const mocks = vi.hoisted(() => ({
   getRetainedOutput: vi.fn(),
   listDeliveries: vi.fn(),
   openExternalUrl: vi.fn(),
+  replay: vi.fn(),
 }));
 
 vi.mock('@/common', () => ({
   ipcBridge: {
-    taskSession: { run: { list: { invoke: mocks.listRuns }, review: { invoke: mocks.getReview } } },
+    taskSession: {
+      run: { list: { invoke: mocks.listRuns }, review: { invoke: mocks.getReview }, replay: { invoke: mocks.replay } },
+    },
     conversation: { getRetainedOutput: { invoke: mocks.getRetainedOutput } },
     scmDelivery: { list: { invoke: mocks.listDeliveries } },
   },
@@ -234,5 +237,105 @@ describe('TaskReviewPanel', () => {
     // project repository loaded it explains why it is unavailable.
     expect(await screen.findByText('conversation.explorer.scm.delivery.open')).toBeTruthy();
     expect(screen.getByText('conversation.explorer.scm.delivery.noRepository')).toBeTruthy();
+  });
+
+  it('shows the replay tab with cursor paging and retention gaps (M7 E5-6)', async () => {
+    mocks.listDeliveries.mockResolvedValue([]);
+    mocks.listRuns.mockResolvedValue([
+      { id: 'run-3', run_kind: 'execution', status: 'failed', started_at: 1, task_session_id: 'task-3' },
+    ]);
+    mocks.getReview.mockResolvedValue({
+      task: { id: 'task-3', mode: 'goal', status: 'failed' },
+      run: { id: 'run-3', run_kind: 'execution', status: 'failed', started_at: 1 },
+      artifacts: [],
+      approvals: [],
+      acceptance_criteria: [],
+      trace: [],
+      checkpoints: [],
+      evidence: [],
+      summary: {
+        status: 'failed',
+        files_changed: 0,
+        tool_calls: 0,
+        policy_decisions: 0,
+        denied_decisions: 0,
+        criteria_passed: 0,
+        criteria_total: 0,
+      },
+    });
+    const event = (sequence: number, event_type: string) => ({
+      event_id: `e${sequence}`,
+      task_id: 'task-3',
+      run_id: 'run-3',
+      sequence,
+      timestamp: 1000 * sequence,
+      event_type,
+      payload: { n: sequence },
+    });
+    mocks.replay
+      .mockResolvedValueOnce({
+        run: { id: 'run-3' },
+        events: [event(3, 'tool.requested')],
+        next_after_sequence: 3,
+        has_more: true,
+        latest_sequence: 4,
+        retention_gap: true,
+      })
+      .mockResolvedValueOnce({
+        run: { id: 'run-3' },
+        events: [event(4, 'tool.failed')],
+        next_after_sequence: 4,
+        has_more: false,
+        latest_sequence: 4,
+        retention_gap: false,
+      });
+
+    render(<TaskReviewPanel visible taskId='task-3' conversationId='conversation-3' onCancel={vi.fn()} />);
+
+    expect(await screen.findByText('conversation.taskSession.replay.tab')).toBeTruthy();
+    expect(mocks.replay).toHaveBeenCalledWith({ id: 'task-3', run_id: 'run-3', after_sequence: 0, limit: 200 });
+    expect(screen.getByText('conversation.taskSession.replay.retentionGap')).toBeTruthy();
+    // Sequences 1-2 were pruned before the first retained event.
+    expect(screen.getByText('conversation.taskSession.replay.removed')).toBeTruthy();
+
+    fireEvent.click(screen.getByText('conversation.taskSession.replay.loadMore'));
+    expect(await screen.findByText('tool.failed')).toBeTruthy();
+    expect(mocks.replay).toHaveBeenLastCalledWith({ id: 'task-3', run_id: 'run-3', after_sequence: 3, limit: 200 });
+    expect(screen.queryByText('conversation.taskSession.replay.loadMore')).toBeNull();
+    fireEvent.click(screen.getByText('conversation.taskSession.replay.jumpToError'));
+    expect(screen.getByText('"n": 4', { exact: false })).toBeTruthy();
+  });
+
+  it('hides the replay tab when the core has no replay endpoint', async () => {
+    mocks.listDeliveries.mockResolvedValue([]);
+    mocks.listRuns.mockResolvedValue([
+      { id: 'run-4', run_kind: 'execution', status: 'completed', started_at: 1, task_session_id: 'task-4' },
+    ]);
+    mocks.getReview.mockResolvedValue({
+      task: { id: 'task-4', mode: 'goal', status: 'completed' },
+      run: { id: 'run-4', run_kind: 'execution', status: 'completed', started_at: 1 },
+      artifacts: [],
+      approvals: [],
+      acceptance_criteria: [],
+      trace: [],
+      checkpoints: [],
+      evidence: [],
+      summary: {
+        status: 'completed',
+        files_changed: 0,
+        tool_calls: 0,
+        policy_decisions: 0,
+        denied_decisions: 0,
+        criteria_passed: 0,
+        criteria_total: 0,
+      },
+    });
+    mocks.replay.mockRejectedValue(Object.assign(new Error('Not Found'), { status: 404 }));
+
+    render(<TaskReviewPanel visible taskId='task-4' conversationId='conversation-4' onCancel={vi.fn()} />);
+
+    expect(await screen.findByText('conversation.taskSession.review.overview')).toBeTruthy();
+    await waitFor(() => expect(mocks.replay).toHaveBeenCalled());
+    expect(screen.queryByText('conversation.taskSession.replay.tab')).toBeNull();
   });
 });

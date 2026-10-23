@@ -24,6 +24,7 @@ import { CreatePullRequestModal } from '../SourceControl/delivery/CreatePullRequ
 import { pullRequestEvidence } from '../SourceControl/delivery/prDeliveryModel';
 import { repoOption, useDeliverySupported } from '../SourceControl/delivery/useDeliverySupport';
 import { useScm } from '../SourceControl/scmStore';
+import TaskRunReplayTimeline, { useFirstReplayPage } from './TaskRunReplayTimeline';
 
 type Props = { visible: boolean; taskId: string; conversationId: string; onCancel: () => void };
 
@@ -85,6 +86,8 @@ const TaskReviewPanel: React.FC<Props> = ({ visible, taskId, conversationId, onC
   } = useSWR(visible && runId ? ['taskReview', taskId, runId] : null, () =>
     ipcBridge.taskSession.run.review.invoke({ id: taskId, run_id: runId! })
   );
+  // Older aioncore has no replay endpoint: the tab stays hidden.
+  const replayFirstPage = useFirstReplayPage(taskId, runId, visible);
   const changes = useMemo(() => review?.evidence.filter((item) => item.kind === 'file') ?? [], [review]);
   const pullRequests = useMemo(() => pullRequestEvidence(review?.evidence ?? []), [review]);
   const tools = useMemo(() => review?.trace.filter((item) => item.event_type.startsWith('tool.')) ?? [], [review]);
@@ -294,6 +297,11 @@ const TaskReviewPanel: React.FC<Props> = ({ visible, taskId, conversationId, onC
                 )}
               </Space>
             </Tabs.TabPane>
+            {replayFirstPage && runId ? (
+              <Tabs.TabPane key='replay' title={t('conversation.taskSession.replay.tab')}>
+                <TaskRunReplayTimeline taskId={taskId} runId={runId} firstPage={replayFirstPage} />
+              </Tabs.TabPane>
+            ) : null}
             <Tabs.TabPane key='tools' title={t('conversation.taskSession.review.tools')}>
               <List
                 dataSource={tools}

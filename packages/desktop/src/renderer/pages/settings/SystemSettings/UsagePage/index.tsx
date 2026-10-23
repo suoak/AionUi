@@ -25,6 +25,7 @@ import {
   resolveUsageModelFilter,
   summarizeUsageEvents,
   usageEventsToCsv,
+  usageRangeStart,
   type UsageRange,
 } from '@/renderer/utils/chat/tokenUsageAggregate';
 import { backfillUsageFromConversations } from '@/renderer/utils/chat/tokenUsageBackfill';
@@ -32,6 +33,7 @@ import { completeUsageBackfill, readUsageLedger } from '@/renderer/utils/chat/to
 import SettingsPageHeader from '../../components/SettingsPageHeader';
 import SettingsPageWrapper from '../../components/SettingsPageWrapper';
 import UsageBreakdownList from './UsageBreakdownList';
+import UsageCostPanel from './UsageCostPanel';
 import UsageTrendChart from './UsageTrendChart';
 
 const RANGES: UsageRange[] = ['7d', '30d', '90d', 'all'];
@@ -307,6 +309,8 @@ const UsagePage: React.FC = () => {
             locale={locale}
           />
         </div>
+
+        <UsageCostPanel since={usageRangeStart(range)} locale={locale} />
 
         {scopedEvents.length === 0 ? (
           <div
