@@ -150,6 +150,22 @@ const flushResolvedRequests = async () => {
 };
 
 describe('AgentCenterDetailPage workflow refresh', () => {
+  it('offers the fan-out trial (beta) only for published agents', async () => {
+    await renderDetail();
+    expect(screen.queryByTestId('agent-center-fanout-trial')).not.toBeInTheDocument();
+  });
+
+  it('opens Guid in fan-out trial mode for a published agent', async () => {
+    mocks.get.mockResolvedValue({ ...detail, meta: { ...detail.meta, status: 'published' } });
+    await renderDetail();
+
+    fireEvent.click(screen.getByTestId('agent-center-fanout-trial'));
+
+    expect(mocks.navigate).toHaveBeenCalledWith('/guid', {
+      state: expect.objectContaining({ selectedAssistantId: expect.any(String), agentCenterFanoutTrial: true }),
+    });
+  });
+
   it('refreshes active runs quickly and switches to the terminal result', async () => {
     vi.useFakeTimers();
     mocks.listRuns.mockResolvedValueOnce([activeRun]).mockResolvedValueOnce([{ ...activeRun, status: 'completed' }]);

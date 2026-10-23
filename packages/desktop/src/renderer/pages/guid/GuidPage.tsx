@@ -66,6 +66,8 @@ type GuidNavigationState = {
   agentWorkflowResumeMessage?: string;
   agentWorkflowInputPlaceholder?: string;
   agentCenterReturnTo?: string;
+  /** Agent Center "fan-out trial" (E3-5 beta): open in Fan-out mode with this assistant in slot 1. */
+  agentCenterFanoutTrial?: boolean;
   [key: string]: unknown;
 };
 
@@ -275,8 +277,28 @@ const GuidPage: React.FC = () => {
         .map((item) => ({ id: item.id, name: item.name_i18n?.[localeKey] || item.name })),
     [agentSelection.assistants, localeKey]
   );
+  // Agent Center fan-out trial (E3-5 beta). location.state is cleared right
+  // after the assistant preselect, so the request is latched here and applied
+  // once Fan-out becomes available, i.e. once a git repo is picked.
+  const [pendingFanoutTrialId, setPendingFanoutTrialId] = useState<string | null>(null);
+  const fanoutTrialRequestId =
+    (location.state as GuidNavigationState | null)?.agentCenterFanoutTrial === true
+      ? ((location.state as GuidNavigationState).selectedAssistantId ?? null)
+      : null;
+  useEffect(() => {
+    if (fanoutTrialRequestId) setPendingFanoutTrialId(fanoutTrialRequestId);
+  }, [fanoutTrialRequestId, location.key]);
+  useEffect(() => {
+    if (!pendingFanoutTrialId || !fanoutSupported || fanoutCandidates.length === 0) return;
+    setFanoutAssistantIds(defaultSlotAssistants(pendingFanoutTrialId, fanoutCandidates));
+    setWorkspaceModeChoice('fanout');
+    setPendingFanoutTrialId(null);
+  }, [pendingFanoutTrialId, fanoutSupported, fanoutCandidates]);
+
   const handleWorkspaceModeChange = useCallback(
     (mode: GuidWorkspaceMode) => {
+      // A manual choice wins over a not-yet-applied fan-out trial request.
+      setPendingFanoutTrialId(null);
       if (mode === 'fanout' && fanoutAssistantIds.length === 0) {
         setFanoutAssistantIds(defaultSlotAssistants(agentSelection.selectedAssistantId, fanoutCandidates));
       }
