@@ -217,5 +217,23 @@
   },
   "viewMoreLines_one": "もっと見る ({{count}} 行)",
   "viewMoreLines_other": "もっと見る ({{count}} 行)",
-  "aiAssistant": "AI アシスタント"
+  "aiAssistant": "AI アシスタント",
+  "inbox": {
+    "title": "受信箱",
+    "tooltip": "受信箱 · 未読 {{count}} 件",
+    "empty": "今対応が必要な項目はありません",
+    "markAllRead": "すべて既読にする",
+    "kind": {
+      "approval": "承認待ち",
+      "blocked": "ブロック中",
+      "completed": "完了",
+      "failed": "失敗"
+    },
+    "loadFailed": "受信箱を読み込めませんでした",
+    "resolved": "対応済み",
+    "notifyFailedNamed": "失敗：{{name}}",
+    "notifyFailed": "タスクが失敗しました",
+    "notifyBlockedNamed": "ブロック中・対応が必要：{{name}}",
+    "notifyBlocked": "タスクがブロックされ、対応が必要です"
+  }
 }

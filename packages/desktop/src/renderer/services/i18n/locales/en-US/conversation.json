@@ -1099,6 +1099,17 @@
       "loadMore": "Load more",
       "empty": "No events to replay for this run",
       "selectHint": "Select an event to see its details"
+    },
+    "retry": {
+      "enable": "Retry on failure",
+      "maxAttempts": "Max attempts",
+      "timeout": "Timeout (min)",
+      "noTimeout": "No timeout",
+      "hint": "Retries apply only to failed execution runs of an approved plan; cancelled runs are never retried.",
+      "saved": "Retry policy saved",
+      "saveFailed": "Failed to save retry policy",
+      "attempt": "Attempt",
+      "retryOf": "retry of"
     }
   },
   "toolSurface": {

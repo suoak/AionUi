@@ -21,6 +21,8 @@ vi.mock('@/common', () => ({
   },
 }));
 
+vi.mock('@/renderer/pages/conversation/components/TaskRetryPolicyControl', () => ({ default: () => null }));
+
 vi.mock('@/renderer/utils/platform', () => ({ openExternalUrl: mocks.openExternalUrl }));
 
 vi.mock('react-i18next', () => ({

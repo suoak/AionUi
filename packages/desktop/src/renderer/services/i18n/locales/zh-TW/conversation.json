@@ -1099,6 +1099,17 @@
       "loadMore": "載入更多",
       "empty": "此執行沒有可回放的事件",
       "selectHint": "選擇左側事件檢視詳情"
+    },
+    "retry": {
+      "enable": "失敗時重試",
+      "maxAttempts": "最多嘗試次數",
+      "timeout": "逾時（分鐘）",
+      "noTimeout": "不限時",
+      "hint": "僅對已核准計畫的失敗執行重試；已取消的執行不會重試。",
+      "saved": "重試策略已儲存",
+      "saveFailed": "重試策略儲存失敗",
+      "attempt": "嘗試",
+      "retryOf": "重試自"
     }
   },
   "toolSurface": {

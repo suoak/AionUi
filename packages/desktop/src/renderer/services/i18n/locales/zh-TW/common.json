@@ -217,5 +217,23 @@
   },
   "viewMoreLines_one": "檢視更多 ({{count}} 行)",
   "viewMoreLines_other": "檢視更多 ({{count}} 行)",
-  "aiAssistant": "AI 助手"
+  "aiAssistant": "AI 助手",
+  "inbox": {
+    "title": "收件匣",
+    "tooltip": "收件匣 · {{count}} 則未讀",
+    "empty": "目前沒有需要你處理的事項",
+    "markAllRead": "全部標為已讀",
+    "kind": {
+      "approval": "待審批",
+      "blocked": "受阻",
+      "completed": "已完成",
+      "failed": "失敗"
+    },
+    "loadFailed": "收件匣載入失敗",
+    "resolved": "已處理",
+    "notifyFailedNamed": "失敗：{{name}}",
+    "notifyFailed": "有任務失敗了",
+    "notifyBlockedNamed": "受阻，需要你處理：{{name}}",
+    "notifyBlocked": "有任務受阻，需要你處理"
+  }
 }

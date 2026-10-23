@@ -217,5 +217,23 @@
   },
   "viewMoreLines_one": "View More ({{count}} line)",
   "viewMoreLines_other": "View More ({{count}} lines)",
-  "aiAssistant": "AI Assistant"
+  "aiAssistant": "AI Assistant",
+  "inbox": {
+    "title": "Inbox",
+    "tooltip": "Inbox · {{count}} unread",
+    "empty": "Nothing needs you right now",
+    "markAllRead": "Mark all read",
+    "kind": {
+      "approval": "Approval",
+      "blocked": "Blocked",
+      "completed": "Completed",
+      "failed": "Failed"
+    },
+    "loadFailed": "Couldn't load the inbox",
+    "resolved": "Handled",
+    "notifyFailedNamed": "Failed: {{name}}",
+    "notifyFailed": "A task failed",
+    "notifyBlockedNamed": "Blocked, needs you: {{name}}",
+    "notifyBlocked": "A task is blocked and needs you"
+  }
 }

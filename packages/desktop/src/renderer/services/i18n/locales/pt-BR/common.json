@@ -217,5 +217,23 @@
   },
   "viewMoreLines_one": "Ver Mais ({{count}} linha)",
   "viewMoreLines_other": "Ver Mais ({{count}} linhas)",
-  "aiAssistant": "Assistente de IA"
+  "aiAssistant": "Assistente de IA",
+  "inbox": {
+    "title": "Caixa de entrada",
+    "tooltip": "Caixa de entrada · {{count}} não lidos",
+    "empty": "Nada precisa de você agora",
+    "markAllRead": "Marcar tudo como lido",
+    "kind": {
+      "approval": "Aprovação",
+      "blocked": "Bloqueado",
+      "completed": "Concluído",
+      "failed": "Falhou"
+    },
+    "loadFailed": "Não foi possível carregar a caixa de entrada",
+    "resolved": "Resolvido",
+    "notifyFailedNamed": "Falhou: {{name}}",
+    "notifyFailed": "Uma tarefa falhou",
+    "notifyBlockedNamed": "Bloqueado, precisa de você: {{name}}",
+    "notifyBlocked": "Uma tarefa está bloqueada e precisa de você"
+  }
 }

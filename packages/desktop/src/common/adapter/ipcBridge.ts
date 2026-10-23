@@ -74,6 +74,7 @@ import type {
   TaskSession,
   TaskReview,
   TaskRunReplayPage,
+  TaskRetryPolicyInput,
   UpdateTaskSessionInput,
   CreateReviewThreadInput,
   ListReviewThreadsInput,
@@ -1243,6 +1244,13 @@ export const taskSession = {
       artifact_hash: params.artifact_hash,
     })
   ),
+  /** Retry/timeout policy (aioncore ≥ M7 E5-5); older cores answer 404/405. */
+  retryPolicy: {
+    update: httpPut<TaskSession, { id: string } & TaskRetryPolicyInput>(
+      (params) => `/api/task-sessions/${encodeURIComponent(params.id)}/retry-policy`,
+      (params) => ({ max_attempts: params.max_attempts, timeout_ms: params.timeout_ms })
+    ),
+  },
   run: {
     list: httpGet<TaskRun[], { id: string }>((params) => `/api/task-sessions/${encodeURIComponent(params.id)}/runs`),
     review: httpGet<TaskReview, { id: string; run_id: string }>(
@@ -3321,6 +3329,51 @@ export type ITaskTraceAppendedEvent = {
 
 export const taskTrace = {
   appended: wsEmitter<ITaskTraceAppendedEvent>('task.trace.appended'),
+};
+
+/** M7 E5-4 inbox item ("needs you" queue). */
+export type InboxItemKind = 'approval' | 'blocked' | 'completed' | 'failed';
+
+export type IInboxItem = {
+  id: string;
+  kind: InboxItemKind | string;
+  source_kind: string;
+  source_id: string;
+  conversation_id?: string | null;
+  task_session_id?: string | null;
+  run_id?: string | null;
+  title: string;
+  summary?: string | null;
+  created_at: number;
+  read_at?: number | null;
+  resolved_at?: number | null;
+};
+
+export type IInboxListResponse = { items: IInboxItem[]; unread_count: number };
+export type IInboxMarkReadResponse = { updated: number; unread_count: number };
+export type IInboxChangedEvent = {
+  user_id?: string;
+  unread_count: number;
+  kind?: InboxItemKind | string | null;
+  conversation_id?: string | null;
+};
+
+export const inbox = {
+  /** aioncore ≥ M7 E5-4; older cores answer 404 and the UI hides the inbox. */
+  list: httpGet<IInboxListResponse, { unread_only?: boolean; before?: number; limit?: number }>((p) => {
+    const params = new URLSearchParams();
+    if (p?.unread_only) params.set('unread_only', 'true');
+    if (p?.before) params.set('before', String(p.before));
+    if (p?.limit) params.set('limit', String(p.limit));
+    const qs = params.toString();
+    return `/api/inbox${qs ? `?${qs}` : ''}`;
+  }),
+  markRead: httpPost<IInboxMarkReadResponse, { id: string }>(
+    (p) => `/api/inbox/${encodeURIComponent(p.id)}/read`,
+    () => ({})
+  ),
+  markAllRead: httpPost<IInboxMarkReadResponse, void>('/api/inbox/read-all', () => ({})),
+  changed: wsEmitter<IInboxChangedEvent>('inbox.changed'),
 };
 
 export const channel = {

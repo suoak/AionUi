@@ -71,6 +71,13 @@ export type BrowserNotificationDeps = {
    * confirmation body ignores it.
    */
   bodyFor: (kind: NotificationKind, conversationId?: string) => string;
+  /**
+   * Whether a plain turn-finished notification should fire. Defaults to true.
+   * When Core has the inbox (M7 E5-4), completed turns only land in the inbox
+   * and failures / blocks are notified from `inbox.changed` instead, so the
+   * callers pass `() => !isInboxSupported()`. Confirmations are unaffected.
+   */
+  notifyTurnCompleted?: () => boolean;
 };
 
 /**
@@ -122,6 +129,7 @@ export const createBrowserNotificationController = (deps: BrowserNotificationDep
 
     if (message.type === 'finish') {
       if (message.turn_id && message.turn_id === lastNotifiedTurnId) return;
+      if (deps.notifyTurnCompleted && !deps.notifyTurnCompleted()) return;
       if (!deps.shouldShow()) return;
       lastNotifiedTurnId = message.turn_id ?? null;
       deps.show({

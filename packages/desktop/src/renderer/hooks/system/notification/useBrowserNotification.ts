@@ -17,6 +17,7 @@ import {
   truncateConversationName,
   type NotificationPermissionState,
 } from './browserNotificationCore';
+import { inboxAttentionKind, inboxNotificationBody, isInboxSupported } from '@/renderer/hooks/system/inbox/inboxStore';
 
 /**
  * WebUI-only: show a browser notification when an agent requests a
@@ -40,16 +41,18 @@ export const useBrowserNotification = (): void => {
     // The controller's turn_id dedup is best-effort per effect lifetime: it
     // resets if this effect re-runs (e.g. on a language change). Acceptable —
     // worst case is one duplicate notification across a locale switch.
+    const shouldShow = () =>
+      shouldShowNotification({
+        isElectron: isElectronDesktop(),
+        hasNotificationApi: 'Notification' in window,
+        isSecureContext: window.isSecureContext,
+        permission: Notification.permission as NotificationPermissionState,
+        settingEnabled: configService.get('system.notificationEnabled') !== false,
+        documentHidden: document.hidden,
+      });
     const controller = createBrowserNotificationController({
-      shouldShow: () =>
-        shouldShowNotification({
-          isElectron: isElectronDesktop(),
-          hasNotificationApi: 'Notification' in window,
-          isSecureContext: window.isSecureContext,
-          permission: Notification.permission as NotificationPermissionState,
-          settingEnabled: configService.get('system.notificationEnabled') !== false,
-          documentHidden: document.hidden,
-        }),
+      notifyTurnCompleted: () => !isInboxSupported(),
+      shouldShow,
       bodyFor: (kind, conversationId) => {
         const name = conversationId ? getSnapshotConversationName(conversationId) : undefined;
         if (kind === 'confirmation') {
@@ -61,23 +64,36 @@ export const useBrowserNotification = (): void => {
           ? t('settings.browserNotification.bodyTurnCompletedNamed', { name: truncateConversationName(name) })
           : t('settings.browserNotification.bodyTurnCompleted');
       },
-      show: ({ body, conversationId }) => {
-        try {
-          const notification = new Notification('CSBU WorkMate', { body });
-          notification.onclick = () => {
-            window.focus();
-            if (conversationId) void navigate(`/conversation/${conversationId}`);
-            notification.close();
-          };
-        } catch (error) {
-          console.error('[useBrowserNotification] Failed to show notification:', error);
-        }
-      },
+      show: ({ body, conversationId }) => showNotification(body, conversationId),
     });
+
+    // M7 E5-4: failed / blocked turns notify from the inbox feed (completed
+    // ones stay silent in the inbox; approvals keep the confirmation path).
+    const disposeInbox = ipcBridge.inbox?.changed?.on?.((event) => {
+      const kind = inboxAttentionKind(event);
+      if (!kind || !shouldShow()) return;
+      const conversationId = event.conversation_id ?? undefined;
+      const name = conversationId ? getSnapshotConversationName(conversationId) : undefined;
+      showNotification(inboxNotificationBody(t, kind, name && truncateConversationName(name)), conversationId);
+    });
+
+    function showNotification(body: string, conversationId?: string) {
+      try {
+        const notification = new Notification('CSBU WorkMate', { body });
+        notification.onclick = () => {
+          window.focus();
+          if (conversationId) void navigate(`/conversation/${conversationId}`);
+          notification.close();
+        };
+      } catch (error) {
+        console.error('[useBrowserNotification] Failed to show notification:', error);
+      }
+    }
 
     const disposeStream = streamEmitter.on(controller.onStreamMessage);
     return () => {
       disposeStream();
+      disposeInbox?.();
     };
   }, [navigate, t]);
 };

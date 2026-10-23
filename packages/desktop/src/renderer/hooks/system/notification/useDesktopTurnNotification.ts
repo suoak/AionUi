@@ -11,6 +11,7 @@ import { configService } from '@/common/config/configService';
 import { isElectronDesktop } from '@/renderer/utils/platform';
 import { getSnapshotConversationName } from '@/renderer/pages/conversation/GroupedHistory/hooks/useConversationListSync';
 import { createBrowserNotificationController, truncateConversationName } from './browserNotificationCore';
+import { inboxAttentionKind, inboxNotificationBody, isInboxSupported } from '@/renderer/hooks/system/inbox/inboxStore';
 
 /**
  * Desktop-only: fire a native system notification when an agent turn finishes.
@@ -34,10 +35,12 @@ export const useDesktopTurnNotification = (): void => {
     const streamEmitter = ipcBridge.conversation?.responseStream;
     if (!streamEmitter) return;
 
+    // Cheap renderer-side gate; the main process still re-checks the setting
+    // and the window-focus condition before showing anything.
+    const shouldShow = () => configService.get('system.notificationEnabled') !== false;
     const controller = createBrowserNotificationController({
-      // Cheap renderer-side gate; the main process still re-checks the setting
-      // and the window-focus condition before showing anything.
-      shouldShow: () => configService.get('system.notificationEnabled') !== false,
+      notifyTurnCompleted: () => !isInboxSupported(),
+      shouldShow,
       bodyFor: (kind, conversationId) => {
         const name = conversationId ? getSnapshotConversationName(conversationId) : undefined;
         if (kind === 'confirmation') {
@@ -57,9 +60,25 @@ export const useDesktopTurnNotification = (): void => {
       },
     });
 
+    // M7 E5-4: with an inbox-capable Core, completed turns stay silent in the
+    // inbox; failed / blocked turns notify from `inbox.changed`. Approvals keep
+    // the confirmation path above. Main process still skips when focused.
+    const disposeInbox = ipcBridge.inbox?.changed?.on?.((event) => {
+      const kind = inboxAttentionKind(event);
+      if (!kind || !shouldShow()) return;
+      const conversationId = event.conversation_id ?? undefined;
+      const name = conversationId ? getSnapshotConversationName(conversationId) : undefined;
+      void ipcBridge.notification.show.invoke({
+        title: 'CSBU WorkMate',
+        body: inboxNotificationBody(t, kind, name && truncateConversationName(name)),
+        conversation_id: conversationId,
+      });
+    });
+
     const disposeStream = streamEmitter.on(controller.onStreamMessage);
     return () => {
       disposeStream();
+      disposeInbox?.();
     };
   }, [t]);
 };

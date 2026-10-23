@@ -217,5 +217,23 @@
   },
   "viewMoreLines_one": "Daha Fazla Göster ({{count}} satır)",
   "viewMoreLines_other": "Daha Fazla Göster ({{count}} satır)",
-  "aiAssistant": "Yapay Zekâ Asistanı"
+  "aiAssistant": "Yapay Zekâ Asistanı",
+  "inbox": {
+    "title": "Gelen kutusu",
+    "tooltip": "Gelen kutusu · {{count}} okunmamış",
+    "empty": "Şu an ilgilenmen gereken bir şey yok",
+    "markAllRead": "Tümünü okundu işaretle",
+    "kind": {
+      "approval": "Onay",
+      "blocked": "Engellendi",
+      "completed": "Tamamlandı",
+      "failed": "Başarısız"
+    },
+    "loadFailed": "Gelen kutusu yüklenemedi",
+    "resolved": "İşlendi",
+    "notifyFailedNamed": "Başarısız: {{name}}",
+    "notifyFailed": "Bir görev başarısız oldu",
+    "notifyBlockedNamed": "Engellendi, seni bekliyor: {{name}}",
+    "notifyBlocked": "Bir görev engellendi ve seni bekliyor"
+  }
 }
