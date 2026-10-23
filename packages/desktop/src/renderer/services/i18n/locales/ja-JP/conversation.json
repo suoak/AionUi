@@ -568,7 +568,22 @@
     "cachedRead": "キャッシュ読み取り",
     "tokensUsed": "{{tokens}} トークン使用済み",
     "viewStats": "使用量を見る",
-    "sessionSpend": "この会話の消費"
+    "sessionSpend": "この会話の消費",
+    "breakdownTitle": "コンテキストの内訳",
+    "estimated": "推定",
+    "estimatedHint": "ローカル推定",
+    "free": "空き",
+    "segments": {
+      "system_prompt": "システムプロンプト",
+      "system_tools": "システムツール",
+      "mcp_tools": "MCP ツール",
+      "tools": "ツール定義",
+      "skills": "スキル",
+      "memory_files": "メモリファイル",
+      "custom_agents": "カスタムエージェント",
+      "messages": "メッセージ",
+      "other": "その他"
+    }
   },
   "noModelConfigured": "モデルが設定されていません。設定ページで設定してください。",
   "runtimePreparing": {

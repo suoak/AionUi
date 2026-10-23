@@ -578,7 +578,22 @@
     "cachedRead": "Чтение кэша",
     "tokensUsed": "Использовано токенов: {{tokens}}",
     "viewStats": "Посмотреть использование",
-    "sessionSpend": "Расход сессии"
+    "sessionSpend": "Расход сессии",
+    "breakdownTitle": "Структура контекста",
+    "estimated": "оценка",
+    "estimatedHint": "Локальная оценка",
+    "free": "Свободно",
+    "segments": {
+      "system_prompt": "Системный промпт",
+      "system_tools": "Системные инструменты",
+      "mcp_tools": "Инструменты MCP",
+      "tools": "Схемы инструментов",
+      "skills": "Навыки",
+      "memory_files": "Файлы памяти",
+      "custom_agents": "Пользовательские агенты",
+      "messages": "Сообщения",
+      "other": "Прочее"
+    }
   },
   "noModelConfigured": "Модель не настроена. Настройте в параметрах.",
   "runtimePreparing": {

@@ -578,7 +578,22 @@
     "cachedRead": "Читання кешу",
     "tokensUsed": "Використано токенів: {{tokens}}",
     "viewStats": "Переглянути використання",
-    "sessionSpend": "Витрата сесії"
+    "sessionSpend": "Витрата сесії",
+    "breakdownTitle": "Структура контексту",
+    "estimated": "оцінка",
+    "estimatedHint": "Локальна оцінка",
+    "free": "Вільно",
+    "segments": {
+      "system_prompt": "Системний промпт",
+      "system_tools": "Системні інструменти",
+      "mcp_tools": "Інструменти MCP",
+      "tools": "Схеми інструментів",
+      "skills": "Навички",
+      "memory_files": "Файли пам’яті",
+      "custom_agents": "Власні агенти",
+      "messages": "Повідомлення",
+      "other": "Інше"
+    }
   },
   "noModelConfigured": "Модель не налаштована. Будь ласка, налаштуйте в параметрах.",
   "runtimePreparing": {
