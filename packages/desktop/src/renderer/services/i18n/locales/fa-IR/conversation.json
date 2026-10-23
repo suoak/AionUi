@@ -1307,6 +1307,9 @@
     "diffBinary": "فایل دودویی: diff متنی ندارد.",
     "diffEmpty": "تغییر متنی وجود ندارد.",
     "diffTruncated": "diff کوتاه شد",
-    "closeDiff": "بستن diff"
+    "closeDiff": "بستن diff",
+    "externalMcp": "{{count}} MCP خارجی",
+    "ambientMcp": "ممکن است MCP محلی را بارگیری کند",
+    "ambientMcpTip": "این بک‌اند ممکن است سرورهای MCP پیکربندی‌شده روی این دستگاه را بارگیری کند؛ آنچه واقعاً بارگیری شده نامشخص است."
   }
 }

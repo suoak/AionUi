@@ -15,6 +15,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import useSWR from 'swr';
 import AdoptDialog from './AdoptDialog';
 import FanoutCompareView from './FanoutCompareView';
+import FanoutSlotMcpNotice from './FanoutSlotMcpNotice';
 import PreservedBranchesDialog from './PreservedBranchesDialog';
 import {
   canAdoptSlot,
@@ -167,6 +168,7 @@ const FanoutGroupPage: React.FC = () => {
               {slot.branch}
             </span>
             {slot.error && <span className='text-11px text-danger-6'>{t(fanoutErrorKey(slot.error.code))}</span>}
+            {slot.conversation_id && <FanoutSlotMcpNotice conversationId={slot.conversation_id} />}
             <div className='flex gap-6px'>
               {slot.conversation_id && (
                 <Button

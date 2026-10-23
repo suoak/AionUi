@@ -1307,6 +1307,9 @@
     "diffBinary": "二进制文件：无文本差异。",
     "diffEmpty": "没有文本改动。",
     "diffTruncated": "差异已截断",
-    "closeDiff": "关闭差异"
+    "closeDiff": "关闭差异",
+    "externalMcp": "{{count}} 个外部 MCP",
+    "ambientMcp": "可能加载本机 MCP",
+    "ambientMcpTip": "该后端可能加载本机配置的 MCP 服务器，实际加载情况未知。"
   }
 }

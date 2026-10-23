@@ -1309,6 +1309,9 @@
     "diffBinary": "İkili dosya: metin diff'i yok.",
     "diffEmpty": "Metin değişikliği yok.",
     "diffTruncated": "Diff kısaltıldı",
-    "closeDiff": "Diff'i kapat"
+    "closeDiff": "Diff'i kapat",
+    "externalMcp": "{{count}} harici MCP",
+    "ambientMcp": "Yerel MCP yükleyebilir",
+    "ambientMcpTip": "Bu arka uç bu makinede yapılandırılmış MCP sunucularını yükleyebilir; gerçekte neyin yüklendiği bilinmiyor."
   }
 }
