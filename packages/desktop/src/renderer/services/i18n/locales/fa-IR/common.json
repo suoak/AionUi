@@ -217,5 +217,23 @@
   },
   "viewMoreLines_one": "نمایش بیشتر ({{count}} خط)",
   "viewMoreLines_other": "نمایش بیشتر ({{count}} خط)",
-  "aiAssistant": "دستیار هوش مصنوعی"
+  "aiAssistant": "دستیار هوش مصنوعی",
+  "inbox": {
+    "title": "صندوق ورودی",
+    "tooltip": "صندوق ورودی · {{count}} خوانده‌نشده",
+    "empty": "فعلاً موردی نیاز به رسیدگی شما ندارد",
+    "markAllRead": "علامت‌گذاری همه به‌عنوان خوانده‌شده",
+    "kind": {
+      "approval": "تأیید",
+      "blocked": "مسدود",
+      "completed": "تکمیل‌شده",
+      "failed": "ناموفق"
+    },
+    "loadFailed": "بارگیری صندوق ورودی ممکن نشد",
+    "resolved": "رسیدگی‌شده",
+    "notifyFailedNamed": "ناموفق: {{name}}",
+    "notifyFailed": "یک کار ناموفق بود",
+    "notifyBlockedNamed": "مسدود، نیاز به شما: {{name}}",
+    "notifyBlocked": "یک کار مسدود شده و به شما نیاز دارد"
+  }
 }
