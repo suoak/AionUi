@@ -178,5 +178,34 @@
   "copyPath": "Yolu Kopyala",
   "copyRelativePath": "Göreli Yolu Kopyala",
   "openLocation": "Klasörde göster",
-  "openLocationFailed": "İçeren klasör açılamadı"
+  "openLocationFailed": "İçeren klasör açılamadı",
+  "annotate": {
+    "unresolved": "{{count}} çözülmemiş",
+    "addComment": "Yorum ekle",
+    "placeholder": "Yorum yazın (Markdown desteklenir)",
+    "replyPlaceholder": "Yanıt yazın…",
+    "save": "Yorum yap",
+    "cancel": "İptal",
+    "reply": "Yanıtla",
+    "resolve": "Çöz",
+    "reopen": "Yeniden aç",
+    "delete": "Sil",
+    "deleteConfirm": "Bu not silinsin mi?",
+    "shortcutHint": "Kaydetmek için Enter · Yeni satır için Shift+Enter · İptal için Esc",
+    "line": "Satır {{line}}",
+    "lines": "Satır {{start}}–{{end}}",
+    "movedFuzzy": "Kod değişti",
+    "agentReply": "Agent yanıtı",
+    "detachedTitle": "Bu diff'te gösterilmeyen notlar",
+    "loadFailed": "Notlar yüklenemedi",
+    "saveFailed": "Not kaydedilemedi",
+    "staleDiff": "Bu diff yüklendikten sonra dosya değişti. Diff'i yeniden açıp satırları tekrar seçin.",
+    "emptyDiff": "Gösterilecek değişiklik yok",
+    "status": {
+      "open": "Açık",
+      "sent": "Gönderildi",
+      "resolved": "Çözüldü",
+      "outdated": "Güncel değil"
+    }
+  }
 }

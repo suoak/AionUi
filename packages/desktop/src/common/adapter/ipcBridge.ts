@@ -74,6 +74,10 @@ import type {
   TaskSession,
   TaskReview,
   UpdateTaskSessionInput,
+  CreateReviewThreadInput,
+  ListReviewThreadsInput,
+  ReviewThread,
+  UpdateReviewThreadInput,
 } from '../types/agent/taskSession';
 import {
   normalizeAgentCenterDetail,
@@ -984,6 +988,37 @@ export const conversation = {
         `/api/conversations/${p.conversation_id}/approvals/check?action=${encodeURIComponent(p.action)}${p.command_type ? `&command_type=${encodeURIComponent(p.command_type)}` : ''}`
     ),
   },
+};
+
+/** M7 E4 diff annotations (Core `/api/review-threads*`, user identity only). */
+export const review = {
+  list: httpGet<ReviewThread[], ListReviewThreadsInput>((p) => {
+    const params = new URLSearchParams({ scope_kind: p.scope_kind, scope_id: p.scope_id });
+    if (p.file_path) params.set('file_path', p.file_path);
+    if (p.status) params.set('status', p.status);
+    return `/api/review-threads?${params.toString()}`;
+  }),
+  create: httpPost<ReviewThread, CreateReviewThreadInput>('/api/review-threads'),
+  update: httpPatch<ReviewThread, UpdateReviewThreadInput>(
+    (p) => `/api/review-threads/${encodeURIComponent(p.id)}`,
+    (p) => {
+      const { id: _id, ...body } = p;
+      return body;
+    }
+  ),
+  resolve: httpPost<ReviewThread, { id: string }>(
+    (p) => `/api/review-threads/${encodeURIComponent(p.id)}/resolve`,
+    () => ({})
+  ),
+  reopen: httpPost<ReviewThread, { id: string }>(
+    (p) => `/api/review-threads/${encodeURIComponent(p.id)}/reopen`,
+    () => ({})
+  ),
+  addComment: httpPost<ReviewThread, { id: string; body: string }>(
+    (p) => `/api/review-threads/${encodeURIComponent(p.id)}/comments`,
+    (p) => ({ body: p.body })
+  ),
+  remove: httpDelete<null, { id: string }>((p) => `/api/review-threads/${encodeURIComponent(p.id)}`),
 };
 
 export const taskSession = {

@@ -178,5 +178,34 @@
   "copyPath": "パスをコピー",
   "copyRelativePath": "相対パスをコピー",
   "openLocation": "ファイルの場所を開く",
-  "openLocationFailed": "フォルダーを開けませんでした"
+  "openLocationFailed": "フォルダーを開けませんでした",
+  "annotate": {
+    "unresolved": "未解決 {{count}} 件",
+    "addComment": "コメントを追加",
+    "placeholder": "コメントを入力（Markdown 対応）",
+    "replyPlaceholder": "返信を入力…",
+    "save": "コメント",
+    "cancel": "キャンセル",
+    "reply": "返信",
+    "resolve": "解決",
+    "reopen": "再オープン",
+    "delete": "削除",
+    "deleteConfirm": "この注釈を削除しますか？",
+    "shortcutHint": "Enter で保存 · Shift+Enter で改行 · Esc でキャンセル",
+    "line": "{{line}} 行目",
+    "lines": "{{start}}–{{end}} 行目",
+    "movedFuzzy": "コードが変更されました",
+    "agentReply": "Agent の返信",
+    "detachedTitle": "この diff に表示されていない注釈",
+    "loadFailed": "注釈の読み込みに失敗しました",
+    "saveFailed": "注釈の保存に失敗しました",
+    "staleDiff": "diff を開いた後にファイルが変更されました。diff を開き直して行を選択してください。",
+    "emptyDiff": "表示する変更はありません",
+    "status": {
+      "open": "未解決",
+      "sent": "送信済み",
+      "resolved": "解決済み",
+      "outdated": "古い"
+    }
+  }
 }

@@ -79,6 +79,15 @@ vi.mock('@arco-design/web-react', () => {
   };
 });
 
+// The annotatable diff itself is covered by its own DOM test; here it is a stub
+// that exposes the scope the panel hands it (the model helpers stay real).
+vi.mock('@/renderer/pages/conversation/Preview/components/annotate', async (importOriginal) => ({
+  ...(await importOriginal<Record<string, unknown>>()),
+  AnnotatableDiff: ({ patch, scope }: { patch: string; scope: unknown }) => (
+    <pre data-annotatable-stub={JSON.stringify(scope)}>{patch}</pre>
+  ),
+}));
+
 import TaskReviewPanel from '@/renderer/pages/conversation/components/TaskReviewPanel';
 
 afterEach(() => {
@@ -135,7 +144,9 @@ describe('TaskReviewPanel', () => {
         criteria_total: 1,
       },
     });
-    mocks.getRetainedOutput.mockResolvedValue({ content: '--- a/src/auth.ts\n+++ b/src/auth.ts' });
+    mocks.getRetainedOutput.mockResolvedValue({
+      content: '--- a/src/auth.ts\n+++ b/src/auth.ts\n@@ -1,1 +1,2 @@\n const a = 1;\n+const b = 2;\n',
+    });
 
     render(<TaskReviewPanel visible taskId='task-1' conversationId='conversation-1' onCancel={vi.fn()} />);
 
@@ -153,5 +164,16 @@ describe('TaskReviewPanel', () => {
       })
     );
     expect(await screen.findByText('--- a/src/auth.ts', { exact: false })).toBeTruthy();
+    // The retained diff is annotatable in the task_run scope, keyed by the
+    // patch's own repo-relative path.
+    const stub = document.querySelector('[data-annotatable-stub]') as HTMLElement;
+    expect(JSON.parse(stub.dataset.annotatableStub ?? '{}')).toEqual({
+      scope_kind: 'task_run',
+      scope_id: 'run-1',
+      file_path: 'src/auth.ts',
+      run_id: 'run-1',
+      task_session_id: 'task-1',
+      conversation_id: 'conversation-1',
+    });
   });
 });

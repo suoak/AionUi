@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import type { ReviewScope } from '../components/annotate/useReviewThreads';
 import { ipcBridge } from '@/common';
 import type { PreviewContentType } from '@/common/types/office/preview';
 import type { ChatFileRef, ContentEncoding } from '@/common/types/chatFile';
@@ -63,6 +64,9 @@ export interface PreviewMetadata {
   missingFile?: boolean; // 文件不存在或无法读取 / Whether the referenced file is missing or unreadable
   favicon?: string; // 浏览器 tab 的站点图标 URL / Site icon URL for browser tabs
   agentActive?: boolean; // Agent 正在操作该浏览器 tab / Agent is currently driving this browser tab
+  // diff tab 的批注范围；存在时 diff 用 AnnotatableDiff 渲染（M7 E4）
+  // Annotation scope of a diff tab; when present the diff renders as AnnotatableDiff (M7 E4).
+  review?: ReviewScope;
 }
 
 export interface PreviewTab {

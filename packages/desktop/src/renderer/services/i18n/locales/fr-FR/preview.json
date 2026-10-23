@@ -178,5 +178,34 @@
   "copyPath": "Copier le chemin",
   "copyRelativePath": "Copier le chemin relatif",
   "openLocation": "Afficher dans le dossier",
-  "openLocationFailed": "Échec de l'ouverture du dossier conteneur"
+  "openLocationFailed": "Échec de l'ouverture du dossier conteneur",
+  "annotate": {
+    "unresolved": "{{count}} non résolus",
+    "addComment": "Ajouter un commentaire",
+    "placeholder": "Laissez un commentaire (Markdown pris en charge)",
+    "replyPlaceholder": "Écrire une réponse…",
+    "save": "Commenter",
+    "cancel": "Annuler",
+    "reply": "Répondre",
+    "resolve": "Résoudre",
+    "reopen": "Rouvrir",
+    "delete": "Supprimer",
+    "deleteConfirm": "Supprimer cette annotation ?",
+    "shortcutHint": "Entrée pour enregistrer · Maj+Entrée pour une nouvelle ligne · Échap pour annuler",
+    "line": "Ligne {{line}}",
+    "lines": "Lignes {{start}}–{{end}}",
+    "movedFuzzy": "Code modifié",
+    "agentReply": "Réponse de l'Agent",
+    "detachedTitle": "Annotations hors de ce diff",
+    "loadFailed": "Échec du chargement des annotations",
+    "saveFailed": "Échec de l'enregistrement de l'annotation",
+    "staleDiff": "Le fichier a changé après le chargement de ce diff. Rouvrez le diff et sélectionnez à nouveau les lignes.",
+    "emptyDiff": "Aucune modification à afficher",
+    "status": {
+      "open": "Ouverte",
+      "sent": "Envoyée",
+      "resolved": "Résolue",
+      "outdated": "Obsolète"
+    }
+  }
 }

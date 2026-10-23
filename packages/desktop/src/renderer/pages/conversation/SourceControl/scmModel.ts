@@ -260,6 +260,16 @@ export const diffAnchors = (resource: ScmResource, staging: boolean): { from: Co
   return { from: 'committed', to: 'working' };
 };
 
+/**
+ * Core review-thread scope id for a repository (M7 E4): the repo's pe root as
+ * `pe:{pe_id}` or `pe:{pe_id}/{relative_path}`. Core resolves it through the
+ * user's own project entry, so no absolute path ever leaves the backend.
+ */
+export const scmReviewScopeId = (peId: string, relativePath: string): string => {
+  const rel = relativePath.replace(/\\/g, '/').replace(/^\/+|\/+$/g, '');
+  return rel ? `pe:${peId}/${rel}` : `pe:${peId}`;
+};
+
 /** Display name of a resource row (basename of its repo-relative path). */
 export const resourceName = (resource: ScmResource): string => {
   const path = resource.repo_relative_path || resource.file.relative_path;

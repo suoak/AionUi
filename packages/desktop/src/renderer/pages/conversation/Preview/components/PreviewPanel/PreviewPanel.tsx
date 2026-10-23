@@ -29,6 +29,7 @@ import { usePreviewContext } from '../../context/PreviewContext';
 import { useResizableSplit } from '@/renderer/hooks/ui/useResizableSplit';
 import { Link, Message } from '@arco-design/web-react';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { AnnotatableDiff } from '../annotate';
 import DiffPreview from '../viewers/DiffViewer';
 import ExcelPreview from '../viewers/ExcelViewer';
 import HTMLEditor from '../editors/HTMLEditor';
@@ -1092,6 +1093,9 @@ const PreviewPanel: React.FC = () => {
 
     // 其他类型：全屏预览 / Other types: Full-screen preview
     if (content_type === 'diff') {
+      if (metadata?.review && viewMode !== 'source') {
+        return <AnnotatableDiff patch={content} scope={metadata.review} />;
+      }
       return (
         <DiffPreview
           content={content}

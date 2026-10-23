@@ -178,5 +178,34 @@
   "copyPath": "Pfad kopieren",
   "copyRelativePath": "Relativen Pfad kopieren",
   "openLocation": "Im Ordner anzeigen",
-  "openLocationFailed": "Enthaltenden Ordner öffnen fehlgeschlagen"
+  "openLocationFailed": "Enthaltenden Ordner öffnen fehlgeschlagen",
+  "annotate": {
+    "unresolved": "{{count}} offen",
+    "addComment": "Kommentar hinzufügen",
+    "placeholder": "Kommentar schreiben (Markdown unterstützt)",
+    "replyPlaceholder": "Antwort schreiben…",
+    "save": "Kommentieren",
+    "cancel": "Abbrechen",
+    "reply": "Antworten",
+    "resolve": "Erledigen",
+    "reopen": "Wieder öffnen",
+    "delete": "Löschen",
+    "deleteConfirm": "Diese Anmerkung löschen?",
+    "shortcutHint": "Enter zum Speichern · Shift+Enter für neue Zeile · Esc zum Abbrechen",
+    "line": "Zeile {{line}}",
+    "lines": "Zeilen {{start}}–{{end}}",
+    "movedFuzzy": "Code geändert",
+    "agentReply": "Antwort des Agent",
+    "detachedTitle": "Anmerkungen außerhalb dieses Diffs",
+    "loadFailed": "Anmerkungen konnten nicht geladen werden",
+    "saveFailed": "Anmerkung konnte nicht gespeichert werden",
+    "staleDiff": "Die Datei hat sich nach dem Laden dieses Diffs geändert. Öffnen Sie den Diff erneut und wählen Sie die Zeilen neu.",
+    "emptyDiff": "Keine Änderungen vorhanden",
+    "status": {
+      "open": "Offen",
+      "sent": "Gesendet",
+      "resolved": "Erledigt",
+      "outdated": "Veraltet"
+    }
+  }
 }

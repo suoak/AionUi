@@ -178,5 +178,34 @@
   "copyPath": "경로 복사",
   "copyRelativePath": "상대 경로 복사",
   "openLocation": "폴더에서 보기",
-  "openLocationFailed": "포함 폴더 열기 실패"
+  "openLocationFailed": "포함 폴더 열기 실패",
+  "annotate": {
+    "unresolved": "미해결 {{count}}개",
+    "addComment": "댓글 추가",
+    "placeholder": "댓글 입력 (Markdown 지원)",
+    "replyPlaceholder": "답글 입력…",
+    "save": "댓글",
+    "cancel": "취소",
+    "reply": "답글",
+    "resolve": "해결",
+    "reopen": "다시 열기",
+    "delete": "삭제",
+    "deleteConfirm": "이 주석을 삭제할까요?",
+    "shortcutHint": "Enter 저장 · Shift+Enter 줄바꿈 · Esc 취소",
+    "line": "{{line}}번째 줄",
+    "lines": "{{start}}–{{end}}번째 줄",
+    "movedFuzzy": "코드 변경됨",
+    "agentReply": "Agent 답변",
+    "detachedTitle": "이 diff에 표시되지 않는 주석",
+    "loadFailed": "주석을 불러오지 못했습니다",
+    "saveFailed": "주석을 저장하지 못했습니다",
+    "staleDiff": "diff를 연 뒤 파일이 변경되었습니다. diff를 다시 열고 줄을 다시 선택하세요.",
+    "emptyDiff": "표시할 변경 사항이 없습니다",
+    "status": {
+      "open": "미해결",
+      "sent": "전송됨",
+      "resolved": "해결됨",
+      "outdated": "오래됨"
+    }
+  }
 }

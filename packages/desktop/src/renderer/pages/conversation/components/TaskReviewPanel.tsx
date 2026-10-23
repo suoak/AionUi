@@ -18,12 +18,44 @@ import {
 import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import useSWR from 'swr';
+import { AnnotatableDiff, parseDiffModel } from '../Preview/components/annotate';
 
 type Props = { visible: boolean; taskId: string; conversationId: string; onCancel: () => void };
 
 const value = (input: unknown) => (input === undefined || input === null || input === '' ? '—' : String(input));
 const formatTime = (timestamp?: number) => (timestamp ? new Date(timestamp).toLocaleString() : '—');
 const payloadValue = (event: TaskTraceEvent, key: string) => value(event.payload[key]);
+
+/**
+ * A retained (immutable) TaskRun diff, annotatable in the `task_run` scope
+ * (M7 E4). The file path comes from the patch itself so it is repo-relative.
+ */
+const TaskRunDiff: React.FC<{ patch: string; runId: string; taskId: string; conversationId: string }> = ({
+  patch,
+  runId,
+  taskId,
+  conversationId,
+}) => {
+  const filePath = useMemo(() => parseDiffModel(patch)[0]?.filePath, [patch]);
+  if (!filePath) {
+    return <Typography.Paragraph code>{patch}</Typography.Paragraph>;
+  }
+  return (
+    <div className='w-full max-h-480px overflow-hidden flex flex-col border border-solid border-[var(--border-base)] rd-6px'>
+      <AnnotatableDiff
+        patch={patch}
+        scope={{
+          scope_kind: 'task_run',
+          scope_id: runId,
+          file_path: filePath,
+          run_id: runId,
+          task_session_id: taskId,
+          conversation_id: conversationId,
+        }}
+      />
+    </div>
+  );
+};
 
 const TaskReviewPanel: React.FC<Props> = ({ visible, taskId, conversationId, onCancel }) => {
   const { t } = useTranslation();
@@ -184,9 +216,12 @@ const TaskReviewPanel: React.FC<Props> = ({ visible, taskId, conversationId, onC
                           <Typography.Text type='secondary'>{`+${value(item.metadata.added_lines)} -${value(item.metadata.deleted_lines)}`}</Typography.Text>
                         </Space>
                         {diffs[item.id] ? (
-                          <Typography.Paragraph code copyable>
-                            {diffs[item.id]}
-                          </Typography.Paragraph>
+                          <TaskRunDiff
+                            patch={diffs[item.id]}
+                            runId={review.run.id}
+                            taskId={taskId}
+                            conversationId={conversationId}
+                          />
                         ) : null}
                       </Space>
                     </List.Item>
