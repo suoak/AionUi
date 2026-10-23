@@ -20,6 +20,12 @@ import { getConversationCreateErrorMessage } from '@/renderer/pages/conversation
 import type { CreateWorktreeInput, WorktreeInfo } from '@/common/types/worktree';
 import { isBackendHttpError } from '@/common/adapter/httpBridge';
 import {
+  buildFanoutSlots,
+  fanoutErrorKey,
+  isFanoutUnavailableError,
+  isValidSlotCount,
+} from '@/renderer/pages/conversation/fanout/fanoutModel';
+import {
   isKnownWorktreeErrorCode,
   isWorktreePrepareCancelled,
   isWorktreePrepareFailed,
@@ -30,15 +36,27 @@ import {
  * Where a new conversation runs (design E3 §4.2):
  *  - `local`: in the selected folder itself (or a temp workspace);
  *  - `worktree`: in a fresh managed git worktree of the selected repository;
- *  - `fanout`: several worktrees at once (E3-5; not offered yet).
+ *  - `fanout`: several worktrees at once, one per slot assistant (E3-5).
  */
 export type GuidWorkspaceMode = 'local' | 'worktree' | 'fanout';
 
-/** Thrown for the fan-out branch until E3-5 ships it; never a silent fallback. */
+/**
+ * Thrown when Core cannot fan out (an older Core without `/api/fanout-groups`
+ * answers 404, or Core reports `FANOUT_UNAVAILABLE`); never a silent fallback
+ * to a local conversation.
+ */
 export class GuidFanoutUnavailableError extends Error {
   constructor() {
-    super('fan-out is not available yet');
+    super('fan-out is not available');
     this.name = 'GuidFanoutUnavailableError';
+  }
+}
+
+/** Thrown when the fan-out slot list is outside Core's 2..5. */
+export class GuidFanoutSlotsError extends Error {
+  constructor() {
+    super('fan-out needs 2 to 5 slots');
+    this.name = 'GuidFanoutSlotsError';
   }
 }
 
@@ -109,6 +127,10 @@ export type GuidSendDeps = {
   worktreeBranch?: string;
   /** Creates the worktree and resolves once it is `ready` (see `useWorktreePreparation`). */
   prepareWorktree?: (input: CreateWorktreeInput) => Promise<WorktreeInfo>;
+
+  // Fan-out mode (M7 E3-5)
+  /** One assistant id per slot (2..5); each slot runs with that assistant's own permission mode. */
+  fanoutAssistantIds?: string[];
 };
 
 export type GuidSendResult = {
@@ -160,6 +182,7 @@ export const useGuidSend = (deps: GuidSendDeps): GuidSendResult => {
     worktreeBaseRef,
     worktreeBranch,
     prepareWorktree,
+    fanoutAssistantIds,
   } = deps;
   const sendingRef = useRef(false);
 
@@ -177,7 +200,24 @@ export const useGuidSend = (deps: GuidSendDeps): GuidSendResult => {
 
     const sendBranch = resolveGuidSendBranch({ dir, workspaceMode, canPrepareWorktree: Boolean(prepareWorktree) });
     if (sendBranch === 'fanout') {
-      throw new GuidFanoutUnavailableError();
+      const slots = buildFanoutSlots(fanoutAssistantIds ?? []);
+      if (!isValidSlotCount(slots.length)) throw new GuidFanoutSlotsError();
+      let group;
+      try {
+        group = await ipcBridge.fanout.create.invoke({
+          repo_path: dir,
+          base_ref: worktreeBaseRef?.trim() || undefined,
+          prompt: input,
+          files: files.length > 0 ? files : undefined,
+          slots,
+        });
+      } catch (error) {
+        if (isFanoutUnavailableError(error)) throw new GuidFanoutUnavailableError();
+        throw error;
+      }
+      updateWorkspaceTime(dir);
+      await navigate(`/fanout/${encodeURIComponent(group.id)}`);
+      return;
     }
     const isCustomWorkspace = !!dir;
     let finalWorkspace = dir || '';
@@ -465,6 +505,7 @@ export const useGuidSend = (deps: GuidSendDeps): GuidSendResult => {
     worktreeBaseRef,
     worktreeBranch,
     prepareWorktree,
+    fanoutAssistantIds,
   ]);
 
   const sendMessageHandler = useCallback(() => {
@@ -486,6 +527,19 @@ export const useGuidSend = (deps: GuidSendDeps): GuidSendResult => {
         if (isWorktreePrepareCancelled(error) || isWorktreePrepareFailed(error)) return;
         if (error instanceof GuidFanoutUnavailableError) {
           Message.warning(t('conversation.worktree.fanoutUnavailable'));
+          return;
+        }
+        if (error instanceof GuidFanoutSlotsError) {
+          Message.warning(t('conversation.fanout.slotCountInvalid'));
+          return;
+        }
+        if (
+          isBackendHttpError(error) &&
+          error.code &&
+          fanoutErrorKey(error.code) !== 'conversation.fanout.errors.UNKNOWN'
+        ) {
+          // Rejected by `POST /api/fanout-groups` (slot limit, bad assistant, …).
+          Message.error(t(fanoutErrorKey(error.code)));
           return;
         }
         if (isBackendHttpError(error) && isKnownWorktreeErrorCode(error.code)) {

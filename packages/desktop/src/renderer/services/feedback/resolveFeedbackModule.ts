@@ -18,6 +18,8 @@ import type { FeedbackModuleTag } from '@/common/types/feedbackDiagnostics';
  */
 const ROUTE_MODULE_MAP: ReadonlyArray<readonly [prefix: string, tag: FeedbackModuleTag]> = [
   ['/conversation', 'conversation-session'],
+  // Fan-out groups (M7 E3-5) are parallel conversations of one task.
+  ['/fanout', 'conversation-session'],
   ['/team', 'agent-team'],
   ['/scheduled', 'scheduled-task'],
   ['/assistants', 'assistant-preset'],

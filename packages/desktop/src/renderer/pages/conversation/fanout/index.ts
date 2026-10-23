@@ -5,6 +5,7 @@
  */
 
 export { default as PreservedBranchesDialog } from './PreservedBranchesDialog';
+export { useFanoutSupported } from './useFanoutSupported';
 export { useWorktreeAvailability } from './useWorktreeCapability';
 export { useWorktreePreparation } from './useWorktreePreparation';
 export type { WorktreePreparation, WorktreePreparationState } from './useWorktreePreparation';

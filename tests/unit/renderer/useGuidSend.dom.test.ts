@@ -6,8 +6,10 @@
 
 import { act, renderHook } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { BackendHttpError } from '@/common/adapter/httpBridge';
 import type { IMcpServer } from '@/common/config/storage';
 import {
+  GuidFanoutSlotsError,
   GuidFanoutUnavailableError,
   resolveGuidSendBranch,
   useGuidSend,
@@ -21,6 +23,7 @@ const advanceWorkflowRunInvokeMock = vi.fn();
 const cancelWorkflowRunInvokeMock = vi.fn();
 const swrMutateMock = vi.fn();
 const removeWorktreeInvokeMock = vi.fn();
+const createFanoutInvokeMock = vi.fn();
 
 vi.mock('@/common', () => ({
   ipcBridge: {
@@ -46,6 +49,11 @@ vi.mock('@/common', () => ({
     worktree: {
       remove: {
         invoke: (...args: unknown[]) => removeWorktreeInvokeMock(...args),
+      },
+    },
+    fanout: {
+      create: {
+        invoke: (...args: unknown[]) => createFanoutInvokeMock(...args),
       },
     },
   },
@@ -675,11 +683,58 @@ describe('useGuidSend', () => {
       expect(removeWorktreeInvokeMock).not.toHaveBeenCalled();
     });
 
-    it('fanout mode is a placeholder until E3-5 and creates nothing', async () => {
+    it('fanout mode creates a fan-out group and opens it, without a conversation', async () => {
       const deps = createDeps();
       deps.dir = '/repo';
       deps.workspaceMode = 'fanout';
+      deps.worktreeBaseRef = ' main ';
+      deps.fanoutAssistantIds = ['assistant-1', 'assistant-2', 'assistant-1'];
       deps.prepareWorktree = vi.fn();
+      createFanoutInvokeMock.mockReset();
+      createFanoutInvokeMock.mockResolvedValue({ id: 'fg-1' });
+
+      const { result } = renderHook(() => useGuidSend(deps));
+      await act(async () => {
+        await result.current.handleSend();
+      });
+
+      expect(createFanoutInvokeMock).toHaveBeenCalledWith({
+        repo_path: '/repo',
+        base_ref: 'main',
+        prompt: 'hello',
+        files: undefined,
+        slots: [{ assistant_id: 'assistant-1' }, { assistant_id: 'assistant-2' }, { assistant_id: 'assistant-1' }],
+      });
+      expect(deps.navigate).toHaveBeenCalledWith('/fanout/fg-1');
+      expect(deps.prepareWorktree).not.toHaveBeenCalled();
+      expect(createConversationInvokeMock).not.toHaveBeenCalled();
+    });
+
+    it('fanout mode rejects fewer than two slots before calling Core', async () => {
+      const deps = createDeps();
+      deps.dir = '/repo';
+      deps.workspaceMode = 'fanout';
+      deps.fanoutAssistantIds = ['assistant-1'];
+      createFanoutInvokeMock.mockReset();
+
+      const { result } = renderHook(() => useGuidSend(deps));
+      await expect(
+        act(async () => {
+          await result.current.handleSend();
+        })
+      ).rejects.toBeInstanceOf(GuidFanoutSlotsError);
+      expect(createFanoutInvokeMock).not.toHaveBeenCalled();
+    });
+
+    it('fanout mode degrades to "unavailable" on an old Core (404)', async () => {
+      const deps = createDeps();
+      deps.dir = '/repo';
+      deps.workspaceMode = 'fanout';
+      deps.fanoutAssistantIds = ['assistant-1', 'assistant-2'];
+      createFanoutInvokeMock.mockReset();
+      createFanoutInvokeMock.mockRejectedValue(
+        new BackendHttpError({ method: 'POST', path: '/api/fanout-groups', status: 404, body: 'Not Found' })
+      );
 
       const { result } = renderHook(() => useGuidSend(deps));
       await expect(
@@ -687,8 +742,6 @@ describe('useGuidSend', () => {
           await result.current.handleSend();
         })
       ).rejects.toBeInstanceOf(GuidFanoutUnavailableError);
-
-      expect(deps.prepareWorktree).not.toHaveBeenCalled();
       expect(createConversationInvokeMock).not.toHaveBeenCalled();
     });
   });
