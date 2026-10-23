@@ -1307,6 +1307,9 @@
     "diffBinary": "二進位檔案：無文字差異。",
     "diffEmpty": "沒有文字變更。",
     "diffTruncated": "差異已截斷",
-    "closeDiff": "關閉差異"
+    "closeDiff": "關閉差異",
+    "externalMcp": "{{count}} 個外部 MCP",
+    "ambientMcp": "可能載入本機 MCP",
+    "ambientMcpTip": "此後端可能載入本機設定的 MCP 伺服器，實際載入情況未知。"
   }
 }

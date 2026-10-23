@@ -1307,6 +1307,9 @@
     "diffBinary": "Fichier binaire : pas de diff texte.",
     "diffEmpty": "Aucune modification textuelle.",
     "diffTruncated": "Diff tronqué",
-    "closeDiff": "Fermer le diff"
+    "closeDiff": "Fermer le diff",
+    "externalMcp": "{{count}} MCP externes",
+    "ambientMcp": "Peut charger des MCP locaux",
+    "ambientMcpTip": "Ce backend peut charger des serveurs MCP configurés sur cette machine ; ce qui a réellement été chargé est inconnu."
   }
 }

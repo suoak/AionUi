@@ -1308,6 +1308,9 @@
     "diffBinary": "Binärdatei: kein Text-Diff.",
     "diffEmpty": "Keine Textänderung.",
     "diffTruncated": "Diff gekürzt",
-    "closeDiff": "Diff schließen"
+    "closeDiff": "Diff schließen",
+    "externalMcp": "{{count}} externe MCP",
+    "ambientMcp": "Kann lokale MCP laden",
+    "ambientMcpTip": "Dieses Backend kann auf diesem Rechner konfigurierte MCP-Server laden; was tatsächlich geladen wurde, ist unbekannt."
   }
 }

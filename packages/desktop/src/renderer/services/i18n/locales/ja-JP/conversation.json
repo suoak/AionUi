@@ -1307,6 +1307,9 @@
     "diffBinary": "バイナリファイル：テキスト差分はありません。",
     "diffEmpty": "テキストの変更はありません。",
     "diffTruncated": "差分は切り詰められました",
-    "closeDiff": "差分を閉じる"
+    "closeDiff": "差分を閉じる",
+    "externalMcp": "外部 MCP {{count}} 件",
+    "ambientMcp": "ローカル MCP を読み込む可能性",
+    "ambientMcpTip": "このバックエンドはこのマシンで設定された MCP サーバーを読み込む可能性があります。実際の読み込み状況は不明です。"
   }
 }
