@@ -196,6 +196,12 @@ if (activeOfficecli?.active) {
   console.warn(`[CSBU WorkMate] Bundled OfficeCLI is unavailable (${activeOfficecli.reason})`);
 }
 
+// E2E only: login-shell PATH resolution above replaces the launcher's PATH, so
+// tests that stand in fake host CLIs (gh/glab) for Core prepend them here.
+if (process.env.CSBU_WORKMATE_E2E_TEST === '1' && process.env.CSBU_WORKMATE_E2E_PATH_PREPEND) {
+  process.env.PATH = [process.env.CSBU_WORKMATE_E2E_PATH_PREPEND, process.env.PATH || ''].join(path.delimiter);
+}
+
 // Handle Squirrel startup events (Windows installer)
 if (electronSquirrelStartup) {
   app.quit();
