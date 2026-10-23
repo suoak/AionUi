@@ -1099,6 +1099,17 @@
       "loadMore": "Charger plus",
       "empty": "Aucun événement à rejouer pour cette exécution",
       "selectHint": "Sélectionnez un événement pour voir les détails"
+    },
+    "retry": {
+      "enable": "Réessayer en cas d'échec",
+      "maxAttempts": "Tentatives max.",
+      "timeout": "Délai (min)",
+      "noTimeout": "Aucun délai",
+      "hint": "Les nouvelles tentatives ne concernent que les exécutions échouées d'un plan approuvé ; les exécutions annulées ne sont jamais relancées.",
+      "saved": "Politique de nouvelle tentative enregistrée",
+      "saveFailed": "Impossible d'enregistrer la politique de nouvelle tentative",
+      "attempt": "Tentative",
+      "retryOf": "reprise de"
     }
   },
   "toolSurface": {

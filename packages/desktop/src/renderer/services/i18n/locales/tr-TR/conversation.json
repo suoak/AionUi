@@ -1101,6 +1101,17 @@
       "loadMore": "Daha fazla yükle",
       "empty": "Bu çalıştırmada oynatılacak olay yok",
       "selectHint": "Ayrıntıları görmek için bir olay seçin"
+    },
+    "retry": {
+      "enable": "Hata durumunda yeniden dene",
+      "maxAttempts": "En fazla deneme",
+      "timeout": "Zaman aşımı (dk)",
+      "noTimeout": "Zaman aşımı yok",
+      "hint": "Yeniden denemeler yalnızca onaylanmış bir planın başarısız yürütmelerine uygulanır; iptal edilen çalıştırmalar asla yeniden denenmez.",
+      "saved": "Yeniden deneme ilkesi kaydedildi",
+      "saveFailed": "Yeniden deneme ilkesi kaydedilemedi",
+      "attempt": "Deneme",
+      "retryOf": "yeniden denenen"
     }
   },
   "toolSurface": {

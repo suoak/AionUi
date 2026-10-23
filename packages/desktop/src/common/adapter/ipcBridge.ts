@@ -74,6 +74,7 @@ import type {
   TaskSession,
   TaskReview,
   TaskRunReplayPage,
+  TaskRetryPolicyInput,
   UpdateTaskSessionInput,
   CreateReviewThreadInput,
   ListReviewThreadsInput,
@@ -1243,6 +1244,13 @@ export const taskSession = {
       artifact_hash: params.artifact_hash,
     })
   ),
+  /** Retry/timeout policy (aioncore ≥ M7 E5-5); older cores answer 404/405. */
+  retryPolicy: {
+    update: httpPut<TaskSession, { id: string } & TaskRetryPolicyInput>(
+      (params) => `/api/task-sessions/${encodeURIComponent(params.id)}/retry-policy`,
+      (params) => ({ max_attempts: params.max_attempts, timeout_ms: params.timeout_ms })
+    ),
+  },
   run: {
     list: httpGet<TaskRun[], { id: string }>((params) => `/api/task-sessions/${encodeURIComponent(params.id)}/runs`),
     review: httpGet<TaskReview, { id: string; run_id: string }>(

@@ -1100,6 +1100,17 @@
       "loadMore": "Cargar más",
       "empty": "No hay eventos que reproducir en esta ejecución",
       "selectHint": "Selecciona un evento para ver los detalles"
+    },
+    "retry": {
+      "enable": "Reintentar si falla",
+      "maxAttempts": "Intentos máximos",
+      "timeout": "Tiempo límite (min)",
+      "noTimeout": "Sin límite de tiempo",
+      "hint": "Los reintentos solo se aplican a ejecuciones fallidas de un plan aprobado; las ejecuciones canceladas nunca se reintentan.",
+      "saved": "Política de reintentos guardada",
+      "saveFailed": "No se pudo guardar la política de reintentos",
+      "attempt": "Intento",
+      "retryOf": "reintento de"
     }
   },
   "toolSurface": {
