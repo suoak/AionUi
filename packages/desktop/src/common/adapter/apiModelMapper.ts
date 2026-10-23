@@ -45,6 +45,7 @@ export type CreateConversationBodyInput = {
   model?: TProviderWithModel;
   assistant?: unknown;
   extra?: unknown;
+  worktree_id?: string;
 };
 
 /**
@@ -62,6 +63,7 @@ export function buildCreateConversationBody(p: CreateConversationBodyInput): Rec
     assistant: p.assistant,
     extra: p.extra,
   };
+  if (p.worktree_id) body.worktree_id = p.worktree_id;
   const model = p.type === 'acp' ? undefined : toApiModelOptional(p.model);
   if (model) body.model = model;
   return body;

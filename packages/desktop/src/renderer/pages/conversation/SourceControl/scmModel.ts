@@ -68,6 +68,12 @@ export type ScmRepository = {
    * upstream, never by path text; the client treats it as an opaque id.
    */
   worktree_of?: string;
+  /**
+   * When this repository is a worktree managed by WorkMate (M7 E3), its managed
+   * worktree id (wire field `managed_worktree_id`, aioncore back-fill). Omitted for
+   * user-made worktrees and primary clones; never assume it is present.
+   */
+  managed_worktree_id?: string;
   capabilities: ScmCapabilities;
   state: 'idle' | 'refreshing' | 'operation' | 'error';
 };

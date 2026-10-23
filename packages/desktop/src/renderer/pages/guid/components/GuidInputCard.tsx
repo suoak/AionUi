@@ -45,6 +45,10 @@ type GuidInputCardProps = {
   workspaceDir: string;
   onSelectWorkspace: (dir: string) => void;
   onClearWorkspace: () => void;
+  /** Rendered next to the workspace pill (Worktree mode switch). */
+  workspaceAccessory?: React.ReactNode;
+  /** Rendered under the card (worktree preparation progress). */
+  footer?: React.ReactNode;
 };
 
 const GuidInputCard: React.FC<GuidInputCardProps> = ({
@@ -69,6 +73,8 @@ const GuidInputCard: React.FC<GuidInputCardProps> = ({
   workspaceDir,
   onSelectWorkspace,
   onClearWorkspace,
+  workspaceAccessory,
+  footer,
 }) => {
   const layout = useLayoutContext();
   const isMobile = layout?.isMobile ?? false;
@@ -154,7 +160,9 @@ const GuidInputCard: React.FC<GuidInputCardProps> = ({
         workspaceDir={workspaceDir}
         onSelectWorkspace={onSelectWorkspace}
         onClearWorkspace={onClearWorkspace}
+        accessory={workspaceAccessory}
       />
+      {footer}
     </div>
   );
 };

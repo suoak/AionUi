@@ -24,7 +24,11 @@ import FeedbackReportModal from '@/renderer/components/settings/SettingsModal/co
 import { useGuidAssistantSelection } from './hooks/useGuidAssistantSelection';
 import { useGuidInput } from './hooks/useGuidInput';
 import { useGuidModelSelection } from './hooks/useGuidModelSelection';
-import { useGuidSend } from './hooks/useGuidSend';
+import { useGuidSend, type GuidWorkspaceMode } from './hooks/useGuidSend';
+import GuidWorktreeToggle from './components/GuidWorktreeToggle';
+import { useWorktreeAvailability } from '@/renderer/pages/conversation/fanout/useWorktreeCapability';
+import { useWorktreePreparation } from '@/renderer/pages/conversation/fanout/useWorktreePreparation';
+import WorktreePreparingCard from '@/renderer/pages/conversation/fanout/WorktreePreparingCard';
 import { useTypewriterPlaceholder } from './hooks/useTypewriterPlaceholder';
 import { ensureBackendMcpCatalog } from '@/renderer/hooks/mcp/catalog';
 import { resolveGuidAssistantDefaults } from './utils/assistantDefaults';
@@ -242,6 +246,15 @@ const GuidPage: React.FC = () => {
     [slashController.filteredCommands, slashController.query]
   );
 
+  // Worktree mode (M7 E3-3): offered only for a git repo on a capable Core.
+  const worktreeAvailability = useWorktreeAvailability(guidInput.dir);
+  const worktreePreparation = useWorktreePreparation();
+  const [workspaceModeChoice, setWorkspaceModeChoice] = useState<GuidWorkspaceMode>('local');
+  const [worktreeBaseRef, setWorktreeBaseRef] = useState('');
+  const [worktreeBranch, setWorktreeBranch] = useState('');
+  const workspaceMode: GuidWorkspaceMode = worktreeAvailability.canUseWorktree ? workspaceModeChoice : 'local';
+  const worktreeBusy = worktreePreparation.state.kind === 'creating';
+
   const send = useGuidSend({
     // Input state
     input: guidInput.input,
@@ -286,6 +299,11 @@ const GuidPage: React.FC = () => {
     agentWorkflowResumeRunId: navState?.agentWorkflowResumeRunId,
     agentWorkflowResumeExecutionId: navState?.agentWorkflowResumeExecutionId,
     agentWorkflowResumeMessage: navState?.agentWorkflowResumeMessage,
+
+    workspaceMode,
+    worktreeBaseRef,
+    worktreeBranch,
+    prepareWorktree: worktreePreparation.prepare,
   });
 
   // --- Coordinated handlers (depend on multiple hooks) ---
@@ -744,6 +762,28 @@ const GuidPage: React.FC = () => {
             workspaceDir={guidInput.dir}
             onSelectWorkspace={(dir) => guidInput.setDir(dir)}
             onClearWorkspace={() => guidInput.setDir('')}
+            workspaceAccessory={
+              worktreeAvailability.canUseWorktree ? (
+                <GuidWorktreeToggle
+                  mode={workspaceMode}
+                  onModeChange={setWorkspaceModeChoice}
+                  baseRef={worktreeBaseRef}
+                  onBaseRefChange={setWorktreeBaseRef}
+                  branch={worktreeBranch}
+                  onBranchChange={setWorktreeBranch}
+                  branchPlaceholder={t('conversation.worktree.branchPlaceholder')}
+                  disabled={worktreeBusy}
+                />
+              ) : undefined
+            }
+            footer={
+              <WorktreePreparingCard
+                state={worktreePreparation.state}
+                onCancel={() => void worktreePreparation.cancel()}
+                onRetry={() => send.sendMessageHandler()}
+                onDiscard={() => void worktreePreparation.discard()}
+              />
+            }
           />
 
           {selectedAssistantPrompts.length > 0 ? (

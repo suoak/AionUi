@@ -18,6 +18,8 @@ type GuidWorkspaceFootnoteProps = {
   workspaceDir: string;
   onSelectWorkspace: (dir: string) => void;
   onClearWorkspace: () => void;
+  /** Extra controls after the workspace pill (e.g. the Local / Worktree switch). */
+  accessory?: React.ReactNode;
 };
 
 const FolderIcon = ({ size = 12 }: { size?: number }) => (
@@ -52,6 +54,7 @@ const GuidWorkspaceFootnote: React.FC<GuidWorkspaceFootnoteProps> = ({
   workspaceDir,
   onSelectWorkspace,
   onClearWorkspace,
+  accessory,
 }) => {
   const { t } = useTranslation();
   const recentWorkspaces = getRecentWorkspaces();
@@ -252,6 +255,7 @@ const GuidWorkspaceFootnote: React.FC<GuidWorkspaceFootnoteProps> = ({
             </div>
           </Tooltip>
           {dropdownEl}
+          {accessory}
         </>
       ) : (
         <>

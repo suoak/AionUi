@@ -10,6 +10,7 @@ import type { ScmRepository } from '@/renderer/pages/conversation/SourceControl/
 import {
   expandableRepoIds,
   groupRepositories,
+  isManagedWorktree,
   type ScmRepoGroup,
 } from '@/renderer/pages/conversation/SourceControl/scmRepoTree';
 
@@ -131,5 +132,27 @@ describe('expandableRepoIds', () => {
       repo({ repo_id: 'scm:x/o', label: 'orphan', is_worktree: true }),
     ]);
     expect(expandableRepoIds(groups)).toEqual(['scm:pe1']);
+  });
+});
+
+const groupIds = (groups: ScmRepoGroup[]) =>
+  groups.map((g) => (g.kind === 'primary' ? [g.repo.repo_id, g.worktrees.map((w) => w.repo_id)] : g.repo.repo_id));
+
+describe('isManagedWorktree (M7 E3-3)', () => {
+  it('is true only when Core back-filled a managed worktree id', () => {
+    expect(isManagedWorktree(repo({ repo_id: 'a', label: 'a', is_worktree: true, managed_worktree_id: 'wt-1' }))).toBe(
+      true
+    );
+    expect(isManagedWorktree(repo({ repo_id: 'b', label: 'b', is_worktree: true }))).toBe(false);
+    expect(isManagedWorktree(repo({ repo_id: 'c', label: 'c', managed_worktree_id: '' }))).toBe(false);
+  });
+
+  it('does not change grouping', () => {
+    const plain = [
+      repo({ repo_id: 'scm:p', label: 'p' }),
+      repo({ repo_id: 'scm:w', label: 'w', is_worktree: true, worktree_of: 'scm:p' }),
+    ];
+    const managed = [plain[0], { ...plain[1], managed_worktree_id: 'wt-1' }];
+    expect(groupIds(groupRepositories(managed))).toEqual(groupIds(groupRepositories(plain)));
   });
 });

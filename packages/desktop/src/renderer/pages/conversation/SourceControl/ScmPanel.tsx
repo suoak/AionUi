@@ -27,7 +27,7 @@
  * section drops in as a third with no framework change (see `ScmSectionStack`).
  */
 
-import { Button, Tooltip } from '@arco-design/web-react';
+import { Button, Tag, Tooltip } from '@arco-design/web-react';
 import { BranchTwo, FolderCode, FolderCodeOne, Plus, RightBranchOne, TreeList, Undo, ViewList } from '@icon-park/react';
 import React, { useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -45,7 +45,7 @@ import {
   type ScmRepository,
   type ScmResource,
 } from './scmModel';
-import { groupRepositories, type ScmRepoGroup } from './scmRepoTree';
+import { groupRepositories, isManagedWorktree, type ScmRepoGroup } from './scmRepoTree';
 import { fetchScmDiff, openScmProject, refreshAllRepos, setSelectedRepo, useScm } from './scmStore';
 import { initScmRuntime } from './scmTransport';
 import {
@@ -555,6 +555,7 @@ const RepoRow: React.FC<{
     <span className='flex-1 min-w-0 overflow-hidden text-ellipsis whitespace-nowrap text-13px text-t-primary'>
       {repo.pe_name || repo.label}
     </span>
+    {isManagedWorktree(repo) && <ManagedWorktreeTag />}
     {/* Branch info is pinned to the right of the row (`ms-auto`), the branch
         name preceded by a branch glyph. `flex-1` on the repo name above
         claims the slack so the two never touch; both truncate under pressure.
@@ -568,6 +569,16 @@ const RepoRow: React.FC<{
     )}
   </div>
 );
+
+/** Marks a worktree WorkMate created for a conversation (M7 E3-3). */
+const ManagedWorktreeTag: React.FC = () => {
+  const { t } = useTranslation();
+  return (
+    <Tag size='small' className='flex-shrink-0' data-testid='scm-managed-worktree-tag'>
+      {t('conversation.explorer.scm.managedWorktree')}
+    </Tag>
+  );
+};
 
 /** The worktree glyph shown at the left of a worktree row (nested child or orphan). */
 const WorktreeGlyph: React.FC<{ label: string }> = ({ label }) => (
