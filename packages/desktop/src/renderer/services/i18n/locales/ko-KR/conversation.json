@@ -1262,6 +1262,15 @@
       "TARGET_NOT_CLEAN": "대상 브랜치에 커밋되지 않은 변경이 있습니다. 먼저 커밋하거나 stash하세요.",
       "SLOT_START_FAILED": "슬롯의 대화를 시작하지 못했습니다.",
       "UNKNOWN": "팬아웃에 실패했습니다."
-    }
+    },
+    "estimateSize": "worktree {{count}}개를 만듭니다. 디스크 사용량 약 {{size}}(추적 파일 {{files}}개 × {{count}}).",
+    "estimateSizeAtLeast": "worktree {{count}}개를 만듭니다. 디스크 사용량 최소 {{size}}(대형 저장소라 추정이 잘림).",
+    "siderTitle": "팬아웃",
+    "viewDiff": "슬롯 {{slot}}({{status}}): diff 보기",
+    "diffUnavailable": "이 diff를 가져올 수 없습니다.",
+    "diffBinary": "바이너리 파일: 텍스트 diff가 없습니다.",
+    "diffEmpty": "텍스트 변경이 없습니다.",
+    "diffTruncated": "diff가 잘렸습니다",
+    "closeDiff": "diff 닫기"
   }
 }

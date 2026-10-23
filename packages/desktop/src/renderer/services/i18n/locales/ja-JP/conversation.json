@@ -1262,6 +1262,15 @@
       "TARGET_NOT_CLEAN": "ターゲットブランチに未コミットの変更があります。先にコミットまたは stash してください。",
       "SLOT_START_FAILED": "スロットの会話を開始できませんでした。",
       "UNKNOWN": "ファンアウトに失敗しました。"
-    }
+    },
+    "estimateSize": "{{count}} 個の worktree を作成します。ディスク使用量は約 {{size}}（追跡ファイル {{files}} 個 × {{count}}）。",
+    "estimateSizeAtLeast": "{{count}} 個の worktree を作成します。ディスク使用量は少なくとも {{size}}（大きなリポジトリのため概算を打ち切り）。",
+    "siderTitle": "ファンアウト",
+    "viewDiff": "スロット {{slot}}（{{status}}）：差分を表示",
+    "diffUnavailable": "この差分は取得できません。",
+    "diffBinary": "バイナリファイル：テキスト差分はありません。",
+    "diffEmpty": "テキストの変更はありません。",
+    "diffTruncated": "差分は切り詰められました",
+    "closeDiff": "差分を閉じる"
   }
 }

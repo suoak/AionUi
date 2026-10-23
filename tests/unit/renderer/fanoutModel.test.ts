@@ -16,12 +16,14 @@ import {
   clampSlotCount,
   compareTotals,
   defaultSlotAssistants,
+  fanoutDiskEstimate,
   fanoutErrorKey,
   isFanoutLive,
   isFanoutTerminal,
   isFanoutUnavailableError,
   isValidSlotCount,
   shortCommit,
+  siderFanoutGroups,
 } from '@/renderer/pages/conversation/fanout/fanoutModel';
 import type { FanoutCompare, FanoutGroup } from '@/common/types/fanout';
 
@@ -126,5 +128,31 @@ describe('fanoutModel', () => {
     });
     expect(shortCommit('0123456789abcdef')).toBe('01234567');
     expect(shortCommit(null)).toBe('');
+  });
+});
+
+describe('fanoutDiskEstimate', () => {
+  it('multiplies tracked bytes by the slot count', () => {
+    expect(fanoutDiskEstimate({ tracked_bytes: 1000, tracked_files: 7, truncated: false }, 3)).toEqual({
+      bytes: 3000,
+      files: 7,
+      truncated: false,
+    });
+  });
+  it('keeps the truncated flag and returns null without an estimate', () => {
+    expect(fanoutDiskEstimate({ tracked_bytes: 5, tracked_files: 1, truncated: true }, 2)?.truncated).toBe(true);
+    expect(fanoutDiskEstimate(null, 3)).toBeNull();
+    expect(fanoutDiskEstimate(undefined, 3)).toBeNull();
+    expect(fanoutDiskEstimate({ tracked_bytes: 5, tracked_files: 1, truncated: false }, 0)).toBeNull();
+  });
+});
+
+describe('siderFanoutGroups', () => {
+  const g = (id: string, status: string, updated_at: number) => ({ id, status, updated_at }) as unknown as FanoutGroup;
+  it('puts live groups first, then newest, and caps the list', () => {
+    const groups = [g('old-done', 'adopted', 1), g('new-done', 'discarded', 9), g('running', 'running', 2)];
+    expect(siderFanoutGroups(groups).map((x) => x.id)).toEqual(['running', 'new-done', 'old-done']);
+    expect(siderFanoutGroups(groups, 1).map((x) => x.id)).toEqual(['running']);
+    expect(siderFanoutGroups(null)).toEqual([]);
   });
 });

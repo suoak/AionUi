@@ -6,6 +6,9 @@
 
 import { Button, Input, Popover, Radio, Select, Tooltip } from '@arco-design/web-react';
 import { FANOUT_MAX_SLOTS, FANOUT_MIN_SLOTS, FANOUT_SLOT_LABELS } from '@/common/types/fanout';
+import type { WorktreeEstimate } from '@/common/types/worktree';
+import { formatFileSize } from '@/renderer/services/FileService';
+import { fanoutDiskEstimate } from '@/renderer/pages/conversation/fanout/fanoutModel';
 import { BranchOne, Delete, Plus, SettingTwo, SplitBranch } from '@icon-park/react';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
@@ -28,6 +31,8 @@ type GuidWorktreeToggleProps = {
   /** One assistant id per slot. */
   fanoutAssistantIds?: string[];
   onFanoutAssistantIdsChange?: (ids: string[]) => void;
+  /** Core's tracked-size estimate for the repo (`null`: unknown, generic text). */
+  fanoutEstimate?: WorktreeEstimate | null;
 };
 
 /**
@@ -46,6 +51,7 @@ const GuidWorktreeToggle: React.FC<GuidWorktreeToggleProps> = ({
   fanoutSupported,
   fanoutCandidates = [],
   fanoutAssistantIds = [],
+  fanoutEstimate,
   onFanoutAssistantIdsChange,
 }) => {
   const { t } = useTranslation();
@@ -58,6 +64,7 @@ const GuidWorktreeToggle: React.FC<GuidWorktreeToggleProps> = ({
     onFanoutAssistantIdsChange?.([...fanoutAssistantIds, fanoutAssistantIds[0] ?? fanoutCandidates[0]?.id ?? '']);
   const removeSlot = (index: number) => onFanoutAssistantIdsChange?.(fanoutAssistantIds.filter((_, i) => i !== index));
 
+  const disk = fanoutDiskEstimate(fanoutEstimate, fanoutAssistantIds.length);
   const fanoutOptions = (
     <div className='flex w-300px flex-col gap-10px' data-testid='guid-fanout-options'>
       <label className='flex flex-col gap-4px text-12px text-t-secondary'>
@@ -105,7 +112,15 @@ const GuidWorktreeToggle: React.FC<GuidWorktreeToggleProps> = ({
         </Button>
       </div>
       <div className='flex flex-col gap-2px text-11px leading-16px text-t-tertiary' data-testid='guid-fanout-estimate'>
-        <span>{t('conversation.fanout.estimate', { count: fanoutAssistantIds.length })}</span>
+        <span data-testid='guid-fanout-estimate-size'>
+          {disk
+            ? t(disk.truncated ? 'conversation.fanout.estimateSizeAtLeast' : 'conversation.fanout.estimateSize', {
+                count: fanoutAssistantIds.length,
+                size: formatFileSize(disk.bytes, 1),
+                files: disk.files,
+              })
+            : t('conversation.fanout.estimate', { count: fanoutAssistantIds.length })}
+        </span>
         <span>{t('conversation.fanout.estimateTokens')}</span>
         <span>{t('conversation.fanout.permissionHint')}</span>
       </div>

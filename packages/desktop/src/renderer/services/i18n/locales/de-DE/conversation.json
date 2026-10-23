@@ -1263,6 +1263,15 @@
       "TARGET_NOT_CLEAN": "Der Ziel-Branch hat nicht committete Änderungen; committen oder stashen Sie sie zuerst.",
       "SLOT_START_FAILED": "Die Unterhaltung des Slots konnte nicht gestartet werden.",
       "UNKNOWN": "Fan-out fehlgeschlagen."
-    }
+    },
+    "estimateSize": "Erstellt {{count}} Worktrees; etwa {{size}} Speicherplatz ({{files}} verfolgte Dateien × {{count}}).",
+    "estimateSizeAtLeast": "Erstellt {{count}} Worktrees; mindestens {{size}} Speicherplatz (großes Repository, Schätzung begrenzt).",
+    "siderTitle": "Fan-out",
+    "viewDiff": "Slot {{slot}} ({{status}}): Diff anzeigen",
+    "diffUnavailable": "Dieser Diff ist nicht verfügbar.",
+    "diffBinary": "Binärdatei: kein Text-Diff.",
+    "diffEmpty": "Keine Textänderung.",
+    "diffTruncated": "Diff gekürzt",
+    "closeDiff": "Diff schließen"
   }
 }

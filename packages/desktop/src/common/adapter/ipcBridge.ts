@@ -91,6 +91,7 @@ import type {
   ListWorktreesInput,
   RemoveWorktreeInput,
   WorktreeCapabilities,
+  WorktreeEstimate,
   WorktreeChangedEvent,
   WorktreeDiffStat,
   WorktreeFileDiff,
@@ -1075,6 +1076,15 @@ export const review = {
  */
 export const worktree = {
   capabilities: httpGet<WorktreeCapabilities>('/api/worktrees/capabilities', { silentStatuses: [404] }),
+  /** Disk estimate for a fan-out; an older Core answers 404 (callers fall back to generic text). */
+  estimate: httpGet<WorktreeEstimate, { repo_path: string; base_ref?: string }>(
+    (p) => {
+      const params = new URLSearchParams({ repo_path: p.repo_path });
+      if (p.base_ref) params.set('base_ref', p.base_ref);
+      return `/api/worktrees/estimate?${params.toString()}`;
+    },
+    { silentStatuses: [400, 404, 422] }
+  ),
   create: httpPost<WorktreeInfo, CreateWorktreeInput>('/api/worktrees'),
   list: httpGet<WorktreeInfo[], ListWorktreesInput>((p) => {
     const params = new URLSearchParams();
