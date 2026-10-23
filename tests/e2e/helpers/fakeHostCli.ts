@@ -47,6 +47,10 @@ if (argv[0] === 'pr' && argv[1] === 'create') {
   process.stdin.on('data', (c) => chunks.push(c));
   process.stdin.on('end', () => {
     record(Buffer.concat(chunks).toString('utf8'));
+    if (!state.authenticated) {
+      process.stderr.write('To get started with GitHub CLI, please run:  gh auth login\\n');
+      process.exit(4);
+    }
     process.stdout.write('Creating pull request\\n' + ${JSON.stringify(prUrl)} + '\\n');
     process.exit(0);
   });

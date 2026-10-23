@@ -40,18 +40,35 @@ type HostStatus = {
 type CreateResult = { pr_url: string; pr_number?: string; provider: string; evidence_id?: string };
 type Delivery = { id: string; branch: string; commit_sha?: string; provider: string; pr_url?: string };
 
+/** Last lines of the app's main-process output, for failure messages. */
+function captureOutput(app: ElectronApplication): () => string {
+  const lines: string[] = [];
+  const push = (chunk: Buffer) => {
+    lines.push(...chunk.toString().split('\n'));
+    lines.splice(0, Math.max(0, lines.length - 80));
+  };
+  app.process().stdout?.on('data', push);
+  app.process().stderr?.on('data', push);
+  return () => lines.join('\n');
+}
+
 async function mainWindow(app: ElectronApplication): Promise<Page> {
+  const output = captureOutput(app);
   const existing = app.windows().find((window) => !window.url().startsWith('devtools://'));
   const page = existing ?? (await app.waitForEvent('window', { timeout: 60_000 }));
   await page.waitForLoadState('domcontentloaded');
-  await page.waitForFunction(
-    () => {
-      const port = (window as unknown as { __backendPort?: number }).__backendPort;
-      return typeof port === 'number' && port > 0;
-    },
-    undefined,
-    { timeout: 60_000 }
-  );
+  await page
+    .waitForFunction(
+      () => {
+        const port = (window as unknown as { __backendPort?: number }).__backendPort;
+        return typeof port === 'number' && port > 0;
+      },
+      undefined,
+      { timeout: 60_000 }
+    )
+    .catch((error: unknown) => {
+      throw new Error(`Core did not come up for the delivery app:\n${output()}`, { cause: error });
+    });
   return page;
 }
 
@@ -91,6 +108,7 @@ test.describe('M7 E4-6 commit → push → pull request', () => {
 
     app = await launchApp({
       PATH: pathWith(gh.binDir),
+      CSBU_WORKMATE_E2E_PATH_PREPEND: gh.binDir,
       CSBU_WORKMATE_E2E_USER_DATA_DIR: path.join(root, 'user-data'),
       CSBU_WORKMATE_CDP_PORT: '0',
     });
@@ -100,6 +118,11 @@ test.describe('M7 E4-6 commit → push → pull request', () => {
 
     // Signed out: the dialog shows the login guide.
     const signedOut = await httpGet<HostStatus>(page, q('/api/scm-deliveries/host'));
+    // Hard stop unless Core reached the fake: a real `gh` must never get `pr create`.
+    expect(
+      gh.calls().some((call) => call.argv[0] === 'auth'),
+      'Core must resolve the fake gh (CSBU_WORKMATE_E2E_PATH_PREPEND)'
+    ).toBe(true);
     expect(signedOut).toMatchObject({
       provider: 'github',
       host: 'github.com',
@@ -155,7 +178,10 @@ test.describe('M7 E4-6 commit → push → pull request', () => {
     const created = await httpPost<CreateResult>(page, '/api/scm-deliveries/pull-request', request);
     expect(created).toMatchObject({ pr_url: gh.prUrl, pr_number: '1', provider: 'github' });
 
-    const create = gh.calls().find((call) => call.argv[0] === 'pr' && call.argv[1] === 'create');
+    const creates = gh.calls().filter((call) => call.argv[0] === 'pr' && call.argv[1] === 'create');
+    // One refused while signed out (gh's own "gh auth login" hint → 409), one that succeeded.
+    expect(creates).toHaveLength(2);
+    const create = creates[1];
     expect(create?.argv).toEqual([
       'pr',
       'create',
