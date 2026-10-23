@@ -219,5 +219,23 @@
   "viewMoreLines_other": "Показать ещё ({{count}} строк)",
   "viewMoreLines_few": "Показать ещё ({{count}} строки)",
   "viewMoreLines_many": "Показать ещё ({{count}} строк)",
-  "aiAssistant": "ИИ-ассистент"
+  "aiAssistant": "ИИ-ассистент",
+  "inbox": {
+    "title": "Входящие",
+    "tooltip": "Входящие · непрочитанных: {{count}}",
+    "empty": "Сейчас ничего не требует вашего внимания",
+    "markAllRead": "Отметить все как прочитанные",
+    "kind": {
+      "approval": "Одобрение",
+      "blocked": "Заблокировано",
+      "completed": "Завершено",
+      "failed": "Ошибка"
+    },
+    "loadFailed": "Не удалось загрузить входящие",
+    "resolved": "Обработано",
+    "notifyFailedNamed": "Ошибка: {{name}}",
+    "notifyFailed": "Задача завершилась с ошибкой",
+    "notifyBlockedNamed": "Заблокировано, нужно ваше участие: {{name}}",
+    "notifyBlocked": "Задача заблокирована и ждёт вас"
+  }
 }

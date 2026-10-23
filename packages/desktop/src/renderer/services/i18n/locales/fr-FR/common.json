@@ -217,5 +217,23 @@
   "viewMoreLines_other": "Voir plus ({{count}} lignes)",
   "selectedCount": "{{count}} sélectionné(s)",
   "selectedSkills": "Compétences sélectionnées",
-  "aiAssistant": "Assistant IA"
+  "aiAssistant": "Assistant IA",
+  "inbox": {
+    "title": "Boîte de réception",
+    "tooltip": "Boîte de réception · {{count}} non lus",
+    "empty": "Rien ne requiert votre attention pour l'instant",
+    "markAllRead": "Tout marquer comme lu",
+    "kind": {
+      "approval": "Approbation",
+      "blocked": "Bloqué",
+      "completed": "Terminé",
+      "failed": "Échec"
+    },
+    "loadFailed": "Impossible de charger la boîte de réception",
+    "resolved": "Traité",
+    "notifyFailedNamed": "Échec : {{name}}",
+    "notifyFailed": "Une tâche a échoué",
+    "notifyBlockedNamed": "Bloqué, action requise : {{name}}",
+    "notifyBlocked": "Une tâche est bloquée et attend votre action"
+  }
 }

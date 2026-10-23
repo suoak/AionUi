@@ -220,5 +220,23 @@
   "viewMoreLines_other": "Показати ще ({{count}} рядків)",
   "viewMoreLines_few": "Показати ще ({{count}} рядки)",
   "viewMoreLines_many": "Показати ще ({{count}} рядків)",
-  "aiAssistant": "ШІ-асистент"
+  "aiAssistant": "ШІ-асистент",
+  "inbox": {
+    "title": "Вхідні",
+    "tooltip": "Вхідні · непрочитаних: {{count}}",
+    "empty": "Зараз нічого не потребує вашої уваги",
+    "markAllRead": "Позначити все як прочитане",
+    "kind": {
+      "approval": "Схвалення",
+      "blocked": "Заблоковано",
+      "completed": "Завершено",
+      "failed": "Помилка"
+    },
+    "loadFailed": "Не вдалося завантажити вхідні",
+    "resolved": "Оброблено",
+    "notifyFailedNamed": "Помилка: {{name}}",
+    "notifyFailed": "Завдання завершилося з помилкою",
+    "notifyBlockedNamed": "Заблоковано, потрібна ваша участь: {{name}}",
+    "notifyBlocked": "Завдання заблоковане й чекає на вас"
+  }
 }

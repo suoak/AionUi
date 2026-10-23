@@ -15,6 +15,7 @@ import {
   SiderSkillEvolutionEntry,
   SiderAssistantEntry,
   SiderUsageEntry,
+  SiderInboxEntry,
 } from './SiderNav';
 import SiderFooter from './SiderFooter';
 import TeamSiderSection from './TeamSiderSection';
@@ -98,6 +99,19 @@ const Sider: React.FC<SiderProps> = ({ onSessionClick, collapsed = false }) => {
     closePreview();
     setIsBatchMode(false);
     Promise.resolve(navigate('/scheduled')).catch((error) => {
+      console.error('Navigation failed:', error);
+    });
+    if (onSessionClick) {
+      onSessionClick();
+    }
+  };
+
+  const handleInboxOpenConversation = (conversationId: string) => {
+    cleanupSiderTooltips();
+    blurActiveElement();
+    closePreview();
+    setIsBatchMode(false);
+    Promise.resolve(navigate(`/conversation/${conversationId}`)).catch((error) => {
       console.error('Navigation failed:', error);
     });
     if (onSessionClick) {
@@ -284,6 +298,12 @@ const Sider: React.FC<SiderProps> = ({ onSessionClick, collapsed = false }) => {
               collapsed={collapsed}
               siderTooltipProps={siderTooltipProps}
               onClick={handleUsageClick}
+            />
+            <SiderInboxEntry
+              isMobile={isMobile}
+              collapsed={collapsed}
+              siderTooltipProps={siderTooltipProps}
+              onOpenConversation={handleInboxOpenConversation}
             />
             {/* Divider between fixed top nav and scrollable content area */}
             <div

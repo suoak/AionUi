@@ -217,5 +217,23 @@
   },
   "viewMoreLines_one": "Mehr anzeigen ({{count}} Zeile)",
   "viewMoreLines_other": "Mehr anzeigen ({{count}} Zeilen)",
-  "aiAssistant": "KI-Assistent"
+  "aiAssistant": "KI-Assistent",
+  "inbox": {
+    "title": "Posteingang",
+    "tooltip": "Posteingang · {{count}} ungelesen",
+    "empty": "Gerade braucht nichts deine Aufmerksamkeit",
+    "markAllRead": "Alle als gelesen markieren",
+    "kind": {
+      "approval": "Freigabe",
+      "blocked": "Blockiert",
+      "completed": "Abgeschlossen",
+      "failed": "Fehlgeschlagen"
+    },
+    "loadFailed": "Posteingang konnte nicht geladen werden",
+    "resolved": "Erledigt",
+    "notifyFailedNamed": "Fehlgeschlagen: {{name}}",
+    "notifyFailed": "Eine Aufgabe ist fehlgeschlagen",
+    "notifyBlockedNamed": "Blockiert, braucht dich: {{name}}",
+    "notifyBlocked": "Eine Aufgabe ist blockiert und braucht dich"
+  }
 }
