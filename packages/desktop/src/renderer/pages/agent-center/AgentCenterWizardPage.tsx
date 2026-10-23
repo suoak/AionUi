@@ -99,6 +99,8 @@ const AgentCenterWizardPage: React.FC<{ mode: 'create' | 'edit' }> = ({ mode }) 
   const [workflowNodes, setWorkflowNodes] = useState<AgentWorkflowNodeDefinition[]>(createDefaultWorkflowNodes);
   const [skillOptions, setSkillOptions] = useState<SkillOption[]>([]);
   const [mcpOptions, setMcpOptions] = useState<Array<{ id: string; name: string; description?: string }>>([]);
+  // C-06: distinguish "no servers configured" from "catalog failed to load".
+  const [mcpCatalogFailed, setMcpCatalogFailed] = useState(false);
   const [agentQuery, setAgentQuery] = useState('');
 
   useEffect(() => {
@@ -252,6 +254,7 @@ const AgentCenterWizardPage: React.FC<{ mode: 'create' | 'edit' }> = ({ mode }) 
         console.error(error);
         setSkillOptions([]);
         setMcpOptions([]);
+        setMcpCatalogFailed(true);
       }
     })();
   }, []);
@@ -717,7 +720,13 @@ const AgentCenterWizardPage: React.FC<{ mode: 'create' | 'edit' }> = ({ mode }) 
                 value={selectedMcpIds}
                 onChange={setSelectedMcpIds}
                 searchPlaceholder='搜索 MCP 服务器…'
-                emptyText={mcpOptions.length === 0 ? '暂无 MCP 服务器，可在设置 → 工具中添加' : '无匹配的 MCP'}
+                emptyText={
+                  mcpCatalogFailed
+                    ? 'MCP 服务器列表加载失败，已勾选的服务器会保留；请稍后重新打开此页'
+                    : mcpOptions.length === 0
+                      ? '暂无 MCP 服务器，可在设置 → 工具中添加'
+                      : '无匹配的 MCP'
+                }
                 footerHint='未勾选任何服务器时，此智能体运行时不会挂载 MCP。'
                 testId='agent-center-mcp-picker'
               />

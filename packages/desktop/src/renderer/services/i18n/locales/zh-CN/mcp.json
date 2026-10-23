@@ -71,5 +71,7 @@
     "normal": "普通",
     "high": "高",
     "urgent": "紧急"
-  }
+  },
+  "catalogLoading": "正在加载 MCP 服务器…",
+  "catalogFailedRetry": "MCP 服务器加载失败，点击重试"
 }

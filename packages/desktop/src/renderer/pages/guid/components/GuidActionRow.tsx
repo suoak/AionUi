@@ -6,6 +6,7 @@
 
 import { ipcBridge } from '@/common';
 import type { IMcpServer, IProvider, TProviderWithModel } from '@/common/config/storage';
+import type { McpCatalogStatus } from '@/renderer/hooks/mcp/catalog';
 import AgentModeSelector from '@/renderer/components/agent/AgentModeSelector';
 import { DROPDOWN_SEARCH_THRESHOLD } from '@/renderer/components/agent/runtimeSelectorOptions';
 import WorkMateInlineSearchInput from '@/renderer/components/base/WorkMateInlineSearchInput';
@@ -107,6 +108,9 @@ type GuidActionRowProps = {
   enabledSkills: string[];
   onToggleSkill: (name: string, isAuto: boolean) => void;
   mcpServers: IMcpServer[];
+  /** C-06: omitted ⇒ treated as ready (no status row). */
+  mcpCatalogStatus?: McpCatalogStatus;
+  onRetryMcpCatalog?: () => void;
   selectedMcpServerIds: string[];
   onToggleMcpServer: (serverId: string) => void;
 
@@ -140,6 +144,8 @@ const GuidActionRow: React.FC<GuidActionRowProps> = ({
   enabledSkills,
   onToggleSkill,
   mcpServers,
+  mcpCatalogStatus = 'ready',
+  onRetryMcpCatalog,
   selectedMcpServerIds,
   onToggleMcpServer,
   loading,
@@ -375,6 +381,17 @@ const GuidActionRow: React.FC<GuidActionRowProps> = ({
       });
     }
 
+    // C-06: the catalog has not loaded, so the selector below is absent.
+    if (mcpCatalogStatus === 'failed') {
+      entries.push({
+        key: 'mcp-catalog-failed',
+        icon: <Shield theme='outline' size='16' />,
+        label: t('mcp.catalogFailedRetry'),
+        variant: 'muted',
+        onClick: () => onRetryMcpCatalog?.(),
+      });
+    }
+
     // MCP servers (multi-select).
     if (mcpServers.length > 0) {
       entries.push({
@@ -420,6 +437,8 @@ const GuidActionRow: React.FC<GuidActionRowProps> = ({
     enabledSkills,
     onToggleSkill,
     mcpServers,
+    mcpCatalogStatus,
+    onRetryMcpCatalog,
     selectedMcpServerIds,
     onToggleMcpServer,
     activeSkillCount,
@@ -513,6 +532,29 @@ const GuidActionRow: React.FC<GuidActionRowProps> = ({
             ))}
           </SubmenuSearchList>
         </Menu.SubMenu>
+      )}
+      {mcpCatalogStatus === 'loading' && (
+        <Menu.Item key='mcp-catalog-loading' disabled data-testid='guid-mcp-catalog-loading'>
+          <div className='flex items-center gap-8px'>
+            <Shield theme='outline' size='16' fill={iconColors.secondary} style={{ lineHeight: 0 }} />
+            <span>{t('mcp.catalogLoading')}</span>
+          </div>
+        </Menu.Item>
+      )}
+      {mcpCatalogStatus === 'failed' && (
+        <Menu.Item
+          key='mcp-catalog-failed'
+          data-testid='guid-mcp-catalog-failed'
+          onClick={(e) => {
+            e.stopPropagation();
+            onRetryMcpCatalog?.();
+          }}
+        >
+          <div className='flex items-center gap-8px'>
+            <Shield theme='outline' size='16' fill={iconColors.secondary} style={{ lineHeight: 0 }} />
+            <span>{t('mcp.catalogFailedRetry')}</span>
+          </div>
+        </Menu.Item>
       )}
       {mcpServers.length > 0 && (
         <Menu.SubMenu

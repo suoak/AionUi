@@ -32,7 +32,7 @@ import { useFanoutSupported } from '@/renderer/pages/conversation/fanout/useFano
 import { defaultSlotAssistants } from '@/renderer/pages/conversation/fanout/fanoutModel';
 import WorktreePreparingCard from '@/renderer/pages/conversation/fanout/WorktreePreparingCard';
 import { useTypewriterPlaceholder } from './hooks/useTypewriterPlaceholder';
-import { ensureBackendMcpCatalog } from '@/renderer/hooks/mcp/catalog';
+import { ensureBackendMcpCatalog, type McpCatalogStatus } from '@/renderer/hooks/mcp/catalog';
 import { resolveGuidAssistantDefaults } from './utils/assistantDefaults';
 import SpeechInputButton from '@/renderer/components/chat/SpeechInputButton';
 import { chatFileRefPath, uploadFileRef } from '@/common/types/chatFile';
@@ -104,16 +104,26 @@ const GuidPage: React.FC = () => {
       .catch(() => setAllSkills([]));
   }, []);
 
-  useEffect(() => {
+  // C-06: until the catalog is `ready`, the send path leaves `selected_*`
+  // out of the create request instead of sending an empty allowlist.
+  const [mcpCatalogStatus, setMcpCatalogStatus] = useState<McpCatalogStatus>('loading');
+  const loadMcpCatalog = useCallback(() => {
+    setMcpCatalogStatus('loading');
     void ensureBackendMcpCatalog()
       .then(({ allServers }) => {
         setAvailableMcpServers(allServers);
+        setMcpCatalogStatus('ready');
       })
       .catch((error) => {
         console.error('[GuidPage] Failed to load MCP catalog:', error);
         setAvailableMcpServers([]);
+        setMcpCatalogStatus('failed');
       });
   }, []);
+
+  useEffect(() => {
+    loadMcpCatalog();
+  }, [loadMcpCatalog]);
 
   const handleToggleSkill = useCallback((skillName: string, isAuto: boolean) => {
     if (isAuto) {
@@ -310,6 +320,7 @@ const GuidPage: React.FC = () => {
     assistantDefaultSkillIds: resolvedAssistantDefaults.skillIds,
     assistantDefaultDisabledBuiltinSkillIds: resolvedAssistantDefaults.disabledBuiltinSkillIds,
     availableMcpServers,
+    mcpCatalogReady: mcpCatalogStatus === 'ready',
     selectedMcpServerIds: guidSelectedMcpServerIds,
     assistantDefaultMcpIds: resolvedAssistantDefaults.mcpIds,
     isGoogleAuth: modelSelection.isGoogleAuth,
@@ -689,6 +700,8 @@ const GuidPage: React.FC = () => {
       enabledSkills={guidEnabledSkills ?? []}
       onToggleSkill={handleToggleSkill}
       mcpServers={availableMcpServers}
+      mcpCatalogStatus={mcpCatalogStatus}
+      onRetryMcpCatalog={loadMcpCatalog}
       selectedMcpServerIds={guidSelectedMcpServerIds ?? []}
       onToggleMcpServer={handleToggleMcpServer}
       speechInputNode={

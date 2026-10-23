@@ -8,7 +8,7 @@ import { ipcBridge } from '@/common';
 import { type ChatFileRef, chatFileRefPath } from '@/common/types/chatFile';
 import type { IMcpServer, TProviderWithModel } from '@/common/config/storage';
 import type { AgentCenterRunPlan } from '@/common/types/agent/agentCenterTypes';
-import { toSessionMcpServer } from '@/renderer/hooks/mcp/catalog';
+import { buildMcpSelectionExtra, toSessionMcpServer } from '@/renderer/hooks/mcp/catalog';
 import { emitter } from '@/renderer/utils/emitter';
 import { updateWorkspaceTime } from '@/renderer/utils/workspace/workspaceHistory';
 import { Message } from '@arco-design/web-react';
@@ -98,6 +98,13 @@ export type GuidSendDeps = {
   assistantDefaultSkillIds?: string[];
   assistantDefaultDisabledBuiltinSkillIds?: string[];
   availableMcpServers: IMcpServer[];
+  /**
+   * C-06: false while the MCP catalog is still loading or failed to load.
+   * `availableMcpServers` is then empty, and filtering the selection through
+   * it would send an explicit empty allowlist that Core freezes into the
+   * snapshot. Defaults to true.
+   */
+  mcpCatalogReady?: boolean;
   selectedMcpServerIds: string[] | undefined;
   assistantDefaultMcpIds?: string[];
   isGoogleAuth: boolean;
@@ -163,6 +170,7 @@ export const useGuidSend = (deps: GuidSendDeps): GuidSendResult => {
     assistantDefaultSkillIds,
     assistantDefaultDisabledBuiltinSkillIds,
     availableMcpServers,
+    mcpCatalogReady = true,
     selectedMcpServerIds,
     assistantDefaultMcpIds,
     setMentionOpen,
@@ -280,6 +288,14 @@ export const useGuidSend = (deps: GuidSendDeps): GuidSendResult => {
         : availableMcpServers
             .filter((server) => (defaultSelectedMcpServerIds ?? []).includes(server.id))
             .map((server) => toSessionMcpServer(server));
+    // C-06: without a loaded catalog the two lists above are empty by
+    // construction. Leave the keys out so Core falls back to the assistant
+    // snapshot (or the enabled servers) instead of freezing "no MCP".
+    const mcpSelectionExtra = buildMcpSelectionExtra(
+      mcpCatalogReady,
+      selectedUserMcpServerIdsToSend,
+      selectedSessionMcpServersToSend
+    );
 
     // `current_model` is the aionrs provider selection and means nothing to a
     // CLI agent, which owns its own model list. Used as a blanket fallback it
@@ -375,8 +391,7 @@ export const useGuidSend = (deps: GuidSendDeps): GuidSendResult => {
             default_files: files.map(chatFileRefPath),
             workspace: finalWorkspace,
             custom_workspace: isCustomWorkspace,
-            selected_mcp_server_ids: selectedUserMcpServerIdsToSend,
-            selected_session_mcp_servers: selectedSessionMcpServersToSend,
+            ...mcpSelectionExtra,
           },
         });
 
@@ -434,8 +449,7 @@ export const useGuidSend = (deps: GuidSendDeps): GuidSendResult => {
           workspace: finalWorkspace,
           custom_workspace: isCustomWorkspace,
           default_files: files.map(chatFileRefPath),
-          selected_mcp_server_ids: selectedUserMcpServerIdsToSend,
-          selected_session_mcp_servers: selectedSessionMcpServersToSend,
+          ...mcpSelectionExtra,
         },
       });
       if (!conversation || !conversation.id) {
@@ -490,6 +504,7 @@ export const useGuidSend = (deps: GuidSendDeps): GuidSendResult => {
     assistantDefaultSkillIds,
     assistantDefaultDisabledBuiltinSkillIds,
     availableMcpServers,
+    mcpCatalogReady,
     selectedMcpServerIds,
     assistantDefaultMcpIds,
     navigate,

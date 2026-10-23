@@ -207,6 +207,38 @@ describe('GuidActionRow skill/MCP submenu search', () => {
     await waitFor(() => expect(onFilesPicked).toHaveBeenCalledWith(['/host/project/a.txt']));
   });
 
+  it('shows a loading row instead of the MCP selector while the catalog loads (C-06)', () => {
+    renderActionRow({ mcpServers: [], mcpCatalogStatus: 'loading' });
+
+    expect(screen.getByText('mcp.catalogLoading')).toBeInTheDocument();
+    expect(screen.queryByText('mcp.catalogFailedRetry')).not.toBeInTheDocument();
+  });
+
+  it('offers a retry when the MCP catalog failed to load (C-06)', () => {
+    const onRetryMcpCatalog = vi.fn();
+    renderActionRow({ mcpServers: [], mcpCatalogStatus: 'failed', onRetryMcpCatalog });
+
+    fireEvent.click(screen.getByText('mcp.catalogFailedRetry'));
+    expect(onRetryMcpCatalog).toHaveBeenCalledTimes(1);
+  });
+
+  it('offers the MCP catalog retry in the mobile action sheet (C-06)', () => {
+    environment.isMobile = true;
+    environment.isDesktop = false;
+    const onRetryMcpCatalog = vi.fn();
+    renderActionRow({ allSkills: [], mcpServers: [], mcpCatalogStatus: 'failed', onRetryMcpCatalog });
+
+    fireEvent.click(screen.getByTestId('mcp-catalog-failed'));
+    expect(onRetryMcpCatalog).toHaveBeenCalledTimes(1);
+  });
+
+  it('shows no catalog status row once the catalog is ready', () => {
+    renderActionRow({ mcpCatalogStatus: 'ready' });
+
+    expect(screen.queryByText('mcp.catalogLoading')).not.toBeInTheDocument();
+    expect(screen.queryByText('mcp.catalogFailedRetry')).not.toBeInTheDocument();
+  });
+
   it('shows both search boxes when skills and MCP servers exceed the threshold', () => {
     renderActionRow();
 
