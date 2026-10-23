@@ -8,6 +8,7 @@ import { DESKTOP_PET_FEATURE_ENABLED, TEAM_MODE_ENABLED } from '@/common/config/
 import { legacySkillEvolutionPath } from '@renderer/pages/skill-evolution/routes';
 const Conversation = React.lazy(() => import('@renderer/pages/conversation'));
 const Guid = React.lazy(() => import('@renderer/pages/guid'));
+const FanoutGroupPage = React.lazy(() => import('@renderer/pages/conversation/fanout/FanoutGroupPage'));
 const AgentSettings = React.lazy(() => import('@renderer/pages/settings/AgentSettings'));
 const AgentRepairPage = React.lazy(() => import('@renderer/pages/settings/AgentSettings/AgentRepairPage'));
 const AssistantSettings = React.lazy(() => import('@renderer/pages/settings/AssistantSettings'));
@@ -105,6 +106,7 @@ const PanelRoute: React.FC<{ layout: React.ReactElement }> = ({ layout }) => {
           <Route index element={<Navigate to='/guid' replace />} />
           <Route path='/guid' element={withRouteFallback(Guid)} />
           <Route path='/conversation/:id' element={withRouteFallback(Conversation)} />
+          <Route path='/fanout/:id' element={withRouteFallback(FanoutGroupPage)} />
           <Route
             path='/team/:id'
             element={TEAM_MODE_ENABLED ? withRouteFallback(TeamIndex) : <Navigate to='/guid' replace />}

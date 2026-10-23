@@ -93,6 +93,13 @@ import type {
   WorktreeInfo,
   WorktreeProgressEvent,
 } from '../types/worktree';
+import type {
+  AdoptFanoutInput,
+  CreateFanoutGroupInput,
+  FanoutChangedEvent,
+  FanoutCompare,
+  FanoutGroup,
+} from '../types/fanout';
 import {
   normalizeAgentCenterDetail,
   normalizeAgentCenterListItem,
@@ -1102,6 +1109,38 @@ export const worktree = {
   },
   progress: wsEmitter<WorktreeProgressEvent>('worktree.progress'),
   changed: wsEmitter<WorktreeChangedEvent>('worktree.changed'),
+};
+
+/**
+ * M7 E3-4 fan-out groups (Core `/api/fanout-groups*`, user identity only).
+ * A Core without the API answers 404; callers degrade to "unavailable".
+ */
+export const fanout = {
+  create: httpPost<FanoutGroup, CreateFanoutGroupInput>('/api/fanout-groups'),
+  list: httpGet<FanoutGroup[], { task_session_id?: string } | undefined>(
+    (p) =>
+      p?.task_session_id
+        ? `/api/fanout-groups?task_session_id=${encodeURIComponent(p.task_session_id)}`
+        : '/api/fanout-groups',
+    { silentStatuses: [404] }
+  ),
+  get: httpGet<FanoutGroup, { id: string }>((p) => `/api/fanout-groups/${encodeURIComponent(p.id)}`, {
+    silentStatuses: [404],
+  }),
+  compare: httpGet<FanoutCompare, { id: string }>((p) => `/api/fanout-groups/${encodeURIComponent(p.id)}/compare`),
+  adopt: httpPost<FanoutGroup, AdoptFanoutInput>(
+    (p) => `/api/fanout-groups/${encodeURIComponent(p.id)}/adopt`,
+    ({ id: _id, ...body }) => body
+  ),
+  discard: httpPost<FanoutGroup, { id: string }>(
+    (p) => `/api/fanout-groups/${encodeURIComponent(p.id)}/discard`,
+    () => ({})
+  ),
+  cancel: httpPost<FanoutGroup, { id: string }>(
+    (p) => `/api/fanout-groups/${encodeURIComponent(p.id)}/cancel`,
+    () => ({})
+  ),
+  changed: wsEmitter<FanoutChangedEvent>('fanout.changed'),
 };
 
 export const taskSession = {

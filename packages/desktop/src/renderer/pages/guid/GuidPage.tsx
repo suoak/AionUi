@@ -28,6 +28,8 @@ import { useGuidSend, type GuidWorkspaceMode } from './hooks/useGuidSend';
 import GuidWorktreeToggle from './components/GuidWorktreeToggle';
 import { useWorktreeAvailability } from '@/renderer/pages/conversation/fanout/useWorktreeCapability';
 import { useWorktreePreparation } from '@/renderer/pages/conversation/fanout/useWorktreePreparation';
+import { useFanoutSupported } from '@/renderer/pages/conversation/fanout/useFanoutSupported';
+import { defaultSlotAssistants } from '@/renderer/pages/conversation/fanout/fanoutModel';
 import WorktreePreparingCard from '@/renderer/pages/conversation/fanout/WorktreePreparingCard';
 import { useTypewriterPlaceholder } from './hooks/useTypewriterPlaceholder';
 import { ensureBackendMcpCatalog } from '@/renderer/hooks/mcp/catalog';
@@ -252,7 +254,28 @@ const GuidPage: React.FC = () => {
   const [workspaceModeChoice, setWorkspaceModeChoice] = useState<GuidWorkspaceMode>('local');
   const [worktreeBaseRef, setWorktreeBaseRef] = useState('');
   const [worktreeBranch, setWorktreeBranch] = useState('');
-  const workspaceMode: GuidWorkspaceMode = worktreeAvailability.canUseWorktree ? workspaceModeChoice : 'local';
+  // Fan-out (M7 E3-5): several worktrees at once, offered only when Core ships the API.
+  const fanoutSupported = useFanoutSupported(worktreeAvailability.canUseWorktree);
+  const [fanoutAssistantIds, setFanoutAssistantIds] = useState<string[]>([]);
+  const effectiveModeChoice: GuidWorkspaceMode =
+    workspaceModeChoice === 'fanout' && !fanoutSupported ? 'local' : workspaceModeChoice;
+  const workspaceMode: GuidWorkspaceMode = worktreeAvailability.canUseWorktree ? effectiveModeChoice : 'local';
+  const fanoutCandidates = useMemo(
+    () =>
+      agentSelection.assistants
+        .filter((item) => item.enabled !== false)
+        .map((item) => ({ id: item.id, name: item.name_i18n?.[localeKey] || item.name })),
+    [agentSelection.assistants, localeKey]
+  );
+  const handleWorkspaceModeChange = useCallback(
+    (mode: GuidWorkspaceMode) => {
+      if (mode === 'fanout' && fanoutAssistantIds.length === 0) {
+        setFanoutAssistantIds(defaultSlotAssistants(agentSelection.selectedAssistantId, fanoutCandidates));
+      }
+      setWorkspaceModeChoice(mode);
+    },
+    [agentSelection.selectedAssistantId, fanoutAssistantIds.length, fanoutCandidates]
+  );
   const worktreeBusy = worktreePreparation.state.kind === 'creating';
 
   const send = useGuidSend({
@@ -304,6 +327,7 @@ const GuidPage: React.FC = () => {
     worktreeBaseRef,
     worktreeBranch,
     prepareWorktree: worktreePreparation.prepare,
+    fanoutAssistantIds,
   });
 
   // --- Coordinated handlers (depend on multiple hooks) ---
@@ -766,13 +790,17 @@ const GuidPage: React.FC = () => {
               worktreeAvailability.canUseWorktree ? (
                 <GuidWorktreeToggle
                   mode={workspaceMode}
-                  onModeChange={setWorkspaceModeChoice}
+                  onModeChange={handleWorkspaceModeChange}
                   baseRef={worktreeBaseRef}
                   onBaseRefChange={setWorktreeBaseRef}
                   branch={worktreeBranch}
                   onBranchChange={setWorktreeBranch}
                   branchPlaceholder={t('conversation.worktree.branchPlaceholder')}
                   disabled={worktreeBusy}
+                  fanoutSupported={fanoutSupported}
+                  fanoutCandidates={fanoutCandidates}
+                  fanoutAssistantIds={fanoutAssistantIds}
+                  onFanoutAssistantIdsChange={setFanoutAssistantIds}
                 />
               ) : undefined
             }
