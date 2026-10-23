@@ -1231,6 +1231,15 @@
       "TARGET_NOT_CLEAN": "O branch de destino tem alterações não commitadas; faça commit ou stash antes.",
       "SLOT_START_FAILED": "Não foi possível iniciar a conversa do slot.",
       "UNKNOWN": "O fan-out falhou."
-    }
+    },
+    "estimateSize": "Cria {{count}} worktrees; cerca de {{size}} em disco ({{files}} arquivos rastreados × {{count}}).",
+    "estimateSizeAtLeast": "Cria {{count}} worktrees; pelo menos {{size}} em disco (repositório grande, estimativa limitada).",
+    "siderTitle": "Fan-out",
+    "viewDiff": "Slot {{slot}} ({{status}}): ver diff",
+    "diffUnavailable": "Este diff não está disponível.",
+    "diffBinary": "Arquivo binário: sem diff de texto.",
+    "diffEmpty": "Nenhuma alteração de texto.",
+    "diffTruncated": "Diff truncado",
+    "closeDiff": "Fechar diff"
   }
 }

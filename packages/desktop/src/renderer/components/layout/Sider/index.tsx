@@ -18,6 +18,7 @@ import {
 } from './SiderNav';
 import SiderFooter from './SiderFooter';
 import TeamSiderSection from './TeamSiderSection';
+import FanoutSiderGroup from './FanoutSiderGroup';
 import siderStyles from './Sider.module.css';
 
 const WorkspaceGroupedHistory = React.lazy(() => import('@renderer/pages/conversation/GroupedHistory'));
@@ -299,6 +300,12 @@ const Sider: React.FC<SiderProps> = ({ onSessionClick, collapsed = false }) => {
                   afterPinnedContent={
                     <>
                       <TeamSiderSection
+                        collapsed={collapsed}
+                        pathname={pathname}
+                        siderTooltipProps={siderTooltipProps}
+                        onSessionClick={onSessionClick}
+                      />
+                      <FanoutSiderGroup
                         collapsed={collapsed}
                         pathname={pathname}
                         siderTooltipProps={siderTooltipProps}

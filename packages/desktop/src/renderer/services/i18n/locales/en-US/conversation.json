@@ -1225,6 +1225,15 @@
       "TARGET_NOT_CLEAN": "The target branch has uncommitted changes; commit or stash them first.",
       "SLOT_START_FAILED": "The slot's conversation could not be started.",
       "UNKNOWN": "Fan-out failed."
-    }
+    },
+    "estimateSize": "Creates {{count}} worktrees; about {{size}} on disk ({{files}} tracked files × {{count}}).",
+    "estimateSizeAtLeast": "Creates {{count}} worktrees; at least {{size}} on disk (large repository, estimate capped).",
+    "siderTitle": "Fan-out",
+    "viewDiff": "Slot {{slot}} ({{status}}): show diff",
+    "diffUnavailable": "This diff is not available.",
+    "diffBinary": "Binary file: no text diff.",
+    "diffEmpty": "No textual change.",
+    "diffTruncated": "Diff truncated",
+    "closeDiff": "Close diff"
   }
 }

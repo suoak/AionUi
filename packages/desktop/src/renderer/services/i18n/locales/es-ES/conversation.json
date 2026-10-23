@@ -1226,6 +1226,15 @@
       "TARGET_NOT_CLEAN": "La rama destino tiene cambios sin commit; haz commit o stash primero.",
       "SLOT_START_FAILED": "No se pudo iniciar la conversación de la ranura.",
       "UNKNOWN": "El fan-out falló."
-    }
+    },
+    "estimateSize": "Crea {{count}} worktrees; unos {{size}} en disco ({{files}} archivos rastreados × {{count}}).",
+    "estimateSizeAtLeast": "Crea {{count}} worktrees; al menos {{size}} en disco (repositorio grande, estimación limitada).",
+    "siderTitle": "Fan-out",
+    "viewDiff": "Ranura {{slot}} ({{status}}): ver diff",
+    "diffUnavailable": "Este diff no está disponible.",
+    "diffBinary": "Archivo binario: sin diff de texto.",
+    "diffEmpty": "Sin cambios de texto.",
+    "diffTruncated": "Diff truncado",
+    "closeDiff": "Cerrar diff"
   }
 }

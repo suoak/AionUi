@@ -45,6 +45,7 @@ import React, { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useSta
 import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate } from 'react-router-dom';
 import useSWR from 'swr';
+import type { WorktreeEstimate } from '@/common/types/worktree';
 import type { AgentCenterRunPlan } from '@/common/types/agent/agentCenterTypes';
 import styles from './index.module.css';
 
@@ -260,6 +261,13 @@ const GuidPage: React.FC = () => {
   const effectiveModeChoice: GuidWorkspaceMode =
     workspaceModeChoice === 'fanout' && !fanoutSupported ? 'local' : workspaceModeChoice;
   const workspaceMode: GuidWorkspaceMode = worktreeAvailability.canUseWorktree ? effectiveModeChoice : 'local';
+  const fanoutRepo = workspaceMode === 'fanout' ? guidInput.dir : '';
+  const { data: fanoutEstimate } = useSWR(
+    fanoutRepo ? ['worktree.estimate', fanoutRepo, worktreeBaseRef.trim()] : null,
+    ([, repo_path, base_ref]: [string, string, string]): Promise<WorktreeEstimate | null> =>
+      ipcBridge.worktree.estimate.invoke({ repo_path, base_ref: base_ref || undefined }).catch((): null => null),
+    { revalidateOnFocus: false }
+  );
   const fanoutCandidates = useMemo(
     () =>
       agentSelection.assistants
@@ -801,6 +809,7 @@ const GuidPage: React.FC = () => {
                   fanoutCandidates={fanoutCandidates}
                   fanoutAssistantIds={fanoutAssistantIds}
                   onFanoutAssistantIdsChange={setFanoutAssistantIds}
+                  fanoutEstimate={fanoutEstimate ?? null}
                 />
               ) : undefined
             }

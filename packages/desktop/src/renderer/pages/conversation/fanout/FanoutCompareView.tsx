@@ -7,9 +7,10 @@
 import { ipcBridge } from '@/common';
 import type { FanoutGroup } from '@/common/types/fanout';
 import { Empty, Spin, Tag, Typography } from '@arco-design/web-react';
-import React from 'react';
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import useSWR from 'swr';
+import FanoutFileDiff from './FanoutFileDiff';
 import { compareTotals } from './fanoutModel';
 
 type FanoutCompareViewProps = {
@@ -25,10 +26,12 @@ const CELL_COLOR: Record<string, string> = {
 
 /**
  * Side-by-side result of every slot (design E3 §2.3): per-slot totals and last
- * reply, and a file × slot matrix of what each slot changed.
+ * reply, and a file × slot matrix of what each slot changed. Clicking a cell
+ * opens that slot's diff of the file.
  */
 const FanoutCompareView: React.FC<FanoutCompareViewProps> = ({ group, assistantName }) => {
   const { t } = useTranslation();
+  const [selected, setSelected] = useState<{ slot: string; path: string } | null>(null);
   const { data, isLoading, error } = useSWR(
     ['fanout.compare', group.id, group.updated_at],
     ([, id]: [string, string, number]) => ipcBridge.fanout.compare.invoke({ id }),
@@ -40,6 +43,7 @@ const FanoutCompareView: React.FC<FanoutCompareViewProps> = ({ group, assistantN
 
   const totals = compareTotals(data);
   const labels = data.slots.map((slot) => slot.slot);
+  const selectedWorktree = selected ? data.slots.find((slot) => slot.slot === selected.slot)?.worktree?.id : undefined;
 
   return (
     <div className='flex flex-col gap-12px' data-testid='fanout-compare'>
@@ -96,7 +100,20 @@ const FanoutCompareView: React.FC<FanoutCompareViewProps> = ({ group, assistantN
                     return (
                       <td key={label} className='px-8px py-4px text-center'>
                         {cell ? (
-                          <Tag size='small' style={{ color: CELL_COLOR[cell.status] }} title={cell.status}>
+                          <Tag
+                            size='small'
+                            className='cursor-pointer'
+                            style={{ color: CELL_COLOR[cell.status] }}
+                            title={t('conversation.fanout.viewDiff', { slot: label, status: cell.status })}
+                            checkable
+                            checked={selected?.slot === label && selected.path === row.path}
+                            data-testid={`fanout-cell-${label}`}
+                            onCheck={() =>
+                              setSelected((prev) =>
+                                prev?.slot === label && prev.path === row.path ? null : { slot: label, path: row.path }
+                              )
+                            }
+                          >
                             +{cell.additions} −{cell.deletions}
                           </Tag>
                         ) : (
@@ -110,6 +127,16 @@ const FanoutCompareView: React.FC<FanoutCompareViewProps> = ({ group, assistantN
             </tbody>
           </table>
         </div>
+      )}
+      {selected && selectedWorktree && (
+        <FanoutFileDiff
+          key={`${selected.slot}:${selected.path}`}
+          worktreeId={selectedWorktree}
+          slot={selected.slot}
+          path={selected.path}
+          version={group.updated_at}
+          onClose={() => setSelected(null)}
+        />
       )}
     </div>
   );

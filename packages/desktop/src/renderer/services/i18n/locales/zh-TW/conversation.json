@@ -1225,6 +1225,15 @@
       "TARGET_NOT_CLEAN": "目標分支有未提交的變更，請先提交或暫存。",
       "SLOT_START_FAILED": "該槽位的對話未能啟動。",
       "UNKNOWN": "扇出失敗。"
-    }
+    },
+    "estimateSize": "將建立 {{count}} 個 worktree；約佔 {{size}} 磁碟（{{files}} 個受追蹤檔案 × {{count}}）。",
+    "estimateSizeAtLeast": "將建立 {{count}} 個 worktree；至少佔 {{size}} 磁碟（儲存庫較大，估算已截斷）。",
+    "siderTitle": "並行方案",
+    "viewDiff": "槽位 {{slot}}（{{status}}）：查看差異",
+    "diffUnavailable": "無法取得此差異。",
+    "diffBinary": "二進位檔案：無文字差異。",
+    "diffEmpty": "沒有文字變更。",
+    "diffTruncated": "差異已截斷",
+    "closeDiff": "關閉差異"
   }
 }

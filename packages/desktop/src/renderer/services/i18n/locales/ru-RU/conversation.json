@@ -1243,6 +1243,15 @@
       "TARGET_NOT_CLEAN": "В целевой ветке есть незакоммиченные изменения; сначала закоммитьте или спрячьте их.",
       "SLOT_START_FAILED": "Не удалось начать беседу слота.",
       "UNKNOWN": "Ошибка веера."
-    }
+    },
+    "estimateSize": "Будет создано {{count}} worktree; около {{size}} на диске ({{files}} отслеживаемых файлов × {{count}}).",
+    "estimateSizeAtLeast": "Будет создано {{count}} worktree; не менее {{size}} на диске (большой репозиторий, оценка ограничена).",
+    "siderTitle": "Fan-out",
+    "viewDiff": "Слот {{slot}} ({{status}}): показать diff",
+    "diffUnavailable": "Этот diff недоступен.",
+    "diffBinary": "Двоичный файл: текстового diff нет.",
+    "diffEmpty": "Текстовых изменений нет.",
+    "diffTruncated": "Diff усечён",
+    "closeDiff": "Закрыть diff"
   }
 }

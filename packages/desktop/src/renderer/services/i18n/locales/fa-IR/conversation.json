@@ -1225,6 +1225,15 @@
       "TARGET_NOT_CLEAN": "شاخهٔ مقصد تغییرات commit‌نشده دارد؛ ابتدا commit یا stash کنید.",
       "SLOT_START_FAILED": "گفتگوی جایگاه شروع نشد.",
       "UNKNOWN": "انشعاب ناموفق بود."
-    }
+    },
+    "estimateSize": "{{count}} worktree ساخته می‌شود؛ حدود {{size}} فضای دیسک ({{files}} فایل ردیابی‌شده × {{count}}).",
+    "estimateSizeAtLeast": "{{count}} worktree ساخته می‌شود؛ دست‌کم {{size}} فضای دیسک (مخزن بزرگ، برآورد محدود شد).",
+    "siderTitle": "انشعاب",
+    "viewDiff": "جایگاه {{slot}} ({{status}}): نمایش diff",
+    "diffUnavailable": "این diff در دسترس نیست.",
+    "diffBinary": "فایل دودویی: diff متنی ندارد.",
+    "diffEmpty": "تغییر متنی وجود ندارد.",
+    "diffTruncated": "diff کوتاه شد",
+    "closeDiff": "بستن diff"
   }
 }

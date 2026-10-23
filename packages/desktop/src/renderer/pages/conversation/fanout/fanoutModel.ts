@@ -22,6 +22,7 @@ import {
   type FanoutSlot,
   type FanoutSlotInput,
 } from '@/common/types/fanout';
+import type { WorktreeEstimate } from '@/common/types/worktree';
 
 const TERMINAL_GROUP_STATUSES = new Set<string>(['adopted', 'discarded', 'cancelled', 'failed']);
 const LIVE_SLOT_STATUSES = new Set<string>(['preparing', 'starting', 'running']);
@@ -147,3 +148,28 @@ export const compareTotals = (
 
 /** Short commit id for display. */
 export const shortCommit = (commit: string | null | undefined): string => (commit ? commit.slice(0, 8) : '');
+
+/**
+ * Disk estimate for `count` slots (design E3 §3: tracked size × N). `null`
+ * when Core has no estimate, so the caller shows the generic text.
+ */
+export const fanoutDiskEstimate = (
+  estimate: Pick<WorktreeEstimate, 'tracked_bytes' | 'tracked_files' | 'truncated'> | null | undefined,
+  count: number
+): { bytes: number; files: number; truncated: boolean } | null => {
+  if (!estimate || !Number.isFinite(estimate.tracked_bytes) || count <= 0) return null;
+  return {
+    bytes: estimate.tracked_bytes * count,
+    files: estimate.tracked_files,
+    truncated: Boolean(estimate.truncated),
+  };
+};
+
+/** Recent groups for the sider: newest first, live ones before finished ones. */
+export const siderFanoutGroups = (groups: FanoutGroup[] | null | undefined, limit = 8): FanoutGroup[] =>
+  [...(groups ?? [])]
+    .sort((a, b) => {
+      const live = Number(isFanoutTerminal(a.status)) - Number(isFanoutTerminal(b.status));
+      return live !== 0 ? live : b.updated_at - a.updated_at;
+    })
+    .slice(0, limit);

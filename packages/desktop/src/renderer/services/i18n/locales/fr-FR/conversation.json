@@ -1225,6 +1225,15 @@
       "TARGET_NOT_CLEAN": "La branche cible a des modifications non commitées ; commitez-les ou mettez-les de côté d’abord.",
       "SLOT_START_FAILED": "La conversation de l’emplacement n’a pas pu démarrer.",
       "UNKNOWN": "Échec du fan-out."
-    }
+    },
+    "estimateSize": "Crée {{count}} worktrees ; environ {{size}} sur le disque ({{files}} fichiers suivis × {{count}}).",
+    "estimateSizeAtLeast": "Crée {{count}} worktrees ; au moins {{size}} sur le disque (dépôt volumineux, estimation plafonnée).",
+    "siderTitle": "Fan-out",
+    "viewDiff": "Emplacement {{slot}} ({{status}}) : voir le diff",
+    "diffUnavailable": "Ce diff n’est pas disponible.",
+    "diffBinary": "Fichier binaire : pas de diff texte.",
+    "diffEmpty": "Aucune modification textuelle.",
+    "diffTruncated": "Diff tronqué",
+    "closeDiff": "Fermer le diff"
   }
 }

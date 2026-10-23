@@ -1243,6 +1243,15 @@
       "TARGET_NOT_CLEAN": "У цільовій гілці є незакомічені зміни; спершу закомітьте або сховайте їх.",
       "SLOT_START_FAILED": "Не вдалося почати розмову слота.",
       "UNKNOWN": "Помилка віяла."
-    }
+    },
+    "estimateSize": "Буде створено {{count}} worktree; близько {{size}} на диску ({{files}} відстежуваних файлів × {{count}}).",
+    "estimateSizeAtLeast": "Буде створено {{count}} worktree; щонайменше {{size}} на диску (великий репозиторій, оцінку обмежено).",
+    "siderTitle": "Fan-out",
+    "viewDiff": "Слот {{slot}} ({{status}}): показати diff",
+    "diffUnavailable": "Цей diff недоступний.",
+    "diffBinary": "Двійковий файл: текстового diff немає.",
+    "diffEmpty": "Текстових змін немає.",
+    "diffTruncated": "Diff обрізано",
+    "closeDiff": "Закрити diff"
   }
 }

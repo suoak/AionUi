@@ -1227,6 +1227,15 @@
       "TARGET_NOT_CLEAN": "Hedef dalda commit edilmemiş değişiklikler var; önce commit veya stash yapın.",
       "SLOT_START_FAILED": "Yuvanın sohbeti başlatılamadı.",
       "UNKNOWN": "Fan-out başarısız oldu."
-    }
+    },
+    "estimateSize": "{{count}} worktree oluşturur; diskte yaklaşık {{size}} ({{files}} izlenen dosya × {{count}}).",
+    "estimateSizeAtLeast": "{{count}} worktree oluşturur; diskte en az {{size}} (büyük depo, tahmin sınırlandı).",
+    "siderTitle": "Fan-out",
+    "viewDiff": "{{slot}} yuvası ({{status}}): diff göster",
+    "diffUnavailable": "Bu diff kullanılamıyor.",
+    "diffBinary": "İkili dosya: metin diff'i yok.",
+    "diffEmpty": "Metin değişikliği yok.",
+    "diffTruncated": "Diff kısaltıldı",
+    "closeDiff": "Diff'i kapat"
   }
 }

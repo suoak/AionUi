@@ -117,6 +117,17 @@ export type WorktreeDiffStat = {
   truncated: boolean;
 };
 
+/** `GET /api/worktrees/estimate` (E3-5): blob sizes of the base tree. */
+export type WorktreeEstimate = {
+  repo_path: string;
+  base_ref: string;
+  base_commit: string;
+  tracked_bytes: number;
+  tracked_files: number;
+  /** The tree passed Core's entry cap; the numbers are a lower bound. */
+  truncated: boolean;
+};
+
 export type WorktreeFileDiff = {
   worktree_id: string;
   base_commit: string;
