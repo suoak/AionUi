@@ -1090,6 +1090,16 @@
       "unsupported": "El aislamiento de planificación no es compatible",
       "automaticUnavailable": "La planificación automática no está disponible",
       "start": "Iniciar planificación"
+    },
+    "replay": {
+      "tab": "Reproducción",
+      "retentionGap": "La política de retención eliminó algunos eventos; la reproducción está incompleta",
+      "removed": "{{count}} eventos eliminados por la política de retención",
+      "progress": "{{loaded}} cargados · última secuencia {{latest}}",
+      "jumpToError": "Ir al primer error",
+      "loadMore": "Cargar más",
+      "empty": "No hay eventos que reproducir en esta ejecución",
+      "selectHint": "Selecciona un evento para ver los detalles"
     }
   },
   "toolSurface": {

@@ -406,3 +406,19 @@ export type CreatePullRequestResult = {
   delivery: ScmDelivery;
   evidence_id?: string | null;
 };
+
+/** One page of `GET /api/task-sessions/{id}/runs/{run_id}/replay` (M7 E5-2). */
+export type TaskRunReplayPage = {
+  run: TaskRun;
+  events: TaskTraceEvent[];
+  /** Cursor for the next page; equals the request cursor when nothing new. */
+  next_after_sequence: number;
+  has_more: boolean;
+  latest_sequence: number;
+  /** Sequences in the requested window are missing (pruned by retention). */
+  retention_gap: boolean;
+  /** First page only. */
+  approvals?: TaskApproval[];
+  /** First page only. */
+  evidence?: TaskEvidence[];
+};

@@ -40,6 +40,8 @@ vi.mock('@/common', () => ({
     usage: {
       list: { invoke: vi.fn().mockRejectedValue(new Error('offline')) },
       clear: { invoke: vi.fn().mockResolvedValue(0) },
+      // Older core without the summary endpoint: the cost ledger stays hidden.
+      summary: { invoke: vi.fn().mockRejectedValue(new Error('Not Found')) },
     },
     conversation: {
       responseStream: { on: vi.fn(() => vi.fn()) },

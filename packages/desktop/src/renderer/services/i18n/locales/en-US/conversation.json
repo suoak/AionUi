@@ -1089,6 +1089,16 @@
       "unsupported": "Planning isolation unsupported",
       "automaticUnavailable": "Automatic planning unavailable",
       "start": "Start planning"
+    },
+    "replay": {
+      "tab": "Replay",
+      "retentionGap": "Some events were removed by the retention policy; the replay is incomplete",
+      "removed": "Removed by the retention policy: {{count}}",
+      "progress": "{{loaded}} loaded · latest sequence {{latest}}",
+      "jumpToError": "Jump to first error",
+      "loadMore": "Load more",
+      "empty": "No events to replay for this run",
+      "selectHint": "Select an event to see its details"
     }
   },
   "toolSurface": {

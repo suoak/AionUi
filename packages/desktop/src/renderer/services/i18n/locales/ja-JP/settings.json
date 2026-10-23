@@ -1493,7 +1493,24 @@
     "channelWecom": "WeCom",
     "channelSlack": "Slack",
     "channelDiscord": "Discord",
-    "channelCron": "スケジュール"
+    "channelCron": "スケジュール",
+    "costLedgerTitle": "コスト台帳",
+    "costUnavailable": "利用不可",
+    "costUnavailableHint": "プロバイダーがコストを報告していません（0 としては扱いません）",
+    "costPartial": "一部",
+    "costPartialHint": "一部のターンはコスト未報告のため、報告分のみの金額です",
+    "costTotal": "合計",
+    "unavailableTurns": "使用量データのないターン {{count}} 件",
+    "costRowTurns": "{{count}} ターン",
+    "notTaskLinked": "タスク未関連付け",
+    "notLinked": "未関連付け",
+    "costTruncated": "先頭 50 件のみ表示",
+    "groupBy": {
+      "task": "タスク別",
+      "assistant": "アシスタント別",
+      "day": "日次",
+      "week": "週次"
+    }
   },
   "mcpToolsLoaded_one": "{{count}}個の MCP を検出しました",
   "mcpToolsLoaded_other": "{{count}}個の MCP を検出しました",

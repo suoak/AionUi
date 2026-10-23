@@ -1091,6 +1091,16 @@
       "unsupported": "Planlama yalıtımı desteklenmiyor",
       "automaticUnavailable": "Otomatik planlama kullanılamıyor",
       "start": "Planlamayı başlat"
+    },
+    "replay": {
+      "tab": "Tekrar oynatma",
+      "retentionGap": "Bazı olaylar saklama politikası nedeniyle kaldırıldı; tekrar oynatma eksik",
+      "removed": "Saklama politikası nedeniyle {{count}} olay kaldırıldı",
+      "progress": "{{loaded}} yüklendi · en son sıra {{latest}}",
+      "jumpToError": "İlk hataya git",
+      "loadMore": "Daha fazla yükle",
+      "empty": "Bu çalıştırmada oynatılacak olay yok",
+      "selectHint": "Ayrıntıları görmek için bir olay seçin"
     }
   },
   "toolSurface": {

@@ -1090,6 +1090,16 @@
       "unsupported": "Planungsisolation wird nicht unterstützt",
       "automaticUnavailable": "Automatische Planung nicht verfügbar",
       "start": "Planung starten"
+    },
+    "replay": {
+      "tab": "Wiedergabe",
+      "retentionGap": "Einige Ereignisse wurden durch die Aufbewahrungsrichtlinie entfernt; die Wiedergabe ist unvollständig",
+      "removed": "{{count}} Ereignisse durch Aufbewahrungsrichtlinie entfernt",
+      "progress": "{{loaded}} geladen · neueste Sequenz {{latest}}",
+      "jumpToError": "Zum ersten Fehler",
+      "loadMore": "Mehr laden",
+      "empty": "Keine Ereignisse für diese Ausführung",
+      "selectHint": "Ereignis auswählen, um Details zu sehen"
     }
   },
   "toolSurface": {

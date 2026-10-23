@@ -1493,7 +1493,24 @@
     "channelWecom": "企業微信",
     "channelSlack": "Slack",
     "channelDiscord": "Discord",
-    "channelCron": "定時任務"
+    "channelCron": "定時任務",
+    "costLedgerTitle": "費用帳本",
+    "costUnavailable": "不可用",
+    "costUnavailableHint": "提供方未回報費用，不以 0 計算",
+    "costPartial": "部分",
+    "costPartialHint": "部分回合未回報費用，金額僅含已回報部分",
+    "costTotal": "合計",
+    "unavailableTurns": "{{count}} 輪無用量資料",
+    "costRowTurns": "{{count}} 個回合",
+    "notTaskLinked": "未關聯任務",
+    "notLinked": "未關聯",
+    "costTruncated": "僅顯示前 50 項",
+    "groupBy": {
+      "task": "依任務",
+      "assistant": "依智慧體",
+      "day": "日報",
+      "week": "週報"
+    }
   },
   "mcpToolsLoaded_one": "偵測到{{count}}個 MCP",
   "mcpToolsLoaded_other": "偵測到{{count}}個 MCP",

@@ -1095,6 +1095,16 @@
       "unsupported": "Isolamento de planejamento não suportado",
       "automaticUnavailable": "Planejamento automático indisponível",
       "start": "Iniciar planejamento"
+    },
+    "replay": {
+      "tab": "Replay",
+      "retentionGap": "Alguns eventos foram removidos pela política de retenção; o replay está incompleto",
+      "removed": "{{count}} eventos removidos pela política de retenção",
+      "progress": "{{loaded}} carregados · sequência mais recente {{latest}}",
+      "jumpToError": "Ir para o primeiro erro",
+      "loadMore": "Carregar mais",
+      "empty": "Nenhum evento para reproduzir nesta execução",
+      "selectHint": "Selecione um evento para ver os detalhes"
     }
   },
   "toolSurface": {

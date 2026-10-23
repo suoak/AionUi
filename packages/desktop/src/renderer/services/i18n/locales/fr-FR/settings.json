@@ -1491,7 +1491,24 @@
     "channelWecom": "WeCom",
     "channelSlack": "Slack",
     "channelDiscord": "Discord",
-    "channelCron": "Tâches planifiées"
+    "channelCron": "Tâches planifiées",
+    "costLedgerTitle": "Registre des coûts",
+    "costUnavailable": "Indisponible",
+    "costUnavailableHint": "Le fournisseur n'a signalé aucun coût ; il n'est pas compté comme 0",
+    "costPartial": "Partiel",
+    "costPartialHint": "Certains tours n'ont pas signalé de coût ; le montant ne couvre que les tours signalés",
+    "costTotal": "Total",
+    "unavailableTurns": "{{count}} tours sans données d’utilisation",
+    "costRowTurns": "{{count}} tours",
+    "notTaskLinked": "Non lié à une tâche",
+    "notLinked": "Non lié",
+    "costTruncated": "Seules les 50 premières entrées sont affichées",
+    "groupBy": {
+      "task": "Par tâche",
+      "assistant": "Par assistant",
+      "day": "Quotidien",
+      "week": "Hebdomadaire"
+    }
   },
   "mcpToolsLoaded_one": "{{count}} outil chargé",
   "mcpToolsLoaded_other": "{{count}} outils chargés",

@@ -1502,7 +1502,24 @@
     "channelWecom": "WeCom",
     "channelSlack": "Slack",
     "channelDiscord": "Discord",
-    "channelCron": "Розклад"
+    "channelCron": "Розклад",
+    "costLedgerTitle": "Журнал витрат",
+    "costUnavailable": "Недоступно",
+    "costUnavailableHint": "Провайдер не повідомив вартість; вона не рахується як 0",
+    "costPartial": "Частково",
+    "costPartialHint": "Для частини ходів вартість не повідомлено; сума містить лише повідомлені",
+    "costTotal": "Разом",
+    "unavailableTurns": "Ходів без даних про використання: {{count}}",
+    "costRowTurns": "Ходів: {{count}}",
+    "notTaskLinked": "Не пов’язано із завданням",
+    "notLinked": "Не пов’язано",
+    "costTruncated": "Показано лише перші 50 записів",
+    "groupBy": {
+      "task": "За завданнями",
+      "assistant": "За асистентами",
+      "day": "Щодня",
+      "week": "Щотижня"
+    }
   },
   "mcpToolsLoaded_one": "Виявлено {{count}} MCP",
   "mcpToolsLoaded_other": "Виявлено {{count}} MCP",

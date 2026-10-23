@@ -1501,7 +1501,24 @@
     "channelWecom": "WeCom",
     "channelSlack": "Slack",
     "channelDiscord": "Discord",
-    "channelCron": "Расписание"
+    "channelCron": "Расписание",
+    "costLedgerTitle": "Журнал расходов",
+    "costUnavailable": "Недоступно",
+    "costUnavailableHint": "Провайдер не сообщил стоимость; она не считается равной 0",
+    "costPartial": "Частично",
+    "costPartialHint": "Для части ходов стоимость не сообщена; сумма включает только сообщённые",
+    "costTotal": "Итого",
+    "unavailableTurns": "Ходов без данных об использовании: {{count}}",
+    "costRowTurns": "Ходов: {{count}}",
+    "notTaskLinked": "Не связано с задачей",
+    "notLinked": "Не связано",
+    "costTruncated": "Показаны только первые 50 записей",
+    "groupBy": {
+      "task": "По задачам",
+      "assistant": "По ассистентам",
+      "day": "По дням",
+      "week": "По неделям"
+    }
   },
   "mcpToolsLoaded_one": "Обнаружено {{count}} MCP",
   "mcpToolsLoaded_other": "Обнаружено {{count}} MCP",

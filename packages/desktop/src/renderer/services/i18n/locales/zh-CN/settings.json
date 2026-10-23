@@ -1492,7 +1492,24 @@
     "channelWecom": "企业微信",
     "channelSlack": "Slack",
     "channelDiscord": "Discord",
-    "channelCron": "定时任务"
+    "channelCron": "定时任务",
+    "costLedgerTitle": "费用账本",
+    "costUnavailable": "不可用",
+    "costUnavailableHint": "提供方未报告费用，不按 0 计算",
+    "costPartial": "部分",
+    "costPartialHint": "部分回合未报告费用，金额仅含已报告部分",
+    "costTotal": "合计",
+    "unavailableTurns": "{{count}} 轮无用量数据",
+    "costRowTurns": "{{count}} 个回合",
+    "notTaskLinked": "未关联任务",
+    "notLinked": "未关联",
+    "costTruncated": "仅显示前 50 项",
+    "groupBy": {
+      "task": "按任务",
+      "assistant": "按智能体",
+      "day": "日报",
+      "week": "周报"
+    }
   },
   "mcpToolsLoaded_one": "检测到{{count}}个 MCP",
   "mcpToolsLoaded_other": "检测到{{count}}个 MCP",

@@ -1089,6 +1089,16 @@
       "unsupported": "不支持规划隔离",
       "automaticUnavailable": "自动规划不可用",
       "start": "开始规划"
+    },
+    "replay": {
+      "tab": "回放",
+      "retentionGap": "部分事件已按保留策略移除，回放不完整",
+      "removed": "此处 {{count}} 条已按保留策略移除",
+      "progress": "已加载 {{loaded}} 条 · 最新序号 {{latest}}",
+      "jumpToError": "跳到第一个错误",
+      "loadMore": "加载更多",
+      "empty": "此运行没有可回放的事件",
+      "selectHint": "选择左侧事件查看详情"
     }
   },
   "toolSurface": {

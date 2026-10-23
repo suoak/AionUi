@@ -1493,7 +1493,24 @@
     "channelWecom": "WeCom",
     "channelSlack": "Slack",
     "channelDiscord": "Discord",
-    "channelCron": "예약 작업"
+    "channelCron": "예약 작업",
+    "costLedgerTitle": "비용 원장",
+    "costUnavailable": "사용 불가",
+    "costUnavailableHint": "제공자가 비용을 보고하지 않았습니다(0으로 계산하지 않음)",
+    "costPartial": "일부",
+    "costPartialHint": "일부 턴은 비용이 보고되지 않아 보고된 금액만 포함합니다",
+    "costTotal": "합계",
+    "unavailableTurns": "사용량 데이터 없는 턴 {{count}}개",
+    "costRowTurns": "{{count}}턴",
+    "notTaskLinked": "작업에 연결되지 않음",
+    "notLinked": "연결되지 않음",
+    "costTruncated": "처음 50개 항목만 표시",
+    "groupBy": {
+      "task": "작업별",
+      "assistant": "어시스턴트별",
+      "day": "일별",
+      "week": "주별"
+    }
   },
   "mcpToolsLoaded_one": "{{count}}개의 MCP를 감지했습니다",
   "mcpToolsLoaded_other": "{{count}}개의 MCP를 감지했습니다",

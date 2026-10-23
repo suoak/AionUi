@@ -1491,7 +1491,24 @@
     "channelWecom": "WeCom",
     "channelSlack": "Slack",
     "channelDiscord": "Discord",
-    "channelCron": "Zamanlanmış görevler"
+    "channelCron": "Zamanlanmış görevler",
+    "costLedgerTitle": "Maliyet defteri",
+    "costUnavailable": "Kullanılamıyor",
+    "costUnavailableHint": "Sağlayıcı maliyet bildirmedi; 0 olarak sayılmaz",
+    "costPartial": "Kısmi",
+    "costPartialHint": "Bazı turlar maliyet bildirmedi; tutar yalnızca bildirilenleri kapsar",
+    "costTotal": "Toplam",
+    "unavailableTurns": "Kullanım verisi olmayan {{count}} tur",
+    "costRowTurns": "{{count}} tur",
+    "notTaskLinked": "Göreve bağlı değil",
+    "notLinked": "Bağlı değil",
+    "costTruncated": "Yalnızca ilk 50 kayıt gösteriliyor",
+    "groupBy": {
+      "task": "Göreve göre",
+      "assistant": "Asistana göre",
+      "day": "Günlük",
+      "week": "Haftalık"
+    }
   },
   "mcpToolsLoaded_one": "{{count}} MCP algılandı",
   "mcpToolsLoaded_other": "{{count}} MCP algılandı",

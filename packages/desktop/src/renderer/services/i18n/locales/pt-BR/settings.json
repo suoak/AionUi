@@ -1494,7 +1494,24 @@
     "channelWecom": "WeCom",
     "channelSlack": "Slack",
     "channelDiscord": "Discord",
-    "channelCron": "Tarefas agendadas"
+    "channelCron": "Tarefas agendadas",
+    "costLedgerTitle": "Registro de custos",
+    "costUnavailable": "Indisponível",
+    "costUnavailableHint": "O provedor não informou o custo; não é contado como 0",
+    "costPartial": "Parcial",
+    "costPartialHint": "Alguns turnos não informaram custo; o valor cobre apenas os informados",
+    "costTotal": "Total",
+    "unavailableTurns": "{{count}} turnos sem dados de uso",
+    "costRowTurns": "{{count}} turnos",
+    "notTaskLinked": "Sem tarefa vinculada",
+    "notLinked": "Sem vínculo",
+    "costTruncated": "Mostrando apenas as primeiras 50 entradas",
+    "groupBy": {
+      "task": "Por tarefa",
+      "assistant": "Por assistente",
+      "day": "Diário",
+      "week": "Semanal"
+    }
   },
   "mcpToolsLoaded_one": "Carregada {{count}} ferramenta",
   "mcpToolsLoaded_other": "Carregadas {{count}} ferramentas",

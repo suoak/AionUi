@@ -1089,6 +1089,16 @@
       "unsupported": "계획 격리를 지원하지 않음",
       "automaticUnavailable": "자동 계획을 사용할 수 없음",
       "start": "계획 시작"
+    },
+    "replay": {
+      "tab": "리플레이",
+      "retentionGap": "보존 정책에 따라 일부 이벤트가 삭제되어 리플레이가 불완전합니다",
+      "removed": "보존 정책에 따라 {{count}}개 삭제됨",
+      "progress": "{{loaded}}개 로드됨 · 최신 시퀀스 {{latest}}",
+      "jumpToError": "첫 오류로 이동",
+      "loadMore": "더 불러오기",
+      "empty": "이 실행에는 재생할 이벤트가 없습니다",
+      "selectHint": "왼쪽 이벤트를 선택하면 상세 정보가 표시됩니다"
     }
   },
   "toolSurface": {

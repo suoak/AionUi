@@ -73,6 +73,7 @@ import type {
   TaskRun,
   TaskSession,
   TaskReview,
+  TaskRunReplayPage,
   UpdateTaskSessionInput,
   CreateReviewThreadInput,
   ListReviewThreadsInput,
@@ -1246,6 +1247,16 @@ export const taskSession = {
     list: httpGet<TaskRun[], { id: string }>((params) => `/api/task-sessions/${encodeURIComponent(params.id)}/runs`),
     review: httpGet<TaskReview, { id: string; run_id: string }>(
       (params) => `/api/task-sessions/${encodeURIComponent(params.id)}/runs/${encodeURIComponent(params.run_id)}/review`
+    ),
+    /** Paged run replay (aioncore ≥ M7 E5-2); older cores answer 404. */
+    replay: httpGet<TaskRunReplayPage, { id: string; run_id: string; after_sequence?: number; limit?: number }>(
+      (params) => {
+        const query = new URLSearchParams();
+        if (params.after_sequence !== undefined) query.set('after_sequence', String(params.after_sequence));
+        if (params.limit !== undefined) query.set('limit', String(params.limit));
+        const qs = query.toString();
+        return `/api/task-sessions/${encodeURIComponent(params.id)}/runs/${encodeURIComponent(params.run_id)}/replay${qs ? `?${qs}` : ''}`;
+      }
     ),
   },
   acceptanceCriterion: {
@@ -3232,6 +3243,49 @@ export type UsageEventDto = {
   event_source: string;
 };
 
+export type UsageGroupBy = 'day' | 'week' | 'conversation' | 'assistant' | 'task' | 'run' | 'model';
+
+export type UsageSummaryQuery = {
+  group_by: UsageGroupBy;
+  since?: number;
+  until?: number;
+  tz_offset_minutes?: number;
+  task_session_id?: string;
+  limit?: number;
+};
+
+/** Provider-reported spend in one currency; never estimated. */
+export type UsageCostAmount = { currency: string; amount: number };
+
+export type UsageSummaryGroup = {
+  /** `YYYY-MM-DD` for day/week buckets, else the dimension id; `''` = not linked. */
+  key: string;
+  label?: string | null;
+  turns: number;
+  unavailable_turns: number;
+  total_tokens: number;
+  input_tokens: number;
+  output_tokens: number;
+  thought_tokens: number;
+  cached_read_tokens: number;
+  cached_write_tokens: number;
+  /** Per-currency totals; `null` when no turn in the group reported a cost. */
+  cost: UsageCostAmount[] | null;
+  cost_status: 'reported' | 'partial' | 'unavailable' | string;
+  first_recorded_at?: number | null;
+  last_recorded_at?: number | null;
+};
+
+export type UsageSummaryResponse = {
+  group_by: UsageGroupBy;
+  since?: number | null;
+  until?: number | null;
+  tz_offset_minutes: number;
+  totals: UsageSummaryGroup;
+  groups: UsageSummaryGroup[];
+  truncated: boolean;
+};
+
 export const usage = {
   list: httpGet<{ events: UsageEventDto[] }, { since?: number; limit?: number }>((p) => {
     const params = new URLSearchParams();
@@ -3241,6 +3295,17 @@ export const usage = {
     return `/api/usage${qs ? `?${qs}` : ''}`;
   }),
   clear: httpDelete<number>('/api/usage'),
+  /** Server-side ledger summary (aioncore ≥ M7 E5-1); older cores answer 404. */
+  summary: httpGet<UsageSummaryResponse, UsageSummaryQuery>((p) => {
+    const params = new URLSearchParams();
+    params.set('group_by', p.group_by);
+    if (p.since) params.set('since', String(p.since));
+    if (p.until) params.set('until', String(p.until));
+    if (p.tz_offset_minutes !== undefined) params.set('tz_offset_minutes', String(p.tz_offset_minutes));
+    if (p.task_session_id) params.set('task_session_id', p.task_session_id);
+    if (p.limit) params.set('limit', String(p.limit));
+    return `/api/usage/summary?${params.toString()}`;
+  }),
 };
 
 export const channel = {

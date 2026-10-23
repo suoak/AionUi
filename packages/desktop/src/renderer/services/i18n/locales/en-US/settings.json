@@ -1491,7 +1491,24 @@
     "channelWecom": "WeCom",
     "channelSlack": "Slack",
     "channelDiscord": "Discord",
-    "channelCron": "Scheduled tasks"
+    "channelCron": "Scheduled tasks",
+    "costLedgerTitle": "Cost ledger",
+    "costUnavailable": "Unavailable",
+    "costUnavailableHint": "The provider reported no cost; it is not counted as 0",
+    "costPartial": "Partial",
+    "costPartialHint": "Some turns reported no cost; the amount covers reported turns only",
+    "costTotal": "Total",
+    "unavailableTurns": "Turns without usage data: {{count}}",
+    "costRowTurns": "Turns: {{count}}",
+    "notTaskLinked": "Not linked to a task",
+    "notLinked": "Not linked",
+    "costTruncated": "Showing the first 50 entries",
+    "groupBy": {
+      "task": "By task",
+      "assistant": "By assistant",
+      "day": "Daily",
+      "week": "Weekly"
+    }
   },
   "mcpToolsLoaded_one": "Detected {{count}} MCP server",
   "mcpToolsLoaded_other": "Detected {{count}} MCP servers",
