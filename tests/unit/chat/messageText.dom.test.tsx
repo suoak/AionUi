@@ -151,6 +151,14 @@ vi.mock('@icon-park/react', () => ({
   Copy: () => <span data-testid='copy-icon' />,
 }));
 
+vi.mock('@/renderer/pages/conversation/Messages/components/ReviewBatchCard', () => ({
+  default: ({ block }: { block: { batchId: string; notes: { note: string }[] } }) => (
+    <div data-testid='review-batch-card' data-review-batch={block.batchId}>
+      {block.notes.map((note) => note.note).join('\n')}
+    </div>
+  ),
+}));
+
 vi.mock('react-i18next', () => ({
   useTranslation: () => ({
     t: (key: string, options?: { defaultValue?: string }) => options?.defaultValue ?? key,
@@ -285,6 +293,31 @@ describe('MessageText attachment paths', () => {
     expect(content.className).toContain('[overflow-wrap:anywhere]');
     expect(content.className).not.toContain('break-words');
     expect(content).toHaveTextContent(longPath);
+  });
+
+  it('shows a sent review batch as a card instead of the raw block', () => {
+    const block = [
+      '[[AION_REVIEW batch=b-1 count=1]]',
+      'preface',
+      '',
+      '#1 src/a.ts  L2（新版本）',
+      '批注：rename x',
+      '[[/AION_REVIEW]]',
+    ].join('\n');
+
+    renderMessageText(block, { position: 'right' });
+
+    expect(screen.getByTestId('review-batch-card')).toHaveAttribute('data-review-batch', 'b-1');
+    expect(screen.queryByTestId('message-text-content')).toBeNull();
+    expect(screen.getByText('rename x')).toBeInTheDocument();
+  });
+
+  it('keeps a review block from the agent side as plain text', () => {
+    const block = ['[[AION_REVIEW batch=b-1 count=1]]', 'preface', '[[/AION_REVIEW]]'].join('\n');
+
+    renderMessageText(block, { position: 'left' });
+
+    expect(screen.queryByTestId('review-batch-card')).toBeNull();
   });
 
   it('keeps absolute attachment paths unchanged before previewing', () => {

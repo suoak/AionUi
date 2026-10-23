@@ -1026,5 +1026,10 @@
       "strict": "Solo MCP gestionados",
       "ambient": "Puede cargar MCP locales"
     }
+  },
+  "reviewBatch": {
+    "title": "{{count}} anotaciones enviadas",
+    "showSent": "Ver texto enviado",
+    "hideSent": "Ocultar texto enviado"
   }
 }

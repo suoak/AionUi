@@ -206,6 +206,23 @@
       "sent": "送信済み",
       "resolved": "解決済み",
       "outdated": "古い"
+    },
+    "send": {
+      "open": "エージェントに送信",
+      "title": "注釈をエージェントに送信",
+      "target": "送信先",
+      "targetPlaceholder": "会話を選択",
+      "mode": "送信方法",
+      "followup": "次のメッセージとして",
+      "steer": "現在のターンに挿入",
+      "steerUnavailable": "会話の実行中かつエージェントが対応している場合のみ利用できます",
+      "preface": "冒頭の説明",
+      "prefacePlaceholder": "空欄の場合は既定の説明を使用します",
+      "preview": "{{count}} 件の注釈を送信します",
+      "empty": "未解決の注釈はありません",
+      "confirm": "{{count}} 件を送信",
+      "sent": "{{count}} 件の注釈を送信しました",
+      "failed": "送信に失敗しました: {{message}}"
     }
   }
 }

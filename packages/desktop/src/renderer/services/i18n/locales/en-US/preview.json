@@ -206,6 +206,23 @@
       "sent": "Sent",
       "resolved": "Resolved",
       "outdated": "Outdated"
+    },
+    "send": {
+      "open": "Send to agent",
+      "title": "Send annotations to agent",
+      "target": "Send to",
+      "targetPlaceholder": "Choose a conversation",
+      "mode": "Delivery",
+      "followup": "As the next message",
+      "steer": "Insert into the current turn",
+      "steerUnavailable": "Only available while the conversation is running and the agent supports it",
+      "preface": "Opening note",
+      "prefacePlaceholder": "Leave empty to use the default instructions",
+      "preview": "{{count}} annotations will be sent",
+      "empty": "No unresolved annotations",
+      "confirm": "Send {{count}}",
+      "sent": "Sent {{count}} annotations",
+      "failed": "Failed to send: {{message}}"
     }
   }
 }

@@ -1025,5 +1025,10 @@
       "strict": "관리되는 MCP만",
       "ambient": "로컬 MCP를 로드할 수 있음"
     }
+  },
+  "reviewBatch": {
+    "title": "주석 {{count}}개를 보냈습니다",
+    "showSent": "보낸 내용 보기",
+    "hideSent": "보낸 내용 숨기기"
   }
 }

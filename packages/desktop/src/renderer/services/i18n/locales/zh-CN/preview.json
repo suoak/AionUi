@@ -206,6 +206,23 @@
       "sent": "已发送",
       "resolved": "已解决",
       "outdated": "已过期"
+    },
+    "send": {
+      "open": "发送给 Agent",
+      "title": "把批注发送给 Agent",
+      "target": "发送到",
+      "targetPlaceholder": "选择会话",
+      "mode": "发送方式",
+      "followup": "作为下一条消息",
+      "steer": "立即插入当前轮",
+      "steerUnavailable": "仅在会话运行中且 Agent 支持时可用",
+      "preface": "开头说明",
+      "prefacePlaceholder": "留空使用默认说明",
+      "preview": "将发送 {{count}} 条批注",
+      "empty": "没有未解决的批注",
+      "confirm": "发送 {{count}} 条",
+      "sent": "已发送 {{count}} 条批注",
+      "failed": "发送失败：{{message}}"
     }
   }
 }

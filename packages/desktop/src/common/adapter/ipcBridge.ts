@@ -76,7 +76,10 @@ import type {
   UpdateTaskSessionInput,
   CreateReviewThreadInput,
   ListReviewThreadsInput,
+  ReviewBatch,
   ReviewThread,
+  SendReviewBatchInput,
+  SendReviewBatchResult,
   UpdateReviewThreadInput,
 } from '../types/agent/taskSession';
 import {
@@ -1019,6 +1022,11 @@ export const review = {
     (p) => ({ body: p.body })
   ),
   remove: httpDelete<null, { id: string }>((p) => `/api/review-threads/${encodeURIComponent(p.id)}`),
+  /** Send unresolved threads to a conversation as one `[[AION_REVIEW]]` input. */
+  sendBatch: httpPost<SendReviewBatchResult, SendReviewBatchInput>('/api/review-batches'),
+  listBatches: httpGet<ReviewBatch[], { target_conversation_id: string }>(
+    (p) => `/api/review-batches?target_conversation_id=${encodeURIComponent(p.target_conversation_id)}`
+  ),
 };
 
 export const taskSession = {

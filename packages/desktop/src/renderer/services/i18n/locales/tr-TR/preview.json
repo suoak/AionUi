@@ -206,6 +206,23 @@
       "sent": "Gönderildi",
       "resolved": "Çözüldü",
       "outdated": "Güncel değil"
+    },
+    "send": {
+      "open": "Ajana gönder",
+      "title": "Notları ajana gönder",
+      "target": "Gönderilecek yer",
+      "targetPlaceholder": "Bir konuşma seçin",
+      "mode": "Gönderim",
+      "followup": "Sonraki mesaj olarak",
+      "steer": "Mevcut tura ekle",
+      "steerUnavailable": "Yalnızca konuşma çalışırken ve ajan destekliyorsa kullanılabilir",
+      "preface": "Giriş notu",
+      "prefacePlaceholder": "Varsayılan talimatlar için boş bırakın",
+      "preview": "{{count}} not gönderilecek",
+      "empty": "Çözülmemiş not yok",
+      "confirm": "{{count}} gönder",
+      "sent": "{{count}} not gönderildi",
+      "failed": "Gönderilemedi: {{message}}"
     }
   }
 }
