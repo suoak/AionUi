@@ -182,6 +182,7 @@ bun run test:e2e
 - `session/new` → 返回 sessionId
 - `session/prompt` → 返回流式 text chunks + end_turn
 - `session/cancel` → 取消当前 prompt
+- 脚本写入模式（M7 E3-6 fan-out E2E）：`--script <file.json>` 或 `FAKE_ACP_SCRIPT=<file.json>`，每次 prompt 先把 `{"writes": {"相对路径": "内容"}, "reply": "回复"}` 中的文件写进 `session/new` 的 `cwd`（即槽位 worktree），再回复。拒绝绝对路径和越出 `cwd` 的路径。不同槽位用不同脚本即可得到「2 个正确修复 + 1 个错误修复」。单测：`tests/unit/fixtures/fakeAcpCliScript.test.ts`
 
 用于 L1 和 L3（fake CLI 部分），避免依赖真实 Backend。
 
