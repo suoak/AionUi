@@ -3116,6 +3116,11 @@ export const extensions = {
   getMcpServers: httpGet<Record<string, unknown>[], void>('/api/extensions/mcp-servers'),
   getSkills: httpGet<Array<{ name: string; description: string; location: string }>, void>('/api/extensions/skills'),
   getSettingsTabs: httpGet<IExtensionSettingsTab[], void>('/api/extensions/settings-tabs'),
+  /** Short-lived, extension-scoped token for settings-tab iframe assets (aioncore ≥ E1 tail ④). */
+  issueAssetToken: httpPost<{ token: string; expires_at: number; base_path: string }, { name: string }>(
+    ({ name }) => `/api/extensions/${encodeURIComponent(name)}/asset-token`,
+    () => ({})
+  ),
   getWebuiContributions: httpGet<IExtensionWebuiContribution[], void>('/api/extensions/webui'),
   getAgentActivitySnapshot: httpGet<IExtensionAgentActivitySnapshot, void>('/api/extensions/agent-activity'),
   getExtI18nForLocale: httpPost<Record<string, unknown>, { locale: string }>('/api/extensions/i18n'),
