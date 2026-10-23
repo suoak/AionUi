@@ -109,3 +109,8 @@ export const groupRepositories = (repositories: ScmRepository[]): ScmRepoGroup[]
  *  rows the view can expand/collapse. Order follows the grouped outer order. */
 export const expandableRepoIds = (groups: ScmRepoGroup[]): string[] =>
   groups.filter((g) => g.kind === 'primary' && g.worktrees.length > 0).map((g) => g.repo.repo_id);
+
+/** Whether a repository row is a WorkMate-managed worktree (M7 E3) — gets a tag in
+ *  the list. Display-only: grouping above never looks at it. */
+export const isManagedWorktree = (repo: Pick<ScmRepository, 'managed_worktree_id'>): boolean =>
+  typeof repo.managed_worktree_id === 'string' && repo.managed_worktree_id.length > 0;

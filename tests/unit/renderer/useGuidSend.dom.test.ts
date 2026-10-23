@@ -7,7 +7,12 @@
 import { act, renderHook } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type { IMcpServer } from '@/common/config/storage';
-import { useGuidSend, type GuidSendDeps } from '@/renderer/pages/guid/hooks/useGuidSend';
+import {
+  GuidFanoutUnavailableError,
+  resolveGuidSendBranch,
+  useGuidSend,
+  type GuidSendDeps,
+} from '@/renderer/pages/guid/hooks/useGuidSend';
 
 const createConversationInvokeMock = vi.fn();
 const startWorkflowRunInvokeMock = vi.fn();
@@ -15,6 +20,7 @@ const retryWorkflowRunInvokeMock = vi.fn();
 const advanceWorkflowRunInvokeMock = vi.fn();
 const cancelWorkflowRunInvokeMock = vi.fn();
 const swrMutateMock = vi.fn();
+const removeWorktreeInvokeMock = vi.fn();
 
 vi.mock('@/common', () => ({
   ipcBridge: {
@@ -35,6 +41,11 @@ vi.mock('@/common', () => ({
     conversation: {
       create: {
         invoke: (...args: unknown[]) => createConversationInvokeMock(...args),
+      },
+    },
+    worktree: {
+      remove: {
+        invoke: (...args: unknown[]) => removeWorktreeInvokeMock(...args),
       },
     },
   },
@@ -148,6 +159,8 @@ describe('useGuidSend', () => {
     advanceWorkflowRunInvokeMock.mockResolvedValue(undefined);
     swrMutateMock.mockReset();
     swrMutateMock.mockResolvedValue(undefined);
+    removeWorktreeInvokeMock.mockReset();
+    removeWorktreeInvokeMock.mockResolvedValue(undefined);
   });
 
   it('passes selected mode into assistant conversation overrides when creating a preset ACP conversation', async () => {
@@ -568,5 +581,115 @@ describe('useGuidSend', () => {
     expect(deps.navigate).toHaveBeenCalledWith('/conversation/conv-1');
     expect(setItemSpy).not.toHaveBeenCalledWith('aionrs_initial_message_conv-1', expect.anything());
     setItemSpy.mockRestore();
+  });
+
+  describe('workspace mode (M7 E3-3)', () => {
+    const worktree = { id: 'wt-1', path: '/home/u/.workmate/worktrees/wt-1', branch: 'wm/wt-1', status: 'ready' };
+
+    it('picks the send branch from dir, mode and worktree support', () => {
+      expect(resolveGuidSendBranch({ dir: '', workspaceMode: 'worktree', canPrepareWorktree: true })).toBe('local');
+      expect(resolveGuidSendBranch({ dir: '/repo', workspaceMode: undefined, canPrepareWorktree: true })).toBe('local');
+      expect(resolveGuidSendBranch({ dir: '/repo', workspaceMode: 'local', canPrepareWorktree: true })).toBe('local');
+      expect(resolveGuidSendBranch({ dir: '/repo', workspaceMode: 'worktree', canPrepareWorktree: true })).toBe(
+        'worktree'
+      );
+      expect(resolveGuidSendBranch({ dir: '/repo', workspaceMode: 'worktree', canPrepareWorktree: false })).toBe(
+        'local'
+      );
+      expect(resolveGuidSendBranch({ dir: '/repo', workspaceMode: 'fanout', canPrepareWorktree: true })).toBe('fanout');
+    });
+
+    it('local mode creates the conversation in the chosen folder without a worktree', async () => {
+      const deps = createDeps();
+      deps.dir = '/repo';
+      deps.workspaceMode = 'local';
+      deps.prepareWorktree = vi.fn();
+
+      const { result } = renderHook(() => useGuidSend(deps));
+      await act(async () => {
+        await result.current.handleSend();
+      });
+
+      expect(deps.prepareWorktree).not.toHaveBeenCalled();
+      const payload = createConversationInvokeMock.mock.calls[0][0];
+      expect(payload.worktree_id).toBeUndefined();
+      expect(payload.extra.workspace).toBe('/repo');
+    });
+
+    it('worktree mode prepares a worktree first and binds the conversation to it', async () => {
+      const deps = createDeps();
+      deps.dir = '/repo';
+      deps.workspaceMode = 'worktree';
+      deps.worktreeBaseRef = ' origin/dev ';
+      deps.worktreeBranch = '';
+      deps.prepareWorktree = vi.fn().mockResolvedValue(worktree);
+
+      const { result } = renderHook(() => useGuidSend(deps));
+      await act(async () => {
+        await result.current.handleSend();
+      });
+
+      expect(deps.prepareWorktree).toHaveBeenCalledWith({
+        repo_path: '/repo',
+        base_ref: 'origin/dev',
+        branch: undefined,
+        title: 'hello',
+      });
+      const payload = createConversationInvokeMock.mock.calls[0][0];
+      expect(payload.worktree_id).toBe('wt-1');
+      expect(payload.extra.workspace).toBe(worktree.path);
+      expect(removeWorktreeInvokeMock).not.toHaveBeenCalled();
+    });
+
+    it('drops the prepared worktree when the conversation cannot be created', async () => {
+      const deps = createDeps();
+      deps.dir = '/repo';
+      deps.workspaceMode = 'worktree';
+      deps.prepareWorktree = vi.fn().mockResolvedValue(worktree);
+      createConversationInvokeMock.mockRejectedValueOnce(new Error('create failed'));
+
+      const { result } = renderHook(() => useGuidSend(deps));
+      await expect(
+        act(async () => {
+          await result.current.handleSend();
+        })
+      ).rejects.toThrow('create failed');
+
+      expect(removeWorktreeInvokeMock).toHaveBeenCalledWith({ id: 'wt-1', branch: 'auto' });
+    });
+
+    it('does not create a conversation when worktree preparation fails', async () => {
+      const deps = createDeps();
+      deps.dir = '/repo';
+      deps.workspaceMode = 'worktree';
+      deps.prepareWorktree = vi.fn().mockRejectedValue(new Error('prepare failed'));
+
+      const { result } = renderHook(() => useGuidSend(deps));
+      await expect(
+        act(async () => {
+          await result.current.handleSend();
+        })
+      ).rejects.toThrow('prepare failed');
+
+      expect(createConversationInvokeMock).not.toHaveBeenCalled();
+      expect(removeWorktreeInvokeMock).not.toHaveBeenCalled();
+    });
+
+    it('fanout mode is a placeholder until E3-5 and creates nothing', async () => {
+      const deps = createDeps();
+      deps.dir = '/repo';
+      deps.workspaceMode = 'fanout';
+      deps.prepareWorktree = vi.fn();
+
+      const { result } = renderHook(() => useGuidSend(deps));
+      await expect(
+        act(async () => {
+          await result.current.handleSend();
+        })
+      ).rejects.toBeInstanceOf(GuidFanoutUnavailableError);
+
+      expect(deps.prepareWorktree).not.toHaveBeenCalled();
+      expect(createConversationInvokeMock).not.toHaveBeenCalled();
+    });
   });
 });

@@ -82,6 +82,17 @@ import type {
   SendReviewBatchResult,
   UpdateReviewThreadInput,
 } from '../types/agent/taskSession';
+import type {
+  CreateWorktreeInput,
+  ListWorktreesInput,
+  RemoveWorktreeInput,
+  WorktreeCapabilities,
+  WorktreeChangedEvent,
+  WorktreeDiffStat,
+  WorktreeFileDiff,
+  WorktreeInfo,
+  WorktreeProgressEvent,
+} from '../types/worktree';
 import {
   normalizeAgentCenterDetail,
   normalizeAgentCenterListItem,
@@ -1027,6 +1038,70 @@ export const review = {
   listBatches: httpGet<ReviewBatch[], { target_conversation_id: string }>(
     (p) => `/api/review-batches?target_conversation_id=${encodeURIComponent(p.target_conversation_id)}`
   ),
+};
+
+/**
+ * M7 E3 managed git worktrees (Core `/api/worktrees*`, user identity only).
+ * A Core without the API answers 404; callers treat that as "unavailable".
+ */
+export const worktree = {
+  capabilities: httpGet<WorktreeCapabilities>('/api/worktrees/capabilities', { silentStatuses: [404] }),
+  create: httpPost<WorktreeInfo, CreateWorktreeInput>('/api/worktrees'),
+  list: httpGet<WorktreeInfo[], ListWorktreesInput>((p) => {
+    const params = new URLSearchParams();
+    if (p.repo_path) params.set('repo_path', p.repo_path);
+    if (p.status) params.set('status', p.status);
+    if (p.include_removed) params.set('include_removed', 'true');
+    const query = params.toString();
+    return query ? `/api/worktrees?${query}` : '/api/worktrees';
+  }),
+  get: httpGet<WorktreeInfo, { id: string }>((p) => `/api/worktrees/${encodeURIComponent(p.id)}`, {
+    silentStatuses: [404],
+  }),
+  cancel: httpPost<WorktreeInfo, { id: string }>(
+    (p) => `/api/worktrees/${encodeURIComponent(p.id)}/cancel`,
+    () => ({})
+  ),
+  retry: httpPost<WorktreeInfo, { id: string }>(
+    (p) => `/api/worktrees/${encodeURIComponent(p.id)}/retry`,
+    () => ({})
+  ),
+  remove: httpDelete<WorktreeInfo, RemoveWorktreeInput>((p) => {
+    const params = new URLSearchParams({ branch: p.branch ?? 'auto' });
+    if (p.force_dir) params.set('force_dir', 'true');
+    return `/api/worktrees/${encodeURIComponent(p.id)}?${params.toString()}`;
+  }),
+  prune: httpPost<{ pruned: string[] }>('/api/worktrees/prune', () => ({})),
+  diffStat: httpGet<WorktreeDiffStat, { id: string }>((p) => `/api/worktrees/${encodeURIComponent(p.id)}/diff-stat`),
+  diff: httpGet<WorktreeFileDiff, { id: string; path: string }>(
+    (p) => `/api/worktrees/${encodeURIComponent(p.id)}/diff?path=${encodeURIComponent(p.path)}`
+  ),
+  /**
+   * Whether `dir` is the root of a git checkout (`.git` directory, or the
+   * `.git` file of a linked worktree). Soft-fails to `false`.
+   */
+  isGitWorkspace: {
+    provider: () => {},
+    invoke: (async (p: { dir: string }) => {
+      const dir = p.dir.replace(/[\\/]+$/, '');
+      const sep = dir.includes('\\') && !dir.includes('/') ? '\\' : '/';
+      try {
+        await httpRequest(
+          'POST',
+          '/api/fs/metadata',
+          { path: `${dir}${sep}.git`, workspace: dir },
+          {
+            silentStatuses: [400, 403, 404, 500],
+          }
+        );
+        return true;
+      } catch {
+        return false;
+      }
+    }) as (p: { dir: string }) => Promise<boolean>,
+  },
+  progress: wsEmitter<WorktreeProgressEvent>('worktree.progress'),
+  changed: wsEmitter<WorktreeChangedEvent>('worktree.changed'),
 };
 
 export const taskSession = {
@@ -2690,6 +2765,8 @@ export interface IConfirmMessageParams {
 export interface ICreateConversationParams {
   type?: 'acp' | 'aionrs';
   id?: string;
+  /** M7 E3: bind a managed worktree (status ready/unbound); Core then owns `extra.workspace`. */
+  worktree_id?: string;
   name?: string;
   model?: TProviderWithModel;
   assistant?: {

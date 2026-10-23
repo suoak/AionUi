@@ -60,6 +60,7 @@ import LegacyReadOnlyConversation from '../platforms/legacy/LegacyReadOnlyConver
 import SingleChatEmptyState from './SingleChatEmptyState';
 import TaskReviewPanel from './TaskReviewPanel';
 import { useActiveLease } from '../hooks/useActiveLease';
+import WorktreeStatusBadge from '../fanout/WorktreeStatusBadge';
 // import SkillRuleGenerator from './components/SkillRuleGenerator'; // Temporarily hidden
 
 const configErrorMessageKey = (error: unknown) => {
@@ -548,6 +549,7 @@ const AionrsConversationPanel: React.FC<{ conversation: AionrsConversation; slid
     sider: <ChatSlider conversation={conversation} />,
     headerExtra: (
       <div className='flex items-center gap-8px'>
+        <WorktreeStatusBadge conversationId={conversation.id} extra={conversation.extra} />
         <TaskSessionControl conversation={conversation} agentType='aionrs' />
         <ConversationTrajectoryButton conversationId={conversation.id} />
         <ConversationToolsButton conversationId={conversation.id} />
@@ -752,6 +754,7 @@ const ChatConversation: React.FC<{
     <div className='flex items-center gap-8px'>
       {conversation && (
         <>
+          <WorktreeStatusBadge conversationId={conversation.id} extra={conversation.extra} />
           <TaskSessionControl
             conversation={conversation}
             agentType={resolvedConversationBackend || conversation.type}

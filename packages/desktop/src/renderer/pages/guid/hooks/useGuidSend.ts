@@ -17,6 +17,44 @@ import { type TFunction } from 'i18next';
 import type { NavigateFunction } from 'react-router-dom';
 import { mutate as swrMutate } from 'swr';
 import { getConversationCreateErrorMessage } from '@/renderer/pages/conversation/utils/conversationCreateError';
+import type { CreateWorktreeInput, WorktreeInfo } from '@/common/types/worktree';
+import { isBackendHttpError } from '@/common/adapter/httpBridge';
+import {
+  isKnownWorktreeErrorCode,
+  isWorktreePrepareCancelled,
+  isWorktreePrepareFailed,
+  worktreeErrorKey,
+} from '@/renderer/pages/conversation/fanout/worktreeModel';
+
+/**
+ * Where a new conversation runs (design E3 §4.2):
+ *  - `local`: in the selected folder itself (or a temp workspace);
+ *  - `worktree`: in a fresh managed git worktree of the selected repository;
+ *  - `fanout`: several worktrees at once (E3-5; not offered yet).
+ */
+export type GuidWorkspaceMode = 'local' | 'worktree' | 'fanout';
+
+/** Thrown for the fan-out branch until E3-5 ships it; never a silent fallback. */
+export class GuidFanoutUnavailableError extends Error {
+  constructor() {
+    super('fan-out is not available yet');
+    this.name = 'GuidFanoutUnavailableError';
+  }
+}
+
+/**
+ * Pick the send branch. Worktree / fan-out need a selected repository folder;
+ * without one (or without a preparer) the send stays local.
+ */
+export const resolveGuidSendBranch = (input: {
+  dir: string;
+  workspaceMode?: GuidWorkspaceMode;
+  canPrepareWorktree: boolean;
+}): GuidWorkspaceMode => {
+  if (!input.dir || !input.workspaceMode || input.workspaceMode === 'local') return 'local';
+  if (input.workspaceMode === 'fanout') return 'fanout';
+  return input.canPrepareWorktree ? 'worktree' : 'local';
+};
 
 export type GuidSendDeps = {
   // Input state
@@ -62,6 +100,15 @@ export type GuidSendDeps = {
   agentWorkflowResumeRunId?: string;
   agentWorkflowResumeExecutionId?: string;
   agentWorkflowResumeMessage?: string;
+
+  // Worktree mode (M7 E3-3)
+  workspaceMode?: GuidWorkspaceMode;
+  /** Start-from ref; empty ⇒ Core default (`origin/HEAD`, then current branch). */
+  worktreeBaseRef?: string;
+  /** Branch to create; empty ⇒ Core generates one. */
+  worktreeBranch?: string;
+  /** Creates the worktree and resolves once it is `ready` (see `useWorktreePreparation`). */
+  prepareWorktree?: (input: CreateWorktreeInput) => Promise<WorktreeInfo>;
 };
 
 export type GuidSendResult = {
@@ -109,6 +156,10 @@ export const useGuidSend = (deps: GuidSendDeps): GuidSendResult => {
     agentWorkflowResumeRunId,
     agentWorkflowResumeExecutionId,
     agentWorkflowResumeMessage,
+    workspaceMode,
+    worktreeBaseRef,
+    worktreeBranch,
+    prepareWorktree,
   } = deps;
   const sendingRef = useRef(false);
 
@@ -124,8 +175,13 @@ export const useGuidSend = (deps: GuidSendDeps): GuidSendResult => {
       return;
     }
 
+    const sendBranch = resolveGuidSendBranch({ dir, workspaceMode, canPrepareWorktree: Boolean(prepareWorktree) });
+    if (sendBranch === 'fanout') {
+      throw new GuidFanoutUnavailableError();
+    }
     const isCustomWorkspace = !!dir;
-    const finalWorkspace = dir || '';
+    let finalWorkspace = dir || '';
+    let boundWorktree: WorktreeInfo | undefined;
 
     let workflowRunId = agentWorkflowResumeRunId;
     let workflowExecutionId = agentWorkflowResumeExecutionId;
@@ -219,6 +275,17 @@ export const useGuidSend = (deps: GuidSendDeps): GuidSendResult => {
     };
     let conversationCreated = false;
     const cancelUnstartedWorkflow = async () => {
+      if (boundWorktree && !conversationCreated) {
+        // The worktree is ready but nothing holds it: drop it (Core keeps the
+        // branch if it somehow gained commits).
+        const orphan = boundWorktree;
+        boundWorktree = undefined;
+        try {
+          await ipcBridge.worktree.remove.invoke({ id: orphan.id, branch: 'auto' });
+        } catch (error) {
+          console.error('Failed to remove unused worktree after conversation creation failed:', error);
+        }
+      }
       if (!workflowRunId || conversationCreated) return;
       try {
         if (agentWorkflowRetryRunId || agentWorkflowResumeRunId) {
@@ -236,11 +303,28 @@ export const useGuidSend = (deps: GuidSendDeps): GuidSendResult => {
       }
     };
 
+    if (sendBranch === 'worktree' && prepareWorktree) {
+      try {
+        boundWorktree = await prepareWorktree({
+          repo_path: dir,
+          base_ref: worktreeBaseRef?.trim() || undefined,
+          branch: worktreeBranch?.trim() || undefined,
+          title: (workflowConversationPlan?.name ?? input).slice(0, 80) || undefined,
+        });
+      } catch (error) {
+        await cancelUnstartedWorkflow();
+        throw error;
+      }
+      finalWorkspace = boundWorktree.path;
+    }
+    const worktreeId = boundWorktree?.id;
+
     if (assistantBackend === 'aionrs') {
       try {
         const conversation = await ipcBridge.conversation.create.invoke({
           name: workflowConversationPlan?.name ?? input,
           model: current_model,
+          worktree_id: worktreeId,
           assistant: {
             id: assistantConversationId,
             locale: workflowConversationPlan?.assistant?.locale ?? localeKey,
@@ -264,7 +348,7 @@ export const useGuidSend = (deps: GuidSendDeps): GuidSendResult => {
         conversationCreated = true;
 
         if (isCustomWorkspace) {
-          updateWorkspaceTime(finalWorkspace);
+          updateWorkspaceTime(dir);
         }
 
         if (assistantConversationId) {
@@ -299,6 +383,7 @@ export const useGuidSend = (deps: GuidSendDeps): GuidSendResult => {
     try {
       const conversation = await ipcBridge.conversation.create.invoke({
         name: workflowConversationPlan?.name ?? input,
+        worktree_id: worktreeId,
         assistant: {
           id: assistantConversationId,
           locale: workflowConversationPlan?.assistant?.locale ?? localeKey,
@@ -321,7 +406,7 @@ export const useGuidSend = (deps: GuidSendDeps): GuidSendResult => {
       conversationCreated = true;
 
       if (isCustomWorkspace) {
-        updateWorkspaceTime(finalWorkspace);
+        updateWorkspaceTime(dir);
       }
 
       if (assistantConversationId) {
@@ -376,6 +461,10 @@ export const useGuidSend = (deps: GuidSendDeps): GuidSendResult => {
     agentWorkflowResumeRunId,
     agentWorkflowResumeExecutionId,
     agentWorkflowResumeMessage,
+    workspaceMode,
+    worktreeBaseRef,
+    worktreeBranch,
+    prepareWorktree,
   ]);
 
   const sendMessageHandler = useCallback(() => {
@@ -393,6 +482,17 @@ export const useGuidSend = (deps: GuidSendDeps): GuidSendResult => {
         setDir('');
       })
       .catch((error) => {
+        // Worktree cancel / failure: the preparing card already shows it.
+        if (isWorktreePrepareCancelled(error) || isWorktreePrepareFailed(error)) return;
+        if (error instanceof GuidFanoutUnavailableError) {
+          Message.warning(t('conversation.worktree.fanoutUnavailable'));
+          return;
+        }
+        if (isBackendHttpError(error) && isKnownWorktreeErrorCode(error.code)) {
+          // Rejected synchronously by `POST /api/worktrees` (bad ref, branch exists, …).
+          Message.error(t(worktreeErrorKey(error.code)));
+          return;
+        }
         console.error('Failed to send message:', error);
         Message.error(getConversationCreateErrorMessage(error, t));
       })
