@@ -7,7 +7,7 @@
 import { isBackendHttpError } from '@/common/adapter/httpBridge';
 import type { ReviewThread } from '@/common/types/agent/taskSession';
 import { Button, Message, Tag, Tooltip } from '@arco-design/web-react';
-import { Plus } from '@icon-park/react';
+import { Plus, Send } from '@icon-park/react';
 import classNames from 'classnames';
 import 'diff2html/bundles/css/diff2html.min.css';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
@@ -24,6 +24,7 @@ import {
   type DiffSelection,
 } from './annotateModel';
 import CommentComposer from './CommentComposer';
+import SendReviewMenu from './SendReviewMenu';
 import ThreadBubble from './ThreadBubble';
 import { useReviewThreads, type ReviewScope } from './useReviewThreads';
 
@@ -86,6 +87,7 @@ const AnnotatableDiff: React.FC<Props> = ({ patch, scope, readOnly: readOnlyProp
 
   const [selection, setSelection] = useState<DiffSelection>();
   const [composing, setComposing] = useState(false);
+  const [sendOpen, setSendOpen] = useState(false);
   const [hovered, setHovered] = useState<number>();
   const dragAnchor = useRef<number | undefined>(undefined);
   const lastAnchor = useRef<number | undefined>(undefined);
@@ -215,7 +217,20 @@ const AnnotatableDiff: React.FC<Props> = ({ patch, scope, readOnly: readOnlyProp
             {t('preview.annotate.unresolved', { count: unresolved })}
           </Tag>
         ) : null}
+        {scope && !readOnly ? (
+          <Button
+            size='mini'
+            type='secondary'
+            icon={<Send size={12} />}
+            className='ml-auto shrink-0'
+            onClick={() => setSendOpen(true)}
+            data-review-send=''
+          >
+            {t('preview.annotate.send.open')}
+          </Button>
+        ) : null}
       </div>
+      {scope ? <SendReviewMenu visible={sendOpen} scope={scope} onClose={() => setSendOpen(false)} /> : null}
       {review.error ? <div className={styles.notice}>{t('preview.annotate.loadFailed')}</div> : null}
       {detached.length > 0 ? (
         <div className={styles.detached} data-review-detached=''>

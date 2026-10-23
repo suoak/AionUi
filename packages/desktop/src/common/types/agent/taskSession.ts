@@ -318,3 +318,37 @@ export type UpdateReviewThreadInput = {
   end_line?: number;
   diff_context?: ReviewDiffContext;
 };
+
+/** `auto` steers into a running turn, else followup (Core decides). */
+export type ReviewDelivery = 'auto' | 'steer' | 'followup';
+
+/** `POST /api/review-batches`. Empty `thread_ids` = every unresolved thread of the scope. */
+export type SendReviewBatchInput = {
+  target_conversation_id: string;
+  delivery?: ReviewDelivery;
+  thread_ids?: string[];
+  scope_kind?: ReviewScopeKind;
+  scope_id?: string;
+  /** Replaces the block's default instruction line. */
+  preface?: string;
+};
+
+export type ReviewBatch = {
+  id: string;
+  target_conversation_id: string;
+  /** The mode actually used (`steer` falls back to `followup` when idle). */
+  delivery: 'steer' | 'followup';
+  thread_ids: string[];
+  /** The frozen `[[AION_REVIEW]]` text that was sent. */
+  content: string;
+  input_id: string | null;
+  status: 'sending' | 'accepted' | 'failed';
+  error_message: string | null;
+  created_at: number;
+};
+
+export type SendReviewBatchResult = {
+  batch: ReviewBatch;
+  /** The conversation input receipt, passed through from Core. */
+  input_receipt: unknown;
+};

@@ -7,6 +7,8 @@
 import type { IMessageText } from '@/common/chat/chatLib';
 import { parseFileMarker, resolveMessageFilePath } from './fileMarker';
 import SessionMentionAction from './SessionMentionAction';
+import ReviewBatchCard from './ReviewBatchCard';
+import { parseReviewBlock } from './reviewMarker';
 import { parseSessionMessageBlock, parseSessionsBlock } from './sessionMarkers';
 import { useConversationContextSafe } from '@/renderer/hooks/context/ConversationContext';
 import { useLayoutContext } from '@/renderer/hooks/context/LayoutContext';
@@ -172,6 +174,12 @@ const MessageText: React.FC<{
         { memberName: contextResetNotice.member_name }
       )
     : visibleText;
+  // A review batch (M7 E4) is the user's own message carrying Core's
+  // `[[AION_REVIEW]]` block: show it as a card, not raw text.
+  const reviewBlock = useMemo(
+    () => (isUserMessage && !contextResetNotice ? parseReviewBlock(renderedText) : null),
+    [isUserMessage, contextResetNotice, renderedText]
+  );
   const { data, json } = useFormatContent(renderedText);
   const shouldRenderPlainText = isUserMessage || Boolean(contextResetNotice);
   const conversationContext = useConversationContextSafe();
@@ -334,7 +342,9 @@ const MessageText: React.FC<{
           }}
         >
           {/* JSON 内容使用折叠组件 Use CollapsibleContent for JSON content */}
-          {shouldRenderPlainText ? (
+          {reviewBlock ? (
+            <ReviewBatchCard block={reviewBlock} />
+          ) : shouldRenderPlainText ? (
             <div className='whitespace-pre-wrap [overflow-wrap:anywhere]' data-testid='message-text-content'>
               {renderedText}
             </div>

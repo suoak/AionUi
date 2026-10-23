@@ -43,3 +43,7 @@ export const useConversationHistoryContext = (): ConversationHistoryContextValue
 
   return context;
 };
+
+/** Same as {@link useConversationHistoryContext}, `null` outside the provider. */
+export const useConversationHistoryContextSafe = (): ConversationHistoryContextValue | null =>
+  useContext(ConversationHistoryContext);

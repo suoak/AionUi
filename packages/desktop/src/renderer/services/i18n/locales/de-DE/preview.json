@@ -206,6 +206,23 @@
       "sent": "Gesendet",
       "resolved": "Erledigt",
       "outdated": "Veraltet"
+    },
+    "send": {
+      "open": "An Agent senden",
+      "title": "Anmerkungen an den Agenten senden",
+      "target": "Senden an",
+      "targetPlaceholder": "Unterhaltung wählen",
+      "mode": "Zustellung",
+      "followup": "Als nächste Nachricht",
+      "steer": "In die laufende Runde einfügen",
+      "steerUnavailable": "Nur verfügbar, während die Unterhaltung läuft und der Agent es unterstützt",
+      "preface": "Einleitung",
+      "prefacePlaceholder": "Leer lassen für die Standardanweisungen",
+      "preview": "{{count}} Anmerkungen werden gesendet",
+      "empty": "Keine offenen Anmerkungen",
+      "confirm": "{{count}} senden",
+      "sent": "{{count}} Anmerkungen gesendet",
+      "failed": "Senden fehlgeschlagen: {{message}}"
     }
   }
 }

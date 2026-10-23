@@ -1025,5 +1025,10 @@
       "strict": "管理対象の MCP のみ",
       "ambient": "ローカルの MCP を読み込む可能性あり"
     }
+  },
+  "reviewBatch": {
+    "title": "{{count}} 件の注釈を送信しました",
+    "showSent": "送信内容を表示",
+    "hideSent": "送信内容を隠す"
   }
 }

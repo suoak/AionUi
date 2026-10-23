@@ -1027,5 +1027,10 @@
       "strict": "Yalnızca yönetilen MCP",
       "ambient": "Yerel MCP yükleyebilir"
     }
+  },
+  "reviewBatch": {
+    "title": "{{count}} not gönderildi",
+    "showSent": "Gönderilen metni göster",
+    "hideSent": "Gönderilen metni gizle"
   }
 }

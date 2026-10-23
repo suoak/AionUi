@@ -206,6 +206,23 @@
       "sent": "Enviado",
       "resolved": "Resolvido",
       "outdated": "Desatualizado"
+    },
+    "send": {
+      "open": "Enviar ao agente",
+      "title": "Enviar anotações ao agente",
+      "target": "Enviar para",
+      "targetPlaceholder": "Escolha uma conversa",
+      "mode": "Entrega",
+      "followup": "Como próxima mensagem",
+      "steer": "Inserir no turno atual",
+      "steerUnavailable": "Disponível apenas enquanto a conversa está em execução e o agente oferece suporte",
+      "preface": "Nota inicial",
+      "prefacePlaceholder": "Deixe vazio para usar as instruções padrão",
+      "preview": "{{count}} anotações serão enviadas",
+      "empty": "Nenhuma anotação pendente",
+      "confirm": "Enviar {{count}}",
+      "sent": "{{count}} anotações enviadas",
+      "failed": "Falha ao enviar: {{message}}"
     }
   }
 }

@@ -1025,5 +1025,10 @@
       "strict": "僅託管 MCP",
       "ambient": "可能載入本機 MCP"
     }
+  },
+  "reviewBatch": {
+    "title": "已傳送 {{count}} 則註解",
+    "showSent": "檢視傳送內容",
+    "hideSent": "收合傳送內容"
   }
 }

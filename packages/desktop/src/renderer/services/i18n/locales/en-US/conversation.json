@@ -1025,5 +1025,10 @@
       "strict": "Managed MCP only",
       "ambient": "May load local MCP"
     }
+  },
+  "reviewBatch": {
+    "title": "Sent {{count}} annotations",
+    "showSent": "Show sent text",
+    "hideSent": "Hide sent text"
   }
 }

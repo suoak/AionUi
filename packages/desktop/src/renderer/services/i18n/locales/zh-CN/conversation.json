@@ -1025,5 +1025,10 @@
       "strict": "仅托管 MCP",
       "ambient": "可能加载本机 MCP"
     }
+  },
+  "reviewBatch": {
+    "title": "已发送 {{count}} 条批注",
+    "showSent": "查看发送内容",
+    "hideSent": "收起发送内容"
   }
 }

@@ -1026,5 +1026,10 @@
       "strict": "Nur verwaltete MCP",
       "ambient": "Kann lokale MCP laden"
     }
+  },
+  "reviewBatch": {
+    "title": "{{count}} Anmerkungen gesendet",
+    "showSent": "Gesendeten Text anzeigen",
+    "hideSent": "Gesendeten Text ausblenden"
   }
 }

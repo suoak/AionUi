@@ -206,6 +206,23 @@
       "sent": "已傳送",
       "resolved": "已解決",
       "outdated": "已過期"
+    },
+    "send": {
+      "open": "傳送給 Agent",
+      "title": "把註解傳送給 Agent",
+      "target": "傳送到",
+      "targetPlaceholder": "選擇會話",
+      "mode": "傳送方式",
+      "followup": "作為下一則訊息",
+      "steer": "立即插入目前回合",
+      "steerUnavailable": "僅在會話執行中且 Agent 支援時可用",
+      "preface": "開頭說明",
+      "prefacePlaceholder": "留空使用預設說明",
+      "preview": "將傳送 {{count}} 則註解",
+      "empty": "沒有未解決的註解",
+      "confirm": "傳送 {{count}} 則",
+      "sent": "已傳送 {{count}} 則註解",
+      "failed": "傳送失敗：{{message}}"
     }
   }
 }
