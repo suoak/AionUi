@@ -205,6 +205,27 @@ vi.mock('@/renderer/pages/guid/components/GuidInputCard', () => ({
   },
 }));
 
+const fanoutTrialMock = vi.hoisted(() => ({
+  canUseWorktree: false,
+}));
+
+vi.mock('@/renderer/pages/conversation/fanout/useWorktreeCapability', () => ({
+  useWorktreeAvailability: () => ({
+    supported: fanoutTrialMock.canUseWorktree,
+    isGitRepo: fanoutTrialMock.canUseWorktree,
+    canUseWorktree: fanoutTrialMock.canUseWorktree,
+  }),
+}));
+
+vi.mock('@/renderer/pages/conversation/fanout/useFanoutSupported', () => ({
+  useFanoutSupported: (enabled: boolean) => enabled && fanoutTrialMock.canUseWorktree,
+}));
+
+// GuidInputCard is mocked, so read the worktree toggle off its accessory prop.
+const latestWorktreeToggleProps = () =>
+  (capturedGuidInputCardProps.at(-1)?.workspaceAccessory as React.ReactElement<Record<string, unknown>> | undefined)
+    ?.props;
+
 vi.mock('@/renderer/pages/guid/components/GuidModelSelector', () => ({
   default: () => <div data-testid='guid-model-selector' />,
 }));
@@ -304,6 +325,7 @@ describe('GuidPage', () => {
   beforeEach(() => {
     locationMock.state = null;
     locationMock.key = 'guid-location';
+    fanoutTrialMock.canUseWorktree = false;
     navigateMock.mockReset();
     swrMock.useSWRMock.mockReturnValue({ data: null });
     capturedGuidActionRowProps.length = 0;
@@ -385,6 +407,40 @@ describe('GuidPage', () => {
       placeholder: 'Describe the incident',
       focusRequestKey: 'guid-location',
     });
+  });
+
+  it('opens an Agent Center fan-out trial in Fan-out mode with the agent in slot 1', () => {
+    fanoutTrialMock.canUseWorktree = true;
+    locationMock.state = { selectedAssistantId: 'bare-aionrs', agentCenterFanoutTrial: true };
+
+    render(<GuidPage />);
+
+    const toggle = latestWorktreeToggleProps();
+    expect(toggle?.mode).toBe('fanout');
+    expect(toggle?.fanoutAssistantIds).toEqual(expect.arrayContaining(['bare-aionrs']));
+    expect((toggle?.fanoutAssistantIds as string[] | undefined)?.at(0)).toBe('bare-aionrs');
+  });
+
+  it('keeps a fan-out trial request until a git repo makes Fan-out available', () => {
+    locationMock.state = { selectedAssistantId: 'bare-aionrs', agentCenterFanoutTrial: true };
+    const { rerender } = render(<GuidPage />);
+    expect(latestWorktreeToggleProps()).toBeUndefined();
+
+    // The preselect cleanup has already replaced location.state.
+    locationMock.state = null;
+    fanoutTrialMock.canUseWorktree = true;
+    rerender(<GuidPage />);
+
+    expect(latestWorktreeToggleProps()?.mode).toBe('fanout');
+  });
+
+  it('stays in local mode for an ordinary preselect', () => {
+    fanoutTrialMock.canUseWorktree = true;
+    locationMock.state = { selectedAssistantId: 'bare-aionrs' };
+
+    render(<GuidPage />);
+
+    expect(latestWorktreeToggleProps()?.mode).toBe('local');
   });
 
   it('keeps replacing attachments supplied by an ordinary Guid prefill', () => {

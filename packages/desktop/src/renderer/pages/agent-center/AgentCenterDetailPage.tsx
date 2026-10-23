@@ -1,4 +1,4 @@
-import { Button, Collapse, Message, Modal, Tag, Typography } from '@arco-design/web-react';
+import { Button, Collapse, Message, Modal, Tag, Tooltip, Typography } from '@arco-design/web-react';
 import { ipcBridge } from '@/common';
 import type { AgentCenterDetail, AgentVisibility, AgentWorkflowRun } from '@/common/types/agent/agentCenterTypes';
 import {
@@ -149,6 +149,20 @@ const AgentCenterDetailPage: React.FC = () => {
         agentWorkflowStartAssistantId: id,
         agentWorkflowInputPlaceholder: detail?.meta.workflow.input.placeholder,
         agentCenterPreviewMode: detail?.meta.status === 'published' ? 'published' : 'draft',
+        focusPrefill: true,
+        agentCenterReturnTo: `/agent-center/${id}`,
+      },
+    });
+  };
+
+  // E3-5 beta: open Guid in Fan-out mode with this agent in slot 1, so the
+  // same prompt runs in parallel worktrees and the results can be compared.
+  const handleFanoutTrial = () => {
+    if (!id) return;
+    navigate('/guid', {
+      state: {
+        selectedAssistantId: id,
+        agentCenterFanoutTrial: true,
         focusPrefill: true,
         agentCenterReturnTo: `/agent-center/${id}`,
       },
@@ -365,6 +379,16 @@ const AgentCenterDetailPage: React.FC = () => {
               <Button type='primary' loading={busy} onClick={() => void handleTryRun()}>
                 试跑
               </Button>
+              {detail.meta.status === 'published' ? (
+                <Tooltip content='在多个并行 worktree 里用同一提示运行此智能体和其他助手，再对比、采纳结果。需要先在对话页选择一个 git 仓库。'>
+                  <Button loading={busy} onClick={handleFanoutTrial} data-testid='agent-center-fanout-trial'>
+                    扇出试跑
+                    <Tag size='small' color='orangered' className='ml-6px'>
+                      Beta
+                    </Tag>
+                  </Button>
+                </Tooltip>
+              ) : null}
               <Button loading={busy} onClick={handleEdit}>
                 编辑
               </Button>
