@@ -24,7 +24,9 @@ import { CreatePullRequestModal } from '../SourceControl/delivery/CreatePullRequ
 import { pullRequestEvidence } from '../SourceControl/delivery/prDeliveryModel';
 import { repoOption, useDeliverySupported } from '../SourceControl/delivery/useDeliverySupport';
 import { useScm } from '../SourceControl/scmStore';
+import TaskRetryPolicyControl from './TaskRetryPolicyControl';
 import TaskRunReplayTimeline, { useFirstReplayPage } from './TaskRunReplayTimeline';
+import { runAttemptLabel } from './taskRetryPolicyModel';
 
 type Props = { visible: boolean; taskId: string; conversationId: string; onCancel: () => void };
 
@@ -149,6 +151,22 @@ const TaskReviewPanel: React.FC<Props> = ({ visible, taskId, conversationId, onC
           },
           { label: t('common.model'), value: value(data.run.model) },
           { label: t('conversation.taskSession.review.isolation'), value: value(data.run.planning_isolation) },
+          ...(typeof data.run.attempt === 'number'
+            ? [
+                {
+                  label: t('conversation.taskSession.retry.attempt'),
+                  value: data.run.retry_of_run_id
+                    ? `#${data.run.attempt} · ${t('conversation.taskSession.retry.retryOf')} ${data.run.retry_of_run_id}`
+                    : `#${data.run.attempt}`,
+                },
+                {
+                  label: t('conversation.taskSession.retry.timeout'),
+                  value: data.run.timeout_ms
+                    ? `${Math.round(data.run.timeout_ms / 60_000)} min`
+                    : t('conversation.taskSession.retry.noTimeout'),
+                },
+              ]
+            : []),
           { label: t('conversation.taskSession.review.started'), value: formatTime(data.run.started_at) },
           { label: t('conversation.taskSession.review.finished'), value: formatTime(data.run.finished_at) },
           {
@@ -182,6 +200,7 @@ const TaskReviewPanel: React.FC<Props> = ({ visible, taskId, conversationId, onC
       className='w-920px'
     >
       <Space direction='vertical' className='w-full'>
+        <TaskRetryPolicyControl taskId={taskId} visible={visible} />
         {runs?.length ? (
           <Select
             value={runId}
@@ -193,7 +212,7 @@ const TaskReviewPanel: React.FC<Props> = ({ visible, taskId, conversationId, onC
               <Select.Option
                 key={run.id}
                 value={run.id}
-              >{`${run.run_kind} · ${run.status} · ${formatTime(run.started_at)}`}</Select.Option>
+              >{`${run.run_kind} · ${run.status} · ${formatTime(run.started_at)}${runAttemptLabel(run)}`}</Select.Option>
             ))}
           </Select>
         ) : null}

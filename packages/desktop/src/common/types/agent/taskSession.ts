@@ -65,7 +65,21 @@ export type TaskSession = {
   runtime_binding?: RuntimeBinding;
   created_at: number;
   updated_at: number;
+  /** Execution attempts per approval, 1 = no retry (aioncore ≥ M7 E5-5; absent on older cores). */
+  retry_max_attempts?: number;
+  /** Per-attempt execution timeout in ms (aioncore ≥ M7 E5-5). */
+  retry_timeout_ms?: number;
 };
+
+/** `PUT /api/task-sessions/{id}/retry-policy` body (aioncore ≥ M7 E5-5). */
+export type TaskRetryPolicyInput = {
+  max_attempts: number;
+  timeout_ms: number | null;
+};
+
+export const TASK_RETRY_MAX_ATTEMPTS = 3;
+export const TASK_RUN_TIMEOUT_MIN_MS = 1_000;
+export const TASK_RUN_TIMEOUT_MAX_MS = 86_400_000;
 
 export type CreateTaskSessionInput = Pick<TaskSession, 'title' | 'mode' | 'objective' | 'agent_type'> & {
   project_id?: string;
@@ -142,6 +156,11 @@ export type TaskRun = {
   planning_isolation?: PlanningIsolationLevel;
   result_summary?: string;
   usage?: Record<string, unknown>;
+  /** 1-based attempt in a retry chain (aioncore ≥ M7 E5-5). */
+  attempt?: number;
+  /** The failed run this run retries (aioncore ≥ M7 E5-5). */
+  retry_of_run_id?: string;
+  timeout_ms?: number;
 };
 
 export type TaskTraceEvent = {

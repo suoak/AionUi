@@ -1100,6 +1100,17 @@
       "loadMore": "Mehr laden",
       "empty": "Keine Ereignisse für diese Ausführung",
       "selectHint": "Ereignis auswählen, um Details zu sehen"
+    },
+    "retry": {
+      "enable": "Bei Fehler wiederholen",
+      "maxAttempts": "Max. Versuche",
+      "timeout": "Zeitlimit (Min.)",
+      "noTimeout": "Kein Zeitlimit",
+      "hint": "Wiederholungen gelten nur für fehlgeschlagene Ausführungen eines genehmigten Plans; abgebrochene Läufe werden nie wiederholt.",
+      "saved": "Wiederholungsrichtlinie gespeichert",
+      "saveFailed": "Wiederholungsrichtlinie konnte nicht gespeichert werden",
+      "attempt": "Versuch",
+      "retryOf": "Wiederholung von"
     }
   },
   "toolSurface": {

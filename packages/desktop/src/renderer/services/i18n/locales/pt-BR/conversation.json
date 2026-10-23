@@ -1105,6 +1105,17 @@
       "loadMore": "Carregar mais",
       "empty": "Nenhum evento para reproduzir nesta execução",
       "selectHint": "Selecione um evento para ver os detalhes"
+    },
+    "retry": {
+      "enable": "Tentar novamente em caso de falha",
+      "maxAttempts": "Máximo de tentativas",
+      "timeout": "Tempo limite (min)",
+      "noTimeout": "Sem tempo limite",
+      "hint": "Novas tentativas só se aplicam a execuções com falha de um plano aprovado; execuções canceladas nunca são repetidas.",
+      "saved": "Política de novas tentativas salva",
+      "saveFailed": "Falha ao salvar a política de novas tentativas",
+      "attempt": "Tentativa",
+      "retryOf": "nova tentativa de"
     }
   },
   "toolSurface": {
