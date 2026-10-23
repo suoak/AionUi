@@ -193,7 +193,12 @@ function shouldUsePackagedMode(): boolean {
   return !!process.env.CI;
 }
 
-async function launchApp(): Promise<ElectronApplication> {
+/**
+ * Launch an app instance. `envOverrides` is applied last, so a spec that needs
+ * its own Core environment (e.g. a fake CLI first on PATH, its own user data
+ * dir) can start a dedicated instance next to the shared one.
+ */
+export async function launchApp(envOverrides: Record<string, string> = {}): Promise<ElectronApplication> {
   const projectRoot = path.resolve(__dirname, '../..');
   const usePackaged = shouldUsePackagedMode();
   // Some test runners use Electron itself as their Node host. Never leak that
@@ -227,6 +232,7 @@ async function launchApp(): Promise<ElectronApplication> {
      * exercised in E2E: the tests would silently skip and look like passes.
      */
     CSBU_WORKMATE_CDP_PORT: process.env.CSBU_WORKMATE_CDP_PORT || '9230',
+    ...envOverrides,
   };
 
   if (usePackaged) {
