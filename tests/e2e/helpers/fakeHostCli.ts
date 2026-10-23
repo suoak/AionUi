@@ -6,7 +6,11 @@
 
 /**
  * A fake `gh` for delivery E2E (M7 E4-6). Core runs `gh` from the PATH it
- * inherits, so prepend `binDir` to PATH before the app (and its Core) start.
+ * inherits, and the app rebuilds PATH from the login shell at startup, so pass
+ * `binDir` as `CSBU_WORKMATE_E2E_PATH_PREPEND` (honoured only under
+ * `CSBU_WORKMATE_E2E_TEST=1`). Specs should assert the fake saw a call before
+ * driving anything, so a real `gh` is never reached.
+ * - `gh pr create` while signed out fails with gh's own "gh auth login" hint
  *
  * - `gh auth status --hostname <h>` exits 0, or 1 when `authenticated: false`
  * - `gh pr create ... --body-file -` reads the body from stdin and prints a PR URL
