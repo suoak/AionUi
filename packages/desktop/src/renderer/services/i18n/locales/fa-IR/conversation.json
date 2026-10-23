@@ -568,7 +568,22 @@
     "cachedRead": "خواندن حافظه پنهان",
     "tokensUsed": "{{tokens}} توکن استفاده شده",
     "viewStats": "مشاهده آمار مصرف",
-    "sessionSpend": "مصرف این گفتگو"
+    "sessionSpend": "مصرف این گفتگو",
+    "breakdownTitle": "ترکیب زمینه",
+    "estimated": "تخمینی",
+    "estimatedHint": "تخمین محلی",
+    "free": "آزاد",
+    "segments": {
+      "system_prompt": "پرامپت سیستم",
+      "system_tools": "ابزارهای سیستم",
+      "mcp_tools": "ابزارهای MCP",
+      "tools": "طرح‌واره ابزارها",
+      "skills": "مهارت‌ها",
+      "memory_files": "فایل‌های حافظه",
+      "custom_agents": "عامل‌های سفارشی",
+      "messages": "پیام‌ها",
+      "other": "سایر"
+    }
   },
   "noModelConfigured": "مدلی پیکربندی نشده است. لطفاً در تنظیمات پیکربندی کنید.",
   "runtimePreparing": {

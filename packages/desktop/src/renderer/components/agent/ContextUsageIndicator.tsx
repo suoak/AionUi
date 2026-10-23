@@ -5,7 +5,7 @@
  */
 
 import { Button, Popover } from '@arco-design/web-react';
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
@@ -13,6 +13,8 @@ import type { TokenUsageCost, TokenUsageData } from '@/common/config/storage';
 import { formatCurrency, formatNumber } from '@/renderer/services/i18n/format';
 import { conversationSpendTokens } from '@/renderer/utils/chat/tokenUsageAggregate';
 import { readUsageLedger } from '@/renderer/utils/chat/tokenUsageLedger';
+
+import { ContextBreakdownPanel, useContextBreakdown } from './ContextBreakdownPanel';
 
 interface ContextUsageIndicatorProps {
   tokenUsage: TokenUsageData | null;
@@ -39,6 +41,10 @@ const ContextUsageIndicator: React.FC<ContextUsageIndicatorProps> = ({
   const navigate = useNavigate();
 
   const hasWindow = context_limit > 0;
+  // The composition is fetched only while the popover is open; older Core
+  // builds without the route degrade to the plain used/size ring below.
+  const [popoverOpen, setPopoverOpen] = useState(false);
+  const breakdownState = useContextBreakdown(conversation_id, popoverOpen);
 
   const { percentage, displayTotal, displayLimit, isWarning, isDanger } = useMemo(() => {
     if (!tokenUsage) {
@@ -147,6 +153,7 @@ const ContextUsageIndicator: React.FC<ContextUsageIndicatorProps> = ({
       {breakdownParts.length > 0 && (
         <div className='text-12px text-t-secondary mt-4px'>{breakdownParts.join(' · ')}</div>
       )}
+      {breakdownState.kind === 'ready' && <ContextBreakdownPanel data={breakdownState.data} />}
       <Button
         type='text'
         size='mini'
@@ -184,7 +191,13 @@ const ContextUsageIndicator: React.FC<ContextUsageIndicatorProps> = ({
   );
 
   return (
-    <Popover content={popoverContent} position='top' trigger='hover' className='context-usage-popover'>
+    <Popover
+      content={popoverContent}
+      position='top'
+      trigger='hover'
+      className='context-usage-popover'
+      onVisibleChange={setPopoverOpen}
+    >
       <div
         className={`context-usage-indicator cursor-pointer flex items-center justify-center ${className}`}
         style={{ width: 32, height: 32 }}

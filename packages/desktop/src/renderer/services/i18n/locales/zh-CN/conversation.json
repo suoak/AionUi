@@ -568,7 +568,22 @@
     "cachedRead": "缓存读",
     "tokensUsed": "已使用 {{tokens}} tokens",
     "viewStats": "查看用量统计",
-    "sessionSpend": "本会话消耗"
+    "sessionSpend": "本会话消耗",
+    "breakdownTitle": "上下文构成",
+    "estimated": "估算",
+    "estimatedHint": "本地估算",
+    "free": "剩余",
+    "segments": {
+      "system_prompt": "系统提示词",
+      "system_tools": "系统工具",
+      "mcp_tools": "MCP 工具",
+      "tools": "工具定义",
+      "skills": "技能",
+      "memory_files": "记忆文件",
+      "custom_agents": "自定义智能体",
+      "messages": "消息",
+      "other": "其他"
+    }
   },
   "noModelConfigured": "未配置模型，请前往设置页面配置。",
   "runtimePreparing": {

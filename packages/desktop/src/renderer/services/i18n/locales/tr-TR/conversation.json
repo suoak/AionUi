@@ -568,7 +568,22 @@
     "cachedRead": "Önbellek okuma",
     "tokensUsed": "{{tokens}} jeton kullanıldı",
     "viewStats": "Kullanımı gör",
-    "sessionSpend": "Oturum tüketimi"
+    "sessionSpend": "Oturum tüketimi",
+    "breakdownTitle": "Bağlam dağılımı",
+    "estimated": "tahmini",
+    "estimatedHint": "Yerel tahmin",
+    "free": "Boş",
+    "segments": {
+      "system_prompt": "Sistem istemi",
+      "system_tools": "Sistem araçları",
+      "mcp_tools": "MCP araçları",
+      "tools": "Araç şemaları",
+      "skills": "Beceriler",
+      "memory_files": "Bellek dosyaları",
+      "custom_agents": "Özel ajanlar",
+      "messages": "Mesajlar",
+      "other": "Diğer"
+    }
   },
   "noModelConfigured": "No model configured. Please configure in settings.",
   "runtimePreparing": {

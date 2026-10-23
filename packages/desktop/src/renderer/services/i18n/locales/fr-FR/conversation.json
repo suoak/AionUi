@@ -568,7 +568,22 @@
     "cachedRead": "Lecture du cache",
     "tokensUsed": "{{tokens}} jetons utilisés",
     "viewStats": "Voir l’utilisation",
-    "sessionSpend": "Consommation de la session"
+    "sessionSpend": "Consommation de la session",
+    "breakdownTitle": "Répartition du contexte",
+    "estimated": "est.",
+    "estimatedHint": "Estimé localement",
+    "free": "Libre",
+    "segments": {
+      "system_prompt": "Prompt système",
+      "system_tools": "Outils système",
+      "mcp_tools": "Outils MCP",
+      "tools": "Schémas d’outils",
+      "skills": "Compétences",
+      "memory_files": "Fichiers mémoire",
+      "custom_agents": "Agents personnalisés",
+      "messages": "Messages",
+      "other": "Autre"
+    }
   },
   "noModelConfigured": "Aucun modèle configuré. Veuillez configurer dans les paramètres.",
   "runtimePreparing": {

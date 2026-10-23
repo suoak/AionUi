@@ -851,6 +851,12 @@ export const conversation = {
     } | null,
     { conversation_id: string }
   >((p) => `/api/conversations/${p.conversation_id}/usage`),
+  // Context-window composition (Core E5-3). Older Core builds lack the route
+  // and answer 404 — callers treat that as "no breakdown" and keep the plain
+  // used/size ring from getUsage.
+  getContextBreakdown: httpGet<IContextBreakdown, { conversation_id: string }>(
+    (p) => `/api/conversations/${p.conversation_id}/context-breakdown`
+  ),
   getRetainedOutput: httpGet<
     { reference: string; sha256: string; size: number; content: string },
     { conversation_id: string; reference: string }
@@ -3569,3 +3575,21 @@ export const sidebar = {
     (p) => `/api/sidebar/archived/project/${encodeURIComponent(p.project_id)}`
   ),
 };
+
+export type ContextSegmentSource = 'reported' | 'estimated' | 'unavailable';
+
+export interface IContextBreakdownSegment {
+  key: string;
+  label: string;
+  tokens: number;
+  source: ContextSegmentSource;
+}
+
+/** `GET /api/conversations/{id}/context-breakdown`; segments sum to `used`. */
+export interface IContextBreakdown {
+  conversation_id: string;
+  used?: number | null;
+  size?: number | null;
+  source: ContextSegmentSource;
+  segments: IContextBreakdownSegment[];
+}
