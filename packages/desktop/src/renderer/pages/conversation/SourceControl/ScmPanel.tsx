@@ -34,6 +34,7 @@ import { useTranslation } from 'react-i18next';
 
 import { usePreviewContext } from '../Preview';
 import { discardAllTargets, ScmChangesView, stageAllTargets } from './ScmChangesView';
+import { ScmPublishArea } from './publish/ScmPublishArea';
 import { ScmSection, ScmSectionDivider } from './ScmSection';
 import {
   diffAnchors,
@@ -280,6 +281,7 @@ const ScmSectionStack: React.FC<{
 
   const changesBody = (
     <div className='flex-1 min-h-0 overflow-auto ps-4px pe-4px pb-8px'>
+      <ScmPublishArea repo={selectedRepo} status={view.statuses[selectedRepo.repo_id]} />
       <ScmChangesView
         repo={selectedRepo}
         status={view.statuses[selectedRepo.repo_id]}

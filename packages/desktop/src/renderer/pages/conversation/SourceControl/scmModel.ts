@@ -37,6 +37,11 @@ export type ScmCapabilities = {
   local_branches: boolean;
   history_graph: boolean;
   remote_ops: boolean;
+  /**
+   * `scm/commit` is available (M7 E4-4). Optional: a Core that predates it omits
+   * the field, and the commit box simply does not render.
+   */
+  commit?: boolean;
 };
 
 export type ScmRepository = {
@@ -83,7 +88,15 @@ export type ScmRepository = {
  * aioncore `types.rs`). Both fields are optional — a provider that cannot resolve
  * a branch name omits it, and `detached` defaults to false when absent.
  */
-export type ScmHead = { name?: string; detached?: boolean };
+export type ScmHead = {
+  name?: string;
+  detached?: boolean;
+  /** Upstream short name (`origin/main`), when the branch tracks one (M7 E4-4). */
+  upstream?: string;
+  /** Commits ahead of / behind the upstream, from the local tracking ref. */
+  ahead?: number;
+  behind?: number;
+};
 
 /** The resource states this build knows about. */
 export type ScmKnownResourceState = 'created' | 'modified' | 'deleted' | 'conflicted' | 'renamed';

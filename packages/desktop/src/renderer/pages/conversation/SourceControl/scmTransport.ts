@@ -20,6 +20,8 @@ import { wsEmitter, wsSend } from '@/common/adapter/httpBridge';
 
 import type { MonitorTransport } from '../explorer/monitorClient';
 import { MonitorClient } from '../explorer/monitorClient';
+import type { ScmCommitResult, ScmPushResult, ScmRemoteInfo } from './publish/scmPublishModel';
+import { applyScmProgress, configureScmPublish } from './publish/scmPublishStore';
 import type { ScmActionKind, ScmRepository, ScmStatus } from './scmModel';
 import {
   applyScmNotification,
@@ -60,7 +62,10 @@ export function initScmRuntime(): MonitorClient {
 
   const scm = new MonitorClient({
     transport: createWsScmTransport(),
-    onNotification: applyScmNotification,
+    // `scm/progress` is per-request (push) progress, owned by the publish store;
+    // everything else is status/discovery for the main store.
+    onNotification: (method, params) =>
+      method === 'scm/progress' ? applyScmProgress(params) : applyScmNotification(method, params),
     onReconnect: onScmReconnect,
   });
   client = scm;
@@ -78,6 +83,14 @@ export function initScmRuntime(): MonitorClient {
     // One method per action — the wire has no "action" parameter, and that is what
     // makes a failure attributable to a side without a per-failure flag.
     act: async (action, params) => (await scm.request(ACTION_METHOD[action], params)) as ScmActionResult,
+  });
+
+  // Commit/push (M7 E4-4). An older Core answers method_not_found; the publish
+  // store turns that into "unsupported" rather than an error banner.
+  configureScmPublish({
+    commit: async (params) => (await scm.request('scm/commit', params)) as ScmCommitResult,
+    push: async (params) => (await scm.request('scm/push', params)) as ScmPushResult,
+    remoteInfo: async (repoId) => (await scm.request('scm/remoteInfo', { repository: repoId })) as ScmRemoteInfo,
   });
 
   return scm;
