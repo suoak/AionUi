@@ -6,6 +6,7 @@
 
 import React from 'react';
 
+import { ScmPullRequestEntry } from '../delivery/ScmPullRequestEntry';
 import type { ScmRepository, ScmStatus } from '../scmModel';
 import { ScmCommitBox } from './ScmCommitBox';
 import { ScmPublishBar } from './ScmPublishBar';
@@ -25,6 +26,9 @@ export const ScmPublishArea: React.FC<{ repo: ScmRepository; status: ScmStatus |
     <div data-scm-publish-area className='flex flex-col gap-6px px-4px pt-4px pb-6px'>
       <ScmCommitBox repoId={repo.repo_id} controls={controls} />
       {controls.showPublish && <ScmPublishBar repoId={repo.repo_id} controls={controls} />}
+      {controls.showPublish && (
+        <ScmPullRequestEntry repo={repo} status={status} upstream={controls.upstream} detached={controls.detached} />
+      )}
       <ScmPublishReport repoId={repo.repo_id} controls={controls} />
     </div>
   );

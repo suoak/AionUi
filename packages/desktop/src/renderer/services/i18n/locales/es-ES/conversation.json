@@ -892,6 +892,43 @@
           "outcomeUnknown": "Conexión perdida; el resultado es desconocido. Revisa el estado antes de reintentar",
           "failed": "La operación falló"
         }
+      },
+      "delivery": {
+        "open": "Crear pull request",
+        "title": "Crear pull request",
+        "tab": "Pull requests",
+        "repository": "Repositorio",
+        "noRepository": "Abre primero el control de código fuente del proyecto para elegir un repositorio.",
+        "recheck": "Comprobar de nuevo",
+        "unsupportedHost": "{{host}} no es un host compatible. Se pueden crear pull requests para remotos de GitHub (gh) y GitLab (glab).",
+        "notInstalledTitle": "{{cli}} no está instalado",
+        "notInstalledContent": "Instala la herramienta de línea de comandos {{cli}} en este equipo y vuelve a comprobar.",
+        "openInstallGuide": "Abrir guía de instalación",
+        "notAuthenticatedTitle": "{{cli}} no tiene sesión iniciada",
+        "notAuthenticatedContent": "Ejecuta este comando en una terminal, sigue las indicaciones y vuelve a comprobar:",
+        "target": "Mediante {{cli}} a {{remote}}",
+        "branch": "Rama",
+        "base": "Base",
+        "titlePlaceholder": "Título",
+        "bodyPlaceholder": "Descripción (opcional)",
+        "draft": "Crear como borrador",
+        "draftTag": "Borrador",
+        "submit": "Crear",
+        "created": "Pull request creada",
+        "evidenceRecorded": "El enlace se registró como evidencia de esta ejecución de la tarea.",
+        "openPullRequest": "Abrir pull request",
+        "noPullRequests": "Aún no hay pull requests para esta ejecución",
+        "errors": {
+          "notInstalled": "La CLI no está instalada.",
+          "notAuthenticated": "La CLI no tiene sesión iniciada.",
+          "noRemote": "Este repositorio no tiene un remoto llamado origin.",
+          "providerUnsupported": "El host de este remoto no es compatible.",
+          "createFailed": "La CLI no pudo crear la pull request.",
+          "runNotFound": "No se encontró esta ejecución de la tarea.",
+          "invalid": "Algunos campos no son válidos.",
+          "unsupported": "Esta versión del backend no permite crear pull requests.",
+          "generic": "Algo salió mal. Inténtalo de nuevo."
+        }
       }
     },
     "attachOverlap": "This folder overlaps a folder already in the project",

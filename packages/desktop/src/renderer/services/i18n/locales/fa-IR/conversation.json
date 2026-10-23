@@ -891,6 +891,43 @@
           "outcomeUnknown": "اتصال قطع شد؛ نتیجه نامعلوم است. پیش از تلاش دوباره وضعیت را بررسی کنید",
           "failed": "عملیات ناموفق بود"
         }
+      },
+      "delivery": {
+        "open": "ایجاد درخواست ادغام",
+        "title": "ایجاد درخواست ادغام",
+        "tab": "درخواست‌های ادغام",
+        "repository": "مخزن",
+        "noRepository": "برای انتخاب مخزن، ابتدا کنترل منبع پروژه را باز کنید.",
+        "recheck": "بررسی دوباره",
+        "unsupportedHost": "{{host}} میزبان پشتیبانی‌شده‌ای نیست. درخواست ادغام برای مخزن‌های راه‌دور GitHub (gh) و GitLab (glab) ممکن است.",
+        "notInstalledTitle": "{{cli}} نصب نشده است",
+        "notInstalledContent": "ابزار خط فرمان {{cli}} را روی این رایانه نصب کنید و سپس دوباره بررسی کنید.",
+        "openInstallGuide": "باز کردن راهنمای نصب",
+        "notAuthenticatedTitle": "وارد {{cli}} نشده‌اید",
+        "notAuthenticatedContent": "این فرمان را در ترمینال اجرا کنید، مراحل را دنبال کنید و سپس دوباره بررسی کنید:",
+        "target": "از طریق {{cli}} به {{remote}}",
+        "branch": "شاخه",
+        "base": "شاخه پایه",
+        "titlePlaceholder": "عنوان",
+        "bodyPlaceholder": "توضیحات (اختیاری)",
+        "draft": "ایجاد به‌صورت پیش‌نویس",
+        "draftTag": "پیش‌نویس",
+        "submit": "ایجاد",
+        "created": "درخواست ادغام ایجاد شد",
+        "evidenceRecorded": "پیوند به‌عنوان شاهد این اجرای وظیفه ثبت شد.",
+        "openPullRequest": "باز کردن درخواست ادغام",
+        "noPullRequests": "هنوز درخواست ادغامی برای این اجرا وجود ندارد",
+        "errors": {
+          "notInstalled": "ابزار خط فرمان نصب نشده است.",
+          "notAuthenticated": "وارد ابزار خط فرمان نشده‌اید.",
+          "noRemote": "این مخزن مخزن راه‌دوری به نام origin ندارد.",
+          "providerUnsupported": "میزبان این مخزن راه‌دور پشتیبانی نمی‌شود.",
+          "createFailed": "ابزار خط فرمان نتوانست درخواست ادغام را ایجاد کند.",
+          "runNotFound": "این اجرای وظیفه یافت نشد.",
+          "invalid": "برخی فیلدها نامعتبر هستند.",
+          "unsupported": "این نسخه از بک‌اند از ایجاد درخواست ادغام پشتیبانی نمی‌کند.",
+          "generic": "مشکلی پیش آمد. لطفاً دوباره تلاش کنید."
+        }
       }
     },
     "attachOverlap": "This folder overlaps a folder already in the project",

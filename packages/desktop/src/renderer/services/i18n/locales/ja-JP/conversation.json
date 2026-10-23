@@ -891,6 +891,43 @@
           "outcomeUnknown": "接続が切断され、結果は不明です。再試行の前に状態を確認してください",
           "failed": "操作に失敗しました"
         }
+      },
+      "delivery": {
+        "open": "プルリクエストを作成",
+        "title": "プルリクエストを作成",
+        "tab": "プルリクエスト",
+        "repository": "リポジトリ",
+        "noRepository": "リポジトリを選ぶには、先にプロジェクトのソース管理を開いてください。",
+        "recheck": "再確認",
+        "unsupportedHost": "{{host}} はサポートされていないホストです。GitHub（gh）と GitLab（glab）のリモートに対応しています。",
+        "notInstalledTitle": "{{cli}} がインストールされていません",
+        "notInstalledContent": "このコンピューターに {{cli}} コマンドラインツールをインストールしてから、再確認してください。",
+        "openInstallGuide": "インストールガイドを開く",
+        "notAuthenticatedTitle": "{{cli}} にサインインしていません",
+        "notAuthenticatedContent": "ターミナルで次のコマンドを実行して案内に従い、再確認してください：",
+        "target": "{{cli}} 経由で {{remote}} へ",
+        "branch": "ブランチ",
+        "base": "ベース",
+        "titlePlaceholder": "タイトル",
+        "bodyPlaceholder": "説明（任意）",
+        "draft": "ドラフトとして作成",
+        "draftTag": "ドラフト",
+        "submit": "作成",
+        "created": "プルリクエストを作成しました",
+        "evidenceRecorded": "リンクをこのタスク実行のエビデンスとして記録しました。",
+        "openPullRequest": "プルリクエストを開く",
+        "noPullRequests": "この実行のプルリクエストはまだありません",
+        "errors": {
+          "notInstalled": "CLI がインストールされていません。",
+          "notAuthenticated": "CLI にサインインしていません。",
+          "noRemote": "このリポジトリには origin という名前のリモートがありません。",
+          "providerUnsupported": "このリモートのホストはサポートされていません。",
+          "createFailed": "CLI でプルリクエストを作成できませんでした。",
+          "runNotFound": "このタスク実行が見つかりません。",
+          "invalid": "一部の項目が無効です。",
+          "unsupported": "このバージョンのバックエンドはプルリクエストの作成に対応していません。",
+          "generic": "問題が発生しました。もう一度お試しください。"
+        }
       }
     },
     "attachOverlap": "This folder overlaps a folder already in the project",

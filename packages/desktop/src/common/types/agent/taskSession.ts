@@ -352,3 +352,57 @@ export type SendReviewBatchResult = {
   /** The conversation input receipt, passed through from Core. */
   input_receipt: unknown;
 };
+
+// ── PR / MR delivery (M7 E4-5, Core `/api/scm-deliveries*`) ──
+
+export type ScmHostProvider = 'github' | 'gitlab' | 'other';
+
+/** Remote host + CLI readiness for one repository (`GET /api/scm-deliveries/host`). */
+export type ScmHostStatus = {
+  provider: ScmHostProvider;
+  host?: string | null;
+  remote?: string | null;
+  remote_url_redacted?: string | null;
+  /** `gh` / `glab`; absent for an unsupported host. */
+  cli?: 'gh' | 'glab' | null;
+  installed: boolean;
+  authenticated: boolean;
+  detail?: string | null;
+};
+
+export type ScmDelivery = {
+  id: string;
+  repo_path: string;
+  branch: string;
+  commit_sha?: string | null;
+  remote?: string | null;
+  provider?: string | null;
+  pr_url?: string | null;
+  pr_number?: string | null;
+  worktree_id?: string | null;
+  task_session_id?: string | null;
+  run_id?: string | null;
+  created_at: number;
+};
+
+export type CreatePullRequestInput = {
+  /** `pe:{pe_id}[/{rel}]` (or an allowed absolute path); Core sandboxes it. */
+  repo_path: string;
+  branch: string;
+  base: string;
+  title: string;
+  body?: string;
+  draft?: boolean;
+  remote?: string;
+  /** Both or neither: the PR link is recorded as evidence of this run. */
+  task_session_id?: string;
+  run_id?: string;
+};
+
+export type CreatePullRequestResult = {
+  pr_url: string;
+  pr_number?: string | null;
+  provider: ScmHostProvider;
+  delivery: ScmDelivery;
+  evidence_id?: string | null;
+};

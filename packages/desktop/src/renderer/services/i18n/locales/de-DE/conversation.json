@@ -892,6 +892,43 @@
           "outcomeUnknown": "Verbindung getrennt; Ergebnis unbekannt. Prüfe den Status, bevor du es erneut versuchst",
           "failed": "Vorgang fehlgeschlagen"
         }
+      },
+      "delivery": {
+        "open": "Pull-Request erstellen",
+        "title": "Pull-Request erstellen",
+        "tab": "Pull-Requests",
+        "repository": "Repository",
+        "noRepository": "Öffne zuerst die Quellcodeverwaltung des Projekts, um ein Repository auszuwählen.",
+        "recheck": "Erneut prüfen",
+        "unsupportedHost": "{{host}} wird nicht unterstützt. Pull-Requests sind für GitHub- (gh) und GitLab-Remotes (glab) möglich.",
+        "notInstalledTitle": "{{cli}} ist nicht installiert",
+        "notInstalledContent": "Installiere das Kommandozeilentool {{cli}} auf diesem Computer und prüfe dann erneut.",
+        "openInstallGuide": "Installationsanleitung öffnen",
+        "notAuthenticatedTitle": "{{cli}} ist nicht angemeldet",
+        "notAuthenticatedContent": "Führe diesen Befehl in einem Terminal aus, folge den Anweisungen und prüfe dann erneut:",
+        "target": "Über {{cli}} an {{remote}}",
+        "branch": "Branch",
+        "base": "Basis",
+        "titlePlaceholder": "Titel",
+        "bodyPlaceholder": "Beschreibung (optional)",
+        "draft": "Als Entwurf erstellen",
+        "draftTag": "Entwurf",
+        "submit": "Erstellen",
+        "created": "Pull-Request erstellt",
+        "evidenceRecorded": "Der Link wurde als Nachweis dieses Task-Laufs gespeichert.",
+        "openPullRequest": "Pull-Request öffnen",
+        "noPullRequests": "Noch keine Pull-Requests für diesen Lauf",
+        "errors": {
+          "notInstalled": "Das CLI ist nicht installiert.",
+          "notAuthenticated": "Das CLI ist nicht angemeldet.",
+          "noRemote": "Dieses Repository hat kein Remote namens origin.",
+          "providerUnsupported": "Der Host dieses Remotes wird nicht unterstützt.",
+          "createFailed": "Das CLI konnte den Pull-Request nicht erstellen.",
+          "runNotFound": "Dieser Task-Lauf wurde nicht gefunden.",
+          "invalid": "Einige Felder sind ungültig.",
+          "unsupported": "Diese Backend-Version unterstützt das Erstellen von Pull-Requests nicht.",
+          "generic": "Etwas ist schiefgelaufen. Bitte versuche es erneut."
+        }
       }
     },
     "attachOverlap": "This folder overlaps a folder already in the project",

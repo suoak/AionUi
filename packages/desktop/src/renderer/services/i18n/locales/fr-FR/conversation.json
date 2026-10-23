@@ -891,6 +891,43 @@
           "outcomeUnknown": "Connexion perdue ; résultat inconnu. Vérifiez l’état avant de réessayer",
           "failed": "L’opération a échoué"
         }
+      },
+      "delivery": {
+        "open": "Créer une pull request",
+        "title": "Créer une pull request",
+        "tab": "Pull requests",
+        "repository": "Dépôt",
+        "noRepository": "Ouvrez d'abord le contrôle de code source du projet pour choisir un dépôt.",
+        "recheck": "Vérifier à nouveau",
+        "unsupportedHost": "{{host}} n'est pas un hébergeur pris en charge. Les pull requests sont possibles pour les remotes GitHub (gh) et GitLab (glab).",
+        "notInstalledTitle": "{{cli}} n'est pas installé",
+        "notInstalledContent": "Installez l'outil en ligne de commande {{cli}} sur cet ordinateur, puis vérifiez à nouveau.",
+        "openInstallGuide": "Ouvrir le guide d'installation",
+        "notAuthenticatedTitle": "{{cli}} n'est pas connecté",
+        "notAuthenticatedContent": "Exécutez cette commande dans un terminal, suivez les instructions, puis vérifiez à nouveau :",
+        "target": "Via {{cli}} vers {{remote}}",
+        "branch": "Branche",
+        "base": "Base",
+        "titlePlaceholder": "Titre",
+        "bodyPlaceholder": "Description (facultatif)",
+        "draft": "Créer en brouillon",
+        "draftTag": "Brouillon",
+        "submit": "Créer",
+        "created": "Pull request créée",
+        "evidenceRecorded": "Le lien a été enregistré comme preuve de cette exécution de tâche.",
+        "openPullRequest": "Ouvrir la pull request",
+        "noPullRequests": "Aucune pull request pour cette exécution",
+        "errors": {
+          "notInstalled": "La CLI n'est pas installée.",
+          "notAuthenticated": "La CLI n'est pas connectée.",
+          "noRemote": "Ce dépôt n'a pas de remote nommé origin.",
+          "providerUnsupported": "L'hébergeur de ce remote n'est pas pris en charge.",
+          "createFailed": "La CLI n'a pas pu créer la pull request.",
+          "runNotFound": "Cette exécution de tâche est introuvable.",
+          "invalid": "Certains champs ne sont pas valides.",
+          "unsupported": "Cette version du backend ne permet pas de créer des pull requests.",
+          "generic": "Une erreur s'est produite. Veuillez réessayer."
+        }
       }
     },
     "attachOverlap": "This folder overlaps a folder already in the project",

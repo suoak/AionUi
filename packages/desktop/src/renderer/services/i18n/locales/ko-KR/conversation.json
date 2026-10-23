@@ -891,6 +891,43 @@
           "outcomeUnknown": "연결이 끊어져 결과를 알 수 없습니다. 다시 시도하기 전에 상태를 확인하세요",
           "failed": "작업에 실패했습니다"
         }
+      },
+      "delivery": {
+        "open": "풀 리퀘스트 만들기",
+        "title": "풀 리퀘스트 만들기",
+        "tab": "풀 리퀘스트",
+        "repository": "저장소",
+        "noRepository": "저장소를 선택하려면 먼저 프로젝트의 소스 제어를 여세요.",
+        "recheck": "다시 확인",
+        "unsupportedHost": "{{host}}은(는) 지원되지 않는 호스트입니다. GitHub(gh) 및 GitLab(glab) 원격 저장소를 지원합니다.",
+        "notInstalledTitle": "{{cli}}이(가) 설치되지 않았습니다",
+        "notInstalledContent": "이 컴퓨터에 {{cli}} 명령줄 도구를 설치한 후 다시 확인하세요.",
+        "openInstallGuide": "설치 가이드 열기",
+        "notAuthenticatedTitle": "{{cli}}에 로그인되지 않았습니다",
+        "notAuthenticatedContent": "터미널에서 다음 명령을 실행하고 안내에 따른 후 다시 확인하세요:",
+        "target": "{{cli}}를 통해 {{remote}}(으)로",
+        "branch": "브랜치",
+        "base": "대상 브랜치",
+        "titlePlaceholder": "제목",
+        "bodyPlaceholder": "설명(선택)",
+        "draft": "초안으로 만들기",
+        "draftTag": "초안",
+        "submit": "만들기",
+        "created": "풀 리퀘스트를 만들었습니다",
+        "evidenceRecorded": "링크가 이 작업 실행의 증거로 기록되었습니다.",
+        "openPullRequest": "풀 리퀘스트 열기",
+        "noPullRequests": "이 실행의 풀 리퀘스트가 아직 없습니다",
+        "errors": {
+          "notInstalled": "CLI가 설치되지 않았습니다.",
+          "notAuthenticated": "CLI에 로그인되지 않았습니다.",
+          "noRemote": "이 저장소에 origin이라는 원격이 없습니다.",
+          "providerUnsupported": "이 원격의 호스트는 지원되지 않습니다.",
+          "createFailed": "CLI가 풀 리퀘스트를 만들지 못했습니다.",
+          "runNotFound": "이 작업 실행을 찾을 수 없습니다.",
+          "invalid": "일부 항목이 올바르지 않습니다.",
+          "unsupported": "이 버전의 백엔드는 풀 리퀘스트 만들기를 지원하지 않습니다.",
+          "generic": "문제가 발생했습니다. 다시 시도하세요."
+        }
       }
     },
     "attachOverlap": "This folder overlaps a folder already in the project",

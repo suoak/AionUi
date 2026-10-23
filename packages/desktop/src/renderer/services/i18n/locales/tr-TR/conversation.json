@@ -893,6 +893,43 @@
           "outcomeUnknown": "Bağlantı koptu; sonuç bilinmiyor. Yeniden denemeden önce durumu kontrol edin",
           "failed": "İşlem başarısız oldu"
         }
+      },
+      "delivery": {
+        "open": "Pull request oluştur",
+        "title": "Pull request oluştur",
+        "tab": "Pull request'ler",
+        "repository": "Depo",
+        "noRepository": "Depo seçmek için önce projenin kaynak denetimini açın.",
+        "recheck": "Yeniden denetle",
+        "unsupportedHost": "{{host}} desteklenen bir sunucu değil. Pull request'ler GitHub (gh) ve GitLab (glab) uzak depoları için oluşturulabilir.",
+        "notInstalledTitle": "{{cli}} yüklü değil",
+        "notInstalledContent": "Bu bilgisayara {{cli}} komut satırı aracını yükleyin, ardından yeniden denetleyin.",
+        "openInstallGuide": "Kurulum kılavuzunu aç",
+        "notAuthenticatedTitle": "{{cli}} oturumu açık değil",
+        "notAuthenticatedContent": "Bu komutu bir terminalde çalıştırıp yönergeleri izleyin, ardından yeniden denetleyin:",
+        "target": "{{cli}} ile {{remote}} hedefine",
+        "branch": "Dal",
+        "base": "Temel dal",
+        "titlePlaceholder": "Başlık",
+        "bodyPlaceholder": "Açıklama (isteğe bağlı)",
+        "draft": "Taslak olarak oluştur",
+        "draftTag": "Taslak",
+        "submit": "Oluştur",
+        "created": "Pull request oluşturuldu",
+        "evidenceRecorded": "Bağlantı bu görev çalıştırmasının kanıtı olarak kaydedildi.",
+        "openPullRequest": "Pull request'i aç",
+        "noPullRequests": "Bu çalıştırma için henüz pull request yok",
+        "errors": {
+          "notInstalled": "CLI yüklü değil.",
+          "notAuthenticated": "CLI oturumu açık değil.",
+          "noRemote": "Bu deponun origin adlı bir uzak deposu yok.",
+          "providerUnsupported": "Bu uzak deponun sunucusu desteklenmiyor.",
+          "createFailed": "CLI pull request oluşturamadı.",
+          "runNotFound": "Bu görev çalıştırması bulunamadı.",
+          "invalid": "Bazı alanlar geçersiz.",
+          "unsupported": "Bu arka uç sürümü pull request oluşturmayı desteklemiyor.",
+          "generic": "Bir sorun oluştu. Lütfen yeniden deneyin."
+        }
       }
     },
     "attachOverlap": "This folder overlaps a folder already in the project",

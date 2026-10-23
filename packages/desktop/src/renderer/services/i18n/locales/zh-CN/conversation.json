@@ -891,6 +891,43 @@
           "outcomeUnknown": "连接已断开，结果未知。请先查看状态再重试",
           "failed": "操作失败"
         }
+      },
+      "delivery": {
+        "open": "创建拉取请求",
+        "title": "创建拉取请求",
+        "tab": "拉取请求",
+        "repository": "仓库",
+        "noRepository": "请先打开项目的源代码管理以选择仓库。",
+        "recheck": "重新检测",
+        "unsupportedHost": "{{host}} 不是受支持的托管平台。目前支持 GitHub（gh）和 GitLab（glab）远程仓库。",
+        "notInstalledTitle": "未安装 {{cli}}",
+        "notInstalledContent": "请在本机安装 {{cli}} 命令行工具，然后重新检测。",
+        "openInstallGuide": "打开安装指南",
+        "notAuthenticatedTitle": "{{cli}} 未登录",
+        "notAuthenticatedContent": "请在终端运行以下命令并按提示完成登录，然后重新检测：",
+        "target": "通过 {{cli}} 提交到 {{remote}}",
+        "branch": "分支",
+        "base": "目标分支",
+        "titlePlaceholder": "标题",
+        "bodyPlaceholder": "描述（可选）",
+        "draft": "创建为草稿",
+        "draftTag": "草稿",
+        "submit": "创建",
+        "created": "拉取请求已创建",
+        "evidenceRecorded": "链接已记录为本次任务运行的证据。",
+        "openPullRequest": "打开拉取请求",
+        "noPullRequests": "本次运行暂无拉取请求",
+        "errors": {
+          "notInstalled": "未安装命令行工具。",
+          "notAuthenticated": "命令行工具未登录。",
+          "noRemote": "该仓库没有名为 origin 的远程仓库。",
+          "providerUnsupported": "不支持该远程仓库的托管平台。",
+          "createFailed": "命令行工具未能创建拉取请求。",
+          "runNotFound": "未找到该任务运行。",
+          "invalid": "部分字段无效。",
+          "unsupported": "当前后端版本不支持创建拉取请求。",
+          "generic": "出错了，请重试。"
+        }
       }
     },
     "attachOverlap": "该文件夹与项目中已有文件夹重叠",

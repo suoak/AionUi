@@ -909,6 +909,43 @@
           "outcomeUnknown": "З'єднання втрачено; результат невідомий. Перевірте стан перед повтором",
           "failed": "Операція не вдалася"
         }
+      },
+      "delivery": {
+        "open": "Створити pull request",
+        "title": "Створити pull request",
+        "tab": "Pull request'и",
+        "repository": "Репозиторій",
+        "noRepository": "Спершу відкрийте керування версіями проєкту, щоб вибрати репозиторій.",
+        "recheck": "Перевірити знову",
+        "unsupportedHost": "{{host}} не підтримується. Pull request'и можна створювати для віддалених репозиторіїв GitHub (gh) і GitLab (glab).",
+        "notInstalledTitle": "{{cli}} не встановлено",
+        "notInstalledContent": "Встановіть на цей комп'ютер утиліту командного рядка {{cli}}, потім перевірте знову.",
+        "openInstallGuide": "Відкрити інструкцію зі встановлення",
+        "notAuthenticatedTitle": "Вхід у {{cli}} не виконано",
+        "notAuthenticatedContent": "Виконайте цю команду в терміналі, дотримуйтеся підказок і перевірте знову:",
+        "target": "Через {{cli}} до {{remote}}",
+        "branch": "Гілка",
+        "base": "Базова гілка",
+        "titlePlaceholder": "Заголовок",
+        "bodyPlaceholder": "Опис (необов'язково)",
+        "draft": "Створити як чернетку",
+        "draftTag": "Чернетка",
+        "submit": "Створити",
+        "created": "Pull request створено",
+        "evidenceRecorded": "Посилання збережено як доказ цього запуску завдання.",
+        "openPullRequest": "Відкрити pull request",
+        "noPullRequests": "Для цього запуску pull request'ів ще немає",
+        "errors": {
+          "notInstalled": "CLI не встановлено.",
+          "notAuthenticated": "Вхід у CLI не виконано.",
+          "noRemote": "У цьому репозиторії немає віддаленого репозиторію origin.",
+          "providerUnsupported": "Хост цього віддаленого репозиторію не підтримується.",
+          "createFailed": "CLI не вдалося створити pull request.",
+          "runNotFound": "Цей запуск завдання не знайдено.",
+          "invalid": "Деякі поля недійсні.",
+          "unsupported": "Ця версія бекенду не підтримує створення pull request'ів.",
+          "generic": "Щось пішло не так. Спробуйте ще раз."
+        }
       }
     },
     "attachOverlap": "This folder overlaps a folder already in the project",

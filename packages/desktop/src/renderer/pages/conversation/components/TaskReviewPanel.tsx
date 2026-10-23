@@ -18,7 +18,12 @@ import {
 import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import useSWR from 'swr';
+import { openExternalUrl } from '@/renderer/utils/platform';
 import { AnnotatableDiff, parseDiffModel } from '../Preview/components/annotate';
+import { CreatePullRequestModal } from '../SourceControl/delivery/CreatePullRequestModal';
+import { pullRequestEvidence } from '../SourceControl/delivery/prDeliveryModel';
+import { repoOption, useDeliverySupported } from '../SourceControl/delivery/useDeliverySupport';
+import { useScm } from '../SourceControl/scmStore';
 
 type Props = { visible: boolean; taskId: string; conversationId: string; onCancel: () => void };
 
@@ -66,10 +71,22 @@ const TaskReviewPanel: React.FC<Props> = ({ visible, taskId, conversationId, onC
     ipcBridge.taskSession.run.list.invoke({ id: taskId })
   );
   const runId = selectedRunId ?? runs?.[0]?.id;
-  const { data: review, error: reviewError } = useSWR(visible && runId ? ['taskReview', taskId, runId] : null, () =>
+  const [prOpen, setPrOpen] = useState(false);
+  const deliverySupported = useDeliverySupported();
+  const scm = useScm();
+  const repoOptions = useMemo(
+    () => scm.repositories.map((repo) => repoOption(repo, scm.statuses[repo.repo_id])),
+    [scm.repositories, scm.statuses]
+  );
+  const {
+    data: review,
+    error: reviewError,
+    mutate: mutateReview,
+  } = useSWR(visible && runId ? ['taskReview', taskId, runId] : null, () =>
     ipcBridge.taskSession.run.review.invoke({ id: taskId, run_id: runId! })
   );
   const changes = useMemo(() => review?.evidence.filter((item) => item.kind === 'file') ?? [], [review]);
+  const pullRequests = useMemo(() => pullRequestEvidence(review?.evidence ?? []), [review]);
   const tools = useMemo(() => review?.trace.filter((item) => item.event_type.startsWith('tool.')) ?? [], [review]);
   const policy = useMemo(
     () => review?.trace.filter((item) => item.event_type === 'tool.allowed' || item.event_type === 'tool.denied') ?? [],
@@ -231,6 +248,52 @@ const TaskReviewPanel: React.FC<Props> = ({ visible, taskId, conversationId, onC
                 <Empty description={t('conversation.taskSession.review.noChanges')} />
               )}
             </Tabs.TabPane>
+            <Tabs.TabPane key='delivery' title={t('conversation.explorer.scm.delivery.tab')}>
+              <Space direction='vertical' className='w-full' data-task-pull-requests>
+                {deliverySupported ? (
+                  <Button
+                    size='small'
+                    data-task-create-pr
+                    disabled={!repoOptions.length}
+                    onClick={() => setPrOpen(true)}
+                  >
+                    {t('conversation.explorer.scm.delivery.open')}
+                  </Button>
+                ) : null}
+                {deliverySupported && !repoOptions.length ? (
+                  <Typography.Text type='secondary'>
+                    {t('conversation.explorer.scm.delivery.noRepository')}
+                  </Typography.Text>
+                ) : null}
+                {pullRequests.length ? (
+                  <List
+                    dataSource={pullRequests}
+                    render={(item) => (
+                      <List.Item key={item.id}>
+                        <Space direction='vertical'>
+                          <Space>
+                            <Typography.Text>{item.title}</Typography.Text>
+                            {item.draft ? <Tag>{t('conversation.explorer.scm.delivery.draftTag')}</Tag> : null}
+                            {item.provider ? <Tag>{item.provider}</Tag> : null}
+                          </Space>
+                          <Button
+                            type='text'
+                            size='mini'
+                            data-task-pr-link
+                            onClick={() => void openExternalUrl(item.url)}
+                          >
+                            {item.number ? `#${item.number} · ${item.url}` : item.url}
+                          </Button>
+                          <Typography.Text type='secondary'>{`${value(item.branch)} → ${value(item.base)} · ${formatTime(item.createdAt)}`}</Typography.Text>
+                        </Space>
+                      </List.Item>
+                    )}
+                  />
+                ) : (
+                  <Empty description={t('conversation.explorer.scm.delivery.noPullRequests')} />
+                )}
+              </Space>
+            </Tabs.TabPane>
             <Tabs.TabPane key='tools' title={t('conversation.taskSession.review.tools')}>
               <List
                 dataSource={tools}
@@ -303,6 +366,15 @@ const TaskReviewPanel: React.FC<Props> = ({ visible, taskId, conversationId, onC
               />
             </Tabs.TabPane>
           </Tabs>
+        ) : null}
+        {prOpen && runId ? (
+          <CreatePullRequestModal
+            visible
+            repos={repoOptions}
+            task={{ taskSessionId: taskId, runId }}
+            onClose={() => setPrOpen(false)}
+            onCreated={() => void mutateReview()}
+          />
         ) : null}
       </Space>
     </Modal>
