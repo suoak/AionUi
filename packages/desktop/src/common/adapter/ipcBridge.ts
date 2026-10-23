@@ -3316,6 +3316,21 @@ export const usage = {
   }),
 };
 
+/** `task.trace.appended` (aioncore ≥ M7 E5): metadata only, refetch the trace for payloads. */
+export type ITaskTraceAppendedEvent = {
+  user_id?: string;
+  task_session_id: string;
+  run_id: string;
+  conversation_id?: string;
+  event_id: string;
+  event_type: string;
+  timestamp: number;
+};
+
+export const taskTrace = {
+  appended: wsEmitter<ITaskTraceAppendedEvent>('task.trace.appended'),
+};
+
 /** M7 E5-4 inbox item ("needs you" queue). */
 export type InboxItemKind = 'approval' | 'blocked' | 'completed' | 'failed';
 

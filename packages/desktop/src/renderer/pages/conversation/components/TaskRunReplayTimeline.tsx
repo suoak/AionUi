@@ -7,7 +7,7 @@
 import { ipcBridge } from '@/common';
 import type { TaskRunReplayPage, TaskTraceEvent } from '@/common/types/agent/taskSession';
 import { Alert, Button, Empty, Space, Spin, Tag, Typography } from '@arco-design/web-react';
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { emptyReplay, isErrorEvent, mergeReplayPage, missingBefore, type ReplayState } from './taskRunReplayModel';
 
@@ -65,7 +65,10 @@ const TaskRunReplayTimeline: React.FC<Props> = ({ taskId, runId, firstPage }) =>
     setSelected(undefined);
   }, [firstPage]);
 
+  const inFlight = useRef(false);
   const loadMore = useCallback(async () => {
+    if (inFlight.current) return;
+    inFlight.current = true;
     setLoading(true);
     setLoadError(false);
     try {
@@ -79,9 +82,30 @@ const TaskRunReplayTimeline: React.FC<Props> = ({ taskId, runId, firstPage }) =>
     } catch {
       setLoadError(true);
     } finally {
+      inFlight.current = false;
       setLoading(false);
     }
   }, [taskId, runId, state.cursor]);
+
+  // Live tail: newer cores push `task.trace.appended` for each persisted trace
+  // event; fetch from the current cursor instead of waiting for "load more".
+  // Bursts coalesce into one fetch after the in-flight one settles. Older
+  // cores never emit it, so the timeline simply stays manual.
+  const [tailPending, setTailPending] = useState(false);
+  useEffect(() => {
+    const dispose = ipcBridge.taskTrace?.appended?.on?.((event) => {
+      if (event?.run_id !== runId || event.task_session_id !== taskId) return;
+      setTailPending(true);
+    });
+    return () => {
+      dispose?.();
+    };
+  }, [taskId, runId]);
+  useEffect(() => {
+    if (!tailPending || loading) return;
+    setTailPending(false);
+    void loadMore();
+  }, [tailPending, loading, loadMore]);
 
   const firstError = useMemo(() => state.events.find(isErrorEvent)?.sequence, [state.events]);
   const selectedEvent = state.events.find((event) => event.sequence === selected);
