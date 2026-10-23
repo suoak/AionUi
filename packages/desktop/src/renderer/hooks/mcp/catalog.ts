@@ -85,3 +85,24 @@ export const ensureBackendMcpCatalog = async (): Promise<{
     allServers,
   };
 };
+
+/** Load state of the MCP catalog as seen by a conversation-creating page. */
+export type McpCatalogStatus = 'loading' | 'ready' | 'failed';
+
+/**
+ * C-06: the `selected_*` keys of a conversation-create `extra`.
+ *
+ * Core reads a present `selected_mcp_server_ids` as an explicit allowlist and
+ * freezes it, so an empty list sent because the catalog never loaded would
+ * silently strip every MCP from the session. Until the catalog is ready the
+ * keys are left out, and Core falls back to the assistant snapshot (or the
+ * enabled servers when there is no assistant).
+ */
+export const buildMcpSelectionExtra = (
+  catalogReady: boolean,
+  selectedMcpServerIds: string[],
+  selectedSessionMcpServers: ISessionMcpServer[]
+): { selected_mcp_server_ids?: string[]; selected_session_mcp_servers?: ISessionMcpServer[] } =>
+  catalogReady
+    ? { selected_mcp_server_ids: selectedMcpServerIds, selected_session_mcp_servers: selectedSessionMcpServers }
+    : {};

@@ -71,5 +71,7 @@
     "normal": "Normal",
     "high": "High",
     "urgent": "Urgent"
-  }
+  },
+  "catalogLoading": "Loading MCP servers…",
+  "catalogFailedRetry": "MCP servers failed to load. Click to retry"
 }

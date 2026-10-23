@@ -71,5 +71,7 @@
     "normal": "Normal",
     "high": "Élevé",
     "urgent": "Urgent"
-  }
+  },
+  "catalogLoading": "Chargement des serveurs MCP…",
+  "catalogFailedRetry": "Échec du chargement des serveurs MCP. Cliquez pour réessayer"
 }

@@ -1767,6 +1767,8 @@ export type I18nKey =
   | 'mcp.advancedOptions'
   | 'mcp.approve'
   | 'mcp.capabilities'
+  | 'mcp.catalogFailedRetry'
+  | 'mcp.catalogLoading'
   | 'mcp.connect'
   | 'mcp.connectedSince'
   | 'mcp.daysAgo'

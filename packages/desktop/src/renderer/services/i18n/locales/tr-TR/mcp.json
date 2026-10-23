@@ -71,5 +71,7 @@
     "normal": "Normal",
     "high": "Yüksek",
     "urgent": "Acil"
-  }
+  },
+  "catalogLoading": "MCP sunucuları yükleniyor…",
+  "catalogFailedRetry": "MCP sunucuları yüklenemedi. Yeniden denemek için tıklayın"
 }

@@ -71,5 +71,7 @@
     "normal": "Normal",
     "high": "Hoch",
     "urgent": "Dringend"
-  }
+  },
+  "catalogLoading": "MCP-Server werden geladen…",
+  "catalogFailedRetry": "MCP-Server konnten nicht geladen werden. Zum Wiederholen klicken"
 }

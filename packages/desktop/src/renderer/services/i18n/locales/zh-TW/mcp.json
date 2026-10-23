@@ -71,5 +71,7 @@
     "normal": "一般",
     "high": "高",
     "urgent": "緊急"
-  }
+  },
+  "catalogLoading": "正在載入 MCP 伺服器…",
+  "catalogFailedRetry": "MCP 伺服器載入失敗，點擊重試"
 }

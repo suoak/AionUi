@@ -71,5 +71,7 @@
     "normal": "보통",
     "high": "높음",
     "urgent": "긴급"
-  }
+  },
+  "catalogLoading": "MCP 서버 불러오는 중…",
+  "catalogFailedRetry": "MCP 서버를 불러오지 못했습니다. 클릭하여 다시 시도"
 }

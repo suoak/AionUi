@@ -243,6 +243,49 @@ describe('useGuidSend', () => {
     expect(payload.extra.selected_session_mcp_servers).toEqual([expect.objectContaining({ id: 'builtin-mcp' })]);
   });
 
+  it.each([
+    ['ACP', undefined],
+    ['aionrs', 'aionrs'],
+  ])('omits MCP selection keys while the catalog is not ready (C-06, %s)', async (_label, backend) => {
+    const deps = createDeps();
+    if (backend) {
+      deps.selectedAssistantBackend = backend;
+      deps.selectedAcpModel = null;
+      deps.current_model = { id: 'p1', name: 'Gemini', use_model: 'gemini-3.1-pro-preview' } as never;
+    }
+    // The catalog failed: nothing to filter the selection through.
+    deps.availableMcpServers = [];
+    deps.mcpCatalogReady = false;
+    deps.selectedMcpServerIds = ['mcp-user'];
+
+    const { result } = renderHook(() => useGuidSend(deps));
+    await act(async () => {
+      await result.current.handleSend();
+    });
+
+    const payload = createConversationInvokeMock.mock.calls[0][0];
+    // An explicit `[]` would be frozen by Core as "no MCP"; absent keys
+    // make it fall back to the assistant snapshot instead.
+    expect(payload.extra).not.toHaveProperty('selected_mcp_server_ids');
+    expect(payload.extra).not.toHaveProperty('selected_session_mcp_servers');
+    expect(payload.assistant?.conversation_overrides?.mcp_ids).toEqual(['mcp-user']);
+  });
+
+  it('sends an explicit empty MCP selection once the catalog is ready', async () => {
+    const deps = createDeps();
+    deps.mcpCatalogReady = true;
+    deps.selectedMcpServerIds = [];
+
+    const { result } = renderHook(() => useGuidSend(deps));
+    await act(async () => {
+      await result.current.handleSend();
+    });
+
+    const payload = createConversationInvokeMock.mock.calls[0][0];
+    expect(payload.extra.selected_mcp_server_ids).toEqual([]);
+    expect(payload.extra.selected_session_mcp_servers).toEqual([]);
+  });
+
   it('does not write legacy preset_assistant_id for preset assistant sends', async () => {
     const deps = createDeps();
 
