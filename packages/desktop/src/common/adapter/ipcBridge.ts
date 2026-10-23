@@ -81,6 +81,10 @@ import type {
   SendReviewBatchInput,
   SendReviewBatchResult,
   UpdateReviewThreadInput,
+  CreatePullRequestInput,
+  CreatePullRequestResult,
+  ScmDelivery,
+  ScmHostStatus,
 } from '../types/agent/taskSession';
 import type {
   CreateWorktreeInput,
@@ -1002,6 +1006,24 @@ export const conversation = {
         `/api/conversations/${p.conversation_id}/approvals/check?action=${encodeURIComponent(p.action)}${p.command_type ? `&command_type=${encodeURIComponent(p.command_type)}` : ''}`
     ),
   },
+};
+
+/** M7 E4-5 PR / MR delivery through gh / glab (Core `/api/scm-deliveries*`, user identity only). */
+export const scmDelivery = {
+  host: httpGet<ScmHostStatus, { repo_path: string; remote?: string }>((p) => {
+    const params = new URLSearchParams({ repo_path: p.repo_path });
+    if (p.remote) params.set('remote', p.remote);
+    return `/api/scm-deliveries/host?${params.toString()}`;
+  }),
+  list: httpGet<ScmDelivery[], { repo_path?: string; task_session_id?: string; limit?: number }>((p) => {
+    const params = new URLSearchParams();
+    if (p.repo_path) params.set('repo_path', p.repo_path);
+    if (p.task_session_id) params.set('task_session_id', p.task_session_id);
+    if (p.limit) params.set('limit', String(p.limit));
+    const query = params.toString();
+    return query ? `/api/scm-deliveries?${query}` : '/api/scm-deliveries';
+  }),
+  createPullRequest: httpPost<CreatePullRequestResult, CreatePullRequestInput>('/api/scm-deliveries/pull-request'),
 };
 
 /** M7 E4 diff annotations (Core `/api/review-threads*`, user identity only). */

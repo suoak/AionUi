@@ -6,14 +6,19 @@ const mocks = vi.hoisted(() => ({
   listRuns: vi.fn(),
   getReview: vi.fn(),
   getRetainedOutput: vi.fn(),
+  listDeliveries: vi.fn(),
+  openExternalUrl: vi.fn(),
 }));
 
 vi.mock('@/common', () => ({
   ipcBridge: {
     taskSession: { run: { list: { invoke: mocks.listRuns }, review: { invoke: mocks.getReview } } },
     conversation: { getRetainedOutput: { invoke: mocks.getRetainedOutput } },
+    scmDelivery: { list: { invoke: mocks.listDeliveries } },
   },
 }));
+
+vi.mock('@/renderer/utils/platform', () => ({ openExternalUrl: mocks.openExternalUrl }));
 
 vi.mock('react-i18next', () => ({
   useTranslation: () => ({ t: (key: string) => key }),
@@ -175,5 +180,59 @@ describe('TaskReviewPanel', () => {
       task_session_id: 'task-1',
       conversation_id: 'conversation-1',
     });
+  });
+
+  it('lists pull requests recorded as run evidence (M7 E4-5)', async () => {
+    mocks.listDeliveries.mockResolvedValue([]);
+    mocks.listRuns.mockResolvedValue([
+      { id: 'run-2', run_kind: 'execution', status: 'completed', started_at: 1, task_session_id: 'task-2' },
+    ]);
+    mocks.getReview.mockResolvedValue({
+      task: { id: 'task-2', mode: 'goal', status: 'completed' },
+      run: { id: 'run-2', run_kind: 'execution', status: 'completed', started_at: 1, finished_at: 5 },
+      artifacts: [],
+      approvals: [],
+      acceptance_criteria: [],
+      trace: [],
+      checkpoints: [],
+      evidence: [
+        {
+          id: 'pr-1',
+          kind: 'artifact',
+          summary: 'Pull request: Add login',
+          reference: 'https://github.com/o/r/pull/12',
+          metadata: {
+            type: 'pull_request',
+            url: 'https://github.com/o/r/pull/12',
+            number: '12',
+            provider: 'github',
+            branch: 'feat/login',
+            base: 'main',
+            draft: true,
+          },
+          created_at: 1,
+        },
+      ],
+      summary: {
+        status: 'completed',
+        files_changed: 0,
+        tool_calls: 0,
+        policy_decisions: 0,
+        denied_decisions: 0,
+        criteria_passed: 0,
+        criteria_total: 0,
+      },
+    });
+
+    render(<TaskReviewPanel visible taskId='task-2' conversationId='conversation-2' onCancel={vi.fn()} />);
+
+    expect(await screen.findByText('Add login')).toBeTruthy();
+    expect(screen.getByText('conversation.explorer.scm.delivery.draftTag')).toBeTruthy();
+    fireEvent.click(screen.getByText('#12 · https://github.com/o/r/pull/12'));
+    expect(mocks.openExternalUrl).toHaveBeenCalledWith('https://github.com/o/r/pull/12');
+    // A Core with the delivery API offers the task-linked dialog; with no
+    // project repository loaded it explains why it is unavailable.
+    expect(await screen.findByText('conversation.explorer.scm.delivery.open')).toBeTruthy();
+    expect(screen.getByText('conversation.explorer.scm.delivery.noRepository')).toBeTruthy();
   });
 });

@@ -891,6 +891,43 @@
           "outcomeUnknown": "連線已中斷，結果未知。請先查看狀態再重試",
           "failed": "操作失敗"
         }
+      },
+      "delivery": {
+        "open": "建立提取要求",
+        "title": "建立提取要求",
+        "tab": "提取要求",
+        "repository": "存放庫",
+        "noRepository": "請先開啟專案的原始碼控制以選擇存放庫。",
+        "recheck": "重新偵測",
+        "unsupportedHost": "{{host}} 不是支援的代管平台。目前支援 GitHub（gh）和 GitLab（glab）遠端存放庫。",
+        "notInstalledTitle": "尚未安裝 {{cli}}",
+        "notInstalledContent": "請在本機安裝 {{cli}} 命令列工具，然後重新偵測。",
+        "openInstallGuide": "開啟安裝指南",
+        "notAuthenticatedTitle": "{{cli}} 尚未登入",
+        "notAuthenticatedContent": "請在終端機執行以下指令並依提示完成登入，然後重新偵測：",
+        "target": "透過 {{cli}} 提交到 {{remote}}",
+        "branch": "分支",
+        "base": "目標分支",
+        "titlePlaceholder": "標題",
+        "bodyPlaceholder": "描述（選填）",
+        "draft": "建立為草稿",
+        "draftTag": "草稿",
+        "submit": "建立",
+        "created": "提取要求已建立",
+        "evidenceRecorded": "連結已記錄為本次任務執行的證據。",
+        "openPullRequest": "開啟提取要求",
+        "noPullRequests": "本次執行尚無提取要求",
+        "errors": {
+          "notInstalled": "尚未安裝命令列工具。",
+          "notAuthenticated": "命令列工具尚未登入。",
+          "noRemote": "此存放庫沒有名為 origin 的遠端。",
+          "providerUnsupported": "不支援此遠端的代管平台。",
+          "createFailed": "命令列工具無法建立提取要求。",
+          "runNotFound": "找不到此任務執行。",
+          "invalid": "部分欄位無效。",
+          "unsupported": "目前後端版本不支援建立提取要求。",
+          "generic": "發生錯誤，請重試。"
+        }
       }
     },
     "attachOverlap": "該資料夾與專案中既有資料夾重疊",

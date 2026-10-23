@@ -891,6 +891,43 @@
           "outcomeUnknown": "Connection lost; the result is unknown. Check the status before retrying",
           "failed": "Operation failed"
         }
+      },
+      "delivery": {
+        "open": "Create pull request",
+        "title": "Create pull request",
+        "tab": "Pull requests",
+        "repository": "Repository",
+        "noRepository": "Open the project's Source Control first to choose a repository.",
+        "recheck": "Check again",
+        "unsupportedHost": "{{host}} is not a supported host. Pull requests can be created for GitHub (gh) and GitLab (glab) remotes.",
+        "notInstalledTitle": "{{cli}} is not installed",
+        "notInstalledContent": "Install the {{cli}} command-line tool on this computer, then check again.",
+        "openInstallGuide": "Open install guide",
+        "notAuthenticatedTitle": "{{cli}} is not signed in",
+        "notAuthenticatedContent": "Run this command in a terminal and follow the prompts, then check again:",
+        "target": "Via {{cli}} to {{remote}}",
+        "branch": "Branch",
+        "base": "Base",
+        "titlePlaceholder": "Title",
+        "bodyPlaceholder": "Description (optional)",
+        "draft": "Create as draft",
+        "draftTag": "Draft",
+        "submit": "Create",
+        "created": "Pull request created",
+        "evidenceRecorded": "The link was recorded as evidence of this task run.",
+        "openPullRequest": "Open pull request",
+        "noPullRequests": "No pull requests for this run yet",
+        "errors": {
+          "notInstalled": "The CLI is not installed.",
+          "notAuthenticated": "The CLI is not signed in.",
+          "noRemote": "This repository has no remote named origin.",
+          "providerUnsupported": "This remote's host is not supported.",
+          "createFailed": "The CLI could not create the pull request.",
+          "runNotFound": "This task run was not found.",
+          "invalid": "Some fields are invalid.",
+          "unsupported": "This version of the backend does not support creating pull requests.",
+          "generic": "Something went wrong. Please try again."
+        }
       }
     },
     "attachOverlap": "This folder overlaps a folder already in the project",

@@ -909,6 +909,43 @@
           "outcomeUnknown": "Соединение потеряно; результат неизвестен. Проверьте состояние перед повтором",
           "failed": "Операция не удалась"
         }
+      },
+      "delivery": {
+        "open": "Создать pull request",
+        "title": "Создать pull request",
+        "tab": "Pull request'ы",
+        "repository": "Репозиторий",
+        "noRepository": "Сначала откройте систему управления версиями проекта, чтобы выбрать репозиторий.",
+        "recheck": "Проверить снова",
+        "unsupportedHost": "{{host}} не поддерживается. Pull request'ы можно создавать для удалённых репозиториев GitHub (gh) и GitLab (glab).",
+        "notInstalledTitle": "{{cli}} не установлен",
+        "notInstalledContent": "Установите на этот компьютер утилиту командной строки {{cli}}, затем проверьте снова.",
+        "openInstallGuide": "Открыть инструкцию по установке",
+        "notAuthenticatedTitle": "Вход в {{cli}} не выполнен",
+        "notAuthenticatedContent": "Выполните эту команду в терминале, следуйте подсказкам и проверьте снова:",
+        "target": "Через {{cli}} в {{remote}}",
+        "branch": "Ветка",
+        "base": "Базовая ветка",
+        "titlePlaceholder": "Заголовок",
+        "bodyPlaceholder": "Описание (необязательно)",
+        "draft": "Создать как черновик",
+        "draftTag": "Черновик",
+        "submit": "Создать",
+        "created": "Pull request создан",
+        "evidenceRecorded": "Ссылка сохранена как свидетельство этого запуска задачи.",
+        "openPullRequest": "Открыть pull request",
+        "noPullRequests": "Для этого запуска pull request'ов пока нет",
+        "errors": {
+          "notInstalled": "CLI не установлен.",
+          "notAuthenticated": "Вход в CLI не выполнен.",
+          "noRemote": "В этом репозитории нет удалённого репозитория origin.",
+          "providerUnsupported": "Хост этого удалённого репозитория не поддерживается.",
+          "createFailed": "CLI не удалось создать pull request.",
+          "runNotFound": "Этот запуск задачи не найден.",
+          "invalid": "Некоторые поля заполнены неверно.",
+          "unsupported": "Эта версия бэкенда не поддерживает создание pull request'ов.",
+          "generic": "Что-то пошло не так. Попробуйте ещё раз."
+        }
       }
     },
     "attachOverlap": "This folder overlaps a folder already in the project",
