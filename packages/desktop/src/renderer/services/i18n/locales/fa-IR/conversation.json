@@ -1340,6 +1340,19 @@
       "agent": "عامل",
       "plan": "برنامه",
       "goal": "هدف"
+    },
+    "detail": {
+      "boardColumn": "ستون",
+      "runStatus": "وضعیت اجرا",
+      "mode": "حالت",
+      "agent": "عامل",
+      "createdAt": "ایجاد شده",
+      "updatedAt": "به‌روزرسانی شده",
+      "taskId": "شناسه کار",
+      "objective": "هدف",
+      "acceptanceCriteria": "معیارهای پذیرش",
+      "none": "هیچ",
+      "openConversation": "باز کردن گفتگو"
     }
   }
 }

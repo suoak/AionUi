@@ -1346,6 +1346,19 @@
       "agent": "Agente",
       "plan": "Plano",
       "goal": "Meta"
+    },
+    "detail": {
+      "boardColumn": "Coluna",
+      "runStatus": "Status de execução",
+      "mode": "Modo",
+      "agent": "Agente",
+      "createdAt": "Criado",
+      "updatedAt": "Atualizado",
+      "taskId": "ID da tarefa",
+      "objective": "Objetivo",
+      "acceptanceCriteria": "Critérios de aceitação",
+      "none": "Nenhum",
+      "openConversation": "Abrir conversa"
     }
   }
 }

@@ -24,6 +24,21 @@ vi.mock('@renderer/hooks/context/LayoutContext', () => ({
   useLayoutContext: () => ({ isMobile: false }),
 }));
 
+// Arco Descriptions (detail drawer) reads responsive breakpoints.
+Object.defineProperty(window, 'matchMedia', {
+  writable: true,
+  value: vi.fn().mockImplementation((query: string) => ({
+    matches: false,
+    media: query,
+    onchange: null,
+    addListener: vi.fn(),
+    removeListener: vi.fn(),
+    addEventListener: vi.fn(),
+    removeEventListener: vi.fn(),
+    dispatchEvent: vi.fn(),
+  })),
+});
+
 import TasksBoardPage from '@/renderer/pages/tasks/TasksBoardPage';
 
 const task = (id: string, status: TaskSessionStatus, extra: Partial<TaskSession> = {}): TaskSession => ({
@@ -75,15 +90,45 @@ describe('TasksBoardPage', () => {
     expect(within(screen.getByTestId('tasks-board-column-cancelled')).getByTestId('task-board-card-f')).toBeTruthy();
   });
 
-  it('opens the linked conversation on click and ignores cards without one', async () => {
-    mocks.list.mockResolvedValue([task('r', 'running', { conversation_id: 'conv-r' }), task('d', 'draft')]);
+  it('opens a read-only detail drawer and jumps to the linked conversation', async () => {
+    mocks.list.mockResolvedValue([
+      task('r', 'running', {
+        conversation_id: 'conv-r',
+        objective: 'Ship the board',
+        acceptance_criteria: ['columns render', 'drawer opens'],
+      }),
+      task('d', 'draft'),
+    ]);
     render(<TasksBoardPage />);
 
     fireEvent.click(await screen.findByTestId('task-board-card-r'));
-    expect(mocks.navigate).toHaveBeenCalledWith('/conversation/conv-r');
+    const detail = await screen.findByTestId('task-board-detail');
+    expect(within(detail).getByTestId('task-board-detail-objective').textContent).toBe('Ship the board');
+    expect(
+      within(detail)
+        .getAllByRole('listitem')
+        .map((n) => n.textContent)
+    ).toEqual(['columns render', 'drawer opens']);
+    expect(within(detail).getByTestId('task-board-detail-run-status').textContent).toBe(
+      'conversation.taskSession.status.running'
+    );
+    expect(mocks.navigate).not.toHaveBeenCalled();
 
-    fireEvent.click(screen.getByTestId('task-board-card-d'));
-    expect(mocks.navigate).toHaveBeenCalledTimes(1);
+    fireEvent.click(screen.getByTestId('task-board-detail-open-conversation'));
+    expect(mocks.navigate).toHaveBeenCalledWith('/conversation/conv-r');
+  });
+
+  it('keeps the open-conversation action disabled for cards without a conversation', async () => {
+    mocks.list.mockResolvedValue([task('d', 'draft')]);
+    render(<TasksBoardPage />);
+
+    fireEvent.keyDown(await screen.findByTestId('task-board-card-d'), { key: 'Enter' });
+    await screen.findByTestId('task-board-detail');
+    const open = screen.getByTestId('task-board-detail-open-conversation') as HTMLButtonElement;
+    expect(open.disabled).toBe(true);
+    fireEvent.click(open);
+    expect(mocks.navigate).not.toHaveBeenCalled();
+    expect(screen.getByText('conversation.taskBoard.noConversation')).toBeTruthy();
   });
 
   it('shows a retry state when loading fails', async () => {

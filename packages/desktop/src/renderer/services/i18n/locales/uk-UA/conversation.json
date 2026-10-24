@@ -1358,6 +1358,19 @@
       "agent": "Агент",
       "plan": "План",
       "goal": "Мета"
+    },
+    "detail": {
+      "boardColumn": "Колонка",
+      "runStatus": "Статус виконання",
+      "mode": "Режим",
+      "agent": "Агент",
+      "createdAt": "Створено",
+      "updatedAt": "Оновлено",
+      "taskId": "ID завдання",
+      "objective": "Мета",
+      "acceptanceCriteria": "Критерії приймання",
+      "none": "Немає",
+      "openConversation": "Відкрити розмову"
     }
   }
 }

@@ -1358,6 +1358,19 @@
       "agent": "Агент",
       "plan": "План",
       "goal": "Цель"
+    },
+    "detail": {
+      "boardColumn": "Колонка",
+      "runStatus": "Статус выполнения",
+      "mode": "Режим",
+      "agent": "Агент",
+      "createdAt": "Создано",
+      "updatedAt": "Обновлено",
+      "taskId": "ID задачи",
+      "objective": "Цель",
+      "acceptanceCriteria": "Критерии приёмки",
+      "none": "Нет",
+      "openConversation": "Открыть диалог"
     }
   }
 }
