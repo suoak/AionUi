@@ -3,6 +3,7 @@
 // Renderer code should import from here instead of @process/team/types.
 
 import type { ChatFileRef } from '@/common/types/chatFile';
+import type { SquadRunPayload } from '../agent/squadRun';
 
 /** Role of a teammate within a team */
 export type TeammateRole = 'leader' | 'teammate';
@@ -52,6 +53,8 @@ export type TeamAssistant = {
   model?: string;
   pending_confirmations?: number;
   context_reset: TeamContextResetCapability;
+  /** M8 E7-6: Squad role title ("Leader" for lead; template member role_title). */
+  squad_role_title?: string;
 };
 
 /** Persisted team record (stored in SQLite `teams` table) */
@@ -71,6 +74,10 @@ export type TTeam = {
   session_mode?: string;
   /** M8 E7: set when the Team was instantiated from a Squad template (aioncore #192). */
   squad_template_id?: string;
+  /** M8 E7-6: template leader_mode (`route_only` | `route_and_work`); omitted for plain Teams. */
+  squad_leader_mode?: string;
+  /** M8 E7-6: same payload as GET /api/teams/{id}/squad-run; omitted when nothing to show. */
+  squad_run?: SquadRunPayload;
   created_at: number;
   updated_at: number;
 };

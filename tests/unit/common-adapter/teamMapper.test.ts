@@ -213,4 +213,51 @@ describe('teamMapper', () => {
       })
     ).toThrow('assistant_id is required');
   });
+
+  it('maps E7-6 squad fields on team and assistants', () => {
+    const team = fromBackendTeam({
+      id: 't1',
+      user_id: 'u1',
+      name: 'Squad Team',
+      workspace: '/tmp',
+      workspace_mode: 'shared',
+      leader_assistant_id: 'a1',
+      squad_template_id: 'sq1',
+      squad_leader_mode: 'route_only',
+      squad_run: {
+        team_id: 't1',
+        state: 'running',
+        leader_conversation_id: 'c1',
+        leader_mode: 'route_only',
+        updated_at: 9,
+      },
+      assistants: [
+        {
+          slot_id: 's1',
+          conversation_id: 'c1',
+          role: 'lead',
+          assistant_name: 'Lead',
+          assistant_id: 'a1',
+          squad_role_title: 'Leader',
+          context_reset: { supported: false, availability: 'unsupported' },
+        },
+        {
+          slot_id: 's2',
+          conversation_id: 'c2',
+          role: 'teammate',
+          assistant_name: 'Mem',
+          assistant_id: 'a2',
+          squad_role_title: 'Reviewer',
+          context_reset: { supported: false, availability: 'unsupported' },
+        },
+      ],
+      created_at: 1,
+      updated_at: 2,
+    });
+    expect(team.squad_template_id).toBe('sq1');
+    expect(team.squad_leader_mode).toBe('route_only');
+    expect(team.squad_run?.state).toBe('running');
+    expect(team.assistants[0].squad_role_title).toBe('Leader');
+    expect(team.assistants[1].squad_role_title).toBe('Reviewer');
+  });
 });
