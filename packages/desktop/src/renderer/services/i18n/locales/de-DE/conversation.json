@@ -1321,7 +1321,6 @@
     "retry": "Erneut versuchen",
     "emptyColumn": "Keine Arbeitselemente",
     "showCancelled": "Abgebrochene anzeigen",
-    "previewNotice": "Vorschau: Spalten werden vorerst aus dem Ausführungsstatus abgeleitet. Ziehen, Zuweisen und Review folgen, sobald das Backend bereit ist.",
     "noConversation": "Dieses Arbeitselement hat keine verknüpfte Unterhaltung",
     "columns": {
       "backlog": "Backlog",
@@ -1353,7 +1352,73 @@
       "objective": "Ziel",
       "acceptanceCriteria": "Akzeptanzkriterien",
       "none": "Keine",
-      "openConversation": "Unterhaltung öffnen"
+      "openConversation": "Unterhaltung öffnen",
+      "priority": "Priorität",
+      "assignee": "Zuständig",
+      "labels": "Labels"
+    },
+    "legacyNotice": "Dieser Core bietet die Board-API noch nicht an: Spalten werden aus dem Laufstatus abgeleitet, das Board ist schreibgeschützt.",
+    "priority": {
+      "none": "Keine Priorität",
+      "low": "Niedrig",
+      "medium": "Mittel",
+      "high": "Hoch",
+      "urgent": "Dringend"
+    },
+    "assignee": {
+      "title": "Zuständig",
+      "none": "Nicht zugewiesen",
+      "idPlaceholder": "Zuständigen-ID",
+      "save": "Zuweisen",
+      "unassign": "Zuweisung aufheben",
+      "kind": {
+        "user": "Benutzer",
+        "agent": "Agent",
+        "squad": "Squad"
+      }
+    },
+    "move": {
+      "title": "In Spalte verschieben",
+      "placeholder": "Spalte wählen"
+    },
+    "review": {
+      "title": "Review",
+      "hint": "Genehmigen markiert als erledigt; Ablehnen mit Kommentar schickt zurück nach „Zu erledigen“.",
+      "approve": "Genehmigen",
+      "reject": "Ablehnen",
+      "commentPlaceholder": "Review-Kommentar (zum Ablehnen erforderlich)",
+      "rejectNeedsComment": "Zum Ablehnen einen Kommentar angeben"
+    },
+    "timeline": {
+      "title": "Aktivität",
+      "empty": "Noch keine Aktivität",
+      "loadFailed": "Aktivität konnte nicht geladen werden",
+      "placeholder": "Kommentar schreiben",
+      "submit": "Kommentieren",
+      "edit": "Bearbeiten",
+      "save": "Speichern",
+      "cancel": "Abbrechen",
+      "edited": "bearbeitet",
+      "statusChange": "Von {{from}} nach {{to}} verschoben",
+      "assigned": "{{assignee}} zugewiesen",
+      "unassigned": "Zuweisung aufgehoben",
+      "approved": "Genehmigt",
+      "rejected": "Abgelehnt",
+      "author": {
+        "user": "Benutzer",
+        "agent": "Agent",
+        "system": "System"
+      }
+    },
+    "errors": {
+      "review_required": "Nach „Erledigt“ oder zurück aus „In Review“ geht es nur über das Review.",
+      "backlog_not_started": "Vor dem Start zuerst nach „Zu erledigen“ verschieben.",
+      "plan_not_approved": "Der Plan muss vor dem Start genehmigt sein.",
+      "agent_review_gate": "Ein Agentenergebnis braucht ein menschliches Review.",
+      "not_in_review": "Nur Elemente in Review können geprüft werden.",
+      "not_allowed": "Diese Verschiebung ist nicht erlaubt.",
+      "commentEditWindow": "Kommentare kann nur der Autor innerhalb von 15 Minuten bearbeiten.",
+      "generic": "Vorgang fehlgeschlagen. Bitte erneut versuchen."
     }
   }
 }

@@ -17,6 +17,87 @@ export type TaskSessionStatus = (typeof TASK_SESSION_STATUSES)[number];
 export const TASK_BOARD_STATUSES = ['backlog', 'todo', 'in_progress', 'in_review', 'done', 'cancelled'] as const;
 export type TaskBoardStatus = (typeof TASK_BOARD_STATUSES)[number];
 
+// ---- Work-item board HTTP API (aioncore ≥ M8 E6-3; mirrors aionui-api-types task_board.rs) ----
+
+export type TaskAssigneeKind = 'user' | 'agent' | 'squad';
+export type TaskAssignee = { kind: TaskAssigneeKind; id: string };
+
+/** One card of `GET /api/task-sessions/board`. `status` is the run state (badge only). */
+export type TaskBoardItem = {
+  id: string;
+  title: string;
+  project_id: string | null;
+  conversation_id: string | null;
+  mode: TaskSessionMode;
+  status: TaskSessionStatus;
+  board_status: TaskBoardStatus;
+  assignee: TaskAssignee | null;
+  /** 0 none, 1 low, 2 medium, 3 high, 4 urgent. */
+  priority: number;
+  labels: string[];
+  /** Lexicographic order inside a column; `null` sorts last. */
+  board_rank: string | null;
+  external_ref: string | null;
+  created_at: number;
+  updated_at: number;
+};
+
+/** `GET /api/task-sessions/board`: always all six columns, in display order. */
+export type TaskBoardResponse = {
+  columns: { board_status: TaskBoardStatus; items: TaskBoardItem[] }[];
+};
+
+export type TaskBoardQuery = {
+  project_id?: string;
+  assignee_kind?: TaskAssigneeKind;
+  assignee_id?: string;
+  label?: string;
+};
+
+/**
+ * `PATCH /api/task-sessions/{id}/board`. Absent fields stay unchanged; `null`
+ * clears `board_rank` / `assignee`. `done` is only reachable through review.
+ */
+export type UpdateTaskBoardInput = {
+  board_status?: Exclude<TaskBoardStatus, 'done'>;
+  board_rank?: string | null;
+  assignee?: TaskAssignee | null;
+  priority?: number;
+  labels?: string[];
+};
+
+export type TaskCommentKind = 'comment' | 'status_change' | 'assignment' | 'review_decision';
+
+/**
+ * Timeline entry. `body` is plain text for `comment`; a JSON object for the
+ * event kinds: `status_change` {from,to}, `assignment` {assignee},
+ * `review_decision` {decision,comment}.
+ */
+export type TaskComment = {
+  id: string;
+  task_session_id: string;
+  author_kind: 'user' | 'agent' | 'system';
+  author_id: string;
+  kind: TaskCommentKind;
+  body: string;
+  created_at: number;
+  edited_at: number | null;
+};
+
+export type TaskBoardReviewDecision = 'approve' | 'reject';
+/** `reject` requires a non-empty comment and sends the item back to `todo`. */
+export type TaskBoardReviewInput = { decision: TaskBoardReviewDecision; comment?: string };
+export type TaskBoardReviewResult = { item: TaskBoardItem; decision: TaskComment };
+
+/** `details.reason` of a 409 `board_transition_rejected`. */
+export type TaskBoardRejectionReason =
+  | 'review_required'
+  | 'backlog_not_started'
+  | 'plan_not_approved'
+  | 'agent_review_gate'
+  | 'not_in_review'
+  | 'not_allowed';
+
 export type PlanningIsolationLevel = 'guaranteed' | 'best_effort' | 'unsupported';
 export type AgentIntegrationMode =
   | 'native_sandbox'

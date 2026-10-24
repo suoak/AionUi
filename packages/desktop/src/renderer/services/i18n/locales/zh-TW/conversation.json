@@ -1320,7 +1320,6 @@
     "retry": "重試",
     "emptyColumn": "暫無工作項",
     "showCancelled": "顯示已取消",
-    "previewNotice": "預覽版：欄位暫依任務執行狀態推斷，拖曳、指派和審查將在後端就緒後開放。",
     "noConversation": "此工作項沒有關聯對話",
     "columns": {
       "backlog": "待規劃",
@@ -1352,7 +1351,73 @@
       "objective": "目標",
       "acceptanceCriteria": "驗收標準",
       "none": "無",
-      "openConversation": "開啟對話"
+      "openConversation": "開啟對話",
+      "priority": "優先級",
+      "assignee": "負責人",
+      "labels": "標籤"
+    },
+    "legacyNotice": "目前核心尚未提供看板介面：欄位依任務執行狀態推斷，看板為唯讀。",
+    "priority": {
+      "none": "無優先級",
+      "low": "低",
+      "medium": "中",
+      "high": "高",
+      "urgent": "緊急"
+    },
+    "assignee": {
+      "title": "負責人",
+      "none": "未指派",
+      "idPlaceholder": "負責人 ID",
+      "save": "指派",
+      "unassign": "取消指派",
+      "kind": {
+        "user": "使用者",
+        "agent": "智慧體",
+        "squad": "小隊"
+      }
+    },
+    "move": {
+      "title": "移動到欄位",
+      "placeholder": "選擇欄位"
+    },
+    "review": {
+      "title": "審查",
+      "hint": "核准後標記為完成；駁回需填寫意見，並退回到待辦。",
+      "approve": "核准",
+      "reject": "駁回",
+      "commentPlaceholder": "審查意見（駁回時必填）",
+      "rejectNeedsComment": "駁回前請填寫意見"
+    },
+    "timeline": {
+      "title": "動態",
+      "empty": "尚無動態",
+      "loadFailed": "載入動態失敗",
+      "placeholder": "撰寫留言",
+      "submit": "留言",
+      "edit": "編輯",
+      "save": "儲存",
+      "cancel": "取消",
+      "edited": "已編輯",
+      "statusChange": "從 {{from}} 移至 {{to}}",
+      "assigned": "指派給 {{assignee}}",
+      "unassigned": "已取消指派",
+      "approved": "已核准",
+      "rejected": "已駁回",
+      "author": {
+        "user": "使用者",
+        "agent": "智慧體",
+        "system": "系統"
+      }
+    },
+    "errors": {
+      "review_required": "移到「完成」或從「審查中」退回須經審查。",
+      "backlog_not_started": "請先移到「待辦」再開始工作。",
+      "plan_not_approved": "計畫核准後才能開始工作。",
+      "agent_review_gate": "智慧體產出的結果需要人工審查。",
+      "not_in_review": "只有審查中的項目可以審查。",
+      "not_allowed": "不允許此移動。",
+      "commentEditWindow": "留言僅作者可在 15 分鐘內編輯。",
+      "generic": "操作失敗，請重試。"
     }
   }
 }

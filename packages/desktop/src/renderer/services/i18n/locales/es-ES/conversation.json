@@ -1321,7 +1321,6 @@
     "retry": "Reintentar",
     "emptyColumn": "Sin elementos",
     "showCancelled": "Mostrar canceladas",
-    "previewNotice": "Vista previa: por ahora las columnas se deducen del estado de ejecución. Arrastrar, asignar y revisar llegarán cuando el backend esté listo.",
     "noConversation": "Este elemento no tiene conversación vinculada",
     "columns": {
       "backlog": "Pendientes",
@@ -1353,7 +1352,73 @@
       "objective": "Objetivo",
       "acceptanceCriteria": "Criterios de aceptación",
       "none": "Ninguno",
-      "openConversation": "Abrir conversación"
+      "openConversation": "Abrir conversación",
+      "priority": "Prioridad",
+      "assignee": "Responsable",
+      "labels": "Etiquetas"
+    },
+    "legacyNotice": "Este núcleo aún no ofrece la API del tablero: las columnas se infieren del estado de ejecución y el tablero es de solo lectura.",
+    "priority": {
+      "none": "Sin prioridad",
+      "low": "Baja",
+      "medium": "Media",
+      "high": "Alta",
+      "urgent": "Urgente"
+    },
+    "assignee": {
+      "title": "Responsable",
+      "none": "Sin asignar",
+      "idPlaceholder": "ID del responsable",
+      "save": "Asignar",
+      "unassign": "Quitar asignación",
+      "kind": {
+        "user": "Usuario",
+        "agent": "Agente",
+        "squad": "Escuadra"
+      }
+    },
+    "move": {
+      "title": "Mover a columna",
+      "placeholder": "Elige una columna"
+    },
+    "review": {
+      "title": "Revisión",
+      "hint": "Aprobar lo marca como hecho; rechazar con un comentario lo devuelve a Por hacer.",
+      "approve": "Aprobar",
+      "reject": "Rechazar",
+      "commentPlaceholder": "Comentario de revisión (obligatorio para rechazar)",
+      "rejectNeedsComment": "Añade un comentario para rechazar"
+    },
+    "timeline": {
+      "title": "Actividad",
+      "empty": "Sin actividad",
+      "loadFailed": "No se pudo cargar la actividad",
+      "placeholder": "Escribe un comentario",
+      "submit": "Comentar",
+      "edit": "Editar",
+      "save": "Guardar",
+      "cancel": "Cancelar",
+      "edited": "editado",
+      "statusChange": "Movido de {{from}} a {{to}}",
+      "assigned": "Asignado a {{assignee}}",
+      "unassigned": "Asignación eliminada",
+      "approved": "Aprobado",
+      "rejected": "Rechazado",
+      "author": {
+        "user": "Usuario",
+        "agent": "Agente",
+        "system": "Sistema"
+      }
+    },
+    "errors": {
+      "review_required": "Pasar a Hecho o salir de En revisión requiere revisión.",
+      "backlog_not_started": "Muévelo a Por hacer antes de empezar.",
+      "plan_not_approved": "El plan debe aprobarse antes de empezar.",
+      "agent_review_gate": "Un resultado de agente necesita revisión humana.",
+      "not_in_review": "Solo se pueden revisar elementos en revisión.",
+      "not_allowed": "Este movimiento no está permitido.",
+      "commentEditWindow": "Solo el autor puede editar un comentario durante 15 minutos.",
+      "generic": "La operación falló. Inténtalo de nuevo."
     }
   }
 }

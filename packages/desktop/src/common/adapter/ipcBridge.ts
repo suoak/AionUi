@@ -87,6 +87,13 @@ import type {
   CreatePullRequestResult,
   ScmDelivery,
   ScmHostStatus,
+  TaskBoardItem,
+  TaskBoardQuery,
+  TaskBoardResponse,
+  TaskBoardReviewInput,
+  TaskBoardReviewResult,
+  TaskComment,
+  UpdateTaskBoardInput,
 } from '../types/agent/taskSession';
 import type {
   CreateWorktreeInput,
@@ -1191,6 +1198,42 @@ export const taskSession = {
       : '/api/task-sessions'
   ),
   get: httpGet<TaskSession, { id: string }>((params) => `/api/task-sessions/${encodeURIComponent(params.id)}`),
+  /** Work-item board (aioncore ≥ M8 E6-3); older cores answer 404/405. */
+  board: {
+    get: httpGet<TaskBoardResponse, TaskBoardQuery>((params) => {
+      const query = new URLSearchParams();
+      for (const [key, value] of Object.entries(params ?? {})) {
+        if (typeof value === 'string' && value) query.set(key, value);
+      }
+      const qs = query.toString();
+      return qs ? `/api/task-sessions/board?${qs}` : '/api/task-sessions/board';
+    }),
+    update: httpPatch<TaskBoardItem, { id: string; updates: UpdateTaskBoardInput }>(
+      (params) => `/api/task-sessions/${encodeURIComponent(params.id)}/board`,
+      (params) => params.updates
+    ),
+    review: httpPost<TaskBoardReviewResult, { id: string } & TaskBoardReviewInput>(
+      (params) => `/api/task-sessions/${encodeURIComponent(params.id)}/review`,
+      (params) =>
+        params.comment === undefined
+          ? { decision: params.decision }
+          : { decision: params.decision, comment: params.comment }
+    ),
+    comments: {
+      list: httpGet<TaskComment[], { id: string }>(
+        (params) => `/api/task-sessions/${encodeURIComponent(params.id)}/comments`
+      ),
+      create: httpPost<TaskComment, { id: string; body: string }>(
+        (params) => `/api/task-sessions/${encodeURIComponent(params.id)}/comments`,
+        (params) => ({ body: params.body })
+      ),
+      edit: httpPatch<TaskComment, { id: string; comment_id: string; body: string }>(
+        (params) =>
+          `/api/task-sessions/${encodeURIComponent(params.id)}/comments/${encodeURIComponent(params.comment_id)}`,
+        (params) => ({ body: params.body })
+      ),
+    },
+  },
   planningIsolation: httpGet<PlanningIsolation, { id: string }>(
     (params) => `/api/task-sessions/${encodeURIComponent(params.id)}/planning-isolation`
   ),
