@@ -65,3 +65,49 @@ export const SQUAD_DESCRIPTION_MAX = 2000;
 export const SQUAD_ROLE_TITLE_MAX = 60;
 export const SQUAD_ROLE_DESCRIPTION_MAX = 2000;
 export const SQUAD_MAX_PARALLEL = 4;
+
+// ---------------------------------------------------------------------------
+// M8 E7-2: member-config preview + instantiation
+// ---------------------------------------------------------------------------
+
+/** Hard rule: no participant of a Squad team may spawn/add agents. */
+export const SQUAD_SUBAGENT_SPAWN_FORBIDDEN = 'forbidden';
+
+export type SquadPreviewParticipant = {
+  assistant_id: string;
+  /** Agent slot name the Team will use (role_title for members, de-duplicated). */
+  agent_name: string;
+  role: 'lead' | 'teammate';
+  role_title: string;
+  role_description: string;
+  max_parallel: number;
+  assistant: AssistantBrief;
+  backend: string | null;
+  /** false when the assistant is no longer team-selectable. */
+  eligible: boolean;
+  subagent_spawn: string;
+  /** Leader only, route_only: Team MCP tools it keeps. Absent = unrestricted. */
+  team_tools?: string[];
+};
+
+export type SquadPreviewBlocker = {
+  code: string;
+  assistant_id?: string;
+};
+
+/** GET /api/squads/{id}/preview */
+export type SquadPreview = {
+  squad_template_id: string;
+  name: string;
+  leader_mode: SquadLeaderMode;
+  /** Leader first, then members in template order. */
+  participants: SquadPreviewParticipant[];
+  can_instantiate: boolean;
+  blocking: SquadPreviewBlocker[];
+};
+
+/** POST /api/squads/{id}/instantiate body (all optional). */
+export type SquadInstantiateInput = {
+  name?: string;
+  workspace?: string;
+};

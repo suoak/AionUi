@@ -291,7 +291,30 @@
         "squad_store_failed": "保存 Squad 失败，请重试。",
         "squad_assistant_catalog_unavailable": "助手列表暂时不可用，请稍后再试。",
         "forbidden": "你没有执行此操作的权限。",
-        "generic": "出错了，请重试。"
+        "generic": "出错了，请重试。",
+        "squad_instantiate_unavailable": "暂时无法从 Squad 创建团队",
+        "squad_spawn_forbidden": "Squad 团队名册固定，不允许添加智能体"
+      },
+      "previewAction": "预览并创建团队",
+      "preview": {
+        "title": "Squad 预览：{{name}}",
+        "instantiate": "创建团队",
+        "created": "已创建团队“{{name}}”",
+        "fixedRoster": "Squad 团队名册固定：任何成员（包括 Leader）都不能派生或添加智能体。",
+        "ineligible": "不可用",
+        "maxParallel": "最大并行任务数：{{count}}",
+        "teamTools": "Leader 保留的团队工具：",
+        "noTools": "无",
+        "teamName": "团队名称",
+        "role": {
+          "lead": "Leader",
+          "teammate": "成员"
+        },
+        "blockers": {
+          "squad_assistant_not_eligible": "{{name}} 已不可用于团队",
+          "squad_team_visibility_unavailable": "团队可见性暂不可用",
+          "generic": "该 Squad 当前无法实例化"
+        }
       }
     }
   },

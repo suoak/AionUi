@@ -3,6 +3,7 @@ import { Message } from '@arco-design/web-react';
 import { useTranslation } from 'react-i18next';
 import type { TeamAssistant } from '@/common/types/team/teamTypes';
 import type { TeamAssistantInput } from '@/common/adapter/teamMapper';
+import { isBackendHttpError } from '@/common/adapter/httpBridge';
 import { getConversationCreateErrorMessage } from '@renderer/pages/conversation/utils/conversationCreateError';
 import { getSendBoxDraftHook } from '@renderer/hooks/chat/useSendBoxDraft';
 import { useTeamAssistantOptions } from '../../hooks/useTeamAssistantOptions';
@@ -69,7 +70,12 @@ const TeamAddMemberPopover: React.FC<Props> = ({ children, disabled = false }) =
       setVisible(false);
       switchTab(created.slot_id);
     } catch (error) {
-      Message.error(getConversationCreateErrorMessage(error, t));
+      // Squad-instantiated teams have a fixed roster (403 squad_spawn_forbidden).
+      Message.error(
+        isBackendHttpError(error) && error.code === 'squad_spawn_forbidden'
+          ? t('agent.agentCenter.squad.errors.squad_spawn_forbidden')
+          : getConversationCreateErrorMessage(error, t)
+      );
     } finally {
       setPendingAssistantId(undefined);
     }

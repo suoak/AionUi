@@ -291,7 +291,30 @@
         "squad_store_failed": "Squad kaydedilemedi. Lütfen tekrar deneyin.",
         "squad_assistant_catalog_unavailable": "Asistan listesi geçici olarak kullanılamıyor. Lütfen daha sonra tekrar deneyin.",
         "forbidden": "Bu işlem için yetkiniz yok.",
-        "generic": "Bir sorun oluştu. Lütfen tekrar deneyin."
+        "generic": "Bir sorun oluştu. Lütfen tekrar deneyin.",
+        "squad_instantiate_unavailable": "Şu anda Squad'dan ekip oluşturulamıyor",
+        "squad_spawn_forbidden": "Squad ekiplerinin kadrosu sabittir; ajan eklenemez"
+      },
+      "previewAction": "Önizle ve ekip oluştur",
+      "preview": {
+        "title": "Squad önizlemesi: {{name}}",
+        "instantiate": "Ekip oluştur",
+        "created": "\"{{name}}\" ekibi oluşturuldu",
+        "fixedRoster": "Squad ekiplerinin kadrosu sabittir: Leader dahil hiçbir üye ajan oluşturamaz veya ekleyemez.",
+        "ineligible": "Kullanılamıyor",
+        "maxParallel": "Maks. paralel görev: {{count}}",
+        "teamTools": "Leader'ın tuttuğu ekip araçları:",
+        "noTools": "yok",
+        "teamName": "Ekip adı",
+        "role": {
+          "lead": "Leader",
+          "teammate": "Üye"
+        },
+        "blockers": {
+          "squad_assistant_not_eligible": "{{name}} artık ekipler için kullanılamıyor",
+          "squad_team_visibility_unavailable": "Ekip görünürlüğü henüz kullanılamıyor",
+          "generic": "Bu Squad şu anda örneklenemiyor"
+        }
       }
     }
   },

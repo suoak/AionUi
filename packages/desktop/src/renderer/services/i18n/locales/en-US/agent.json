@@ -291,7 +291,30 @@
         "squad_store_failed": "Failed to save the Squad. Please try again.",
         "squad_assistant_catalog_unavailable": "The assistant list is temporarily unavailable. Please try again later.",
         "forbidden": "You do not have permission to do this.",
-        "generic": "Something went wrong. Please try again."
+        "generic": "Something went wrong. Please try again.",
+        "squad_instantiate_unavailable": "Creating teams from Squads is not available right now",
+        "squad_spawn_forbidden": "Squad teams have a fixed roster; adding agents is not allowed"
+      },
+      "previewAction": "Preview & create team",
+      "preview": {
+        "title": "Squad preview: {{name}}",
+        "instantiate": "Create team",
+        "created": "Team \"{{name}}\" created",
+        "fixedRoster": "Squad teams have a fixed roster: no member (including the Leader) can spawn or add agents.",
+        "ineligible": "Not available",
+        "maxParallel": "Max parallel tasks: {{count}}",
+        "teamTools": "Team tools kept by the Leader:",
+        "noTools": "none",
+        "teamName": "Team name",
+        "role": {
+          "lead": "Leader",
+          "teammate": "Member"
+        },
+        "blockers": {
+          "squad_assistant_not_eligible": "{{name}} is no longer available for teams",
+          "squad_team_visibility_unavailable": "Team visibility is not available yet",
+          "generic": "This Squad cannot be instantiated right now"
+        }
       }
     }
   },
