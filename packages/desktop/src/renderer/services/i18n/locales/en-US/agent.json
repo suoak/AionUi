@@ -229,6 +229,70 @@
       "confirmDescription": "The published version remains in history. The agent returns to draft and can be edited or published again.",
       "success": "Agent unpublished",
       "error": "Failed to unpublish"
+    },
+    "squad": {
+      "entry": "Squads",
+      "title": "Squad templates",
+      "description": "Combine a Leader and up to 5 member assistants into a reusable team template.",
+      "back": "Agent Center",
+      "create": "New Squad",
+      "edit": "Edit",
+      "delete": "Delete",
+      "save": "Save",
+      "saved": "Squad saved",
+      "created": "Squad created",
+      "deleted": "Squad deleted",
+      "loading": "Loading…",
+      "retry": "Retry",
+      "empty": "No Squads yet. Click \"New Squad\" to create one.",
+      "leaderLabel": "Leader: {{name}}",
+      "memberCount": "Members: {{count}}",
+      "missingRefs": "{{count}} referenced assistant(s) no longer available",
+      "deleteConfirmTitle": "Delete this Squad template?",
+      "deleteConfirmContent": "Delete \"{{name}}\"? Teams already using it are not affected.",
+      "inUseCount": "Used by {{count}} team(s); it cannot be deleted.",
+      "ineligibleNamed": "{{name}} cannot be added to a Squad.",
+      "addMember": "Add member",
+      "removeMember": "Remove",
+      "membersHint": "Up to {{limit}} members besides the Leader. Members cannot spawn sub-agents.",
+      "fields": {
+        "name": "Name",
+        "description": "Description",
+        "leader": "Leader",
+        "members": "Members",
+        "assistant": "Select an assistant",
+        "roleTitle": "Role title",
+        "roleDescription": "Role description (optional)",
+        "maxParallel": "Max parallel tasks"
+      },
+      "leaderMode": {
+        "route_only": "Route only",
+        "route_and_work": "Route and work"
+      },
+      "leaderModeHint": {
+        "route_only": "The Leader only assigns work to members and does not take tasks itself.",
+        "route_and_work": "The Leader assigns work and can also take tasks itself."
+      },
+      "errors": {
+        "squad_invalid_body": "Invalid request.",
+        "squad_invalid_name": "Name is required (up to 100 characters).",
+        "squad_invalid_description": "Description is too long (up to 2000 characters).",
+        "squad_leader_required": "Choose a Leader.",
+        "squad_no_members": "Add at least one member.",
+        "squad_too_many_members": "Too many members: up to 6 including the Leader.",
+        "squad_invalid_member": "A member is incomplete: check the assistant, role title (up to 60 characters) and max parallel tasks (1–4).",
+        "squad_member_duplicate": "An assistant appears more than once (the Leader cannot also be a member).",
+        "squad_assistant_not_eligible": "This assistant cannot be added to a Squad.",
+        "squad_team_visibility_unavailable": "Team-shared Squads are not available yet.",
+        "squad_not_found": "Squad not found; it may have been deleted.",
+        "squad_name_conflict": "A Squad with this name already exists.",
+        "squad_stale": "This Squad was changed elsewhere; the list has been refreshed. Please edit again.",
+        "squad_in_use": "This Squad is used by a team and cannot be deleted.",
+        "squad_store_failed": "Failed to save the Squad. Please try again.",
+        "squad_assistant_catalog_unavailable": "The assistant list is temporarily unavailable. Please try again later.",
+        "forbidden": "You do not have permission to do this.",
+        "generic": "Something went wrong. Please try again."
+      }
     }
   },
   "skillEvolution": {

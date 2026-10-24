@@ -229,6 +229,70 @@
       "confirmDescription": "Yayımlanan sürüm geçmişte kalır ve aracı taslağa döner.",
       "success": "Yayından kaldırıldı",
       "error": "Yayından kaldırılamadı"
+    },
+    "squad": {
+      "entry": "Squad'lar",
+      "title": "Squad şablonları",
+      "description": "Bir Leader ve en fazla 5 üye asistanı yeniden kullanılabilir bir ekip şablonunda birleştirin.",
+      "back": "Ajan Merkezi",
+      "create": "Yeni Squad",
+      "edit": "Düzenle",
+      "delete": "Sil",
+      "save": "Kaydet",
+      "saved": "Squad kaydedildi",
+      "created": "Squad oluşturuldu",
+      "deleted": "Squad silindi",
+      "loading": "Yükleniyor…",
+      "retry": "Yeniden dene",
+      "empty": "Henüz Squad yok. Oluşturmak için \"Yeni Squad\"a tıklayın.",
+      "leaderLabel": "Leader: {{name}}",
+      "memberCount": "Üyeler: {{count}}",
+      "missingRefs": "Başvurulan {{count}} asistan artık kullanılamıyor",
+      "deleteConfirmTitle": "Bu Squad şablonu silinsin mi?",
+      "deleteConfirmContent": "\"{{name}}\" silinsin mi? Onu zaten kullanan ekipler etkilenmez.",
+      "inUseCount": "{{count}} ekip tarafından kullanılıyor; silinemez.",
+      "ineligibleNamed": "{{name}} bir Squad'a eklenemez.",
+      "addMember": "Üye ekle",
+      "removeMember": "Kaldır",
+      "membersHint": "Leader dışında en fazla {{limit}} üye. Üyeler alt ajan başlatamaz.",
+      "fields": {
+        "name": "Ad",
+        "description": "Açıklama",
+        "leader": "Leader",
+        "members": "Üyeler",
+        "assistant": "Bir asistan seçin",
+        "roleTitle": "Rol başlığı",
+        "roleDescription": "Rol açıklaması (isteğe bağlı)",
+        "maxParallel": "En fazla paralel görev"
+      },
+      "leaderMode": {
+        "route_only": "Yalnızca dağıt",
+        "route_and_work": "Dağıt ve çalış"
+      },
+      "leaderModeHint": {
+        "route_only": "Leader görevleri yalnızca üyelere dağıtır, kendisi görev almaz.",
+        "route_and_work": "Leader görevleri dağıtır ve kendisi de görev alabilir."
+      },
+      "errors": {
+        "squad_invalid_body": "Geçersiz istek.",
+        "squad_invalid_name": "Ad gereklidir (en fazla 100 karakter).",
+        "squad_invalid_description": "Açıklama çok uzun (en fazla 2000 karakter).",
+        "squad_leader_required": "Bir Leader seçin.",
+        "squad_no_members": "En az bir üye ekleyin.",
+        "squad_too_many_members": "Çok fazla üye: Leader dahil en fazla 6.",
+        "squad_invalid_member": "Bir üye eksik: asistanı, rol başlığını (en fazla 60 karakter) ve paralel görev sayısını (1–4) kontrol edin.",
+        "squad_member_duplicate": "Bir asistan birden fazla kez geçiyor (Leader aynı zamanda üye olamaz).",
+        "squad_assistant_not_eligible": "Bu asistan bir Squad'a eklenemez.",
+        "squad_team_visibility_unavailable": "Ekiple paylaşılan Squad'lar henüz kullanılamıyor.",
+        "squad_not_found": "Squad bulunamadı; silinmiş olabilir.",
+        "squad_name_conflict": "Bu ada sahip bir Squad zaten var.",
+        "squad_stale": "Bu Squad başka bir yerde değiştirildi; liste yenilendi. Lütfen yeniden düzenleyin.",
+        "squad_in_use": "Bu Squad bir ekip tarafından kullanılıyor ve silinemez.",
+        "squad_store_failed": "Squad kaydedilemedi. Lütfen tekrar deneyin.",
+        "squad_assistant_catalog_unavailable": "Asistan listesi geçici olarak kullanılamıyor. Lütfen daha sonra tekrar deneyin.",
+        "forbidden": "Bu işlem için yetkiniz yok.",
+        "generic": "Bir sorun oluştu. Lütfen tekrar deneyin."
+      }
     }
   },
   "skillEvolution": {

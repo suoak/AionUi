@@ -128,9 +128,14 @@ const AgentCenterListPage: React.FC = () => {
           </Title>
           <Text type='secondary'>{t('agent.agentCenter.description')}</Text>
         </div>
-        <Button type='primary' onClick={() => navigate('/agent-center/new')}>
-          创建智能体
-        </Button>
+        <div className='flex gap-8px'>
+          <Button onClick={() => navigate('/agent-center/squads')} data-testid='agent-center-squads'>
+            {t('agent.agentCenter.squad.entry')}
+          </Button>
+          <Button type='primary' onClick={() => navigate('/agent-center/new')}>
+            创建智能体
+          </Button>
+        </div>
       </div>
 
       <Tabs activeTab={scope} onChange={(key) => setScope(key as Scope)}>

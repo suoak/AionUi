@@ -229,6 +229,70 @@
       "confirmDescription": "Die veröffentlichte Version bleibt im Verlauf. Der Agent wird wieder zum Entwurf.",
       "success": "Veröffentlichung zurückgenommen",
       "error": "Zurücknehmen fehlgeschlagen"
+    },
+    "squad": {
+      "entry": "Squads",
+      "title": "Squad-Vorlagen",
+      "description": "Fasse einen Leader und bis zu 5 Mitglieds-Assistenten zu einer wiederverwendbaren Teamvorlage zusammen.",
+      "back": "Agent Center",
+      "create": "Neuer Squad",
+      "edit": "Bearbeiten",
+      "delete": "Löschen",
+      "save": "Speichern",
+      "saved": "Squad gespeichert",
+      "created": "Squad erstellt",
+      "deleted": "Squad gelöscht",
+      "loading": "Wird geladen…",
+      "retry": "Erneut versuchen",
+      "empty": "Noch keine Squads. Klicke auf „Neuer Squad“, um einen zu erstellen.",
+      "leaderLabel": "Leader: {{name}}",
+      "memberCount": "Mitglieder: {{count}}",
+      "missingRefs": "{{count}} referenzierte(r) Assistent(en) nicht mehr verfügbar",
+      "deleteConfirmTitle": "Diese Squad-Vorlage löschen?",
+      "deleteConfirmContent": "„{{name}}“ löschen? Teams, die sie bereits nutzen, sind nicht betroffen.",
+      "inUseCount": "Von {{count}} Team(s) verwendet; kann nicht gelöscht werden.",
+      "ineligibleNamed": "{{name}} kann keinem Squad hinzugefügt werden.",
+      "addMember": "Mitglied hinzufügen",
+      "removeMember": "Entfernen",
+      "membersHint": "Bis zu {{limit}} Mitglieder neben dem Leader. Mitglieder können keine Sub-Agenten starten.",
+      "fields": {
+        "name": "Name",
+        "description": "Beschreibung",
+        "leader": "Leader",
+        "members": "Mitglieder",
+        "assistant": "Assistent auswählen",
+        "roleTitle": "Rollentitel",
+        "roleDescription": "Rollenbeschreibung (optional)",
+        "maxParallel": "Max. parallele Aufgaben"
+      },
+      "leaderMode": {
+        "route_only": "Nur verteilen",
+        "route_and_work": "Verteilen und mitarbeiten"
+      },
+      "leaderModeHint": {
+        "route_only": "Der Leader verteilt nur Aufgaben an Mitglieder und übernimmt selbst keine.",
+        "route_and_work": "Der Leader verteilt Aufgaben und kann auch selbst welche übernehmen."
+      },
+      "errors": {
+        "squad_invalid_body": "Ungültige Anfrage.",
+        "squad_invalid_name": "Name ist erforderlich (bis zu 100 Zeichen).",
+        "squad_invalid_description": "Beschreibung ist zu lang (bis zu 2000 Zeichen).",
+        "squad_leader_required": "Wähle einen Leader.",
+        "squad_no_members": "Füge mindestens ein Mitglied hinzu.",
+        "squad_too_many_members": "Zu viele Mitglieder: höchstens 6 einschließlich Leader.",
+        "squad_invalid_member": "Ein Mitglied ist unvollständig: Prüfe Assistent, Rollentitel (bis zu 60 Zeichen) und max. parallele Aufgaben (1–4).",
+        "squad_member_duplicate": "Ein Assistent kommt mehrfach vor (der Leader kann nicht zugleich Mitglied sein).",
+        "squad_assistant_not_eligible": "Dieser Assistent kann keinem Squad hinzugefügt werden.",
+        "squad_team_visibility_unavailable": "Team-geteilte Squads sind noch nicht verfügbar.",
+        "squad_not_found": "Squad nicht gefunden; er wurde möglicherweise gelöscht.",
+        "squad_name_conflict": "Es gibt bereits einen Squad mit diesem Namen.",
+        "squad_stale": "Dieser Squad wurde anderswo geändert; die Liste wurde aktualisiert. Bitte erneut bearbeiten.",
+        "squad_in_use": "Dieser Squad wird von einem Team verwendet und kann nicht gelöscht werden.",
+        "squad_store_failed": "Squad konnte nicht gespeichert werden. Bitte erneut versuchen.",
+        "squad_assistant_catalog_unavailable": "Die Assistentenliste ist vorübergehend nicht verfügbar. Bitte später erneut versuchen.",
+        "forbidden": "Du hast keine Berechtigung dafür.",
+        "generic": "Etwas ist schiefgelaufen. Bitte erneut versuchen."
+      }
     }
   },
   "skillEvolution": {

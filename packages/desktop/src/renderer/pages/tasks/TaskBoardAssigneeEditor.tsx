@@ -6,6 +6,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import useSWR from 'swr';
 import { Button, Input, Message, Select } from '@arco-design/web-react';
 import { ipcBridge } from '@/common';
 import type { TaskAssignee, TaskAssigneeKind, TaskBoardItem } from '@/common/types/agent/taskSession';
@@ -26,6 +27,10 @@ const TaskBoardAssigneeEditor: React.FC<TaskBoardAssigneeEditorProps> = ({ item,
   const [kind, setKind] = useState<TaskAssigneeKind>(item.assignee?.kind ?? 'agent');
   const [assigneeId, setAssigneeId] = useState(item.assignee?.id ?? '');
   const [pending, setPending] = useState(false);
+  // Squad templates (E7); falls back to a free-text id while the route is unavailable.
+  const { data: squads } = useSWR(kind === 'squad' ? 'squads.list' : null, () => ipcBridge.squads.list.invoke({}), {
+    shouldRetryOnError: false,
+  });
 
   useEffect(() => {
     setKind(item.assignee?.kind ?? 'agent');
@@ -65,13 +70,30 @@ const TaskBoardAssigneeEditor: React.FC<TaskBoardAssigneeEditorProps> = ({ item,
             </Select.Option>
           ))}
         </Select>
-        <Input
-          size='small'
-          value={assigneeId}
-          onChange={setAssigneeId}
-          placeholder={t('conversation.taskBoard.assignee.idPlaceholder')}
-          data-testid='task-board-assignee-id'
-        />
+        {kind === 'squad' && squads && squads.length > 0 ? (
+          <Select
+            size='small'
+            showSearch
+            value={assigneeId || undefined}
+            onChange={(value: string) => setAssigneeId(value)}
+            placeholder={t('conversation.taskBoard.assignee.idPlaceholder')}
+            data-testid='task-board-assignee-squad'
+          >
+            {squads.map((squad) => (
+              <Select.Option key={squad.id} value={squad.id}>
+                {squad.name}
+              </Select.Option>
+            ))}
+          </Select>
+        ) : (
+          <Input
+            size='small'
+            value={assigneeId}
+            onChange={setAssigneeId}
+            placeholder={t('conversation.taskBoard.assignee.idPlaceholder')}
+            data-testid='task-board-assignee-id'
+          />
+        )}
       </div>
       <div className='flex justify-end gap-8px'>
         <Button

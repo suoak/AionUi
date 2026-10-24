@@ -229,6 +229,70 @@
       "confirmDescription": "公開済みバージョンは履歴に保持され、エージェントは下書きに戻ります。",
       "success": "公開を取り消しました",
       "error": "公開の取り消しに失敗しました"
+    },
+    "squad": {
+      "entry": "Squad",
+      "title": "Squad テンプレート",
+      "description": "Leader と最大 5 人のメンバーアシスタントを再利用可能なチームテンプレートにまとめます。",
+      "back": "エージェントセンター",
+      "create": "Squad を作成",
+      "edit": "編集",
+      "delete": "削除",
+      "save": "保存",
+      "saved": "Squad を保存しました",
+      "created": "Squad を作成しました",
+      "deleted": "Squad を削除しました",
+      "loading": "読み込み中…",
+      "retry": "再試行",
+      "empty": "Squad はまだありません。「Squad を作成」から作成してください。",
+      "leaderLabel": "Leader：{{name}}",
+      "memberCount": "メンバー：{{count}}",
+      "missingRefs": "参照中のアシスタント {{count}} 件が利用できません",
+      "deleteConfirmTitle": "この Squad テンプレートを削除しますか？",
+      "deleteConfirmContent": "「{{name}}」を削除しますか？使用中のチームには影響しません。",
+      "inUseCount": "{{count}} 件のチームで使用中のため削除できません。",
+      "ineligibleNamed": "{{name}} は Squad に追加できません。",
+      "addMember": "メンバーを追加",
+      "removeMember": "削除",
+      "membersHint": "Leader 以外に最大 {{limit}} 人まで。メンバーはサブエージェントを起動できません。",
+      "fields": {
+        "name": "名前",
+        "description": "説明",
+        "leader": "Leader",
+        "members": "メンバー",
+        "assistant": "アシスタントを選択",
+        "roleTitle": "役割名",
+        "roleDescription": "役割の説明（任意）",
+        "maxParallel": "最大並行タスク数"
+      },
+      "leaderMode": {
+        "route_only": "振り分けのみ",
+        "route_and_work": "振り分けと実行"
+      },
+      "leaderModeHint": {
+        "route_only": "Leader はメンバーにタスクを割り当てるだけで、自分では担当しません。",
+        "route_and_work": "Leader はタスクを割り当て、自分でも担当できます。"
+      },
+      "errors": {
+        "squad_invalid_body": "リクエストが無効です。",
+        "squad_invalid_name": "名前を入力してください（100 文字以内）。",
+        "squad_invalid_description": "説明が長すぎます（2000 文字以内）。",
+        "squad_leader_required": "Leader を選択してください。",
+        "squad_no_members": "メンバーを 1 人以上追加してください。",
+        "squad_too_many_members": "メンバーが多すぎます：Leader を含めて最大 6 人です。",
+        "squad_invalid_member": "メンバー情報が不完全です：アシスタント、役割名（60 文字以内）、最大並行タスク数（1–4）を確認してください。",
+        "squad_member_duplicate": "同じアシスタントが重複しています（Leader はメンバーを兼任できません）。",
+        "squad_assistant_not_eligible": "このアシスタントは Squad に追加できません。",
+        "squad_team_visibility_unavailable": "チーム共有の Squad はまだ利用できません。",
+        "squad_not_found": "Squad が見つかりません。削除された可能性があります。",
+        "squad_name_conflict": "同じ名前の Squad が既にあります。",
+        "squad_stale": "この Squad は別の場所で変更されました。一覧を更新したので、もう一度編集してください。",
+        "squad_in_use": "この Squad はチームで使用中のため削除できません。",
+        "squad_store_failed": "Squad の保存に失敗しました。もう一度お試しください。",
+        "squad_assistant_catalog_unavailable": "アシスタント一覧が一時的に利用できません。しばらくしてからお試しください。",
+        "forbidden": "この操作を行う権限がありません。",
+        "generic": "エラーが発生しました。もう一度お試しください。"
+      }
     }
   },
   "skillEvolution": {

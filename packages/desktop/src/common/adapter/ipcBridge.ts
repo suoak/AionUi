@@ -206,6 +206,7 @@ import type { AgentMetadata } from '@/renderer/utils/model/agentTypes';
 import type { Theme } from '@/common/theme/types';
 import type { AttachFolderRequest, ProjectDetailDto, ProjectEntryDto } from '@/common/types/project';
 import type { ChatFileRef, ContentEncoding } from '@/common/types/chatFile';
+import type { SquadTemplate, SquadTemplateInput, SquadTemplatePatch } from '@/common/types/agent/squad';
 import type { ProtocolDetectionRequest, ProtocolDetectionResponse } from '../utils/protocolDetector';
 import { normalizeLegacyBrandText } from '../utils/utils';
 import {
@@ -3516,6 +3517,22 @@ export const hub = {
 };
 
 // ---------------------------------------------------------------------------
+// M8 E7 Squad templates — routed to /api/squads/* (aioncore #189).
+export const squads = {
+  list: httpGet<SquadTemplate[], { include_deleted?: boolean }>(
+    (p) => `/api/squads${p?.include_deleted ? '?include_deleted=1' : ''}`
+  ),
+  get: httpGet<SquadTemplate, { id: string }>((p) => `/api/squads/${encodeURIComponent(p.id)}`),
+  create: httpPost<SquadTemplate, SquadTemplateInput>('/api/squads'),
+  update: httpPatch<SquadTemplate, { id: string; updates: SquadTemplatePatch }>(
+    (p) => `/api/squads/${encodeURIComponent(p.id)}`,
+    (p) => p.updates
+  ),
+  remove: httpDelete<{ id: string; deleted_at: number }, { id: string }>(
+    (p) => `/api/squads/${encodeURIComponent(p.id)}`
+  ),
+};
+
 // Team Mode API — routed to /api/teams/*
 // ---------------------------------------------------------------------------
 
