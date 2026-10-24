@@ -1438,5 +1438,12 @@
       "unavailable": "Bu Squad'ın ekipleri için çalıştırma durumu yok.",
       "hint": "Ekibin görevlerinden türetilir; 15 saniyede bir yenilenir."
     }
+  },
+  "squadRouteOnly": {
+    "title": "Squad Leader yalnızca iş dağıtabilir",
+    "body": "Bu Squad Leader yalnızca dağıtım modunda olduğundan {{tool}} aracı engellendi.",
+    "bodyUnknownTool": "Bu Squad Leader yalnızca dağıtım modunda olduğundan bu araç engellendi.",
+    "allowed": "İzin verilen araçlar:",
+    "hint": "Leader bu işi team_send_message veya bir görevle bir ekip üyesine vermelidir."
   }
 }

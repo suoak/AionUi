@@ -6,6 +6,7 @@
 
 import { ipcBridge } from '@/common';
 import type { IMessageToolGroup } from '@/common/chat/chatLib';
+import { parseSquadRouteOnlyRejection } from '@/common/chat/squadRouteOnly';
 import { iconColors } from '@/renderer/styles/colors';
 import { Alert, Button, Image, Message, Radio, Tag, Tooltip } from '@arco-design/web-react';
 import { Copy, Download, LoadingOne } from '@icon-park/react';
@@ -19,6 +20,7 @@ import { useConversationContextSafe } from '@/renderer/hooks/context/Conversatio
 import { parseDiff } from '@/renderer/utils/file/diffUtils';
 import { resolveLocalFileReadRoot } from '@/renderer/utils/file/fileSelection';
 import MessageFileChanges from '../MessageFileChanges';
+import SquadRouteOnlyNotice from './SquadRouteOnlyNotice';
 import CollapsibleContent from '@renderer/components/chat/CollapsibleContent';
 import LocalImageView from '@renderer/components/media/LocalImageView';
 import MarkdownView from '@renderer/components/Markdown';
@@ -492,6 +494,7 @@ const MessageToolGroup: React.FC<IMessageToolGroupProps> = ({ message }) => {
       {message.content.map((content, index) => {
         const { status, call_id, name, description, result_display, confirmationDetails } = content;
         const isLoading = status !== 'Success' && status !== 'Error' && status !== 'Canceled';
+        const squadRouteOnly = status === 'Error' ? parseSquadRouteOnlyRejection(result_display, description) : null;
         // status === "Confirming" &&
         if (confirmationDetails) {
           return (
@@ -588,6 +591,7 @@ const MessageToolGroup: React.FC<IMessageToolGroupProps> = ({ message }) => {
                     <ToolResultDisplay content={content} />
                   </div>
                 )}
+                {squadRouteOnly && <SquadRouteOnlyNotice rejection={squadRouteOnly} />}
                 {status === 'Error' && (
                   <div className='mt-4px flex justify-end'>
                     <ButlerDiagnoseButton

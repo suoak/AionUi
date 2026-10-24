@@ -1436,5 +1436,12 @@
       "unavailable": "此 Squad 的团队暂无运行状态。",
       "hint": "根据团队任务推导，每 15 秒刷新。"
     }
+  },
+  "squadRouteOnly": {
+    "title": "Squad Leader 只能派活",
+    "body": "该 Squad Leader 处于只派活模式，已拦截工具 {{tool}}。",
+    "bodyUnknownTool": "该 Squad Leader 处于只派活模式，已拦截此工具。",
+    "allowed": "可用工具：",
+    "hint": "Leader 应通过 team_send_message 或任务把这项工作交给团队成员。"
   }
 }

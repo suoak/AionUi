@@ -88,7 +88,18 @@ export type SquadPreviewParticipant = {
   subagent_spawn: string;
   /** Leader only, route_only: Team MCP tools it keeps. Absent = unrestricted. */
   team_tools?: string[];
+  /** M8 E7-4: native tool profile applied to this agent's session. */
+  tool_profile?: SquadToolProfile;
+  /** M8 E7-4: whether the backend can actually enforce that profile. */
+  native_tool_enforcement?: NativeToolEnforcement;
 };
+
+/** M8 E7-4: route_only Leader vs member native tool profile. */
+export type SquadToolProfile = 'route_only_leader' | 'member';
+/** M8 E7-4: claude enforces both profiles; aionrs only the Leader; other ACP backends neither. */
+export type NativeToolEnforcement = 'enforced' | 'unenforceable';
+/** Blocker / 400 code: a route_only Leader on a backend that cannot enforce it. */
+export const SQUAD_LEADER_BACKEND_UNENFORCEABLE = 'squad_leader_backend_unenforceable';
 
 export type SquadPreviewBlocker = {
   code: string;

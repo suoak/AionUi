@@ -7,6 +7,7 @@
 import { ipcBridge } from '@/common';
 import type { IMessageAcpToolCall } from '@/common/chat/chatLib';
 import { getAcpImageFileName, getAcpImagePath } from '@/common/chat/acpToolCallOutput';
+import { parseSquadRouteOnlyRejection } from '@/common/chat/squadRouteOnly';
 import { formatRetainedOutputSize, parseRetainedToolOutput } from '@/common/chat/retainedToolOutput';
 import FileChangesPanel from '@/renderer/components/base/FileChangesPanel';
 import LocalImageView from '@/renderer/components/media/LocalImageView';
@@ -19,6 +20,7 @@ import { createTwoFilesPatch } from 'diff';
 import React, { useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import MarkdownView from '@renderer/components/Markdown';
+import SquadRouteOnlyNotice from '../components/SquadRouteOnlyNotice';
 
 const StatusTag: React.FC<{ status: string }> = ({ status }) => {
   const getTagProps = () => {
@@ -174,6 +176,17 @@ const MessageAcpToolCall: React.FC<{ message: IMessageAcpToolCall }> = ({ messag
     Array.isArray(diffContent) &&
     diffContent.length > 0 &&
     diffContent.every((contentItem) => contentItem.type === 'diff');
+  const squadRouteOnly =
+    status === 'failed'
+      ? parseSquadRouteOnlyRejection(
+          update.rawOutput ?? update.raw_output,
+          ...(Array.isArray(diffContent)
+            ? diffContent.map((item) =>
+                item.type === 'content' && item.content?.type === 'text' ? item.content.text : undefined
+              )
+            : [])
+        )
+      : null;
   const imagePath = getAcpImagePath(update);
   const imageAlt = imagePath?.split(/[/\\]/).pop() || t('acp.image.generated_alt');
   const [messageApi, messageContext] = Message.useMessage();
@@ -249,6 +262,7 @@ const MessageAcpToolCall: React.FC<{ message: IMessageAcpToolCall }> = ({ messag
               ))}
             </div>
           )}
+          {squadRouteOnly && <SquadRouteOnlyNotice rejection={squadRouteOnly} />}
           <div className='text-xs text-t-secondary mt-2'>Tool Call ID: {tool_call_id}</div>
         </div>
       </div>

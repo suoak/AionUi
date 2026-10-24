@@ -1437,5 +1437,12 @@
       "unavailable": "Für die Teams dieses Squads ist kein Laufstatus verfügbar.",
       "hint": "Aus den Aufgaben des Teams abgeleitet; wird alle 15 Sekunden aktualisiert."
     }
+  },
+  "squadRouteOnly": {
+    "title": "Squad Leader darf nur Arbeit verteilen",
+    "body": "Dieser Squad Leader ist im Nur-Verteilen-Modus, daher wurde das Tool {{tool}} blockiert.",
+    "bodyUnknownTool": "Dieser Squad Leader ist im Nur-Verteilen-Modus, daher wurde dieses Tool blockiert.",
+    "allowed": "Erlaubte Tools:",
+    "hint": "Der Leader sollte diese Arbeit per team_send_message oder Aufgabe an ein Teammitglied übergeben."
   }
 }

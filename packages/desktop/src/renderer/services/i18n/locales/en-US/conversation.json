@@ -1436,5 +1436,12 @@
       "unavailable": "Run status is not available for this Squad's teams.",
       "hint": "Derived from the team's tasks; refreshes every 15 seconds."
     }
+  },
+  "squadRouteOnly": {
+    "title": "Squad Leader can only route work",
+    "body": "This Squad Leader is in route-only mode, so the tool {{tool}} was blocked.",
+    "bodyUnknownTool": "This Squad Leader is in route-only mode, so this tool was blocked.",
+    "allowed": "Allowed tools:",
+    "hint": "The Leader should assign this work to a team member with team_send_message or a task instead."
   }
 }

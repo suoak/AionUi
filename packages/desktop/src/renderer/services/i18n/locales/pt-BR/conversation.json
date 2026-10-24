@@ -1442,5 +1442,12 @@
       "unavailable": "Não há status de execução para as equipes deste Squad.",
       "hint": "Derivado das tarefas da equipe; atualiza a cada 15 segundos."
     }
+  },
+  "squadRouteOnly": {
+    "title": "O Squad Leader só pode distribuir trabalho",
+    "body": "Este Squad Leader está no modo somente distribuição, então a ferramenta {{tool}} foi bloqueada.",
+    "bodyUnknownTool": "Este Squad Leader está no modo somente distribuição, então esta ferramenta foi bloqueada.",
+    "allowed": "Ferramentas permitidas:",
+    "hint": "O Leader deve atribuir este trabalho a um membro da equipe com team_send_message ou uma tarefa."
   }
 }

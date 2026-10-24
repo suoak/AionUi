@@ -293,7 +293,8 @@
         "forbidden": "اجازهٔ انجام این کار را ندارید.",
         "generic": "مشکلی پیش آمد. لطفاً دوباره تلاش کنید.",
         "squad_instantiate_unavailable": "اکنون امکان ساخت تیم از Squad وجود ندارد",
-        "squad_spawn_forbidden": "ترکیب تیم‌های Squad ثابت است؛ افزودن عامل مجاز نیست"
+        "squad_spawn_forbidden": "ترکیب تیم‌های Squad ثابت است؛ افزودن عامل مجاز نیست",
+        "squad_leader_backend_unenforceable": "بک‌اند Leader نمی‌تواند محدودیت‌های فقط‌تقسیم را اعمال کند"
       },
       "previewAction": "پیش‌نمایش و ساخت تیم",
       "preview": {
@@ -313,8 +314,15 @@
         "blockers": {
           "squad_assistant_not_eligible": "{{name}} دیگر برای تیم‌ها در دسترس نیست",
           "squad_team_visibility_unavailable": "نمایش تیمی هنوز در دسترس نیست",
-          "generic": "این Squad اکنون قابل نمونه‌سازی نیست"
-        }
+          "generic": "این Squad اکنون قابل نمونه‌سازی نیست",
+          "squad_leader_backend_unenforceable": "{{name}}: بک‌اند Leader نمی‌تواند محدودیت‌های فقط‌تقسیم را اعمال کند"
+        },
+        "unenforceable": "قابل اعمال نیست",
+        "unenforceableHint": {
+          "leader": "بک‌اند {{backend}} نمی‌تواند ابزارهای بومی این Leader فقط‌تقسیم را محدود کند، بنابراین این Squad ساخته نمی‌شود. از Leader با Claude استفاده کنید.",
+          "member": "بک‌اند {{backend}} نمی‌تواند ابزارهای بومی زیرعامل این عضو را حذف کند؛ منع ساخت عامل فقط به پرامپت متکی است."
+        },
+        "leaderUnenforceableNamed": "{{name}} روی {{backend}} اجرا می‌شود که نمی‌تواند محدودیت‌های Leader فقط‌تقسیم را اعمال کند"
       }
     }
   },

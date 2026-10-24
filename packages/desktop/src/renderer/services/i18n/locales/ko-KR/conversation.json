@@ -1436,5 +1436,12 @@
       "unavailable": "이 Squad 팀의 실행 상태를 사용할 수 없습니다.",
       "hint": "팀 작업에서 계산되며 15초마다 새로 고칩니다."
     }
+  },
+  "squadRouteOnly": {
+    "title": "Squad Leader는 작업 배분만 할 수 있습니다",
+    "body": "이 Squad Leader는 배분 전용 모드이므로 도구 {{tool}}이(가) 차단되었습니다.",
+    "bodyUnknownTool": "이 Squad Leader는 배분 전용 모드이므로 이 도구가 차단되었습니다.",
+    "allowed": "사용 가능한 도구:",
+    "hint": "Leader는 team_send_message 또는 작업으로 이 일을 팀원에게 맡겨야 합니다."
   }
 }

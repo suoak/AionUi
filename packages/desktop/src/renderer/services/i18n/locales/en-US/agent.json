@@ -293,7 +293,8 @@
         "forbidden": "You do not have permission to do this.",
         "generic": "Something went wrong. Please try again.",
         "squad_instantiate_unavailable": "Creating teams from Squads is not available right now",
-        "squad_spawn_forbidden": "Squad teams have a fixed roster; adding agents is not allowed"
+        "squad_spawn_forbidden": "Squad teams have a fixed roster; adding agents is not allowed",
+        "squad_leader_backend_unenforceable": "The Leader's backend cannot enforce route-only restrictions"
       },
       "previewAction": "Preview & create team",
       "preview": {
@@ -313,8 +314,15 @@
         "blockers": {
           "squad_assistant_not_eligible": "{{name}} is no longer available for teams",
           "squad_team_visibility_unavailable": "Team visibility is not available yet",
-          "generic": "This Squad cannot be instantiated right now"
-        }
+          "generic": "This Squad cannot be instantiated right now",
+          "squad_leader_backend_unenforceable": "{{name}}: the Leader's backend cannot enforce route-only restrictions"
+        },
+        "unenforceable": "Cannot enforce",
+        "unenforceableHint": {
+          "leader": "The {{backend}} backend cannot restrict this route-only Leader's native tools, so this Squad cannot be created. Use a Claude Leader.",
+          "member": "The {{backend}} backend cannot strip this member's native sub-agent tools; the no-spawn rule relies on the prompt only."
+        },
+        "leaderUnenforceableNamed": "{{name}} runs on {{backend}}, which cannot enforce the route-only Leader restrictions"
       }
     }
   },

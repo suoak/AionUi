@@ -293,7 +293,8 @@
         "forbidden": "Bu işlem için yetkiniz yok.",
         "generic": "Bir sorun oluştu. Lütfen tekrar deneyin.",
         "squad_instantiate_unavailable": "Şu anda Squad'dan ekip oluşturulamıyor",
-        "squad_spawn_forbidden": "Squad ekiplerinin kadrosu sabittir; ajan eklenemez"
+        "squad_spawn_forbidden": "Squad ekiplerinin kadrosu sabittir; ajan eklenemez",
+        "squad_leader_backend_unenforceable": "Leader'ın arka ucu yalnızca dağıtım kısıtlamalarını zorunlu kılamıyor"
       },
       "previewAction": "Önizle ve ekip oluştur",
       "preview": {
@@ -313,8 +314,15 @@
         "blockers": {
           "squad_assistant_not_eligible": "{{name}} artık ekipler için kullanılamıyor",
           "squad_team_visibility_unavailable": "Ekip görünürlüğü henüz kullanılamıyor",
-          "generic": "Bu Squad şu anda örneklenemiyor"
-        }
+          "generic": "Bu Squad şu anda örneklenemiyor",
+          "squad_leader_backend_unenforceable": "{{name}}: Leader'ın arka ucu yalnızca dağıtım kısıtlamalarını zorunlu kılamıyor"
+        },
+        "unenforceable": "Zorunlu kılınamıyor",
+        "unenforceableHint": {
+          "leader": "{{backend}} arka ucu bu yalnızca dağıtım yapan Leader'ın yerel araçlarını kısıtlayamaz, bu yüzden bu Squad oluşturulamaz. Claude Leader kullanın.",
+          "member": "{{backend}} arka ucu bu üyenin yerel alt ajan araçlarını kaldıramaz; ajan oluşturma yasağı yalnızca isteme dayanır."
+        },
+        "leaderUnenforceableNamed": "{{name}}, yalnızca dağıtım Leader kısıtlamalarını zorunlu kılamayan {{backend}} üzerinde çalışıyor"
       }
     }
   },

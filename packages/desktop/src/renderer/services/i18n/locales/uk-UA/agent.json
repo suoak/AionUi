@@ -293,7 +293,8 @@
         "forbidden": "У вас немає прав на цю дію.",
         "generic": "Щось пішло не так. Спробуйте ще раз.",
         "squad_instantiate_unavailable": "Зараз не можна створити команду зі Squad",
-        "squad_spawn_forbidden": "Склад команди Squad фіксований; додавати агентів не дозволено"
+        "squad_spawn_forbidden": "Склад команди Squad фіксований; додавати агентів не дозволено",
+        "squad_leader_backend_unenforceable": "Бекенд Leader не може забезпечити обмеження режиму лише розподілу"
       },
       "previewAction": "Перегляд і створення команди",
       "preview": {
@@ -313,8 +314,15 @@
         "blockers": {
           "squad_assistant_not_eligible": "{{name}} більше недоступний для команд",
           "squad_team_visibility_unavailable": "Видимість для команди поки недоступна",
-          "generic": "Цей Squad зараз не можна створити"
-        }
+          "generic": "Цей Squad зараз не можна створити",
+          "squad_leader_backend_unenforceable": "{{name}}: бекенд Leader не може забезпечити обмеження режиму лише розподілу"
+        },
+        "unenforceable": "Неможливо забезпечити",
+        "unenforceableHint": {
+          "leader": "Бекенд {{backend}} не може обмежити вбудовані інструменти цього Leader у режимі лише розподілу, тому створити цей Squad не можна. Використайте Leader на Claude.",
+          "member": "Бекенд {{backend}} не може прибрати вбудовані інструменти субагентів у цього учасника; заборона створювати агентів тримається лише на промпті."
+        },
+        "leaderUnenforceableNamed": "{{name}} працює на {{backend}}, який не може забезпечити обмеження Leader у режимі лише розподілу"
       }
     }
   },

@@ -144,4 +144,52 @@ describe('SquadPreviewDrawer', () => {
     expect(bridge.squads.instantiate.invoke).toHaveBeenCalledWith({ id: 'sq1', input: {} });
     expect(navigate).not.toHaveBeenCalled();
   });
+
+  it('marks unenforceable backends and names the Leader on a 400 unenforceable error', async () => {
+    bridge.squads.preview.invoke.mockResolvedValue(
+      preview({
+        participants: [
+          participant({
+            assistant_id: 'lead',
+            agent_name: 'Leader',
+            role: 'lead',
+            assistant: brief('lead'),
+            backend: 'gemini',
+            tool_profile: 'route_only_leader',
+            native_tool_enforcement: 'unenforceable',
+          }),
+          participant({ backend: 'codex', tool_profile: 'member', native_tool_enforcement: 'unenforceable' }),
+          participant({
+            assistant_id: 'a2',
+            assistant: brief('a2'),
+            tool_profile: 'member',
+            native_tool_enforcement: 'enforced',
+          }),
+        ],
+      })
+    );
+    bridge.squads.instantiate.invoke.mockRejectedValue(
+      new BackendHttpError({
+        method: 'POST',
+        path: '/api/squads/sq1/instantiate',
+        status: 400,
+        body: {
+          success: false,
+          error: 'squad_leader_backend_unenforceable',
+          code: 'squad_leader_backend_unenforceable',
+          details: { assistant_id: 'lead', backend: 'gemini' },
+        },
+      })
+    );
+    renderDrawer();
+    await screen.findAllByTestId('squad-preview-participant');
+    expect(screen.getAllByTestId('squad-preview-unenforceable')).toHaveLength(2);
+    fireEvent.click(screen.getByTestId('squad-instantiate'));
+    await waitFor(() =>
+      expect(arco.error).toHaveBeenCalledWith(
+        'agent.agentCenter.squad.preview.leaderUnenforceableNamed:{"name":"Name lead","backend":"gemini"}'
+      )
+    );
+    expect(navigate).not.toHaveBeenCalled();
+  });
 });
