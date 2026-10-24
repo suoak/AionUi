@@ -16,6 +16,8 @@ const mocks = vi.hoisted(() => ({
   listAvailableSkills: vi.fn(),
   listSkillFiles: vi.fn(),
   readSkillFile: vi.fn(),
+  getSkillSourceDetail: vi.fn(),
+  refreshSkillFromSource: vi.fn(),
   assistantsList: vi.fn(),
   assistantsUpdate: vi.fn(),
   larkCliStatus: vi.fn(),
@@ -36,6 +38,8 @@ vi.mock('@/common', () => ({
       listAvailableSkills: { invoke: mocks.listAvailableSkills },
       listSkillFiles: { invoke: mocks.listSkillFiles },
       readSkillFile: { invoke: mocks.readSkillFile },
+      getSkillSourceDetail: { invoke: mocks.getSkillSourceDetail },
+      refreshSkillFromSource: { invoke: mocks.refreshSkillFromSource },
     },
     assistants: {
       list: { invoke: mocks.assistantsList },
@@ -350,5 +354,32 @@ describe('SkillDetailPage', () => {
 
     await waitFor(() => expect(mocks.larkCliCheck).toHaveBeenCalledTimes(1));
     expect(mocks.messageSuccess).toHaveBeenCalledWith('settings.skillsHub.larkSetup.updateAvailable');
+  });
+  it('shows the source & versions section only when Core returns a skill_id', async () => {
+    const first = renderWithFreshCache();
+    await screen.findByTestId('skill-detail-files');
+    expect(screen.queryByTestId('skill-detail-source')).toBeNull();
+    expect(mocks.getSkillSourceDetail).not.toHaveBeenCalled();
+    first.unmount();
+
+    mocks.listAvailableSkills.mockResolvedValue([
+      {
+        name: 'demo-skill',
+        description: 'A demo skill.',
+        location: '/tmp/skills/demo-skill',
+        is_auto_inject: false,
+        is_custom: true,
+        source: 'custom',
+        skill_id: 'sk-1',
+      },
+    ]);
+    mocks.getSkillSourceDetail.mockResolvedValue({
+      skill: { skill_id: 'sk-1', name: 'demo-skill', visibility: 'private', team_id: null, review_status: 'approved' },
+      source: null,
+      versions: [],
+    });
+    renderWithFreshCache();
+    expect(await screen.findByTestId('skill-detail-source')).toBeTruthy();
+    expect(mocks.getSkillSourceDetail).toHaveBeenCalledWith({ skill_id: 'sk-1' });
   });
 });

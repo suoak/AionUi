@@ -29,6 +29,7 @@ import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import useSWR, { mutate as swrMutate } from 'swr';
 import SettingsPageWrapper from '../components/SettingsPageWrapper';
 import SkillFileBrowser from './SkillFileBrowser';
+import SkillSourceSection from './SkillSourceSection';
 import { getAssistantsUsingSkill } from './SkillUsedByStack';
 
 interface SkillInfo {
@@ -38,6 +39,8 @@ interface SkillInfo {
   is_auto_inject: boolean;
   is_custom: boolean;
   source?: 'builtin' | 'custom' | 'cron' | 'extension';
+  /** M8 E10: present when Core tracks this skill in the DB (source/version APIs). */
+  skill_id?: string;
 }
 
 const getAvatarColorClass = (name: string) => {
@@ -513,6 +516,8 @@ const SkillDetailPage: React.FC = () => {
                 </div>
               )}
             </SectionCard>
+
+            {skill.skill_id ? <SkillSourceSection skillId={skill.skill_id} /> : null}
 
             <SectionCard
               title={t('settings.skillsHub.detailFilesTitle', { defaultValue: 'Skill files' })}

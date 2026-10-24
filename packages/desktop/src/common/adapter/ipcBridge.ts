@@ -1802,6 +1802,8 @@ export const fs = {
       is_custom: boolean;
       source: 'builtin' | 'custom' | 'cron' | 'extension';
       registry_origin?: SkillRegistryOrigin;
+      /** M8 E10: DB id for source/version APIs; absent on older Core and disk-scan fallbacks. */
+      skill_id?: string;
     }>,
     void
   >('/api/skills'),

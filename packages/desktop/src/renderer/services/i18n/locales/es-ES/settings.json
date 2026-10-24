@@ -1339,6 +1339,12 @@
         "evolution": "Autoevolución"
       },
       "importNeedsReview": "{{count}} habilidad(es) importada(s) contienen scripts y deben aprobarse en Pendiente de revisión antes de usarse: {{names}}"
+    },
+    "sourceSection": {
+      "title": "Origen y versiones",
+      "checkUpdate": "Buscar actualización",
+      "updated": "Actualizado a una nueva versión",
+      "movedToReview": "La actualización cambia scripts: la habilidad pasó a Revisión pendiente y no estará disponible hasta que se apruebe"
     }
   },
   "assistant.connectionFailed": "Error de conexión",
