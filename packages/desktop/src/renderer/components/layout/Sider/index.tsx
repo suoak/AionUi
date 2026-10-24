@@ -133,6 +133,21 @@ const Sider: React.FC<SiderProps> = ({ onSessionClick, collapsed = false }) => {
     }
   };
 
+  /** E6-6: Inbox item with task_session_id → board drawer via `/tasks?task=`. */
+  const handleInboxOpenTaskBoard = (taskSessionId: string) => {
+    cleanupSiderTooltips();
+    blurActiveElement();
+    closePreview();
+    setIsBatchMode(false);
+    const qs = new URLSearchParams({ task: taskSessionId });
+    Promise.resolve(navigate(`/tasks?${qs.toString()}`)).catch((error) => {
+      console.error('Navigation failed:', error);
+    });
+    if (onSessionClick) {
+      onSessionClick();
+    }
+  };
+
   const handleUsageClick = () => {
     cleanupSiderTooltips();
     blurActiveElement();
@@ -326,6 +341,7 @@ const Sider: React.FC<SiderProps> = ({ onSessionClick, collapsed = false }) => {
               collapsed={collapsed}
               siderTooltipProps={siderTooltipProps}
               onOpenConversation={handleInboxOpenConversation}
+              onOpenTaskBoard={handleInboxOpenTaskBoard}
             />
             {/* Divider between fixed top nav and scrollable content area */}
             <div

@@ -20,6 +20,8 @@ type SiderInboxEntryProps = {
   siderTooltipProps: SiderTooltipProps;
   /** Jump to the item's source conversation. */
   onOpenConversation: (conversationId: string) => void;
+  /** E6-6: when the item carries a task_session_id, open the board drawer. */
+  onOpenTaskBoard?: (taskSessionId: string) => void;
 };
 
 const KIND_COLOR: Record<string, string> = {
@@ -129,6 +131,7 @@ const SiderInboxEntry: React.FC<SiderInboxEntryProps> = ({
   collapsed,
   siderTooltipProps,
   onOpenConversation,
+  onOpenTaskBoard,
 }) => {
   const { t } = useTranslation();
   const { support, unread, revision } = useInboxState();
@@ -145,9 +148,14 @@ const SiderInboxEntry: React.FC<SiderInboxEntryProps> = ({
           })
           .catch(() => {});
       }
+      // Prefer the board drawer when Core stamped a task_session_id (E6-6).
+      if (item.task_session_id && onOpenTaskBoard) {
+        onOpenTaskBoard(item.task_session_id);
+        return;
+      }
       if (item.conversation_id) onOpenConversation(item.conversation_id);
     },
-    [onOpenConversation]
+    [onOpenConversation, onOpenTaskBoard]
   );
 
   if (support !== 'supported') return null;

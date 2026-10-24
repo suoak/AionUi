@@ -1407,7 +1407,11 @@
         "user": "کاربر",
         "agent": "عامل",
         "system": "سیستم"
-      }
+      },
+      "trace": "ردیابی",
+      "traceFileChanged": "تغییر {{path}}",
+      "traceToolDenied": "رد شد {{tool}}",
+      "traceGeneric": "{{type}}"
     },
     "errors": {
       "review_required": "انتقال به «انجام‌شده» یا بازگشت از «در بازبینی» فقط با بازبینی ممکن است.",

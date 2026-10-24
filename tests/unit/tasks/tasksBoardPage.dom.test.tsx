@@ -18,9 +18,13 @@ const mocks = vi.hoisted(() => ({
   commentsList: vi.fn(),
   commentsCreate: vi.fn(),
   commentsEdit: vi.fn(),
+  runList: vi.fn(),
+  runReplay: vi.fn(),
   list: vi.fn(),
   get: vi.fn(),
   navigate: vi.fn(),
+  setSearchParams: vi.fn(),
+  searchParams: new URLSearchParams(),
   listeners: new Map<string, Set<(payload: unknown) => void>>(),
 }));
 
@@ -61,12 +65,20 @@ vi.mock('@/common', () => ({
         },
         updated: wsEmitter('task.board.updated'),
       },
+      run: {
+        list: { invoke: mocks.runList },
+        replay: { invoke: mocks.runReplay },
+      },
+    },
+    taskTrace: {
+      appended: wsEmitter('task.trace.appended'),
     },
   },
 }));
 
 vi.mock('react-router-dom', () => ({
   useNavigate: () => mocks.navigate,
+  useSearchParams: () => [mocks.searchParams, mocks.setSearchParams],
 }));
 
 vi.mock('react-i18next', () => ({
@@ -168,8 +180,18 @@ describe('TasksBoardPage', () => {
   beforeEach(() => {
     for (const m of Object.values(mocks)) if (typeof m === 'function') m.mockReset();
     mocks.listeners.clear();
+    mocks.searchParams = new URLSearchParams();
     mocks.get.mockImplementation(({ id }: { id: string }) => Promise.resolve(session(id)));
     mocks.commentsList.mockResolvedValue([]);
+    mocks.runList.mockResolvedValue([]);
+    mocks.runReplay.mockResolvedValue({
+      run: { id: 'r0', task_session_id: 't', conversation_id: 'c', run_kind: 'execution', status: 'completed', started_at: 0 },
+      events: [],
+      next_after_sequence: 0,
+      has_more: false,
+      latest_sequence: 0,
+      retention_gap: false,
+    });
     vi.spyOn(console, 'error').mockImplementation(() => {});
   });
   afterEach(() => {
@@ -489,3 +511,14 @@ describe('TasksBoardPage', () => {
     expect(mocks.list).not.toHaveBeenCalled();
   });
 });
+
+
+  it('opens the drawer from ?task= deep link (E6-6)', async () => {
+    mocks.searchParams = new URLSearchParams('task=deep1');
+    mocks.boardGet.mockResolvedValue(board(item('deep1', 'in_review', { title: 'Deep link item' })));
+    render(<TasksBoardPage />);
+    await screen.findByTestId('task-board-detail');
+    // Title sits on the Arco Drawer header (outside the detail panel).
+    expect(screen.getAllByText('Deep link item').length).toBeGreaterThan(0);
+  });
+

@@ -6,7 +6,7 @@
 
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import classNames from 'classnames';
 import { Alert, Button, Empty, Message, Spin, Switch } from '@arco-design/web-react';
 import {
@@ -103,13 +103,15 @@ const DroppableColumn: React.FC<{
 const TasksBoardPage: React.FC = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const deepLinkTask = searchParams.get('task');
   const isMobile = useLayoutContext()?.isMobile ?? false;
   const [columns, setColumns] = useState<BoardItemColumns>(EMPTY_COLUMNS);
   const [source, setSource] = useState<DataSource>('board');
   const [loadState, setLoadState] = useState<LoadState>('loading');
   const [hasData, setHasData] = useState(false);
   const [showCancelled, setShowCancelled] = useState(false);
-  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [selectedId, setSelectedId] = useState<string | null>(deepLinkTask);
   const [dragFrom, setDragFrom] = useState<TaskBoardStatus | null>(null);
   const [refreshKey, setRefreshKey] = useState(0);
   const loadSeq = useRef(0);
@@ -157,6 +159,13 @@ const TasksBoardPage: React.FC = () => {
     ? [...VISIBLE_BOARD_COLUMNS, 'cancelled']
     : [...VISIBLE_BOARD_COLUMNS];
   const selectedTask = findBoardItem(columns, selectedId);
+
+  // E6-6: Inbox / share links open the drawer via `/tasks?task=<id>`.
+  useEffect(() => {
+    if (!deepLinkTask) return;
+    if (loadState === 'ready') setSelectedId(deepLinkTask);
+  }, [deepLinkTask, loadState]);
+
 
   useEffect(() => {
     const timers = pendingFallbacks.current;
@@ -243,18 +252,47 @@ const TasksBoardPage: React.FC = () => {
     [columns, moveItem]
   );
 
-  const handleSelect = useCallback((task: TaskBoardItem) => {
-    if (Date.now() - lastDragEndAt.current < 300) return;
-    setSelectedId(task.id);
-  }, []);
+  const handleSelect = useCallback(
+    (task: TaskBoardItem) => {
+      if (Date.now() - lastDragEndAt.current < 300) return;
+      setSelectedId(task.id);
+      setSearchParams(
+        (prev) => {
+          const next = new URLSearchParams(prev);
+          next.set('task', task.id);
+          return next;
+        },
+        { replace: true }
+      );
+    },
+    [setSearchParams]
+  );
+
+  const clearTaskQuery = useCallback(() => {
+    setSearchParams(
+      (prev) => {
+        if (!prev.has('task')) return prev;
+        const next = new URLSearchParams(prev);
+        next.delete('task');
+        return next;
+      },
+      { replace: true }
+    );
+  }, [setSearchParams]);
 
   const handleOpenConversation = useCallback(
     (conversationId: string) => {
       setSelectedId(null);
+      clearTaskQuery();
       navigate(`/conversation/${conversationId}`);
     },
-    [navigate]
+    [clearTaskQuery, navigate]
   );
+
+  const handleCloseDrawer = useCallback(() => {
+    setSelectedId(null);
+    clearTaskQuery();
+  }, [clearTaskQuery]);
 
   return (
     <div className='w-full h-full min-h-0 box-border bg-1 flex flex-col overflow-hidden' data-testid='tasks-board-page'>
@@ -349,7 +387,7 @@ const TasksBoardPage: React.FC = () => {
         interactive={interactive}
         refreshKey={refreshKey}
         isMobile={isMobile}
-        onClose={() => setSelectedId(null)}
+        onClose={handleCloseDrawer}
         onOpenConversation={handleOpenConversation}
         onMove={moveItem}
         onItemUpdated={applyServerItem}

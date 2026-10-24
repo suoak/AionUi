@@ -4,13 +4,19 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button, Input, Message, Spin } from '@arco-design/web-react';
 import { ipcBridge } from '@/common';
-import type { TaskComment, TaskCommentEvent } from '@/common/types/agent/taskSession';
+import type { TaskComment, TaskCommentEvent, TaskTraceEvent } from '@/common/types/agent/taskSession';
 import { isBackendHttpError } from '@/common/adapter/httpBridge';
-import { canEditComment, parseTimelineEntry, upsertComment } from './boardModel';
+import {
+  canEditComment,
+  mergeBoardTimeline,
+  parseTimelineEntry,
+  upsertComment,
+  type BoardTimelineRow,
+} from './boardModel';
 
 type TaskBoardTimelineProps = {
   taskId: string;
@@ -26,11 +32,35 @@ const formatTime = (ms: number, locale: string): string => {
   }
 };
 
-/** Comments and board events of one item, oldest first, with a comment box. */
+/** Load the latest run's replay page; older cores / empty runs → []. */
+const loadLatestTrace = async (taskId: string): Promise<TaskTraceEvent[]> => {
+  try {
+    const runs = await ipcBridge.taskSession.run.list.invoke({ id: taskId });
+    if (!Array.isArray(runs) || runs.length === 0) return [];
+    const latest = [...runs].sort((a, b) => b.started_at - a.started_at)[0];
+    if (!latest?.id) return [];
+    const page = await ipcBridge.taskSession.run.replay.invoke({
+      id: taskId,
+      run_id: latest.id,
+      limit: 200,
+    });
+    return Array.isArray(page?.events) ? page.events : [];
+  } catch (error) {
+    // 404/405 on older cores — comments-only timeline is still useful.
+    console.warn('[TasksBoard] Trace merge skipped:', error);
+    return [];
+  }
+};
+
+/**
+ * E6-6: comments + status/assignment/review events + high-signal trace from the
+ * latest run, oldest first, with a comment box.
+ */
 const TaskBoardTimeline: React.FC<TaskBoardTimelineProps> = ({ taskId, refreshKey }) => {
   const { t, i18n } = useTranslation();
   const locale = i18n?.language ?? 'en-US';
   const [entries, setEntries] = useState<TaskComment[]>([]);
+  const [traces, setTraces] = useState<TaskTraceEvent[]>([]);
   const [state, setState] = useState<'loading' | 'ready' | 'failed'>('loading');
   const [draft, setDraft] = useState('');
   const [posting, setPosting] = useState(false);
@@ -39,10 +69,13 @@ const TaskBoardTimeline: React.FC<TaskBoardTimelineProps> = ({ taskId, refreshKe
 
   const load = useCallback(() => {
     setState('loading');
-    ipcBridge.taskSession.board.comments.list
-      .invoke({ id: taskId })
-      .then((list) => {
-        setEntries(Array.isArray(list) ? list : []);
+    Promise.all([
+      ipcBridge.taskSession.board.comments.list.invoke({ id: taskId }).then((list) => (Array.isArray(list) ? list : [])),
+      loadLatestTrace(taskId),
+    ])
+      .then(([list, nextTraces]) => {
+        setEntries(list);
+        setTraces(nextTraces);
         setState('ready');
       })
       .catch((error) => {
@@ -69,6 +102,19 @@ const TaskBoardTimeline: React.FC<TaskBoardTimelineProps> = ({ taskId, refreshKe
       offUpdated();
     };
   }, [taskId]);
+
+  // Realtime: metadata-only push → refetch the latest run slice.
+  useEffect(() => {
+    const dispose = ipcBridge.taskTrace?.appended?.on?.((event) => {
+      if (event?.task_session_id !== taskId) return;
+      void loadLatestTrace(taskId).then(setTraces);
+    });
+    return () => {
+      dispose?.();
+    };
+  }, [taskId]);
+
+  const rows: BoardTimelineRow[] = useMemo(() => mergeBoardTimeline(entries, traces), [entries, traces]);
 
   const post = () => {
     const body = draft.trim();
@@ -111,7 +157,7 @@ const TaskBoardTimeline: React.FC<TaskBoardTimelineProps> = ({ taskId, refreshKe
       .finally(() => setSavingEdit(false));
   };
 
-  const describe = (entry: TaskComment): string => {
+  const describeComment = (entry: TaskComment): string => {
     const event = parseTimelineEntry(entry);
     switch (event.kind) {
       case 'comment':
@@ -139,12 +185,30 @@ const TaskBoardTimeline: React.FC<TaskBoardTimelineProps> = ({ taskId, refreshKe
     }
   };
 
+  const describeTrace = (row: Extract<BoardTimelineRow, { source: 'trace' }>): string => {
+    const { summary } = row.trace;
+    switch (summary.kind) {
+      case 'file_changed':
+        return t('conversation.taskBoard.timeline.traceFileChanged', {
+          path: summary.path || row.trace.event_type,
+        });
+      case 'tool_denied':
+        return t('conversation.taskBoard.timeline.traceToolDenied', {
+          tool: summary.tool || row.trace.event_type,
+        });
+      default:
+        return t('conversation.taskBoard.timeline.traceGeneric', {
+          type: summary.event_type,
+        });
+    }
+  };
+
   const now = Date.now();
 
   return (
     <section className='flex flex-col gap-8px' data-testid='task-board-timeline'>
       <div className='text-13px font-medium text-t-primary'>{t('conversation.taskBoard.timeline.title')}</div>
-      {state === 'loading' && entries.length === 0 ? (
+      {state === 'loading' && entries.length === 0 && traces.length === 0 ? (
         <Spin size={16} />
       ) : state === 'failed' ? (
         <div className='flex items-center gap-8px text-12px text-t-secondary'>
@@ -153,78 +217,97 @@ const TaskBoardTimeline: React.FC<TaskBoardTimelineProps> = ({ taskId, refreshKe
             {t('conversation.taskBoard.retry')}
           </Button>
         </div>
-      ) : entries.length === 0 ? (
+      ) : rows.length === 0 ? (
         <div className='text-12px text-t-tertiary'>{t('conversation.taskBoard.timeline.empty')}</div>
       ) : (
         <ol className='m-0 p-0 list-none flex flex-col gap-8px'>
-          {entries.map((entry) => (
-            <li
-              key={entry.id}
-              data-testid={`task-board-timeline-entry-${entry.id}`}
-              data-kind={entry.kind}
-              className={
-                entry.kind === 'comment'
-                  ? 'rd-6px bg-fill-1 p-8px flex flex-col gap-4px'
-                  : 'text-12px text-t-secondary flex flex-col gap-2px'
-              }
-            >
-              <div className='flex items-center justify-between gap-8px text-12px text-t-tertiary'>
-                <span>
-                  {t(`conversation.taskBoard.timeline.author.${entry.author_kind}`)}
-                  {entry.author_kind === 'system' ? '' : ` · ${entry.author_id}`}
-                  {' · '}
-                  {formatTime(entry.created_at, locale)}
-                  {entry.edited_at ? ` · ${t('conversation.taskBoard.timeline.edited')}` : ''}
-                </span>
-                {canEditComment(entry, now) && editing?.id !== entry.id ? (
-                  <Button
-                    size='mini'
-                    type='text'
-                    onClick={() => setEditing({ id: entry.id, body: entry.body })}
-                    data-testid={`task-board-timeline-edit-${entry.id}`}
-                  >
-                    {t('conversation.taskBoard.timeline.edit')}
-                  </Button>
-                ) : null}
-              </div>
-              {editing?.id === entry.id ? (
-                <div className='flex flex-col gap-6px'>
-                  <Input.TextArea
-                    value={editing.body}
-                    onChange={(body) => setEditing({ id: entry.id, body })}
-                    maxLength={10000}
-                    autoSize={{ minRows: 2, maxRows: 6 }}
-                    data-testid='task-board-timeline-edit-input'
-                  />
-                  <div className='flex justify-end gap-6px'>
-                    <Button size='mini' onClick={() => setEditing(null)}>
-                      {t('conversation.taskBoard.timeline.cancel')}
-                    </Button>
+          {rows.map((row) =>
+            row.source === 'comment' ? (
+              <li
+                key={row.id}
+                data-testid={`task-board-timeline-entry-${row.comment.id}`}
+                data-kind={row.comment.kind}
+                className={
+                  row.comment.kind === 'comment'
+                    ? 'rd-6px bg-fill-1 p-8px flex flex-col gap-4px'
+                    : 'text-12px text-t-secondary flex flex-col gap-2px'
+                }
+              >
+                <div className='flex items-center justify-between gap-8px text-12px text-t-tertiary'>
+                  <span>
+                    {t(`conversation.taskBoard.timeline.author.${row.comment.author_kind}`)}
+                    {row.comment.author_kind === 'system' ? '' : ` · ${row.comment.author_id}`}
+                    {' · '}
+                    {formatTime(row.comment.created_at, locale)}
+                    {row.comment.edited_at ? ` · ${t('conversation.taskBoard.timeline.edited')}` : ''}
+                  </span>
+                  {canEditComment(row.comment, now) && editing?.id !== row.comment.id ? (
                     <Button
                       size='mini'
-                      type='primary'
-                      loading={savingEdit}
-                      disabled={!editing.body.trim()}
-                      onClick={saveEdit}
-                      data-testid='task-board-timeline-edit-save'
+                      type='text'
+                      onClick={() => setEditing({ id: row.comment.id, body: row.comment.body })}
+                      data-testid={`task-board-timeline-edit-${row.comment.id}`}
                     >
-                      {t('conversation.taskBoard.timeline.save')}
+                      {t('conversation.taskBoard.timeline.edit')}
                     </Button>
+                  ) : null}
+                </div>
+                {editing?.id === row.comment.id ? (
+                  <div className='flex flex-col gap-6px'>
+                    <Input.TextArea
+                      value={editing.body}
+                      onChange={(body) => setEditing({ id: row.comment.id, body })}
+                      maxLength={10000}
+                      autoSize={{ minRows: 2, maxRows: 6 }}
+                      data-testid='task-board-timeline-edit-input'
+                    />
+                    <div className='flex justify-end gap-6px'>
+                      <Button size='mini' onClick={() => setEditing(null)}>
+                        {t('conversation.taskBoard.timeline.cancel')}
+                      </Button>
+                      <Button
+                        size='mini'
+                        type='primary'
+                        loading={savingEdit}
+                        disabled={!editing.body.trim()}
+                        onClick={saveEdit}
+                        data-testid='task-board-timeline-edit-save'
+                      >
+                        {t('conversation.taskBoard.timeline.save')}
+                      </Button>
+                    </div>
                   </div>
+                ) : (
+                  <div
+                    className={
+                      row.comment.kind === 'comment'
+                        ? 'text-13px text-t-primary whitespace-pre-wrap break-words'
+                        : 'break-words'
+                    }
+                  >
+                    {describeComment(row.comment)}
+                  </div>
+                )}
+              </li>
+            ) : (
+              <li
+                key={row.id}
+                data-testid={`task-board-timeline-trace-${row.trace.event_id}`}
+                data-kind='trace'
+                data-event-type={row.trace.event_type}
+                className='text-12px text-t-secondary flex flex-col gap-2px'
+              >
+                <div className='flex items-center justify-between gap-8px text-12px text-t-tertiary'>
+                  <span>
+                    {t('conversation.taskBoard.timeline.trace')}
+                    {' · '}
+                    {formatTime(row.trace.timestamp, locale)}
+                  </span>
                 </div>
-              ) : (
-                <div
-                  className={
-                    entry.kind === 'comment'
-                      ? 'text-13px text-t-primary whitespace-pre-wrap break-words'
-                      : 'break-words'
-                  }
-                >
-                  {describe(entry)}
-                </div>
-              )}
-            </li>
-          ))}
+                <div className='break-words'>{describeTrace(row)}</div>
+              </li>
+            )
+          )}
         </ol>
       )}
       <Input.TextArea

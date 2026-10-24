@@ -1425,7 +1425,11 @@
         "user": "Користувач",
         "agent": "Агент",
         "system": "Система"
-      }
+      },
+      "trace": "Трасування",
+      "traceFileChanged": "Змінено {{path}}",
+      "traceToolDenied": "Відхилено {{tool}}",
+      "traceGeneric": "{{type}}"
     },
     "errors": {
       "review_required": "Перенесення в «Готово» чи повернення з «На рев'ю» — лише через рев'ю.",

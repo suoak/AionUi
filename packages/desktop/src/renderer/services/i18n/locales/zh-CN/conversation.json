@@ -1407,7 +1407,11 @@
         "user": "用户",
         "agent": "智能体",
         "system": "系统"
-      }
+      },
+      "trace": "轨迹",
+      "traceFileChanged": "变更 {{path}}",
+      "traceToolDenied": "拒绝 {{tool}}",
+      "traceGeneric": "{{type}}"
     },
     "errors": {
       "review_required": "移到“完成”或从“评审中”退回须经评审。",

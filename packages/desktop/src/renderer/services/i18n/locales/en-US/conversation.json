@@ -1407,7 +1407,11 @@
         "user": "User",
         "agent": "Agent",
         "system": "System"
-      }
+      },
+      "trace": "Trace",
+      "traceFileChanged": "Changed {{path}}",
+      "traceToolDenied": "Denied {{tool}}",
+      "traceGeneric": "{{type}}"
     },
     "errors": {
       "review_required": "Moving to Done or back from In review goes through review.",

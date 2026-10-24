@@ -1407,7 +1407,11 @@
         "user": "ユーザー",
         "agent": "エージェント",
         "system": "システム"
-      }
+      },
+      "trace": "トレース",
+      "traceFileChanged": "変更 {{path}}",
+      "traceToolDenied": "拒否 {{tool}}",
+      "traceGeneric": "{{type}}"
     },
     "errors": {
       "review_required": "「完了」への移動や「レビュー中」からの戻しはレビューが必要です。",
