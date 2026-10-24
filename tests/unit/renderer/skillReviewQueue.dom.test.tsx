@@ -35,8 +35,10 @@ vi.mock('@arco-design/web-react', async (orig) => {
 import SkillReviewQueue from '@/renderer/pages/settings/SkillsSettings/SkillReviewQueue';
 import {
   isUntrustedSource,
+  pendingImportedNames,
   skillReviewErrorKey,
   validateImportLocator,
+  versionCreatedByKey,
 } from '@/renderer/pages/settings/SkillsSettings/skillReviewModel';
 
 const pending = {
@@ -127,7 +129,7 @@ describe('SkillReviewQueue', () => {
         method: 'POST',
         path: '/api/skills/id/s1/review',
         status: 409,
-        body: { success: false, code: 'skill_review_not_pending', msg: 'x' },
+        body: { success: false, code: 'CONFLICT', error: 'skill_review_not_pending: approved' },
       })
     );
     renderQueue();
@@ -185,6 +187,36 @@ describe('skillReviewModel', () => {
     expect(isUntrustedSource(null)).toBe(false);
     expect(isUntrustedSource({ ...detail.source, trust: 'trusted' })).toBe(false);
     expect(isUntrustedSource({ ...detail.source, trust: 'weird' })).toBe(true);
+  });
+  it('reads the reason from the core error message prefix, then the status', () => {
+    const err = (status: number, code: string, error: string) =>
+      new BackendHttpError({ method: 'POST', path: '/x', status, body: { success: false, code, error } });
+    expect(skillReviewErrorKey(err(400, 'BAD_REQUEST', 'source_git_unsupported: git 2.30 < 2.37'))).toBe(
+      'settings.skillsHub.review.errors.source_git_unsupported'
+    );
+    expect(skillReviewErrorKey(err(400, 'BAD_REQUEST', 'source_address_blocked: 10.0.0.1'))).toBe(
+      'settings.skillsHub.review.errors.source_address_blocked'
+    );
+    expect(skillReviewErrorKey(err(409, 'CONFLICT', 'skill_source_renamed: local skill not found'))).toBe(
+      'settings.skillsHub.review.errors.skill_source_renamed'
+    );
+    expect(skillReviewErrorKey(err(504, 'GATEWAY_TIMEOUT', 'Request timed out.'))).toBe(
+      'settings.skillsHub.review.errors.source_fetch_timeout'
+    );
+    expect(skillReviewErrorKey(err(502, 'BAD_GATEWAY', 'Upstream service unavailable.'))).toBe(
+      'settings.skillsHub.review.errors.source_fetch_failed'
+    );
+    expect(skillReviewErrorKey(err(413, 'PAYLOAD_TOO_LARGE', 'Request body is too large.'))).toBe(
+      'settings.skillsHub.review.errors.source_too_large'
+    );
+    expect(skillReviewErrorKey(err(400, 'BAD_REQUEST', 'something_else: x'))).toBe(
+      'settings.skillsHub.review.errors.generic'
+    );
+  });
+  it('labels known version authors and finds imported skills awaiting review', () => {
+    expect(versionCreatedByKey('evolution')).toBe('settings.skillsHub.review.createdBy.evolution');
+    expect(versionCreatedByKey('u-123')).toBeNull();
+    expect(pendingImportedNames(['a', 'b'], [{ ...pending, name: 'b' }])).toEqual(['b']);
   });
   it('maps 403 and unknown errors', () => {
     const e403 = new BackendHttpError({ method: 'POST', path: '/x', status: 403, body: {} });

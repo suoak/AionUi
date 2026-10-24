@@ -1312,7 +1312,10 @@
         "source_url_invalid": "Dirección de fuente no válida (solo https)",
         "source_address_blocked": "No se permite esta dirección",
         "forbidden": "No tienes permiso para hacer esto",
-        "generic": "Algo salió mal, inténtalo de nuevo"
+        "generic": "Algo salió mal, inténtalo de nuevo",
+        "skill_source_not_refreshable": "Esta fuente no se puede actualizar (solo fuentes git / url)",
+        "skill_import_no_skill_found": "No se encontró ninguna habilidad en la fuente (falta SKILL.md)",
+        "source_git_unsupported": "Tu git es demasiado antiguo (se requiere 2.37 o posterior). Actualiza git o importa por URL"
       },
       "import": {
         "open": "Importar desde fuente",
@@ -1329,7 +1332,13 @@
         "locatorRequired": "Introduce una dirección de fuente",
         "localAbsolute": "La ruta local debe ser absoluta",
         "done": "Se importaron {{count}} habilidad(es); {{pending}} pendiente(s) de revisión"
-      }
+      },
+      "createdBy": {
+        "user": "Manual",
+        "import": "Importación",
+        "evolution": "Autoevolución"
+      },
+      "importNeedsReview": "{{count}} habilidad(es) importada(s) contienen scripts y deben aprobarse en Pendiente de revisión antes de usarse: {{names}}"
     }
   },
   "assistant.connectionFailed": "Error de conexión",

@@ -1312,7 +1312,10 @@
         "source_url_invalid": "Adresse de source invalide (https uniquement)",
         "source_address_blocked": "Cette adresse n’est pas autorisée",
         "forbidden": "Vous n’avez pas l’autorisation de faire cela",
-        "generic": "Une erreur est survenue, veuillez réessayer"
+        "generic": "Une erreur est survenue, veuillez réessayer",
+        "skill_source_not_refreshable": "Cette source ne peut pas être actualisée (sources git / url uniquement)",
+        "skill_import_no_skill_found": "Aucune compétence trouvée dans la source (SKILL.md manquant)",
+        "source_git_unsupported": "Votre git est trop ancien (2.37 ou plus requis). Mettez git à jour ou importez via une URL"
       },
       "import": {
         "open": "Importer depuis une source",
@@ -1329,7 +1332,13 @@
         "locatorRequired": "Saisissez une adresse de source",
         "localAbsolute": "Le chemin local doit être absolu",
         "done": "{{count}} compétence(s) importée(s), {{pending}} en attente de vérification"
-      }
+      },
+      "createdBy": {
+        "user": "Manuel",
+        "import": "Import",
+        "evolution": "Auto-évolution"
+      },
+      "importNeedsReview": "{{count}} compétence(s) importée(s) contiennent des scripts et doivent être approuvées dans « En attente de vérification » avant utilisation : {{names}}"
     }
   },
   "assistant.connectionFailed": "Échec de la connexion",

@@ -1312,7 +1312,10 @@
         "source_url_invalid": "来源地址无效（仅支持 https）",
         "source_address_blocked": "不允许访问该地址",
         "forbidden": "你没有权限执行此操作",
-        "generic": "操作失败，请重试"
+        "generic": "操作失败，请重试",
+        "skill_source_not_refreshable": "无法从该来源刷新（仅 git / url 来源支持）",
+        "skill_import_no_skill_found": "来源中没有找到技能（缺少 SKILL.md）",
+        "source_git_unsupported": "本机 git 版本过低（需要 2.37 及以上），请升级 git 或改用 URL 导入"
       },
       "import": {
         "open": "从来源导入",
@@ -1329,7 +1332,13 @@
         "locatorRequired": "请填写来源地址",
         "localAbsolute": "本地路径必须是绝对路径",
         "done": "已导入 {{count}} 个技能，其中 {{pending}} 个待审核"
-      }
+      },
+      "createdBy": {
+        "user": "手动",
+        "import": "导入",
+        "evolution": "自动进化"
+      },
+      "importNeedsReview": "{{count}} 个导入的技能含脚本，需要在「待审核」中批准后才能使用：{{names}}"
     }
   },
   "assistant.connectionFailed": "连接失败",

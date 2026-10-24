@@ -5,7 +5,12 @@
  */
 
 import { isBackendHttpError } from '@/common/adapter/httpBridge';
-import type { SkillSource, SkillSourceDetail, SkillSourceImportKind } from '@/common/types/skills/skillSources';
+import type {
+  SkillGovernance,
+  SkillSource,
+  SkillSourceDetail,
+  SkillSourceImportKind,
+} from '@/common/types/skills/skillSources';
 
 /** Anything the backend does not explicitly mark trusted is shown as untrusted. */
 export const isUntrustedSource = (source: SkillSource | null | undefined): boolean =>
@@ -17,21 +22,39 @@ export const latestHasScripts = (detail: SkillSourceDetail | undefined): boolean
 const KNOWN_ERRORS = new Set([
   'skill_review_not_pending',
   'skill_source_renamed',
+  'skill_source_not_refreshable',
+  'skill_import_no_skill_found',
   'source_fetch_failed',
   'source_fetch_timeout',
   'source_too_large',
   'source_url_invalid',
   'source_address_blocked',
+  'source_git_unsupported',
 ]);
 
-/** i18n key for a failed review / refresh call. */
-export const skillReviewErrorKey = (error: unknown): string => {
-  if (isBackendHttpError(error)) {
-    if (error.code && KNOWN_ERRORS.has(error.code)) return `settings.skillsHub.review.errors.${error.code}`;
-    if (error.status === 403) return 'settings.skillsHub.review.errors.forbidden';
-  }
-  return 'settings.skillsHub.review.errors.generic';
+/** 413/502/504 bodies carry only a generic public message, so map by status. */
+const STATUS_ERRORS: Record<number, string> = {
+  413: 'source_too_large',
+  502: 'source_fetch_failed',
+  504: 'source_fetch_timeout',
 };
+
+/**
+ * Core returns generic `code`s (BAD_REQUEST, CONFLICT, ...) for these routes;
+ * the specific reason is the `snake_case:` prefix of the `error` message
+ * (e.g. "skill_review_not_pending: approved").
+ */
+export const skillErrorReason = (error: unknown): string | null => {
+  if (!isBackendHttpError(error)) return null;
+  if (KNOWN_ERRORS.has(error.code)) return error.code;
+  const prefix = /^([a-z][a-z0-9_]*)(?::|$)/.exec(error.backendMessage.trim())?.[1];
+  if (prefix && KNOWN_ERRORS.has(prefix)) return prefix;
+  return STATUS_ERRORS[error.status] ?? (error.status === 403 ? 'forbidden' : null);
+};
+
+/** i18n key for a failed import / review / refresh call. */
+export const skillReviewErrorKey = (error: unknown): string =>
+  `settings.skillsHub.review.errors.${skillErrorReason(error) ?? 'generic'}`;
 
 /**
  * Client-side pre-check mirroring the backend rules (https only for remote
@@ -52,3 +75,15 @@ export const validateImportLocator = (kind: SkillSourceImportKind, locator: stri
     return 'settings.skillsHub.review.errors.source_url_invalid';
   }
 };
+
+/** Names from a just-finished import that landed in the review queue. */
+export const pendingImportedNames = (importedNames: string[], pending: SkillGovernance[]): string[] => {
+  const pendingNames = new Set(pending.map((p) => p.name));
+  return importedNames.filter((name) => pendingNames.has(name));
+};
+
+const CREATED_BY = new Set(['user', 'import', 'evolution']);
+
+/** i18n key for SkillVersion.created_by, or null to show the raw value. */
+export const versionCreatedByKey = (createdBy: string): string | null =>
+  CREATED_BY.has(createdBy) ? `settings.skillsHub.review.createdBy.${createdBy}` : null;

@@ -6,7 +6,7 @@ import { Delete, Help, Lightning, NewLark, Puzzle } from '@icon-park/react';
 import React, { useCallback, useEffect, useRef, useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
-import useSWR from 'swr';
+import useSWR, { mutate } from 'swr';
 import SkillUsedByStack, { getAssistantsUsingSkill } from './SkillUsedByStack';
 import SettingsPageWrapper from '../components/SettingsPageWrapper';
 import SettingsPageHeader from '../components/SettingsPageHeader';
@@ -14,7 +14,9 @@ import TalkToButlerButton from '@/renderer/components/base/TalkToButlerButton';
 import { WorkMateSearchInput } from '@/renderer/components/base';
 import { formatDateTime } from '@/renderer/services/i18n/format';
 import { buildSkillImportNotice, getSkillImportErrorMessage } from './skillImportMessages';
-import SkillReviewQueue from './SkillReviewQueue';
+import SkillReviewQueue, { PENDING_SKILL_REVIEWS_KEY } from './SkillReviewQueue';
+import { pendingImportedNames } from './skillReviewModel';
+import type { SkillGovernance } from '@/common/types/skills/skillSources';
 import OfficialOnlineSkills from './OfficialOnlineSkills';
 
 // Skill 信息类型 / Skill info type
@@ -270,6 +272,26 @@ const SkillsHubSettings: React.FC<SkillsHubSettingsProps> = ({ withWrapper = tru
     void navigate('/settings/skills');
   }, [navigate]);
 
+  // M8 E10: imported skills with scripts wait for manual review (core #188).
+  const notifyPendingImports = useCallback(
+    async (importedNames: string[]) => {
+      let pending: SkillGovernance[];
+      try {
+        pending = await ipcBridge.fs.listPendingSkillReviews.invoke();
+      } catch {
+        return; // older core without the review queue
+      }
+      void mutate(PENDING_SKILL_REVIEWS_KEY, pending, { revalidate: false });
+      const names = pendingImportedNames(importedNames, pending);
+      if (names.length === 0) return;
+      Message.warning({
+        content: t('settings.skillsHub.review.importNeedsReview', { count: names.length, names: names.join(', ') }),
+        duration: 8000,
+      });
+    },
+    [t]
+  );
+
   const handleImport = async (skillPath: string) => {
     try {
       const result = await ipcBridge.fs.importSkills.invoke({ skill_path: skillPath });
@@ -284,6 +306,7 @@ const SkillsHubSettings: React.FC<SkillsHubSettingsProps> = ({ withWrapper = tru
       if (notice.importedNames.length > 0) {
         setSearchQuery('');
         void fetchData();
+        void notifyPendingImports(notice.importedNames);
       } else if (notice.type !== 'success') {
         void fetchData();
       }

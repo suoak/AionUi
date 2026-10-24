@@ -1314,7 +1314,10 @@
         "source_url_invalid": "無効なソースアドレスです（https のみ）",
         "source_address_blocked": "このアドレスへのアクセスは許可されていません",
         "forbidden": "この操作を行う権限がありません",
-        "generic": "エラーが発生しました。もう一度お試しください"
+        "generic": "エラーが発生しました。もう一度お試しください",
+        "skill_source_not_refreshable": "このソースからは更新できません（git / url ソースのみ対応）",
+        "skill_import_no_skill_found": "ソースにスキルが見つかりません（SKILL.md がありません）",
+        "source_git_unsupported": "git のバージョンが古すぎます（2.37 以上が必要）。git を更新するか URL からインポートしてください"
       },
       "import": {
         "open": "ソースからインポート",
@@ -1331,7 +1334,13 @@
         "locatorRequired": "ソースアドレスを入力してください",
         "localAbsolute": "ローカルパスは絶対パスである必要があります",
         "done": "{{count}} 件のスキルをインポートしました（うち {{pending}} 件が審査待ち）"
-      }
+      },
+      "createdBy": {
+        "user": "手動",
+        "import": "インポート",
+        "evolution": "自動進化"
+      },
+      "importNeedsReview": "インポートしたスキルのうち {{count}} 件はスクリプトを含むため、「審査待ち」で承認するまで使用できません：{{names}}"
     }
   },
   "assistant.connectionFailed": "Connection failed",

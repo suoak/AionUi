@@ -15,7 +15,7 @@ import React, { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import useSWR from 'swr';
 import SkillSourceImportModal from './SkillSourceImportModal';
-import { isUntrustedSource, latestHasScripts, skillReviewErrorKey } from './skillReviewModel';
+import { isUntrustedSource, latestHasScripts, skillReviewErrorKey, versionCreatedByKey } from './skillReviewModel';
 
 export const PENDING_SKILL_REVIEWS_KEY = 'skills.reviews.pending';
 
@@ -56,7 +56,8 @@ const SkillReviewDetail: React.FC<{ skillId: string }> = ({ skillId }) => {
       <ul className='m-0 pl-16px'>
         {versions.map((v) => (
           <li key={v.version_no} data-testid={`skill-review-version-${v.version_no}`}>
-            v{v.version_no} · {formatTime(v.created_at)} · {v.created_by}
+            v{v.version_no} · {formatTime(v.created_at)} ·{' '}
+            {versionCreatedByKey(v.created_by) ? t(versionCreatedByKey(v.created_by)!) : v.created_by}
             {v.has_scripts && (
               <Tag size='small' color='orangered' className='ml-6px'>
                 {t('settings.skillsHub.review.scriptsBadge')}

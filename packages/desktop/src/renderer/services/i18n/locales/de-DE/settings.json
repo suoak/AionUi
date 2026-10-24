@@ -1312,7 +1312,10 @@
         "source_url_invalid": "Ungültige Quelladresse (nur https)",
         "source_address_blocked": "Diese Adresse ist nicht erlaubt",
         "forbidden": "Dazu fehlt dir die Berechtigung",
-        "generic": "Etwas ist schiefgelaufen, bitte erneut versuchen"
+        "generic": "Etwas ist schiefgelaufen, bitte erneut versuchen",
+        "skill_source_not_refreshable": "Diese Quelle kann nicht aktualisiert werden (nur git- / url-Quellen)",
+        "skill_import_no_skill_found": "In der Quelle wurde kein Skill gefunden (SKILL.md fehlt)",
+        "source_git_unsupported": "Deine git-Version ist zu alt (2.37 oder neuer nötig). Aktualisiere git oder importiere per URL"
       },
       "import": {
         "open": "Aus Quelle importieren",
@@ -1329,7 +1332,13 @@
         "locatorRequired": "Gib eine Quelladresse ein",
         "localAbsolute": "Der lokale Pfad muss absolut sein",
         "done": "{{count}} Skill(s) importiert, {{pending}} warten auf Prüfung"
-      }
+      },
+      "createdBy": {
+        "user": "Manuell",
+        "import": "Import",
+        "evolution": "Auto-Evolution"
+      },
+      "importNeedsReview": "{{count}} importierte(r) Skill(s) enthalten Skripte und müssen unter „Prüfung ausstehend“ freigegeben werden: {{names}}"
     }
   },
   "assistant.connectionFailed": "Verbindung fehlgeschlagen",

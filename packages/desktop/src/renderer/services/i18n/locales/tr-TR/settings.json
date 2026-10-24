@@ -1312,7 +1312,10 @@
         "source_url_invalid": "Geçersiz kaynak adresi (yalnızca https)",
         "source_address_blocked": "Bu adrese izin verilmiyor",
         "forbidden": "Bunu yapmaya yetkiniz yok",
-        "generic": "Bir sorun oluştu, lütfen tekrar deneyin"
+        "generic": "Bir sorun oluştu, lütfen tekrar deneyin",
+        "skill_source_not_refreshable": "Bu kaynak yenilenemez (yalnızca git / url kaynakları)",
+        "skill_import_no_skill_found": "Kaynakta beceri bulunamadı (SKILL.md yok)",
+        "source_git_unsupported": "git sürümünüz çok eski (2.37 veya üzeri gerekli). git'i güncelleyin ya da URL ile içe aktarın"
       },
       "import": {
         "open": "Kaynaktan içe aktar",
@@ -1329,7 +1332,13 @@
         "locatorRequired": "Bir kaynak adresi girin",
         "localAbsolute": "Yerel yol mutlak olmalıdır",
         "done": "{{count}} beceri içe aktarıldı, {{pending}} tanesi inceleme bekliyor"
-      }
+      },
+      "createdBy": {
+        "user": "Elle",
+        "import": "İçe aktarma",
+        "evolution": "Otomatik evrim"
+      },
+      "importNeedsReview": "İçe aktarılan {{count}} beceri betik içeriyor ve kullanılmadan önce İnceleme bekliyor bölümünde onaylanmalı: {{names}}"
     }
   },
   "assistant.connectionFailed": "Bağlantı başarısız",

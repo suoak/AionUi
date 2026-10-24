@@ -1312,7 +1312,10 @@
         "source_url_invalid": "نشانی منبع نامعتبر است (فقط https)",
         "source_address_blocked": "دسترسی به این نشانی مجاز نیست",
         "forbidden": "اجازهٔ انجام این کار را ندارید",
-        "generic": "مشکلی پیش آمد، دوباره تلاش کنید"
+        "generic": "مشکلی پیش آمد، دوباره تلاش کنید",
+        "skill_source_not_refreshable": "این منبع قابل تازه‌سازی نیست (فقط منابع git / url)",
+        "skill_import_no_skill_found": "هیچ مهارتی در منبع پیدا نشد (SKILL.md وجود ندارد)",
+        "source_git_unsupported": "نسخهٔ git شما خیلی قدیمی است (۲٫۳۷ یا بالاتر لازم است). git را به‌روز کنید یا از طریق URL وارد کنید"
       },
       "import": {
         "open": "وارد کردن از منبع",
@@ -1329,7 +1332,13 @@
         "locatorRequired": "نشانی منبع را وارد کنید",
         "localAbsolute": "مسیر محلی باید مطلق باشد",
         "done": "{{count}} مهارت وارد شد، {{pending}} مورد در انتظار بررسی"
-      }
+      },
+      "createdBy": {
+        "user": "دستی",
+        "import": "وارد کردن",
+        "evolution": "تکامل خودکار"
+      },
+      "importNeedsReview": "{{count}} مهارت واردشده شامل اسکریپت است و پیش از استفاده باید در «در انتظار بررسی» تأیید شود: {{names}}"
     }
   },
   "assistant.connectionFailed": "اتصال ناموفق بود",

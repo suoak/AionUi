@@ -1312,7 +1312,10 @@
         "source_url_invalid": "Invalid source address (https only)",
         "source_address_blocked": "This address is not allowed",
         "forbidden": "You do not have permission to do this",
-        "generic": "Something went wrong, please try again"
+        "generic": "Something went wrong, please try again",
+        "skill_source_not_refreshable": "This source cannot be refreshed (only git / url sources can)",
+        "skill_import_no_skill_found": "No skill found in the source (SKILL.md missing)",
+        "source_git_unsupported": "Your git is too old (2.37 or later required). Upgrade git or import via URL instead"
       },
       "import": {
         "open": "Import from source",
@@ -1329,7 +1332,13 @@
         "locatorRequired": "Enter a source address",
         "localAbsolute": "The local path must be absolute",
         "done": "Imported {{count}} skill(s), {{pending}} waiting for review"
-      }
+      },
+      "createdBy": {
+        "user": "Manual",
+        "import": "Import",
+        "evolution": "Auto-evolution"
+      },
+      "importNeedsReview": "{{count}} imported skill(s) contain scripts and must be approved under Pending review before use: {{names}}"
     }
   },
   "assistant.connectionFailed": "Connection failed",
