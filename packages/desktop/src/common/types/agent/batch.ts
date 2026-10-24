@@ -18,24 +18,10 @@
  */
 
 /** Job lifecycle statuses — matches CHECK on `batch_jobs.status`. */
-export type BatchJobStatus =
-  | 'draft'
-  | 'trial'
-  | 'running'
-  | 'paused'
-  | 'completed'
-  | 'failed'
-  | 'cancelled';
+export type BatchJobStatus = 'draft' | 'trial' | 'running' | 'paused' | 'completed' | 'failed' | 'cancelled';
 
 /** Item lifecycle statuses — matches CHECK on `batch_items.status`. */
-export type BatchItemStatus =
-  | 'pending'
-  | 'running'
-  | 'passed'
-  | 'failed'
-  | 'timeout'
-  | 'skipped'
-  | 'cancelled';
+export type BatchItemStatus = 'pending' | 'running' | 'passed' | 'failed' | 'timeout' | 'skipped' | 'cancelled';
 
 export const BATCH_JOB_STATUSES: readonly BatchJobStatus[] = [
   'draft',
