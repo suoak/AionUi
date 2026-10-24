@@ -9,17 +9,19 @@ import { useTranslation } from 'react-i18next';
 import { Button, Input, Message, Select } from '@arco-design/web-react';
 import { ipcBridge } from '@/common';
 import type { TaskAssignee, TaskAssigneeKind, TaskBoardItem } from '@/common/types/agent/taskSession';
-import { boardErrorKey } from './boardModel';
+import { boardErrorKey, isBoardItemStale } from './boardModel';
 
 const ASSIGNEE_KINDS: readonly TaskAssigneeKind[] = ['user', 'agent', 'squad'];
 
 type TaskBoardAssigneeEditorProps = {
   item: TaskBoardItem;
   onUpdated: (item: TaskBoardItem) => void;
+  /** Optimistic-lock conflict; the board refetches and the user retries. */
+  onStale?: () => void;
 };
 
 /** Assign the item to a user, agent or squad (by id), or clear the assignee. */
-const TaskBoardAssigneeEditor: React.FC<TaskBoardAssigneeEditorProps> = ({ item, onUpdated }) => {
+const TaskBoardAssigneeEditor: React.FC<TaskBoardAssigneeEditorProps> = ({ item, onUpdated, onStale }) => {
   const { t } = useTranslation();
   const [kind, setKind] = useState<TaskAssigneeKind>(item.assignee?.kind ?? 'agent');
   const [assigneeId, setAssigneeId] = useState(item.assignee?.id ?? '');
@@ -33,11 +35,12 @@ const TaskBoardAssigneeEditor: React.FC<TaskBoardAssigneeEditorProps> = ({ item,
   const save = (assignee: TaskAssignee | null) => {
     setPending(true);
     ipcBridge.taskSession.board.update
-      .invoke({ id: item.id, updates: { assignee } })
+      .invoke({ id: item.id, updates: { assignee, expected_updated_at: item.updated_at } })
       .then(onUpdated)
       .catch((error) => {
         console.error('[TasksBoard] Assign failed:', error);
-        Message.error(t(boardErrorKey(error)));
+        if (isBoardItemStale(error) && onStale) onStale();
+        else Message.error(t(boardErrorKey(error)));
       })
       .finally(() => setPending(false));
   };

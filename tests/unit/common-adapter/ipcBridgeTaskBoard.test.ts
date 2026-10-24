@@ -102,4 +102,20 @@ describe('ipcBridge task board adapter (Core E6-3 routes)', () => {
       { method: 'PATCH', path: '/api/task-sessions/t1/comments/c1', body: { body: 'edited' } },
     ]);
   });
+
+  it('passes the optimistic lock and subscribes to the board WS events', async () => {
+    const { taskSession } = await import('@/common/adapter/ipcBridge');
+
+    await taskSession.board.update.invoke({ id: 't1', updates: { priority: 2, expected_updated_at: 42 } });
+    expect(httpBridgeMocks.calls).toEqual([
+      { method: 'PATCH', path: '/api/task-sessions/t1/board', body: { priority: 2, expected_updated_at: 42 } },
+    ]);
+    const names = httpBridgeMocks.wsEmitter.mock.calls.map((call) => (call as unknown[])[0]);
+    expect(names).toEqual(
+      expect.arrayContaining(['task.board.updated', 'task.comment.created', 'task.comment.updated'])
+    );
+    expect(typeof taskSession.board.updated.on).toBe('function');
+    expect(typeof taskSession.board.comments.created.on).toBe('function');
+    expect(typeof taskSession.board.comments.updated.on).toBe('function');
+  });
 });

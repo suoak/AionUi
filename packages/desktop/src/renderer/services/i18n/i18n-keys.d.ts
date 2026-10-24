@@ -1258,6 +1258,7 @@ export type I18nKey =
   | 'conversation.taskBoard.errors.not_in_review'
   | 'conversation.taskBoard.errors.plan_not_approved'
   | 'conversation.taskBoard.errors.review_required'
+  | 'conversation.taskBoard.errors.stale'
   | 'conversation.taskBoard.legacyNotice'
   | 'conversation.taskBoard.loadFailed'
   | 'conversation.taskBoard.mode.agent'

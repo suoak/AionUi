@@ -21,7 +21,27 @@ const mocks = vi.hoisted(() => ({
   list: vi.fn(),
   get: vi.fn(),
   navigate: vi.fn(),
+  listeners: new Map<string, Set<(payload: unknown) => void>>(),
 }));
+
+const { wsEmitter } = vi.hoisted(() => ({
+  wsEmitter: (name: string) => ({
+    on: (cb: (payload: unknown) => void) => {
+      if (!mocks.listeners.has(name)) mocks.listeners.set(name, new Set());
+      mocks.listeners.get(name)!.add(cb);
+      return () => {
+        mocks.listeners.get(name)?.delete(cb);
+      };
+    },
+  }),
+}));
+
+const push = (name: string, payload: unknown) =>
+  act(() => {
+    for (const cb of mocks.listeners.get(name) ?? []) cb(payload);
+  });
+
+const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 vi.mock('@/common', () => ({
   ipcBridge: {
@@ -36,7 +56,10 @@ vi.mock('@/common', () => ({
           list: { invoke: mocks.commentsList },
           create: { invoke: mocks.commentsCreate },
           edit: { invoke: mocks.commentsEdit },
+          created: wsEmitter('task.comment.created'),
+          updated: wsEmitter('task.comment.updated'),
         },
+        updated: wsEmitter('task.board.updated'),
       },
     },
   },
@@ -143,7 +166,8 @@ const chooseMoveTarget = async (status: TaskBoardStatus) => {
 
 describe('TasksBoardPage', () => {
   beforeEach(() => {
-    Object.values(mocks).forEach((m) => m.mockReset());
+    for (const m of Object.values(mocks)) if (typeof m === 'function') m.mockReset();
+    mocks.listeners.clear();
     mocks.get.mockImplementation(({ id }: { id: string }) => Promise.resolve(session(id)));
     mocks.commentsList.mockResolvedValue([]);
     vi.spyOn(console, 'error').mockImplementation(() => {});
@@ -223,7 +247,7 @@ describe('TasksBoardPage', () => {
     expect(mocks.navigate).toHaveBeenCalledWith('/conversation/conv-r');
   });
 
-  it('moves a card optimistically and refetches after the server accepts', async () => {
+  it('moves a card optimistically and refetches when no realtime push confirms it', async () => {
     mocks.boardGet.mockResolvedValueOnce(board(item('t', 'todo')));
     mocks.boardUpdate.mockResolvedValue(item('t', 'in_progress', { updated_at: 5 }));
     mocks.boardGet.mockResolvedValue(board(item('t', 'in_progress', { updated_at: 5 })));
@@ -234,8 +258,87 @@ describe('TasksBoardPage', () => {
     await chooseMoveTarget('in_progress');
 
     await waitFor(() => expect(within(column('in_progress')).getByTestId('task-board-card-t')).toBeTruthy());
-    expect(mocks.boardUpdate).toHaveBeenCalledWith({ id: 't', updates: { board_status: 'in_progress' } });
-    await waitFor(() => expect(mocks.boardGet).toHaveBeenCalledTimes(2));
+    expect(mocks.boardUpdate).toHaveBeenCalledWith({
+      id: 't',
+      updates: { board_status: 'in_progress', expected_updated_at: 1 },
+    });
+    expect(mocks.boardGet).toHaveBeenCalledTimes(1);
+    await waitFor(() => expect(mocks.boardGet).toHaveBeenCalledTimes(2), { timeout: 3000 });
+  });
+
+  it('skips the fallback refetch when the push confirms the move', async () => {
+    mocks.boardGet.mockResolvedValue(board(item('t', 'todo')));
+    const moved = item('t', 'in_progress', { updated_at: 5 });
+    mocks.boardUpdate.mockResolvedValue(moved);
+    render(<TasksBoardPage />);
+
+    fireEvent.click(await screen.findByTestId('task-board-card-t'));
+    await screen.findByTestId('task-board-detail');
+    await chooseMoveTarget('in_progress');
+    await waitFor(() => expect(mocks.boardUpdate).toHaveBeenCalled());
+    push('task.board.updated', {
+      user_id: 'u',
+      task_session_id: 't',
+      change: 'board',
+      from_board_status: 'todo',
+      item: moved,
+    });
+    await act(() => sleep(1800));
+    expect(mocks.boardGet).toHaveBeenCalledTimes(1);
+    expect(within(column('in_progress')).getByTestId('task-board-card-t')).toBeTruthy();
+  });
+
+  it('applies pushes from elsewhere and ignores older copies', async () => {
+    mocks.boardGet.mockResolvedValue(board(item('t', 'todo', { updated_at: 3 })));
+    render(<TasksBoardPage />);
+    await screen.findByTestId('task-board-card-t');
+
+    const event = (board_status: TaskBoardStatus, updated_at: number) => ({
+      user_id: 'u',
+      task_session_id: 't',
+      change: 'board',
+      from_board_status: 'todo',
+      item: item('t', board_status, { updated_at }),
+    });
+    push('task.board.updated', event('in_progress', 9));
+    expect(within(column('in_progress')).getByTestId('task-board-card-t')).toBeTruthy();
+    push('task.board.updated', event('backlog', 4));
+    expect(within(column('in_progress')).getByTestId('task-board-card-t')).toBeTruthy();
+    expect(within(column('backlog')).queryByTestId('task-board-card-t')).toBeNull();
+    push('task.board.updated', {
+      ...event('todo', 10),
+      task_session_id: 'n',
+      item: item('n', 'todo', { updated_at: 10 }),
+    });
+    expect(within(column('todo')).getByTestId('task-board-card-n')).toBeTruthy();
+    expect(mocks.boardGet).toHaveBeenCalledTimes(1);
+  });
+
+  it('rolls back a stale move, refetches and asks to retry', async () => {
+    const warning = vi.spyOn(Message, 'warning').mockImplementation(() => () => {});
+    mocks.boardGet.mockResolvedValueOnce(board(item('t', 'todo', { updated_at: 2 })));
+    mocks.boardGet.mockResolvedValue(board(item('t', 'backlog', { updated_at: 7 })));
+    mocks.boardUpdate.mockRejectedValue(
+      new BackendHttpError({
+        method: 'PATCH',
+        path: '/api/task-sessions/t/board',
+        status: 409,
+        body: { error: 'stale', code: 'board_item_stale', details: { expected_updated_at: 2, current_updated_at: 7 } },
+      })
+    );
+    render(<TasksBoardPage />);
+
+    fireEvent.click(await screen.findByTestId('task-board-card-t'));
+    await screen.findByTestId('task-board-detail');
+    await chooseMoveTarget('in_progress');
+
+    await waitFor(() => expect(warning).toHaveBeenCalledWith('conversation.taskBoard.errors.stale'));
+    expect(mocks.boardUpdate).toHaveBeenCalledWith({
+      id: 't',
+      updates: { board_status: 'in_progress', expected_updated_at: 2 },
+    });
+    await waitFor(() => expect(within(column('backlog')).getByTestId('task-board-card-t')).toBeTruthy());
+    expect(within(column('in_progress')).queryByTestId('task-board-card-t')).toBeNull();
   });
 
   it('rolls a rejected move back and explains the reason', async () => {
@@ -286,7 +389,7 @@ describe('TasksBoardPage', () => {
 
   it('assigns and unassigns', async () => {
     mocks.boardGet.mockResolvedValue(board(item('t', 'todo', { assignee: { kind: 'user', id: 'u1' } })));
-    mocks.boardUpdate.mockResolvedValue(item('t', 'todo'));
+    mocks.boardUpdate.mockResolvedValue(item('t', 'todo', { assignee: { kind: 'user', id: 'u2' }, updated_at: 2 }));
     render(<TasksBoardPage />);
 
     fireEvent.click(await screen.findByTestId('task-board-card-t'));
@@ -294,10 +397,15 @@ describe('TasksBoardPage', () => {
     fireEvent.change(screen.getByTestId('task-board-assignee-id'), { target: { value: 'u2' } });
     fireEvent.click(screen.getByTestId('task-board-assignee-save'));
     await waitFor(() =>
-      expect(mocks.boardUpdate).toHaveBeenCalledWith({ id: 't', updates: { assignee: { kind: 'user', id: 'u2' } } })
+      expect(mocks.boardUpdate).toHaveBeenCalledWith({
+        id: 't',
+        updates: { assignee: { kind: 'user', id: 'u2' }, expected_updated_at: 1 },
+      })
     );
     fireEvent.click(screen.getByTestId('task-board-assignee-clear'));
-    await waitFor(() => expect(mocks.boardUpdate).toHaveBeenCalledWith({ id: 't', updates: { assignee: null } }));
+    await waitFor(() =>
+      expect(mocks.boardUpdate).toHaveBeenCalledWith({ id: 't', updates: { assignee: null, expected_updated_at: 2 } })
+    );
   });
 
   it('renders the timeline, posts comments and maps edit-window conflicts', async () => {
@@ -339,6 +447,35 @@ describe('TasksBoardPage', () => {
     });
     await waitFor(() => expect(error).toHaveBeenCalledWith('conversation.taskBoard.errors.commentEditWindow'));
     expect(mocks.commentsEdit).toHaveBeenCalledWith({ id: 't', comment_id: 'm', body: 'changed' });
+  });
+
+  it('adds pushed timeline entries of the open item once', async () => {
+    mocks.boardGet.mockResolvedValue(board(item('t', 'todo')));
+    mocks.commentsList.mockResolvedValue([comment('m', { body: 'first note', created_at: 1 })]);
+    render(<TasksBoardPage />);
+
+    fireEvent.click(await screen.findByTestId('task-board-card-t'));
+    await screen.findByTestId('task-board-timeline-entry-m');
+    const pushed = comment('s', {
+      kind: 'status_change',
+      author_kind: 'system',
+      body: '{"from":"todo","to":"backlog"}',
+    });
+    push('task.comment.created', { user_id: 'u', task_session_id: 't', comment: pushed });
+    push('task.comment.created', { user_id: 'u', task_session_id: 't', comment: pushed });
+    push('task.comment.created', {
+      user_id: 'u',
+      task_session_id: 'other',
+      comment: comment('o', { task_session_id: 'other' }),
+    });
+    expect(screen.getAllByTestId('task-board-timeline-entry-s')).toHaveLength(1);
+    expect(screen.queryByTestId('task-board-timeline-entry-o')).toBeNull();
+    push('task.comment.updated', {
+      user_id: 'u',
+      task_session_id: 't',
+      comment: comment('m', { body: 'edited note', created_at: 1, edited_at: 2 }),
+    });
+    expect(screen.getByTestId('task-board-timeline-entry-m').textContent).toContain('edited note');
   });
 
   it('shows a retry state when loading fails', async () => {

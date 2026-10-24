@@ -1416,6 +1416,7 @@
       "agent_review_gate": "智能体产出的结果需要人工评审。",
       "not_in_review": "只有评审中的事项可以评审。",
       "not_allowed": "不允许此移动。",
+      "stale": "该卡片已在别处被修改，看板已刷新，请重试。",
       "commentEditWindow": "评论仅作者可在 15 分钟内编辑。",
       "generic": "操作失败，请重试。"
     }

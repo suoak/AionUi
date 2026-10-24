@@ -8,6 +8,7 @@ import type {
 } from '@/common/types/agent/taskSession';
 import { BackendHttpError } from '@/common/adapter/httpBridge';
 import {
+  applyBoardItem,
   boardErrorKey,
   boardItemFromTaskSession,
   boardRejectionReason,
@@ -15,7 +16,9 @@ import {
   canUserMoveBoardItem,
   columnsFromBoardResponse,
   isBoardApiUnavailable,
+  isBoardItemStale,
   moveItemInColumns,
+  upsertComment,
   parseTimelineEntry,
   boardStatusForTask,
   boardStatusFromRunStatus,
@@ -218,5 +221,41 @@ describe('boardModel board API helpers', () => {
     expect(canEditComment(entry('comment', 'x', { created_at: 0 }), now)).toBe(false);
     expect(canEditComment(entry('comment', 'x', { created_at: now, author_kind: 'agent' }), now)).toBe(false);
     expect(canEditComment(entry('status_change', '{}', { created_at: now }), now)).toBe(false);
+  });
+});
+
+describe('realtime and optimistic-lock helpers', () => {
+  const stale = new BackendHttpError({
+    method: 'PATCH',
+    path: '/api/task-sessions/t/board',
+    status: 409,
+    body: { error: 'stale', code: 'board_item_stale', details: { expected_updated_at: 1, current_updated_at: 2 } },
+  });
+
+  it('maps board_item_stale to its own message', () => {
+    expect(isBoardItemStale(stale)).toBe(true);
+    expect(boardErrorKey(stale)).toBe('conversation.taskBoard.errors.stale');
+    expect(isBoardItemStale(new Error('x'))).toBe(false);
+  });
+
+  it('applies newer server copies, ignores older ones and inserts unknown items', () => {
+    const columns = columnsFromBoardResponse({
+      columns: [{ board_status: 'todo', items: [boardItem('a', 'todo', { updated_at: 5 })] }],
+    });
+    const moved = applyBoardItem(columns, boardItem('a', 'in_progress', { updated_at: 6 }));
+    expect(moved.in_progress.map((i) => i.id)).toEqual(['a']);
+    expect(moved.todo).toEqual([]);
+    expect(applyBoardItem(moved, boardItem('a', 'todo', { updated_at: 5 }))).toBe(moved);
+    const inserted = applyBoardItem(moved, boardItem('b', 'backlog', { updated_at: 1 }));
+    expect(inserted.backlog.map((i) => i.id)).toEqual(['b']);
+  });
+
+  it('upserts timeline entries by id in creation order', () => {
+    const a = entry('comment', 'a', { id: 'a', created_at: 1 });
+    const c = entry('comment', 'c', { id: 'c', created_at: 3 });
+    const b = entry('comment', 'b', { id: 'b', created_at: 2 });
+    const list = upsertComment(upsertComment([a, c], b), b);
+    expect(list.map((e) => e.id)).toEqual(['a', 'b', 'c']);
+    expect(upsertComment(list, { ...b, body: 'edited', edited_at: 4 })[1].body).toBe('edited');
   });
 });

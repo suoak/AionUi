@@ -179,6 +179,21 @@ export const moveItemInColumns = (
   return next;
 };
 
+/**
+ * Apply a server copy of an item (mutation response or `task.board.updated`
+ * push). Older copies than the one shown are ignored, so a late push cannot
+ * undo a newer response; unknown items are inserted.
+ */
+export const applyBoardItem = (columns: BoardItemColumns, item: TaskBoardItem): BoardItemColumns => {
+  const current = findBoardItem(columns, item.id);
+  if (current && current.updated_at > item.updated_at) return columns;
+  if (current) return moveItemInColumns(columns, item.id, item.board_status, item);
+  if (!columns[item.board_status]) return columns;
+  const column = [...columns[item.board_status], item];
+  column.sort(compareBoardItems);
+  return { ...columns, [item.board_status]: column };
+};
+
 export const findBoardItem = (columns: BoardItemColumns, itemId: string | null): TaskBoardItem | null => {
   if (!itemId) return null;
   for (const status of TASK_BOARD_STATUSES) {
@@ -209,6 +224,26 @@ export const boardRejectionReason = (error: unknown): TaskBoardRejectionReason |
 /** Older cores without the board API answer 404/405 on `GET /api/task-sessions/board`. */
 export const isBoardApiUnavailable = (error: unknown): boolean =>
   isBackendHttpError(error) && (error.status === 404 || error.status === 405);
+
+/** Optimistic-lock conflict on `PATCH /board` (aioncore ≥ E6 WS/OCC). */
+export const isBoardItemStale = (error: unknown): boolean =>
+  isBackendHttpError(error) && error.code === 'board_item_stale';
+
+/**
+ * Without a matching push within this window after a mutation, the board
+ * refetches (realtime unavailable: older core, socket down).
+ */
+export const REALTIME_FALLBACK_MS = 1500;
+
+/** Insert or replace a timeline entry by id, keeping oldest-first order. */
+export const upsertComment = (entries: TaskComment[], comment: TaskComment): TaskComment[] => {
+  if (entries.some((entry) => entry.id === comment.id)) {
+    return entries.map((entry) => (entry.id === comment.id ? comment : entry));
+  }
+  const next = [...entries, comment];
+  next.sort((a, b) => a.created_at - b.created_at);
+  return next;
+};
 
 /** Comments can be edited by their author for 15 minutes (Core rule; server enforces). */
 export const COMMENT_EDIT_WINDOW_MS = 15 * 60 * 1000;
@@ -260,6 +295,7 @@ export const parseTimelineEntry = (comment: TaskComment): TimelineEvent => {
 
 /** i18n key (under `conversation.taskBoard.errors`) for a failed board mutation. */
 export const boardErrorKey = (error: unknown): string => {
+  if (isBoardItemStale(error)) return 'conversation.taskBoard.errors.stale';
   const reason = boardRejectionReason(error);
   if (reason) return `conversation.taskBoard.errors.${reason}`;
   return 'conversation.taskBoard.errors.generic';

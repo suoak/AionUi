@@ -1418,6 +1418,7 @@
       "agent_review_gate": "Ajan sonucu insan incelemesi gerektirir.",
       "not_in_review": "Yalnızca incelemedeki öğeler incelenebilir.",
       "not_allowed": "Bu taşımaya izin verilmiyor.",
+      "stale": "Bu kart başka bir yerde değiştirildi. Pano yenilendi, lütfen tekrar deneyin.",
       "commentEditWindow": "Yorumlar yalnızca yazarı tarafından 15 dakika içinde düzenlenebilir.",
       "generic": "İşlem başarısız oldu. Lütfen tekrar deneyin."
     }

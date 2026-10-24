@@ -1416,6 +1416,7 @@
       "agent_review_gate": "Un résultat d'agent nécessite une revue humaine.",
       "not_in_review": "Seuls les éléments en revue peuvent être revus.",
       "not_allowed": "Ce déplacement n'est pas autorisé.",
+      "stale": "Cette carte a été modifiée ailleurs. Le tableau a été actualisé ; veuillez réessayer.",
       "commentEditWindow": "Seul l'auteur peut modifier un commentaire pendant 15 minutes.",
       "generic": "L'opération a échoué. Veuillez réessayer."
     }

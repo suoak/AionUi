@@ -1417,6 +1417,7 @@
       "agent_review_gate": "Ein Agentenergebnis braucht ein menschliches Review.",
       "not_in_review": "Nur Elemente in Review können geprüft werden.",
       "not_allowed": "Diese Verschiebung ist nicht erlaubt.",
+      "stale": "Diese Karte wurde an anderer Stelle geändert. Das Board wurde aktualisiert, bitte erneut versuchen.",
       "commentEditWindow": "Kommentare kann nur der Autor innerhalb von 15 Minuten bearbeiten.",
       "generic": "Vorgang fehlgeschlagen. Bitte erneut versuchen."
     }
