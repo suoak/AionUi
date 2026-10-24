@@ -12,6 +12,12 @@
  * native dialogs, auto-update, devtools, zoom, CDP, deep links) remain as IPC.
  */
 
+import type {
+  SkillGovernance,
+  SkillReviewDecision,
+  SkillSourceDetail,
+  SkillSourceSyncResult,
+} from '@/common/types/skills/skillSources';
 import type { IConfirmation } from '@/common/chat/chatLib';
 import type { AcpSlashCommandApiItem } from '@/common/chat/slash/types';
 import { bridge } from '@/common/platform/bridge';
@@ -1822,6 +1828,19 @@ export const fs = {
     '/api/skills/scan'
   ),
   detectCommonSkillPaths: httpGet<Array<{ name: string; path: string }>, void>('/api/skills/detect-paths'),
+  // M8 E10: skill sources / versions / script review gate (aioncore #187).
+  listPendingSkillReviews: httpGet<SkillGovernance[], void>('/api/skills/reviews/pending'),
+  getSkillSourceDetail: httpGet<SkillSourceDetail, { skill_id: string }>(
+    (p) => `/api/skills/id/${encodeURIComponent(p.skill_id)}/source`
+  ),
+  refreshSkillFromSource: httpPost<SkillSourceSyncResult, { skill_id: string }>(
+    (p) => `/api/skills/id/${encodeURIComponent(p.skill_id)}/refresh`,
+    () => ({})
+  ),
+  reviewSkill: httpPost<SkillGovernance, { skill_id: string; decision: SkillReviewDecision }>(
+    (p) => `/api/skills/id/${encodeURIComponent(p.skill_id)}/review`,
+    (p) => ({ decision: p.decision })
+  ),
   detectAndCountExternalSkills: httpGet<
     Array<{
       name: string;

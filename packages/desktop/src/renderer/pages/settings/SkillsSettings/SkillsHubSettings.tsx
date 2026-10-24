@@ -14,6 +14,7 @@ import TalkToButlerButton from '@/renderer/components/base/TalkToButlerButton';
 import { WorkMateSearchInput } from '@/renderer/components/base';
 import { formatDateTime } from '@/renderer/services/i18n/format';
 import { buildSkillImportNotice, getSkillImportErrorMessage } from './skillImportMessages';
+import SkillReviewQueue from './SkillReviewQueue';
 import OfficialOnlineSkills from './OfficialOnlineSkills';
 
 // Skill 信息类型 / Skill info type
@@ -136,11 +137,12 @@ interface SkillsHubSettingsProps {
   withWrapper?: boolean;
 }
 
-type SkillsTab = 'custom' | 'official' | 'online';
+type SkillsTab = 'custom' | 'official' | 'online' | 'review';
 
 const getSkillsTabFromState = (state: unknown): SkillsTab => {
   if (typeof state === 'object' && state !== null && 'skillsTab' in state) {
-    if (state.skillsTab === 'official' || state.skillsTab === 'online') return state.skillsTab;
+    if (state.skillsTab === 'official' || state.skillsTab === 'online' || state.skillsTab === 'review')
+      return state.skillsTab;
   }
   return 'custom';
 };
@@ -1060,6 +1062,10 @@ const SkillsHubSettings: React.FC<SkillsHubSettingsProps> = ({ withWrapper = tru
             key: 'online',
             label: t('settings.skillsHub.officialOnline.tab'),
           },
+          {
+            key: 'review',
+            label: t('settings.skillsHub.review.tab'),
+          },
         ]}
         activeTab={activeTab}
         onTabChange={(key) => {
@@ -1071,6 +1077,8 @@ const SkillsHubSettings: React.FC<SkillsHubSettingsProps> = ({ withWrapper = tru
         customPane
       ) : activeTab === 'official' ? (
         officialPane
+      ) : activeTab === 'review' ? (
+        <SkillReviewQueue />
       ) : (
         <OfficialOnlineSkills onInstalled={fetchData} />
       )}
