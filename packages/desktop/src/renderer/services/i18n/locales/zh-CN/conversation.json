@@ -1340,6 +1340,19 @@
       "agent": "智能体",
       "plan": "计划",
       "goal": "目标"
+    },
+    "detail": {
+      "boardColumn": "所在列",
+      "runStatus": "运行状态",
+      "mode": "模式",
+      "agent": "智能体",
+      "createdAt": "创建时间",
+      "updatedAt": "更新时间",
+      "taskId": "任务 ID",
+      "objective": "目标",
+      "acceptanceCriteria": "验收标准",
+      "none": "无",
+      "openConversation": "打开对话"
     }
   }
 }

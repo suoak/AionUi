@@ -14,6 +14,7 @@ import type { TaskBoardStatus, TaskSession } from '@/common/types/agent/taskSess
 import { useLayoutContext } from '@renderer/hooks/context/LayoutContext';
 import SettingsPageHeader from '@/renderer/pages/settings/components/SettingsPageHeader';
 import TaskBoardCard from './TaskBoardCard';
+import TaskBoardDetailDrawer from './TaskBoardDetailDrawer';
 import { VISIBLE_BOARD_COLUMNS, groupTasksByBoardStatus } from './boardModel';
 
 type LoadState = 'loading' | 'ready' | 'failed';
@@ -21,7 +22,8 @@ type LoadState = 'loading' | 'ready' | 'failed';
 /**
  * M8 E6-4 skeleton: work-item board. Reads the existing task-session list and
  * places each item by `board_status` (or the D6-3 run-status mapping until
- * Core E6-2/E6-3 ship). Read-only: no drag, assignment or review yet.
+ * Core E6-2/E6-3 ship). Read-only: clicking a card opens a detail drawer; no
+ * drag, assignment or review yet.
  */
 const TasksBoardPage: React.FC = () => {
   const { t } = useTranslation();
@@ -30,6 +32,7 @@ const TasksBoardPage: React.FC = () => {
   const [tasks, setTasks] = useState<TaskSession[]>([]);
   const [loadState, setLoadState] = useState<LoadState>('loading');
   const [showCancelled, setShowCancelled] = useState(false);
+  const [selectedId, setSelectedId] = useState<string | null>(null);
 
   const load = useCallback(() => {
     setLoadState('loading');
@@ -54,9 +57,15 @@ const TasksBoardPage: React.FC = () => {
     ? [...VISIBLE_BOARD_COLUMNS, 'cancelled']
     : [...VISIBLE_BOARD_COLUMNS];
 
-  const handleOpen = useCallback(
-    (task: TaskSession) => {
-      if (task.conversation_id) navigate(`/conversation/${task.conversation_id}`);
+  // Keep the drawer bound to the latest copy of the task after a refresh.
+  const selectedTask = useMemo(() => tasks.find((item) => item.id === selectedId) ?? null, [tasks, selectedId]);
+
+  const handleSelect = useCallback((task: TaskSession) => setSelectedId(task.id), []);
+
+  const handleOpenConversation = useCallback(
+    (conversationId: string) => {
+      setSelectedId(null);
+      navigate(`/conversation/${conversationId}`);
     },
     [navigate]
   );
@@ -124,13 +133,19 @@ const TasksBoardPage: React.FC = () => {
                 {columns[status].length === 0 ? (
                   <Empty className='py-16px' description={t('conversation.taskBoard.emptyColumn')} />
                 ) : (
-                  columns[status].map((task) => <TaskBoardCard key={task.id} task={task} onOpen={handleOpen} />)
+                  columns[status].map((task) => <TaskBoardCard key={task.id} task={task} onOpen={handleSelect} />)
                 )}
               </div>
             </section>
           ))}
         </div>
       )}
+      <TaskBoardDetailDrawer
+        task={selectedTask}
+        isMobile={isMobile}
+        onClose={() => setSelectedId(null)}
+        onOpenConversation={handleOpenConversation}
+      />
     </div>
   );
 };

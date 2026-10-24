@@ -1341,6 +1341,19 @@
       "agent": "Agent",
       "plan": "Plan",
       "goal": "Ziel"
+    },
+    "detail": {
+      "boardColumn": "Spalte",
+      "runStatus": "Ausführungsstatus",
+      "mode": "Modus",
+      "agent": "Agent",
+      "createdAt": "Erstellt",
+      "updatedAt": "Aktualisiert",
+      "taskId": "Aufgaben-ID",
+      "objective": "Ziel",
+      "acceptanceCriteria": "Akzeptanzkriterien",
+      "none": "Keine",
+      "openConversation": "Unterhaltung öffnen"
     }
   }
 }

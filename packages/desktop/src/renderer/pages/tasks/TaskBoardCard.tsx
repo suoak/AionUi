@@ -27,14 +27,13 @@ type TaskBoardCardProps = {
 const TaskBoardCard: React.FC<TaskBoardCardProps> = ({ task, onOpen }) => {
   const { t, i18n } = useTranslation();
   const badge = runBadgeForTask(task);
-  const clickable = Boolean(task.conversation_id && onOpen);
+  const clickable = Boolean(onOpen);
 
   return (
     <div
       data-testid={`task-board-card-${task.id}`}
       role={clickable ? 'button' : undefined}
       tabIndex={clickable ? 0 : undefined}
-      title={clickable ? undefined : t('conversation.taskBoard.noConversation')}
       className={classNames(
         'box-border w-full rd-8px border border-solid border-[var(--color-border-2)] bg-2 p-10px flex flex-col gap-6px',
         clickable && 'cursor-pointer hover:bg-fill-2'

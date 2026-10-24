@@ -1340,6 +1340,19 @@
       "agent": "에이전트",
       "plan": "계획",
       "goal": "목표"
+    },
+    "detail": {
+      "boardColumn": "열",
+      "runStatus": "실행 상태",
+      "mode": "모드",
+      "agent": "에이전트",
+      "createdAt": "생성 시각",
+      "updatedAt": "업데이트 시각",
+      "taskId": "작업 ID",
+      "objective": "목표",
+      "acceptanceCriteria": "수용 기준",
+      "none": "없음",
+      "openConversation": "대화 열기"
     }
   }
 }

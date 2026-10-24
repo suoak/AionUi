@@ -1340,6 +1340,19 @@
       "agent": "Agent",
       "plan": "Plan",
       "goal": "Objectif"
+    },
+    "detail": {
+      "boardColumn": "Colonne",
+      "runStatus": "État d’exécution",
+      "mode": "Mode",
+      "agent": "Agent",
+      "createdAt": "Créé",
+      "updatedAt": "Mis à jour",
+      "taskId": "ID de tâche",
+      "objective": "Objectif",
+      "acceptanceCriteria": "Critères d’acceptation",
+      "none": "Aucun",
+      "openConversation": "Ouvrir la conversation"
     }
   }
 }

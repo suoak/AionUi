@@ -1340,6 +1340,19 @@
       "agent": "エージェント",
       "plan": "計画",
       "goal": "目標"
+    },
+    "detail": {
+      "boardColumn": "列",
+      "runStatus": "実行状態",
+      "mode": "モード",
+      "agent": "エージェント",
+      "createdAt": "作成日時",
+      "updatedAt": "更新日時",
+      "taskId": "タスク ID",
+      "objective": "目的",
+      "acceptanceCriteria": "受け入れ基準",
+      "none": "なし",
+      "openConversation": "会話を開く"
     }
   }
 }

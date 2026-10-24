@@ -1342,6 +1342,19 @@
       "agent": "Ajan",
       "plan": "Plan",
       "goal": "Hedef"
+    },
+    "detail": {
+      "boardColumn": "Sütun",
+      "runStatus": "Çalışma durumu",
+      "mode": "Mod",
+      "agent": "Ajan",
+      "createdAt": "Oluşturuldu",
+      "updatedAt": "Güncellendi",
+      "taskId": "Görev kimliği",
+      "objective": "Hedef",
+      "acceptanceCriteria": "Kabul kriterleri",
+      "none": "Yok",
+      "openConversation": "Sohbeti aç"
     }
   }
 }
