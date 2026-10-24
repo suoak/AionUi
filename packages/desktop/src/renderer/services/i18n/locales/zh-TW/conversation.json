@@ -1311,5 +1311,35 @@
     "externalMcp": "{{count}} 個外部 MCP",
     "ambientMcp": "可能載入本機 MCP",
     "ambientMcpTip": "此後端可能載入本機設定的 MCP 伺服器，實際載入情況未知。"
+  },
+  "taskBoard": {
+    "title": "工作項看板",
+    "description": "依流程狀態檢視任務工作階段",
+    "refresh": "重新整理",
+    "loadFailed": "任務清單載入失敗",
+    "retry": "重試",
+    "emptyColumn": "暫無工作項",
+    "showCancelled": "顯示已取消",
+    "previewNotice": "預覽版：欄位暫依任務執行狀態推斷，拖曳、指派和審查將在後端就緒後開放。",
+    "noConversation": "此工作項沒有關聯對話",
+    "columns": {
+      "backlog": "待規劃",
+      "todo": "待辦",
+      "in_progress": "進行中",
+      "in_review": "審查中",
+      "done": "已完成",
+      "cancelled": "已取消"
+    },
+    "run": {
+      "running": "執行中",
+      "blocked": "阻塞",
+      "paused": "已暫停",
+      "failed": "失敗"
+    },
+    "mode": {
+      "agent": "智慧體",
+      "plan": "計畫",
+      "goal": "目標"
+    }
   }
 }

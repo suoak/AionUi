@@ -1311,5 +1311,35 @@
     "externalMcp": "{{count}} external MCP",
     "ambientMcp": "May load local MCP",
     "ambientMcpTip": "This backend may load MCP servers configured on this machine; what it actually loaded is unknown."
+  },
+  "taskBoard": {
+    "title": "Work board",
+    "description": "Task sessions by workflow stage",
+    "refresh": "Refresh",
+    "loadFailed": "Failed to load tasks",
+    "retry": "Retry",
+    "emptyColumn": "No work items",
+    "showCancelled": "Show cancelled",
+    "previewNotice": "Preview: columns are inferred from each task's run status for now. Drag, assignment and review arrive once the backend is ready.",
+    "noConversation": "This work item has no linked conversation",
+    "columns": {
+      "backlog": "Backlog",
+      "todo": "To do",
+      "in_progress": "In progress",
+      "in_review": "In review",
+      "done": "Done",
+      "cancelled": "Cancelled"
+    },
+    "run": {
+      "running": "Running",
+      "blocked": "Blocked",
+      "paused": "Paused",
+      "failed": "Failed"
+    },
+    "mode": {
+      "agent": "Agent",
+      "plan": "Plan",
+      "goal": "Goal"
+    }
   }
 }

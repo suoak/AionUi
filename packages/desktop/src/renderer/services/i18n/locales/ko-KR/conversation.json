@@ -1311,5 +1311,35 @@
     "externalMcp": "외부 MCP {{count}}개",
     "ambientMcp": "로컬 MCP를 불러올 수 있음",
     "ambientMcpTip": "이 백엔드는 이 컴퓨터에 설정된 MCP 서버를 불러올 수 있으며, 실제 로드 여부는 알 수 없습니다."
+  },
+  "taskBoard": {
+    "title": "작업 보드",
+    "description": "워크플로 단계별 작업 세션",
+    "refresh": "새로 고침",
+    "loadFailed": "작업 목록을 불러오지 못했습니다",
+    "retry": "다시 시도",
+    "emptyColumn": "작업 항목 없음",
+    "showCancelled": "취소된 항목 표시",
+    "previewNotice": "미리 보기: 현재 열은 작업 실행 상태로 추정합니다. 드래그, 할당, 리뷰는 백엔드 준비 후 제공됩니다.",
+    "noConversation": "이 작업 항목에 연결된 대화가 없습니다",
+    "columns": {
+      "backlog": "백로그",
+      "todo": "할 일",
+      "in_progress": "진행 중",
+      "in_review": "리뷰 중",
+      "done": "완료",
+      "cancelled": "취소됨"
+    },
+    "run": {
+      "running": "실행 중",
+      "blocked": "차단됨",
+      "paused": "일시 중지",
+      "failed": "실패"
+    },
+    "mode": {
+      "agent": "에이전트",
+      "plan": "계획",
+      "goal": "목표"
+    }
   }
 }

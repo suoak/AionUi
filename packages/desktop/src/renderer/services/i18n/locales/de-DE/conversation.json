@@ -1312,5 +1312,35 @@
     "externalMcp": "{{count}} externe MCP",
     "ambientMcp": "Kann lokale MCP laden",
     "ambientMcpTip": "Dieses Backend kann auf diesem Rechner konfigurierte MCP-Server laden; was tatsächlich geladen wurde, ist unbekannt."
+  },
+  "taskBoard": {
+    "title": "Arbeitsboard",
+    "description": "Aufgabensitzungen nach Workflow-Phase",
+    "refresh": "Aktualisieren",
+    "loadFailed": "Aufgaben konnten nicht geladen werden",
+    "retry": "Erneut versuchen",
+    "emptyColumn": "Keine Arbeitselemente",
+    "showCancelled": "Abgebrochene anzeigen",
+    "previewNotice": "Vorschau: Spalten werden vorerst aus dem Ausführungsstatus abgeleitet. Ziehen, Zuweisen und Review folgen, sobald das Backend bereit ist.",
+    "noConversation": "Dieses Arbeitselement hat keine verknüpfte Unterhaltung",
+    "columns": {
+      "backlog": "Backlog",
+      "todo": "Zu erledigen",
+      "in_progress": "In Arbeit",
+      "in_review": "Im Review",
+      "done": "Erledigt",
+      "cancelled": "Abgebrochen"
+    },
+    "run": {
+      "running": "Läuft",
+      "blocked": "Blockiert",
+      "paused": "Pausiert",
+      "failed": "Fehlgeschlagen"
+    },
+    "mode": {
+      "agent": "Agent",
+      "plan": "Plan",
+      "goal": "Ziel"
+    }
   }
 }

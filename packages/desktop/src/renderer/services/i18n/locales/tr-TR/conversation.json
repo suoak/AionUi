@@ -1313,5 +1313,35 @@
     "externalMcp": "{{count}} harici MCP",
     "ambientMcp": "Yerel MCP yükleyebilir",
     "ambientMcpTip": "Bu arka uç bu makinede yapılandırılmış MCP sunucularını yükleyebilir; gerçekte neyin yüklendiği bilinmiyor."
+  },
+  "taskBoard": {
+    "title": "İş panosu",
+    "description": "Görev oturumları iş akışı aşamasına göre",
+    "refresh": "Yenile",
+    "loadFailed": "Görevler yüklenemedi",
+    "retry": "Yeniden dene",
+    "emptyColumn": "İş öğesi yok",
+    "showCancelled": "İptal edilenleri göster",
+    "previewNotice": "Önizleme: sütunlar şimdilik görevin çalışma durumundan çıkarılıyor. Sürükleme, atama ve inceleme arka uç hazır olunca gelecek.",
+    "noConversation": "Bu iş öğesinin bağlı sohbeti yok",
+    "columns": {
+      "backlog": "Bekleyen",
+      "todo": "Yapılacak",
+      "in_progress": "Devam ediyor",
+      "in_review": "İncelemede",
+      "done": "Tamamlandı",
+      "cancelled": "İptal edildi"
+    },
+    "run": {
+      "running": "Çalışıyor",
+      "blocked": "Engellendi",
+      "paused": "Duraklatıldı",
+      "failed": "Başarısız"
+    },
+    "mode": {
+      "agent": "Ajan",
+      "plan": "Plan",
+      "goal": "Hedef"
+    }
   }
 }
