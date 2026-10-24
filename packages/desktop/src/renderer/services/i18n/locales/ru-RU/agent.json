@@ -291,7 +291,30 @@
         "squad_store_failed": "Не удалось сохранить Squad. Повторите попытку.",
         "squad_assistant_catalog_unavailable": "Список ассистентов временно недоступен. Повторите позже.",
         "forbidden": "У вас нет прав на это действие.",
-        "generic": "Что-то пошло не так. Повторите попытку."
+        "generic": "Что-то пошло не так. Повторите попытку.",
+        "squad_instantiate_unavailable": "Сейчас нельзя создать команду из Squad",
+        "squad_spawn_forbidden": "Состав команды Squad фиксирован; добавлять агентов нельзя"
+      },
+      "previewAction": "Просмотр и создание команды",
+      "preview": {
+        "title": "Предпросмотр Squad: {{name}}",
+        "instantiate": "Создать команду",
+        "created": "Команда «{{name}}» создана",
+        "fixedRoster": "Состав команды Squad фиксирован: ни один участник (включая Leader) не может создавать или добавлять агентов.",
+        "ineligible": "Недоступен",
+        "maxParallel": "Макс. параллельных задач: {{count}}",
+        "teamTools": "Инструменты команды, оставленные Leader:",
+        "noTools": "нет",
+        "teamName": "Название команды",
+        "role": {
+          "lead": "Leader",
+          "teammate": "Участник"
+        },
+        "blockers": {
+          "squad_assistant_not_eligible": "{{name}} больше недоступен для команд",
+          "squad_team_visibility_unavailable": "Видимость для команды пока недоступна",
+          "generic": "Этот Squad сейчас нельзя создать"
+        }
       }
     }
   },

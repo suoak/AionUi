@@ -101,3 +101,41 @@ describe('template helpers', () => {
     expect(missingSquadRefs(squad)).toEqual(['a1']);
   });
 });
+
+describe('squadPreviewBlockers', () => {
+  it('maps known codes with assistant names and falls back to generic', async () => {
+    const { squadPreviewBlockers } = await import('@/renderer/pages/agent-center/squad/squadModel');
+    const out = squadPreviewBlockers({
+      squad_template_id: 's',
+      name: 'n',
+      leader_mode: 'route_only',
+      participants: [
+        {
+          assistant_id: 'a1',
+          agent_name: 'W',
+          role: 'teammate',
+          role_title: 'W',
+          role_description: '',
+          max_parallel: 1,
+          assistant: { id: 'a1', name: 'Alice', enabled: true, missing: false },
+          backend: null,
+          eligible: false,
+          subagent_spawn: 'forbidden',
+        },
+      ],
+      can_instantiate: false,
+      blocking: [
+        { code: 'squad_assistant_not_eligible', assistant_id: 'a1' },
+        { code: 'squad_assistant_not_eligible', assistant_id: 'gone' },
+        { code: 'squad_team_visibility_unavailable' },
+        { code: 'other' },
+      ],
+    });
+    expect(out).toEqual([
+      { key: 'agent.agentCenter.squad.preview.blockers.squad_assistant_not_eligible', assistantName: 'Alice' },
+      { key: 'agent.agentCenter.squad.preview.blockers.squad_assistant_not_eligible', assistantName: 'gone' },
+      { key: 'agent.agentCenter.squad.preview.blockers.squad_team_visibility_unavailable' },
+      { key: 'agent.agentCenter.squad.preview.blockers.generic' },
+    ]);
+  });
+});

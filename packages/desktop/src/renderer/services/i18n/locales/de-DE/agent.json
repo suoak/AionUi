@@ -291,7 +291,30 @@
         "squad_store_failed": "Squad konnte nicht gespeichert werden. Bitte erneut versuchen.",
         "squad_assistant_catalog_unavailable": "Die Assistentenliste ist vorübergehend nicht verfügbar. Bitte später erneut versuchen.",
         "forbidden": "Du hast keine Berechtigung dafür.",
-        "generic": "Etwas ist schiefgelaufen. Bitte erneut versuchen."
+        "generic": "Etwas ist schiefgelaufen. Bitte erneut versuchen.",
+        "squad_instantiate_unavailable": "Teams aus Squads zu erstellen ist derzeit nicht möglich",
+        "squad_spawn_forbidden": "Squad-Teams haben eine feste Besetzung; Agenten hinzufügen ist nicht erlaubt"
+      },
+      "previewAction": "Vorschau & Team erstellen",
+      "preview": {
+        "title": "Squad-Vorschau: {{name}}",
+        "instantiate": "Team erstellen",
+        "created": "Team „{{name}}“ erstellt",
+        "fixedRoster": "Squad-Teams haben eine feste Besetzung: Kein Mitglied (auch nicht der Leader) kann Agenten erzeugen oder hinzufügen.",
+        "ineligible": "Nicht verfügbar",
+        "maxParallel": "Max. parallele Aufgaben: {{count}}",
+        "teamTools": "Vom Leader behaltene Team-Tools:",
+        "noTools": "keine",
+        "teamName": "Teamname",
+        "role": {
+          "lead": "Leader",
+          "teammate": "Mitglied"
+        },
+        "blockers": {
+          "squad_assistant_not_eligible": "{{name}} ist für Teams nicht mehr verfügbar",
+          "squad_team_visibility_unavailable": "Team-Sichtbarkeit ist noch nicht verfügbar",
+          "generic": "Dieser Squad kann derzeit nicht instanziiert werden"
+        }
       }
     }
   },

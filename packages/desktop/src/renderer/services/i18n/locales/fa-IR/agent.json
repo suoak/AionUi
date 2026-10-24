@@ -291,7 +291,30 @@
         "squad_store_failed": "ذخیرهٔ اسکواد ناموفق بود. لطفاً دوباره تلاش کنید.",
         "squad_assistant_catalog_unavailable": "فهرست دستیارها موقتاً در دسترس نیست. لطفاً بعداً تلاش کنید.",
         "forbidden": "اجازهٔ انجام این کار را ندارید.",
-        "generic": "مشکلی پیش آمد. لطفاً دوباره تلاش کنید."
+        "generic": "مشکلی پیش آمد. لطفاً دوباره تلاش کنید.",
+        "squad_instantiate_unavailable": "اکنون امکان ساخت تیم از Squad وجود ندارد",
+        "squad_spawn_forbidden": "ترکیب تیم‌های Squad ثابت است؛ افزودن عامل مجاز نیست"
+      },
+      "previewAction": "پیش‌نمایش و ساخت تیم",
+      "preview": {
+        "title": "پیش‌نمایش Squad: {{name}}",
+        "instantiate": "ساخت تیم",
+        "created": "تیم «{{name}}» ساخته شد",
+        "fixedRoster": "ترکیب تیم‌های Squad ثابت است: هیچ عضوی (از جمله Leader) نمی‌تواند عامل بسازد یا اضافه کند.",
+        "ineligible": "در دسترس نیست",
+        "maxParallel": "حداکثر کارهای موازی: {{count}}",
+        "teamTools": "ابزارهای تیمی که Leader نگه می‌دارد:",
+        "noTools": "هیچ",
+        "teamName": "نام تیم",
+        "role": {
+          "lead": "Leader",
+          "teammate": "عضو"
+        },
+        "blockers": {
+          "squad_assistant_not_eligible": "{{name}} دیگر برای تیم‌ها در دسترس نیست",
+          "squad_team_visibility_unavailable": "نمایش تیمی هنوز در دسترس نیست",
+          "generic": "این Squad اکنون قابل نمونه‌سازی نیست"
+        }
       }
     }
   },

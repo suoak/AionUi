@@ -12,6 +12,7 @@ import { Button, Message, Modal, Tag, Typography } from '@arco-design/web-react'
 import { ipcBridge } from '@/common';
 import type { SquadTemplate } from '@/common/types/agent/squad';
 import SquadEditorDrawer from './SquadEditorDrawer';
+import SquadPreviewDrawer from './SquadPreviewDrawer';
 import { missingSquadRefs, squadErrorKey, squadErrorReason, squadInUseTeamIds } from './squadModel';
 
 const { Title, Text } = Typography;
@@ -26,6 +27,7 @@ const SquadListPage: React.FC = () => {
   const { data: assistants } = useSWR('squads.assistants', () => ipcBridge.assistants.list.invoke());
   const [editing, setEditing] = useState<SquadTemplate | null>(null);
   const [editorOpen, setEditorOpen] = useState(false);
+  const [previewing, setPreviewing] = useState<SquadTemplate | null>(null);
 
   const openEditor = (squad: SquadTemplate | null) => {
     setEditing(squad);
@@ -115,6 +117,14 @@ const SquadListPage: React.FC = () => {
                 ) : null}
               </div>
               <div className='flex gap-8px shrink-0'>
+                <Button
+                  size='small'
+                  type='primary'
+                  onClick={() => setPreviewing(squad)}
+                  data-testid='squad-preview-open'
+                >
+                  {t('agent.agentCenter.squad.previewAction')}
+                </Button>
                 <Button size='small' onClick={() => openEditor(squad)} data-testid='squad-edit'>
                   {t('agent.agentCenter.squad.edit')}
                 </Button>
@@ -141,6 +151,7 @@ const SquadListPage: React.FC = () => {
           void mutate();
         }}
       />
+      {previewing ? <SquadPreviewDrawer visible squad={previewing} onClose={() => setPreviewing(null)} /> : null}
     </div>
   );
 };
