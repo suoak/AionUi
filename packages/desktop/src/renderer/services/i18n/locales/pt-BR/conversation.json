@@ -1413,7 +1413,11 @@
         "user": "Usuário",
         "agent": "Agente",
         "system": "Sistema"
-      }
+      },
+      "trace": "Rastro",
+      "traceFileChanged": "Alterado {{path}}",
+      "traceToolDenied": "Negado {{tool}}",
+      "traceGeneric": "{{type}}"
     },
     "errors": {
       "review_required": "Ir para Concluído ou sair de Em revisão exige revisão.",

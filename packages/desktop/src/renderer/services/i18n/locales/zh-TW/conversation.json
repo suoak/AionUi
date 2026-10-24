@@ -1407,7 +1407,11 @@
         "user": "使用者",
         "agent": "智慧體",
         "system": "系統"
-      }
+      },
+      "trace": "軌跡",
+      "traceFileChanged": "變更 {{path}}",
+      "traceToolDenied": "拒絕 {{tool}}",
+      "traceGeneric": "{{type}}"
     },
     "errors": {
       "review_required": "移到「完成」或從「審查中」退回須經審查。",

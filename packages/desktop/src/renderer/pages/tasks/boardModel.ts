@@ -14,6 +14,7 @@ import {
   type TaskComment,
   type TaskSession,
   type TaskSessionStatus,
+  type TaskTraceEvent,
 } from '@/common/types/agent/taskSession';
 import { isBackendHttpError } from '@/common/adapter/httpBridge';
 
@@ -268,6 +269,7 @@ export const parseTimelineEntry = (comment: TaskComment): TimelineEvent => {
   } catch {
     body = null;
   }
+  // E6-5 auto-start writes kind=assignment with plain-text 「已开工：…」 (not JSON).
   if (!body) return { kind: 'unknown', text: comment.body };
   switch (comment.kind) {
     case 'status_change':
@@ -291,6 +293,91 @@ export const parseTimelineEntry = (comment: TaskComment): TimelineEvent => {
     default:
       return { kind: 'unknown', text: comment.body };
   }
+};
+
+/**
+ * E6-6: board drawer timeline merges comments/status events with a high-signal
+ * slice of the latest run's trace (tool denied / failed / file.changed). Full
+ * replay stays on the conversation page; this keeps the board readable.
+ */
+export const BOARD_TIMELINE_TRACE_CAP = 40;
+
+export const isBoardTimelineTraceEvent = (eventType: string): boolean =>
+  eventType === 'file.changed' ||
+  eventType === 'error' ||
+  eventType.endsWith('.denied') ||
+  eventType.endsWith('.failed');
+
+export type BoardTraceSummary =
+  | { kind: 'file_changed'; path: string }
+  | { kind: 'tool_denied'; tool: string }
+  | { kind: 'generic'; event_type: string };
+
+export const summarizeBoardTraceEvent = (event: TaskTraceEvent): BoardTraceSummary => {
+  const payload = event.payload ?? {};
+  if (event.event_type === 'file.changed') {
+    const path =
+      (typeof payload.path === 'string' && payload.path) ||
+      (typeof payload.file === 'string' && payload.file) ||
+      (typeof payload.relative_path === 'string' && payload.relative_path) ||
+      '';
+    return { kind: 'file_changed', path };
+  }
+  if (event.event_type.endsWith('.denied') || event.event_type.includes('tool')) {
+    const tool =
+      (typeof payload.tool === 'string' && payload.tool) ||
+      (typeof payload.name === 'string' && payload.name) ||
+      (typeof payload.tool_name === 'string' && payload.tool_name) ||
+      '';
+    if (event.event_type.endsWith('.denied')) return { kind: 'tool_denied', tool };
+  }
+  return { kind: 'generic', event_type: event.event_type };
+};
+
+export type BoardTimelineTraceRef = {
+  event_id: string;
+  run_id: string;
+  sequence: number;
+  timestamp: number;
+  event_type: string;
+  summary: BoardTraceSummary;
+};
+
+export type BoardTimelineRow =
+  | { source: 'comment'; at: number; id: string; comment: TaskComment }
+  | { source: 'trace'; at: number; id: string; trace: BoardTimelineTraceRef };
+
+/** Merge comments and filtered trace events, oldest first. */
+export const mergeBoardTimeline = (comments: TaskComment[], traces: TaskTraceEvent[]): BoardTimelineRow[] => {
+  const rows: BoardTimelineRow[] = comments.map((comment) => ({
+    source: 'comment' as const,
+    at: comment.created_at,
+    id: `c:${comment.id}`,
+    comment,
+  }));
+  const filtered = traces
+    .filter((event) => isBoardTimelineTraceEvent(event.event_type))
+    .slice()
+    .sort((a, b) => a.timestamp - b.timestamp || a.sequence - b.sequence);
+  const slice =
+    filtered.length > BOARD_TIMELINE_TRACE_CAP ? filtered.slice(filtered.length - BOARD_TIMELINE_TRACE_CAP) : filtered;
+  for (const event of slice) {
+    rows.push({
+      source: 'trace',
+      at: event.timestamp,
+      id: `t:${event.event_id}`,
+      trace: {
+        event_id: event.event_id,
+        run_id: event.run_id,
+        sequence: event.sequence,
+        timestamp: event.timestamp,
+        event_type: event.event_type,
+        summary: summarizeBoardTraceEvent(event),
+      },
+    });
+  }
+  rows.sort((a, b) => a.at - b.at || a.id.localeCompare(b.id));
+  return rows;
 };
 
 /** i18n key (under `conversation.taskBoard.errors`) for a failed board mutation. */

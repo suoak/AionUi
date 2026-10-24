@@ -1409,7 +1409,11 @@
         "user": "Kullanıcı",
         "agent": "Ajan",
         "system": "Sistem"
-      }
+      },
+      "trace": "İz",
+      "traceFileChanged": "Değişti {{path}}",
+      "traceToolDenied": "Reddedildi {{tool}}",
+      "traceGeneric": "{{type}}"
     },
     "errors": {
       "review_required": "Tamamlandı'ya taşımak veya İncelemede'den geri almak inceleme gerektirir.",

@@ -12,11 +12,13 @@ import {
   boardErrorKey,
   boardItemFromTaskSession,
   boardRejectionReason,
+  BOARD_TIMELINE_TRACE_CAP,
   canEditComment,
   canUserMoveBoardItem,
   columnsFromBoardResponse,
   isBoardApiUnavailable,
   isBoardItemStale,
+  mergeBoardTimeline,
   moveItemInColumns,
   upsertComment,
   parseTimelineEntry,
@@ -257,5 +259,83 @@ describe('realtime and optimistic-lock helpers', () => {
     const list = upsertComment(upsertComment([a, c], b), b);
     expect(list.map((e) => e.id)).toEqual(['a', 'b', 'c']);
     expect(upsertComment(list, { ...b, body: 'edited', edited_at: 4 })[1].body).toBe('edited');
+  });
+});
+
+it('treats E6-5 plain-text assignment 「已开工」 as unknown text (not JSON assignee)', () => {
+  const entry = parseTimelineEntry({
+    id: 'c1',
+    task_session_id: 't1',
+    kind: 'assignment',
+    body: '已开工：Ship the board',
+    author_kind: 'agent',
+    author_id: 'agent-1',
+    created_at: 1,
+  });
+  expect(entry).toEqual({ kind: 'unknown', text: '已开工：Ship the board' });
+});
+
+describe('mergeBoardTimeline (E6-6)', () => {
+  const comment = (id: string, created_at: number, extra: Partial<TaskComment> = {}): TaskComment => ({
+    id,
+    task_session_id: 't1',
+    kind: 'comment',
+    body: id,
+    author_kind: 'user',
+    author_id: 'u1',
+    created_at,
+    ...extra,
+  });
+
+  const trace = (
+    event_id: string,
+    timestamp: number,
+    event_type: string,
+    payload: Record<string, unknown> = {},
+    sequence = 1
+  ) => ({
+    event_id,
+    task_id: 't1',
+    run_id: 'r1',
+    sequence,
+    timestamp,
+    event_type,
+    payload,
+  });
+
+  it('keeps comments only when there is no high-signal trace', () => {
+    const rows = mergeBoardTimeline([comment('c1', 10)], [trace('e1', 5, 'tool.started')]);
+    expect(rows).toHaveLength(1);
+    expect(rows[0].source).toBe('comment');
+  });
+
+  it('merges denied / failed / file.changed and sorts by time', () => {
+    const rows = mergeBoardTimeline(
+      [comment('c1', 20)],
+      [
+        trace('e1', 10, 'tool.denied', { tool: 'Bash' }, 1),
+        trace('e2', 30, 'file.changed', { path: 'a.ts' }, 2),
+        trace('e3', 15, 'tool.allowed', { tool: 'Read' }, 3),
+      ]
+    );
+    expect(rows.map((r) => r.id)).toEqual(['t:e1', 'c:c1', 't:e2']);
+    expect(rows[0].source === 'trace' && rows[0].trace.summary).toEqual({
+      kind: 'tool_denied',
+      tool: 'Bash',
+    });
+    expect(rows[2].source === 'trace' && rows[2].trace.summary).toEqual({
+      kind: 'file_changed',
+      path: 'a.ts',
+    });
+  });
+
+  it('caps trace rows at BOARD_TIMELINE_TRACE_CAP (keeps newest)', () => {
+    const many = Array.from({ length: BOARD_TIMELINE_TRACE_CAP + 5 }, (_, i) =>
+      trace(`e${i}`, i + 1, 'tool.denied', { tool: `t${i}` }, i + 1)
+    );
+    const rows = mergeBoardTimeline([], many);
+    expect(rows).toHaveLength(BOARD_TIMELINE_TRACE_CAP);
+    expect(rows[0].id).toBe(`t:e5`);
+    expect(rows[rows.length - 1].id).toBe(`t:e${BOARD_TIMELINE_TRACE_CAP + 4}`);
   });
 });

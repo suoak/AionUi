@@ -1407,7 +1407,11 @@
         "user": "사용자",
         "agent": "에이전트",
         "system": "시스템"
-      }
+      },
+      "trace": "추적",
+      "traceFileChanged": "변경 {{path}}",
+      "traceToolDenied": "거부 {{tool}}",
+      "traceGeneric": "{{type}}"
     },
     "errors": {
       "review_required": "완료로 이동하거나 검토 중에서 되돌리려면 검토가 필요합니다.",

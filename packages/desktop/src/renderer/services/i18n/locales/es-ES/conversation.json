@@ -1408,7 +1408,11 @@
         "user": "Usuario",
         "agent": "Agente",
         "system": "Sistema"
-      }
+      },
+      "trace": "Rastro",
+      "traceFileChanged": "Cambiado {{path}}",
+      "traceToolDenied": "Denegado {{tool}}",
+      "traceGeneric": "{{type}}"
     },
     "errors": {
       "review_required": "Pasar a Hecho o salir de En revisión requiere revisión.",

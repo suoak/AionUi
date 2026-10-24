@@ -1425,7 +1425,11 @@
         "user": "Пользователь",
         "agent": "Агент",
         "system": "Система"
-      }
+      },
+      "trace": "Трассировка",
+      "traceFileChanged": "Изменён {{path}}",
+      "traceToolDenied": "Отклонён {{tool}}",
+      "traceGeneric": "{{type}}"
     },
     "errors": {
       "review_required": "Перенос в «Готово» или возврат из «На ревью» — только через ревью.",

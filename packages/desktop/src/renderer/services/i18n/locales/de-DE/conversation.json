@@ -1408,7 +1408,11 @@
         "user": "Benutzer",
         "agent": "Agent",
         "system": "System"
-      }
+      },
+      "trace": "Trace",
+      "traceFileChanged": "Geändert {{path}}",
+      "traceToolDenied": "Verweigert {{tool}}",
+      "traceGeneric": "{{type}}"
     },
     "errors": {
       "review_required": "Nach „Erledigt“ oder zurück aus „In Review“ geht es nur über das Review.",
