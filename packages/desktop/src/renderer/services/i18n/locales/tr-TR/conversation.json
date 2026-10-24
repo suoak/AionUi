@@ -1422,5 +1422,12 @@
       "commentEditWindow": "Yorumlar yalnızca yazarı tarafından 15 dakika içinde düzenlenebilir.",
       "generic": "İşlem başarısız oldu. Lütfen tekrar deneyin."
     }
+  },
+  "squadRouteOnly": {
+    "title": "Squad Leader yalnızca iş dağıtabilir",
+    "body": "Bu Squad Leader yalnızca dağıtım modunda olduğundan {{tool}} aracı engellendi.",
+    "bodyUnknownTool": "Bu Squad Leader yalnızca dağıtım modunda olduğundan bu araç engellendi.",
+    "allowed": "İzin verilen araçlar:",
+    "hint": "Leader bu işi team_send_message veya bir görevle bir ekip üyesine vermelidir."
   }
 }

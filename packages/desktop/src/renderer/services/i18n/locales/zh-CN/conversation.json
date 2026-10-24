@@ -1420,5 +1420,12 @@
       "commentEditWindow": "评论仅作者可在 15 分钟内编辑。",
       "generic": "操作失败，请重试。"
     }
+  },
+  "squadRouteOnly": {
+    "title": "Squad Leader 只能派活",
+    "body": "该 Squad Leader 处于只派活模式，已拦截工具 {{tool}}。",
+    "bodyUnknownTool": "该 Squad Leader 处于只派活模式，已拦截此工具。",
+    "allowed": "可用工具：",
+    "hint": "Leader 应通过 team_send_message 或任务把这项工作交给团队成员。"
   }
 }
