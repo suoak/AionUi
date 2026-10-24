@@ -1420,6 +1420,22 @@
       "stale": "Esta tarjeta se modificó en otro lugar. Se actualizó el tablero; inténtalo de nuevo.",
       "commentEditWindow": "Solo el autor puede editar un comentario durante 15 minutos.",
       "generic": "La operación falló. Inténtalo de nuevo."
+    },
+    "squadRun": {
+      "title": "Ejecución del Squad",
+      "state": {
+        "waiting_backlog": "Esperando backlog",
+        "running": "En ejecución",
+        "paused": "En pausa",
+        "finished": "Finalizado",
+        "failed": "Fallido"
+      },
+      "idle": "Sin iniciar",
+      "routeOnly": "El líder solo reparte",
+      "openLeader": "Abrir conversación del líder",
+      "noTeam": "Aún no se ha creado ningún equipo a partir de este Squad.",
+      "unavailable": "No hay estado de ejecución para los equipos de este Squad.",
+      "hint": "Se deriva de las tareas del equipo; se actualiza cada 15 segundos."
     }
   },
   "squadRouteOnly": {

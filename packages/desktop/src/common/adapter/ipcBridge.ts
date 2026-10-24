@@ -213,6 +213,7 @@ import type {
   SquadTemplateInput,
   SquadTemplatePatch,
 } from '@/common/types/agent/squad';
+import { toSquadRunPayload } from '@/common/types/agent/squadRun';
 import type { ProtocolDetectionRequest, ProtocolDetectionResponse } from '../utils/protocolDetector';
 import { normalizeLegacyBrandText } from '../utils/utils';
 import {
@@ -3622,6 +3623,13 @@ export const team = {
     (p) => ({ mode: p.session_mode })
   ),
   getRunState: httpGet<ITeamRunStateResponse, { team_id: string }>((p) => `/api/teams/${p.team_id}/run-state`),
+  /** M8 E7-5 (aioncore #193): derived Squad run state; null = no tasks and no run yet; 404 team_not_squad. */
+  getSquadRun: withResponseMap(
+    httpGet<unknown, { team_id: string }>((p) => `/api/teams/${encodeURIComponent(p.team_id)}/squad-run`, {
+      silentStatuses: [404],
+    }),
+    toSquadRunPayload
+  ),
   listMailbox: httpGet<ITeamMailboxMessage[], { team_id: string; limit?: number }>(
     (p) => `/api/teams/${p.team_id}/mailbox?limit=${p.limit ?? 500}`
   ),

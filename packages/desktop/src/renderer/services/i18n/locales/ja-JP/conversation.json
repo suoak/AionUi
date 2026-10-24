@@ -1419,6 +1419,22 @@
       "stale": "このカードは別の場所で変更されました。ボードを更新しました。もう一度お試しください。",
       "commentEditWindow": "コメントは作成者のみ 15 分以内に編集できます。",
       "generic": "操作に失敗しました。もう一度お試しください。"
+    },
+    "squadRun": {
+      "title": "Squad の実行",
+      "state": {
+        "waiting_backlog": "バックログ待ち",
+        "running": "実行中",
+        "paused": "一時停止",
+        "finished": "完了",
+        "failed": "失敗"
+      },
+      "idle": "未開始",
+      "routeOnly": "リーダーは振り分けのみ",
+      "openLeader": "リーダーの会話を開く",
+      "noTeam": "この Squad からまだチームが作成されていません。",
+      "unavailable": "この Squad のチームの実行状態はありません。",
+      "hint": "チームのタスクから算出し、15 秒ごとに更新します。"
     }
   },
   "squadRouteOnly": {

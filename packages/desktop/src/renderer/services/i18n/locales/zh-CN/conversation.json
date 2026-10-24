@@ -1419,6 +1419,22 @@
       "stale": "该卡片已在别处被修改，看板已刷新，请重试。",
       "commentEditWindow": "评论仅作者可在 15 分钟内编辑。",
       "generic": "操作失败，请重试。"
+    },
+    "squadRun": {
+      "title": "Squad 运行",
+      "state": {
+        "waiting_backlog": "等待待办",
+        "running": "运行中",
+        "paused": "已暂停",
+        "finished": "已完成",
+        "failed": "失败"
+      },
+      "idle": "未开始",
+      "routeOnly": "Leader 仅分派",
+      "openLeader": "打开 Leader 会话",
+      "noTeam": "尚未从此 Squad 创建团队。",
+      "unavailable": "此 Squad 的团队暂无运行状态。",
+      "hint": "根据团队任务推导，每 15 秒刷新。"
     }
   },
   "squadRouteOnly": {
