@@ -293,7 +293,8 @@
         "forbidden": "No tienes permiso para hacer esto.",
         "generic": "Algo salió mal. Inténtalo de nuevo.",
         "squad_instantiate_unavailable": "Ahora no se pueden crear equipos desde Squads",
-        "squad_spawn_forbidden": "Los equipos Squad tienen una plantilla fija; no se permite añadir agentes"
+        "squad_spawn_forbidden": "Los equipos Squad tienen una plantilla fija; no se permite añadir agentes",
+        "squad_leader_backend_unenforceable": "El backend del Leader no puede imponer las restricciones de solo reparto"
       },
       "previewAction": "Vista previa y crear equipo",
       "preview": {
@@ -313,8 +314,15 @@
         "blockers": {
           "squad_assistant_not_eligible": "{{name}} ya no está disponible para equipos",
           "squad_team_visibility_unavailable": "La visibilidad de equipo aún no está disponible",
-          "generic": "Este Squad no se puede instanciar ahora"
-        }
+          "generic": "Este Squad no se puede instanciar ahora",
+          "squad_leader_backend_unenforceable": "{{name}}: el backend del Leader no puede imponer las restricciones de solo reparto"
+        },
+        "unenforceable": "No se puede imponer",
+        "unenforceableHint": {
+          "leader": "El backend {{backend}} no puede restringir las herramientas nativas de este Leader de solo reparto, así que no se puede crear este Squad. Usa un Leader de Claude.",
+          "member": "El backend {{backend}} no puede quitar las herramientas nativas de subagentes de este miembro; la prohibición de generar depende solo del prompt."
+        },
+        "leaderUnenforceableNamed": "{{name}} se ejecuta en {{backend}}, que no puede imponer las restricciones del Leader de solo reparto"
       }
     }
   },

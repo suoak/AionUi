@@ -293,7 +293,8 @@
         "forbidden": "Vous n’avez pas l’autorisation d’effectuer cette action.",
         "generic": "Une erreur s’est produite. Veuillez réessayer.",
         "squad_instantiate_unavailable": "Impossible de créer une équipe depuis un Squad pour le moment",
-        "squad_spawn_forbidden": "Les équipes Squad ont une composition fixe ; l'ajout d'agents est interdit"
+        "squad_spawn_forbidden": "Les équipes Squad ont une composition fixe ; l'ajout d'agents est interdit",
+        "squad_leader_backend_unenforceable": "Le backend du Leader ne peut pas appliquer les restrictions de répartition uniquement"
       },
       "previewAction": "Aperçu et créer l'équipe",
       "preview": {
@@ -313,8 +314,15 @@
         "blockers": {
           "squad_assistant_not_eligible": "{{name}} n'est plus disponible pour les équipes",
           "squad_team_visibility_unavailable": "La visibilité d'équipe n'est pas encore disponible",
-          "generic": "Ce Squad ne peut pas être instancié pour le moment"
-        }
+          "generic": "Ce Squad ne peut pas être instancié pour le moment",
+          "squad_leader_backend_unenforceable": "{{name}} : le backend du Leader ne peut pas appliquer les restrictions de répartition uniquement"
+        },
+        "unenforceable": "Non applicable",
+        "unenforceableHint": {
+          "leader": "Le backend {{backend}} ne peut pas restreindre les outils natifs de ce Leader en mode répartition uniquement : ce Squad ne peut pas être créé. Utilisez un Leader Claude.",
+          "member": "Le backend {{backend}} ne peut pas retirer les outils natifs de sous-agents de ce membre ; l'interdiction de créer des agents repose uniquement sur le prompt."
+        },
+        "leaderUnenforceableNamed": "{{name}} s'exécute sur {{backend}}, qui ne peut pas appliquer les restrictions du Leader en mode répartition uniquement"
       }
     }
   },

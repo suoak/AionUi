@@ -293,7 +293,8 @@
         "forbidden": "Du hast keine Berechtigung dafür.",
         "generic": "Etwas ist schiefgelaufen. Bitte erneut versuchen.",
         "squad_instantiate_unavailable": "Teams aus Squads zu erstellen ist derzeit nicht möglich",
-        "squad_spawn_forbidden": "Squad-Teams haben eine feste Besetzung; Agenten hinzufügen ist nicht erlaubt"
+        "squad_spawn_forbidden": "Squad-Teams haben eine feste Besetzung; Agenten hinzufügen ist nicht erlaubt",
+        "squad_leader_backend_unenforceable": "Das Backend des Leaders kann die Nur-Verteilen-Einschränkungen nicht erzwingen"
       },
       "previewAction": "Vorschau & Team erstellen",
       "preview": {
@@ -313,8 +314,15 @@
         "blockers": {
           "squad_assistant_not_eligible": "{{name}} ist für Teams nicht mehr verfügbar",
           "squad_team_visibility_unavailable": "Team-Sichtbarkeit ist noch nicht verfügbar",
-          "generic": "Dieser Squad kann derzeit nicht instanziiert werden"
-        }
+          "generic": "Dieser Squad kann derzeit nicht instanziiert werden",
+          "squad_leader_backend_unenforceable": "{{name}}: Das Backend des Leaders kann die Nur-Verteilen-Einschränkungen nicht erzwingen"
+        },
+        "unenforceable": "Nicht erzwingbar",
+        "unenforceableHint": {
+          "leader": "Das Backend {{backend}} kann die nativen Tools dieses Nur-Verteilen-Leaders nicht einschränken, daher kann dieser Squad nicht erstellt werden. Verwende einen Claude-Leader.",
+          "member": "Das Backend {{backend}} kann die nativen Sub-Agent-Tools dieses Mitglieds nicht entfernen; das Erzeugungsverbot stützt sich nur auf den Prompt."
+        },
+        "leaderUnenforceableNamed": "{{name}} läuft auf {{backend}} und kann die Nur-Verteilen-Einschränkungen des Leaders nicht erzwingen"
       }
     }
   },

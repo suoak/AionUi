@@ -36,6 +36,7 @@ const KNOWN_ERRORS = new Set([
   'squad_assistant_catalog_unavailable',
   'squad_instantiate_unavailable',
   'squad_spawn_forbidden',
+  'squad_leader_backend_unenforceable',
 ]);
 
 /** Squad routes put the specific reason in `code`; fall back to the `code:` message prefix. */
@@ -121,8 +122,22 @@ export const squadIneligibleAssistantId = (error: unknown): string | null => {
   return typeof id === 'string' ? id : null;
 };
 
+/** Leader named by a 400 squad_leader_backend_unenforceable (details `{assistant_id, backend}`). */
+export const squadUnenforceableLeader = (error: unknown): { assistantId?: string; backend?: string } | null => {
+  if (!isBackendHttpError(error) || squadErrorReason(error) !== 'squad_leader_backend_unenforceable') return null;
+  const details = (error.details ?? {}) as { assistant_id?: unknown; backend?: unknown };
+  return {
+    assistantId: typeof details.assistant_id === 'string' ? details.assistant_id : undefined,
+    backend: typeof details.backend === 'string' ? details.backend : undefined,
+  };
+};
+
 /** Known preview blocker codes get a specific message; anything else falls back to generic. */
-const KNOWN_BLOCKERS = new Set(['squad_assistant_not_eligible', 'squad_team_visibility_unavailable']);
+const KNOWN_BLOCKERS = new Set([
+  'squad_assistant_not_eligible',
+  'squad_team_visibility_unavailable',
+  'squad_leader_backend_unenforceable',
+]);
 
 export type SquadBlockerView = { key: string; assistantName?: string };
 

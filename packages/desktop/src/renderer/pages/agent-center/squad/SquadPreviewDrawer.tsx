@@ -8,11 +8,16 @@ import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import useSWR, { useSWRConfig } from 'swr';
-import { Alert, Button, Drawer, Input, Message, Tag, Typography } from '@arco-design/web-react';
+import { Alert, Button, Drawer, Input, Message, Tag, Tooltip, Typography } from '@arco-design/web-react';
 import { ipcBridge } from '@/common';
 import type { SquadTemplate } from '@/common/types/agent/squad';
 import { useAuth } from '@renderer/hooks/context/AuthContext';
-import { squadErrorKey, squadIneligibleAssistantId, squadPreviewBlockers } from './squadModel';
+import {
+  squadErrorKey,
+  squadIneligibleAssistantId,
+  squadPreviewBlockers,
+  squadUnenforceableLeader,
+} from './squadModel';
 
 const { Text } = Typography;
 
@@ -61,7 +66,16 @@ const SquadPreviewDrawer: React.FC<Props> = ({ visible, squad, onClose }) => {
     } catch (err) {
       console.error('[Squad] Instantiate failed:', err);
       const ineligible = squadIneligibleAssistantId(err);
-      if (ineligible) {
+      const unenforceable = squadUnenforceableLeader(err);
+      if (unenforceable) {
+        const p = preview.participants.find((x) => x.assistant_id === unenforceable.assistantId);
+        Message.error(
+          t('agent.agentCenter.squad.preview.leaderUnenforceableNamed', {
+            name: p?.assistant.name || unenforceable.assistantId || '',
+            backend: unenforceable.backend || p?.backend || '',
+          })
+        );
+      } else if (ineligible) {
         const p = preview.participants.find((x) => x.assistant_id === ineligible);
         Message.error(t('agent.agentCenter.squad.ineligibleNamed', { name: p?.assistant.name || ineligible }));
       } else {
@@ -147,6 +161,24 @@ const SquadPreviewDrawer: React.FC<Props> = ({ visible, squad, onClose }) => {
                     <Tag size='small' color='orange' data-testid='squad-preview-ineligible'>
                       {t('agent.agentCenter.squad.preview.ineligible')}
                     </Tag>
+                  ) : null}
+                  {p.native_tool_enforcement === 'unenforceable' ? (
+                    <Tooltip
+                      content={t(
+                        `agent.agentCenter.squad.preview.unenforceableHint.${
+                          p.tool_profile === 'route_only_leader' ? 'leader' : 'member'
+                        }`,
+                        { backend: p.backend ?? '' }
+                      )}
+                    >
+                      <Tag
+                        size='small'
+                        color={p.tool_profile === 'route_only_leader' ? 'red' : 'gold'}
+                        data-testid='squad-preview-unenforceable'
+                      >
+                        {t('agent.agentCenter.squad.preview.unenforceable')}
+                      </Tag>
+                    </Tooltip>
                   ) : null}
                 </div>
                 {p.role_description ? (
