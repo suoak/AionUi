@@ -26,13 +26,16 @@ import SettingsPageHeader from '@/renderer/pages/settings/components/SettingsPag
 import TaskBoardCard from './TaskBoardCard';
 import TaskBoardDetailDrawer from './TaskBoardDetailDrawer';
 import {
+  REALTIME_FALLBACK_MS,
   VISIBLE_BOARD_COLUMNS,
+  applyBoardItem,
   boardErrorKey,
   canUserMoveBoardItem,
   columnsFromBoardResponse,
   columnsFromTaskSessions,
   findBoardItem,
   isBoardApiUnavailable,
+  isBoardItemStale,
   moveItemInColumns,
   type BoardItemColumns,
 } from './boardModel';
@@ -91,6 +94,11 @@ const DroppableColumn: React.FC<{
  * decides, and a rejected move rolls back with the reason. `done` is reached
  * only through review. Cores without the board API fall back to the read-only
  * task-session list with the D6-3 run-status mapping.
+ *
+ * Realtime: `task.board.updated` pushes replace cards in place. Each mutation
+ * also arms a short fallback; if no matching push arrives (older core, socket
+ * down) the board refetches. Board PATCHes carry `expected_updated_at`, and a
+ * 409 `board_item_stale` rolls back, refetches and asks the user to retry.
  */
 const TasksBoardPage: React.FC = () => {
   const { t } = useTranslation();
@@ -107,6 +115,8 @@ const TasksBoardPage: React.FC = () => {
   const loadSeq = useRef(0);
   // The pointer-up that ends a drag also clicks the card; ignore that click.
   const lastDragEndAt = useRef(0);
+  // Item id → updated_at a push must reach before its fallback timer is dropped.
+  const pendingFallbacks = useRef(new Map<string, { updatedAt: number; timer: ReturnType<typeof setTimeout> }>());
 
   // Pointer only: Enter/Space on a card opens the drawer, which also offers the column move.
   const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 6 } }));
@@ -148,31 +158,73 @@ const TasksBoardPage: React.FC = () => {
     : [...VISIBLE_BOARD_COLUMNS];
   const selectedTask = findBoardItem(columns, selectedId);
 
+  useEffect(() => {
+    const timers = pendingFallbacks.current;
+    return () => {
+      for (const { timer } of timers.values()) clearTimeout(timer);
+      timers.clear();
+    };
+  }, []);
+
+  /** Mutation response: apply now; refetch later unless the push confirms it. */
   const applyServerItem = useCallback(
     (item: TaskBoardItem) => {
-      setColumns((prev) => moveItemInColumns(prev, item.id, item.board_status, item));
-      setRefreshKey((k) => k + 1);
-      load(true);
+      setColumns((prev) => applyBoardItem(prev, item));
+      const pending = pendingFallbacks.current;
+      const previous = pending.get(item.id);
+      if (previous) clearTimeout(previous.timer);
+      const timer = setTimeout(() => {
+        pending.delete(item.id);
+        setRefreshKey((k) => k + 1);
+        load(true);
+      }, REALTIME_FALLBACK_MS);
+      pending.set(item.id, { updatedAt: item.updated_at, timer });
     },
     [load]
   );
+
+  useEffect(
+    () =>
+      ipcBridge.taskSession.board.updated.on((event) => {
+        const item = event?.item;
+        if (!item?.id) return;
+        const pending = pendingFallbacks.current.get(item.id);
+        if (pending && item.updated_at >= pending.updatedAt) {
+          clearTimeout(pending.timer);
+          pendingFallbacks.current.delete(item.id);
+        }
+        setColumns((prev) => applyBoardItem(prev, item));
+      }),
+    []
+  );
+
+  /** Optimistic-lock conflict: show the latest server state and let the user retry. */
+  const handleStale = useCallback(() => {
+    Message.warning(t('conversation.taskBoard.errors.stale'));
+    setRefreshKey((k) => k + 1);
+    load(true);
+  }, [load, t]);
 
   const moveItem = useCallback(
     (item: TaskBoardItem, to: TaskBoardStatus) => {
       if (item.board_status === to || !canUserMoveBoardItem(item.board_status, to)) return;
       const from = item.board_status;
       setColumns((prev) => moveItemInColumns(prev, item.id, to));
-      const updates: UpdateTaskBoardInput = { board_status: to as UpdateTaskBoardInput['board_status'] };
+      const updates: UpdateTaskBoardInput = {
+        board_status: to as UpdateTaskBoardInput['board_status'],
+        expected_updated_at: item.updated_at,
+      };
       ipcBridge.taskSession.board.update
         .invoke({ id: item.id, updates })
         .then(applyServerItem)
         .catch((error) => {
           console.error('[TasksBoard] Move rejected:', error);
           setColumns((prev) => moveItemInColumns(prev, item.id, from));
-          Message.error(t(boardErrorKey(error)));
+          if (isBoardItemStale(error)) handleStale();
+          else Message.error(t(boardErrorKey(error)));
         });
     },
-    [applyServerItem, t]
+    [applyServerItem, handleStale, t]
   );
 
   const handleDragStart = useCallback((event: DragStartEvent) => {
@@ -301,6 +353,7 @@ const TasksBoardPage: React.FC = () => {
         onOpenConversation={handleOpenConversation}
         onMove={moveItem}
         onItemUpdated={applyServerItem}
+        onStale={handleStale}
       />
     </div>
   );

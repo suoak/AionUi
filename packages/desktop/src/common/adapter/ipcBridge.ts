@@ -93,6 +93,8 @@ import type {
   TaskBoardReviewInput,
   TaskBoardReviewResult,
   TaskComment,
+  TaskCommentEvent,
+  TaskBoardUpdatedEvent,
   UpdateTaskBoardInput,
 } from '../types/agent/taskSession';
 import type {
@@ -1232,7 +1234,13 @@ export const taskSession = {
           `/api/task-sessions/${encodeURIComponent(params.id)}/comments/${encodeURIComponent(params.comment_id)}`,
         (params) => ({ body: params.body })
       ),
+      /** WS: a comment or timeline event was appended (aioncore ≥ E6 WS). */
+      created: wsEmitter<TaskCommentEvent>('task.comment.created'),
+      /** WS: a comment was edited. */
+      updated: wsEmitter<TaskCommentEvent>('task.comment.updated'),
     },
+    /** WS: an item changed column/fields (PATCH /board or review). */
+    updated: wsEmitter<TaskBoardUpdatedEvent>('task.board.updated'),
   },
   planningIsolation: httpGet<PlanningIsolation, { id: string }>(
     (params) => `/api/task-sessions/${encodeURIComponent(params.id)}/planning-isolation`

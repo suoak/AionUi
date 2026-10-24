@@ -27,6 +27,8 @@ type TaskBoardDetailDrawerProps = {
   onOpenConversation: (conversationId: string) => void;
   onMove?: (task: TaskBoardItem, to: TaskBoardStatus) => void;
   onItemUpdated?: (task: TaskBoardItem) => void;
+  /** A board PATCH hit the optimistic lock (409 `board_item_stale`). */
+  onStale?: () => void;
 };
 
 const formatTimestamp = (ms: number, locale: string): string => {
@@ -52,6 +54,7 @@ const TaskBoardDetailDrawer: React.FC<TaskBoardDetailDrawerProps> = ({
   onOpenConversation,
   onMove,
   onItemUpdated,
+  onStale,
 }) => {
   const { t, i18n } = useTranslation();
   const locale = i18n?.language ?? 'en-US';
@@ -179,7 +182,13 @@ const TaskBoardDetailDrawer: React.FC<TaskBoardDetailDrawerProps> = ({
               </Select>
             </section>
           ) : null}
-          {interactive ? <TaskBoardAssigneeEditor item={task} onUpdated={(item) => onItemUpdated?.(item)} /> : null}
+          {interactive ? (
+            <TaskBoardAssigneeEditor
+              item={task}
+              onUpdated={(item) => onItemUpdated?.(item)}
+              onStale={() => onStale?.()}
+            />
+          ) : null}
           <section>
             <div className='text-13px font-medium text-t-primary mb-6px'>
               {t('conversation.taskBoard.detail.objective')}

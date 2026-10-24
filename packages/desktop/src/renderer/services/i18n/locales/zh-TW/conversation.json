@@ -1416,6 +1416,7 @@
       "agent_review_gate": "智慧體產出的結果需要人工審查。",
       "not_in_review": "只有審查中的項目可以審查。",
       "not_allowed": "不允許此移動。",
+      "stale": "此卡片已在別處被修改，看板已重新整理，請重試。",
       "commentEditWindow": "留言僅作者可在 15 分鐘內編輯。",
       "generic": "操作失敗，請重試。"
     }

@@ -1416,6 +1416,7 @@
       "agent_review_gate": "An agent-authored result needs a human review.",
       "not_in_review": "Only items in review can be reviewed.",
       "not_allowed": "This move is not allowed.",
+      "stale": "This card was changed elsewhere. The board has been refreshed; please try again.",
       "commentEditWindow": "Comments can only be edited by their author within 15 minutes.",
       "generic": "The operation failed. Please try again."
     }

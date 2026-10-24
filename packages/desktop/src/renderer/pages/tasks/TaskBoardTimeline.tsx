@@ -8,13 +8,13 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button, Input, Message, Spin } from '@arco-design/web-react';
 import { ipcBridge } from '@/common';
-import type { TaskComment } from '@/common/types/agent/taskSession';
+import type { TaskComment, TaskCommentEvent } from '@/common/types/agent/taskSession';
 import { isBackendHttpError } from '@/common/adapter/httpBridge';
-import { canEditComment, parseTimelineEntry } from './boardModel';
+import { canEditComment, parseTimelineEntry, upsertComment } from './boardModel';
 
 type TaskBoardTimelineProps = {
   taskId: string;
-  /** Bumped by the parent after a board mutation so new events show up. */
+  /** Bumped by the parent to reload (realtime fallback, stale conflict). */
   refreshKey: number;
 };
 
@@ -55,6 +55,21 @@ const TaskBoardTimeline: React.FC<TaskBoardTimelineProps> = ({ taskId, refreshKe
     load();
   }, [load, refreshKey]);
 
+  // Realtime: comments and timeline events of this item (deduped by id).
+  useEffect(() => {
+    const apply = (event: TaskCommentEvent) => {
+      const comment = event?.comment;
+      if (!comment?.id || (event.task_session_id ?? comment.task_session_id) !== taskId) return;
+      setEntries((prev) => upsertComment(prev, comment));
+    };
+    const offCreated = ipcBridge.taskSession.board.comments.created.on(apply);
+    const offUpdated = ipcBridge.taskSession.board.comments.updated.on(apply);
+    return () => {
+      offCreated();
+      offUpdated();
+    };
+  }, [taskId]);
+
   const post = () => {
     const body = draft.trim();
     if (!body) return;
@@ -63,7 +78,7 @@ const TaskBoardTimeline: React.FC<TaskBoardTimelineProps> = ({ taskId, refreshKe
       .invoke({ id: taskId, body })
       .then((created) => {
         setDraft('');
-        setEntries((prev) => [...prev, created]);
+        setEntries((prev) => upsertComment(prev, created));
       })
       .catch((error) => {
         console.error('[TasksBoard] Failed to post comment:', error);
@@ -81,7 +96,7 @@ const TaskBoardTimeline: React.FC<TaskBoardTimelineProps> = ({ taskId, refreshKe
       .invoke({ id: taskId, comment_id: editing.id, body })
       .then((updated) => {
         setEditing(null);
-        setEntries((prev) => prev.map((entry) => (entry.id === updated.id ? updated : entry)));
+        setEntries((prev) => upsertComment(prev, updated));
       })
       .catch((error) => {
         console.error('[TasksBoard] Failed to edit comment:', error);

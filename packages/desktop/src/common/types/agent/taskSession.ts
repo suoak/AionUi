@@ -64,6 +64,11 @@ export type UpdateTaskBoardInput = {
   assignee?: TaskAssignee | null;
   priority?: number;
   labels?: string[];
+  /**
+   * Optimistic concurrency (aioncore ≥ E6 WS/OCC): the `updated_at` last seen.
+   * A mismatch answers 409 `board_item_stale`; omit for last-write-wins.
+   */
+  expected_updated_at?: number;
 };
 
 export type TaskCommentKind = 'comment' | 'status_change' | 'assignment' | 'review_decision';
@@ -97,6 +102,26 @@ export type TaskBoardRejectionReason =
   | 'agent_review_gate'
   | 'not_in_review'
   | 'not_allowed';
+
+/** What caused a `task.board.updated` event. */
+export type TaskBoardChange = 'board' | 'review';
+
+/** WS `task.board.updated`: the item after a successful board change. */
+export type TaskBoardUpdatedEvent = {
+  user_id: string;
+  task_session_id: string;
+  change: TaskBoardChange;
+  /** Column before the change (equals `item.board_status` when it did not move). */
+  from_board_status: TaskBoardStatus;
+  item: TaskBoardItem;
+};
+
+/** WS `task.comment.created` / `task.comment.updated` (timeline events included). */
+export type TaskCommentEvent = {
+  user_id: string;
+  task_session_id: string;
+  comment: TaskComment;
+};
 
 export type PlanningIsolationLevel = 'guaranteed' | 'best_effort' | 'unsupported';
 export type AgentIntegrationMode =

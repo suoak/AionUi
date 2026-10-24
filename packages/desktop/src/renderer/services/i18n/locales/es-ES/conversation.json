@@ -1417,6 +1417,7 @@
       "agent_review_gate": "Un resultado de agente necesita revisión humana.",
       "not_in_review": "Solo se pueden revisar elementos en revisión.",
       "not_allowed": "Este movimiento no está permitido.",
+      "stale": "Esta tarjeta se modificó en otro lugar. Se actualizó el tablero; inténtalo de nuevo.",
       "commentEditWindow": "Solo el autor puede editar un comentario durante 15 minutos.",
       "generic": "La operación falló. Inténtalo de nuevo."
     }
