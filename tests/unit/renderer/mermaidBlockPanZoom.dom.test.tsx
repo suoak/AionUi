@@ -81,6 +81,25 @@ async function settledDiagram(panZoom = false): Promise<HTMLElement> {
   return screen.getByTestId('mermaid-diagram');
 }
 
+/**
+ * Click `testId` synchronously in the same task as the commit that first shows
+ * it, before React flushes that commit's passive effects. A reset that lives in
+ * a post-commit effect would undo the click here; on busy CI runners the same
+ * window opened at random and made this suite flaky.
+ */
+function clickOnCommit(container: HTMLElement, testId: string): Promise<void> {
+  return new Promise((resolve) => {
+    const observer = new MutationObserver(() => {
+      const target = screen.queryByTestId(testId);
+      if (!target) return;
+      observer.disconnect();
+      fireEvent.click(target);
+      resolve();
+    });
+    observer.observe(container, { childList: true, subtree: true });
+  });
+}
+
 // jsdom lacks the pointer capture API used by the drag handlers.
 beforeAll(() => {
   Object.defineProperty(Element.prototype, 'setPointerCapture', {
@@ -177,5 +196,30 @@ describe('MermaidBlock pan/zoom', () => {
 
     await waitFor(() => expect(innerOf().style.transform).toContain('translate(50px, 30px)'), SETTLE);
     expect(screen.queryByTestId('mermaid-zoom-overlay')).toBeNull();
+  });
+  it('keeps a zoom click made in the same task as the diagram commit', async () => {
+    const { container } = render(<MermaidBlock code={'graph TD; A-->B'} enablePanZoom />);
+    await clickOnCommit(container, 'mermaid-zoom-in');
+    await new Promise((resolve) => setTimeout(resolve, 50));
+    expect(innerOf().style.transform).toContain('scale(1.25)');
+  });
+
+  it('keeps the overlay open when the diagram is clicked in the same task as its commit', async () => {
+    const { container } = render(<MermaidBlock code={'graph TD; A-->B'} />);
+    await clickOnCommit(container, 'mermaid-diagram');
+    await new Promise((resolve) => setTimeout(resolve, 50));
+    expect(screen.getByTestId('diagram-zoom-overlay')).toBeInTheDocument();
+  });
+
+  it('resets zoom and closes the overlay when a new diagram renders', async () => {
+    const { rerender } = render(<MermaidBlock code={'graph TD; A-->B'} enablePanZoom />);
+    await settledDiagram(true);
+    fireEvent.click(screen.getByTestId('mermaid-zoom-in'));
+    await waitFor(() => expect(innerOf().style.transform).toContain('scale(1.25)'), SETTLE);
+
+    renderMock.mockResolvedValue({ svg: '<svg width="200" height="80"></svg>' });
+    rerender(<MermaidBlock code={'graph TD; A-->C'} enablePanZoom />);
+    await waitFor(() => expect(screen.getByTestId('mermaid-diagram').innerHTML).toContain('width="200"'), SETTLE);
+    expect(innerOf().style.transform).toContain('translate(0px, 0px) scale(1)');
   });
 });
