@@ -1420,5 +1420,12 @@
       "commentEditWindow": "Seul l'auteur peut modifier un commentaire pendant 15 minutes.",
       "generic": "L'opération a échoué. Veuillez réessayer."
     }
+  },
+  "squadRouteOnly": {
+    "title": "Le Squad Leader ne peut que répartir le travail",
+    "body": "Ce Squad Leader est en mode répartition uniquement : l'outil {{tool}} a été bloqué.",
+    "bodyUnknownTool": "Ce Squad Leader est en mode répartition uniquement : cet outil a été bloqué.",
+    "allowed": "Outils autorisés :",
+    "hint": "Le Leader doit confier ce travail à un membre de l'équipe via team_send_message ou une tâche."
   }
 }

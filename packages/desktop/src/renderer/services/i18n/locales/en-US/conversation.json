@@ -1420,5 +1420,12 @@
       "commentEditWindow": "Comments can only be edited by their author within 15 minutes.",
       "generic": "The operation failed. Please try again."
     }
+  },
+  "squadRouteOnly": {
+    "title": "Squad Leader can only route work",
+    "body": "This Squad Leader is in route-only mode, so the tool {{tool}} was blocked.",
+    "bodyUnknownTool": "This Squad Leader is in route-only mode, so this tool was blocked.",
+    "allowed": "Allowed tools:",
+    "hint": "The Leader should assign this work to a team member with team_send_message or a task instead."
   }
 }

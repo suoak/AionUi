@@ -1420,5 +1420,12 @@
       "commentEditWindow": "コメントは作成者のみ 15 分以内に編集できます。",
       "generic": "操作に失敗しました。もう一度お試しください。"
     }
+  },
+  "squadRouteOnly": {
+    "title": "Squad Leader は作業の割り振りのみ可能です",
+    "body": "この Squad Leader は割り振り専用モードのため、ツール {{tool}} はブロックされました。",
+    "bodyUnknownTool": "この Squad Leader は割り振り専用モードのため、このツールはブロックされました。",
+    "allowed": "使用可能なツール：",
+    "hint": "Leader は team_send_message またはタスクでこの作業をチームメンバーに割り当ててください。"
   }
 }

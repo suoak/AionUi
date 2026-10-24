@@ -1421,5 +1421,12 @@
       "commentEditWindow": "Kommentare kann nur der Autor innerhalb von 15 Minuten bearbeiten.",
       "generic": "Vorgang fehlgeschlagen. Bitte erneut versuchen."
     }
+  },
+  "squadRouteOnly": {
+    "title": "Squad Leader darf nur Arbeit verteilen",
+    "body": "Dieser Squad Leader ist im Nur-Verteilen-Modus, daher wurde das Tool {{tool}} blockiert.",
+    "bodyUnknownTool": "Dieser Squad Leader ist im Nur-Verteilen-Modus, daher wurde dieses Tool blockiert.",
+    "allowed": "Erlaubte Tools:",
+    "hint": "Der Leader sollte diese Arbeit per team_send_message oder Aufgabe an ein Teammitglied übergeben."
   }
 }

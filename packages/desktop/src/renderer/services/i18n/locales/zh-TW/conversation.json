@@ -1420,5 +1420,12 @@
       "commentEditWindow": "留言僅作者可在 15 分鐘內編輯。",
       "generic": "操作失敗，請重試。"
     }
+  },
+  "squadRouteOnly": {
+    "title": "Squad Leader 只能派工",
+    "body": "此 Squad Leader 處於只派工模式，已攔截工具 {{tool}}。",
+    "bodyUnknownTool": "此 Squad Leader 處於只派工模式，已攔截此工具。",
+    "allowed": "可用工具：",
+    "hint": "Leader 應透過 team_send_message 或任務把這項工作交給團隊成員。"
   }
 }
