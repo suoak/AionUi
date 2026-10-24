@@ -1341,6 +1341,12 @@
         "evolution": "自動進化"
       },
       "importNeedsReview": "インポートしたスキルのうち {{count}} 件はスクリプトを含むため、「審査待ち」で承認するまで使用できません：{{names}}"
+    },
+    "sourceSection": {
+      "title": "ソースとバージョン",
+      "checkUpdate": "更新を確認",
+      "updated": "新しいバージョンに更新しました",
+      "movedToReview": "スクリプトの変更を含む更新のため、スキルは「審査待ち」に移動しました。承認されるまで使用できません"
     }
   },
   "assistant.connectionFailed": "Connection failed",

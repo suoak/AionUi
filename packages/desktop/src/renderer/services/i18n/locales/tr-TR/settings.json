@@ -1339,6 +1339,12 @@
         "evolution": "Otomatik evrim"
       },
       "importNeedsReview": "İçe aktarılan {{count}} beceri betik içeriyor ve kullanılmadan önce İnceleme bekliyor bölümünde onaylanmalı: {{names}}"
+    },
+    "sourceSection": {
+      "title": "Kaynak ve sürümler",
+      "checkUpdate": "Güncellemeyi denetle",
+      "updated": "Yeni bir sürüme güncellendi",
+      "movedToReview": "Güncelleme betikleri değiştiriyor; beceri İnceleme bekliyor bölümüne taşındı ve onaylanana kadar kullanılamaz"
     }
   },
   "assistant.connectionFailed": "Bağlantı başarısız",

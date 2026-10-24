@@ -21,7 +21,8 @@ export const PENDING_SKILL_REVIEWS_KEY = 'skills.reviews.pending';
 
 const formatTime = (ms: number | null | undefined): string => (ms ? new Date(ms).toLocaleString() : '—');
 
-const SkillReviewDetail: React.FC<{ skillId: string }> = ({ skillId }) => {
+/** Source + version history of one skill; shared with the skill detail page. */
+export const SkillReviewDetail: React.FC<{ skillId: string }> = ({ skillId }) => {
   const { t } = useTranslation();
   const { data, error, isLoading } = useSWR(`skills.source.${skillId}`, () =>
     ipcBridge.fs.getSkillSourceDetail.invoke({ skill_id: skillId })
