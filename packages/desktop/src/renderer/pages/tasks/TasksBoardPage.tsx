@@ -166,7 +166,6 @@ const TasksBoardPage: React.FC = () => {
     if (loadState === 'ready') setSelectedId(deepLinkTask);
   }, [deepLinkTask, loadState]);
 
-
   useEffect(() => {
     const timers = pendingFallbacks.current;
     return () => {

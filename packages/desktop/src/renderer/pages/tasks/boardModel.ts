@@ -294,8 +294,6 @@ export const parseTimelineEntry = (comment: TaskComment): TimelineEvent => {
   }
 };
 
-
-
 /**
  * E6-6: board drawer timeline merges comments/status events with a high-signal
  * slice of the latest run's trace (tool denied / failed / file.changed). Full
@@ -349,10 +347,7 @@ export type BoardTimelineRow =
   | { source: 'trace'; at: number; id: string; trace: BoardTimelineTraceRef };
 
 /** Merge comments and filtered trace events, oldest first. */
-export const mergeBoardTimeline = (
-  comments: TaskComment[],
-  traces: TaskTraceEvent[]
-): BoardTimelineRow[] => {
+export const mergeBoardTimeline = (comments: TaskComment[], traces: TaskTraceEvent[]): BoardTimelineRow[] => {
   const rows: BoardTimelineRow[] = comments.map((comment) => ({
     source: 'comment' as const,
     at: comment.created_at,
@@ -364,9 +359,7 @@ export const mergeBoardTimeline = (
     .slice()
     .sort((a, b) => a.timestamp - b.timestamp || a.sequence - b.sequence);
   const slice =
-    filtered.length > BOARD_TIMELINE_TRACE_CAP
-      ? filtered.slice(filtered.length - BOARD_TIMELINE_TRACE_CAP)
-      : filtered;
+    filtered.length > BOARD_TIMELINE_TRACE_CAP ? filtered.slice(filtered.length - BOARD_TIMELINE_TRACE_CAP) : filtered;
   for (const event of slice) {
     rows.push({
       source: 'trace',

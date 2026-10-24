@@ -70,7 +70,9 @@ const TaskBoardTimeline: React.FC<TaskBoardTimelineProps> = ({ taskId, refreshKe
   const load = useCallback(() => {
     setState('loading');
     Promise.all([
-      ipcBridge.taskSession.board.comments.list.invoke({ id: taskId }).then((list) => (Array.isArray(list) ? list : [])),
+      ipcBridge.taskSession.board.comments.list
+        .invoke({ id: taskId })
+        .then((list) => (Array.isArray(list) ? list : [])),
       loadLatestTrace(taskId),
     ])
       .then(([list, nextTraces]) => {

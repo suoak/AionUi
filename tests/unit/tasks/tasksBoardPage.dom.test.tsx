@@ -185,7 +185,14 @@ describe('TasksBoardPage', () => {
     mocks.commentsList.mockResolvedValue([]);
     mocks.runList.mockResolvedValue([]);
     mocks.runReplay.mockResolvedValue({
-      run: { id: 'r0', task_session_id: 't', conversation_id: 'c', run_kind: 'execution', status: 'completed', started_at: 0 },
+      run: {
+        id: 'r0',
+        task_session_id: 't',
+        conversation_id: 'c',
+        run_kind: 'execution',
+        status: 'completed',
+        started_at: 0,
+      },
       events: [],
       next_after_sequence: 0,
       has_more: false,
@@ -512,13 +519,11 @@ describe('TasksBoardPage', () => {
   });
 });
 
-
-  it('opens the drawer from ?task= deep link (E6-6)', async () => {
-    mocks.searchParams = new URLSearchParams('task=deep1');
-    mocks.boardGet.mockResolvedValue(board(item('deep1', 'in_review', { title: 'Deep link item' })));
-    render(<TasksBoardPage />);
-    await screen.findByTestId('task-board-detail');
-    // Title sits on the Arco Drawer header (outside the detail panel).
-    expect(screen.getAllByText('Deep link item').length).toBeGreaterThan(0);
-  });
-
+it('opens the drawer from ?task= deep link (E6-6)', async () => {
+  mocks.searchParams = new URLSearchParams('task=deep1');
+  mocks.boardGet.mockResolvedValue(board(item('deep1', 'in_review', { title: 'Deep link item' })));
+  render(<TasksBoardPage />);
+  await screen.findByTestId('task-board-detail');
+  // Title sits on the Arco Drawer header (outside the detail panel).
+  expect(screen.getAllByText('Deep link item').length).toBeGreaterThan(0);
+});
