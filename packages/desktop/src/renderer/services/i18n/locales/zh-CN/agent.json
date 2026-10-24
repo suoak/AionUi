@@ -229,6 +229,70 @@
       "confirmDescription": "已发布版本会保留在版本历史中；智能体将恢复为草稿，可继续编辑或再次发布。",
       "success": "已撤销发布",
       "error": "撤销发布失败"
+    },
+    "squad": {
+      "entry": "Squad",
+      "title": "Squad 模板",
+      "description": "把一个 Leader 和最多 5 个成员助手组合成可复用的团队模板。",
+      "back": "智能体中心",
+      "create": "组建 Squad",
+      "edit": "编辑",
+      "delete": "删除",
+      "save": "保存",
+      "saved": "Squad 已保存",
+      "created": "Squad 已创建",
+      "deleted": "Squad 已删除",
+      "loading": "加载中…",
+      "retry": "重试",
+      "empty": "还没有 Squad。点击「组建 Squad」创建。",
+      "leaderLabel": "Leader：{{name}}",
+      "memberCount": "成员：{{count}}",
+      "missingRefs": "{{count}} 个引用的助手已不可用",
+      "deleteConfirmTitle": "删除这个 Squad 模板？",
+      "deleteConfirmContent": "确定删除「{{name}}」？已在使用它的团队不受影响。",
+      "inUseCount": "已被 {{count}} 个团队使用，无法删除。",
+      "ineligibleNamed": "{{name}} 不能加入 Squad。",
+      "addMember": "添加成员",
+      "removeMember": "移除",
+      "membersHint": "除 Leader 外最多 {{limit}} 个成员。成员不能再派子 Agent。",
+      "fields": {
+        "name": "名称",
+        "description": "描述",
+        "leader": "Leader",
+        "members": "成员",
+        "assistant": "选择助手",
+        "roleTitle": "角色名称",
+        "roleDescription": "角色说明（可选）",
+        "maxParallel": "最大并行任务数"
+      },
+      "leaderMode": {
+        "route_only": "只派活",
+        "route_and_work": "派活并干活"
+      },
+      "leaderModeHint": {
+        "route_only": "Leader 只把任务分派给成员，自己不接任务。",
+        "route_and_work": "Leader 分派任务，也可以自己接任务。"
+      },
+      "errors": {
+        "squad_invalid_body": "请求无效。",
+        "squad_invalid_name": "请填写名称（最多 100 个字符）。",
+        "squad_invalid_description": "描述过长（最多 2000 个字符）。",
+        "squad_leader_required": "请选择 Leader。",
+        "squad_no_members": "请至少添加一个成员。",
+        "squad_too_many_members": "成员过多：含 Leader 最多 6 个。",
+        "squad_invalid_member": "有成员信息不完整：请检查助手、角色名称（最多 60 个字符）和最大并行任务数（1–4）。",
+        "squad_member_duplicate": "有助手重复出现（Leader 不能同时是成员）。",
+        "squad_assistant_not_eligible": "该助手不能加入 Squad。",
+        "squad_team_visibility_unavailable": "团队共享的 Squad 暂不可用。",
+        "squad_not_found": "未找到该 Squad，可能已被删除。",
+        "squad_name_conflict": "已有同名 Squad。",
+        "squad_stale": "该 Squad 已在别处被修改，列表已刷新，请重新编辑。",
+        "squad_in_use": "该 Squad 正被团队使用，无法删除。",
+        "squad_store_failed": "保存 Squad 失败，请重试。",
+        "squad_assistant_catalog_unavailable": "助手列表暂时不可用，请稍后再试。",
+        "forbidden": "你没有执行此操作的权限。",
+        "generic": "出错了，请重试。"
+      }
     }
   },
   "skillEvolution": {

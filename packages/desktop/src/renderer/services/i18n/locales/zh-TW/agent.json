@@ -229,6 +229,70 @@
       "confirmDescription": "已發布版本會保留在版本歷史中；智能體將恢復為草稿，可繼續編輯或再次發布。",
       "success": "已取消發布",
       "error": "取消發布失敗"
+    },
+    "squad": {
+      "entry": "Squad",
+      "title": "Squad 範本",
+      "description": "把一個 Leader 和最多 5 個成員助理組合成可重複使用的團隊範本。",
+      "back": "智慧體中心",
+      "create": "組建 Squad",
+      "edit": "編輯",
+      "delete": "刪除",
+      "save": "儲存",
+      "saved": "Squad 已儲存",
+      "created": "Squad 已建立",
+      "deleted": "Squad 已刪除",
+      "loading": "載入中…",
+      "retry": "重試",
+      "empty": "還沒有 Squad。點擊「組建 Squad」建立。",
+      "leaderLabel": "Leader：{{name}}",
+      "memberCount": "成員：{{count}}",
+      "missingRefs": "{{count}} 個引用的助理已無法使用",
+      "deleteConfirmTitle": "刪除這個 Squad 範本？",
+      "deleteConfirmContent": "確定刪除「{{name}}」？已在使用它的團隊不受影響。",
+      "inUseCount": "已被 {{count}} 個團隊使用，無法刪除。",
+      "ineligibleNamed": "{{name}} 不能加入 Squad。",
+      "addMember": "新增成員",
+      "removeMember": "移除",
+      "membersHint": "除 Leader 外最多 {{limit}} 個成員。成員不能再派子 Agent。",
+      "fields": {
+        "name": "名稱",
+        "description": "描述",
+        "leader": "Leader",
+        "members": "成員",
+        "assistant": "選擇助理",
+        "roleTitle": "角色名稱",
+        "roleDescription": "角色說明（選填）",
+        "maxParallel": "最大並行任務數"
+      },
+      "leaderMode": {
+        "route_only": "只派工",
+        "route_and_work": "派工並執行"
+      },
+      "leaderModeHint": {
+        "route_only": "Leader 只把任務分派給成員，自己不接任務。",
+        "route_and_work": "Leader 分派任務，也可以自己接任務。"
+      },
+      "errors": {
+        "squad_invalid_body": "請求無效。",
+        "squad_invalid_name": "請填寫名稱（最多 100 個字元）。",
+        "squad_invalid_description": "描述過長（最多 2000 個字元）。",
+        "squad_leader_required": "請選擇 Leader。",
+        "squad_no_members": "請至少新增一個成員。",
+        "squad_too_many_members": "成員過多：含 Leader 最多 6 個。",
+        "squad_invalid_member": "有成員資訊不完整：請檢查助理、角色名稱（最多 60 個字元）和最大並行任務數（1–4）。",
+        "squad_member_duplicate": "有助理重複出現（Leader 不能同時是成員）。",
+        "squad_assistant_not_eligible": "該助理不能加入 Squad。",
+        "squad_team_visibility_unavailable": "團隊共享的 Squad 暫不可用。",
+        "squad_not_found": "找不到該 Squad，可能已被刪除。",
+        "squad_name_conflict": "已有同名 Squad。",
+        "squad_stale": "該 Squad 已在別處被修改，列表已重新整理，請重新編輯。",
+        "squad_in_use": "該 Squad 正被團隊使用，無法刪除。",
+        "squad_store_failed": "儲存 Squad 失敗，請重試。",
+        "squad_assistant_catalog_unavailable": "助理列表暫時無法使用，請稍後再試。",
+        "forbidden": "你沒有執行此操作的權限。",
+        "generic": "發生錯誤，請重試。"
+      }
     }
   },
   "skillEvolution": {

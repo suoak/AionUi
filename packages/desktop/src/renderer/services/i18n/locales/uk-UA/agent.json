@@ -229,6 +229,70 @@
       "confirmDescription": "Опублікована версія залишиться в історії, а агент повернеться до чернеток.",
       "success": "Публікацію скасовано",
       "error": "Не вдалося скасувати публікацію"
+    },
+    "squad": {
+      "entry": "Squad",
+      "title": "Шаблони Squad",
+      "description": "Об’єднайте Leader і до 5 асистентів-учасників у шаблон команди для повторного використання.",
+      "back": "Центр агентів",
+      "create": "Новий Squad",
+      "edit": "Редагувати",
+      "delete": "Видалити",
+      "save": "Зберегти",
+      "saved": "Squad збережено",
+      "created": "Squad створено",
+      "deleted": "Squad видалено",
+      "loading": "Завантаження…",
+      "retry": "Повторити",
+      "empty": "Squad ще немає. Натисніть «Новий Squad», щоб створити.",
+      "leaderLabel": "Leader: {{name}}",
+      "memberCount": "Учасники: {{count}}",
+      "missingRefs": "Недоступно асистентів за посиланнями: {{count}}",
+      "deleteConfirmTitle": "Видалити цей шаблон Squad?",
+      "deleteConfirmContent": "Видалити «{{name}}»? Команди, які вже його використовують, не зачеплено.",
+      "inUseCount": "Використовується командами ({{count}}); видалити неможливо.",
+      "ineligibleNamed": "{{name}} не можна додати до Squad.",
+      "addMember": "Додати учасника",
+      "removeMember": "Прибрати",
+      "membersHint": "Не більше {{limit}} учасників окрім Leader. Учасники не можуть запускати субагентів.",
+      "fields": {
+        "name": "Назва",
+        "description": "Опис",
+        "leader": "Leader",
+        "members": "Учасники",
+        "assistant": "Виберіть асистента",
+        "roleTitle": "Назва ролі",
+        "roleDescription": "Опис ролі (необов’язково)",
+        "maxParallel": "Макс. паралельних завдань"
+      },
+      "leaderMode": {
+        "route_only": "Лише розподіляти",
+        "route_and_work": "Розподіляти й працювати"
+      },
+      "leaderModeHint": {
+        "route_only": "Leader лише розподіляє завдання між учасниками і сам їх не бере.",
+        "route_and_work": "Leader розподіляє завдання і може брати їх сам."
+      },
+      "errors": {
+        "squad_invalid_body": "Недійсний запит.",
+        "squad_invalid_name": "Вкажіть назву (до 100 символів).",
+        "squad_invalid_description": "Опис задовгий (до 2000 символів).",
+        "squad_leader_required": "Виберіть Leader.",
+        "squad_no_members": "Додайте принаймні одного учасника.",
+        "squad_too_many_members": "Забагато учасників: не більше 6 разом із Leader.",
+        "squad_invalid_member": "Дані учасника неповні: перевірте асистента, назву ролі (до 60 символів) і кількість паралельних завдань (1–4).",
+        "squad_member_duplicate": "Асистента вказано кілька разів (Leader не може бути водночас учасником).",
+        "squad_assistant_not_eligible": "Цього асистента не можна додати до Squad.",
+        "squad_team_visibility_unavailable": "Squad зі спільним доступом для команди поки недоступні.",
+        "squad_not_found": "Squad не знайдено; можливо, його видалено.",
+        "squad_name_conflict": "Squad із такою назвою вже існує.",
+        "squad_stale": "Цей Squad змінено в іншому місці; список оновлено. Відредагуйте його знову.",
+        "squad_in_use": "Цей Squad використовується командою і не може бути видалений.",
+        "squad_store_failed": "Не вдалося зберегти Squad. Спробуйте ще раз.",
+        "squad_assistant_catalog_unavailable": "Список асистентів тимчасово недоступний. Спробуйте пізніше.",
+        "forbidden": "У вас немає прав на цю дію.",
+        "generic": "Щось пішло не так. Спробуйте ще раз."
+      }
     }
   },
   "skillEvolution": {

@@ -45,7 +45,7 @@ export const squadErrorReason = (error: unknown): string | null => {
 };
 
 export const squadErrorKey = (error: unknown): string =>
-  `agentCenter.squad.errors.${squadErrorReason(error) ?? 'generic'}`;
+  `agent.agentCenter.squad.errors.${squadErrorReason(error) ?? 'generic'}`;
 
 export const isSquadStale = (error: unknown): boolean => squadErrorReason(error) === 'squad_stale';
 
@@ -107,3 +107,13 @@ export const squadToInput = (squad: SquadTemplate): SquadTemplateInput => ({
 /** Assistant references that no longer resolve (leader or members). */
 export const missingSquadRefs = (squad: SquadTemplate): string[] =>
   [squad.leader, ...squad.member_assistants].filter((a) => a?.missing).map((a) => a!.id);
+
+/** i18n key for a client-side validation issue (shares the backend error copy). */
+export const squadIssueKey = (issue: SquadValidationIssue): string => `agent.agentCenter.squad.errors.${issue.reason}`;
+
+/** Assistant id named by a 400 squad_assistant_not_eligible. */
+export const squadIneligibleAssistantId = (error: unknown): string | null => {
+  if (!isBackendHttpError(error) || squadErrorReason(error) !== 'squad_assistant_not_eligible') return null;
+  const id = (error.details as { assistant_id?: unknown } | null | undefined)?.assistant_id;
+  return typeof id === 'string' ? id : null;
+};

@@ -33,7 +33,7 @@ describe('squadErrorReason', () => {
   });
   it('maps 403 and unknown', () => {
     expect(squadErrorReason(err(403, { code: 'FORBIDDEN', error: 'nope' }))).toBe('forbidden');
-    expect(squadErrorKey(err(500, { code: 'INTERNAL', error: 'boom' }))).toBe('agentCenter.squad.errors.generic');
+    expect(squadErrorKey(err(500, { code: 'INTERNAL', error: 'boom' }))).toBe('agent.agentCenter.squad.errors.generic');
     expect(squadErrorReason(new Error('x'))).toBeNull();
   });
   it('detects stale and in-use details', () => {

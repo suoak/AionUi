@@ -229,6 +229,70 @@
       "confirmDescription": "게시된 버전은 기록에 유지되며 에이전트는 초안으로 돌아갑니다.",
       "success": "게시가 취소되었습니다",
       "error": "게시 취소 실패"
+    },
+    "squad": {
+      "entry": "Squad",
+      "title": "Squad 템플릿",
+      "description": "Leader와 최대 5명의 멤버 어시스턴트를 재사용 가능한 팀 템플릿으로 묶습니다.",
+      "back": "에이전트 센터",
+      "create": "Squad 만들기",
+      "edit": "편집",
+      "delete": "삭제",
+      "save": "저장",
+      "saved": "Squad를 저장했습니다",
+      "created": "Squad를 만들었습니다",
+      "deleted": "Squad를 삭제했습니다",
+      "loading": "불러오는 중…",
+      "retry": "다시 시도",
+      "empty": "아직 Squad가 없습니다. \"Squad 만들기\"를 눌러 만드세요.",
+      "leaderLabel": "Leader: {{name}}",
+      "memberCount": "멤버: {{count}}",
+      "missingRefs": "참조된 어시스턴트 {{count}}개를 더 이상 사용할 수 없습니다",
+      "deleteConfirmTitle": "이 Squad 템플릿을 삭제할까요?",
+      "deleteConfirmContent": "\"{{name}}\"을(를) 삭제할까요? 이미 사용 중인 팀에는 영향이 없습니다.",
+      "inUseCount": "{{count}}개 팀에서 사용 중이라 삭제할 수 없습니다.",
+      "ineligibleNamed": "{{name}}은(는) Squad에 추가할 수 없습니다.",
+      "addMember": "멤버 추가",
+      "removeMember": "제거",
+      "membersHint": "Leader 외 최대 {{limit}}명. 멤버는 하위 에이전트를 만들 수 없습니다.",
+      "fields": {
+        "name": "이름",
+        "description": "설명",
+        "leader": "Leader",
+        "members": "멤버",
+        "assistant": "어시스턴트 선택",
+        "roleTitle": "역할 이름",
+        "roleDescription": "역할 설명(선택)",
+        "maxParallel": "최대 병렬 작업 수"
+      },
+      "leaderMode": {
+        "route_only": "배분만",
+        "route_and_work": "배분 및 작업"
+      },
+      "leaderModeHint": {
+        "route_only": "Leader는 멤버에게 작업을 배분만 하고 직접 맡지 않습니다.",
+        "route_and_work": "Leader는 작업을 배분하고 직접 맡을 수도 있습니다."
+      },
+      "errors": {
+        "squad_invalid_body": "잘못된 요청입니다.",
+        "squad_invalid_name": "이름을 입력하세요(최대 100자).",
+        "squad_invalid_description": "설명이 너무 깁니다(최대 2000자).",
+        "squad_leader_required": "Leader를 선택하세요.",
+        "squad_no_members": "멤버를 한 명 이상 추가하세요.",
+        "squad_too_many_members": "멤버가 너무 많습니다: Leader 포함 최대 6명입니다.",
+        "squad_invalid_member": "멤버 정보가 불완전합니다: 어시스턴트, 역할 이름(최대 60자), 최대 병렬 작업 수(1–4)를 확인하세요.",
+        "squad_member_duplicate": "같은 어시스턴트가 중복되었습니다(Leader는 멤버를 겸할 수 없습니다).",
+        "squad_assistant_not_eligible": "이 어시스턴트는 Squad에 추가할 수 없습니다.",
+        "squad_team_visibility_unavailable": "팀 공유 Squad는 아직 사용할 수 없습니다.",
+        "squad_not_found": "Squad를 찾을 수 없습니다. 삭제되었을 수 있습니다.",
+        "squad_name_conflict": "같은 이름의 Squad가 이미 있습니다.",
+        "squad_stale": "이 Squad가 다른 곳에서 변경되었습니다. 목록을 새로 고쳤으니 다시 편집하세요.",
+        "squad_in_use": "이 Squad는 팀에서 사용 중이라 삭제할 수 없습니다.",
+        "squad_store_failed": "Squad 저장에 실패했습니다. 다시 시도하세요.",
+        "squad_assistant_catalog_unavailable": "어시스턴트 목록을 일시적으로 사용할 수 없습니다. 잠시 후 다시 시도하세요.",
+        "forbidden": "이 작업을 수행할 권한이 없습니다.",
+        "generic": "문제가 발생했습니다. 다시 시도하세요."
+      }
     }
   },
   "skillEvolution": {
