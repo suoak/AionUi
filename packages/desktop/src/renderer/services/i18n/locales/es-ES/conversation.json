@@ -1421,5 +1421,12 @@
       "commentEditWindow": "Solo el autor puede editar un comentario durante 15 minutos.",
       "generic": "La operación falló. Inténtalo de nuevo."
     }
+  },
+  "squadRouteOnly": {
+    "title": "El Squad Leader solo puede repartir trabajo",
+    "body": "Este Squad Leader está en modo solo reparto, así que se bloqueó la herramienta {{tool}}.",
+    "bodyUnknownTool": "Este Squad Leader está en modo solo reparto, así que se bloqueó esta herramienta.",
+    "allowed": "Herramientas permitidas:",
+    "hint": "El Leader debe asignar este trabajo a un miembro del equipo con team_send_message o una tarea."
   }
 }
