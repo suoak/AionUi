@@ -262,6 +262,19 @@ describe('realtime and optimistic-lock helpers', () => {
   });
 });
 
+it('treats E6-5 plain-text assignment 「已开工」 as unknown text (not JSON assignee)', () => {
+  const entry = parseTimelineEntry({
+    id: 'c1',
+    task_session_id: 't1',
+    kind: 'assignment',
+    body: '已开工：Ship the board',
+    author_kind: 'agent',
+    author_id: 'agent-1',
+    created_at: 1,
+  });
+  expect(entry).toEqual({ kind: 'unknown', text: '已开工：Ship the board' });
+});
+
 describe('mergeBoardTimeline (E6-6)', () => {
   const comment = (id: string, created_at: number, extra: Partial<TaskComment> = {}): TaskComment => ({
     id,

@@ -269,6 +269,7 @@ export const parseTimelineEntry = (comment: TaskComment): TimelineEvent => {
   } catch {
     body = null;
   }
+  // E6-5 auto-start writes kind=assignment with plain-text 「已开工：…」 (not JSON).
   if (!body) return { kind: 'unknown', text: comment.body };
   switch (comment.kind) {
     case 'status_change':
