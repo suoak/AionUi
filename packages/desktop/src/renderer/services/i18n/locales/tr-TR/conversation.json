@@ -1421,6 +1421,22 @@
       "stale": "Bu kart başka bir yerde değiştirildi. Pano yenilendi, lütfen tekrar deneyin.",
       "commentEditWindow": "Yorumlar yalnızca yazarı tarafından 15 dakika içinde düzenlenebilir.",
       "generic": "İşlem başarısız oldu. Lütfen tekrar deneyin."
+    },
+    "squadRun": {
+      "title": "Squad çalıştırması",
+      "state": {
+        "waiting_backlog": "Backlog bekleniyor",
+        "running": "Çalışıyor",
+        "paused": "Duraklatıldı",
+        "finished": "Tamamlandı",
+        "failed": "Başarısız"
+      },
+      "idle": "Başlamadı",
+      "routeOnly": "Lider yalnızca dağıtır",
+      "openLeader": "Lider konuşmasını aç",
+      "noTeam": "Bu Squad'dan henüz ekip oluşturulmadı.",
+      "unavailable": "Bu Squad'ın ekipleri için çalıştırma durumu yok.",
+      "hint": "Ekibin görevlerinden türetilir; 15 saniyede bir yenilenir."
     }
   }
 }

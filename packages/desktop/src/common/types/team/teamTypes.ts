@@ -69,6 +69,8 @@ export type TTeam = {
   agents?: TeamAssistant[];
   /** Current session permission mode (e.g. 'plan', 'auto'). Persisted so newly spawned assistants inherit it. */
   session_mode?: string;
+  /** M8 E7: set when the Team was instantiated from a Squad template (aioncore #192). */
+  squad_template_id?: string;
   created_at: number;
   updated_at: number;
 };

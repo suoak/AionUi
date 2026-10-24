@@ -142,6 +142,9 @@ export function fromBackendTeam(raw: unknown): TTeam {
     leader_agent_id: leaderAssistantId,
     agents: assistants,
     session_mode: r.session_mode as string | undefined,
+    ...(typeof r.squad_template_id === 'string' && r.squad_template_id
+      ? { squad_template_id: r.squad_template_id }
+      : {}),
     created_at: (r.created_at as number | undefined) ?? 0,
     updated_at: (r.updated_at as number | undefined) ?? 0,
   };

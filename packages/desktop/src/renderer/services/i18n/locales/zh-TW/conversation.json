@@ -1419,6 +1419,22 @@
       "stale": "此卡片已在別處被修改，看板已重新整理，請重試。",
       "commentEditWindow": "留言僅作者可在 15 分鐘內編輯。",
       "generic": "操作失敗，請重試。"
+    },
+    "squadRun": {
+      "title": "Squad 執行",
+      "state": {
+        "waiting_backlog": "等待待辦",
+        "running": "執行中",
+        "paused": "已暫停",
+        "finished": "已完成",
+        "failed": "失敗"
+      },
+      "idle": "未開始",
+      "routeOnly": "Leader 僅分派",
+      "openLeader": "開啟 Leader 對話",
+      "noTeam": "尚未從此 Squad 建立團隊。",
+      "unavailable": "此 Squad 的團隊暫無執行狀態。",
+      "hint": "依團隊任務推導，每 15 秒重新整理。"
     }
   }
 }

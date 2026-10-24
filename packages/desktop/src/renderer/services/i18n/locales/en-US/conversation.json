@@ -1419,6 +1419,22 @@
       "stale": "This card was changed elsewhere. The board has been refreshed; please try again.",
       "commentEditWindow": "Comments can only be edited by their author within 15 minutes.",
       "generic": "The operation failed. Please try again."
+    },
+    "squadRun": {
+      "title": "Squad run",
+      "state": {
+        "waiting_backlog": "Waiting for backlog",
+        "running": "Running",
+        "paused": "Paused",
+        "finished": "Finished",
+        "failed": "Failed"
+      },
+      "idle": "Not started",
+      "routeOnly": "Leader routes only",
+      "openLeader": "Open leader conversation",
+      "noTeam": "No team has been created from this Squad yet.",
+      "unavailable": "Run status is not available for this Squad's teams.",
+      "hint": "Derived from the team's tasks; refreshes every 15 seconds."
     }
   }
 }

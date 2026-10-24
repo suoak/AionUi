@@ -1419,6 +1419,22 @@
       "stale": "Cette carte a été modifiée ailleurs. Le tableau a été actualisé ; veuillez réessayer.",
       "commentEditWindow": "Seul l'auteur peut modifier un commentaire pendant 15 minutes.",
       "generic": "L'opération a échoué. Veuillez réessayer."
+    },
+    "squadRun": {
+      "title": "Exécution du Squad",
+      "state": {
+        "waiting_backlog": "En attente du backlog",
+        "running": "En cours",
+        "paused": "En pause",
+        "finished": "Terminé",
+        "failed": "Échec"
+      },
+      "idle": "Non démarré",
+      "routeOnly": "Le leader ne fait que répartir",
+      "openLeader": "Ouvrir la conversation du leader",
+      "noTeam": "Aucune équipe n’a encore été créée à partir de ce Squad.",
+      "unavailable": "Aucun état d’exécution disponible pour les équipes de ce Squad.",
+      "hint": "Déduit des tâches de l’équipe ; actualisé toutes les 15 secondes."
     }
   }
 }

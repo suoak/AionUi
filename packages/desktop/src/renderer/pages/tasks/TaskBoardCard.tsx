@@ -11,6 +11,7 @@ import { Tag } from '@arco-design/web-react';
 import type { TaskBoardItem } from '@/common/types/agent/taskSession';
 import { formatRelativeTime } from '@/renderer/utils/chat/relativeTime';
 import { runBadgeForTask, type TaskRunBadge } from './boardModel';
+import { SquadRunBadge } from './SquadRunStatus';
 
 const RUN_BADGE_COLOR: Record<TaskRunBadge, string> = {
   running: 'arcoblue',
@@ -69,6 +70,7 @@ const TaskBoardCard: React.FC<TaskBoardCardProps> = ({ task, onOpen, dragging = 
             {t(`conversation.taskBoard.assignee.kind.${task.assignee.kind}`)}: {task.assignee.id}
           </Tag>
         ) : null}
+        {task.assignee?.kind === 'squad' && task.assignee.id ? <SquadRunBadge templateId={task.assignee.id} /> : null}
         {task.labels.map((label) => (
           <Tag key={label} size='small' color='purple'>
             {label}

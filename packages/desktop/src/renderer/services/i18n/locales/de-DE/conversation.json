@@ -1420,6 +1420,22 @@
       "stale": "Diese Karte wurde an anderer Stelle geändert. Das Board wurde aktualisiert, bitte erneut versuchen.",
       "commentEditWindow": "Kommentare kann nur der Autor innerhalb von 15 Minuten bearbeiten.",
       "generic": "Vorgang fehlgeschlagen. Bitte erneut versuchen."
+    },
+    "squadRun": {
+      "title": "Squad-Lauf",
+      "state": {
+        "waiting_backlog": "Wartet auf Backlog",
+        "running": "Läuft",
+        "paused": "Pausiert",
+        "finished": "Abgeschlossen",
+        "failed": "Fehlgeschlagen"
+      },
+      "idle": "Nicht gestartet",
+      "routeOnly": "Leader verteilt nur",
+      "openLeader": "Leader-Unterhaltung öffnen",
+      "noTeam": "Aus diesem Squad wurde noch kein Team erstellt.",
+      "unavailable": "Für die Teams dieses Squads ist kein Laufstatus verfügbar.",
+      "hint": "Aus den Aufgaben des Teams abgeleitet; wird alle 15 Sekunden aktualisiert."
     }
   }
 }

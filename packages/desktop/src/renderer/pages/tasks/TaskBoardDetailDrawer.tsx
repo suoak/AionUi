@@ -12,6 +12,7 @@ import type { TaskBoardItem, TaskBoardStatus, TaskSession } from '@/common/types
 import TaskBoardAssigneeEditor from './TaskBoardAssigneeEditor';
 import TaskBoardReviewPanel from './TaskBoardReviewPanel';
 import TaskBoardTimeline from './TaskBoardTimeline';
+import { SquadRunPanel } from './SquadRunStatus';
 import { userMoveTargets } from './boardModel';
 
 const PRIORITY_KEYS = ['none', 'low', 'medium', 'high', 'urgent'] as const;
@@ -181,6 +182,9 @@ const TaskBoardDetailDrawer: React.FC<TaskBoardDetailDrawerProps> = ({
                 ))}
               </Select>
             </section>
+          ) : null}
+          {task.assignee?.kind === 'squad' && task.assignee.id ? (
+            <SquadRunPanel templateId={task.assignee.id} onOpenConversation={onOpenConversation} />
           ) : null}
           {interactive ? (
             <TaskBoardAssigneeEditor
