@@ -74,20 +74,23 @@ function MermaidBlock({ code, style, showOpenInPanelButton = true, enablePanZoom
   } | null>(null);
   const [isPanning, setIsPanning] = useState(false);
 
-  // Reset the view whenever a fresh diagram renders so a re-render never leaves the
-  // user staring at an off-screen, zoomed-in fragment of the previous diagram.
-  // A re-render also replaces the overlay content, so close it as well.
-  useEffect(() => {
-    setTransform({ scale: 1, x: 0, y: 0 });
-    setIsZoomOpen(false);
-  }, [svg]);
-
   const zoomBy = (delta: number) =>
     setTransform((prev) => ({
       ...prev,
       scale: Math.min(MAX_MERMAID_SCALE, Math.max(MIN_MERMAID_SCALE, Math.round((prev.scale + delta) * 100) / 100)),
     }));
   const resetTransform = () => setTransform({ scale: 1, x: 0, y: 0 });
+
+  // Swap the diagram and reset the view in one batch, so a re-render never leaves
+  // the user on an off-screen, zoomed-in fragment of the previous diagram and the
+  // overlay never shows stale content. This must not be a useEffect on `svg`: a
+  // passive effect flushes after the commit, so a zoom click or overlay click that
+  // lands between the commit and that flush would be silently undone.
+  const showDiagram = (next: string | null) => {
+    setSvg(next);
+    setTransform({ scale: 1, x: 0, y: 0 });
+    setIsZoomOpen(false);
+  };
 
   const handlePanPointerDown = (event: React.PointerEvent<HTMLDivElement>) => {
     if (event.button !== 0) return;
@@ -160,7 +163,7 @@ function MermaidBlock({ code, style, showOpenInPanelButton = true, enablePanZoom
     const source = debouncedCode.trim();
 
     if (!source) {
-      setSvg(null);
+      showDiagram(null);
       setIsRendering(false);
       setViewMode('source');
       return () => {
@@ -168,7 +171,7 @@ function MermaidBlock({ code, style, showOpenInPanelButton = true, enablePanZoom
       };
     }
 
-    setSvg(null);
+    showDiagram(null);
     setIsRendering(true);
 
     const renderDiagram = async () => {
@@ -178,13 +181,13 @@ function MermaidBlock({ code, style, showOpenInPanelButton = true, enablePanZoom
         const { svg: renderedSvg } = await mermaid.render(`${blockIdRef.current}-${Date.now()}`, source);
 
         if (!cancelled) {
-          setSvg(withResponsiveSvg(renderedSvg));
+          showDiagram(withResponsiveSvg(renderedSvg));
           setIsRendering(false);
           setViewMode(preferredViewModeRef.current === 'source' ? 'source' : 'preview');
         }
       } catch {
         if (!cancelled) {
-          setSvg(null);
+          showDiagram(null);
           setIsRendering(false);
           setViewMode('source');
         }
