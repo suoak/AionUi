@@ -1311,5 +1311,35 @@
     "externalMcp": "{{count}} 个外部 MCP",
     "ambientMcp": "可能加载本机 MCP",
     "ambientMcpTip": "该后端可能加载本机配置的 MCP 服务器，实际加载情况未知。"
+  },
+  "taskBoard": {
+    "title": "工作项看板",
+    "description": "按流程状态查看任务会话",
+    "refresh": "刷新",
+    "loadFailed": "任务列表加载失败",
+    "retry": "重试",
+    "emptyColumn": "暂无工作项",
+    "showCancelled": "显示已取消",
+    "previewNotice": "预览版：列暂按任务运行状态推断，拖拽、指派和评审将在后端就绪后开放。",
+    "noConversation": "此工作项没有关联对话",
+    "columns": {
+      "backlog": "待规划",
+      "todo": "待办",
+      "in_progress": "进行中",
+      "in_review": "评审中",
+      "done": "已完成",
+      "cancelled": "已取消"
+    },
+    "run": {
+      "running": "运行中",
+      "blocked": "阻塞",
+      "paused": "已暂停",
+      "failed": "失败"
+    },
+    "mode": {
+      "agent": "智能体",
+      "plan": "计划",
+      "goal": "目标"
+    }
   }
 }

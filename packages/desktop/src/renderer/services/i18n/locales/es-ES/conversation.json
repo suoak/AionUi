@@ -1312,5 +1312,35 @@
     "externalMcp": "{{count}} MCP externos",
     "ambientMcp": "Puede cargar MCP locales",
     "ambientMcpTip": "Este backend puede cargar servidores MCP configurados en este equipo; se desconoce qué cargó realmente."
+  },
+  "taskBoard": {
+    "title": "Tablero de trabajo",
+    "description": "Sesiones de tareas por etapa del flujo",
+    "refresh": "Actualizar",
+    "loadFailed": "No se pudieron cargar las tareas",
+    "retry": "Reintentar",
+    "emptyColumn": "Sin elementos",
+    "showCancelled": "Mostrar canceladas",
+    "previewNotice": "Vista previa: por ahora las columnas se deducen del estado de ejecución. Arrastrar, asignar y revisar llegarán cuando el backend esté listo.",
+    "noConversation": "Este elemento no tiene conversación vinculada",
+    "columns": {
+      "backlog": "Pendientes",
+      "todo": "Por hacer",
+      "in_progress": "En curso",
+      "in_review": "En revisión",
+      "done": "Hecho",
+      "cancelled": "Cancelado"
+    },
+    "run": {
+      "running": "En ejecución",
+      "blocked": "Bloqueada",
+      "paused": "En pausa",
+      "failed": "Fallida"
+    },
+    "mode": {
+      "agent": "Agente",
+      "plan": "Plan",
+      "goal": "Objetivo"
+    }
   }
 }

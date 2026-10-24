@@ -1311,5 +1311,35 @@
     "externalMcp": "外部 MCP {{count}} 件",
     "ambientMcp": "ローカル MCP を読み込む可能性",
     "ambientMcpTip": "このバックエンドはこのマシンで設定された MCP サーバーを読み込む可能性があります。実際の読み込み状況は不明です。"
+  },
+  "taskBoard": {
+    "title": "作業ボード",
+    "description": "タスクセッションをワークフロー段階ごとに表示",
+    "refresh": "更新",
+    "loadFailed": "タスクの読み込みに失敗しました",
+    "retry": "再試行",
+    "emptyColumn": "作業項目はありません",
+    "showCancelled": "キャンセル済みを表示",
+    "previewNotice": "プレビュー：列は現在タスクの実行状態から推定しています。ドラッグ、割り当て、レビューはバックエンドの準備後に提供されます。",
+    "noConversation": "この作業項目には関連する会話がありません",
+    "columns": {
+      "backlog": "バックログ",
+      "todo": "未着手",
+      "in_progress": "進行中",
+      "in_review": "レビュー中",
+      "done": "完了",
+      "cancelled": "キャンセル"
+    },
+    "run": {
+      "running": "実行中",
+      "blocked": "ブロック",
+      "paused": "一時停止",
+      "failed": "失敗"
+    },
+    "mode": {
+      "agent": "エージェント",
+      "plan": "計画",
+      "goal": "目標"
+    }
   }
 }

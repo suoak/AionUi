@@ -13,6 +13,10 @@ export const TASK_SESSION_STATUSES = [
 ] as const;
 export type TaskSessionStatus = (typeof TASK_SESSION_STATUSES)[number];
 
+/** Board (workflow) column of a task session, separate from its run `status` (M8 E6). */
+export const TASK_BOARD_STATUSES = ['backlog', 'todo', 'in_progress', 'in_review', 'done', 'cancelled'] as const;
+export type TaskBoardStatus = (typeof TASK_BOARD_STATUSES)[number];
+
 export type PlanningIsolationLevel = 'guaranteed' | 'best_effort' | 'unsupported';
 export type AgentIntegrationMode =
   | 'native_sandbox'
@@ -69,6 +73,8 @@ export type TaskSession = {
   retry_max_attempts?: number;
   /** Per-attempt execution timeout in ms (aioncore ≥ M7 E5-5). */
   retry_timeout_ms?: number;
+  /** Board column (aioncore ≥ M8 E6-2, migration 072; absent on older cores). */
+  board_status?: TaskBoardStatus;
 };
 
 /** `PUT /api/task-sessions/{id}/retry-policy` body (aioncore ≥ M7 E5-5). */
