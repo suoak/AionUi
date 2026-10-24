@@ -1322,7 +1322,6 @@
     "retry": "Yeniden dene",
     "emptyColumn": "İş öğesi yok",
     "showCancelled": "İptal edilenleri göster",
-    "previewNotice": "Önizleme: sütunlar şimdilik görevin çalışma durumundan çıkarılıyor. Sürükleme, atama ve inceleme arka uç hazır olunca gelecek.",
     "noConversation": "Bu iş öğesinin bağlı sohbeti yok",
     "columns": {
       "backlog": "Bekleyen",
@@ -1354,7 +1353,73 @@
       "objective": "Hedef",
       "acceptanceCriteria": "Kabul kriterleri",
       "none": "Yok",
-      "openConversation": "Sohbeti aç"
+      "openConversation": "Sohbeti aç",
+      "priority": "Öncelik",
+      "assignee": "Atanan",
+      "labels": "Etiketler"
+    },
+    "legacyNotice": "Bu çekirdek henüz pano API'sini sunmuyor: sütunlar çalışma durumundan çıkarılır ve pano salt okunurdur.",
+    "priority": {
+      "none": "Öncelik yok",
+      "low": "Düşük",
+      "medium": "Orta",
+      "high": "Yüksek",
+      "urgent": "Acil"
+    },
+    "assignee": {
+      "title": "Atanan",
+      "none": "Atanmadı",
+      "idPlaceholder": "Atanan kimliği",
+      "save": "Ata",
+      "unassign": "Atamayı kaldır",
+      "kind": {
+        "user": "Kullanıcı",
+        "agent": "Ajan",
+        "squad": "Ekip"
+      }
+    },
+    "move": {
+      "title": "Sütuna taşı",
+      "placeholder": "Sütun seçin"
+    },
+    "review": {
+      "title": "İnceleme",
+      "hint": "Onaylamak tamamlandı olarak işaretler; yorumla reddetmek Yapılacak'a geri gönderir.",
+      "approve": "Onayla",
+      "reject": "Reddet",
+      "commentPlaceholder": "İnceleme yorumu (reddetmek için zorunlu)",
+      "rejectNeedsComment": "Reddetmek için yorum ekleyin"
+    },
+    "timeline": {
+      "title": "Etkinlik",
+      "empty": "Henüz etkinlik yok",
+      "loadFailed": "Etkinlik yüklenemedi",
+      "placeholder": "Yorum yazın",
+      "submit": "Yorum yap",
+      "edit": "Düzenle",
+      "save": "Kaydet",
+      "cancel": "İptal",
+      "edited": "düzenlendi",
+      "statusChange": "{{from}} → {{to}} taşındı",
+      "assigned": "{{assignee}} kişisine atandı",
+      "unassigned": "Atama kaldırıldı",
+      "approved": "Onaylandı",
+      "rejected": "Reddedildi",
+      "author": {
+        "user": "Kullanıcı",
+        "agent": "Ajan",
+        "system": "Sistem"
+      }
+    },
+    "errors": {
+      "review_required": "Tamamlandı'ya taşımak veya İncelemede'den geri almak inceleme gerektirir.",
+      "backlog_not_started": "Başlamadan önce Yapılacak'a taşıyın.",
+      "plan_not_approved": "Başlamadan önce plan onaylanmalı.",
+      "agent_review_gate": "Ajan sonucu insan incelemesi gerektirir.",
+      "not_in_review": "Yalnızca incelemedeki öğeler incelenebilir.",
+      "not_allowed": "Bu taşımaya izin verilmiyor.",
+      "commentEditWindow": "Yorumlar yalnızca yazarı tarafından 15 dakika içinde düzenlenebilir.",
+      "generic": "İşlem başarısız oldu. Lütfen tekrar deneyin."
     }
   }
 }

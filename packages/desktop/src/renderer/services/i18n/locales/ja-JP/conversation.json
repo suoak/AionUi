@@ -1320,7 +1320,6 @@
     "retry": "再試行",
     "emptyColumn": "作業項目はありません",
     "showCancelled": "キャンセル済みを表示",
-    "previewNotice": "プレビュー：列は現在タスクの実行状態から推定しています。ドラッグ、割り当て、レビューはバックエンドの準備後に提供されます。",
     "noConversation": "この作業項目には関連する会話がありません",
     "columns": {
       "backlog": "バックログ",
@@ -1352,7 +1351,73 @@
       "objective": "目的",
       "acceptanceCriteria": "受け入れ基準",
       "none": "なし",
-      "openConversation": "会話を開く"
+      "openConversation": "会話を開く",
+      "priority": "優先度",
+      "assignee": "担当者",
+      "labels": "ラベル"
+    },
+    "legacyNotice": "このコアはまだボード API を提供していません。列は各タスクの実行状態から推定され、ボードは読み取り専用です。",
+    "priority": {
+      "none": "優先度なし",
+      "low": "低",
+      "medium": "中",
+      "high": "高",
+      "urgent": "緊急"
+    },
+    "assignee": {
+      "title": "担当者",
+      "none": "未割り当て",
+      "idPlaceholder": "担当者 ID",
+      "save": "割り当て",
+      "unassign": "割り当て解除",
+      "kind": {
+        "user": "ユーザー",
+        "agent": "エージェント",
+        "squad": "スクワッド"
+      }
+    },
+    "move": {
+      "title": "列へ移動",
+      "placeholder": "列を選択"
+    },
+    "review": {
+      "title": "レビュー",
+      "hint": "承認すると完了になります。差し戻す場合はコメントを入力すると「To do」に戻ります。",
+      "approve": "承認",
+      "reject": "差し戻し",
+      "commentPlaceholder": "レビューコメント（差し戻し時は必須）",
+      "rejectNeedsComment": "差し戻すにはコメントを入力してください"
+    },
+    "timeline": {
+      "title": "アクティビティ",
+      "empty": "アクティビティはまだありません",
+      "loadFailed": "アクティビティの読み込みに失敗しました",
+      "placeholder": "コメントを書く",
+      "submit": "コメント",
+      "edit": "編集",
+      "save": "保存",
+      "cancel": "キャンセル",
+      "edited": "編集済み",
+      "statusChange": "{{from}} から {{to}} へ移動",
+      "assigned": "{{assignee}} に割り当て",
+      "unassigned": "担当者を解除",
+      "approved": "承認済み",
+      "rejected": "差し戻し済み",
+      "author": {
+        "user": "ユーザー",
+        "agent": "エージェント",
+        "system": "システム"
+      }
+    },
+    "errors": {
+      "review_required": "「完了」への移動や「レビュー中」からの戻しはレビューが必要です。",
+      "backlog_not_started": "作業開始前に「To do」へ移動してください。",
+      "plan_not_approved": "作業開始前にプランの承認が必要です。",
+      "agent_review_gate": "エージェントの成果物には人によるレビューが必要です。",
+      "not_in_review": "レビュー中の項目のみレビューできます。",
+      "not_allowed": "この移動はできません。",
+      "commentEditWindow": "コメントは作成者のみ 15 分以内に編集できます。",
+      "generic": "操作に失敗しました。もう一度お試しください。"
     }
   }
 }

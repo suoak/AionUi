@@ -1320,7 +1320,6 @@
     "retry": "Retry",
     "emptyColumn": "No work items",
     "showCancelled": "Show cancelled",
-    "previewNotice": "Preview: columns are inferred from each task's run status for now. Drag, assignment and review arrive once the backend is ready.",
     "noConversation": "This work item has no linked conversation",
     "columns": {
       "backlog": "Backlog",
@@ -1352,7 +1351,73 @@
       "objective": "Objective",
       "acceptanceCriteria": "Acceptance criteria",
       "none": "None",
-      "openConversation": "Open conversation"
+      "openConversation": "Open conversation",
+      "priority": "Priority",
+      "assignee": "Assignee",
+      "labels": "Labels"
+    },
+    "legacyNotice": "This core does not provide the board API yet: columns are inferred from each task's run status and the board is read-only.",
+    "priority": {
+      "none": "No priority",
+      "low": "Low",
+      "medium": "Medium",
+      "high": "High",
+      "urgent": "Urgent"
+    },
+    "assignee": {
+      "title": "Assignee",
+      "none": "Unassigned",
+      "idPlaceholder": "Assignee ID",
+      "save": "Assign",
+      "unassign": "Unassign",
+      "kind": {
+        "user": "User",
+        "agent": "Agent",
+        "squad": "Squad"
+      }
+    },
+    "move": {
+      "title": "Move to column",
+      "placeholder": "Choose a column"
+    },
+    "review": {
+      "title": "Review",
+      "hint": "Approve to mark as done, or reject with a comment to send it back to To do.",
+      "approve": "Approve",
+      "reject": "Reject",
+      "commentPlaceholder": "Review comment (required to reject)",
+      "rejectNeedsComment": "Add a comment to reject"
+    },
+    "timeline": {
+      "title": "Activity",
+      "empty": "No activity yet",
+      "loadFailed": "Failed to load activity",
+      "placeholder": "Write a comment",
+      "submit": "Comment",
+      "edit": "Edit",
+      "save": "Save",
+      "cancel": "Cancel",
+      "edited": "edited",
+      "statusChange": "Moved from {{from}} to {{to}}",
+      "assigned": "Assigned to {{assignee}}",
+      "unassigned": "Assignee cleared",
+      "approved": "Approved",
+      "rejected": "Rejected",
+      "author": {
+        "user": "User",
+        "agent": "Agent",
+        "system": "System"
+      }
+    },
+    "errors": {
+      "review_required": "Moving to Done or back from In review goes through review.",
+      "backlog_not_started": "Move it to To do before starting work.",
+      "plan_not_approved": "The plan must be approved before work starts.",
+      "agent_review_gate": "An agent-authored result needs a human review.",
+      "not_in_review": "Only items in review can be reviewed.",
+      "not_allowed": "This move is not allowed.",
+      "commentEditWindow": "Comments can only be edited by their author within 15 minutes.",
+      "generic": "The operation failed. Please try again."
     }
   }
 }

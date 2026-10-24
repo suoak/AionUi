@@ -1320,7 +1320,6 @@
     "retry": "重试",
     "emptyColumn": "暂无工作项",
     "showCancelled": "显示已取消",
-    "previewNotice": "预览版：列暂按任务运行状态推断，拖拽、指派和评审将在后端就绪后开放。",
     "noConversation": "此工作项没有关联对话",
     "columns": {
       "backlog": "待规划",
@@ -1352,7 +1351,73 @@
       "objective": "目标",
       "acceptanceCriteria": "验收标准",
       "none": "无",
-      "openConversation": "打开对话"
+      "openConversation": "打开对话",
+      "priority": "优先级",
+      "assignee": "负责人",
+      "labels": "标签"
+    },
+    "legacyNotice": "当前内核尚未提供看板接口：列根据任务运行状态推断，看板为只读。",
+    "priority": {
+      "none": "无优先级",
+      "low": "低",
+      "medium": "中",
+      "high": "高",
+      "urgent": "紧急"
+    },
+    "assignee": {
+      "title": "负责人",
+      "none": "未指派",
+      "idPlaceholder": "负责人 ID",
+      "save": "指派",
+      "unassign": "取消指派",
+      "kind": {
+        "user": "用户",
+        "agent": "智能体",
+        "squad": "小队"
+      }
+    },
+    "move": {
+      "title": "移动到列",
+      "placeholder": "选择列"
+    },
+    "review": {
+      "title": "评审",
+      "hint": "批准后标记为完成；驳回需填写意见，并退回到待办。",
+      "approve": "批准",
+      "reject": "驳回",
+      "commentPlaceholder": "评审意见（驳回时必填）",
+      "rejectNeedsComment": "驳回前请填写意见"
+    },
+    "timeline": {
+      "title": "动态",
+      "empty": "暂无动态",
+      "loadFailed": "加载动态失败",
+      "placeholder": "写评论",
+      "submit": "评论",
+      "edit": "编辑",
+      "save": "保存",
+      "cancel": "取消",
+      "edited": "已编辑",
+      "statusChange": "从 {{from}} 移至 {{to}}",
+      "assigned": "指派给 {{assignee}}",
+      "unassigned": "已取消指派",
+      "approved": "已批准",
+      "rejected": "已驳回",
+      "author": {
+        "user": "用户",
+        "agent": "智能体",
+        "system": "系统"
+      }
+    },
+    "errors": {
+      "review_required": "移到“完成”或从“评审中”退回须经评审。",
+      "backlog_not_started": "请先移到“待办”再开始工作。",
+      "plan_not_approved": "计划获批后才能开始工作。",
+      "agent_review_gate": "智能体产出的结果需要人工评审。",
+      "not_in_review": "只有评审中的事项可以评审。",
+      "not_allowed": "不允许此移动。",
+      "commentEditWindow": "评论仅作者可在 15 分钟内编辑。",
+      "generic": "操作失败，请重试。"
     }
   }
 }

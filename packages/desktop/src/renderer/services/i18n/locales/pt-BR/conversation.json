@@ -1326,7 +1326,6 @@
     "retry": "Tentar novamente",
     "emptyColumn": "Nenhum item",
     "showCancelled": "Mostrar canceladas",
-    "previewNotice": "Prévia: por enquanto as colunas são inferidas do status de execução. Arrastar, atribuir e revisar chegam quando o backend estiver pronto.",
     "noConversation": "Este item não tem conversa vinculada",
     "columns": {
       "backlog": "Backlog",
@@ -1358,7 +1357,73 @@
       "objective": "Objetivo",
       "acceptanceCriteria": "Critérios de aceitação",
       "none": "Nenhum",
-      "openConversation": "Abrir conversa"
+      "openConversation": "Abrir conversa",
+      "priority": "Prioridade",
+      "assignee": "Responsável",
+      "labels": "Rótulos"
+    },
+    "legacyNotice": "Este núcleo ainda não oferece a API do quadro: as colunas são inferidas do status de execução e o quadro é somente leitura.",
+    "priority": {
+      "none": "Sem prioridade",
+      "low": "Baixa",
+      "medium": "Média",
+      "high": "Alta",
+      "urgent": "Urgente"
+    },
+    "assignee": {
+      "title": "Responsável",
+      "none": "Não atribuído",
+      "idPlaceholder": "ID do responsável",
+      "save": "Atribuir",
+      "unassign": "Remover atribuição",
+      "kind": {
+        "user": "Usuário",
+        "agent": "Agente",
+        "squad": "Esquadrão"
+      }
+    },
+    "move": {
+      "title": "Mover para coluna",
+      "placeholder": "Escolha uma coluna"
+    },
+    "review": {
+      "title": "Revisão",
+      "hint": "Aprovar marca como concluído; rejeitar com comentário devolve para A fazer.",
+      "approve": "Aprovar",
+      "reject": "Rejeitar",
+      "commentPlaceholder": "Comentário de revisão (obrigatório para rejeitar)",
+      "rejectNeedsComment": "Adicione um comentário para rejeitar"
+    },
+    "timeline": {
+      "title": "Atividade",
+      "empty": "Nenhuma atividade",
+      "loadFailed": "Falha ao carregar a atividade",
+      "placeholder": "Escreva um comentário",
+      "submit": "Comentar",
+      "edit": "Editar",
+      "save": "Salvar",
+      "cancel": "Cancelar",
+      "edited": "editado",
+      "statusChange": "Movido de {{from}} para {{to}}",
+      "assigned": "Atribuído a {{assignee}}",
+      "unassigned": "Atribuição removida",
+      "approved": "Aprovado",
+      "rejected": "Rejeitado",
+      "author": {
+        "user": "Usuário",
+        "agent": "Agente",
+        "system": "Sistema"
+      }
+    },
+    "errors": {
+      "review_required": "Ir para Concluído ou sair de Em revisão exige revisão.",
+      "backlog_not_started": "Mova para A fazer antes de começar.",
+      "plan_not_approved": "O plano precisa ser aprovado antes de começar.",
+      "agent_review_gate": "Um resultado de agente precisa de revisão humana.",
+      "not_in_review": "Somente itens em revisão podem ser revisados.",
+      "not_allowed": "Esta movimentação não é permitida.",
+      "commentEditWindow": "Somente o autor pode editar um comentário em até 15 minutos.",
+      "generic": "A operação falhou. Tente novamente."
     }
   }
 }
