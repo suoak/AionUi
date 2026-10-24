@@ -16,6 +16,8 @@ const TAB_OVERFLOW_THRESHOLD = 10;
 type TeamTabViewProps = {
   slot_id: string;
   assistant_name: string;
+  /** M8 E7-6: Squad role title from TeamAgentResponse.squad_role_title. */
+  squad_role_title?: string;
   assistant_backend: string;
   icon?: string;
   conversation_id?: string;
@@ -38,6 +40,7 @@ type TeamTabViewProps = {
 const TeamTabView: React.FC<TeamTabViewProps> = ({
   slot_id,
   assistant_name,
+  squad_role_title,
   assistant_backend,
   icon,
   conversation_id,
@@ -193,6 +196,15 @@ const TeamTabView: React.FC<TeamTabViewProps> = ({
               )
             }
           />
+          {squad_role_title ? (
+            <span
+              className='shrink-0 text-11px text-[color:var(--text-secondary)] whitespace-nowrap overflow-hidden text-ellipsis max-w-90px'
+              data-testid={`team-tab-role-title-${slot_id}`}
+              title={squad_role_title}
+            >
+              {squad_role_title}
+            </span>
+          ) : null}
         </div>
       )}
       {/* hover 时胶囊变宽、露出操作按钮；失焦则收起（胶囊变窄，只剩头像+文字）。拖拽期间冻结，避免布局跳动。 */}
@@ -332,6 +344,7 @@ const TeamTabs: React.FC<TeamTabsProps> = ({ onTabClick, pendingCounts, warmingU
                     key={assistant.slot_id}
                     slot_id={assistant.slot_id}
                     assistant_name={assistant.assistant_name}
+                    squad_role_title={assistant.squad_role_title}
                     assistant_backend={assistant.assistant_backend}
                     icon={assistant.icon}
                     conversation_id={assistant.conversation_id}

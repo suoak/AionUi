@@ -1,3 +1,4 @@
+import type { SquadRunPayload } from './squadRun';
 export const TASK_SESSION_MODES = ['agent', 'plan', 'goal'] as const;
 export type TaskSessionMode = (typeof TASK_SESSION_MODES)[number];
 
@@ -40,6 +41,12 @@ export type TaskBoardItem = {
   external_ref: string | null;
   created_at: number;
   updated_at: number;
+  /**
+   * M8 E7-6: linked Squad instance run state (aioncore ≥ #195). Only set for
+   * cards assigned to a Squad that has a linked instance with something to
+   * show; omitted otherwise (not null).
+   */
+  squad_run?: SquadRunPayload;
 };
 
 /** `GET /api/task-sessions/board`: always all six columns, in display order. */
@@ -104,7 +111,7 @@ export type TaskBoardRejectionReason =
   | 'not_allowed';
 
 /** What caused a `task.board.updated` event. */
-export type TaskBoardChange = 'board' | 'review';
+export type TaskBoardChange = 'board' | 'review' | 'squad_run';
 
 /** WS `task.board.updated`: the item after a successful board change. */
 export type TaskBoardUpdatedEvent = {

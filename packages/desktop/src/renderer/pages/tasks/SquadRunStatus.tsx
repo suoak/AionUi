@@ -8,27 +8,39 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button, Tag } from '@arco-design/web-react';
 import { formatRelativeTime } from '@/renderer/utils/chat/relativeTime';
+import type { SquadRunPayload } from '@/common/types/agent/squadRun';
 import { primarySquadRun, SQUAD_RUN_COLOR } from './squadRunModel';
 import { useSquadRuns } from './useSquadRuns';
 
-/** Compact card badge: the most attention-worthy run of the Squad's teams. Renders nothing when unknown. */
-export const SquadRunBadge: React.FC<{ templateId: string }> = ({ templateId }) => {
+const SquadRunBadgeTag: React.FC<{ state: SquadRunPayload['state']; extra?: number }> = ({ state, extra = 0 }) => {
   const { t } = useTranslation();
+  return (
+    <Tag size='small' color={SQUAD_RUN_COLOR[state]} data-testid='task-board-card-squad-run' data-state={state}>
+      {t(`conversation.taskBoard.squadRun.state.${state}`)}
+      {extra > 0 ? ` +${extra}` : ''}
+    </Tag>
+  );
+};
+
+/** Polling fallback when the card has no inline `squad_run` yet (older Core / no work-item link). */
+const SquadRunBadgeFromTeams: React.FC<{ templateId: string }> = ({ templateId }) => {
   const { runs } = useSquadRuns(templateId);
   const primary = primarySquadRun(runs);
   if (!primary?.run) return null;
   const extra = runs.filter((entry) => entry.run).length - 1;
-  return (
-    <Tag
-      size='small'
-      color={SQUAD_RUN_COLOR[primary.run.state]}
-      data-testid='task-board-card-squad-run'
-      data-state={primary.run.state}
-    >
-      {t(`conversation.taskBoard.squadRun.state.${primary.run.state}`)}
-      {extra > 0 ? ` +${extra}` : ''}
-    </Tag>
-  );
+  return <SquadRunBadgeTag state={primary.run.state} extra={extra} />;
+};
+
+type SquadRunBadgeProps = {
+  templateId: string;
+  /** M8 E7-6: card-inline run from TaskBoardItem.squad_run; skips the poll when set. */
+  run?: SquadRunPayload | null;
+};
+
+/** Compact card badge. Prefers an inline run; otherwise polls teams for the template. */
+export const SquadRunBadge: React.FC<SquadRunBadgeProps> = ({ templateId, run: inlineRun }) => {
+  if (inlineRun) return <SquadRunBadgeTag state={inlineRun.state} />;
+  return <SquadRunBadgeFromTeams templateId={templateId} />;
 };
 
 type SquadRunPanelProps = {

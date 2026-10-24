@@ -70,7 +70,9 @@ const TaskBoardCard: React.FC<TaskBoardCardProps> = ({ task, onOpen, dragging = 
             {t(`conversation.taskBoard.assignee.kind.${task.assignee.kind}`)}: {task.assignee.id}
           </Tag>
         ) : null}
-        {task.assignee?.kind === 'squad' && task.assignee.id ? <SquadRunBadge templateId={task.assignee.id} /> : null}
+        {task.assignee?.kind === 'squad' && task.assignee.id ? (
+          <SquadRunBadge templateId={task.assignee.id} run={task.squad_run} />
+        ) : null}
         {task.labels.map((label) => (
           <Tag key={label} size='small' color='purple'>
             {label}

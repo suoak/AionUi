@@ -15,6 +15,7 @@ import type {
   WorkspaceMode,
 } from '../types/team/teamTypes';
 import { normalizeLegacyBrandText } from '../utils/utils';
+import { toSquadRunPayload } from '@/common/types/agent/squadRun';
 
 // ── Parameter types for team API calls ─────────────────────────────────
 
@@ -118,6 +119,7 @@ export function fromBackendAssistant(raw: unknown): TeamAssistant {
     model: r.model as string | undefined,
     pending_confirmations: (r.pending_confirmations ?? r.pendingConfirmations ?? 0) as number,
     context_reset: toContextResetCapability(r.context_reset),
+    ...(typeof r.squad_role_title === 'string' && r.squad_role_title ? { squad_role_title: r.squad_role_title } : {}),
   };
 }
 
@@ -145,6 +147,13 @@ export function fromBackendTeam(raw: unknown): TTeam {
     ...(typeof r.squad_template_id === 'string' && r.squad_template_id
       ? { squad_template_id: r.squad_template_id }
       : {}),
+    ...(typeof r.squad_leader_mode === 'string' && r.squad_leader_mode
+      ? { squad_leader_mode: r.squad_leader_mode }
+      : {}),
+    ...(() => {
+      const run = toSquadRunPayload(r.squad_run);
+      return run ? { squad_run: run } : {};
+    })(),
     created_at: (r.created_at as number | undefined) ?? 0,
     updated_at: (r.updated_at as number | undefined) ?? 0,
   };

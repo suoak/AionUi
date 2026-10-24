@@ -58,6 +58,25 @@ describe('SquadRunStatus', () => {
     expect(bridge.team.getSquadRun.invoke).not.toHaveBeenCalledWith({ team_id: 't3' });
   });
 
+  it('badge prefers an inline run and skips the squad-run poll', async () => {
+    bridge.team.list.invoke.mockResolvedValue([{ id: 't1', name: 'A', squad_template_id: 'sq1', updated_at: 1 }]);
+    wrap(
+      <SquadRunBadge
+        templateId='sq1'
+        run={{
+          team_id: 't1',
+          state: 'paused',
+          leader_conversation_id: null,
+          leader_mode: 'route_only',
+          updated_at: 42,
+        }}
+      />
+    );
+    const badge = await screen.findByTestId('task-board-card-squad-run');
+    expect(badge.getAttribute('data-state')).toBe('paused');
+    expect(bridge.team.getSquadRun.invoke).not.toHaveBeenCalled();
+  });
+
   it('badge renders nothing when no team was instantiated from the squad', async () => {
     bridge.team.list.invoke.mockResolvedValue([{ id: 't9', squad_template_id: 'other' }]);
     const { container } = wrap(<SquadRunBadge templateId='sq1' />);

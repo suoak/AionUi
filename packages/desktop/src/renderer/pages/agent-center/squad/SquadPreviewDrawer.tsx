@@ -152,6 +152,11 @@ const SquadPreviewDrawer: React.FC<Props> = ({ visible, squad, onClose }) => {
                   <Tag size='small' color={p.role === 'lead' ? 'arcoblue' : 'gray'}>
                     {t(`agent.agentCenter.squad.preview.role.${p.role === 'lead' ? 'lead' : 'teammate'}`)}
                   </Tag>
+                  {p.role_title ? (
+                    <Tag size='small' data-testid='squad-preview-role-title'>
+                      {p.role_title}
+                    </Tag>
+                  ) : null}
                   <span className='font-medium'>{p.agent_name}</span>
                   <Text type='secondary' className='text-12px'>
                     {p.assistant.name || p.assistant_id}

@@ -167,7 +167,11 @@ const TeamWarmupOverlay: React.FC<Props> = ({ phase, assistants, runtimeStatus, 
                   >
                     <span className='shrink-0 font-600' style={{ color: 'var(--danger)' }}>
                       {m.assistant.assistant_name}
-                      {m.assistant.role === 'leader' ? t('team.warmup.leaderSuffix', { defaultValue: ' (Lead)' }) : ''}
+                      {m.assistant.squad_role_title
+                        ? ` · ${m.assistant.squad_role_title}`
+                        : m.assistant.role === 'leader'
+                          ? t('team.warmup.leaderSuffix', { defaultValue: ' (Lead)' })
+                          : ''}
                     </span>
                     <span className='min-w-0 break-words' style={{ color: 'var(--danger)' }}>
                       {simplifyWarmupError(m.error) ??
