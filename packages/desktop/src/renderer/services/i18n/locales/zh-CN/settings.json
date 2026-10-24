@@ -1313,6 +1313,22 @@
         "source_address_blocked": "不允许访问该地址",
         "forbidden": "你没有权限执行此操作",
         "generic": "操作失败，请重试"
+      },
+      "import": {
+        "open": "从来源导入",
+        "title": "从来源导入技能",
+        "submit": "导入",
+        "kindGit": "Git 仓库",
+        "kindUrl": "URL",
+        "kindLocal": "本地目录",
+        "urlPlaceholder": "https://…（仅支持 https）",
+        "localPlaceholder": "本地目录的绝对路径",
+        "refPlaceholder": "分支 / 标签 / commit（可选）",
+        "subpathPlaceholder": "子目录（可选）",
+        "hint": "不含脚本的技能导入后即可使用；含脚本的技能会进入待审核，批准前不会启用。",
+        "locatorRequired": "请填写来源地址",
+        "localAbsolute": "本地路径必须是绝对路径",
+        "done": "已导入 {{count}} 个技能，其中 {{pending}} 个待审核"
       }
     }
   },

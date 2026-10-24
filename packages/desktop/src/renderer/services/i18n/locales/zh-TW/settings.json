@@ -1315,6 +1315,22 @@
         "source_address_blocked": "不允許存取此位址",
         "forbidden": "你沒有權限執行此操作",
         "generic": "操作失敗，請重試"
+      },
+      "import": {
+        "open": "從來源匯入",
+        "title": "從來源匯入技能",
+        "submit": "匯入",
+        "kindGit": "Git 儲存庫",
+        "kindUrl": "URL",
+        "kindLocal": "本機目錄",
+        "urlPlaceholder": "https://…（僅支援 https）",
+        "localPlaceholder": "本機目錄的絕對路徑",
+        "refPlaceholder": "分支 / 標籤 / commit（選填）",
+        "subpathPlaceholder": "子目錄（選填）",
+        "hint": "不含腳本的技能匯入後即可使用；含腳本的技能會進入待審核，核准前不會啟用。",
+        "locatorRequired": "請填寫來源位址",
+        "localAbsolute": "本機路徑必須是絕對路徑",
+        "done": "已匯入 {{count}} 個技能，其中 {{pending}} 個待審核"
       }
     }
   },

@@ -15,6 +15,7 @@ const fsMock = vi.hoisted(() => ({
   getSkillSourceDetail: { invoke: vi.fn() },
   refreshSkillFromSource: { invoke: vi.fn() },
   reviewSkill: { invoke: vi.fn() },
+  importSkillsFromSource: { invoke: vi.fn() },
 }));
 const arco = vi.hoisted(() => ({ confirm: vi.fn(), success: vi.fn(), error: vi.fn(), info: vi.fn() }));
 
@@ -32,7 +33,11 @@ vi.mock('@arco-design/web-react', async (orig) => {
 });
 
 import SkillReviewQueue from '@/renderer/pages/settings/SkillsSettings/SkillReviewQueue';
-import { isUntrustedSource, skillReviewErrorKey } from '@/renderer/pages/settings/SkillsSettings/skillReviewModel';
+import {
+  isUntrustedSource,
+  skillReviewErrorKey,
+  validateImportLocator,
+} from '@/renderer/pages/settings/SkillsSettings/skillReviewModel';
 
 const pending = {
   skill_id: 's1',
@@ -134,7 +139,48 @@ describe('SkillReviewQueue', () => {
   });
 });
 
+describe('SkillSourceImportModal', () => {
+  it('blocks a non-https address before calling the backend', async () => {
+    renderQueue();
+    fireEvent.click(await screen.findByTestId('skill-source-import-open'));
+    const input = (await screen.findByTestId('skill-source-import-locator')) as HTMLInputElement;
+    fireEvent.change(input, { target: { value: 'http://example.com/repo.git' } });
+    fireEvent.click(screen.getByText('settings.skillsHub.review.import.submit'));
+    expect((await screen.findByTestId('skill-source-import-error')).textContent).toBe(
+      'settings.skillsHub.review.errors.source_url_invalid'
+    );
+    expect(fsMock.importSkillsFromSource.invoke).not.toHaveBeenCalled();
+  });
+
+  it('imports a git source and refreshes the queue', async () => {
+    fsMock.importSkillsFromSource.invoke.mockResolvedValue({
+      imported: [{ skill: pending, source: detail.source, version: detail.versions[0], changed: true }],
+    });
+    renderQueue();
+    fireEvent.click(await screen.findByTestId('skill-source-import-open'));
+    const input = await screen.findByTestId('skill-source-import-locator');
+    fireEvent.change(input, { target: { value: ' https://example.com/repo.git ' } });
+    fireEvent.click(screen.getByText('settings.skillsHub.review.import.submit'));
+    await waitFor(() =>
+      expect(fsMock.importSkillsFromSource.invoke).toHaveBeenCalledWith({
+        kind: 'git',
+        locator: 'https://example.com/repo.git',
+      })
+    );
+    await waitFor(() => expect(fsMock.listPendingSkillReviews.invoke).toHaveBeenCalledTimes(2));
+  });
+});
+
 describe('skillReviewModel', () => {
+  it('validates import locators like the backend', () => {
+    expect(validateImportLocator('url', '')).toBe('settings.skillsHub.review.import.locatorRequired');
+    expect(validateImportLocator('git', 'file:///etc')).toBe('settings.skillsHub.review.errors.source_url_invalid');
+    expect(validateImportLocator('git', 'https://x.dev/a.git')).toBeNull();
+    expect(validateImportLocator('local', 'rel/dir')).toBe('settings.skillsHub.review.import.localAbsolute');
+    expect(validateImportLocator('local', '/home/u/skills')).toBeNull();
+    expect(validateImportLocator('local', 'C:\\skills')).toBeNull();
+  });
+
   it('treats anything not explicitly trusted as untrusted', () => {
     expect(isUntrustedSource(null)).toBe(false);
     expect(isUntrustedSource({ ...detail.source, trust: 'trusted' })).toBe(false);

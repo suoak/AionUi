@@ -1316,6 +1316,22 @@
         "source_address_blocked": "Este endereço não é permitido",
         "forbidden": "Você não tem permissão para fazer isso",
         "generic": "Algo deu errado, tente novamente"
+      },
+      "import": {
+        "open": "Importar de fonte",
+        "title": "Importar habilidades de uma fonte",
+        "submit": "Importar",
+        "kindGit": "Repositório Git",
+        "kindUrl": "URL",
+        "kindLocal": "Pasta local",
+        "urlPlaceholder": "https://… (somente https)",
+        "localPlaceholder": "Caminho absoluto de uma pasta local",
+        "refPlaceholder": "Branch / tag / commit (opcional)",
+        "subpathPlaceholder": "Subpasta (opcional)",
+        "hint": "Habilidades sem scripts ficam disponíveis logo após a importação; as que têm scripts vão para a fila de revisão e ficam desativadas até serem aprovadas.",
+        "locatorRequired": "Informe um endereço de fonte",
+        "localAbsolute": "O caminho local deve ser absoluto",
+        "done": "{{count}} habilidade(s) importada(s), {{pending}} aguardando revisão"
       }
     }
   },

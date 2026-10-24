@@ -1315,6 +1315,22 @@
         "source_address_blocked": "이 주소에는 접근할 수 없습니다",
         "forbidden": "이 작업을 수행할 권한이 없습니다",
         "generic": "문제가 발생했습니다. 다시 시도하세요"
+      },
+      "import": {
+        "open": "소스에서 가져오기",
+        "title": "소스에서 스킬 가져오기",
+        "submit": "가져오기",
+        "kindGit": "Git 저장소",
+        "kindUrl": "URL",
+        "kindLocal": "로컬 폴더",
+        "urlPlaceholder": "https://… (https만 지원)",
+        "localPlaceholder": "로컬 폴더의 절대 경로",
+        "refPlaceholder": "브랜치 / 태그 / 커밋(선택)",
+        "subpathPlaceholder": "하위 폴더(선택)",
+        "hint": "스크립트가 없는 스킬은 가져온 즉시 사용할 수 있으며, 스크립트가 있는 스킬은 검토 대기열로 이동하고 승인 전까지 비활성 상태입니다.",
+        "locatorRequired": "소스 주소를 입력하세요",
+        "localAbsolute": "로컬 경로는 절대 경로여야 합니다",
+        "done": "스킬 {{count}}개를 가져왔으며 그중 {{pending}}개가 검토 대기 중입니다"
       }
     }
   },

@@ -57,3 +57,14 @@ export type SkillSourceSyncResult = {
 
 /** Only a human decision; there is deliberately no auto-apply variant. */
 export type SkillReviewDecision = 'approve' | 'reject';
+
+export type SkillSourceImportKind = 'url' | 'git' | 'local';
+
+export type SkillSourceImportRequest = {
+  kind: SkillSourceImportKind;
+  /** https URL (url / git) or an absolute local directory (local). */
+  locator: string;
+  ref?: string;
+  subpath?: string;
+  origin_app?: 'claude' | 'codex';
+};

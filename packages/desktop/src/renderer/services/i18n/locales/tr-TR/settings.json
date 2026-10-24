@@ -1313,6 +1313,22 @@
         "source_address_blocked": "Bu adrese izin verilmiyor",
         "forbidden": "Bunu yapmaya yetkiniz yok",
         "generic": "Bir sorun oluştu, lütfen tekrar deneyin"
+      },
+      "import": {
+        "open": "Kaynaktan içe aktar",
+        "title": "Bir kaynaktan beceri içe aktar",
+        "submit": "İçe aktar",
+        "kindGit": "Git deposu",
+        "kindUrl": "URL",
+        "kindLocal": "Yerel klasör",
+        "urlPlaceholder": "https://… (yalnızca https)",
+        "localPlaceholder": "Yerel klasörün mutlak yolu",
+        "refPlaceholder": "Dal / etiket / commit (isteğe bağlı)",
+        "subpathPlaceholder": "Alt klasör (isteğe bağlı)",
+        "hint": "Betik içermeyen beceriler içe aktarıldıktan hemen sonra kullanılabilir; betik içerenler inceleme kuyruğuna girer ve onaylanana kadar devre dışı kalır.",
+        "locatorRequired": "Bir kaynak adresi girin",
+        "localAbsolute": "Yerel yol mutlak olmalıdır",
+        "done": "{{count}} beceri içe aktarıldı, {{pending}} tanesi inceleme bekliyor"
       }
     }
   },

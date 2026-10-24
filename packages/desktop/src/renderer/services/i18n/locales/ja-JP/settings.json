@@ -1315,6 +1315,22 @@
         "source_address_blocked": "このアドレスへのアクセスは許可されていません",
         "forbidden": "この操作を行う権限がありません",
         "generic": "エラーが発生しました。もう一度お試しください"
+      },
+      "import": {
+        "open": "ソースからインポート",
+        "title": "ソースからスキルをインポート",
+        "submit": "インポート",
+        "kindGit": "Git リポジトリ",
+        "kindUrl": "URL",
+        "kindLocal": "ローカルフォルダー",
+        "urlPlaceholder": "https://…（https のみ）",
+        "localPlaceholder": "ローカルフォルダーの絶対パス",
+        "refPlaceholder": "ブランチ / タグ / コミット（任意）",
+        "subpathPlaceholder": "サブフォルダー（任意）",
+        "hint": "スクリプトを含まないスキルはインポート後すぐに使えます。スクリプトを含むスキルは審査待ちになり、承認されるまで有効になりません。",
+        "locatorRequired": "ソースアドレスを入力してください",
+        "localAbsolute": "ローカルパスは絶対パスである必要があります",
+        "done": "{{count}} 件のスキルをインポートしました（うち {{pending}} 件が審査待ち）"
       }
     }
   },

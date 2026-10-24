@@ -14,6 +14,7 @@ import { Alert, Button, Empty, Message, Modal, Spin, Tag } from '@arco-design/we
 import React, { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import useSWR from 'swr';
+import SkillSourceImportModal from './SkillSourceImportModal';
 import { isUntrustedSource, latestHasScripts, skillReviewErrorKey } from './skillReviewModel';
 
 export const PENDING_SKILL_REVIEWS_KEY = 'skills.reviews.pending';
@@ -75,6 +76,7 @@ const SkillReviewQueue: React.FC = () => {
   );
   const [expanded, setExpanded] = useState<string | null>(null);
   const [busy, setBusy] = useState<string | null>(null);
+  const [importOpen, setImportOpen] = useState(false);
 
   const decide = useCallback(
     async (skill: SkillGovernance, decision: SkillReviewDecision) => {
@@ -143,6 +145,16 @@ const SkillReviewQueue: React.FC = () => {
   return (
     <div className='flex flex-col gap-12px' data-testid='skill-review-queue'>
       <Alert type='warning' content={t('settings.skillsHub.review.intro')} />
+      <div>
+        <Button size='small' onClick={() => setImportOpen(true)} data-testid='skill-source-import-open'>
+          {t('settings.skillsHub.review.import.open')}
+        </Button>
+      </div>
+      <SkillSourceImportModal
+        visible={importOpen}
+        onClose={() => setImportOpen(false)}
+        onImported={() => void mutate()}
+      />
       {items.length === 0 ? (
         <Empty description={t('settings.skillsHub.review.empty')} />
       ) : (

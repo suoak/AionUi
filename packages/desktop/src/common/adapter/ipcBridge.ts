@@ -16,6 +16,7 @@ import type {
   SkillGovernance,
   SkillReviewDecision,
   SkillSourceDetail,
+  SkillSourceImportRequest,
   SkillSourceSyncResult,
 } from '@/common/types/skills/skillSources';
 import type { IConfirmation } from '@/common/chat/chatLib';
@@ -1830,6 +1831,9 @@ export const fs = {
   detectCommonSkillPaths: httpGet<Array<{ name: string; path: string }>, void>('/api/skills/detect-paths'),
   // M8 E10: skill sources / versions / script review gate (aioncore #187).
   listPendingSkillReviews: httpGet<SkillGovernance[], void>('/api/skills/reviews/pending'),
+  importSkillsFromSource: httpPost<{ imported: SkillSourceSyncResult[] }, SkillSourceImportRequest>(
+    '/api/skills/sources/import'
+  ),
   getSkillSourceDetail: httpGet<SkillSourceDetail, { skill_id: string }>(
     (p) => `/api/skills/id/${encodeURIComponent(p.skill_id)}/source`
   ),

@@ -1313,6 +1313,22 @@
         "source_address_blocked": "This address is not allowed",
         "forbidden": "You do not have permission to do this",
         "generic": "Something went wrong, please try again"
+      },
+      "import": {
+        "open": "Import from source",
+        "title": "Import skills from a source",
+        "submit": "Import",
+        "kindGit": "Git repository",
+        "kindUrl": "URL",
+        "kindLocal": "Local folder",
+        "urlPlaceholder": "https://… (https only)",
+        "localPlaceholder": "Absolute path of a local folder",
+        "refPlaceholder": "Branch / tag / commit (optional)",
+        "subpathPlaceholder": "Subfolder (optional)",
+        "hint": "Skills without scripts are usable right after import; skills with scripts go to the review queue and stay disabled until approved.",
+        "locatorRequired": "Enter a source address",
+        "localAbsolute": "The local path must be absolute",
+        "done": "Imported {{count}} skill(s), {{pending}} waiting for review"
       }
     }
   },

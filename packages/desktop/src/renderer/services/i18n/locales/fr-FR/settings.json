@@ -1313,6 +1313,22 @@
         "source_address_blocked": "Cette adresse n’est pas autorisée",
         "forbidden": "Vous n’avez pas l’autorisation de faire cela",
         "generic": "Une erreur est survenue, veuillez réessayer"
+      },
+      "import": {
+        "open": "Importer depuis une source",
+        "title": "Importer des compétences depuis une source",
+        "submit": "Importer",
+        "kindGit": "Dépôt Git",
+        "kindUrl": "URL",
+        "kindLocal": "Dossier local",
+        "urlPlaceholder": "https://… (https uniquement)",
+        "localPlaceholder": "Chemin absolu d’un dossier local",
+        "refPlaceholder": "Branche / tag / commit (facultatif)",
+        "subpathPlaceholder": "Sous-dossier (facultatif)",
+        "hint": "Les compétences sans script sont utilisables dès l’import ; celles avec scripts rejoignent la file de vérification et restent désactivées jusqu’à approbation.",
+        "locatorRequired": "Saisissez une adresse de source",
+        "localAbsolute": "Le chemin local doit être absolu",
+        "done": "{{count}} compétence(s) importée(s), {{pending}} en attente de vérification"
       }
     }
   },

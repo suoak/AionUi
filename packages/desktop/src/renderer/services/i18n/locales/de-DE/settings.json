@@ -1313,6 +1313,22 @@
         "source_address_blocked": "Diese Adresse ist nicht erlaubt",
         "forbidden": "Dazu fehlt dir die Berechtigung",
         "generic": "Etwas ist schiefgelaufen, bitte erneut versuchen"
+      },
+      "import": {
+        "open": "Aus Quelle importieren",
+        "title": "Skills aus einer Quelle importieren",
+        "submit": "Importieren",
+        "kindGit": "Git-Repository",
+        "kindUrl": "URL",
+        "kindLocal": "Lokaler Ordner",
+        "urlPlaceholder": "https://… (nur https)",
+        "localPlaceholder": "Absoluter Pfad eines lokalen Ordners",
+        "refPlaceholder": "Branch / Tag / Commit (optional)",
+        "subpathPlaceholder": "Unterordner (optional)",
+        "hint": "Skills ohne Skripte sind nach dem Import sofort nutzbar; Skills mit Skripten landen in der Prüfwarteschlange und bleiben bis zur Freigabe deaktiviert.",
+        "locatorRequired": "Gib eine Quelladresse ein",
+        "localAbsolute": "Der lokale Pfad muss absolut sein",
+        "done": "{{count}} Skill(s) importiert, {{pending}} warten auf Prüfung"
       }
     }
   },
