@@ -41,7 +41,7 @@ const visibilityLabel: Record<string, string> = {
 const gateModeLabel: Record<string, string> = {
   human_only: '仅人工审核（默认）',
   heuristic_assist: '启发式辅助提交',
-  auto_apply_on_pass: '高分自动应用（危险）',
+  auto_apply_on_pass: '高分自动应用（危险，含脚本技能除外）',
 };
 
 type Filter = 'all' | 'pending_review' | 'draft' | 'approved' | 'applied' | 'rejected' | 'experience' | 'settings';
@@ -344,7 +344,7 @@ const SkillEvolutionListPage: React.FC = () => {
         <div className='mt-16px max-w-720px flex flex-col gap-16px'>
           <Text type='secondary' className='text-12px'>
             默认「仅人工审核」。启发式分数仅作建议；「自动应用」需显式开启，高分通过后仍写
-            skill_impact，并可一键回滚。经验库永不注入日常对话。
+            skill_impact，并可一键回滚。含脚本的技能一律人工审核，任何模式下都不会自动应用。经验库永不注入日常对话。
           </Text>
           {!settings && loading ? <Text type='secondary'>加载中…</Text> : null}
           {settings ? (
@@ -358,7 +358,7 @@ const SkillEvolutionListPage: React.FC = () => {
                   onChange={(v) => {
                     if (v === 'auto_apply_on_pass') {
                       messageRef.current.warning(
-                        '警告：自动应用会在高分时跳过人工点击通过/写入。请确认企业策略允许，并保留回滚习惯。'
+                        '警告：自动应用会在高分时跳过人工点击通过/写入（含脚本的技能除外，始终需人工审核）。请确认企业策略允许，并保留回滚习惯。'
                       );
                     }
                     void saveSettings({ gate_mode: v });
