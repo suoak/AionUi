@@ -12,6 +12,7 @@ import {
   SQUAD_NAME_MAX,
   SQUAD_ROLE_DESCRIPTION_MAX,
   SQUAD_ROLE_TITLE_MAX,
+  type SquadPreview,
   type SquadTemplate,
   type SquadTemplateInput,
 } from '@/common/types/agent/squad';
@@ -33,6 +34,8 @@ const KNOWN_ERRORS = new Set([
   'squad_in_use',
   'squad_store_failed',
   'squad_assistant_catalog_unavailable',
+  'squad_instantiate_unavailable',
+  'squad_spawn_forbidden',
 ]);
 
 /** Squad routes put the specific reason in `code`; fall back to the `code:` message prefix. */
@@ -117,3 +120,17 @@ export const squadIneligibleAssistantId = (error: unknown): string | null => {
   const id = (error.details as { assistant_id?: unknown } | null | undefined)?.assistant_id;
   return typeof id === 'string' ? id : null;
 };
+
+/** Known preview blocker codes get a specific message; anything else falls back to generic. */
+const KNOWN_BLOCKERS = new Set(['squad_assistant_not_eligible', 'squad_team_visibility_unavailable']);
+
+export type SquadBlockerView = { key: string; assistantName?: string };
+
+/** Human-facing blockers for a preview, resolving assistant ids to names where possible. */
+export const squadPreviewBlockers = (preview: SquadPreview): SquadBlockerView[] =>
+  preview.blocking.map((b) => {
+    const key = `agent.agentCenter.squad.preview.blockers.${KNOWN_BLOCKERS.has(b.code) ? b.code : 'generic'}`;
+    if (!b.assistant_id) return { key };
+    const p = preview.participants.find((x) => x.assistant_id === b.assistant_id);
+    return { key, assistantName: p?.assistant.name || b.assistant_id };
+  });

@@ -206,7 +206,13 @@ import type { AgentMetadata } from '@/renderer/utils/model/agentTypes';
 import type { Theme } from '@/common/theme/types';
 import type { AttachFolderRequest, ProjectDetailDto, ProjectEntryDto } from '@/common/types/project';
 import type { ChatFileRef, ContentEncoding } from '@/common/types/chatFile';
-import type { SquadTemplate, SquadTemplateInput, SquadTemplatePatch } from '@/common/types/agent/squad';
+import type {
+  SquadInstantiateInput,
+  SquadPreview,
+  SquadTemplate,
+  SquadTemplateInput,
+  SquadTemplatePatch,
+} from '@/common/types/agent/squad';
 import type { ProtocolDetectionRequest, ProtocolDetectionResponse } from '../utils/protocolDetector';
 import { normalizeLegacyBrandText } from '../utils/utils';
 import {
@@ -3530,6 +3536,14 @@ export const squads = {
   ),
   remove: httpDelete<{ id: string; deleted_at: number }, { id: string }>(
     (p) => `/api/squads/${encodeURIComponent(p.id)}`
+  ),
+  preview: httpGet<SquadPreview, { id: string }>((p) => `/api/squads/${encodeURIComponent(p.id)}/preview`),
+  instantiate: withResponseMap(
+    httpPost<{ squad_template_id: string; team: unknown }, { id: string; input: SquadInstantiateInput }>(
+      (p) => `/api/squads/${encodeURIComponent(p.id)}/instantiate`,
+      (p) => p.input
+    ),
+    (res) => ({ squad_template_id: res.squad_template_id, team: fromBackendTeam(res.team) })
   ),
 };
 

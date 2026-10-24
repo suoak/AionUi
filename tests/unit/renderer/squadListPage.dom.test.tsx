@@ -13,6 +13,8 @@ import { BackendHttpError } from '@/common/adapter/httpBridge';
 const bridge = vi.hoisted(() => ({
   squads: {
     list: { invoke: vi.fn() },
+    preview: { invoke: vi.fn() },
+    instantiate: { invoke: vi.fn() },
     create: { invoke: vi.fn() },
     update: { invoke: vi.fn() },
     remove: { invoke: vi.fn() },
@@ -23,6 +25,7 @@ const arco = vi.hoisted(() => ({ error: vi.fn(), success: vi.fn(), warning: vi.f
 const navigate = vi.hoisted(() => vi.fn());
 
 vi.mock('@/common', () => ({ ipcBridge: bridge }));
+vi.mock('@renderer/hooks/context/AuthContext', () => ({ useAuth: () => ({ user: { id: 'u1' } }) }));
 vi.mock('react-i18next', () => ({
   useTranslation: () => ({
     t: (key: string, opts?: Record<string, unknown>) => (opts ? `${key}:${JSON.stringify(opts)}` : key),
@@ -183,5 +186,21 @@ describe('SquadListPage', () => {
     await arco.confirm.mock.calls[0][0].onOk();
     expect(bridge.squads.remove.invoke).toHaveBeenCalledWith({ id: 'sq1' });
     await waitFor(() => expect(arco.error).toHaveBeenCalledWith('agent.agentCenter.squad.inUseCount:{"count":2}'));
+  });
+
+  it('opens the preview drawer from a card', async () => {
+    bridge.squads.list.invoke.mockResolvedValue([squad()]);
+    bridge.squads.preview.invoke.mockResolvedValue({
+      squad_template_id: 'sq1',
+      name: 'Research',
+      leader_mode: 'route_only',
+      participants: [],
+      can_instantiate: true,
+      blocking: [],
+    });
+    renderPage();
+    fireEvent.click(await screen.findByTestId('squad-preview-open'));
+    expect(await screen.findByTestId('squad-preview')).toBeTruthy();
+    await waitFor(() => expect(bridge.squads.preview.invoke).toHaveBeenCalledWith({ id: 'sq1' }));
   });
 });

@@ -7,6 +7,7 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import React from 'react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { BackendHttpError } from '@/common/adapter/httpBridge';
 
 const addAssistantMock = vi.fn();
 const switchTabMock = vi.fn();
@@ -228,6 +229,29 @@ describe('TeamAddMemberPopover', () => {
 
     await waitFor(() => expect(messageErrorMock).toHaveBeenCalled());
     expect(screen.getAllByTestId('team-add-member-option-writer')).toHaveLength(2);
+    expect(switchTabMock).not.toHaveBeenCalled();
+  });
+
+  it('explains the fixed roster when a Squad team refuses new members', async () => {
+    addAssistantMock.mockRejectedValueOnce(
+      new BackendHttpError({
+        method: 'POST',
+        path: '/api/teams/t1/agents',
+        status: 403,
+        body: { success: false, error: 'squad_spawn_forbidden: fixed roster', code: 'squad_spawn_forbidden' },
+      })
+    );
+    render(
+      <TeamAddMemberPopover>
+        <button type='button'>add</button>
+      </TeamAddMemberPopover>
+    );
+
+    fireEvent.click(screen.getAllByTestId('team-add-member-option-writer')[0]);
+
+    await waitFor(() =>
+      expect(messageErrorMock).toHaveBeenCalledWith('agent.agentCenter.squad.errors.squad_spawn_forbidden')
+    );
     expect(switchTabMock).not.toHaveBeenCalled();
   });
 

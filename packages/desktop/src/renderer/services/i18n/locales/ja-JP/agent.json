@@ -291,7 +291,30 @@
         "squad_store_failed": "Squad の保存に失敗しました。もう一度お試しください。",
         "squad_assistant_catalog_unavailable": "アシスタント一覧が一時的に利用できません。しばらくしてからお試しください。",
         "forbidden": "この操作を行う権限がありません。",
-        "generic": "エラーが発生しました。もう一度お試しください。"
+        "generic": "エラーが発生しました。もう一度お試しください。",
+        "squad_instantiate_unavailable": "現在 Squad からチームを作成できません",
+        "squad_spawn_forbidden": "Squad チームの構成は固定のため、エージェントを追加できません"
+      },
+      "previewAction": "プレビューしてチームを作成",
+      "preview": {
+        "title": "Squad プレビュー：{{name}}",
+        "instantiate": "チームを作成",
+        "created": "チーム「{{name}}」を作成しました",
+        "fixedRoster": "Squad チームのメンバー構成は固定です。Leader を含むどのメンバーもエージェントを生成・追加できません。",
+        "ineligible": "利用不可",
+        "maxParallel": "最大並列タスク数：{{count}}",
+        "teamTools": "Leader が保持するチームツール：",
+        "noTools": "なし",
+        "teamName": "チーム名",
+        "role": {
+          "lead": "Leader",
+          "teammate": "メンバー"
+        },
+        "blockers": {
+          "squad_assistant_not_eligible": "{{name}} はチームで利用できなくなりました",
+          "squad_team_visibility_unavailable": "チーム公開範囲はまだ利用できません",
+          "generic": "この Squad は現在インスタンス化できません"
+        }
       }
     }
   },
