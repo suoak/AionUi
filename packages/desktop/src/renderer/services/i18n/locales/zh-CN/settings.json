@@ -1339,6 +1339,12 @@
         "evolution": "自动进化"
       },
       "importNeedsReview": "{{count}} 个导入的技能含脚本，需要在「待审核」中批准后才能使用：{{names}}"
+    },
+    "sourceSection": {
+      "title": "来源与版本",
+      "checkUpdate": "检查更新",
+      "updated": "已更新到新版本",
+      "movedToReview": "更新包含脚本变更，技能已移入「待审核」，批准前不可用"
     }
   },
   "assistant.connectionFailed": "连接失败",

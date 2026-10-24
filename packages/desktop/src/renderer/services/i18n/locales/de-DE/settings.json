@@ -1339,6 +1339,12 @@
         "evolution": "Auto-Evolution"
       },
       "importNeedsReview": "{{count}} importierte(r) Skill(s) enthalten Skripte und müssen unter „Prüfung ausstehend“ freigegeben werden: {{names}}"
+    },
+    "sourceSection": {
+      "title": "Quelle & Versionen",
+      "checkUpdate": "Nach Update suchen",
+      "updated": "Auf eine neue Version aktualisiert",
+      "movedToReview": "Das Update ändert Skripte; der Skill wurde in „Prüfung ausstehend“ verschoben und ist bis zur Freigabe nicht verfügbar"
     }
   },
   "assistant.connectionFailed": "Verbindung fehlgeschlagen",

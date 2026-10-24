@@ -1341,6 +1341,12 @@
         "evolution": "自動進化"
       },
       "importNeedsReview": "{{count}} 個匯入的技能含腳本，需要在「待審核」中核准後才能使用：{{names}}"
+    },
+    "sourceSection": {
+      "title": "來源與版本",
+      "checkUpdate": "檢查更新",
+      "updated": "已更新到新版本",
+      "movedToReview": "更新包含腳本變更，技能已移入「待審核」，核准前無法使用"
     }
   },
   "assistant.connectionFailed": "Connection failed",

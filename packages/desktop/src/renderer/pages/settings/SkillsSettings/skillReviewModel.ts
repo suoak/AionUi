@@ -16,6 +16,12 @@ import type {
 export const isUntrustedSource = (source: SkillSource | null | undefined): boolean =>
   !!source && source.trust !== 'trusted';
 
+/** Kinds Core can re-fetch (registry sources are not refreshable). */
+const REFRESHABLE_KINDS = new Set(['url', 'git', 'local_snapshot']);
+
+export const isRefreshableSource = (source: SkillSource | null | undefined): boolean =>
+  !!source && REFRESHABLE_KINDS.has(source.kind);
+
 /** Whether the newest version carries executable scripts. */
 export const latestHasScripts = (detail: SkillSourceDetail | undefined): boolean => !!detail?.versions[0]?.has_scripts;
 

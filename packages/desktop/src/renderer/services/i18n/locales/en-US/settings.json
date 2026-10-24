@@ -1339,6 +1339,12 @@
         "evolution": "Auto-evolution"
       },
       "importNeedsReview": "{{count}} imported skill(s) contain scripts and must be approved under Pending review before use: {{names}}"
+    },
+    "sourceSection": {
+      "title": "Source & versions",
+      "checkUpdate": "Check for update",
+      "updated": "Updated to a new version",
+      "movedToReview": "The update changes scripts, so the skill moved to Pending review and is unavailable until approved"
     }
   },
   "assistant.connectionFailed": "Connection failed",
