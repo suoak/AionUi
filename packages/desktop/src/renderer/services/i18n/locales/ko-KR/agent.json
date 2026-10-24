@@ -293,7 +293,8 @@
         "forbidden": "이 작업을 수행할 권한이 없습니다.",
         "generic": "문제가 발생했습니다. 다시 시도하세요.",
         "squad_instantiate_unavailable": "지금은 Squad에서 팀을 만들 수 없습니다",
-        "squad_spawn_forbidden": "Squad 팀은 구성원이 고정되어 에이전트를 추가할 수 없습니다"
+        "squad_spawn_forbidden": "Squad 팀은 구성원이 고정되어 에이전트를 추가할 수 없습니다",
+        "squad_leader_backend_unenforceable": "Leader의 백엔드가 배분 전용 제한을 강제할 수 없습니다"
       },
       "previewAction": "미리보기 및 팀 만들기",
       "preview": {
@@ -313,8 +314,15 @@
         "blockers": {
           "squad_assistant_not_eligible": "{{name}}은(는) 더 이상 팀에서 사용할 수 없습니다",
           "squad_team_visibility_unavailable": "팀 공개 범위는 아직 사용할 수 없습니다",
-          "generic": "지금은 이 Squad를 인스턴스화할 수 없습니다"
-        }
+          "generic": "지금은 이 Squad를 인스턴스화할 수 없습니다",
+          "squad_leader_backend_unenforceable": "{{name}}: Leader의 백엔드가 배분 전용 제한을 강제할 수 없습니다"
+        },
+        "unenforceable": "강제 불가",
+        "unenforceableHint": {
+          "leader": "{{backend}} 백엔드는 이 배분 전용 Leader의 기본 도구를 제한할 수 없으므로 이 Squad를 만들 수 없습니다. Claude Leader를 사용하세요.",
+          "member": "{{backend}} 백엔드는 이 구성원의 기본 하위 에이전트 도구를 제거할 수 없어 생성 금지는 프롬프트에만 의존합니다."
+        },
+        "leaderUnenforceableNamed": "{{name}}은(는) {{backend}}에서 실행되어 배분 전용 Leader 제한을 강제할 수 없습니다"
       }
     }
   },

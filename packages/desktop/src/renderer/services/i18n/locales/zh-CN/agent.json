@@ -293,7 +293,8 @@
         "forbidden": "你没有执行此操作的权限。",
         "generic": "出错了，请重试。",
         "squad_instantiate_unavailable": "暂时无法从 Squad 创建团队",
-        "squad_spawn_forbidden": "Squad 团队名册固定，不允许添加智能体"
+        "squad_spawn_forbidden": "Squad 团队名册固定，不允许添加智能体",
+        "squad_leader_backend_unenforceable": "Leader 所用后端无法强制只派活限制"
       },
       "previewAction": "预览并创建团队",
       "preview": {
@@ -313,8 +314,15 @@
         "blockers": {
           "squad_assistant_not_eligible": "{{name}} 已不可用于团队",
           "squad_team_visibility_unavailable": "团队可见性暂不可用",
-          "generic": "该 Squad 当前无法实例化"
-        }
+          "generic": "该 Squad 当前无法实例化",
+          "squad_leader_backend_unenforceable": "{{name}}：Leader 所用后端无法强制只派活限制"
+        },
+        "unenforceable": "无法强制",
+        "unenforceableHint": {
+          "leader": "{{backend}} 后端无法限制此只派活 Leader 的原生工具，因此不能创建该 Squad。请改用 Claude 作为 Leader。",
+          "member": "{{backend}} 后端无法移除此成员的原生子智能体工具，禁止派生只能依靠提示词约束。"
+        },
+        "leaderUnenforceableNamed": "{{name}} 运行在 {{backend}} 上，无法强制只派活 Leader 的限制"
       }
     }
   },

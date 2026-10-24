@@ -293,7 +293,8 @@
         "forbidden": "この操作を行う権限がありません。",
         "generic": "エラーが発生しました。もう一度お試しください。",
         "squad_instantiate_unavailable": "現在 Squad からチームを作成できません",
-        "squad_spawn_forbidden": "Squad チームの構成は固定のため、エージェントを追加できません"
+        "squad_spawn_forbidden": "Squad チームの構成は固定のため、エージェントを追加できません",
+        "squad_leader_backend_unenforceable": "Leader のバックエンドは割り振り専用の制限を強制できません"
       },
       "previewAction": "プレビューしてチームを作成",
       "preview": {
@@ -313,8 +314,15 @@
         "blockers": {
           "squad_assistant_not_eligible": "{{name}} はチームで利用できなくなりました",
           "squad_team_visibility_unavailable": "チーム公開範囲はまだ利用できません",
-          "generic": "この Squad は現在インスタンス化できません"
-        }
+          "generic": "この Squad は現在インスタンス化できません",
+          "squad_leader_backend_unenforceable": "{{name}}：Leader のバックエンドは割り振り専用の制限を強制できません"
+        },
+        "unenforceable": "強制不可",
+        "unenforceableHint": {
+          "leader": "{{backend}} バックエンドはこの割り振り専用 Leader のネイティブツールを制限できないため、この Squad は作成できません。Claude の Leader を使用してください。",
+          "member": "{{backend}} バックエンドはこのメンバーのネイティブなサブエージェントツールを除外できません。生成禁止はプロンプトのみで担保されます。"
+        },
+        "leaderUnenforceableNamed": "{{name}} は {{backend}} で動作しており、割り振り専用 Leader の制限を強制できません"
       }
     }
   },

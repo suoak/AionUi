@@ -139,3 +139,31 @@ describe('squadPreviewBlockers', () => {
     ]);
   });
 });
+
+describe('E7-4 unenforceable Leader', () => {
+  it('maps the blocker and reads instantiate error details', async () => {
+    const { squadPreviewBlockers, squadUnenforceableLeader, squadErrorKey } =
+      await import('@/renderer/pages/agent-center/squad/squadModel');
+    expect(
+      squadPreviewBlockers({
+        squad_template_id: 's',
+        name: 'n',
+        leader_mode: 'route_only',
+        participants: [],
+        can_instantiate: false,
+        blocking: [{ code: 'squad_leader_backend_unenforceable', assistant_id: 'x' }],
+      })
+    ).toEqual([
+      { key: 'agent.agentCenter.squad.preview.blockers.squad_leader_backend_unenforceable', assistantName: 'x' },
+    ]);
+    const e = err(400, {
+      success: false,
+      error: 'squad_leader_backend_unenforceable',
+      code: 'squad_leader_backend_unenforceable',
+      details: { assistant_id: 'x', backend: 'gemini' },
+    });
+    expect(squadUnenforceableLeader(e)).toEqual({ assistantId: 'x', backend: 'gemini' });
+    expect(squadErrorKey(e)).toBe('agent.agentCenter.squad.errors.squad_leader_backend_unenforceable');
+    expect(squadUnenforceableLeader(err(400, { success: false, error: 'x', code: 'squad_invalid_body' }))).toBeNull();
+  });
+});
