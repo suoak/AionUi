@@ -5,6 +5,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { SafeAreaView, useSafeAreaInsets, SafeAreaInsetsContext } from 'react-native-safe-area-context';
 import { useThemeColor } from '../../src/hooks/useThemeColor';
 import { useConnection } from '../../src/context/ConnectionContext';
+import { useInbox } from '../../src/context/InboxContext';
 import { ConnectionBanner } from '../../src/components/ui/ConnectionBanner';
 
 export default function TabLayout() {
@@ -13,6 +14,8 @@ export default function TabLayout() {
   const tabIconDefault = useThemeColor({}, 'tabIconDefault');
   const background = useThemeColor({}, 'background');
   const { isConfigured } = useConnection();
+  const { unreadCount, agentApprovals } = useInbox();
+  const badge = unreadCount + agentApprovals.length;
   const router = useRouter();
   const insets = useSafeAreaInsets();
 
@@ -34,6 +37,15 @@ export default function TabLayout() {
           headerShown: true,
         }}
       >
+        <Tabs.Screen
+          name='inbox'
+          options={{
+            title: t('tabs.inbox'),
+            headerShown: false,
+            tabBarBadge: badge > 0 ? (badge > 99 ? '99+' : badge) : undefined,
+            tabBarIcon: ({ color, size }) => <Ionicons name='file-tray-full-outline' size={size} color={color} />,
+          }}
+        />
         <Tabs.Screen
           name='chat'
           options={{

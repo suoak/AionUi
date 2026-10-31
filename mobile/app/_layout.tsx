@@ -12,6 +12,7 @@ import { WebSocketProvider } from '../src/context/WebSocketContext';
 import { ConversationProvider } from '../src/context/ConversationContext';
 import { WorkspaceProvider } from '../src/context/WorkspaceContext';
 import { FilesTabProvider } from '../src/context/FilesTabContext';
+import { InboxProvider } from '../src/context/InboxContext';
 import { initI18n } from '../src/i18n';
 
 // Prevent splash screen from auto-hiding until routing is ready
@@ -27,6 +28,7 @@ export default function RootLayout() {
     <GestureHandlerRootView style={{ flex: 1 }}>
       <SafeAreaProvider>
       <ConnectionProvider>
+        <InboxProvider>
         <WebSocketProvider>
           <ConversationProvider>
             <WorkspaceProvider>
@@ -52,6 +54,7 @@ export default function RootLayout() {
             </WorkspaceProvider>
           </ConversationProvider>
         </WebSocketProvider>
+        </InboxProvider>
       </ConnectionProvider>
       </SafeAreaProvider>
     </GestureHandlerRootView>

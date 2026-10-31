@@ -67,6 +67,9 @@ repos:
         entry: bun run format
         language: system
         files: \.(ts|tsx|js|jsx|json|css|md|yaml|yml|toml)$
+        # mobile/ is listed in .prettierignore (oxfmt honours it); passing only
+        # ignored files makes oxfmt exit 2 with "Expected at least one target file".
+        exclude: ^mobile/
         pass_filenames: true
 
   # i18n translation files validation

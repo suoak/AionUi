@@ -16,7 +16,7 @@
   },
   "connect": {
     "scanTitle": "QR-Code scannen",
-    "scanHint": "Öffne CSBU WorkMate Desktop → Einstellungen → WebUI → QR-Code anzeigen",
+    "scanHint": "Öffnen Sie CSBU WorkMate am Desktop → Einstellungen → Mobilgeräte → Gerät koppeln",
     "cameraPermissionTitle": "Kamerazugriff erforderlich",
     "cameraPermissionMessage": "CSBU WorkMate benötigt Kamerazugriff, um QR-Codes für die schnelle Server-Anmeldung zu scannen.",
     "requestPermission": "Kamera erlauben",
@@ -26,15 +26,16 @@
     "invalidToken": "Ungültiger oder abgelaufener Token",
     "disconnected": "Verbindung zum Server getrennt",
     "pasteLink": "Link einfügen",
-    "pasteLinkHint": "Füge den QR-Code-Link vom Desktop ein",
-    "urlPlaceholder": "Füge QR-Login-URL hier ein",
+    "pasteLinkHint": "Fügen Sie den Kopplungslink ein, der am Desktop neben dem QR-Code angezeigt wird",
+    "urlPlaceholder": "Kopplungslink hier einfügen",
     "connect": "Verbinden",
-    "invalidURL": "Ungültige URL. Bitte füge den QR-Login-Link von CSBU WorkMate Desktop ein."
+    "invalidURL": "Ungültiger Link. Verwenden Sie den Kopplungs-QR-Code aus CSBU WorkMate am Desktop → Einstellungen → Mobilgeräte."
   },
   "tabs": {
     "chat": "Chat",
     "files": "Dateien",
-    "settings": "Einstellungen"
+    "settings": "Einstellungen",
+    "inbox": "Posteingang"
   },
   "conversations": {
     "title": "Unterhaltungen",
@@ -138,5 +139,90 @@
     "about": "Über",
     "version": "Version",
     "language": "Sprache"
+  },
+  "pairing": {
+    "defaultDeviceName": "CSBU WorkMate-Smartphone",
+    "codeTitle": "Kopplungscode eingeben",
+    "codeHint": "Geben Sie den {{count}}-stelligen Code ein, der am Desktop angezeigt wird.",
+    "pairingWith": "Server {{server}} · dieses Smartphone: {{device}}",
+    "confirm": "Koppeln",
+    "codeFormat": "Der Code hat {{count}} Ziffern.",
+    "legacyQr": "Dieser QR-Code meldet die Browser-WebUI an. Um dieses Smartphone zu verbinden, öffnen Sie CSBU WorkMate am Desktop → Einstellungen → Mobilgeräte → Gerät koppeln und scannen Sie den dortigen Code.",
+    "signedOutTitle": "Smartphone erneut koppeln",
+    "signedOutRevoked": "Dieses Smartphone wurde am Desktop entfernt oder sein Zugriff ist abgelaufen. Koppeln Sie es erneut.",
+    "signedOutLegacy": "Das Smartphone verbindet sich jetzt per Gerätekopplung. Koppeln Sie es einmal vom Desktop aus.",
+    "errors": {
+      "qrInvalid": "Dieser QR-Code ist abgelaufen oder wurde bereits verwendet. Erzeugen Sie am Desktop einen neuen Code.",
+      "codeInvalid": "Falscher Code. Bitte erneut versuchen.",
+      "codeInvalidAttempts": "Falscher Code. Verbleibende Versuche: {{count}}.",
+      "closed": "Diese Kopplungsanfrage ist beendet (abgelaufen, abgebrochen oder abgelehnt). Starten Sie am Desktop neu.",
+      "deviceLimit": "Zu viele gekoppelte Geräte. Entfernen Sie zuerst eines am Desktop.",
+      "deviceLimitMax": "Zu viele gekoppelte Geräte (maximal {{count}}). Entfernen Sie zuerst eines am Desktop.",
+      "invalidRequest": "Der Desktop hat diese Kopplungsanfrage abgelehnt.",
+      "network": "Desktop nicht erreichbar. Prüfen Sie, ob der Fernzugriff aktiv ist und das Smartphone im selben Netzwerk ist.",
+      "unknown": "Kopplung fehlgeschlagen. Bitte erneut versuchen."
+    }
+  },
+  "inbox": {
+    "title": "Posteingang",
+    "detailTitle": "Details",
+    "markAllRead": "Alle gelesen",
+    "agentApprovalsSection": "Agent-Anfragen ({{count}})",
+    "itemsSection": "Benachrichtigungen",
+    "empty": "Nichts erfordert Ihre Aufmerksamkeit",
+    "loadFailed": "Posteingang konnte nicht geladen werden",
+    "notFound": "Dieser Eintrag existiert nicht mehr",
+    "openOnDesktop": "Öffnen Sie CSBU WorkMate am Desktop, um alle Details zu sehen.",
+    "resolved": "Erledigt",
+    "kind": {
+      "approval": "Freigabe",
+      "blocked": "Blockiert",
+      "completed": "Abgeschlossen",
+      "failed": "Fehlgeschlagen",
+      "question": "Frage",
+      "mention": "Erwähnung"
+    }
+  },
+  "approval": {
+    "approve": "Freigeben",
+    "deny": "Ablehnen",
+    "reject": "Zurückweisen",
+    "agentTitle": "Agent möchte die Konfiguration ändern",
+    "agentKind": {
+      "mcp": "MCP-Server",
+      "provider": "Modellanbieter",
+      "settings": "Einstellungen",
+      "agent": "Agent",
+      "assistant": "Assistent",
+      "skill": "Skill",
+      "cron": "Geplante Aufgabe",
+      "squad": "Squad",
+      "work_item": "Arbeitselement"
+    },
+    "summaryTruncated": "Die Anfrage ist zu lang, um vollständig angezeigt zu werden.",
+    "summaryTruncatedDesktop": "Die Anfrage ist zu lang, um sie hier vollständig anzuzeigen. Prüfen und freigeben Sie sie am Desktop. Ablehnen ist hier weiterhin möglich.",
+    "agentApproved": "Freigegeben",
+    "agentDenied": "Abgelehnt",
+    "alreadyHandled": "Diese Anfrage wurde bereits bearbeitet oder ist abgelaufen.",
+    "decisionFailed": "Entscheidung konnte nicht gesendet werden. Bitte erneut versuchen.",
+    "loadFailed": "Freigabe konnte nicht geladen werden",
+    "taskMissing": "Diese Freigabe existiert nicht mehr.",
+    "artifactMissing": "Der zu prüfende Inhalt ist nicht verfügbar.",
+    "planTitle": "Plan-Freigabe",
+    "goalTitle": "Ziel-Freigabe",
+    "status": {
+      "pending": "Wartet auf Sie",
+      "approved": "Freigegeben",
+      "rejected": "Zurückgewiesen",
+      "expired": "Abgelaufen",
+      "cancelled": "Abgebrochen"
+    },
+    "planApprovedRunOnDesktop": "Plan freigegeben. Öffnen Sie CSBU WorkMate am Desktop, um ihn auszuführen.",
+    "planExecutionStarted": "Plan freigegeben und gestartet.",
+    "planExecutionFailed": "Plan freigegeben, konnte aber nicht vom Smartphone gestartet werden. Starten Sie ihn am Desktop.",
+    "taskApproved": "Freigegeben",
+    "taskRejected": "Zurückgewiesen",
+    "taskConflict": "Diese Freigabe hat sich geändert (bereits entschieden oder neuere Version). Neu laden und erneut prüfen.",
+    "commentPlaceholder": "Kommentar (optional)"
   }
 }

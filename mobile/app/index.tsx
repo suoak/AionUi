@@ -1,20 +1,11 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { Redirect } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { useConnection } from '../src/context/ConnectionContext';
+import { postPairingHref } from '../src/services/deepLink';
 
 export default function IndexScreen() {
-  const { isConfigured, connectionState, isRestoring } = useConnection();
-  const [authFailedExpired, setAuthFailedExpired] = useState(false);
-
-  // Give auto-recovery 5 seconds before redirecting to connect screen
-  useEffect(() => {
-    if (connectionState === 'auth_failed') {
-      const timer = setTimeout(() => setAuthFailedExpired(true), 5000);
-      return () => clearTimeout(timer);
-    }
-    setAuthFailedExpired(false);
-  }, [connectionState]);
+  const { isConfigured, isRestoring } = useConnection();
 
   useEffect(() => {
     if (!isRestoring) {
@@ -27,9 +18,11 @@ export default function IndexScreen() {
     return null;
   }
 
-  if (!isConfigured || (connectionState === 'auth_failed' && authFailedExpired)) {
+  // A revoked/expired device token is forgotten by ConnectionContext, which
+  // makes the phone unconfigured and lands here -> pairing screen.
+  if (!isConfigured) {
     return <Redirect href='/connect' />;
   }
 
-  return <Redirect href='/(tabs)/chat' />;
+  return <Redirect href={postPairingHref() as never} />;
 }

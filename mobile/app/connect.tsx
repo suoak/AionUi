@@ -1,34 +1,60 @@
-import React, { useState, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { View, TouchableOpacity, StyleSheet, Alert, ActivityIndicator, TextInput, KeyboardAvoidingView, Platform } from 'react-native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { CameraView, useCameraPermissions, type BarcodeScanningResult } from 'expo-camera';
+import Constants from 'expo-constants';
 import { useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
-import axios from 'axios';
 import { ThemedText } from '../src/components/ui/ThemedText';
 import { useConnection } from '../src/context/ConnectionContext';
 import { useThemeColor } from '../src/hooks/useThemeColor';
 import { wsService } from '../src/services/websocket';
+import {
+  confirmPairing,
+  normalizePairingCode,
+  PAIRING_CODE_LENGTH,
+  PairingError,
+  parsePairingLink,
+  sanitizeDeviceName,
+  serverBaseUrl,
+  startPairing,
+  toPairingPlatform,
+} from '../src/services/pairing';
+import { pairingErrorMessage } from '../src/services/pairingMessages';
+import { postPairingHref } from '../src/services/deepLink';
 
-function parseQrLoginUrl(data: string): { host: string; port: string; qrToken: string } | null {
-  try {
-    const url = new URL(data);
-    if (url.pathname !== '/qr-login') return null;
-    const qrToken = url.searchParams.get('token');
-    if (!qrToken) return null;
-    return {
-      host: url.hostname,
-      port: url.port || '25808',
-      qrToken,
-    };
-  } catch {
-    return null;
-  }
+type PendingPairing = {
+  host: string;
+  port: string;
+  secure: boolean;
+  pairingId: string;
+  expiresAt: number;
+};
+
+/** Wait briefly for the socket; a slow socket must not block a successful pairing. */
+function waitForSocket(timeoutMs = 5000): Promise<'connected' | 'timeout' | 'auth_failed'> {
+  return new Promise((resolve) => {
+    if (wsService.state === 'connected') {
+      resolve('connected');
+      return;
+    }
+    const timeout = setTimeout(() => {
+      unsub();
+      resolve('timeout');
+    }, timeoutMs);
+    const unsub = wsService.onStateChange((state) => {
+      if (state === 'connected' || state === 'auth_failed') {
+        clearTimeout(timeout);
+        unsub();
+        resolve(state);
+      }
+    });
+  });
 }
 
 export default function ConnectScreen() {
   const { t } = useTranslation();
-  const { connect } = useConnection();
+  const { connect, signOutReason, clearSignOutReason } = useConnection();
   const router = useRouter();
   const tint = useThemeColor({}, 'tint');
   const background = useThemeColor({}, 'background');
@@ -38,51 +64,89 @@ export default function ConnectScreen() {
   const [isVerifying, setIsVerifying] = useState(false);
   const [mode, setMode] = useState<'scan' | 'paste'>('scan');
   const [pasteUrl, setPasteUrl] = useState('');
+  const [pending, setPending] = useState<PendingPairing | null>(null);
+  const [code, setCode] = useState('');
+  const [codeError, setCodeError] = useState<string | null>(null);
   const scannedRef = useRef(false);
   const insets = useSafeAreaInsets();
 
-  const connectWithUrl = async (url: string, onInvalid: () => void) => {
-    const parsed = parseQrLoginUrl(url);
-    if (!parsed) {
+  useEffect(() => {
+    if (!signOutReason) return;
+    const key = signOutReason === 'revoked' ? 'pairing.signedOutRevoked' : 'pairing.signedOutLegacy';
+    Alert.alert(t('pairing.signedOutTitle'), t(key), [{ text: t('common.ok') }]);
+    clearSignOutReason();
+  }, [signOutReason, clearSignOutReason, t]);
+
+  const deviceName = sanitizeDeviceName(Constants.deviceName, t('pairing.defaultDeviceName'));
+
+  // Step 1: scanned/pasted link -> POST /api/auth/devices/pair/start
+  const startWithUrl = async (url: string, onInvalid: () => void) => {
+    const parsed = parsePairingLink(url);
+    if (parsed.kind === 'legacy_qr_login') {
+      Alert.alert(t('common.error'), t('pairing.legacyQr'), [{ text: t('common.ok'), onPress: onInvalid }]);
+      return;
+    }
+    if (parsed.kind !== 'pairing') {
       Alert.alert(t('common.error'), t('connect.invalidURL'), [{ text: t('common.ok'), onPress: onInvalid }]);
       return;
     }
 
     setIsVerifying(true);
     try {
-      const { host, port, qrToken } = parsed;
-      const response = await axios.post(`http://${host}:${port}/api/auth/qr-login`, {
-        qrToken,
+      const base = serverBaseUrl(parsed.host, parsed.port, parsed.secure);
+      const started = await startPairing(base, parsed.qrToken, deviceName, toPairingPlatform(Platform.OS));
+      setCode('');
+      setCodeError(null);
+      setPending({ host: parsed.host, port: parsed.port, secure: parsed.secure, ...started });
+    } catch (e) {
+      const error = e instanceof PairingError ? e : new PairingError('unknown');
+      Alert.alert(t('common.error'), pairingErrorMessage(t, error), [{ text: t('common.ok'), onPress: onInvalid }]);
+    } finally {
+      setIsVerifying(false);
+    }
+  };
+
+  const cancelPairing = () => {
+    setPending(null);
+    setCode('');
+    setCodeError(null);
+    scannedRef.current = false;
+  };
+
+  // Step 2: 6-digit code -> POST /api/auth/devices/pair/confirm
+  const handleConfirmCode = async () => {
+    if (!pending) return;
+    const normalized = normalizePairingCode(code);
+    if (!normalized) {
+      setCodeError(t('pairing.codeFormat', { count: PAIRING_CODE_LENGTH }));
+      return;
+    }
+    setIsVerifying(true);
+    setCodeError(null);
+    try {
+      const base = serverBaseUrl(pending.host, pending.port, pending.secure);
+      const device = await confirmPairing(base, pending.pairingId, normalized);
+      await connect({
+        host: pending.host,
+        port: pending.port,
+        secure: pending.secure,
+        token: device.deviceToken,
+        deviceId: device.deviceId,
+        authKind: 'device',
       });
-      const jwt: string = response.data.token;
-
-      await connect(host, port, jwt);
-
-      // Wait for WebSocket connection
-      await new Promise<void>((resolve, reject) => {
-        const timeout = setTimeout(() => {
-          unsub();
-          reject(new Error('timeout'));
-        }, 5000);
-
-        const unsub = wsService.onStateChange((state) => {
-          if (state === 'connected') {
-            clearTimeout(timeout);
-            unsub();
-            resolve();
-          }
-          if (state === 'auth_failed') {
-            clearTimeout(timeout);
-            unsub();
-            reject(new Error('auth_failed'));
-          }
-        });
-      });
-
-      router.replace('/(tabs)/chat');
-    } catch (e: any) {
-      const msg = e.message === 'auth_failed' ? t('connect.invalidToken') : t('connect.connectionFailed');
-      Alert.alert(t('common.error'), msg, [{ text: t('common.ok'), onPress: onInvalid }]);
+      // The token is already saved; if the socket is rejected, the connection
+      // layer probes Core and returns to pairing when the token is invalid.
+      await waitForSocket();
+      setPending(null);
+      router.replace(postPairingHref() as never);
+    } catch (e) {
+      const error = e instanceof PairingError ? e : new PairingError('unknown');
+      if (error.kind === 'code_invalid') {
+        setCodeError(pairingErrorMessage(t, error));
+        setCode('');
+      } else {
+        Alert.alert(t('common.error'), pairingErrorMessage(t, error), [{ text: t('common.ok'), onPress: cancelPairing }]);
+      }
     } finally {
       setIsVerifying(false);
     }
@@ -91,33 +155,61 @@ export default function ConnectScreen() {
   const handleBarCodeScanned = async (result: BarcodeScanningResult) => {
     if (scannedRef.current) return;
     scannedRef.current = true;
-    await connectWithUrl(result.data, () => (scannedRef.current = false));
+    await startWithUrl(result.data, () => (scannedRef.current = false));
   };
 
   const handlePasteConnect = () => {
-    connectWithUrl(pasteUrl.trim(), () => {});
+    void startWithUrl(pasteUrl.trim(), () => {});
   };
 
-  // Still loading permission status
-  if (!permission) {
+  // Step 2 UI: enter the code shown on the desktop
+  if (pending) {
     return (
-      <SafeAreaView style={[styles.container, styles.center, { backgroundColor: background }]}>
-        <ActivityIndicator size='large' color={tint} />
-      </SafeAreaView>
-    );
-  }
-
-  // Permission not granted — show request UI
-  if (!permission.granted) {
-    return (
-      <SafeAreaView style={[styles.container, styles.center, { backgroundColor: background }]}>
-        <ThemedText type='title' style={styles.permissionTitle}>
-          {t('connect.cameraPermissionTitle')}
-        </ThemedText>
-        <ThemedText style={styles.permissionMessage}>{t('connect.cameraPermissionMessage')}</ThemedText>
-        <TouchableOpacity style={[styles.permissionButton, { backgroundColor: tint }]} onPress={requestPermission}>
-          <ThemedText style={styles.permissionButtonText}>{t('connect.requestPermission')}</ThemedText>
-        </TouchableOpacity>
+      <SafeAreaView style={[styles.container, { backgroundColor: background }]}>
+        <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+          <View style={[styles.container, styles.center]}>
+            <ThemedText type='title' style={styles.permissionTitle}>
+              {t('pairing.codeTitle')}
+            </ThemedText>
+            <ThemedText style={styles.permissionMessage}>
+              {t('pairing.codeHint', { count: PAIRING_CODE_LENGTH })}
+            </ThemedText>
+            <ThemedText type='caption' style={styles.pairingMeta}>
+              {t('pairing.pairingWith', { server: `${pending.host}:${pending.port}`, device: deviceName })}
+            </ThemedText>
+            <TextInput
+              testID='pairing-code-input'
+              style={[styles.codeInput, { color: textColor, borderColor: tint }]}
+              value={code}
+              onChangeText={(value) => setCode(value.replace(/[^0-9]/g, '').slice(0, PAIRING_CODE_LENGTH))}
+              keyboardType='number-pad'
+              textContentType='oneTimeCode'
+              autoComplete='one-time-code'
+              maxLength={PAIRING_CODE_LENGTH}
+              placeholder={'0'.repeat(PAIRING_CODE_LENGTH)}
+              placeholderTextColor='#999'
+              autoFocus
+            />
+            {codeError && <ThemedText style={styles.codeError}>{codeError}</ThemedText>}
+            <TouchableOpacity
+              style={[
+                styles.permissionButton,
+                { backgroundColor: tint, opacity: code.length === PAIRING_CODE_LENGTH && !isVerifying ? 1 : 0.5 },
+              ]}
+              onPress={handleConfirmCode}
+              disabled={code.length !== PAIRING_CODE_LENGTH || isVerifying}
+            >
+              {isVerifying ? (
+                <ActivityIndicator color='#fff' />
+              ) : (
+                <ThemedText style={styles.permissionButtonText}>{t('pairing.confirm')}</ThemedText>
+              )}
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.switchModeButton} onPress={cancelPairing} disabled={isVerifying}>
+              <ThemedText style={{ color: tint }}>{t('common.cancel')}</ThemedText>
+            </TouchableOpacity>
+          </View>
+        </KeyboardAvoidingView>
       </SafeAreaView>
     );
   }
@@ -164,6 +256,33 @@ export default function ConnectScreen() {
           </TouchableOpacity>
         </View>
         </KeyboardAvoidingView>
+      </SafeAreaView>
+    );
+  }
+
+  // Still loading permission status
+  if (!permission) {
+    return (
+      <SafeAreaView style={[styles.container, styles.center, { backgroundColor: background }]}>
+        <ActivityIndicator size='large' color={tint} />
+      </SafeAreaView>
+    );
+  }
+
+  // Permission not granted — show request UI
+  if (!permission.granted) {
+    return (
+      <SafeAreaView style={[styles.container, styles.center, { backgroundColor: background }]}>
+        <ThemedText type='title' style={styles.permissionTitle}>
+          {t('connect.cameraPermissionTitle')}
+        </ThemedText>
+        <ThemedText style={styles.permissionMessage}>{t('connect.cameraPermissionMessage')}</ThemedText>
+        <TouchableOpacity style={[styles.permissionButton, { backgroundColor: tint }]} onPress={requestPermission}>
+          <ThemedText style={styles.permissionButtonText}>{t('connect.requestPermission')}</ThemedText>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.switchModeButton} onPress={() => setMode('paste')}>
+          <ThemedText style={{ color: tint }}>{t('connect.pasteLink')}</ThemedText>
+        </TouchableOpacity>
       </SafeAreaView>
     );
   }
@@ -294,6 +413,25 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 17,
     fontWeight: '600',
+  },
+  pairingMeta: {
+    textAlign: 'center',
+    marginBottom: 16,
+  },
+  codeInput: {
+    width: 220,
+    borderWidth: 1,
+    borderRadius: 10,
+    padding: 14,
+    fontSize: 28,
+    letterSpacing: 8,
+    textAlign: 'center',
+    marginBottom: 12,
+  },
+  codeError: {
+    color: '#F53F3F',
+    textAlign: 'center',
+    marginBottom: 12,
   },
   urlInput: {
     width: '100%',
