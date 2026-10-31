@@ -134,11 +134,9 @@ export default function ConnectScreen() {
         deviceId: device.deviceId,
         authKind: 'device',
       });
-      const socket = await waitForSocket();
-      if (socket === 'auth_failed') {
-        Alert.alert(t('common.error'), t('connect.invalidToken'));
-        return;
-      }
+      // The token is already saved; if the socket is rejected, the connection
+      // layer probes Core and returns to pairing when the token is invalid.
+      await waitForSocket();
       setPending(null);
       router.replace(postPairingHref() as never);
     } catch (e) {
