@@ -1483,5 +1483,193 @@
     "bodyUnknownTool": "Bu Squad Leader yalnızca dağıtım modunda olduğundan bu araç engellendi.",
     "allowed": "İzin verilen araçlar:",
     "hint": "Leader bu işi team_send_message veya bir görevle bir ekip üyesine vermelidir."
+  },
+  "batchJobs": {
+    "title": "Toplu işler",
+    "description": "Tek bir görevi birçok depoda çalıştırın: önce birkaçını deneyin, sonra ölçeklendirin",
+    "newJob": "Yeni toplu iş",
+    "empty": "Henüz toplu iş yok",
+    "selectHint": "Öğelerini görmek için bir toplu iş seçin",
+    "loadFailed": "Toplu işler yüklenemedi",
+    "reload": "Yeniden yükle",
+    "back": "Listeye dön",
+    "listSummary": "{{passed}}/{{total}} başarılı · {{failed}} başarısız",
+    "created": "Toplu iş taslak olarak oluşturuldu. Şimdi deneme çalıştırın.",
+    "exported": "CSV dışa aktarıldı",
+    "createTitle": "Yeni toplu iş",
+    "meta": "Eşzamanlılık {{concurrency}} · öğe başına {{minutes}} dk zaman aşımı · deneme {{trial}}",
+    "cancelConfirm": "Bu toplu iş iptal edilsin mi? Bekleyen öğeler çalışmaz, çalışanlar durdurulur.",
+    "progressTrial": "Deneme ilerlemesi",
+    "progressAll": "Genel ilerleme",
+    "trialBadge": "Deneme",
+    "attempt": "Deneme {{count}}",
+    "openSession": "Oturumu aç",
+    "diskDetail": "Yaklaşık {{need}} MiB gerekiyor, yalnızca {{free}} MiB boş. Yer açın veya eşzamanlılığı düşürüp tekrar deneyin.",
+    "status": {
+      "draft": "Taslak",
+      "trial": "Deneme",
+      "running": "Çalışıyor",
+      "paused": "Duraklatıldı",
+      "completed": "Tamamlandı",
+      "failed": "Başarısız",
+      "cancelled": "İptal edildi",
+      "pending": "Bekliyor",
+      "passed": "Başarılı",
+      "timeout": "Zaman aşımı",
+      "skipped": "Atlandı"
+    },
+    "actions": {
+      "trial": "Deneme çalıştır",
+      "scale": "Tüm {{count}} öğeye ölçeklendir",
+      "resume": "Sürdür",
+      "retryFailed": "Başarısızları yeniden dene",
+      "retryItem": "Yeniden dene",
+      "cancel": "Toplu işi iptal et",
+      "cancelConfirmOk": "Toplu işi iptal et",
+      "keepRunning": "Devam etsin",
+      "export": "CSV dışa aktar"
+    },
+    "hints": {
+      "trialFirst": "Önce deneme çalıştırın — ölçeklendirme yalnızca tüm deneme öğeleri başarılı olduğunda açılır",
+      "trialRunning": "Denemenin bitmesini bekleyin",
+      "trialNotPassed": "Ölçeklendirmeden önce tüm deneme öğeleri başarılı olmalı; başarısız olanları yeniden deneyin"
+    },
+    "phase": {
+      "draft": {
+        "title": "Taslak — henüz denenmedi",
+        "desc": "Tüm {{total}} öğeye ölçeklendirmeden önce ilk {{trial}} öğeyi deneyin ve sonuçları inceleyin."
+      },
+      "trialRunning": {
+        "title": "Deneme çalışıyor",
+        "desc": "İlk {{trial}} öğe çalışıyor. Sonuçlar bittikçe burada görünür."
+      },
+      "trialPassed": {
+        "title": "Deneme başarılı",
+        "desc": "Tüm deneme öğeleri kontrolleri geçti. İnceleyin, ardından tüm {{total}} öğeye ölçeklendirin."
+      },
+      "trialFailed": {
+        "title": "Deneme başarısız",
+        "desc": "Bazı deneme öğeleri başarısız oldu. Hataları inceleyin, gerekirse düzeltin ve yeniden deneyin; hepsi başarılı olunca ölçeklendirme açılır."
+      },
+      "running": {
+        "title": "Çalışıyor",
+        "desc": "Öğeler eşzamanlılık sınırına kadar paralel çalışır. İlerleme canlı güncellenir."
+      },
+      "pausedAfterRestart": {
+        "title": "Uygulama yeniden başlatıldıktan sonra duraklatıldı",
+        "desc": "Uygulama yeniden başlarken çalışan öğeler başarısız olarak işaretlendi ve toplu iş duraklatıldı. Bekleyen öğelerle devam etmek için sürdürün veya başarısızları yeniden deneyin."
+      },
+      "paused": {
+        "title": "Duraklatıldı",
+        "desc": "Bekleyen öğelerle devam etmek için sürdürün."
+      },
+      "completed": {
+        "title": "Tamamlandı",
+        "desc": "Tüm öğeler kontrolleri geçti. Tam rapor için CSV'yi dışa aktarın."
+      },
+      "failed": {
+        "title": "Hatalarla bitti",
+        "desc": "Bazı öğeler başarısız oldu veya zaman aşımına uğradı. Yeniden deneyin ya da CSV'yi dışa aktarın."
+      },
+      "cancelled": {
+        "title": "İptal edildi",
+        "desc": "Bu toplu iş iptal edildi. Tamamlanan sonuçlar korunur."
+      },
+      "unknown": {
+        "title": "Bilinmeyen durum",
+        "desc": "Core, bu sürümün tanımadığı bir durum bildirdi."
+      }
+    },
+    "columns": {
+      "target": "Hedef",
+      "status": "Durum",
+      "checks": "Kontroller",
+      "error": "Hata"
+    },
+    "checkKinds": {
+      "file_exists": "Dosya var",
+      "glob": "Glob eşleşmesi",
+      "json_schema": "JSON şeması"
+    },
+    "errors": {
+      "generic": "İstek başarısız oldu, tekrar deneyin",
+      "badRequest": "İstek reddedildi",
+      "agentDenied": "Ajanlar toplu işleri yönetemez",
+      "notFound": "Bu toplu iş artık mevcut değil",
+      "notTrialed": "Henüz denenmedi — ölçeklendirmeden önce deneme çalıştırın",
+      "trialRunning": "Deneme hâlâ çalışıyor; bitmesini bekleyin",
+      "trialNotPassed": "Ölçeklendirmeden önce tüm deneme öğeleri başarılı olmalı; önce başarısızları yeniden deneyin",
+      "retryTrialOnly": "Ölçeklendirmeden önce yalnızca deneme öğeleri yeniden denenebilir",
+      "noRetryable": "Yeniden denenecek başarısız öğe yok",
+      "concurrent": "Toplu işin durumu bu arada değişti; yenilendi, tekrar deneyin",
+      "invalidState": "Bu işleme toplu işin mevcut durumunda izin verilmiyor",
+      "unavailable": "Bir bağımlılık kullanılamıyor (asistan, worktree veya oturum)",
+      "insufficientDisk": "Bu toplu işi çalıştırmak için yeterli disk alanı yok"
+    },
+    "form": {
+      "intro": "Toplu iş oluşturmak hiçbir şeyi çalıştırmaz. İlk öğeler deneme olarak çalışır; geri kalanına yalnızca deneme başarılı olunca ölçeklendirin.",
+      "title": "Ad",
+      "titlePlaceholder": "ör. Bağımlılık denetimi",
+      "assistant": "Asistan",
+      "assistantPlaceholder": "Bir asistan seçin",
+      "assistantHint": "Her öğe bu asistanla kendi ajan oturumunda çalışır.",
+      "prompt": "Görev şablonu",
+      "promptPlaceholder": "Tek bir hedef için görevi açıklayın",
+      "promptHint": "Değişkenler: {{field}} (hedefin bir alanı), {{target}} (JSON olarak tüm hedef), {{seq}} (öğe numarası).",
+      "targets": "Hedefler",
+      "pathKindRepo": "Depolar",
+      "pathKindWorkspace": "Çalışma alanları",
+      "targetsPlaceholder": "/path/to/repo-a\n/path/to/repo-b\n\nveya repo ya da workspace sütunlu JSON dizisi / JSON Lines / CSV",
+      "targetsHint": "Satır başına bir mutlak yol veya repo ya da workspace ve şablon alanları içeren JSON nesneleri / CSV. En fazla 500.",
+      "targetCount": "{{count}} hedef",
+      "moreIssues": "…ve {{count}} tane daha",
+      "checks": "Çıktı kontrolleri",
+      "checksHint": "Öğeler yalnızca ürettikleri dosyalara göre değerlendirilir. Yollar öğenin çalışma alanına görelidir.",
+      "checkPattern": "Glob, ör. reports/*.json",
+      "checkPath": "Göreli yol, ör. report.json",
+      "removeCheck": "Kaldır",
+      "checkMin": "Min",
+      "checkMax": "Maks",
+      "checkSchema": "JSON şeması, ör. {\"type\":\"object\"}",
+      "addCheck": "Kontrol ekle",
+      "concurrency": "Eşzamanlılık",
+      "timeoutMinutes": "Zaman aşımı (dk)",
+      "trialSize": "Deneme öğeleri",
+      "trialHint": "Varsayılanlar: eşzamanlılık 4, öğe başına 30 dk, 1 deneme öğesi.",
+      "cancel": "İptal",
+      "submit": "Taslak oluştur",
+      "targetIssues": {
+        "notObject": "Hedef {{index}} bir nesne değil",
+        "needsLocation": "Hedef {{index}} için repo veya workspace yolu gerekli",
+        "bothLocations": "Hedef {{index}} hem repo hem workspace belirtiyor",
+        "notAbsolute": "Hedef {{index}}: {{path}} mutlak bir yol değil",
+        "duplicate": "Hedef {{index}}: {{path}} çalışma alanı birden fazla kez kullanılıyor",
+        "missingField": "Hedef {{index}}, şablonun kullandığı {{field}} alanını içermiyor"
+      },
+      "targetErrors": {
+        "empty": "Hedef yok",
+        "invalidJson": "Geçersiz JSON",
+        "invalidCsv": "Geçersiz CSV satırı",
+        "tooMany": "Çok fazla hedef (en fazla 500)"
+      },
+      "checkIssues": {
+        "pathRequired": "Yol gerekli",
+        "pathNotRelative": "Çalışma alanı içinde göreli bir yol kullanın",
+        "patternRequired": "Desen gerekli",
+        "countInvalid": "Min / maks tam sayı olmalı",
+        "maxBelowMin": "Maks, min değerinden küçük",
+        "schemaInvalid": "Şema bir JSON nesnesi veya boolean olmalı"
+      },
+      "issues": {
+        "titleRequired": "Bir ad girin",
+        "assistantRequired": "Bir asistan seçin",
+        "promptRequired": "Görev şablonunu girin",
+        "targetsInvalid": "Hedefleri düzeltin",
+        "checksRequired": "En az bir kontrol ekleyin",
+        "tooManyChecks": "En fazla 20 kontrol",
+        "checkInvalid": "Kontrolleri düzeltin",
+        "trialTooLarge": "Deneme öğesi sayısı hedef sayısından fazla"
+      }
+    }
   }
 }

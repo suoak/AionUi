@@ -1482,5 +1482,193 @@
     "bodyUnknownTool": "Este Squad Leader está en modo solo reparto, así que se bloqueó esta herramienta.",
     "allowed": "Herramientas permitidas:",
     "hint": "El Leader debe asignar este trabajo a un miembro del equipo con team_send_message o una tarea."
+  },
+  "batchJobs": {
+    "title": "Trabajos por lotes",
+    "description": "Ejecuta una tarea en muchos repositorios: prueba unos pocos primero y luego escala",
+    "newJob": "Nuevo lote",
+    "empty": "Aún no hay trabajos por lotes",
+    "selectHint": "Selecciona un trabajo por lotes para ver sus elementos",
+    "loadFailed": "No se pudieron cargar los trabajos por lotes",
+    "reload": "Recargar",
+    "back": "Volver a la lista",
+    "listSummary": "{{passed}}/{{total}} superados · {{failed}} fallidos",
+    "created": "Lote creado como borrador. Ahora ejecuta la prueba.",
+    "exported": "CSV exportado",
+    "createTitle": "Nuevo trabajo por lotes",
+    "meta": "Concurrencia {{concurrency}} · tiempo límite {{minutes}} min por elemento · prueba {{trial}}",
+    "cancelConfirm": "¿Cancelar este lote? Los elementos pendientes no se ejecutarán y los que estén en curso se detendrán.",
+    "progressTrial": "Progreso de la prueba",
+    "progressAll": "Progreso total",
+    "trialBadge": "Prueba",
+    "attempt": "Intento {{count}}",
+    "openSession": "Abrir sesión",
+    "diskDetail": "Necesita unos {{need}} MiB y solo hay {{free}} MiB libres. Libera espacio o reduce la concurrencia e inténtalo de nuevo.",
+    "status": {
+      "draft": "Borrador",
+      "trial": "Prueba",
+      "running": "En ejecución",
+      "paused": "En pausa",
+      "completed": "Completado",
+      "failed": "Fallido",
+      "cancelled": "Cancelado",
+      "pending": "Pendiente",
+      "passed": "Superado",
+      "timeout": "Tiempo agotado",
+      "skipped": "Omitido"
+    },
+    "actions": {
+      "trial": "Ejecutar prueba",
+      "scale": "Escalar a los {{count}}",
+      "resume": "Reanudar",
+      "retryFailed": "Reintentar fallidos",
+      "retryItem": "Reintentar",
+      "cancel": "Cancelar lote",
+      "cancelConfirmOk": "Cancelar lote",
+      "keepRunning": "Mantener",
+      "export": "Exportar CSV"
+    },
+    "hints": {
+      "trialFirst": "Ejecuta primero la prueba: solo se puede escalar cuando todos los elementos de prueba se superan",
+      "trialRunning": "Espera a que termine la prueba",
+      "trialNotPassed": "Todos los elementos de prueba deben superarse antes de escalar; reintenta los fallidos"
+    },
+    "phase": {
+      "draft": {
+        "title": "Borrador: aún sin probar",
+        "desc": "Prueba los primeros {{trial}} elemento(s) y revisa los resultados antes de escalar a los {{total}}."
+      },
+      "trialRunning": {
+        "title": "Prueba en curso",
+        "desc": "Se están ejecutando los primeros {{trial}} elemento(s). Los resultados aparecen aquí al terminar."
+      },
+      "trialPassed": {
+        "title": "Prueba superada",
+        "desc": "Todos los elementos de prueba superaron sus comprobaciones. Revísalos y escala a los {{total}} elementos."
+      },
+      "trialFailed": {
+        "title": "La prueba no se superó",
+        "desc": "Algunos elementos de prueba fallaron. Revisa los errores, ajusta si hace falta y reinténtalos; podrás escalar cuando todos se superen."
+      },
+      "running": {
+        "title": "En ejecución",
+        "desc": "Los elementos se ejecutan en paralelo hasta el límite de concurrencia. El progreso se actualiza en vivo."
+      },
+      "pausedAfterRestart": {
+        "title": "En pausa tras reiniciar la app",
+        "desc": "Los elementos que se ejecutaban al reiniciar la app se marcaron como fallidos y el lote se pausó. Reanuda para continuar con los pendientes o reintenta los fallidos."
+      },
+      "paused": {
+        "title": "En pausa",
+        "desc": "Reanuda para continuar con los elementos pendientes."
+      },
+      "completed": {
+        "title": "Completado",
+        "desc": "Todos los elementos superaron sus comprobaciones. Exporta el CSV para el informe completo."
+      },
+      "failed": {
+        "title": "Terminado con fallos",
+        "desc": "Algunos elementos fallaron o agotaron el tiempo. Reinténtalos o exporta el CSV."
+      },
+      "cancelled": {
+        "title": "Cancelado",
+        "desc": "Este lote se canceló. Se conservan los resultados terminados."
+      },
+      "unknown": {
+        "title": "Estado desconocido",
+        "desc": "El core informó un estado que esta versión no reconoce."
+      }
+    },
+    "columns": {
+      "target": "Destino",
+      "status": "Estado",
+      "checks": "Comprobaciones",
+      "error": "Error"
+    },
+    "checkKinds": {
+      "file_exists": "El archivo existe",
+      "glob": "Coincidencia glob",
+      "json_schema": "Esquema JSON"
+    },
+    "errors": {
+      "generic": "La solicitud falló, inténtalo de nuevo",
+      "badRequest": "La solicitud fue rechazada",
+      "agentDenied": "Los agentes no pueden gestionar trabajos por lotes",
+      "notFound": "Este trabajo por lotes ya no existe",
+      "notTrialed": "Aún sin probar: ejecuta la prueba antes de escalar",
+      "trialRunning": "La prueba sigue en curso; espera a que termine",
+      "trialNotPassed": "Todos los elementos de prueba deben superarse antes de escalar; reintenta primero los fallidos",
+      "retryTrialOnly": "Antes de escalar solo se pueden reintentar elementos de prueba",
+      "noRetryable": "No hay elementos fallidos que reintentar",
+      "concurrent": "El lote cambió de estado mientras tanto; se actualizó, inténtalo de nuevo",
+      "invalidState": "Esta acción no está permitida en el estado actual del lote",
+      "unavailable": "Una dependencia no está disponible (asistente, worktree o sesión)",
+      "insufficientDisk": "No hay suficiente espacio en disco para ejecutar este lote"
+    },
+    "form": {
+      "intro": "Crear un lote no ejecuta nada. Los primeros elementos se ejecutan como prueba; escala al resto solo cuando la prueba se supere.",
+      "title": "Nombre",
+      "titlePlaceholder": "p. ej. Auditoría de dependencias",
+      "assistant": "Asistente",
+      "assistantPlaceholder": "Elige un asistente",
+      "assistantHint": "Cada elemento se ejecuta como su propia sesión de agente con este asistente.",
+      "prompt": "Plantilla de tarea",
+      "promptPlaceholder": "Describe la tarea para un destino",
+      "promptHint": "Variables: {{field}} (un campo del destino), {{target}} (el destino entero en JSON), {{seq}} (número de elemento).",
+      "targets": "Destinos",
+      "pathKindRepo": "Repositorios",
+      "pathKindWorkspace": "Espacios de trabajo",
+      "targetsPlaceholder": "/path/to/repo-a\n/path/to/repo-b\n\no un array JSON / JSON Lines / CSV con columna repo o workspace",
+      "targetsHint": "Una ruta absoluta por línea, u objetos JSON / CSV con repo o workspace y campos de plantilla. Hasta 500.",
+      "targetCount": "{{count}} destino(s)",
+      "moreIssues": "…y {{count}} más",
+      "checks": "Comprobaciones de salida",
+      "checksHint": "Los elementos se juzgan solo por sus artefactos. Las rutas son relativas al espacio de trabajo del elemento.",
+      "checkPattern": "Glob, p. ej. reports/*.json",
+      "checkPath": "Ruta relativa, p. ej. report.json",
+      "removeCheck": "Quitar",
+      "checkMin": "Mín.",
+      "checkMax": "Máx.",
+      "checkSchema": "Esquema JSON, p. ej. {\"type\":\"object\"}",
+      "addCheck": "Añadir comprobación",
+      "concurrency": "Concurrencia",
+      "timeoutMinutes": "Tiempo límite (min)",
+      "trialSize": "Elementos de prueba",
+      "trialHint": "Valores por defecto: concurrencia 4, 30 min por elemento, 1 elemento de prueba.",
+      "cancel": "Cancelar",
+      "submit": "Crear borrador",
+      "targetIssues": {
+        "notObject": "El destino {{index}} no es un objeto",
+        "needsLocation": "El destino {{index}} necesita una ruta repo o workspace",
+        "bothLocations": "El destino {{index}} define repo y workspace a la vez",
+        "notAbsolute": "Destino {{index}}: {{path}} no es una ruta absoluta",
+        "duplicate": "Destino {{index}}: el espacio de trabajo {{path}} se usa más de una vez",
+        "missingField": "Al destino {{index}} le falta el campo {{field}} que usa la plantilla"
+      },
+      "targetErrors": {
+        "empty": "No hay destinos",
+        "invalidJson": "JSON no válido",
+        "invalidCsv": "Fila CSV no válida",
+        "tooMany": "Demasiados destinos (máx. 500)"
+      },
+      "checkIssues": {
+        "pathRequired": "La ruta es obligatoria",
+        "pathNotRelative": "Usa una ruta relativa dentro del espacio de trabajo",
+        "patternRequired": "El patrón es obligatorio",
+        "countInvalid": "Mín. / máx. deben ser números enteros",
+        "maxBelowMin": "El máx. es menor que el mín.",
+        "schemaInvalid": "El esquema debe ser un objeto JSON o un booleano"
+      },
+      "issues": {
+        "titleRequired": "Escribe un nombre",
+        "assistantRequired": "Elige un asistente",
+        "promptRequired": "Escribe la plantilla de tarea",
+        "targetsInvalid": "Corrige los destinos",
+        "checksRequired": "Añade al menos una comprobación",
+        "tooManyChecks": "Como máximo 20 comprobaciones",
+        "checkInvalid": "Corrige las comprobaciones",
+        "trialTooLarge": "Hay más elementos de prueba que destinos"
+      }
+    }
   }
 }

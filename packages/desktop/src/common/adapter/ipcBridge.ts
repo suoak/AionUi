@@ -214,6 +214,14 @@ import type {
   SquadTemplatePatch,
   SquadWorkItemWorktree,
 } from '@/common/types/agent/squad';
+import type {
+  BatchItem,
+  BatchItemUpdatedEvent,
+  BatchJob,
+  BatchJobUpdatedEvent,
+  BatchRetryRequest,
+  CreateBatchJobRequest,
+} from '@/common/types/agent/batch';
 import { toSquadRunPayload } from '@/common/types/agent/squadRun';
 import type { ProtocolDetectionRequest, ProtocolDetectionResponse } from '../utils/protocolDetector';
 import { normalizeLegacyBrandText } from '../utils/utils';
@@ -1210,6 +1218,47 @@ export const fanout = {
     () => ({})
   ),
   changed: wsEmitter<FanoutChangedEvent>('fanout.changed'),
+};
+
+/**
+ * M8 E8 batch jobs (`/api/batch*`, Core #205). User identity only — agent
+ * tokens get 403 AGENT_SCOPE_DENIED. Errors: 400 BAD_REQUEST, 404
+ * BATCH_NOT_FOUND, 409 BATCH_INVALID_STATE (e.g. scale before the trial),
+ * 424 BATCH_UNAVAILABLE, 507 BATCH_INSUFFICIENT_DISK.
+ */
+export const batch = {
+  list: httpGet<BatchJob[], { limit?: number; before?: number } | undefined>((p) => {
+    const qs = new URLSearchParams();
+    if (p?.limit !== undefined) qs.set('limit', String(p.limit));
+    if (p?.before !== undefined) qs.set('before', String(p.before));
+    const query = qs.toString();
+    return query ? `/api/batch?${query}` : '/api/batch';
+  }),
+  create: httpPost<BatchJob, CreateBatchJobRequest>('/api/batch'),
+  get: httpGet<BatchJob, { id: string }>((p) => `/api/batch/${encodeURIComponent(p.id)}`, { silentStatuses: [404] }),
+  items: httpGet<BatchItem[], { id: string }>((p) => `/api/batch/${encodeURIComponent(p.id)}/items`),
+  trial: httpPost<BatchJob, { id: string }>(
+    (p) => `/api/batch/${encodeURIComponent(p.id)}/trial`,
+    () => ({})
+  ),
+  scale: httpPost<BatchJob, { id: string }>(
+    (p) => `/api/batch/${encodeURIComponent(p.id)}/scale`,
+    () => ({})
+  ),
+  retry: httpPost<BatchJob, { id: string; request: BatchRetryRequest }>(
+    (p) => `/api/batch/${encodeURIComponent(p.id)}/retry`,
+    (p) => p.request
+  ),
+  cancel: httpPost<BatchJob, { id: string }>(
+    (p) => `/api/batch/${encodeURIComponent(p.id)}/cancel`,
+    () => ({})
+  ),
+  /** RFC 4180 CSV text (`text/csv`), one row per item. */
+  exportCsv: httpGet<string, { id: string }>((p) => `/api/batch/${encodeURIComponent(p.id)}/export.csv`, {
+    responseType: 'text',
+  }),
+  jobUpdated: wsEmitter<BatchJobUpdatedEvent>('batch.jobUpdated'),
+  itemUpdated: wsEmitter<BatchItemUpdatedEvent>('batch.itemUpdated'),
 };
 
 export const taskSession = {

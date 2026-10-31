@@ -7,3 +7,4 @@ export { default as SiderToolbar } from './SiderToolbar';
 export { default as SiderUsageEntry } from './SiderUsageEntry';
 export { default as SiderInboxEntry } from './SiderInboxEntry';
 export { default as SiderTasksBoardEntry } from './SiderTasksBoardEntry';
+export { default as SiderBatchEntry } from './SiderBatchEntry';

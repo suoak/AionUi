@@ -1481,5 +1481,193 @@
     "bodyUnknownTool": "This Squad Leader is in route-only mode, so this tool was blocked.",
     "allowed": "Allowed tools:",
     "hint": "The Leader should assign this work to a team member with team_send_message or a task instead."
+  },
+  "batchJobs": {
+    "title": "Batch jobs",
+    "description": "Run one task across many repositories, trial a few first, then scale",
+    "newJob": "New batch",
+    "empty": "No batch jobs yet",
+    "selectHint": "Select a batch job to see its items",
+    "loadFailed": "Failed to load batch jobs",
+    "reload": "Reload",
+    "back": "Back to list",
+    "listSummary": "{{passed}}/{{total}} passed · {{failed}} failed",
+    "created": "Batch created as a draft. Run the trial next.",
+    "exported": "CSV exported",
+    "createTitle": "New batch job",
+    "meta": "Concurrency {{concurrency}} · timeout {{minutes}} min per item · trial {{trial}}",
+    "cancelConfirm": "Cancel this batch? Pending items will not run; running items are stopped.",
+    "progressTrial": "Trial progress",
+    "progressAll": "Overall progress",
+    "trialBadge": "Trial",
+    "attempt": "Attempt {{count}}",
+    "openSession": "Open session",
+    "diskDetail": "Needs about {{need}} MiB, only {{free}} MiB free. Free up disk space or lower the concurrency, then try again.",
+    "status": {
+      "draft": "Draft",
+      "trial": "Trial",
+      "running": "Running",
+      "paused": "Paused",
+      "completed": "Completed",
+      "failed": "Failed",
+      "cancelled": "Cancelled",
+      "pending": "Pending",
+      "passed": "Passed",
+      "timeout": "Timed out",
+      "skipped": "Skipped"
+    },
+    "actions": {
+      "trial": "Run trial",
+      "scale": "Scale to all {{count}}",
+      "resume": "Resume",
+      "retryFailed": "Retry failed",
+      "retryItem": "Retry",
+      "cancel": "Cancel batch",
+      "cancelConfirmOk": "Cancel batch",
+      "keepRunning": "Keep",
+      "export": "Export CSV"
+    },
+    "hints": {
+      "trialFirst": "Run the trial first — scaling is only allowed after every trial item passes",
+      "trialRunning": "Wait for the trial to finish",
+      "trialNotPassed": "Every trial item must pass before scaling; retry the failed trial items"
+    },
+    "phase": {
+      "draft": {
+        "title": "Draft — not trialed yet",
+        "desc": "Run the trial on the first {{trial}} item(s) and check the results before scaling to all {{total}}."
+      },
+      "trialRunning": {
+        "title": "Trial running",
+        "desc": "The first {{trial}} item(s) are running. Results appear here as they finish."
+      },
+      "trialPassed": {
+        "title": "Trial passed",
+        "desc": "All trial items passed their checks. Review them, then scale to all {{total}} items."
+      },
+      "trialFailed": {
+        "title": "Trial did not pass",
+        "desc": "Some trial items failed. Check the errors, adjust if needed and retry them; scaling unlocks once every trial item passes."
+      },
+      "running": {
+        "title": "Running",
+        "desc": "Items run in parallel up to the concurrency limit. Progress updates live."
+      },
+      "pausedAfterRestart": {
+        "title": "Paused after an app restart",
+        "desc": "Items that were running when the app restarted were marked failed and the batch was paused. Resume to continue the pending items, or retry the failed ones."
+      },
+      "paused": {
+        "title": "Paused",
+        "desc": "Resume to continue the pending items."
+      },
+      "completed": {
+        "title": "Completed",
+        "desc": "Every item passed its checks. Export the CSV for the full report."
+      },
+      "failed": {
+        "title": "Finished with failures",
+        "desc": "Some items failed or timed out. Retry them or export the CSV."
+      },
+      "cancelled": {
+        "title": "Cancelled",
+        "desc": "This batch was cancelled. Finished results are kept."
+      },
+      "unknown": {
+        "title": "Unknown state",
+        "desc": "This core reported a state this version does not recognize."
+      }
+    },
+    "columns": {
+      "target": "Target",
+      "status": "Status",
+      "checks": "Checks",
+      "error": "Error"
+    },
+    "checkKinds": {
+      "file_exists": "File exists",
+      "glob": "Glob match",
+      "json_schema": "JSON schema"
+    },
+    "errors": {
+      "generic": "Request failed, please try again",
+      "badRequest": "The request was rejected",
+      "agentDenied": "Agents cannot manage batch jobs",
+      "notFound": "This batch job no longer exists",
+      "notTrialed": "Not trialed yet — run the trial before scaling",
+      "trialRunning": "The trial is still running; wait for it to finish",
+      "trialNotPassed": "Every trial item must pass before scaling; retry the failed trial items first",
+      "retryTrialOnly": "Before scaling, only trial items can be retried",
+      "noRetryable": "No failed items to retry",
+      "concurrent": "The batch changed state meanwhile; refreshed, please try again",
+      "invalidState": "This action is not allowed in the batch's current state",
+      "unavailable": "A dependency is unavailable (assistant, worktree or session)",
+      "insufficientDisk": "Not enough disk space to run this batch"
+    },
+    "form": {
+      "intro": "Creating a batch runs nothing. The first items run as a trial; scale to the rest only after the trial passes.",
+      "title": "Name",
+      "titlePlaceholder": "e.g. Dependency audit",
+      "assistant": "Assistant",
+      "assistantPlaceholder": "Choose an assistant",
+      "assistantHint": "Each item runs as its own agent session with this assistant.",
+      "prompt": "Task template",
+      "promptPlaceholder": "Describe the task for one target",
+      "promptHint": "Variables: {{field}} (a target field), {{target}} (the whole target as JSON), {{seq}} (item number).",
+      "targets": "Targets",
+      "pathKindRepo": "Repositories",
+      "pathKindWorkspace": "Workspaces",
+      "targetsPlaceholder": "/path/to/repo-a\n/path/to/repo-b\n\nor a JSON array / JSON Lines / CSV with a repo or workspace column",
+      "targetsHint": "One absolute path per line, or JSON / CSV objects with repo or workspace plus template fields. Up to 500.",
+      "targetCount": "{{count}} target(s)",
+      "moreIssues": "…and {{count}} more",
+      "checks": "Output checks",
+      "checksHint": "Items are judged only by their artifacts. Paths are relative to the item's workspace.",
+      "checkPattern": "Glob, e.g. reports/*.json",
+      "checkPath": "Relative path, e.g. report.json",
+      "removeCheck": "Remove",
+      "checkMin": "Min",
+      "checkMax": "Max",
+      "checkSchema": "JSON schema, e.g. {\"type\":\"object\"}",
+      "addCheck": "Add check",
+      "concurrency": "Concurrency",
+      "timeoutMinutes": "Timeout (min)",
+      "trialSize": "Trial items",
+      "trialHint": "Defaults: concurrency 4, 30 min per item, 1 trial item.",
+      "cancel": "Cancel",
+      "submit": "Create draft",
+      "targetIssues": {
+        "notObject": "Target {{index}} is not an object",
+        "needsLocation": "Target {{index}} needs a repo or workspace path",
+        "bothLocations": "Target {{index}} sets both repo and workspace",
+        "notAbsolute": "Target {{index}}: {{path}} is not an absolute path",
+        "duplicate": "Target {{index}}: workspace {{path}} is used more than once",
+        "missingField": "Target {{index}} has no {{field}} field used by the template"
+      },
+      "targetErrors": {
+        "empty": "No targets",
+        "invalidJson": "Invalid JSON",
+        "invalidCsv": "Invalid CSV row",
+        "tooMany": "Too many targets (max 500)"
+      },
+      "checkIssues": {
+        "pathRequired": "Path is required",
+        "pathNotRelative": "Use a relative path inside the workspace",
+        "patternRequired": "Pattern is required",
+        "countInvalid": "Min / max must be whole numbers",
+        "maxBelowMin": "Max is below min",
+        "schemaInvalid": "Schema must be a JSON object or boolean"
+      },
+      "issues": {
+        "titleRequired": "Enter a name",
+        "assistantRequired": "Choose an assistant",
+        "promptRequired": "Enter the task template",
+        "targetsInvalid": "Fix the targets",
+        "checksRequired": "Add at least one check",
+        "tooManyChecks": "At most 20 checks",
+        "checkInvalid": "Fix the checks",
+        "trialTooLarge": "Trial items exceed the number of targets"
+      }
+    }
   }
 }

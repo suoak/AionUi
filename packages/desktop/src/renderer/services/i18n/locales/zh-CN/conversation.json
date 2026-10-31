@@ -1481,5 +1481,193 @@
     "bodyUnknownTool": "该 Squad Leader 处于只派活模式，已拦截此工具。",
     "allowed": "可用工具：",
     "hint": "Leader 应通过 team_send_message 或任务把这项工作交给团队成员。"
+  },
+  "batchJobs": {
+    "title": "批量任务",
+    "description": "把同一任务跑在多个仓库上，先试跑少量，再放量",
+    "newJob": "新建批量任务",
+    "empty": "暂无批量任务",
+    "selectHint": "选择一个批量任务查看明细",
+    "loadFailed": "批量任务加载失败",
+    "reload": "重新加载",
+    "back": "返回列表",
+    "listSummary": "通过 {{passed}}/{{total}} · 失败 {{failed}}",
+    "created": "已创建草稿，下一步请试跑",
+    "exported": "CSV 已导出",
+    "createTitle": "新建批量任务",
+    "meta": "并发 {{concurrency}} · 每项超时 {{minutes}} 分钟 · 试跑 {{trial}} 项",
+    "cancelConfirm": "确定取消此批量任务？未开始的项目不再运行，运行中的会被停止。",
+    "progressTrial": "试跑进度",
+    "progressAll": "总体进度",
+    "trialBadge": "试跑",
+    "attempt": "第 {{count}} 次",
+    "openSession": "打开会话",
+    "diskDetail": "约需 {{need}} MiB，仅剩 {{free}} MiB。请清理磁盘或降低并发后重试。",
+    "status": {
+      "draft": "草稿",
+      "trial": "试跑",
+      "running": "运行中",
+      "paused": "已暂停",
+      "completed": "已完成",
+      "failed": "失败",
+      "cancelled": "已取消",
+      "pending": "等待中",
+      "passed": "通过",
+      "timeout": "超时",
+      "skipped": "已跳过"
+    },
+    "actions": {
+      "trial": "开始试跑",
+      "scale": "放量到全部 {{count}} 项",
+      "resume": "继续运行",
+      "retryFailed": "重试失败项",
+      "retryItem": "重试",
+      "cancel": "取消任务",
+      "cancelConfirmOk": "取消任务",
+      "keepRunning": "保留",
+      "export": "导出 CSV"
+    },
+    "hints": {
+      "trialFirst": "请先试跑——所有试跑项通过后才能放量",
+      "trialRunning": "请等待试跑完成",
+      "trialNotPassed": "所有试跑项通过后才能放量，请重试失败的试跑项"
+    },
+    "phase": {
+      "draft": {
+        "title": "草稿——尚未试跑",
+        "desc": "先对前 {{trial}} 项试跑并检查结果，再放量到全部 {{total}} 项。"
+      },
+      "trialRunning": {
+        "title": "试跑中",
+        "desc": "前 {{trial}} 项正在运行，完成后结果会显示在这里。"
+      },
+      "trialPassed": {
+        "title": "试跑通过",
+        "desc": "所有试跑项均通过检查。确认结果后即可放量到全部 {{total}} 项。"
+      },
+      "trialFailed": {
+        "title": "试跑未通过",
+        "desc": "部分试跑项失败。查看错误、按需调整后重试；所有试跑项通过后才能放量。"
+      },
+      "running": {
+        "title": "运行中",
+        "desc": "项目按并发上限并行运行，进度实时更新。"
+      },
+      "pausedAfterRestart": {
+        "title": "应用重启后已暂停",
+        "desc": "应用重启时正在运行的项目已标记为失败，任务已暂停。点击“继续运行”跑剩余项目，或重试失败项。"
+      },
+      "paused": {
+        "title": "已暂停",
+        "desc": "点击“继续运行”继续未开始的项目。"
+      },
+      "completed": {
+        "title": "已完成",
+        "desc": "所有项目均通过检查。可导出 CSV 查看完整报告。"
+      },
+      "failed": {
+        "title": "已结束（有失败）",
+        "desc": "部分项目失败或超时。可重试或导出 CSV。"
+      },
+      "cancelled": {
+        "title": "已取消",
+        "desc": "此批量任务已取消，已完成的结果会保留。"
+      },
+      "unknown": {
+        "title": "未知状态",
+        "desc": "Core 返回了此版本无法识别的状态。"
+      }
+    },
+    "columns": {
+      "target": "目标",
+      "status": "状态",
+      "checks": "检查",
+      "error": "错误"
+    },
+    "checkKinds": {
+      "file_exists": "文件存在",
+      "glob": "通配匹配",
+      "json_schema": "JSON Schema"
+    },
+    "errors": {
+      "generic": "请求失败，请重试",
+      "badRequest": "请求被拒绝",
+      "agentDenied": "智能体无权管理批量任务",
+      "notFound": "该批量任务已不存在",
+      "notTrialed": "尚未试跑——请先试跑再放量",
+      "trialRunning": "试跑仍在进行，请等待完成",
+      "trialNotPassed": "所有试跑项通过后才能放量，请先重试失败的试跑项",
+      "retryTrialOnly": "放量前只能重试试跑项",
+      "noRetryable": "没有可重试的失败项",
+      "concurrent": "任务状态已被其他操作更新，已刷新，请重试",
+      "invalidState": "任务当前状态不允许此操作",
+      "unavailable": "依赖不可用（助手、工作树或会话）",
+      "insufficientDisk": "磁盘空间不足，无法运行此批量任务"
+    },
+    "form": {
+      "intro": "创建批量任务不会立即运行。前几项会先试跑，试跑通过后才能放量到其余项目。",
+      "title": "名称",
+      "titlePlaceholder": "例如：依赖审计",
+      "assistant": "助手",
+      "assistantPlaceholder": "选择助手",
+      "assistantHint": "每个项目都会用该助手开一个独立的智能体会话。",
+      "prompt": "任务模板",
+      "promptPlaceholder": "描述针对单个目标要做的事",
+      "promptHint": "变量：{{field}}（目标字段）、{{target}}（整个目标 JSON）、{{seq}}（项目序号）。",
+      "targets": "目标",
+      "pathKindRepo": "仓库",
+      "pathKindWorkspace": "工作区",
+      "targetsPlaceholder": "/path/to/repo-a\n/path/to/repo-b\n\n或 JSON 数组 / JSON Lines / 带 repo 或 workspace 列的 CSV",
+      "targetsHint": "每行一个绝对路径，或包含 repo / workspace 及模板字段的 JSON / CSV。最多 500 个。",
+      "targetCount": "共 {{count}} 个目标",
+      "moreIssues": "……另有 {{count}} 处问题",
+      "checks": "产出检查",
+      "checksHint": "项目只按产出物判定。路径相对于该项目的工作区。",
+      "checkPattern": "通配符，例如 reports/*.json",
+      "checkPath": "相对路径，例如 report.json",
+      "removeCheck": "删除",
+      "checkMin": "最少",
+      "checkMax": "最多",
+      "checkSchema": "JSON Schema，例如 {\"type\":\"object\"}",
+      "addCheck": "添加检查",
+      "concurrency": "并发数",
+      "timeoutMinutes": "超时（分钟）",
+      "trialSize": "试跑项数",
+      "trialHint": "默认：并发 4、每项 30 分钟、试跑 1 项。",
+      "cancel": "取消",
+      "submit": "创建草稿",
+      "targetIssues": {
+        "notObject": "第 {{index}} 个目标不是对象",
+        "needsLocation": "第 {{index}} 个目标缺少 repo 或 workspace 路径",
+        "bothLocations": "第 {{index}} 个目标同时设置了 repo 和 workspace",
+        "notAbsolute": "第 {{index}} 个目标：{{path}} 不是绝对路径",
+        "duplicate": "第 {{index}} 个目标：工作区 {{path}} 被重复使用",
+        "missingField": "第 {{index}} 个目标缺少模板用到的 {{field}} 字段"
+      },
+      "targetErrors": {
+        "empty": "没有目标",
+        "invalidJson": "JSON 格式错误",
+        "invalidCsv": "CSV 行格式错误",
+        "tooMany": "目标过多（最多 500 个）"
+      },
+      "checkIssues": {
+        "pathRequired": "请填写路径",
+        "pathNotRelative": "请使用工作区内的相对路径",
+        "patternRequired": "请填写通配符",
+        "countInvalid": "最少/最多须为整数",
+        "maxBelowMin": "最多不能小于最少",
+        "schemaInvalid": "Schema 须为 JSON 对象或布尔值"
+      },
+      "issues": {
+        "titleRequired": "请填写名称",
+        "assistantRequired": "请选择助手",
+        "promptRequired": "请填写任务模板",
+        "targetsInvalid": "请修正目标",
+        "checksRequired": "至少添加一项检查",
+        "tooManyChecks": "最多 20 项检查",
+        "checkInvalid": "请修正检查",
+        "trialTooLarge": "试跑项数超过目标数量"
+      }
+    }
   }
 }

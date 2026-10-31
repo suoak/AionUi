@@ -1481,5 +1481,193 @@
     "bodyUnknownTool": "Ce Squad Leader est en mode répartition uniquement : cet outil a été bloqué.",
     "allowed": "Outils autorisés :",
     "hint": "Le Leader doit confier ce travail à un membre de l'équipe via team_send_message ou une tâche."
+  },
+  "batchJobs": {
+    "title": "Traitements par lots",
+    "description": "Exécutez une tâche sur de nombreux dépôts : testez-en quelques-uns, puis passez à l’échelle",
+    "newJob": "Nouveau lot",
+    "empty": "Aucun traitement par lots",
+    "selectHint": "Sélectionnez un lot pour voir ses éléments",
+    "loadFailed": "Impossible de charger les lots",
+    "reload": "Recharger",
+    "back": "Retour à la liste",
+    "listSummary": "{{passed}}/{{total}} réussis · {{failed}} en échec",
+    "created": "Lot créé en brouillon. Lancez ensuite l’essai.",
+    "exported": "CSV exporté",
+    "createTitle": "Nouveau traitement par lots",
+    "meta": "Concurrence {{concurrency}} · délai {{minutes}} min par élément · essai {{trial}}",
+    "cancelConfirm": "Annuler ce lot ? Les éléments en attente ne seront pas exécutés et ceux en cours seront arrêtés.",
+    "progressTrial": "Progression de l’essai",
+    "progressAll": "Progression globale",
+    "trialBadge": "Essai",
+    "attempt": "Tentative {{count}}",
+    "openSession": "Ouvrir la session",
+    "diskDetail": "Il faut environ {{need}} Mio, seulement {{free}} Mio libres. Libérez de l’espace ou réduisez la concurrence, puis réessayez.",
+    "status": {
+      "draft": "Brouillon",
+      "trial": "Essai",
+      "running": "En cours",
+      "paused": "En pause",
+      "completed": "Terminé",
+      "failed": "Échec",
+      "cancelled": "Annulé",
+      "pending": "En attente",
+      "passed": "Réussi",
+      "timeout": "Délai dépassé",
+      "skipped": "Ignoré"
+    },
+    "actions": {
+      "trial": "Lancer l’essai",
+      "scale": "Étendre aux {{count}}",
+      "resume": "Reprendre",
+      "retryFailed": "Relancer les échecs",
+      "retryItem": "Relancer",
+      "cancel": "Annuler le lot",
+      "cancelConfirmOk": "Annuler le lot",
+      "keepRunning": "Conserver",
+      "export": "Exporter en CSV"
+    },
+    "hints": {
+      "trialFirst": "Lancez d’abord l’essai : l’extension n’est possible que si tous les éléments d’essai réussissent",
+      "trialRunning": "Attendez la fin de l’essai",
+      "trialNotPassed": "Tous les éléments d’essai doivent réussir avant l’extension ; relancez ceux en échec"
+    },
+    "phase": {
+      "draft": {
+        "title": "Brouillon — pas encore testé",
+        "desc": "Testez les {{trial}} premier(s) élément(s) et vérifiez les résultats avant d’étendre aux {{total}}."
+      },
+      "trialRunning": {
+        "title": "Essai en cours",
+        "desc": "Les {{trial}} premier(s) élément(s) sont en cours. Les résultats s’affichent ici dès qu’ils sont terminés."
+      },
+      "trialPassed": {
+        "title": "Essai réussi",
+        "desc": "Tous les éléments d’essai ont passé leurs vérifications. Contrôlez-les, puis étendez aux {{total}} éléments."
+      },
+      "trialFailed": {
+        "title": "Essai non réussi",
+        "desc": "Certains éléments d’essai ont échoué. Consultez les erreurs, ajustez si besoin et relancez-les ; l’extension se débloque quand tous réussissent."
+      },
+      "running": {
+        "title": "En cours",
+        "desc": "Les éléments s’exécutent en parallèle jusqu’à la limite de concurrence. La progression est mise à jour en direct."
+      },
+      "pausedAfterRestart": {
+        "title": "En pause après un redémarrage de l’app",
+        "desc": "Les éléments en cours lors du redémarrage de l’app ont été marqués en échec et le lot a été mis en pause. Reprenez pour continuer les éléments en attente, ou relancez ceux en échec."
+      },
+      "paused": {
+        "title": "En pause",
+        "desc": "Reprenez pour continuer les éléments en attente."
+      },
+      "completed": {
+        "title": "Terminé",
+        "desc": "Tous les éléments ont passé leurs vérifications. Exportez le CSV pour le rapport complet."
+      },
+      "failed": {
+        "title": "Terminé avec des échecs",
+        "desc": "Certains éléments ont échoué ou dépassé le délai. Relancez-les ou exportez le CSV."
+      },
+      "cancelled": {
+        "title": "Annulé",
+        "desc": "Ce lot a été annulé. Les résultats terminés sont conservés."
+      },
+      "unknown": {
+        "title": "État inconnu",
+        "desc": "Le core a signalé un état que cette version ne reconnaît pas."
+      }
+    },
+    "columns": {
+      "target": "Cible",
+      "status": "État",
+      "checks": "Vérifications",
+      "error": "Erreur"
+    },
+    "checkKinds": {
+      "file_exists": "Fichier présent",
+      "glob": "Correspondance glob",
+      "json_schema": "Schéma JSON"
+    },
+    "errors": {
+      "generic": "La requête a échoué, réessayez",
+      "badRequest": "La requête a été refusée",
+      "agentDenied": "Les agents ne peuvent pas gérer les lots",
+      "notFound": "Ce lot n’existe plus",
+      "notTrialed": "Pas encore testé — lancez l’essai avant d’étendre",
+      "trialRunning": "L’essai est toujours en cours ; attendez qu’il se termine",
+      "trialNotPassed": "Tous les éléments d’essai doivent réussir avant l’extension ; relancez d’abord ceux en échec",
+      "retryTrialOnly": "Avant l’extension, seuls les éléments d’essai peuvent être relancés",
+      "noRetryable": "Aucun élément en échec à relancer",
+      "concurrent": "Le lot a changé d’état entre-temps ; actualisé, réessayez",
+      "invalidState": "Cette action n’est pas autorisée dans l’état actuel du lot",
+      "unavailable": "Une dépendance est indisponible (assistant, worktree ou session)",
+      "insufficientDisk": "Espace disque insuffisant pour exécuter ce lot"
+    },
+    "form": {
+      "intro": "Créer un lot n’exécute rien. Les premiers éléments servent d’essai ; étendez au reste seulement après la réussite de l’essai.",
+      "title": "Nom",
+      "titlePlaceholder": "ex. Audit des dépendances",
+      "assistant": "Assistant",
+      "assistantPlaceholder": "Choisir un assistant",
+      "assistantHint": "Chaque élément s’exécute dans sa propre session d’agent avec cet assistant.",
+      "prompt": "Modèle de tâche",
+      "promptPlaceholder": "Décrivez la tâche pour une cible",
+      "promptHint": "Variables : {{field}} (un champ de la cible), {{target}} (la cible entière en JSON), {{seq}} (numéro d’élément).",
+      "targets": "Cibles",
+      "pathKindRepo": "Dépôts",
+      "pathKindWorkspace": "Espaces de travail",
+      "targetsPlaceholder": "/path/to/repo-a\n/path/to/repo-b\n\nou un tableau JSON / JSON Lines / CSV avec une colonne repo ou workspace",
+      "targetsHint": "Un chemin absolu par ligne, ou des objets JSON / CSV avec repo ou workspace et des champs de modèle. 500 au maximum.",
+      "targetCount": "{{count}} cible(s)",
+      "moreIssues": "…et {{count}} de plus",
+      "checks": "Vérifications de sortie",
+      "checksHint": "Les éléments sont jugés uniquement sur leurs artefacts. Les chemins sont relatifs à l’espace de travail de l’élément.",
+      "checkPattern": "Glob, ex. reports/*.json",
+      "checkPath": "Chemin relatif, ex. report.json",
+      "removeCheck": "Supprimer",
+      "checkMin": "Min",
+      "checkMax": "Max",
+      "checkSchema": "Schéma JSON, ex. {\"type\":\"object\"}",
+      "addCheck": "Ajouter une vérification",
+      "concurrency": "Concurrence",
+      "timeoutMinutes": "Délai (min)",
+      "trialSize": "Éléments d’essai",
+      "trialHint": "Par défaut : concurrence 4, 30 min par élément, 1 élément d’essai.",
+      "cancel": "Annuler",
+      "submit": "Créer le brouillon",
+      "targetIssues": {
+        "notObject": "La cible {{index}} n’est pas un objet",
+        "needsLocation": "La cible {{index}} doit avoir un chemin repo ou workspace",
+        "bothLocations": "La cible {{index}} définit à la fois repo et workspace",
+        "notAbsolute": "Cible {{index}} : {{path}} n’est pas un chemin absolu",
+        "duplicate": "Cible {{index}} : l’espace de travail {{path}} est utilisé plusieurs fois",
+        "missingField": "La cible {{index}} n’a pas le champ {{field}} utilisé par le modèle"
+      },
+      "targetErrors": {
+        "empty": "Aucune cible",
+        "invalidJson": "JSON invalide",
+        "invalidCsv": "Ligne CSV invalide",
+        "tooMany": "Trop de cibles (500 max.)"
+      },
+      "checkIssues": {
+        "pathRequired": "Le chemin est requis",
+        "pathNotRelative": "Utilisez un chemin relatif dans l’espace de travail",
+        "patternRequired": "Le motif est requis",
+        "countInvalid": "Min / max doivent être des entiers",
+        "maxBelowMin": "Le max est inférieur au min",
+        "schemaInvalid": "Le schéma doit être un objet JSON ou un booléen"
+      },
+      "issues": {
+        "titleRequired": "Saisissez un nom",
+        "assistantRequired": "Choisissez un assistant",
+        "promptRequired": "Saisissez le modèle de tâche",
+        "targetsInvalid": "Corrigez les cibles",
+        "checksRequired": "Ajoutez au moins une vérification",
+        "tooManyChecks": "20 vérifications au maximum",
+        "checkInvalid": "Corrigez les vérifications",
+        "trialTooLarge": "Plus d’éléments d’essai que de cibles"
+      }
+    }
   }
 }
