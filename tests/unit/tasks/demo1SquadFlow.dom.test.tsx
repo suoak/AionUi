@@ -427,7 +427,10 @@ const openAssignAndStart = async () => {
   renderBoard();
   await waitFor(() => expect(drawer()).toBeTruthy());
   expect(within(column('todo')).getByTestId('task-board-card-w1')).toBeTruthy();
-  expect(screen.getByTestId('task-board-detail-objective').textContent).toBe('Login page with SSO');
+  // The drawer opens before the session detail resolves; wait for the objective.
+  await waitFor(() =>
+    expect(screen.getByTestId('task-board-detail-objective').textContent).toBe('Login page with SSO')
+  );
 
   // Assign: kind=squad → pick the template from GET /api/squads → save.
   await chooseOption('task-board-assignee-kind', 'conversation.taskBoard.assignee.kind.squad');
