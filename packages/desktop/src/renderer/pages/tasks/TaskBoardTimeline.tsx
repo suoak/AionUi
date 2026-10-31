@@ -6,7 +6,7 @@
 
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Button, Input, Message, Spin } from '@arco-design/web-react';
+import { Button, Input, Message, Spin, Tag } from '@arco-design/web-react';
 import { ipcBridge } from '@/common';
 import type { TaskComment, TaskCommentEvent, TaskTraceEvent } from '@/common/types/agent/taskSession';
 import { isBackendHttpError } from '@/common/adapter/httpBridge';
@@ -17,6 +17,7 @@ import {
   upsertComment,
   type BoardTimelineRow,
 } from './boardModel';
+import { isLeaderEvalComment, isWorktreeKeptComment } from './workItemWorktreeModel';
 
 type TaskBoardTimelineProps = {
   taskId: string;
@@ -229,6 +230,8 @@ const TaskBoardTimeline: React.FC<TaskBoardTimelineProps> = ({ taskId, refreshKe
                 key={row.id}
                 data-testid={`task-board-timeline-entry-${row.comment.id}`}
                 data-kind={row.comment.kind}
+                data-leader-eval={isLeaderEvalComment(row.comment) ? 'true' : undefined}
+                data-worktree-note={isWorktreeKeptComment(row.comment) ? 'true' : undefined}
                 className={
                   row.comment.kind === 'comment'
                     ? 'rd-6px bg-fill-1 p-8px flex flex-col gap-4px'
@@ -237,6 +240,11 @@ const TaskBoardTimeline: React.FC<TaskBoardTimelineProps> = ({ taskId, refreshKe
               >
                 <div className='flex items-center justify-between gap-8px text-12px text-t-tertiary'>
                   <span>
+                    {isLeaderEvalComment(row.comment) ? (
+                      <Tag size='small' color='arcoblue' className='me-4px'>
+                        {t('conversation.taskBoard.timeline.leaderEval')}
+                      </Tag>
+                    ) : null}
                     {t(`conversation.taskBoard.timeline.author.${row.comment.author_kind}`)}
                     {row.comment.author_kind === 'system' ? '' : ` · ${row.comment.author_id}`}
                     {' · '}

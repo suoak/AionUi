@@ -121,4 +121,25 @@ export type SquadPreview = {
 export type SquadInstantiateInput = {
   name?: string;
   workspace?: string;
+  /**
+   * M8 E7-6b: start the Squad for this board work item (must be assigned to
+   * the template and out of backlog). The instance then drives the card.
+   */
+  work_item_id?: string;
+  /**
+   * M8 Q12: git repository for the work item's shared worktree, used only when
+   * the item has none yet. Without it Core tries `workspace`, then the work
+   * item's project folder.
+   */
+  repo_path?: string;
+};
+
+/** M8 Q12: the managed worktree every Squad instance of one work item shares. */
+export type SquadWorkItemWorktree = {
+  id: string;
+  path: string;
+  branch: string;
+  source_repo_path: string;
+  /** `true` when an earlier instance of the work item created it. */
+  reused: boolean;
 };

@@ -1411,7 +1411,8 @@
       "trace": "Trace",
       "traceFileChanged": "Changed {{path}}",
       "traceToolDenied": "Denied {{tool}}",
-      "traceGeneric": "{{type}}"
+      "traceGeneric": "{{type}}",
+      "leaderEval": "Leader evaluation"
     },
     "errors": {
       "review_required": "Moving to Done or back from In review goes through review.",
@@ -1439,6 +1440,39 @@
       "noTeam": "No team has been created from this Squad yet.",
       "unavailable": "Run status is not available for this Squad's teams.",
       "hint": "Derived from the team's tasks; refreshes every 15 seconds."
+    },
+    "squadStart": {
+      "start": "Start Squad",
+      "started": "Squad started for this work item",
+      "hint": "Uses the repository below, or the project folder, for the shared worktree.",
+      "reuseHint": "Reuses this work item's shared worktree.",
+      "repoPlaceholder": "Git repository path (optional)",
+      "errors": {
+        "squad_work_item_not_found": "Work item not found.",
+        "squad_work_item_not_assigned": "This work item is no longer assigned to this Squad.",
+        "squad_backlog_not_started": "Move the work item out of Backlog before starting the Squad.",
+        "squad_worktree_source_invalid": "No usable git repository for the shared worktree. Enter a repository path.",
+        "squad_worktree_failed": "Failed to prepare the shared worktree."
+      }
+    },
+    "worktree": {
+      "title": "Shared worktree",
+      "branch": "Branch",
+      "path": "Path",
+      "source": "Repository",
+      "changes": "Changes",
+      "changesSummary": "{{files}} files, +{{additions}} −{{deletions}}",
+      "shared": "All Squad runs of this work item share this worktree.",
+      "kept": "Work item closed. The worktree and branch were kept, not deleted.",
+      "status": {
+        "creating": "Creating",
+        "ready": "Ready",
+        "failed": "Failed",
+        "unbound": "Unbound",
+        "removing": "Removing",
+        "removed": "Removed",
+        "orphaned": "Orphaned"
+      }
     }
   },
   "squadRouteOnly": {

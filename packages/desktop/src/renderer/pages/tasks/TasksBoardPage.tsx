@@ -21,10 +21,12 @@ import {
 } from '@dnd-kit/core';
 import { ipcBridge } from '@/common';
 import type { TaskBoardItem, TaskBoardStatus, UpdateTaskBoardInput } from '@/common/types/agent/taskSession';
+import type { WorktreeInfo } from '@/common/types/worktree';
 import { useLayoutContext } from '@renderer/hooks/context/LayoutContext';
 import SettingsPageHeader from '@/renderer/pages/settings/components/SettingsPageHeader';
 import TaskBoardCard from './TaskBoardCard';
 import TaskBoardDetailDrawer from './TaskBoardDetailDrawer';
+import { useWorkItemWorktrees } from './useWorkItemWorktrees';
 import {
   REALTIME_FALLBACK_MS,
   VISIBLE_BOARD_COLUMNS,
@@ -50,7 +52,8 @@ const DraggableCard: React.FC<{
   item: TaskBoardItem;
   disabled: boolean;
   onOpen: (item: TaskBoardItem) => void;
-}> = ({ item, disabled, onOpen }) => {
+  worktree?: WorktreeInfo | null;
+}> = ({ item, disabled, onOpen, worktree }) => {
   const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
     id: item.id,
     data: { from: item.board_status },
@@ -59,7 +62,7 @@ const DraggableCard: React.FC<{
   const style = transform ? { transform: `translate3d(${transform.x}px, ${transform.y}px, 0)` } : undefined;
   return (
     <div ref={setNodeRef} style={style} {...listeners} {...attributes} role={undefined} tabIndex={undefined}>
-      <TaskBoardCard task={item} onOpen={onOpen} dragging={isDragging} />
+      <TaskBoardCard task={item} onOpen={onOpen} dragging={isDragging} worktree={worktree} />
     </div>
   );
 };
@@ -155,6 +158,8 @@ const TasksBoardPage: React.FC = () => {
   }, [load]);
 
   const interactive = source === 'board';
+  // M8 Q12: one shared worktree per work item (branch on the card, details in the drawer).
+  const { byItem: worktrees } = useWorkItemWorktrees(interactive && loadState === 'ready', refreshKey);
   const visibleColumns: TaskBoardStatus[] = showCancelled
     ? [...VISIBLE_BOARD_COLUMNS, 'cancelled']
     : [...VISIBLE_BOARD_COLUMNS];
@@ -372,6 +377,7 @@ const TasksBoardPage: React.FC = () => {
                         item={item}
                         disabled={!interactive || status === 'done'}
                         onOpen={handleSelect}
+                        worktree={worktrees.get(item.id) ?? null}
                       />
                     ))
                   )}
@@ -391,6 +397,8 @@ const TasksBoardPage: React.FC = () => {
         onMove={moveItem}
         onItemUpdated={applyServerItem}
         onStale={handleStale}
+        worktree={selectedTask ? (worktrees.get(selectedTask.id) ?? null) : null}
+        onSquadStarted={() => setRefreshKey((k) => k + 1)}
       />
     </div>
   );

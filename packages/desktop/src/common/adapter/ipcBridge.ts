@@ -212,6 +212,7 @@ import type {
   SquadTemplate,
   SquadTemplateInput,
   SquadTemplatePatch,
+  SquadWorkItemWorktree,
 } from '@/common/types/agent/squad';
 import { toSquadRunPayload } from '@/common/types/agent/squadRun';
 import type { ProtocolDetectionRequest, ProtocolDetectionResponse } from '../utils/protocolDetector';
@@ -1118,14 +1119,18 @@ export const worktree = {
     { silentStatuses: [400, 404, 422] }
   ),
   create: httpPost<WorktreeInfo, CreateWorktreeInput>('/api/worktrees'),
-  list: httpGet<WorktreeInfo[], ListWorktreesInput>((p) => {
-    const params = new URLSearchParams();
-    if (p.repo_path) params.set('repo_path', p.repo_path);
-    if (p.status) params.set('status', p.status);
-    if (p.include_removed) params.set('include_removed', 'true');
-    const query = params.toString();
-    return query ? `/api/worktrees?${query}` : '/api/worktrees';
-  }),
+  list: httpGet<WorktreeInfo[], ListWorktreesInput>(
+    (p) => {
+      const params = new URLSearchParams();
+      if (p.repo_path) params.set('repo_path', p.repo_path);
+      if (p.task_session_id) params.set('task_session_id', p.task_session_id);
+      if (p.status) params.set('status', p.status);
+      if (p.include_removed) params.set('include_removed', 'true');
+      const query = params.toString();
+      return query ? `/api/worktrees?${query}` : '/api/worktrees';
+    },
+    { silentStatuses: [404] }
+  ),
   get: httpGet<WorktreeInfo, { id: string }>((p) => `/api/worktrees/${encodeURIComponent(p.id)}`, {
     silentStatuses: [404],
   }),
@@ -3540,11 +3545,25 @@ export const squads = {
   ),
   preview: httpGet<SquadPreview, { id: string }>((p) => `/api/squads/${encodeURIComponent(p.id)}/preview`),
   instantiate: withResponseMap(
-    httpPost<{ squad_template_id: string; team: unknown }, { id: string; input: SquadInstantiateInput }>(
+    httpPost<
+      {
+        squad_template_id: string;
+        team: unknown;
+        work_item_id?: string;
+        worktree?: SquadWorkItemWorktree;
+      },
+      { id: string; input: SquadInstantiateInput }
+    >(
       (p) => `/api/squads/${encodeURIComponent(p.id)}/instantiate`,
       (p) => p.input
     ),
-    (res) => ({ squad_template_id: res.squad_template_id, team: fromBackendTeam(res.team) })
+    (res) => ({
+      squad_template_id: res.squad_template_id,
+      team: fromBackendTeam(res.team),
+      work_item_id: res.work_item_id ?? null,
+      // M8 Q12 (aioncore ≥ #201): the work item's shared worktree, when one is used.
+      worktree: res.worktree ?? null,
+    })
   ),
 };
 

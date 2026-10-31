@@ -9,11 +9,15 @@ import { useTranslation } from 'react-i18next';
 import { Button, Descriptions, Drawer, Select, Tag } from '@arco-design/web-react';
 import { ipcBridge } from '@/common';
 import type { TaskBoardItem, TaskBoardStatus, TaskSession } from '@/common/types/agent/taskSession';
+import type { WorktreeInfo } from '@/common/types/worktree';
 import TaskBoardAssigneeEditor from './TaskBoardAssigneeEditor';
 import TaskBoardReviewPanel from './TaskBoardReviewPanel';
+import TaskBoardSquadStart from './TaskBoardSquadStart';
 import TaskBoardTimeline from './TaskBoardTimeline';
+import TaskBoardWorktreePanel from './TaskBoardWorktreePanel';
 import { SquadRunPanel } from './SquadRunStatus';
 import { userMoveTargets } from './boardModel';
+import { canStartSquadForItem } from './workItemWorktreeModel';
 
 const PRIORITY_KEYS = ['none', 'low', 'medium', 'high', 'urgent'] as const;
 
@@ -30,6 +34,10 @@ type TaskBoardDetailDrawerProps = {
   onItemUpdated?: (task: TaskBoardItem) => void;
   /** A board PATCH hit the optimistic lock (409 `board_item_stale`). */
   onStale?: () => void;
+  /** M8 Q12: the work item's shared worktree, if any. */
+  worktree?: WorktreeInfo | null;
+  /** A Squad instance was started for this work item. */
+  onSquadStarted?: () => void;
 };
 
 const formatTimestamp = (ms: number, locale: string): string => {
@@ -56,6 +64,8 @@ const TaskBoardDetailDrawer: React.FC<TaskBoardDetailDrawerProps> = ({
   onMove,
   onItemUpdated,
   onStale,
+  worktree = null,
+  onSquadStarted,
 }) => {
   const { t, i18n } = useTranslation();
   const locale = i18n?.language ?? 'en-US';
@@ -185,6 +195,12 @@ const TaskBoardDetailDrawer: React.FC<TaskBoardDetailDrawerProps> = ({
           ) : null}
           {task.assignee?.kind === 'squad' && task.assignee.id ? (
             <SquadRunPanel templateId={task.assignee.id} onOpenConversation={onOpenConversation} />
+          ) : null}
+          {interactive && canStartSquadForItem(task) ? (
+            <TaskBoardSquadStart item={task} hasWorktree={Boolean(worktree)} onStarted={() => onSquadStarted?.()} />
+          ) : null}
+          {worktree ? (
+            <TaskBoardWorktreePanel worktree={worktree} boardStatus={task.board_status} refreshKey={refreshKey} />
           ) : null}
           {interactive ? (
             <TaskBoardAssigneeEditor

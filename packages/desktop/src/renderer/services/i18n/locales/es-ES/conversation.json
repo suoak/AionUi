@@ -1412,7 +1412,8 @@
       "trace": "Rastro",
       "traceFileChanged": "Cambiado {{path}}",
       "traceToolDenied": "Denegado {{tool}}",
-      "traceGeneric": "{{type}}"
+      "traceGeneric": "{{type}}",
+      "leaderEval": "Evaluación del líder"
     },
     "errors": {
       "review_required": "Pasar a Hecho o salir de En revisión requiere revisión.",
@@ -1440,6 +1441,39 @@
       "noTeam": "Aún no se ha creado ningún equipo a partir de este Squad.",
       "unavailable": "No hay estado de ejecución para los equipos de este Squad.",
       "hint": "Se deriva de las tareas del equipo; se actualiza cada 15 segundos."
+    },
+    "squadStart": {
+      "start": "Iniciar Squad",
+      "started": "Squad iniciado para este elemento de trabajo",
+      "hint": "El worktree compartido usa el repositorio de abajo o la carpeta del proyecto.",
+      "reuseHint": "Reutiliza el worktree compartido de este elemento de trabajo.",
+      "repoPlaceholder": "Ruta del repositorio Git (opcional)",
+      "errors": {
+        "squad_work_item_not_found": "No se encontró el elemento de trabajo.",
+        "squad_work_item_not_assigned": "Este elemento de trabajo ya no está asignado a este Squad.",
+        "squad_backlog_not_started": "Saca el elemento de trabajo del backlog antes de iniciar el Squad.",
+        "squad_worktree_source_invalid": "No hay un repositorio Git utilizable para el worktree compartido. Introduce una ruta de repositorio.",
+        "squad_worktree_failed": "No se pudo preparar el worktree compartido."
+      }
+    },
+    "worktree": {
+      "title": "Worktree compartido",
+      "branch": "Rama",
+      "path": "Ruta",
+      "source": "Repositorio",
+      "changes": "Cambios",
+      "changesSummary": "{{files}} archivos, +{{additions}} −{{deletions}}",
+      "shared": "Todas las ejecuciones del Squad de este elemento comparten este worktree.",
+      "kept": "Elemento de trabajo cerrado. El worktree y la rama se conservaron, no se eliminaron.",
+      "status": {
+        "creating": "Creando",
+        "ready": "Listo",
+        "failed": "Fallido",
+        "unbound": "Sin vincular",
+        "removing": "Eliminando",
+        "removed": "Eliminado",
+        "orphaned": "Huérfano"
+      }
     }
   },
   "squadRouteOnly": {
