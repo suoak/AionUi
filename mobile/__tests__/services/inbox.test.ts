@@ -10,6 +10,8 @@ import {
   canApproveAgentAction,
   canDenyAgentAction,
   decideTaskApproval,
+  getInboxItem,
+  invalidationReason,
   isAgentSummaryTruncated,
   listAgentApprovals,
   listInbox,
@@ -60,6 +62,28 @@ describe('inbox', () => {
   it('tolerates an empty body', async () => {
     get.mockResolvedValue(ok(null));
     await expect(listInbox({ unreadOnly: true })).resolves.toEqual({ items: [], unread_count: 0 });
+  });
+
+  it('reads one item by id', async () => {
+    get.mockResolvedValue(ok({ id: 'i 1', kind: 'approval', title: 'T', created_at: 1, approval_id: 'ap1' }));
+    const item = await getInboxItem('i 1');
+    expect(get).toHaveBeenCalledWith('/api/inbox/i%201');
+    expect(item.approval_id).toBe('ap1');
+  });
+
+  it('throws on a 404 or a malformed body so callers fall back to the list', async () => {
+    get.mockRejectedValueOnce({ response: { status: 404 } });
+    await expect(getInboxItem('gone')).rejects.toBeTruthy();
+    get.mockResolvedValueOnce(ok(null));
+    await expect(getInboxItem('x')).rejects.toThrow('Malformed inbox item');
+  });
+
+  it('reads the invalidation reason of approval events', () => {
+    expect(invalidationReason({ approval_id: 'a', reason: 'superseded' })).toBe('superseded');
+    expect(invalidationReason({ approval_id: 'a', reason: 'task_ended' })).toBe('task_ended');
+    expect(invalidationReason({ approval_id: 'a', reason: null })).toBeNull();
+    expect(invalidationReason({ approval_id: 'a', reason: 'later' })).toBeNull();
+    expect(invalidationReason(null)).toBeNull();
   });
 
   it('marks items read', async () => {

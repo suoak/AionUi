@@ -4,14 +4,28 @@ jest.mock('react-i18next', () => ({
 jest.mock('@/src/services/api', () => ({
   api: { get: jest.fn(), post: jest.fn() },
 }));
+jest.mock('@/src/services/bridge', () => {
+  const listeners = new Map<string, Set<(data: unknown) => void>>();
+  return {
+    bridge: {
+      on: (name: string, cb: (data: unknown) => void) => {
+        if (!listeners.has(name)) listeners.set(name, new Set());
+        listeners.get(name)!.add(cb);
+        return () => listeners.get(name)?.delete(cb);
+      },
+      __emit: (name: string, data: unknown) => listeners.get(name)?.forEach((cb) => cb(data)),
+    },
+  };
+});
 jest.mock('@/src/components/chat/MarkdownContent', () => {
   const { Text } = jest.requireActual('react-native');
   return { MarkdownContent: ({ content }: { content: string }) => <Text>{content}</Text> };
 });
 
 import React from 'react';
-import { fireEvent, render, waitFor } from '@testing-library/react-native';
+import { act, fireEvent, render, waitFor } from '@testing-library/react-native';
 import { api } from '@/src/services/api';
+import { bridge } from '@/src/services/bridge';
 import { TaskApprovalCard } from '@/src/components/inbox/TaskApprovalCard';
 
 const get = api.get as jest.Mock;
@@ -70,6 +84,21 @@ describe('TaskApprovalCard', () => {
     await waitFor(() => expect(screen.getByTestId('task-approval-reject')).toBeTruthy());
     fireEvent.press(screen.getByTestId('task-approval-reject'));
     await waitFor(() => expect(screen.getByText('approval.taskConflict')).toBeTruthy());
+  });
+
+  it('reloads and explains when the approval is invalidated elsewhere', async () => {
+    const screen = render(<TaskApprovalCard taskSessionId='ts1' approvalId='ap1' />);
+    await waitFor(() => expect(screen.getByTestId('task-approval-approve')).toBeTruthy());
+    get.mockImplementation(async (url: string) =>
+      url.endsWith('/approvals') ? ok([{ ...approval, status: 'cancelled' }]) : ok([artifact])
+    );
+    const emit = (bridge as unknown as { __emit: (n: string, d: unknown) => void }).__emit;
+    act(() => emit('task.approval.changed', { approval_id: 'other', status: 'cancelled', reason: 'task_ended' }));
+    expect(screen.getByTestId('task-approval-approve')).toBeTruthy();
+    act(() => emit('task.approval.changed', { approval_id: 'ap1', status: 'cancelled', reason: 'task_ended' }));
+    await waitFor(() => expect(screen.getByTestId('task-approval-invalidated')).toBeTruthy());
+    expect(screen.getByText('approval.invalidatedTaskEnded')).toBeTruthy();
+    expect(screen.queryByTestId('task-approval-approve')).toBeNull();
   });
 
   it('reports a missing approval', async () => {

@@ -4,11 +4,15 @@ import { useTranslation } from 'react-i18next';
 import { ThemedText } from '../ui/ThemedText';
 import { MarkdownContent } from '../chat/MarkdownContent';
 import { useThemeColor } from '../../hooks/useThemeColor';
+import { bridge } from '../../services/bridge';
 import {
   decideTaskApproval,
+  invalidationReason,
   loadTaskApproval,
   type PlanExecution,
+  type TaskApprovalChangedEvent,
   type TaskApprovalDetail,
+  type TaskApprovalInvalidationReason,
 } from '../../services/inbox';
 
 type Props = {
@@ -34,9 +38,10 @@ export function TaskApprovalCard({ taskSessionId, approvalId, onDecided }: Props
   const [busy, setBusy] = useState<'approve' | 'reject' | null>(null);
   const [message, setMessage] = useState<string | null>(null);
   const [execution, setExecution] = useState<PlanExecution | null>(null);
+  const [invalidated, setInvalidated] = useState<TaskApprovalInvalidationReason | null>(null);
 
-  const load = useCallback(async () => {
-    setState('loading');
+  const load = useCallback(async (quiet = false) => {
+    if (!quiet) setState('loading');
     try {
       const next = await loadTaskApproval(taskSessionId, approvalId);
       setDetail(next);
@@ -49,6 +54,20 @@ export function TaskApprovalCard({ taskSessionId, approvalId, onDecided }: Props
   useEffect(() => {
     void load();
   }, [load]);
+
+  // Decided on the desktop, superseded, or its work item ended (M8 E9-7):
+  // reload so the buttons disappear and say why.
+  useEffect(
+    () =>
+      bridge.on('task.approval.changed', (data) => {
+        const event = data as TaskApprovalChangedEvent | null;
+        if (event?.approval_id !== approvalId) return;
+        const reason = invalidationReason(event);
+        if (reason) setInvalidated(reason);
+        void load(true);
+      }),
+    [approvalId, load]
+  );
 
   const decide = async (decision: 'approve' | 'reject') => {
     if (!detail) return;
@@ -75,7 +94,7 @@ export function TaskApprovalCard({ taskSessionId, approvalId, onDecided }: Props
       <View style={[styles.container, { backgroundColor: surface }]}>
         <ThemedText>{state === 'missing' ? t('approval.taskMissing') : t('approval.loadFailed')}</ThemedText>
         {state === 'error' && (
-          <TouchableOpacity onPress={load}>
+          <TouchableOpacity onPress={() => load()}>
             <ThemedText style={{ color: tint }}>{t('common.retry')}</ThemedText>
           </TouchableOpacity>
         )}
@@ -114,6 +133,11 @@ export function TaskApprovalCard({ taskSessionId, approvalId, onDecided }: Props
       {execution === 'none' && approval.status !== 'pending' && (
         <ThemedText style={styles.notice}>
           {approval.status === 'approved' ? t('approval.taskApproved') : t('approval.taskRejected')}
+        </ThemedText>
+      )}
+      {invalidated && !pending && (
+        <ThemedText testID='task-approval-invalidated' style={styles.notice}>
+          {invalidated === 'superseded' ? t('approval.invalidatedSuperseded') : t('approval.invalidatedTaskEnded')}
         </ThemedText>
       )}
       {message && <ThemedText style={[styles.notice, { color: errorColor }]}>{message}</ThemedText>}

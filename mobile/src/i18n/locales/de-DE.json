@@ -223,6 +223,8 @@
     "taskApproved": "Freigegeben",
     "taskRejected": "Zurückgewiesen",
     "taskConflict": "Diese Freigabe hat sich geändert (bereits entschieden oder neuere Version). Neu laden und erneut prüfen.",
-    "commentPlaceholder": "Kommentar (optional)"
+    "commentPlaceholder": "Kommentar (optional)",
+    "invalidatedSuperseded": "Eine neuere Version hat diese Anfrage ersetzt. Öffne die aktuelle im Posteingang.",
+    "invalidatedTaskEnded": "Diese Aufgabe ist beendet, daher kann über diese Anfrage nicht mehr entschieden werden."
   }
 }
