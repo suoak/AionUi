@@ -223,6 +223,8 @@
     "taskApproved": "Approved",
     "taskRejected": "Rejected",
     "taskConflict": "This approval changed meanwhile (already decided or a newer version). Reload and check again.",
-    "commentPlaceholder": "Comment (optional)"
+    "commentPlaceholder": "Comment (optional)",
+    "invalidatedSuperseded": "A newer version replaced this request. Open the latest one from the Inbox.",
+    "invalidatedTaskEnded": "This work item has ended, so this request can no longer be decided."
   }
 }

@@ -68,4 +68,12 @@ export type ITaskApprovalChangedEvent = {
   status: TaskApprovalStatus | string;
   decided_via?: TaskApprovalDecidedVia | null;
   device_id?: string | null;
+  /**
+   * Why a pending approval ended without a decision (M8 E9-7): a newer
+   * Plan/Goal version superseded it, or its work item ended. Null otherwise;
+   * older Core builds omit it.
+   */
+  reason?: TaskApprovalInvalidationReason | null;
 };
+
+export type TaskApprovalInvalidationReason = 'superseded' | 'task_ended';

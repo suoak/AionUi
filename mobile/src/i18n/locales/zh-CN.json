@@ -223,6 +223,8 @@
     "taskApproved": "已批准",
     "taskRejected": "已驳回",
     "taskConflict": "该审批已变化（已被处理或有新版本），请刷新后再确认。",
-    "commentPlaceholder": "备注（可选）"
+    "commentPlaceholder": "备注（可选）",
+    "invalidatedSuperseded": "已有更新的版本替代了此请求，请在收件箱中打开最新的请求。",
+    "invalidatedTaskEnded": "此工作项已结束，此请求无法再审批。"
   }
 }

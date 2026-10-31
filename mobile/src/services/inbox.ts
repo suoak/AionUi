@@ -47,6 +47,26 @@ export type TaskApproval = {
   comment?: string;
 };
 
+/** Why a pending approval ended without a decision (M8 E9-7). */
+export type TaskApprovalInvalidationReason = 'superseded' | 'task_ended';
+
+/** Payload of Core's `task.approval.changed` realtime event. */
+export type TaskApprovalChangedEvent = {
+  task_session_id?: string;
+  approval_id?: string;
+  status?: TaskApprovalStatus | string;
+  decided_via?: 'user' | 'device' | null;
+  device_id?: string | null;
+  /** Set when the approval was invalidated; older Core builds omit it. */
+  reason?: TaskApprovalInvalidationReason | string | null;
+};
+
+/** The invalidation reason of an event, if it is one this app knows. */
+export function invalidationReason(event: unknown): TaskApprovalInvalidationReason | null {
+  const reason = (event as TaskApprovalChangedEvent | null | undefined)?.reason;
+  return reason === 'superseded' || reason === 'task_ended' ? reason : null;
+}
+
 export type TaskArtifact = {
   id: string;
   task_session_id: string;
@@ -102,6 +122,20 @@ export async function listInbox(params: { unreadOnly?: boolean; before?: number;
   });
   const data = unwrap<InboxList>(res.data);
   return { items: Array.isArray(data?.items) ? data.items : [], unread_count: Number(data?.unread_count ?? 0) };
+}
+
+/**
+ * One inbox item by id (Core `GET /api/inbox/{id}`, M8 E9-7). Core closes a
+ * stale Plan/Goal approval item before returning it. Throws on 404 and on
+ * older Core builds without the route; callers fall back to the list.
+ */
+export async function getInboxItem(id: string): Promise<InboxItem> {
+  const res = await api.get(`/api/inbox/${seg(id)}`);
+  const item = unwrap<InboxItem>(res.data);
+  if (!item || typeof item !== 'object' || typeof item.id !== 'string') {
+    throw new Error('Malformed inbox item');
+  }
+  return item;
 }
 
 export async function markInboxRead(id: string): Promise<InboxReadResult> {
