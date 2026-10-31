@@ -238,6 +238,8 @@
     "origin": {
       "batch": "Lote",
       "autopilot": "Autopilot"
-    }
+    },
+    "phoneApproved": "Aprovado no celular",
+    "phoneRejected": "Rejeitado no celular"
   }
 }

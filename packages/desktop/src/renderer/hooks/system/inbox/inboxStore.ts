@@ -7,6 +7,7 @@
 import { useEffect, useSyncExternalStore } from 'react';
 import { ipcBridge } from '@/common';
 import type { IInboxChangedEvent } from '@/common/adapter/ipcBridge';
+import { ensureTaskApprovalListener } from './taskApprovalStore';
 
 /**
  * Inbox availability + unread count, shared by the sider entry and the
@@ -95,6 +96,8 @@ export const resetInboxStoreForTests = (): void => {
 export const useInboxState = (): InboxState => {
   useEffect(() => {
     void probeInbox();
+    // E9-3: record phone approval decisions even while the inbox popover is closed.
+    ensureTaskApprovalListener();
     const dispose = ipcBridge.inbox?.changed?.on?.(applyInboxChanged);
     return () => {
       dispose?.();

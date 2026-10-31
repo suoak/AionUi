@@ -11,6 +11,7 @@ import {
   Earth,
   Inbox,
   Info,
+  Iphone,
   Lightning,
   LinkCloud,
   Puzzle,
@@ -34,6 +35,7 @@ export const BUILTIN_TAB_IDS = [
   'tools',
   'appearance',
   'webui',
+  'devices',
   'pet',
   'usage',
   'system',
@@ -117,6 +119,7 @@ const SettingsSider: React.FC<{ collapsed?: boolean; tooltipEnabled?: boolean }>
         icon: isDesktop ? <Earth /> : <Communication />,
         path: 'webui',
       },
+      devices: { id: 'devices', label: t('settings.devices.navLabel'), icon: <Iphone />, path: 'devices' },
       pet: { id: 'pet', label: t('pet.desktopPet'), icon: <Cat />, path: 'pet' },
       usage: {
         id: 'usage',

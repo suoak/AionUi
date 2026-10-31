@@ -241,6 +241,8 @@
     "origin": {
       "batch": "Пакет",
       "autopilot": "Autopilot"
-    }
+    },
+    "phoneApproved": "Схвалено на телефоні",
+    "phoneRejected": "Відхилено на телефоні"
   }
 }

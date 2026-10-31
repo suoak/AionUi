@@ -1055,7 +1055,10 @@
       "pass": "Geçti",
       "fail": "Başarısız",
       "review": "Doğrulama gerekli",
-      "userEvidence": "Kullanıcı tarafından onaylandı"
+      "userEvidence": "Kullanıcı tarafından onaylandı",
+      "phoneApproved": "Telefonda onaylandı",
+      "phoneRejected": "Telefonda reddedildi",
+      "phoneApprovedExecuteHint": "Telefonunuzda onaylandı. Hazır olduğunuzda burada çalıştırın; hiçbir şey otomatik başlamaz."
     },
     "review": {
       "open": "Review",

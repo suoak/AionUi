@@ -37,6 +37,13 @@ import {
   type TrajectoryRecord,
 } from '@/common/types/journalTranscript';
 import { buildListTasksPath } from './teamTaskPath';
+import type {
+  IDevice,
+  IDevicePairingOffer,
+  IDevicePairingView,
+  ISetDevicePushInput,
+  ITaskApprovalChangedEvent,
+} from '../types/device';
 import type { OpenDialogOptions } from 'electron';
 import type {
   ICssTheme,
@@ -1356,6 +1363,8 @@ export const taskSession = {
       })
     ),
   },
+  /** M8 E9: an approval was raised or answered (desktop or a paired phone). */
+  approvalChanged: wsEmitter<ITaskApprovalChangedEvent>('task.approval.changed'),
   execute: httpPost<TaskRun, { id: string; approval_id: string; artifact_id: string; artifact_hash: string }>(
     (params) => `/api/task-sessions/${encodeURIComponent(params.id)}/execute`,
     (params) => ({
@@ -3513,6 +3522,8 @@ export type IInboxItem = {
   /** Derived by Core: `batch` (end-of-job batch summary, `source_id` = job id)
    *  or `autopilot` (Autopilot run failure). Absent for other items. */
   origin?: InboxItemOrigin | string | null;
+  /** Derived by Core (≥ M8 E9-3) for Plan/Goal approval items: the task approval id. */
+  approval_id?: string | null;
 };
 
 export type InboxItemOrigin = 'batch' | 'autopilot';
@@ -3542,6 +3553,35 @@ export const inbox = {
   ),
   markAllRead: httpPost<IInboxMarkReadResponse, void>('/api/inbox/read-all', () => ({})),
   changed: wsEmitter<IInboxChangedEvent>('inbox.changed'),
+};
+
+/**
+ * M8 E9 paired mobile devices. User-session only: Core answers 403
+ * `DEVICE_MANAGEMENT_REQUIRES_USER` to device/agent tokens.
+ */
+export const device = {
+  list: httpGet<IDevice[], void>('/api/auth/devices'),
+  rename: httpPatch<IDevice, { id: string; name: string }>(
+    (p) => `/api/auth/devices/${encodeURIComponent(p.id)}`,
+    (p) => ({ name: p.name })
+  ),
+  /** 204 on success. */
+  revoke: httpDelete<void, { id: string }>((p) => `/api/auth/devices/${encodeURIComponent(p.id)}`),
+  setPush: httpPut<IDevice, ISetDevicePushInput>(
+    (p) => `/api/auth/devices/${encodeURIComponent(p.id)}/push`,
+    (p) => (p.push_kind === 'im' ? { push_kind: 'im', push_target: p.push_target } : { push_kind: 'none' })
+  ),
+  pairing: {
+    create: httpPost<IDevicePairingOffer, void>('/api/auth/devices/pair/offers', () => ({})),
+    get: httpGet<IDevicePairingView, { offer_id: string }>(
+      (p) => `/api/auth/devices/pair/offers/${encodeURIComponent(p.offer_id)}`
+    ),
+    reject: httpPost<IDevicePairingView, { offer_id: string }>(
+      (p) => `/api/auth/devices/pair/offers/${encodeURIComponent(p.offer_id)}/reject`,
+      () => ({})
+    ),
+    changed: wsEmitter<IDevicePairingView>('device.pairing'),
+  },
 };
 
 export const channel = {

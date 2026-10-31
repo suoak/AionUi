@@ -1053,7 +1053,10 @@
       "pass": "合格",
       "fail": "不合格",
       "review": "要確認",
-      "userEvidence": "ユーザーが確認しました"
+      "userEvidence": "ユーザーが確認しました",
+      "phoneApproved": "スマートフォンで承認済み",
+      "phoneRejected": "スマートフォンで却下済み",
+      "phoneApprovedExecuteHint": "スマートフォンで承認されました。準備ができたらここで実行してください。自動では開始しません。"
     },
     "review": {
       "open": "Review",

@@ -1059,7 +1059,10 @@
       "pass": "Aprovar",
       "fail": "Falhar",
       "review": "Precisa de verificação",
-      "userEvidence": "Confirmado pelo usuário"
+      "userEvidence": "Confirmado pelo usuário",
+      "phoneApproved": "Aprovado no celular",
+      "phoneRejected": "Rejeitado no celular",
+      "phoneApprovedExecuteHint": "Aprovado no seu celular. Execute aqui quando estiver pronto; nada começa automaticamente."
     },
     "review": {
       "open": "Review",

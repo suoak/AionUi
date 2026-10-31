@@ -1053,7 +1053,10 @@
       "pass": "قبول",
       "fail": "رد",
       "review": "نیازمند بررسی",
-      "userEvidence": "توسط کاربر تأیید شد"
+      "userEvidence": "توسط کاربر تأیید شد",
+      "phoneApproved": "روی تلفن تأیید شد",
+      "phoneRejected": "روی تلفن رد شد",
+      "phoneApprovedExecuteHint": "روی تلفن شما تأیید شد. هر وقت آماده بودید همین‌جا اجرا کنید؛ چیزی خودکار شروع نمی‌شود."
     },
     "review": {
       "open": "Review",

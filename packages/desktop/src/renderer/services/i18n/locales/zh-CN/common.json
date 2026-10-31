@@ -238,6 +238,8 @@
     "origin": {
       "batch": "批量",
       "autopilot": "Autopilot"
-    }
+    },
+    "phoneApproved": "已在手机上批准",
+    "phoneRejected": "已在手机上拒绝"
   }
 }

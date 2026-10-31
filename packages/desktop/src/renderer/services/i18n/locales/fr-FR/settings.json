@@ -1636,5 +1636,85 @@
   "fontWeightRegular": "Normal",
   "fontWeightMedium": "Moyen",
   "fontWeightSemibold": "Demi-gras",
-  "fontWeightBold": "Gras"
+  "fontWeightBold": "Gras",
+  "devices": {
+    "navLabel": "Appareils mobiles",
+    "title": "Appareils mobiles",
+    "description": "Associez votre téléphone pour recevoir les demandes d'approbation et approuver ou refuser des plans et des objectifs loin de votre bureau.",
+    "count": "{{count}}/{{max}} appareils",
+    "approvalNote": "Approuver sur un téléphone enregistre seulement la décision. Un plan approuvé s'exécute toujours ici, sur l'ordinateur.",
+    "limitReached": "Vous avez associé le maximum de {{max}} appareils. Révoquez-en un avant d'en associer un autre.",
+    "empty": "Aucun appareil associé pour l'instant",
+    "unnamed": "Appareil sans nom",
+    "lastUsed": "Dernière utilisation : {{time}}",
+    "neverUsed": "Associé le {{time}}, pas encore utilisé",
+    "idle": {
+      "days": "Inactif depuis {{days}} jours",
+      "expired": "Inutilisé depuis plus de {{days}} jours",
+      "expiringHint": "S'il reste inutilisé, il sera déconnecté automatiquement dans environ {{days}} jours."
+    },
+    "platform": {
+      "ios": "iOS",
+      "android": "Android",
+      "web": "Web",
+      "unknown": "Inconnu"
+    },
+    "rename": "Renommer",
+    "renameTitle": "Renommer l'appareil",
+    "renamed": "Appareil renommé",
+    "nameError": {
+      "empty": "Saisissez un nom",
+      "tooLong": "{{max}} caractères maximum",
+      "invalid": "Le nom ne peut pas contenir de caractères de contrôle"
+    },
+    "revoke": "Révoquer",
+    "revokeTitle": "Révoquer cet appareil ?",
+    "revokeBody": "« {{name}} » sera déconnecté immédiatement et ne pourra plus recevoir ni traiter d'approbations. Pour le réutiliser, associez-le à nouveau.",
+    "revokeConfirm": "Révoquer",
+    "revoked": "« {{name}} » révoqué",
+    "push": {
+      "label": "Notifications",
+      "none": "Ne pas notifier",
+      "saved": "Paramètre de notification enregistré",
+      "unavailableTarget": "Session de messagerie indisponible",
+      "noChannels": "Connectez un canal de messagerie pour recevoir les demandes d'approbation dans votre propre conversation."
+    },
+    "pair": {
+      "title": "Associer un nouvel appareil",
+      "description": "Scannez le QR code avec votre téléphone, puis saisissez-y le code d'association affiché ici.",
+      "start": "Associer un appareil",
+      "regenerate": "Générer un nouveau code",
+      "codeLabel": "Code d'association",
+      "expiresIn": "Expire dans {{time}}",
+      "requester": "{{name}} ({{platform}}) demande l'association. Continuez uniquement s'il s'agit de votre téléphone.",
+      "reject": "Refuser",
+      "reachHint": "Votre téléphone ne peut joindre cet ordinateur qu'après l'activation de l'accès à distance dans les paramètres WebUI.",
+      "pairedToast": "{{name}} associé",
+      "status": {
+        "waiting": "En attente du scan par le téléphone…",
+        "paired": "{{name}} associé",
+        "rejected": "Demande d'association refusée",
+        "voided": "Association annulée. Générez un nouveau code pour réessayer.",
+        "expired": "Code expiré. Générez-en un nouveau."
+      }
+    },
+    "error": {
+      "limit": "Vous pouvez associer jusqu'à {{max}} appareils. Révoquez-en un d'abord.",
+      "requiresUser": "Les appareils ne peuvent être gérés que depuis votre ordinateur connecté.",
+      "pairingClosed": "Ce code d'association n'est plus valide. Générez-en un nouveau.",
+      "notFound": "Cet appareil n'existe plus. La liste a été actualisée.",
+      "invalidName": "Le nom doit comporter de 1 à {{max}} caractères imprimables.",
+      "pushUnavailable": "Les notifications par messagerie sont indisponibles pour le moment.",
+      "pushTargetRequired": "Choisissez une session de messagerie.",
+      "pushTargetInvalid": "Cette session de messagerie est indisponible. Choisissez-en une autre.",
+      "pushKindInvalid": "Ce paramètre de notification n'est pas pris en charge.",
+      "unauthorized": "Votre session a expiré. Reconnectez-vous.",
+      "load": "Impossible de charger les appareils",
+      "pair": "Impossible de créer un code d'association",
+      "rename": "Impossible de renommer l'appareil",
+      "revoke": "Impossible de révoquer l'appareil",
+      "push": "Impossible d'enregistrer le paramètre de notification",
+      "reject": "Impossible de refuser la demande d'association"
+    }
+  }
 }

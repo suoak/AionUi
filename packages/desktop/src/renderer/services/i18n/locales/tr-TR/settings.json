@@ -1636,5 +1636,85 @@
   "fontWeightRegular": "Normal",
   "fontWeightMedium": "Orta",
   "fontWeightSemibold": "Yarı kalın",
-  "fontWeightBold": "Kalın"
+  "fontWeightBold": "Kalın",
+  "devices": {
+    "navLabel": "Mobil cihazlar",
+    "title": "Mobil cihazlar",
+    "description": "Onay isteklerini almak ve masanızdan uzaktayken planları ve hedefleri onaylamak ya da reddetmek için telefonunuzu eşleştirin.",
+    "count": "{{count}}/{{max}} cihaz",
+    "approvalNote": "Telefonda onaylamak yalnızca kararı kaydeder. Onaylanan plan yine burada, masaüstünde çalıştırılır.",
+    "limitReached": "En fazla {{max}} cihaz eşleştirdiniz. Yeni bir cihaz eşleştirmeden önce birini iptal edin.",
+    "empty": "Henüz eşleştirilmiş cihaz yok",
+    "unnamed": "Adsız cihaz",
+    "lastUsed": "Son kullanım: {{time}}",
+    "neverUsed": "{{time}} tarihinde eşleştirildi, henüz kullanılmadı",
+    "idle": {
+      "days": "{{days}} gündür kullanılmıyor",
+      "expired": "{{days}} günden uzun süredir kullanılmıyor",
+      "expiringHint": "Kullanılmamaya devam ederse yaklaşık {{days}} gün içinde oturumu otomatik olarak kapatılır."
+    },
+    "platform": {
+      "ios": "iOS",
+      "android": "Android",
+      "web": "Web",
+      "unknown": "Bilinmiyor"
+    },
+    "rename": "Yeniden adlandır",
+    "renameTitle": "Cihazı yeniden adlandır",
+    "renamed": "Cihaz yeniden adlandırıldı",
+    "nameError": {
+      "empty": "Bir ad girin",
+      "tooLong": "En fazla {{max}} karakter kullanın",
+      "invalid": "Ad kontrol karakterleri içeremez"
+    },
+    "revoke": "İptal et",
+    "revokeTitle": "Bu cihaz iptal edilsin mi?",
+    "revokeBody": "\"{{name}}\" cihazının oturumu hemen kapatılır ve artık onay alamaz veya yanıtlayamaz. Yeniden kullanmak için tekrar eşleştirin.",
+    "revokeConfirm": "İptal et",
+    "revoked": "\"{{name}}\" iptal edildi",
+    "push": {
+      "label": "Bildirim",
+      "none": "Bildirim gönderme",
+      "saved": "Bildirim ayarı kaydedildi",
+      "unavailableTarget": "IM oturumu artık kullanılamıyor",
+      "noChannels": "Onay isteklerini kendi sohbetinize göndermek için bir IM kanalı bağlayın."
+    },
+    "pair": {
+      "title": "Yeni cihaz eşleştir",
+      "description": "QR kodunu telefonunuzla tarayın, ardından burada gösterilen eşleştirme kodunu telefona girin.",
+      "start": "Cihaz eşleştir",
+      "regenerate": "Yeni kod oluştur",
+      "codeLabel": "Eşleştirme kodu",
+      "expiresIn": "{{time}} içinde sona erer",
+      "requester": "{{name}} ({{platform}}) eşleşmek istiyor. Yalnızca sizin telefonunuzsa devam edin.",
+      "reject": "Reddet",
+      "reachHint": "Telefonunuz bu masaüstüne ancak WebUI ayarlarında uzaktan erişim açıldıktan sonra ulaşabilir.",
+      "pairedToast": "{{name}} eşleştirildi",
+      "status": {
+        "waiting": "Telefonun taraması bekleniyor…",
+        "paired": "{{name}} eşleştirildi",
+        "rejected": "Eşleştirme isteği reddedildi",
+        "voided": "Eşleştirme iptal edildi. Tekrar denemek için yeni bir kod oluşturun.",
+        "expired": "Kodun süresi doldu. Yeni bir kod oluşturun."
+      }
+    },
+    "error": {
+      "limit": "En fazla {{max}} cihaz eşleştirebilirsiniz. Önce birini iptal edin.",
+      "requiresUser": "Cihazlar yalnızca oturum açmış masaüstünüzden yönetilebilir.",
+      "pairingClosed": "Bu eşleştirme kodu artık geçerli değil. Yeni bir kod oluşturun.",
+      "notFound": "Bu cihaz artık mevcut değil. Liste yenilendi.",
+      "invalidName": "Ad 1–{{max}} yazdırılabilir karakterden oluşmalıdır.",
+      "pushUnavailable": "IM bildirimi şu anda kullanılamıyor.",
+      "pushTargetRequired": "Bir IM oturumu seçin.",
+      "pushTargetInvalid": "Bu IM oturumu kullanılamıyor. Başka birini seçin.",
+      "pushKindInvalid": "Bu bildirim ayarı desteklenmiyor.",
+      "unauthorized": "Oturumunuzun süresi doldu. Yeniden oturum açın.",
+      "load": "Cihazlar yüklenemedi",
+      "pair": "Eşleştirme kodu oluşturulamadı",
+      "rename": "Cihaz yeniden adlandırılamadı",
+      "revoke": "Cihaz iptal edilemedi",
+      "push": "Bildirim ayarı kaydedilemedi",
+      "reject": "Eşleştirme isteği reddedilemedi"
+    }
+  }
 }

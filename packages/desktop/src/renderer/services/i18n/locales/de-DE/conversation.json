@@ -1054,7 +1054,10 @@
       "pass": "Bestanden",
       "fail": "Fehlgeschlagen",
       "review": "Prüfung erforderlich",
-      "userEvidence": "Vom Benutzer bestätigt"
+      "userEvidence": "Vom Benutzer bestätigt",
+      "phoneApproved": "Auf dem Smartphone genehmigt",
+      "phoneRejected": "Auf dem Smartphone abgelehnt",
+      "phoneApprovedExecuteHint": "Auf Ihrem Smartphone genehmigt. Führen Sie es hier aus, wenn Sie bereit sind; nichts startet automatisch."
     },
     "review": {
       "open": "Review",
