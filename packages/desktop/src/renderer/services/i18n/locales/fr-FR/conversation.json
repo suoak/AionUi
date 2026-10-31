@@ -1411,7 +1411,8 @@
       "trace": "Trace",
       "traceFileChanged": "Modifié {{path}}",
       "traceToolDenied": "Refusé {{tool}}",
-      "traceGeneric": "{{type}}"
+      "traceGeneric": "{{type}}",
+      "leaderEval": "Évaluation du leader"
     },
     "errors": {
       "review_required": "Passer à Terminé ou sortir de En revue passe par la revue.",
@@ -1439,6 +1440,39 @@
       "noTeam": "Aucune équipe n’a encore été créée à partir de ce Squad.",
       "unavailable": "Aucun état d’exécution disponible pour les équipes de ce Squad.",
       "hint": "Déduit des tâches de l’équipe ; actualisé toutes les 15 secondes."
+    },
+    "squadStart": {
+      "start": "Démarrer le Squad",
+      "started": "Squad démarré pour cet élément de travail",
+      "hint": "Le worktree partagé utilise le dépôt ci-dessous, sinon le dossier du projet.",
+      "reuseHint": "Réutilise le worktree partagé de cet élément de travail.",
+      "repoPlaceholder": "Chemin du dépôt Git (facultatif)",
+      "errors": {
+        "squad_work_item_not_found": "Élément de travail introuvable.",
+        "squad_work_item_not_assigned": "Cet élément de travail n'est plus assigné à ce Squad.",
+        "squad_backlog_not_started": "Sortez l’élément de travail du backlog avant de démarrer le Squad.",
+        "squad_worktree_source_invalid": "Aucun dépôt Git utilisable pour le worktree partagé. Saisissez un chemin de dépôt.",
+        "squad_worktree_failed": "Impossible de préparer le worktree partagé."
+      }
+    },
+    "worktree": {
+      "title": "Worktree partagé",
+      "branch": "Branche",
+      "path": "Chemin",
+      "source": "Dépôt",
+      "changes": "Modifications",
+      "changesSummary": "{{files}} fichiers, +{{additions}} −{{deletions}}",
+      "shared": "Toutes les exécutions du Squad de cet élément partagent ce worktree.",
+      "kept": "Élément de travail clos. Le worktree et la branche ont été conservés, pas supprimés.",
+      "status": {
+        "creating": "Création",
+        "ready": "Prêt",
+        "failed": "Échec",
+        "unbound": "Non lié",
+        "removing": "Suppression",
+        "removed": "Supprimé",
+        "orphaned": "Orphelin"
+      }
     }
   },
   "squadRouteOnly": {

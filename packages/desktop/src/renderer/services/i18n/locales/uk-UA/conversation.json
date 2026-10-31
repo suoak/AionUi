@@ -1429,7 +1429,8 @@
       "trace": "Трасування",
       "traceFileChanged": "Змінено {{path}}",
       "traceToolDenied": "Відхилено {{tool}}",
-      "traceGeneric": "{{type}}"
+      "traceGeneric": "{{type}}",
+      "leaderEval": "Оцінка лідера"
     },
     "errors": {
       "review_required": "Перенесення в «Готово» чи повернення з «На рев'ю» — лише через рев'ю.",
@@ -1457,6 +1458,39 @@
       "noTeam": "З цього Squad ще не створено жодної команди.",
       "unavailable": "Для команд цього Squad немає статусу виконання.",
       "hint": "Обчислюється із завдань команди; оновлюється кожні 15 секунд."
+    },
+    "squadStart": {
+      "start": "Запустити Squad",
+      "started": "Squad запущено для цього завдання",
+      "hint": "Спільний worktree використовує репозиторій нижче або теку проєкту.",
+      "reuseHint": "Повторно використовує спільний worktree цього завдання.",
+      "repoPlaceholder": "Шлях до Git-репозиторію (необовʼязково)",
+      "errors": {
+        "squad_work_item_not_found": "Завдання не знайдено.",
+        "squad_work_item_not_assigned": "Це завдання більше не призначене цьому Squad.",
+        "squad_backlog_not_started": "Перед запуском Squad перемістіть завдання з беклогу.",
+        "squad_worktree_source_invalid": "Немає придатного Git-репозиторію для спільного worktree. Вкажіть шлях до репозиторію.",
+        "squad_worktree_failed": "Не вдалося підготувати спільний worktree."
+      }
+    },
+    "worktree": {
+      "title": "Спільний worktree",
+      "branch": "Гілка",
+      "path": "Шлях",
+      "source": "Репозиторій",
+      "changes": "Зміни",
+      "changesSummary": "Файлів: {{files}}, +{{additions}} −{{deletions}}",
+      "shared": "Усі запуски Squad для цього завдання використовують цей worktree.",
+      "kept": "Завдання закрито. Worktree і гілку збережено, не видалено.",
+      "status": {
+        "creating": "Створюється",
+        "ready": "Готовий",
+        "failed": "Помилка",
+        "unbound": "Не привʼязаний",
+        "removing": "Видаляється",
+        "removed": "Видалено",
+        "orphaned": "Покинутий"
+      }
     }
   },
   "squadRouteOnly": {

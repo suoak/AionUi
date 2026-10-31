@@ -1411,7 +1411,8 @@
       "trace": "軌跡",
       "traceFileChanged": "變更 {{path}}",
       "traceToolDenied": "拒絕 {{tool}}",
-      "traceGeneric": "{{type}}"
+      "traceGeneric": "{{type}}",
+      "leaderEval": "Leader 評估"
     },
     "errors": {
       "review_required": "移到「完成」或從「審查中」退回須經審查。",
@@ -1439,6 +1440,39 @@
       "noTeam": "尚未從此 Squad 建立團隊。",
       "unavailable": "此 Squad 的團隊暫無執行狀態。",
       "hint": "依團隊任務推導，每 15 秒重新整理。"
+    },
+    "squadStart": {
+      "start": "啟動 Squad",
+      "started": "已為此工作項啟動 Squad",
+      "hint": "共用 worktree 使用下方儲存庫；留空則用專案資料夾。",
+      "reuseHint": "重用此工作項的共用 worktree。",
+      "repoPlaceholder": "Git 儲存庫路徑（選填）",
+      "errors": {
+        "squad_work_item_not_found": "找不到該工作項。",
+        "squad_work_item_not_assigned": "該工作項已不再指派給此 Squad。",
+        "squad_backlog_not_started": "請先把工作項移出待規劃，再啟動 Squad。",
+        "squad_worktree_source_invalid": "沒有可用於共用 worktree 的 Git 儲存庫，請填寫儲存庫路徑。",
+        "squad_worktree_failed": "共用 worktree 準備失敗。"
+      }
+    },
+    "worktree": {
+      "title": "共用 worktree",
+      "branch": "分支",
+      "path": "路徑",
+      "source": "儲存庫",
+      "changes": "變更",
+      "changesSummary": "{{files}} 個檔案，+{{additions}} −{{deletions}}",
+      "shared": "此工作項的所有 Squad 執行共用這個 worktree。",
+      "kept": "工作項已結束，worktree 與分支已保留，未刪除。",
+      "status": {
+        "creating": "建立中",
+        "ready": "就緒",
+        "failed": "失敗",
+        "unbound": "未綁定",
+        "removing": "移除中",
+        "removed": "已移除",
+        "orphaned": "孤立"
+      }
     }
   },
   "squadRouteOnly": {

@@ -1411,7 +1411,8 @@
       "trace": "トレース",
       "traceFileChanged": "変更 {{path}}",
       "traceToolDenied": "拒否 {{tool}}",
-      "traceGeneric": "{{type}}"
+      "traceGeneric": "{{type}}",
+      "leaderEval": "Leader 評価"
     },
     "errors": {
       "review_required": "「完了」への移動や「レビュー中」からの戻しはレビューが必要です。",
@@ -1439,6 +1440,39 @@
       "noTeam": "この Squad からまだチームが作成されていません。",
       "unavailable": "この Squad のチームの実行状態はありません。",
       "hint": "チームのタスクから算出し、15 秒ごとに更新します。"
+    },
+    "squadStart": {
+      "start": "Squad を開始",
+      "started": "この作業項目で Squad を開始しました",
+      "hint": "共有 worktree には下のリポジトリ、未入力ならプロジェクトフォルダーを使います。",
+      "reuseHint": "この作業項目の共有 worktree を再利用します。",
+      "repoPlaceholder": "Git リポジトリのパス（任意）",
+      "errors": {
+        "squad_work_item_not_found": "作業項目が見つかりません。",
+        "squad_work_item_not_assigned": "この作業項目はこの Squad に割り当てられていません。",
+        "squad_backlog_not_started": "Squad を開始する前に作業項目をバックログから移動してください。",
+        "squad_worktree_source_invalid": "共有 worktree に使える Git リポジトリがありません。パスを入力してください。",
+        "squad_worktree_failed": "共有 worktree の準備に失敗しました。"
+      }
+    },
+    "worktree": {
+      "title": "共有 worktree",
+      "branch": "ブランチ",
+      "path": "パス",
+      "source": "リポジトリ",
+      "changes": "変更",
+      "changesSummary": "{{files}} ファイル、+{{additions}} −{{deletions}}",
+      "shared": "この作業項目の Squad 実行はすべてこの worktree を共有します。",
+      "kept": "作業項目は終了しました。worktree とブランチは削除されず保持されています。",
+      "status": {
+        "creating": "作成中",
+        "ready": "準備完了",
+        "failed": "失敗",
+        "unbound": "未バインド",
+        "removing": "削除中",
+        "removed": "削除済み",
+        "orphaned": "孤立"
+      }
     }
   },
   "squadRouteOnly": {

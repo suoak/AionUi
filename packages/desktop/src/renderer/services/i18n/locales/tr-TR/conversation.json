@@ -1413,7 +1413,8 @@
       "trace": "İz",
       "traceFileChanged": "Değişti {{path}}",
       "traceToolDenied": "Reddedildi {{tool}}",
-      "traceGeneric": "{{type}}"
+      "traceGeneric": "{{type}}",
+      "leaderEval": "Lider değerlendirmesi"
     },
     "errors": {
       "review_required": "Tamamlandı'ya taşımak veya İncelemede'den geri almak inceleme gerektirir.",
@@ -1441,6 +1442,39 @@
       "noTeam": "Bu Squad'dan henüz ekip oluşturulmadı.",
       "unavailable": "Bu Squad'ın ekipleri için çalıştırma durumu yok.",
       "hint": "Ekibin görevlerinden türetilir; 15 saniyede bir yenilenir."
+    },
+    "squadStart": {
+      "start": "Squad'ı başlat",
+      "started": "Bu iş öğesi için Squad başlatıldı",
+      "hint": "Paylaşılan worktree aşağıdaki depoyu veya proje klasörünü kullanır.",
+      "reuseHint": "Bu iş öğesinin paylaşılan worktree’sini yeniden kullanır.",
+      "repoPlaceholder": "Git deposu yolu (isteğe bağlı)",
+      "errors": {
+        "squad_work_item_not_found": "İş öğesi bulunamadı.",
+        "squad_work_item_not_assigned": "Bu iş öğesi artık bu Squad’a atanmış değil.",
+        "squad_backlog_not_started": "Squad’ı başlatmadan önce iş öğesini birikimden çıkarın.",
+        "squad_worktree_source_invalid": "Paylaşılan worktree için kullanılabilir Git deposu yok. Bir depo yolu girin.",
+        "squad_worktree_failed": "Paylaşılan worktree hazırlanamadı."
+      }
+    },
+    "worktree": {
+      "title": "Paylaşılan worktree",
+      "branch": "Dal",
+      "path": "Yol",
+      "source": "Depo",
+      "changes": "Değişiklikler",
+      "changesSummary": "{{files}} dosya, +{{additions}} −{{deletions}}",
+      "shared": "Bu iş öğesinin tüm Squad çalıştırmaları bu worktree’yi paylaşır.",
+      "kept": "İş öğesi kapandı. Worktree ve dal silinmedi, korundu.",
+      "status": {
+        "creating": "Oluşturuluyor",
+        "ready": "Hazır",
+        "failed": "Başarısız",
+        "unbound": "Bağlı değil",
+        "removing": "Kaldırılıyor",
+        "removed": "Kaldırıldı",
+        "orphaned": "Sahipsiz"
+      }
     }
   },
   "squadRouteOnly": {

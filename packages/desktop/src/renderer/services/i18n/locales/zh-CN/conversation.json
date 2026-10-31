@@ -1411,7 +1411,8 @@
       "trace": "轨迹",
       "traceFileChanged": "变更 {{path}}",
       "traceToolDenied": "拒绝 {{tool}}",
-      "traceGeneric": "{{type}}"
+      "traceGeneric": "{{type}}",
+      "leaderEval": "Leader 评估"
     },
     "errors": {
       "review_required": "移到“完成”或从“评审中”退回须经评审。",
@@ -1439,6 +1440,39 @@
       "noTeam": "尚未从此 Squad 创建团队。",
       "unavailable": "此 Squad 的团队暂无运行状态。",
       "hint": "根据团队任务推导，每 15 秒刷新。"
+    },
+    "squadStart": {
+      "start": "启动 Squad",
+      "started": "已为此工作项启动 Squad",
+      "hint": "共享 worktree 使用下方仓库；留空则用项目文件夹。",
+      "reuseHint": "复用此工作项的共享 worktree。",
+      "repoPlaceholder": "Git 仓库路径（可选）",
+      "errors": {
+        "squad_work_item_not_found": "找不到该工作项。",
+        "squad_work_item_not_assigned": "该工作项已不再指派给此 Squad。",
+        "squad_backlog_not_started": "请先把工作项移出待规划，再启动 Squad。",
+        "squad_worktree_source_invalid": "没有可用于共享 worktree 的 Git 仓库，请填写仓库路径。",
+        "squad_worktree_failed": "共享 worktree 准备失败。"
+      }
+    },
+    "worktree": {
+      "title": "共享 worktree",
+      "branch": "分支",
+      "path": "路径",
+      "source": "仓库",
+      "changes": "改动",
+      "changesSummary": "{{files}} 个文件，+{{additions}} −{{deletions}}",
+      "shared": "此工作项的所有 Squad 运行共用这个 worktree。",
+      "kept": "工作项已结束，worktree 与分支已保留，未删除。",
+      "status": {
+        "creating": "创建中",
+        "ready": "就绪",
+        "failed": "失败",
+        "unbound": "未绑定",
+        "removing": "移除中",
+        "removed": "已移除",
+        "orphaned": "孤立"
+      }
     }
   },
   "squadRouteOnly": {

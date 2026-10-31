@@ -9,6 +9,7 @@ import { useTranslation } from 'react-i18next';
 import classNames from 'classnames';
 import { Tag } from '@arco-design/web-react';
 import type { TaskBoardItem } from '@/common/types/agent/taskSession';
+import type { WorktreeInfo } from '@/common/types/worktree';
 import { formatRelativeTime } from '@/renderer/utils/chat/relativeTime';
 import { runBadgeForTask, type TaskRunBadge } from './boardModel';
 import { SquadRunBadge } from './SquadRunStatus';
@@ -28,9 +29,11 @@ type TaskBoardCardProps = {
   onOpen?: (task: TaskBoardItem) => void;
   /** Visual state while the card is being dragged. */
   dragging?: boolean;
+  /** M8 Q12: the work item's shared worktree, if any. */
+  worktree?: WorktreeInfo | null;
 };
 
-const TaskBoardCard: React.FC<TaskBoardCardProps> = ({ task, onOpen, dragging = false }) => {
+const TaskBoardCard: React.FC<TaskBoardCardProps> = ({ task, onOpen, dragging = false, worktree = null }) => {
   const { t, i18n } = useTranslation();
   const badge = runBadgeForTask(task);
   const clickable = Boolean(onOpen);
@@ -72,6 +75,17 @@ const TaskBoardCard: React.FC<TaskBoardCardProps> = ({ task, onOpen, dragging = 
         ) : null}
         {task.assignee?.kind === 'squad' && task.assignee.id ? (
           <SquadRunBadge templateId={task.assignee.id} run={task.squad_run} />
+        ) : null}
+        {worktree?.branch ? (
+          <Tag
+            size='small'
+            color='cyan'
+            title={worktree.path}
+            data-testid='task-board-card-worktree'
+            className='max-w-full'
+          >
+            <span className='font-mono break-all'>{worktree.branch}</span>
+          </Tag>
         ) : null}
         {task.labels.map((label) => (
           <Tag key={label} size='small' color='purple'>

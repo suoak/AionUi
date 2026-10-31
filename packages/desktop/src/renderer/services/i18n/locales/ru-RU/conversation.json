@@ -1429,7 +1429,8 @@
       "trace": "Трассировка",
       "traceFileChanged": "Изменён {{path}}",
       "traceToolDenied": "Отклонён {{tool}}",
-      "traceGeneric": "{{type}}"
+      "traceGeneric": "{{type}}",
+      "leaderEval": "Оценка лидера"
     },
     "errors": {
       "review_required": "Перенос в «Готово» или возврат из «На ревью» — только через ревью.",
@@ -1457,6 +1458,39 @@
       "noTeam": "Из этого Squad ещё не создано ни одной команды.",
       "unavailable": "Для команд этого Squad нет статуса выполнения.",
       "hint": "Вычисляется по задачам команды; обновляется каждые 15 секунд."
+    },
+    "squadStart": {
+      "start": "Запустить Squad",
+      "started": "Squad запущен для этой задачи",
+      "hint": "Общий worktree использует репозиторий ниже или папку проекта.",
+      "reuseHint": "Повторно использует общий worktree этой задачи.",
+      "repoPlaceholder": "Путь к Git-репозиторию (необязательно)",
+      "errors": {
+        "squad_work_item_not_found": "Задача не найдена.",
+        "squad_work_item_not_assigned": "Эта задача больше не назначена этому Squad.",
+        "squad_backlog_not_started": "Перед запуском Squad переместите задачу из бэклога.",
+        "squad_worktree_source_invalid": "Нет подходящего Git-репозитория для общего worktree. Укажите путь к репозиторию.",
+        "squad_worktree_failed": "Не удалось подготовить общий worktree."
+      }
+    },
+    "worktree": {
+      "title": "Общий worktree",
+      "branch": "Ветка",
+      "path": "Путь",
+      "source": "Репозиторий",
+      "changes": "Изменения",
+      "changesSummary": "Файлов: {{files}}, +{{additions}} −{{deletions}}",
+      "shared": "Все запуски Squad для этой задачи используют этот worktree.",
+      "kept": "Задача закрыта. Worktree и ветка сохранены, а не удалены.",
+      "status": {
+        "creating": "Создаётся",
+        "ready": "Готов",
+        "failed": "Ошибка",
+        "unbound": "Не привязан",
+        "removing": "Удаляется",
+        "removed": "Удалён",
+        "orphaned": "Потерян"
+      }
     }
   },
   "squadRouteOnly": {

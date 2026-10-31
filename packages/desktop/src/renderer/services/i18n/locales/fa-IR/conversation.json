@@ -1411,7 +1411,8 @@
       "trace": "ردیابی",
       "traceFileChanged": "تغییر {{path}}",
       "traceToolDenied": "رد شد {{tool}}",
-      "traceGeneric": "{{type}}"
+      "traceGeneric": "{{type}}",
+      "leaderEval": "ارزیابی رهبر"
     },
     "errors": {
       "review_required": "انتقال به «انجام‌شده» یا بازگشت از «در بازبینی» فقط با بازبینی ممکن است.",
@@ -1439,6 +1440,39 @@
       "noTeam": "هنوز هیچ تیمی از این Squad ساخته نشده است.",
       "unavailable": "وضعیت اجرا برای تیم‌های این Squad در دسترس نیست.",
       "hint": "از کارهای تیم به‌دست می‌آید؛ هر ۱۵ ثانیه تازه می‌شود."
+    },
+    "squadStart": {
+      "start": "شروع Squad",
+      "started": "Squad برای این مورد کاری شروع شد",
+      "hint": "worktree مشترک از مخزن زیر یا پوشهٔ پروژه استفاده می‌کند.",
+      "reuseHint": "از worktree مشترک این مورد کاری دوباره استفاده می‌کند.",
+      "repoPlaceholder": "مسیر مخزن Git (اختیاری)",
+      "errors": {
+        "squad_work_item_not_found": "مورد کاری پیدا نشد.",
+        "squad_work_item_not_assigned": "این مورد کاری دیگر به این Squad واگذار نشده است.",
+        "squad_backlog_not_started": "پیش از شروع Squad، مورد کاری را از بک‌لاگ خارج کنید.",
+        "squad_worktree_source_invalid": "مخزن Git قابل استفاده‌ای برای worktree مشترک نیست. مسیر مخزن را وارد کنید.",
+        "squad_worktree_failed": "آماده‌سازی worktree مشترک ناموفق بود."
+      }
+    },
+    "worktree": {
+      "title": "worktree مشترک",
+      "branch": "شاخه",
+      "path": "مسیر",
+      "source": "مخزن",
+      "changes": "تغییرات",
+      "changesSummary": "{{files}} فایل، +{{additions}} −{{deletions}}",
+      "shared": "همهٔ اجراهای Squad این مورد کاری این worktree را به اشتراک می‌گذارند.",
+      "kept": "مورد کاری بسته شد. worktree و شاخه حفظ شدند و حذف نشدند.",
+      "status": {
+        "creating": "در حال ایجاد",
+        "ready": "آماده",
+        "failed": "ناموفق",
+        "unbound": "بدون اتصال",
+        "removing": "در حال حذف",
+        "removed": "حذف شد",
+        "orphaned": "یتیم"
+      }
     }
   },
   "squadRouteOnly": {

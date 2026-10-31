@@ -1411,7 +1411,8 @@
       "trace": "추적",
       "traceFileChanged": "변경 {{path}}",
       "traceToolDenied": "거부 {{tool}}",
-      "traceGeneric": "{{type}}"
+      "traceGeneric": "{{type}}",
+      "leaderEval": "Leader 평가"
     },
     "errors": {
       "review_required": "완료로 이동하거나 검토 중에서 되돌리려면 검토가 필요합니다.",
@@ -1439,6 +1440,39 @@
       "noTeam": "이 Squad로 만든 팀이 아직 없습니다.",
       "unavailable": "이 Squad 팀의 실행 상태를 사용할 수 없습니다.",
       "hint": "팀 작업에서 계산되며 15초마다 새로 고칩니다."
+    },
+    "squadStart": {
+      "start": "Squad 시작",
+      "started": "이 작업 항목에 대해 Squad를 시작했습니다",
+      "hint": "공유 worktree에는 아래 저장소를, 비워 두면 프로젝트 폴더를 사용합니다.",
+      "reuseHint": "이 작업 항목의 공유 worktree를 재사용합니다.",
+      "repoPlaceholder": "Git 저장소 경로(선택)",
+      "errors": {
+        "squad_work_item_not_found": "작업 항목을 찾을 수 없습니다.",
+        "squad_work_item_not_assigned": "이 작업 항목은 더 이상 이 Squad에 할당되어 있지 않습니다.",
+        "squad_backlog_not_started": "Squad를 시작하기 전에 작업 항목을 백로그에서 옮기세요.",
+        "squad_worktree_source_invalid": "공유 worktree에 사용할 Git 저장소가 없습니다. 저장소 경로를 입력하세요.",
+        "squad_worktree_failed": "공유 worktree를 준비하지 못했습니다."
+      }
+    },
+    "worktree": {
+      "title": "공유 worktree",
+      "branch": "브랜치",
+      "path": "경로",
+      "source": "저장소",
+      "changes": "변경",
+      "changesSummary": "파일 {{files}}개, +{{additions}} −{{deletions}}",
+      "shared": "이 작업 항목의 모든 Squad 실행이 이 worktree를 공유합니다.",
+      "kept": "작업 항목이 종료되었습니다. worktree와 브랜치는 삭제되지 않고 유지됩니다.",
+      "status": {
+        "creating": "생성 중",
+        "ready": "준비됨",
+        "failed": "실패",
+        "unbound": "연결 안 됨",
+        "removing": "제거 중",
+        "removed": "제거됨",
+        "orphaned": "고립됨"
+      }
     }
   },
   "squadRouteOnly": {

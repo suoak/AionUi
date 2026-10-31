@@ -75,6 +75,8 @@ export type CreateWorktreeInput = {
 
 export type ListWorktreesInput = {
   repo_path?: string;
+  /** M8 Q12: only worktrees linked to this task session / work item (aioncore ≥ #201). */
+  task_session_id?: string;
   status?: WorktreeStatus;
   include_removed?: boolean;
 };
