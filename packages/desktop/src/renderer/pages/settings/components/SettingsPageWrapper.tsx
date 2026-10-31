@@ -18,6 +18,7 @@ import {
   Info,
   Iphone,
   Lightning,
+  Protect,
   LinkCloud,
   Puzzle,
   Robot,
@@ -84,6 +85,12 @@ export function getBuiltinSettingsNavItems(isDesktop: boolean, t: TranslateFn): 
       label: t('settings.devices.navLabel'),
       icon: <Iphone theme='outline' size='16' />,
       path: 'devices',
+    },
+    governance: {
+      id: 'governance',
+      label: t('settings.governance.navLabel'),
+      icon: <Protect theme='outline' size='16' />,
+      path: 'governance',
     },
     pet: { id: 'pet', label: t('pet.desktopPet'), icon: <Cat theme='outline' size='16' />, path: 'pet' },
     usage: {

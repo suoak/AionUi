@@ -1716,5 +1716,127 @@
       "push": "Couldn't save the push setting",
       "reject": "Couldn't reject the pairing request"
     }
+  },
+  "governance": {
+    "navLabel": "Governance",
+    "title": "Governance",
+    "description": "Launch policies, roles, agent run permissions and the tamper-evident audit log for CSBU WorkMate.",
+    "yourRole": "Your role: {{role}}",
+    "singleUser": "Single-user desktop mode: roles are not enforced and you are the owner. Policies and the audit log still apply.",
+    "save": "Save",
+    "tabs": {
+      "policies": "Policies",
+      "roles": "Roles",
+      "permissions": "Agent permissions",
+      "audit": "Audit log"
+    },
+    "role": {
+      "owner": "Owner",
+      "admin": "Admin",
+      "member": "Member"
+    },
+    "policies": {
+      "readOnly": "Only an owner or admin can change policies.",
+      "saved": "Policy saved",
+      "updated": "Changed {{time}} by {{user}}",
+      "no_yolo": {
+        "title": "Block YOLO mode",
+        "description": "Refuse to start sessions, scheduled tasks or batch runs that auto-approve every tool call."
+      },
+      "mcp_strict_only": {
+        "title": "Managed MCP only",
+        "description": "Only allow sessions whose MCP server list is managed by WorkMate, so agents can't load local MCP servers on their own."
+      },
+      "force_sandbox": {
+        "title": "Require sandbox",
+        "description": "Refuse modes that turn the sandbox off, and require batch runs to use a managed worktree."
+      },
+      "banned_backends": {
+        "title": "Blocked agent backends",
+        "description": "Agent types that can't be started. Separate names with commas or spaces.",
+        "placeholder": "e.g. codex, gemini",
+        "invalid": "Invalid names: {{names}}"
+      }
+    },
+    "roles": {
+      "hintOwner": "Owners can change anyone's role. Admins manage policies and permissions.",
+      "hintAdmin": "Only an owner can change roles.",
+      "inactive": "Roles only apply in multi-user WebUI mode.",
+      "empty": "No users",
+      "you": "You",
+      "default": "Default",
+      "saved": "Role updated"
+    },
+    "permissions": {
+      "hint": "Limit which roles can start an assistant or agent type. Subjects not listed can be started by everyone.",
+      "notEnforced": "Run permissions are saved but only enforced in multi-user WebUI mode.",
+      "add": "Add rule",
+      "empty": "No run permission rules",
+      "edit": "Edit",
+      "editTitle": "Edit rule",
+      "kindLabel": "Type",
+      "subjectLabel": "Applies to",
+      "assistantPlaceholder": "Choose an assistant",
+      "agentTypePlaceholder": "Agent type, e.g. claude",
+      "restrict": "Only these roles can start it",
+      "unrestricted": "Everyone",
+      "nobody": "Nobody",
+      "nobodyWarning": "With no role selected, nobody can start it.",
+      "saved": "Permission saved",
+      "kind": {
+        "assistant": "Assistant",
+        "agent_type": "Agent type"
+      }
+    },
+    "audit": {
+      "scopeAll": "Showing events from all users.",
+      "scopeOwn": "Showing only your own events.",
+      "allActions": "All actions",
+      "allActors": "All actors",
+      "actorPlaceholder": "Actor ID",
+      "verify": "Verify integrity",
+      "chainOk": "Chain intact: {{count}} events checked",
+      "chainBroken": "Chain broken at #{{seq}} ({{count}} events checked)",
+      "export": "Export CSV",
+      "exported": "Audit log exported",
+      "empty": "No audit events",
+      "loadMore": "Load more",
+      "hash": "Hash",
+      "user": "User {{user}}",
+      "approved": "Approved by {{approver}}",
+      "family": {
+        "config": "Configuration",
+        "approval": "Approvals",
+        "tool": "Tool calls",
+        "policy": "Policies",
+        "role": "Roles",
+        "agent_permission": "Agent permissions",
+        "device": "Devices",
+        "skill": "Skills",
+        "conversation": "Conversations",
+        "session_message": "Cross-session messages",
+        "channel": "IM channels"
+      },
+      "actorKind": {
+        "user": "User",
+        "agent": "Agent",
+        "device": "Device",
+        "system": "System"
+      }
+    },
+    "error": {
+      "load": "Couldn't load governance settings",
+      "policy": "Couldn't save the policy",
+      "role": "Couldn't change the role",
+      "permission": "Couldn't save the permission",
+      "audit": "Couldn't load the audit log",
+      "verify": "Couldn't verify the audit log",
+      "export": "Couldn't export the audit log",
+      "requiresUser": "Governance can only be managed from a signed-in desktop or WebUI session.",
+      "forbidden": "You don't have permission to do this.",
+      "rolesInactive": "Roles only apply in multi-user WebUI mode.",
+      "conflict": "Couldn't save: {{reason}}",
+      "invalid": "Invalid value: {{reason}}"
+    }
   }
 }

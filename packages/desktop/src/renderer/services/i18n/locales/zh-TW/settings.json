@@ -1718,5 +1718,127 @@
       "push": "儲存推播設定失敗",
       "reject": "拒絕配對請求失敗"
     }
+  },
+  "governance": {
+    "navLabel": "治理",
+    "title": "治理",
+    "description": "管理 CSBU WorkMate 的啟動策略、角色、智慧體執行權限，以及防竄改的稽核日誌。",
+    "yourRole": "你的角色：{{role}}",
+    "singleUser": "目前是單一使用者桌面模式：角色不生效，你就是擁有者。策略和稽核日誌照常生效。",
+    "save": "儲存",
+    "tabs": {
+      "policies": "策略",
+      "roles": "角色",
+      "permissions": "智慧體權限",
+      "audit": "稽核日誌"
+    },
+    "role": {
+      "owner": "擁有者",
+      "admin": "管理員",
+      "member": "成員"
+    },
+    "policies": {
+      "readOnly": "只有擁有者或管理員可以修改策略。",
+      "saved": "策略已儲存",
+      "updated": "{{user}} 於 {{time}} 修改",
+      "no_yolo": {
+        "title": "停用 YOLO 模式",
+        "description": "拒絕啟動自動核准所有工具呼叫的工作階段、排程任務和批次任務。"
+      },
+      "mcp_strict_only": {
+        "title": "僅允許託管 MCP",
+        "description": "只允許 MCP 伺服器清單由 WorkMate 管理的工作階段，智慧體不能自行載入本機 MCP 伺服器。"
+      },
+      "force_sandbox": {
+        "title": "強制沙箱",
+        "description": "拒絕關閉沙箱的模式，批次任務必須使用託管的 worktree。"
+      },
+      "banned_backends": {
+        "title": "停用的智慧體後端",
+        "description": "這些智慧體類型不能啟動。多個名稱以逗號或空格分隔。",
+        "placeholder": "例如 codex, gemini",
+        "invalid": "無效名稱：{{names}}"
+      }
+    },
+    "roles": {
+      "hintOwner": "擁有者可以修改任何人的角色；管理員負責策略和權限。",
+      "hintAdmin": "只有擁有者可以修改角色。",
+      "inactive": "角色只在多使用者 WebUI 模式下生效。",
+      "empty": "沒有使用者",
+      "you": "你",
+      "default": "預設",
+      "saved": "角色已更新"
+    },
+    "permissions": {
+      "hint": "限制哪些角色可以啟動某個助理或智慧體類型。未列出的對象所有人都可以啟動。",
+      "notEnforced": "執行權限會儲存，但只在多使用者 WebUI 模式下生效。",
+      "add": "新增規則",
+      "empty": "沒有執行權限規則",
+      "edit": "編輯",
+      "editTitle": "編輯規則",
+      "kindLabel": "類型",
+      "subjectLabel": "適用對象",
+      "assistantPlaceholder": "選擇助理",
+      "agentTypePlaceholder": "智慧體類型，例如 claude",
+      "restrict": "只有以下角色可以啟動",
+      "unrestricted": "所有人",
+      "nobody": "無人",
+      "nobodyWarning": "一個角色都不選的話，任何人都無法啟動。",
+      "saved": "權限已儲存",
+      "kind": {
+        "assistant": "助理",
+        "agent_type": "智慧體類型"
+      }
+    },
+    "audit": {
+      "scopeAll": "顯示所有使用者的事件。",
+      "scopeOwn": "只顯示你自己的事件。",
+      "allActions": "全部操作",
+      "allActors": "全部操作者",
+      "actorPlaceholder": "操作者 ID",
+      "verify": "驗證完整性",
+      "chainOk": "雜湊鏈完整：已驗證 {{count}} 筆事件",
+      "chainBroken": "雜湊鏈在 #{{seq}} 處中斷（已驗證 {{count}} 筆事件）",
+      "export": "匯出 CSV",
+      "exported": "稽核日誌已匯出",
+      "empty": "沒有稽核事件",
+      "loadMore": "載入更多",
+      "hash": "雜湊",
+      "user": "使用者 {{user}}",
+      "approved": "由 {{approver}} 核准",
+      "family": {
+        "config": "設定",
+        "approval": "審批",
+        "tool": "工具呼叫",
+        "policy": "策略",
+        "role": "角色",
+        "agent_permission": "智慧體權限",
+        "device": "裝置",
+        "skill": "技能",
+        "conversation": "工作階段",
+        "session_message": "跨工作階段訊息",
+        "channel": "IM 頻道"
+      },
+      "actorKind": {
+        "user": "使用者",
+        "agent": "智慧體",
+        "device": "裝置",
+        "system": "系統"
+      }
+    },
+    "error": {
+      "load": "無法載入治理設定",
+      "policy": "無法儲存策略",
+      "role": "無法修改角色",
+      "permission": "無法儲存權限",
+      "audit": "無法載入稽核日誌",
+      "verify": "無法驗證稽核日誌",
+      "export": "無法匯出稽核日誌",
+      "requiresUser": "治理設定只能在已登入的桌面端或 WebUI 工作階段中管理。",
+      "forbidden": "你沒有執行此操作的權限。",
+      "rolesInactive": "角色只在多使用者 WebUI 模式下生效。",
+      "conflict": "無法儲存：{{reason}}",
+      "invalid": "值無效：{{reason}}"
+    }
   }
 }

@@ -1719,5 +1719,127 @@
       "push": "Não foi possível salvar a configuração de notificação",
       "reject": "Não foi possível rejeitar a solicitação de pareamento"
     }
+  },
+  "governance": {
+    "navLabel": "Governança",
+    "title": "Governança",
+    "description": "Políticas de inicialização, funções, permissões de execução de agentes e o log de auditoria à prova de adulteração do CSBU WorkMate.",
+    "yourRole": "Sua função: {{role}}",
+    "singleUser": "Modo desktop de usuário único: as funções não são aplicadas e você é o proprietário. Políticas e log de auditoria continuam valendo.",
+    "save": "Salvar",
+    "tabs": {
+      "policies": "Políticas",
+      "roles": "Funções",
+      "permissions": "Permissões de agentes",
+      "audit": "Log de auditoria"
+    },
+    "role": {
+      "owner": "Proprietário",
+      "admin": "Administrador",
+      "member": "Membro"
+    },
+    "policies": {
+      "readOnly": "Apenas um proprietário ou administrador pode alterar as políticas.",
+      "saved": "Política salva",
+      "updated": "Alterado em {{time}} por {{user}}",
+      "no_yolo": {
+        "title": "Bloquear modo YOLO",
+        "description": "Recusar sessões, tarefas agendadas ou execuções em lote que aprovam automaticamente toda chamada de ferramenta."
+      },
+      "mcp_strict_only": {
+        "title": "Somente MCP gerenciado",
+        "description": "Permitir apenas sessões cuja lista de servidores MCP é gerenciada pelo WorkMate, para que agentes não carreguem servidores MCP locais por conta própria."
+      },
+      "force_sandbox": {
+        "title": "Exigir sandbox",
+        "description": "Recusar modos que desativam o sandbox e exigir que execuções em lote usem um worktree gerenciado."
+      },
+      "banned_backends": {
+        "title": "Backends de agentes bloqueados",
+        "description": "Tipos de agente que não podem ser iniciados. Separe os nomes com vírgulas ou espaços.",
+        "placeholder": "ex.: codex, gemini",
+        "invalid": "Nomes inválidos: {{names}}"
+      }
+    },
+    "roles": {
+      "hintOwner": "Proprietários podem alterar a função de qualquer pessoa. Administradores gerenciam políticas e permissões.",
+      "hintAdmin": "Apenas um proprietário pode alterar funções.",
+      "inactive": "As funções só se aplicam no modo WebUI multiusuário.",
+      "empty": "Nenhum usuário",
+      "you": "Você",
+      "default": "Padrão",
+      "saved": "Função atualizada"
+    },
+    "permissions": {
+      "hint": "Limite quais funções podem iniciar um assistente ou tipo de agente. O que não estiver listado pode ser iniciado por todos.",
+      "notEnforced": "As permissões de execução são salvas, mas só são aplicadas no modo WebUI multiusuário.",
+      "add": "Adicionar regra",
+      "empty": "Nenhuma regra de permissão de execução",
+      "edit": "Editar",
+      "editTitle": "Editar regra",
+      "kindLabel": "Tipo",
+      "subjectLabel": "Aplica-se a",
+      "assistantPlaceholder": "Escolha um assistente",
+      "agentTypePlaceholder": "Tipo de agente, ex.: claude",
+      "restrict": "Somente estas funções podem iniciar",
+      "unrestricted": "Todos",
+      "nobody": "Ninguém",
+      "nobodyWarning": "Sem nenhuma função selecionada, ninguém poderá iniciar.",
+      "saved": "Permissão salva",
+      "kind": {
+        "assistant": "Assistente",
+        "agent_type": "Tipo de agente"
+      }
+    },
+    "audit": {
+      "scopeAll": "Mostrando eventos de todos os usuários.",
+      "scopeOwn": "Mostrando apenas seus eventos.",
+      "allActions": "Todas as ações",
+      "allActors": "Todos os atores",
+      "actorPlaceholder": "ID do ator",
+      "verify": "Verificar integridade",
+      "chainOk": "Cadeia íntegra: {{count}} eventos verificados",
+      "chainBroken": "Cadeia quebrada em #{{seq}} ({{count}} eventos verificados)",
+      "export": "Exportar CSV",
+      "exported": "Log de auditoria exportado",
+      "empty": "Nenhum evento de auditoria",
+      "loadMore": "Carregar mais",
+      "hash": "Hash",
+      "user": "Usuário {{user}}",
+      "approved": "Aprovado por {{approver}}",
+      "family": {
+        "config": "Configuração",
+        "approval": "Aprovações",
+        "tool": "Chamadas de ferramentas",
+        "policy": "Políticas",
+        "role": "Funções",
+        "agent_permission": "Permissões de agentes",
+        "device": "Dispositivos",
+        "skill": "Skills",
+        "conversation": "Conversas",
+        "session_message": "Mensagens entre sessões",
+        "channel": "Canais de IM"
+      },
+      "actorKind": {
+        "user": "Usuário",
+        "agent": "Agente",
+        "device": "Dispositivo",
+        "system": "Sistema"
+      }
+    },
+    "error": {
+      "load": "Não foi possível carregar as configurações de governança",
+      "policy": "Não foi possível salvar a política",
+      "role": "Não foi possível alterar a função",
+      "permission": "Não foi possível salvar a permissão",
+      "audit": "Não foi possível carregar o log de auditoria",
+      "verify": "Não foi possível verificar o log de auditoria",
+      "export": "Não foi possível exportar o log de auditoria",
+      "requiresUser": "A governança só pode ser gerenciada em uma sessão conectada do desktop ou da WebUI.",
+      "forbidden": "Você não tem permissão para fazer isso.",
+      "rolesInactive": "As funções só se aplicam no modo WebUI multiusuário.",
+      "conflict": "Não foi possível salvar: {{reason}}",
+      "invalid": "Valor inválido: {{reason}}"
+    }
   }
 }

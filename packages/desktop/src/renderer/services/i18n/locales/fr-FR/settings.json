@@ -1716,5 +1716,127 @@
       "push": "Impossible d'enregistrer le paramètre de notification",
       "reject": "Impossible de refuser la demande d'association"
     }
+  },
+  "governance": {
+    "navLabel": "Gouvernance",
+    "title": "Gouvernance",
+    "description": "Politiques de lancement, rôles, autorisations d'exécution des agents et journal d'audit infalsifiable de CSBU WorkMate.",
+    "yourRole": "Votre rôle : {{role}}",
+    "singleUser": "Mode bureau mono-utilisateur : les rôles ne sont pas appliqués et vous êtes le propriétaire. Les politiques et le journal d'audit restent actifs.",
+    "save": "Enregistrer",
+    "tabs": {
+      "policies": "Politiques",
+      "roles": "Rôles",
+      "permissions": "Autorisations des agents",
+      "audit": "Journal d'audit"
+    },
+    "role": {
+      "owner": "Propriétaire",
+      "admin": "Administrateur",
+      "member": "Membre"
+    },
+    "policies": {
+      "readOnly": "Seul un propriétaire ou un administrateur peut modifier les politiques.",
+      "saved": "Politique enregistrée",
+      "updated": "Modifié le {{time}} par {{user}}",
+      "no_yolo": {
+        "title": "Bloquer le mode YOLO",
+        "description": "Refuser de lancer des sessions, tâches planifiées ou exécutions par lots qui approuvent automatiquement chaque appel d'outil."
+      },
+      "mcp_strict_only": {
+        "title": "MCP géré uniquement",
+        "description": "N'autoriser que les sessions dont la liste de serveurs MCP est gérée par WorkMate, pour que les agents ne chargent pas eux-mêmes de serveurs MCP locaux."
+      },
+      "force_sandbox": {
+        "title": "Exiger le sandbox",
+        "description": "Refuser les modes qui désactivent le sandbox et exiger un worktree géré pour les exécutions par lots."
+      },
+      "banned_backends": {
+        "title": "Backends d'agents bloqués",
+        "description": "Types d'agents qui ne peuvent pas être lancés. Séparez les noms par des virgules ou des espaces.",
+        "placeholder": "ex. codex, gemini",
+        "invalid": "Noms non valides : {{names}}"
+      }
+    },
+    "roles": {
+      "hintOwner": "Les propriétaires peuvent modifier le rôle de chacun. Les administrateurs gèrent les politiques et les autorisations.",
+      "hintAdmin": "Seul un propriétaire peut modifier les rôles.",
+      "inactive": "Les rôles ne s'appliquent qu'en mode WebUI multi-utilisateur.",
+      "empty": "Aucun utilisateur",
+      "you": "Vous",
+      "default": "Par défaut",
+      "saved": "Rôle mis à jour"
+    },
+    "permissions": {
+      "hint": "Limitez les rôles qui peuvent lancer un assistant ou un type d'agent. Tout ce qui n'est pas listé peut être lancé par tout le monde.",
+      "notEnforced": "Les autorisations d'exécution sont enregistrées mais appliquées uniquement en mode WebUI multi-utilisateur.",
+      "add": "Ajouter une règle",
+      "empty": "Aucune règle d'autorisation d'exécution",
+      "edit": "Modifier",
+      "editTitle": "Modifier la règle",
+      "kindLabel": "Type",
+      "subjectLabel": "S'applique à",
+      "assistantPlaceholder": "Choisir un assistant",
+      "agentTypePlaceholder": "Type d'agent, ex. claude",
+      "restrict": "Seuls ces rôles peuvent le lancer",
+      "unrestricted": "Tout le monde",
+      "nobody": "Personne",
+      "nobodyWarning": "Sans rôle sélectionné, personne ne peut le lancer.",
+      "saved": "Autorisation enregistrée",
+      "kind": {
+        "assistant": "Assistant",
+        "agent_type": "Type d'agent"
+      }
+    },
+    "audit": {
+      "scopeAll": "Événements de tous les utilisateurs affichés.",
+      "scopeOwn": "Seuls vos propres événements sont affichés.",
+      "allActions": "Toutes les actions",
+      "allActors": "Tous les acteurs",
+      "actorPlaceholder": "ID de l'acteur",
+      "verify": "Vérifier l'intégrité",
+      "chainOk": "Chaîne intacte : {{count}} événements vérifiés",
+      "chainBroken": "Chaîne rompue au n° {{seq}} ({{count}} événements vérifiés)",
+      "export": "Exporter en CSV",
+      "exported": "Journal d'audit exporté",
+      "empty": "Aucun événement d'audit",
+      "loadMore": "Charger plus",
+      "hash": "Hash",
+      "user": "Utilisateur {{user}}",
+      "approved": "Approuvé par {{approver}}",
+      "family": {
+        "config": "Configuration",
+        "approval": "Approbations",
+        "tool": "Appels d'outils",
+        "policy": "Politiques",
+        "role": "Rôles",
+        "agent_permission": "Autorisations des agents",
+        "device": "Appareils",
+        "skill": "Skills",
+        "conversation": "Conversations",
+        "session_message": "Messages entre sessions",
+        "channel": "Canaux IM"
+      },
+      "actorKind": {
+        "user": "Utilisateur",
+        "agent": "Agent",
+        "device": "Appareil",
+        "system": "Système"
+      }
+    },
+    "error": {
+      "load": "Impossible de charger les paramètres de gouvernance",
+      "policy": "Impossible d'enregistrer la politique",
+      "role": "Impossible de modifier le rôle",
+      "permission": "Impossible d'enregistrer l'autorisation",
+      "audit": "Impossible de charger le journal d'audit",
+      "verify": "Impossible de vérifier le journal d'audit",
+      "export": "Impossible d'exporter le journal d'audit",
+      "requiresUser": "La gouvernance ne peut être gérée que depuis une session bureau ou WebUI connectée.",
+      "forbidden": "Vous n'avez pas l'autorisation de faire cela.",
+      "rolesInactive": "Les rôles ne s'appliquent qu'en mode WebUI multi-utilisateur.",
+      "conflict": "Enregistrement impossible : {{reason}}",
+      "invalid": "Valeur non valide : {{reason}}"
+    }
   }
 }

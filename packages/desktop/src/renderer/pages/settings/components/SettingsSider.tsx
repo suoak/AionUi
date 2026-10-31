@@ -13,6 +13,7 @@ import {
   Info,
   Iphone,
   Lightning,
+  Protect,
   LinkCloud,
   Puzzle,
   Speed,
@@ -36,6 +37,7 @@ export const BUILTIN_TAB_IDS = [
   'appearance',
   'webui',
   'devices',
+  'governance',
   'pet',
   'usage',
   'system',
@@ -120,6 +122,12 @@ const SettingsSider: React.FC<{ collapsed?: boolean; tooltipEnabled?: boolean }>
         path: 'webui',
       },
       devices: { id: 'devices', label: t('settings.devices.navLabel'), icon: <Iphone />, path: 'devices' },
+      governance: {
+        id: 'governance',
+        label: t('settings.governance.navLabel'),
+        icon: <Protect />,
+        path: 'governance',
+      },
       pet: { id: 'pet', label: t('pet.desktopPet'), icon: <Cat />, path: 'pet' },
       usage: {
         id: 'usage',

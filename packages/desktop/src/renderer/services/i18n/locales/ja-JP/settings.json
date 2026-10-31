@@ -1718,5 +1718,127 @@
       "push": "プッシュ設定を保存できませんでした",
       "reject": "ペアリング要求を拒否できませんでした"
     }
+  },
+  "governance": {
+    "navLabel": "ガバナンス",
+    "title": "ガバナンス",
+    "description": "CSBU WorkMate の起動ポリシー、ロール、エージェント実行権限、改ざん検知可能な監査ログを管理します。",
+    "yourRole": "あなたのロール：{{role}}",
+    "singleUser": "シングルユーザーのデスクトップモードです。ロールは適用されず、あなたがオーナーです。ポリシーと監査ログは引き続き有効です。",
+    "save": "保存",
+    "tabs": {
+      "policies": "ポリシー",
+      "roles": "ロール",
+      "permissions": "エージェント権限",
+      "audit": "監査ログ"
+    },
+    "role": {
+      "owner": "オーナー",
+      "admin": "管理者",
+      "member": "メンバー"
+    },
+    "policies": {
+      "readOnly": "ポリシーを変更できるのはオーナーまたは管理者のみです。",
+      "saved": "ポリシーを保存しました",
+      "updated": "{{time}} に {{user}} が変更",
+      "no_yolo": {
+        "title": "YOLO モードを禁止",
+        "description": "すべてのツール呼び出しを自動承認するセッション、定期タスク、バッチ実行を起動しません。"
+      },
+      "mcp_strict_only": {
+        "title": "管理された MCP のみ",
+        "description": "MCP サーバー一覧が WorkMate で管理されているセッションのみ許可し、エージェントが独自にローカル MCP サーバーを読み込めないようにします。"
+      },
+      "force_sandbox": {
+        "title": "サンドボックスを必須にする",
+        "description": "サンドボックスを無効にするモードを拒否し、バッチ実行には管理された worktree を必須にします。"
+      },
+      "banned_backends": {
+        "title": "ブロックするエージェントバックエンド",
+        "description": "起動できないエージェントタイプです。名前はカンマまたはスペースで区切ります。",
+        "placeholder": "例: codex, gemini",
+        "invalid": "無効な名前：{{names}}"
+      }
+    },
+    "roles": {
+      "hintOwner": "オーナーは全員のロールを変更できます。管理者はポリシーと権限を管理します。",
+      "hintAdmin": "ロールを変更できるのはオーナーのみです。",
+      "inactive": "ロールはマルチユーザーの WebUI モードでのみ適用されます。",
+      "empty": "ユーザーがいません",
+      "you": "あなた",
+      "default": "既定",
+      "saved": "ロールを更新しました"
+    },
+    "permissions": {
+      "hint": "アシスタントやエージェントタイプを起動できるロールを制限します。一覧にない対象は誰でも起動できます。",
+      "notEnforced": "実行権限は保存されますが、適用されるのはマルチユーザーの WebUI モードのみです。",
+      "add": "ルールを追加",
+      "empty": "実行権限ルールはありません",
+      "edit": "編集",
+      "editTitle": "ルールを編集",
+      "kindLabel": "種類",
+      "subjectLabel": "対象",
+      "assistantPlaceholder": "アシスタントを選択",
+      "agentTypePlaceholder": "エージェントタイプ（例: claude）",
+      "restrict": "次のロールのみ起動可能",
+      "unrestricted": "全員",
+      "nobody": "なし",
+      "nobodyWarning": "ロールを選択しないと、誰も起動できません。",
+      "saved": "権限を保存しました",
+      "kind": {
+        "assistant": "アシスタント",
+        "agent_type": "エージェントタイプ"
+      }
+    },
+    "audit": {
+      "scopeAll": "全ユーザーのイベントを表示しています。",
+      "scopeOwn": "自分のイベントのみ表示しています。",
+      "allActions": "すべての操作",
+      "allActors": "すべての操作者",
+      "actorPlaceholder": "操作者 ID",
+      "verify": "整合性を検証",
+      "chainOk": "チェーンは正常です：{{count}} 件のイベントを検証",
+      "chainBroken": "#{{seq}} でチェーンが壊れています（{{count}} 件のイベントを検証）",
+      "export": "CSV をエクスポート",
+      "exported": "監査ログをエクスポートしました",
+      "empty": "監査イベントはありません",
+      "loadMore": "さらに読み込む",
+      "hash": "ハッシュ",
+      "user": "ユーザー {{user}}",
+      "approved": "{{approver}} が承認",
+      "family": {
+        "config": "設定",
+        "approval": "承認",
+        "tool": "ツール呼び出し",
+        "policy": "ポリシー",
+        "role": "ロール",
+        "agent_permission": "エージェント権限",
+        "device": "デバイス",
+        "skill": "スキル",
+        "conversation": "会話",
+        "session_message": "セッション間メッセージ",
+        "channel": "IM チャネル"
+      },
+      "actorKind": {
+        "user": "ユーザー",
+        "agent": "エージェント",
+        "device": "デバイス",
+        "system": "システム"
+      }
+    },
+    "error": {
+      "load": "ガバナンス設定を読み込めませんでした",
+      "policy": "ポリシーを保存できませんでした",
+      "role": "ロールを変更できませんでした",
+      "permission": "権限を保存できませんでした",
+      "audit": "監査ログを読み込めませんでした",
+      "verify": "監査ログを検証できませんでした",
+      "export": "監査ログをエクスポートできませんでした",
+      "requiresUser": "ガバナンスはサインイン済みのデスクトップまたは WebUI セッションからのみ管理できます。",
+      "forbidden": "この操作を行う権限がありません。",
+      "rolesInactive": "ロールはマルチユーザーの WebUI モードでのみ適用されます。",
+      "conflict": "保存できませんでした：{{reason}}",
+      "invalid": "無効な値：{{reason}}"
+    }
   }
 }
