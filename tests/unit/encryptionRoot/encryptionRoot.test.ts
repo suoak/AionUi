@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import * as path from 'node:path';
 import { describe, expect, it, vi } from 'vitest';
 import {
   ENCRYPTION_ROOT_FILE,
@@ -13,7 +14,8 @@ import {
 } from '@process/services/encryptionRoot/encryptionRoot';
 
 const USER_DATA = '/user-data';
-const FILE = `${USER_DATA}/${ENCRYPTION_ROOT_FILE}`;
+// Platform-native join so the in-memory fs keys match the implementation on Windows.
+const FILE = path.join(USER_DATA, ENCRYPTION_ROOT_FILE);
 
 /** Reversible fake "seal" so tests can tell sealed bytes from plaintext. */
 function fakeSafeStorage(overrides: Partial<SafeStorageLike> = {}): SafeStorageLike {
