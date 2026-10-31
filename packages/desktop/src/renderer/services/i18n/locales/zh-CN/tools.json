@@ -82,7 +82,9 @@
       "agent": "智能体",
       "assistant": "助手",
       "skill": "技能",
-      "cron": "定时任务"
+      "cron": "定时任务",
+      "squad": "Squad 模板",
+      "work_item": "看板工作项"
     }
   }
 }

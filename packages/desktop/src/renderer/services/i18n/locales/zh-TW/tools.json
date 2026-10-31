@@ -82,7 +82,9 @@
       "agent": "智慧體",
       "assistant": "助理",
       "skill": "技能",
-      "cron": "排程任務"
+      "cron": "排程任務",
+      "squad": "Squad 範本",
+      "work_item": "看板工作項"
     }
   }
 }

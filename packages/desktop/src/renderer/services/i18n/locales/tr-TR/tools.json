@@ -82,7 +82,9 @@
       "agent": "Ajan",
       "assistant": "Asistan",
       "skill": "Beceri",
-      "cron": "Zamanlanmış görev"
+      "cron": "Zamanlanmış görev",
+      "squad": "Squad şablonu",
+      "work_item": "Pano iş öğesi"
     }
   }
 }

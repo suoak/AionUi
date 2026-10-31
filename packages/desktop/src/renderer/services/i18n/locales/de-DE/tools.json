@@ -82,7 +82,9 @@
       "agent": "Agent",
       "assistant": "Assistent",
       "skill": "Skill",
-      "cron": "Geplante Aufgabe"
+      "cron": "Geplante Aufgabe",
+      "squad": "Squad-Vorlage",
+      "work_item": "Board-Arbeitselement"
     }
   }
 }

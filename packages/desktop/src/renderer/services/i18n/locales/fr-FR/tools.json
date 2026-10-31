@@ -82,7 +82,9 @@
       "agent": "Agent",
       "assistant": "Assistant",
       "skill": "Compétence",
-      "cron": "Tâche planifiée"
+      "cron": "Tâche planifiée",
+      "squad": "Modèle de Squad",
+      "work_item": "Élément de travail du tableau"
     }
   }
 }

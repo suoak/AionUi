@@ -2661,7 +2661,16 @@ export const cron = {
 // the user must approve (aioncore parks them; see /api/agent-approvals).
 // ---------------------------------------------------------------------------
 
-export type AgentActionKind = 'mcp' | 'provider' | 'settings' | 'agent' | 'assistant' | 'skill' | 'cron';
+export type AgentActionKind =
+  | 'mcp'
+  | 'provider'
+  | 'settings'
+  | 'agent'
+  | 'assistant'
+  | 'skill'
+  | 'cron'
+  | 'squad'
+  | 'work_item';
 export type AgentApprovalStatus = 'pending' | 'approved' | 'denied' | 'consumed' | 'expired';
 
 export interface IAgentApprovalRecord {

@@ -82,7 +82,9 @@
       "agent": "Agente",
       "assistant": "Asistente",
       "skill": "Habilidad",
-      "cron": "Tarea programada"
+      "cron": "Tarea programada",
+      "squad": "Plantilla de Squad",
+      "work_item": "Elemento de trabajo del tablero"
     }
   }
 }
