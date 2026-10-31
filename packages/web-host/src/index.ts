@@ -14,10 +14,17 @@ export {
   generateLocalApiSecret,
   LOCAL_API_SECRET_HEADER,
   LOCAL_AUTH_STDIN_ENV,
+  ENCRYPTION_STDIN_ENV,
   startBackend,
   stopBackend,
 } from './backend-launcher.js';
-export type { BackendDirConfig, BackendLaunchOptions, BackendHandle, BackendStartOptions } from './backend-launcher.js';
+export type {
+  BackendDirConfig,
+  BackendLaunchOptions,
+  BackendHandle,
+  BackendStartOptions,
+  EncryptionRootProvider,
+} from './backend-launcher.js';
 
 /**
  * Start WebHost (main entry point).

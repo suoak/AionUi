@@ -44,6 +44,7 @@ import { ProcessConfig } from './process/utils/initStorage';
 import type { BackendStartupFailureInfo } from './common/types/platform/electron';
 import { registerWindowMaximizeListeners } from '@process/bridge';
 import { BackendLifecycleManager } from '@csbu-workmate/web-host';
+import { createEncryptionRootProvider } from './process/startup/encryptionRootProvider';
 import { pathToFileURL } from 'node:url';
 import { setBackendAuthHeadersProvider } from './common/adapter/backendAuth';
 import { installBackendLocalAuth } from './process/security/backendLocalAuth';
@@ -303,6 +304,10 @@ const backendManager = new BackendLifecycleManager(
   },
   resolveBinaryPath
 );
+// M8 E12-6: mirror the backend storage-encryption root into the OS keychain
+// (safeStorage) and hand it back to the backend over stdin. The database
+// column stays the source of truth and is never cleared.
+backendManager.setEncryptionRootProvider(createEncryptionRootProvider(() => app.getPath('userData')));
 let disposeCronResumeListener: (() => void) | null = null;
 
 // Flag tracking whether the backend subprocess started successfully. Read by

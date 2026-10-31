@@ -480,6 +480,59 @@ describe('BackendLifecycleManager.start (success path)', () => {
   });
 });
 
+describe('BackendLifecycleManager.start (keychain encryption root)', () => {
+  async function startWith(provider: ((dataDir: string) => string | null) | null) {
+    const child = makeFakeChild();
+    vi.mocked(spawn).mockReset();
+    vi.mocked(spawn).mockReturnValue(child as unknown as ChildProcess);
+    const fetchSpy = vi
+      .spyOn(globalThis, 'fetch')
+      .mockResolvedValue(new Response('ok', { status: 200 }) as unknown as Response);
+    const infoSpy = vi.spyOn(console, 'info').mockImplementation(() => {});
+    const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    const mgr = new BackendLifecycleManager(APP_META_PACKAGED, () => '/abs/path/aioncore');
+    mgr.setEncryptionRootProvider(provider);
+    try {
+      const startPromise = mgr.start('/db/path', '/log/dir', { cacheDir: '/c', workDir: '/w', logDir: '/l' });
+      await vi.waitFor(() => expect(spawn).toHaveBeenCalledTimes(1));
+      emitListening(child, 55555);
+      await startPromise;
+      const opts = vi.mocked(spawn).mock.calls[0][2] as { env: NodeJS.ProcessEnv };
+      return { child, mgr, env: opts.env, args: vi.mocked(spawn).mock.calls[0][1] as string[] };
+    } finally {
+      fetchSpy.mockRestore();
+      infoSpy.mockRestore();
+      warnSpy.mockRestore();
+    }
+  }
+
+  it('sends the root as the second stdin line, never in env or argv', async () => {
+    const provider = vi.fn(() => 'root-secret-value');
+    const { child, mgr, env, args } = await startWith(provider);
+    expect(provider).toHaveBeenCalledWith('/db/path');
+    expect(env.AIONUI_ENCRYPTION_STDIN).toBe('1');
+    expect(Object.values(env)).not.toContain('root-secret-value');
+    expect(args).not.toContain('root-secret-value');
+    expect(child.stdin?.end).toHaveBeenCalledWith(`${mgr.localApiSecret}\nroot-secret-value\n`);
+  });
+
+  it.each([
+    ['no provider', null],
+    ['no root yet', () => null],
+    [
+      'a throwing provider',
+      () => {
+        throw new Error('keychain locked');
+      },
+    ],
+    ['a multi-line value', () => 'two\nlines'],
+  ] as const)('sends nothing extra with %s', async (_label, provider) => {
+    const { child, mgr, env } = await startWith(provider);
+    expect(env.AIONUI_ENCRYPTION_STDIN).toBeUndefined();
+    expect(child.stdin?.end).toHaveBeenCalledWith(`${mgr.localApiSecret}\n`);
+  });
+});
+
 describe('BackendLifecycleManager.start (health timeout)', () => {
   it('fails before spawn when startup directory preparation fails', async () => {
     vi.mocked(mkdirSync).mockImplementationOnce(() => {
