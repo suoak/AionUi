@@ -234,6 +234,10 @@
     "notifyFailedNamed": "Başarısız: {{name}}",
     "notifyFailed": "Bir görev başarısız oldu",
     "notifyBlockedNamed": "Engellendi, seni bekliyor: {{name}}",
-    "notifyBlocked": "Bir görev engellendi ve seni bekliyor"
+    "notifyBlocked": "Bir görev engellendi ve seni bekliyor",
+    "origin": {
+      "batch": "Toplu",
+      "autopilot": "Autopilot"
+    }
   }
 }

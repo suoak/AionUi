@@ -176,5 +176,45 @@
     "conversationNotFound": "Konuşma bulunamadı",
     "scheduledTimePassed": "Zamanlanmış saat geçti",
     "conversationBusy": "Konuşma meşgul, {{count}} denemeden sonra atlandı"
+  },
+  "autopilot": {
+    "title": "Autopilot",
+    "hint": "Bu görevi korumalarla gözetimsiz çalıştırır. Hatalar Gelen Kutunuza düşer.",
+    "modeBlocked": "{{mode}} modunda Autopilot kullanılamaz: bu mod her adımın bir kişi tarafından incelenmesini gerektirir.",
+    "channelUnavailable": "Kayıtlı kanal (artık kullanılamıyor)",
+    "guardrail": {
+      "ask": "Tam otomatik kapalıyken izin gerektiren işlemler otomatik olarak onaylanmaz.",
+      "inbox": "Başarısız çalıştırmalar Gelen Kutunuzda görünür.",
+      "summary": "Her çalıştırmanın kısa özeti aşağıda seçtiğiniz kanala gönderilir."
+    },
+    "yolo": {
+      "title": "Tam otomatik",
+      "hint": "Varsayılan olarak kapalıdır. Açıkken her işlem size sormadan yürütülür.",
+      "agentCreated": "Bu görev bir ajan tarafından oluşturuldu, bu yüzden tam otomatik açılamaz.",
+      "confirmTitle": "Tam otomatik açılsın mı?",
+      "confirmOk": "Riski anlıyorum, aç",
+      "confirmIntro": "Tam otomatik açıkken bu görev kimse izlemeden zamanlamaya göre çalışır ve ajan işlem yapmadan önce sormaz. Bu nedenle şunları yapabilir:",
+      "riskCommands": "onay almadan komut çalıştırabilir, çalışma alanındaki dosyaları değiştirebilir veya silebilir;",
+      "riskIrreversible": "mesaj göndermek veya harici servisleri değiştirmek gibi geri alınamayan işlemler yapabilir;",
+      "riskUnattended": "siz fark edene kadar her zamanlanmış çalıştırmada aynı hatalı işlemi tekrarlayabilir.",
+      "confirmOutro": "Yalnızca tamamen güvendiğiniz görevlerde açın. İstediğiniz zaman kapatabilirsiniz."
+    },
+    "channel": {
+      "title": "Bildirim kanalı",
+      "hint": "Yalnızca kendi bağlı kanallarınız listelenir.",
+      "empty": "Mesaj alabilen bağlı bir kanalınız yok. Özetler Gelen Kutusunda kalır.",
+      "loadFailed": "Kanallarınız yüklenemedi. Özetler Gelen Kutusunda kalır.",
+      "none": "Yok (yalnızca Gelen Kutusu)"
+    },
+    "status": {
+      "ask": "Açık · Sorma modu",
+      "fullAuto": "Açık · Tam otomatik"
+    },
+    "error": {
+      "forbidden": "İzin verilmiyor: tam otomatiği yalnızca siz açabilir veya Autopilot'u kapatabilirsiniz; ajanın oluşturduğu görevler tam otomatik kullanamaz.",
+      "invalidChannel": "Seçilen kanal mesaj alamıyor. Başka bir kanal ya da \"Yok\" seçin.",
+      "modeBlocked": "Autopilot, plan veya goal moduyla kullanılamaz.",
+      "yoloNeedsAutopilot": "Tam otomatik için Autopilot'un açık olması gerekir."
+    }
   }
 }

@@ -234,6 +234,10 @@
     "notifyFailedNamed": "ناموفق: {{name}}",
     "notifyFailed": "یک کار ناموفق بود",
     "notifyBlockedNamed": "مسدود، نیاز به شما: {{name}}",
-    "notifyBlocked": "یک کار مسدود شده و به شما نیاز دارد"
+    "notifyBlocked": "یک کار مسدود شده و به شما نیاز دارد",
+    "origin": {
+      "batch": "دسته‌ای",
+      "autopilot": "Autopilot"
+    }
   }
 }

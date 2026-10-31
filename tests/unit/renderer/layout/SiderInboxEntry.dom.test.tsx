@@ -58,13 +58,17 @@ const item = (over: Record<string, unknown> = {}) => ({
   ...over,
 });
 
-const renderEntry = (onOpenConversation = vi.fn()) =>
+const renderEntry = (
+  onOpenConversation = vi.fn(),
+  extra: Partial<Pick<React.ComponentProps<typeof SiderInboxEntry>, 'onOpenBatchJob' | 'onOpenScheduledJob'>> = {}
+) =>
   render(
     <SiderInboxEntry
       isMobile={false}
       collapsed={false}
       siderTooltipProps={{} as never}
       onOpenConversation={onOpenConversation}
+      {...extra}
     />
   );
 
@@ -121,5 +125,77 @@ describe('SiderInboxEntry', () => {
     fireEvent.click(screen.getByTestId('inbox-mark-all'));
     await waitFor(() => expect(mocks.markAllRead).toHaveBeenCalled());
     await waitFor(() => expect(screen.queryByTestId('sider-inbox-unread')).toBeNull());
+  });
+  it('labels batch summaries and opens the batch job', async () => {
+    mocks.list.mockImplementation(() =>
+      Promise.resolve({
+        items: [
+          item({
+            id: 'b1',
+            kind: 'completed',
+            origin: 'batch',
+            source_kind: 'fanout_group',
+            source_id: 'batch-42',
+            conversation_id: null,
+            title: 'Batch finished',
+            summary: '8 passed · 1 failed · 1 timed out',
+          }),
+        ],
+        unread_count: 1,
+      })
+    );
+    mocks.markRead.mockImplementation(() => Promise.resolve({ updated: 1, unread_count: 0 }));
+    const onOpen = vi.fn();
+    const onOpenBatchJob = vi.fn();
+    renderEntry(onOpen, { onOpenBatchJob });
+    fireEvent.click(await screen.findByTestId('sider-inbox-entry'));
+    const tag = await screen.findByTestId('inbox-item-origin');
+    expect(tag).toHaveAttribute('data-origin', 'batch');
+    expect(tag).toHaveTextContent('common.inbox.origin.batch');
+    fireEvent.click(screen.getByText('Batch finished'));
+    expect(onOpenBatchJob).toHaveBeenCalledWith('batch-42');
+    expect(onOpen).not.toHaveBeenCalled();
+    await waitFor(() => expect(mocks.markRead).toHaveBeenCalledWith({ id: 'b1' }));
+  });
+
+  it('opens the conversation of an Autopilot failure, or its scheduled task when there is none', async () => {
+    mocks.list.mockImplementation(() =>
+      Promise.resolve({
+        items: [
+          item({ id: 'a1', origin: 'autopilot', title: 'Autopilot run failed' }),
+          item({
+            id: 'a2',
+            origin: 'autopilot',
+            source_kind: 'cron',
+            source_id: 'job-7',
+            conversation_id: null,
+            title: 'Autopilot could not start',
+          }),
+        ],
+        unread_count: 2,
+      })
+    );
+    mocks.markRead.mockImplementation(() => Promise.resolve({ updated: 1, unread_count: 1 }));
+    const onOpen = vi.fn();
+    const onOpenScheduledJob = vi.fn();
+    renderEntry(onOpen, { onOpenScheduledJob });
+    fireEvent.click(await screen.findByTestId('sider-inbox-entry'));
+    const tags = await screen.findAllByTestId('inbox-item-origin');
+    expect(tags.map((tag) => tag.getAttribute('data-origin'))).toEqual(['autopilot', 'autopilot']);
+    fireEvent.click(screen.getByText('Autopilot run failed'));
+    expect(onOpen).toHaveBeenCalledWith('conv-1');
+    expect(onOpenScheduledJob).not.toHaveBeenCalled();
+    fireEvent.click(await screen.findByText('Autopilot could not start'));
+    expect(onOpenScheduledJob).toHaveBeenCalledWith('job-7');
+  });
+
+  it('does not tag items without a known origin', async () => {
+    mocks.list.mockImplementation(() =>
+      Promise.resolve({ items: [item(), item({ id: 'i2', origin: 'something-new', title: 'Other' })], unread_count: 2 })
+    );
+    renderEntry();
+    fireEvent.click(await screen.findByTestId('sider-inbox-entry'));
+    expect(await screen.findAllByTestId('inbox-item')).toHaveLength(2);
+    expect(screen.queryByTestId('inbox-item-origin')).toBeNull();
   });
 });

@@ -164,5 +164,45 @@
     "conversationNotFound": "未找到對話",
     "scheduledTimePassed": "定時時間已過",
     "conversationBusy": "對話繁忙，在 {{count}} 次嘗試後跳過"
+  },
+  "autopilot": {
+    "title": "Autopilot",
+    "hint": "在護欄下無人值守地執行此任務，失敗會進入你的收件匣。",
+    "modeBlocked": "{{mode}} 模式下不能開啟 Autopilot：該模式需要有人逐步審閱。",
+    "channelUnavailable": "已儲存的頻道（已無法使用）",
+    "guardrail": {
+      "ask": "未開啟全自動時，需要授權的操作不會被自動核准。",
+      "inbox": "執行失敗會出現在你的收件匣。",
+      "summary": "每次執行的簡要摘要會傳送到下方所選頻道。"
+    },
+    "yolo": {
+      "title": "全自動",
+      "hint": "預設關閉。開啟後，所有操作都會直接執行，不再先詢問你。",
+      "agentCreated": "此任務由智慧體建立，不能開啟全自動。",
+      "confirmTitle": "確定開啟全自動？",
+      "confirmOk": "我已了解風險，開啟",
+      "confirmIntro": "開啟全自動後，此任務會依排程在無人看管的情況下執行，智慧體執行操作前不會再徵求你的同意。這表示它可能會：",
+      "riskCommands": "未經確認就執行指令，修改或刪除工作區中的檔案；",
+      "riskIrreversible": "執行無法復原的操作，例如傳送訊息或變更外部服務；",
+      "riskUnattended": "在你察覺之前，每次排程執行都重複同一個錯誤操作。",
+      "confirmOutro": "請只對你完全信任的任務開啟。你可以隨時關閉。"
+    },
+    "channel": {
+      "title": "通知頻道",
+      "hint": "只列出你自己已連線的頻道。",
+      "empty": "你沒有可接收訊息的已連線頻道，摘要只會留在收件匣。",
+      "loadFailed": "無法載入你的頻道，摘要只會留在收件匣。",
+      "none": "不傳送（僅收件匣）"
+    },
+    "status": {
+      "ask": "已開啟 · 詢問模式",
+      "fullAuto": "已開啟 · 全自動"
+    },
+    "error": {
+      "forbidden": "沒有權限：只有你本人可以開啟全自動或關閉 Autopilot，且智慧體建立的任務不能使用全自動。",
+      "invalidChannel": "所選頻道無法接收訊息，請換一個頻道或選擇「不傳送」。",
+      "modeBlocked": "plan 或 goal 模式下不能使用 Autopilot。",
+      "yoloNeedsAutopilot": "開啟全自動前需要先開啟 Autopilot。"
+    }
   }
 }

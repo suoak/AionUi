@@ -168,5 +168,45 @@
     "conversationNotFound": "Conversación no encontrada",
     "scheduledTimePassed": "La hora programada ya pasó",
     "conversationBusy": "Conversación ocupada después de {{count}} reintentos"
+  },
+  "autopilot": {
+    "title": "Autopilot",
+    "hint": "Ejecuta esta tarea sin supervisión y con salvaguardas. Los fallos llegan a tu bandeja de entrada.",
+    "modeBlocked": "Autopilot no está disponible en el modo {{mode}}: ese modo necesita que una persona revise cada paso.",
+    "channelUnavailable": "Canal guardado (ya no disponible)",
+    "guardrail": {
+      "ask": "Sin el modo totalmente automático, las acciones que requieren permiso no se aprueban automáticamente.",
+      "inbox": "Las ejecuciones fallidas aparecen en tu bandeja de entrada.",
+      "summary": "Se envía un breve resumen de cada ejecución al canal que elijas abajo."
+    },
+    "yolo": {
+      "title": "Totalmente automático",
+      "hint": "Desactivado por defecto. Si se activa, cada acción se ejecuta sin preguntarte antes.",
+      "agentCreated": "Esta tarea la creó un agente, así que no se puede activar el modo totalmente automático.",
+      "confirmTitle": "¿Activar el modo totalmente automático?",
+      "confirmOk": "Entiendo el riesgo, activar",
+      "confirmIntro": "Con el modo totalmente automático, esta tarea se ejecuta según la programación sin que nadie la vigile y el agente no pregunta antes de actuar. Por eso puede:",
+      "riskCommands": "ejecutar comandos y modificar o eliminar archivos del espacio de trabajo sin confirmación;",
+      "riskIrreversible": "realizar acciones que no se pueden deshacer, como enviar mensajes o cambiar servicios externos;",
+      "riskUnattended": "repetir la misma acción errónea en cada ejecución programada hasta que te des cuenta.",
+      "confirmOutro": "Actívalo solo en tareas en las que confíes por completo. Puedes desactivarlo en cualquier momento."
+    },
+    "channel": {
+      "title": "Canal de notificación",
+      "hint": "Solo se muestran tus propios canales conectados.",
+      "empty": "No tienes ningún canal conectado que pueda recibir mensajes. Los resúmenes se quedan en la bandeja de entrada.",
+      "loadFailed": "No se pudieron cargar tus canales. Los resúmenes se quedan en la bandeja de entrada.",
+      "none": "Ninguno (solo bandeja de entrada)"
+    },
+    "status": {
+      "ask": "Activado · modo Preguntar",
+      "fullAuto": "Activado · totalmente automático"
+    },
+    "error": {
+      "forbidden": "No permitido: solo tú puedes activar el modo totalmente automático o desactivar Autopilot, y las tareas creadas por un agente no pueden usarlo.",
+      "invalidChannel": "El canal elegido no puede recibir mensajes. Elige otro canal o «Ninguno».",
+      "modeBlocked": "Autopilot no se puede usar con el modo plan o goal.",
+      "yoloNeedsAutopilot": "El modo totalmente automático requiere que Autopilot esté activado."
+    }
   }
 }

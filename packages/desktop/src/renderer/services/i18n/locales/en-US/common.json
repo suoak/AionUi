@@ -234,6 +234,10 @@
     "notifyFailedNamed": "Failed: {{name}}",
     "notifyFailed": "A task failed",
     "notifyBlockedNamed": "Blocked, needs you: {{name}}",
-    "notifyBlocked": "A task is blocked and needs you"
+    "notifyBlocked": "A task is blocked and needs you",
+    "origin": {
+      "batch": "Batch",
+      "autopilot": "Autopilot"
+    }
   }
 }

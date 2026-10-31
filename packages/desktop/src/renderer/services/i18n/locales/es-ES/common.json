@@ -234,6 +234,10 @@
     "notifyFailedNamed": "Falló: {{name}}",
     "notifyFailed": "Una tarea falló",
     "notifyBlockedNamed": "Bloqueado, te necesita: {{name}}",
-    "notifyBlocked": "Una tarea está bloqueada y te necesita"
+    "notifyBlocked": "Una tarea está bloqueada y te necesita",
+    "origin": {
+      "batch": "Lote",
+      "autopilot": "Autopilot"
+    }
   }
 }

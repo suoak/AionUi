@@ -164,5 +164,45 @@
     "conversationNotFound": "未找到会话",
     "scheduledTimePassed": "定时时间已过",
     "conversationBusy": "会话繁忙，在 {{count}} 次尝试后跳过"
+  },
+  "autopilot": {
+    "title": "Autopilot",
+    "hint": "在护栏下无人值守地运行此任务，失败会进入你的收件箱。",
+    "modeBlocked": "{{mode}} 模式下不能开启 Autopilot：该模式需要有人逐步审阅。",
+    "channelUnavailable": "已保存的渠道（已不可用）",
+    "guardrail": {
+      "ask": "未开启全自动时，需要授权的操作不会被自动批准。",
+      "inbox": "运行失败会出现在你的收件箱。",
+      "summary": "每次运行的简要汇总会发送到下方所选渠道。"
+    },
+    "yolo": {
+      "title": "全自动",
+      "hint": "默认关闭。开启后，所有操作都会直接执行，不再先询问你。",
+      "agentCreated": "此任务由智能体创建，不能开启全自动。",
+      "confirmTitle": "确定开启全自动？",
+      "confirmOk": "我已了解风险，开启",
+      "confirmIntro": "开启全自动后，此任务会按计划在无人看管的情况下运行，智能体执行操作前不会再征求你的同意。这意味着它可能会：",
+      "riskCommands": "不经确认就执行命令，修改或删除工作区中的文件；",
+      "riskIrreversible": "执行无法撤销的操作，例如发送消息或更改外部服务；",
+      "riskUnattended": "在你察觉之前，每次定时运行都重复同一个错误操作。",
+      "confirmOutro": "请只对你完全信任的任务开启。你可以随时关闭。"
+    },
+    "channel": {
+      "title": "通知渠道",
+      "hint": "只列出你自己已连接的渠道。",
+      "empty": "你没有可接收消息的已连接渠道，汇总只会留在收件箱。",
+      "loadFailed": "无法加载你的渠道，汇总只会留在收件箱。",
+      "none": "不发送（仅收件箱）"
+    },
+    "status": {
+      "ask": "已开启 · 询问模式",
+      "fullAuto": "已开启 · 全自动"
+    },
+    "error": {
+      "forbidden": "没有权限：只有你本人可以开启全自动或关闭 Autopilot，且智能体创建的任务不能使用全自动。",
+      "invalidChannel": "所选渠道无法接收消息，请换一个渠道或选择“不发送”。",
+      "modeBlocked": "plan 或 goal 模式下不能使用 Autopilot。",
+      "yoloNeedsAutopilot": "开启全自动前需要先开启 Autopilot。"
+    }
   }
 }

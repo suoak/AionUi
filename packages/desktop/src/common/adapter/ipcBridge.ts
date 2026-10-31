@@ -2684,6 +2684,9 @@ export const cron = {
       conversation_title: p.updates.metadata?.conversation_title,
       max_retries: p.updates.state?.max_retries,
       queue_enabled: p.updates.state?.queue_enabled,
+      autopilot: p.updates.state?.autopilot,
+      autopilot_yolo: p.updates.state?.autopilot_yolo,
+      notify_channel_id: p.updates.state?.notify_channel_id,
     })
   ),
   removeJob: httpDelete<void, { job_id: string }>((p) => `/api/cron/jobs/${p.job_id}`),
@@ -2786,6 +2789,12 @@ export interface ICronJob {
     retry_count: number;
     max_retries: number;
     queue_enabled: boolean;
+    /** E8-6 Autopilot guardrails. Absent on cores before #206 (treated as off). */
+    autopilot?: boolean;
+    /** The user confirmed full-auto for this Autopilot job; `false` = Ask mode. */
+    autopilot_yolo?: boolean;
+    /** Channel session (`/api/channel/sessions` id) receiving run summaries. */
+    notify_channel_id?: string;
   };
 }
 
@@ -2831,6 +2840,9 @@ export interface ICreateCronJobParams {
   execution_mode?: 'existing' | 'new_conversation';
   queue_enabled?: boolean;
   agent_config?: ICronAgentConfigWrite;
+  autopilot?: boolean;
+  autopilot_yolo?: boolean;
+  notify_channel_id?: string;
 }
 
 export interface ICronJobUpdateParams {
@@ -2849,6 +2861,10 @@ export interface ICronJobUpdateParams {
   state?: {
     max_retries?: number;
     queue_enabled?: boolean;
+    autopilot?: boolean;
+    autopilot_yolo?: boolean;
+    /** Empty string clears the channel. */
+    notify_channel_id?: string;
   };
 }
 
@@ -3494,7 +3510,12 @@ export type IInboxItem = {
   created_at: number;
   read_at?: number | null;
   resolved_at?: number | null;
+  /** Derived by Core: `batch` (end-of-job batch summary, `source_id` = job id)
+   *  or `autopilot` (Autopilot run failure). Absent for other items. */
+  origin?: InboxItemOrigin | string | null;
 };
+
+export type InboxItemOrigin = 'batch' | 'autopilot';
 
 export type IInboxListResponse = { items: IInboxItem[]; unread_count: number };
 export type IInboxMarkReadResponse = { updated: number; unread_count: number };

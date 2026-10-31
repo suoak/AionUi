@@ -170,6 +170,35 @@ describe('TaskDetailPage', () => {
     expect(screen.queryByText('Codex CLI')).not.toBeInTheDocument();
   });
 
+  it.each([
+    [false, 'cron.autopilot.status.ask'],
+    [true, 'cron.autopilot.status.fullAuto'],
+  ])('shows the Autopilot mode (full-auto: %s)', async (yolo, expected) => {
+    getJobInvokeMock.mockResolvedValue(job({ state: { autopilot: true, autopilot_yolo: yolo } as ICronJob['state'] }));
+    render(
+      <MemoryRouter initialEntries={['/scheduled/job-1']}>
+        <Routes>
+          <Route path='/scheduled/:job_id' element={<TaskDetailPage />} />
+        </Routes>
+      </MemoryRouter>
+    );
+
+    expect(await screen.findByTestId('task-detail-autopilot')).toHaveTextContent(expected);
+  });
+
+  it('hides the Autopilot section when it is off', async () => {
+    render(
+      <MemoryRouter initialEntries={['/scheduled/job-1']}>
+        <Routes>
+          <Route path='/scheduled/:job_id' element={<TaskDetailPage />} />
+        </Routes>
+      </MemoryRouter>
+    );
+
+    expect(await screen.findByText('问好助手')).toBeInTheDocument();
+    expect(screen.queryByTestId('task-detail-autopilot')).toBeNull();
+  });
+
   it('renames run-now conversations with the execution date in new conversation mode', async () => {
     runNowInvokeMock.mockResolvedValue({ conversation_id: 'conv-run' });
     getConversationInvokeMock.mockResolvedValue(

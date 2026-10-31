@@ -147,6 +147,35 @@ const Sider: React.FC<SiderProps> = ({ onSessionClick, collapsed = false }) => {
     }
   };
 
+  /** E8-6: batch summary (origin `batch`) → that job on the batch page. */
+  const handleInboxOpenBatchJob = (jobId: string) => {
+    cleanupSiderTooltips();
+    blurActiveElement();
+    closePreview();
+    setIsBatchMode(false);
+    const qs = new URLSearchParams({ job: jobId });
+    Promise.resolve(navigate(`/batch?${qs.toString()}`)).catch((error) => {
+      console.error('Navigation failed:', error);
+    });
+    if (onSessionClick) {
+      onSessionClick();
+    }
+  };
+
+  /** E8-6: Autopilot failure without a conversation → its scheduled task. */
+  const handleInboxOpenScheduledJob = (jobId: string) => {
+    cleanupSiderTooltips();
+    blurActiveElement();
+    closePreview();
+    setIsBatchMode(false);
+    Promise.resolve(navigate(`/scheduled/${encodeURIComponent(jobId)}`)).catch((error) => {
+      console.error('Navigation failed:', error);
+    });
+    if (onSessionClick) {
+      onSessionClick();
+    }
+  };
+
   /** E6-6: Inbox item with task_session_id → board drawer via `/tasks?task=`. */
   const handleInboxOpenTaskBoard = (taskSessionId: string) => {
     cleanupSiderTooltips();
@@ -364,6 +393,8 @@ const Sider: React.FC<SiderProps> = ({ onSessionClick, collapsed = false }) => {
               siderTooltipProps={siderTooltipProps}
               onOpenConversation={handleInboxOpenConversation}
               onOpenTaskBoard={handleInboxOpenTaskBoard}
+              onOpenBatchJob={handleInboxOpenBatchJob}
+              onOpenScheduledJob={handleInboxOpenScheduledJob}
             />
             {/* Divider between fixed top nav and scrollable content area */}
             <div

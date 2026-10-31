@@ -28,6 +28,17 @@ import { resolveAssistantName } from '@renderer/utils/model/assistantDisplay';
 import { resolveCronAgentConfig } from './resolveCronAgentConfig';
 import { assistantRuntimeKey, isAionrsAssistant } from '@/common/types/agent/assistantTypes';
 import { resolveCronAssistantAvatar } from './jobAgentMeta';
+import AutopilotSection from './AutopilotSection';
+import {
+  AUTOPILOT_OFF,
+  autopilotCreateFields,
+  autopilotStateFromJob,
+  autopilotUpdateFields,
+  canUseFullAuto,
+  getAutopilotErrorMessage,
+  isAutopilotBlockedMode,
+  type AutopilotFormState,
+} from './autopilot';
 
 const FormItem = Form.Item;
 const TextArea = Input.TextArea;
@@ -253,6 +264,7 @@ const CreateTaskDialog: React.FC<CreateTaskDialogProps> = ({
   const isEditMode = !!editJob;
   const [execution_mode, setExecutionMode] = useState<ExecutionMode>('new_conversation');
   const [queueEnabled, setQueueEnabled] = useState(false);
+  const [autopilot, setAutopilot] = useState<AutopilotFormState>(AUTOPILOT_OFF);
   const [advancedOpen, setAdvancedOpen] = useState(false);
   const [teamOwnershipStatus, setTeamOwnershipStatus] = useState<'checking' | 'team' | 'standalone'>('standalone');
 
@@ -278,6 +290,7 @@ const CreateTaskDialog: React.FC<CreateTaskDialogProps> = ({
       setCustomSchedule(parsed.frequency === 'custom' ? parseCustomSchedule(cronExpr) : createDefaultCustomSchedule());
       setExecutionMode(editJob.target.execution_mode || 'existing');
       setQueueEnabled(editJob.state.queue_enabled);
+      setAutopilot(autopilotStateFromJob(editJob));
       setSelectedAssistantId(agentKey);
       setAdvancedOpen(
         Boolean(
@@ -305,6 +318,7 @@ const CreateTaskDialog: React.FC<CreateTaskDialogProps> = ({
       setCustomSchedule(createDefaultCustomSchedule());
       setExecutionMode('new_conversation');
       setQueueEnabled(false);
+      setAutopilot(AUTOPILOT_OFF);
       setAdvancedOpen(false);
       setModelId(undefined);
       setSelectedAionrsProviderId(undefined);
@@ -502,6 +516,13 @@ const CreateTaskDialog: React.FC<CreateTaskDialogProps> = ({
   const canEditAgentConfig =
     !isExecutionModeLocked && !isOriginalExistingConversationTask && (!isEditMode || execution_mode !== 'existing');
 
+  // The permission mode the job will run with: a re-resolved assistant always
+  // gets its auto-approve mode; a locked one keeps what the job stored.
+  const effectiveAgentMode = useMemo(() => {
+    if (!canEditAgentConfig) return editJob?.metadata.agent_config?.mode;
+    return selectedAssistant ? resolveAutoApproveModeFromAgentMetadata(selectedAssistant) : undefined;
+  }, [canEditAgentConfig, editJob, selectedAssistant, resolveAutoApproveModeFromAgentMetadata]);
+
   const handleFrequencyChange = (value: FrequencyType) => {
     setFrequency(value);
     if (value !== 'custom') {
@@ -527,6 +548,7 @@ const CreateTaskDialog: React.FC<CreateTaskDialogProps> = ({
   }, []);
 
   const handleSubmit = async () => {
+    let touchesAutopilot = false;
     try {
       const values = await form.validate();
       setSubmitting(true);
@@ -560,6 +582,12 @@ const CreateTaskDialog: React.FC<CreateTaskDialogProps> = ({
         }).agent_config;
       }
 
+      const submitMode = agent_config?.mode ?? editJob?.metadata.agent_config?.mode;
+      if (autopilot.enabled && isAutopilotBlockedMode(submitMode)) {
+        Message.error(t('cron.autopilot.error.modeBlocked'));
+        return;
+      }
+
       if (isEditMode) {
         const metadata: ICronJobUpdateParams['metadata'] = {
           conversation_title: editJob!.metadata.conversation_title,
@@ -567,6 +595,9 @@ const CreateTaskDialog: React.FC<CreateTaskDialogProps> = ({
         if (canEditAgentConfig) {
           metadata.agent_config = agent_config;
         }
+
+        const autopilotFields = autopilotUpdateFields(autopilot, editJob!);
+        touchesAutopilot = Object.keys(autopilotFields).length > 0 || autopilot.enabled;
 
         // Edit mode: update existing job
         const updates: ICronJobUpdateParams = {
@@ -580,6 +611,7 @@ const CreateTaskDialog: React.FC<CreateTaskDialogProps> = ({
           state: {
             max_retries: editJob!.state.max_retries,
             queue_enabled: queueEnabled,
+            ...autopilotFields,
           },
         };
 
@@ -600,14 +632,16 @@ const CreateTaskDialog: React.FC<CreateTaskDialogProps> = ({
           execution_mode: resolvedExecutionMode,
           queue_enabled: queueEnabled,
           agent_config,
+          ...autopilotCreateFields(autopilot),
         };
+        touchesAutopilot = autopilot.enabled;
         await ipcBridge.cron.addJob.invoke(params);
         Message.success(t('cron.page.createSuccess'));
       }
 
       onClose();
     } catch (err) {
-      Message.error(getConversationCreateErrorMessage(err, t));
+      Message.error(getAutopilotErrorMessage(err, t, touchesAutopilot) ?? getConversationCreateErrorMessage(err, t));
     } finally {
       setSubmitting(false);
     }
@@ -746,6 +780,13 @@ const CreateTaskDialog: React.FC<CreateTaskDialogProps> = ({
             </div>
             <Switch checked={queueEnabled} onChange={setQueueEnabled} />
           </div>
+
+          <AutopilotSection
+            value={autopilot}
+            onChange={setAutopilot}
+            mode={effectiveAgentMode}
+            fullAutoAllowed={canUseFullAuto(editJob)}
+          />
 
           {/* Frequency */}
           <FormItem label={t('cron.page.form.frequency')}>
