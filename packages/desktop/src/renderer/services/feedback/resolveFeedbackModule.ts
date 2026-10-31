@@ -22,6 +22,8 @@ const ROUTE_MODULE_MAP: ReadonlyArray<readonly [prefix: string, tag: FeedbackMod
   ['/fanout', 'conversation-session'],
   // Tasks board (M8 E6-4) lists task sessions, i.e. conversations.
   ['/tasks', 'conversation-session'],
+  // Batch jobs (M8 E8-5) fan one template out to task sessions.
+  ['/batch', 'conversation-session'],
   ['/team', 'agent-team'],
   ['/scheduled', 'scheduled-task'],
   ['/assistants', 'assistant-preset'],

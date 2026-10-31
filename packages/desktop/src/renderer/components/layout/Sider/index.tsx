@@ -17,6 +17,7 @@ import {
   SiderUsageEntry,
   SiderInboxEntry,
   SiderTasksBoardEntry,
+  SiderBatchEntry,
 } from './SiderNav';
 import SiderFooter from './SiderFooter';
 import TeamSiderSection from './TeamSiderSection';
@@ -113,6 +114,19 @@ const Sider: React.FC<SiderProps> = ({ onSessionClick, collapsed = false }) => {
     closePreview();
     setIsBatchMode(false);
     Promise.resolve(navigate('/tasks')).catch((error) => {
+      console.error('Navigation failed:', error);
+    });
+    if (onSessionClick) {
+      onSessionClick();
+    }
+  };
+
+  const handleBatchClick = () => {
+    cleanupSiderTooltips();
+    blurActiveElement();
+    closePreview();
+    setIsBatchMode(false);
+    Promise.resolve(navigate('/batch')).catch((error) => {
       console.error('Navigation failed:', error);
     });
     if (onSessionClick) {
@@ -328,6 +342,14 @@ const Sider: React.FC<SiderProps> = ({ onSessionClick, collapsed = false }) => {
               collapsed={collapsed}
               siderTooltipProps={siderTooltipProps}
               onClick={handleTasksBoardClick}
+            />
+            {/* Batch jobs (M8 E8-5) */}
+            <SiderBatchEntry
+              isMobile={isMobile}
+              isActive={pathname === '/batch'}
+              collapsed={collapsed}
+              siderTooltipProps={siderTooltipProps}
+              onClick={handleBatchClick}
             />
             <SiderUsageEntry
               isMobile={isMobile}

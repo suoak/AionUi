@@ -155,6 +155,8 @@ export type HttpRequestOptions = {
   silentStatuses?: number[];
   /** Extra request headers merged on top of the default `Content-Type`. */
   headers?: Record<string, string>;
+  /** `text`: resolve with the raw response body (e.g. a CSV export) instead of unwrapped JSON. */
+  responseType?: 'json' | 'text';
 };
 
 const SENSITIVE_LOG_KEY_PATTERN = /api[_-]?key|authorization|auth[_-]?token|access[_-]?token|refresh[_-]?token|secret/i;
@@ -274,6 +276,10 @@ export async function httpRequest<T>(
   }
 
   console.debug(`[httpBridge] ${method} ${path} → ${response.status} OK`);
+
+  if (options?.responseType === 'text') {
+    return (await response.text()) as T;
+  }
 
   const contentType = response.headers.get('Content-Type');
   if (!contentType?.includes('application/json')) {

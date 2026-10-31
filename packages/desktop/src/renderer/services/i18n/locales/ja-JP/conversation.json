@@ -1481,5 +1481,193 @@
     "bodyUnknownTool": "この Squad Leader は割り振り専用モードのため、このツールはブロックされました。",
     "allowed": "使用可能なツール：",
     "hint": "Leader は team_send_message またはタスクでこの作業をチームメンバーに割り当ててください。"
+  },
+  "batchJobs": {
+    "title": "バッチジョブ",
+    "description": "同じタスクを複数のリポジトリで実行。まず少数で試行し、その後全体へ展開",
+    "newJob": "新規バッチ",
+    "empty": "バッチジョブはまだありません",
+    "selectHint": "バッチジョブを選択すると項目が表示されます",
+    "loadFailed": "バッチジョブを読み込めませんでした",
+    "reload": "再読み込み",
+    "back": "一覧に戻る",
+    "listSummary": "成功 {{passed}}/{{total}} · 失敗 {{failed}}",
+    "created": "下書きとして作成しました。次は試行を実行してください。",
+    "exported": "CSV をエクスポートしました",
+    "createTitle": "新規バッチジョブ",
+    "meta": "同時実行 {{concurrency}} · 項目ごとのタイムアウト {{minutes}} 分 · 試行 {{trial}} 件",
+    "cancelConfirm": "このバッチをキャンセルしますか？未実行の項目は実行されず、実行中の項目は停止されます。",
+    "progressTrial": "試行の進捗",
+    "progressAll": "全体の進捗",
+    "trialBadge": "試行",
+    "attempt": "{{count}} 回目",
+    "openSession": "セッションを開く",
+    "diskDetail": "約 {{need}} MiB 必要ですが、空きは {{free}} MiB です。空き容量を増やすか同時実行数を下げて再試行してください。",
+    "status": {
+      "draft": "下書き",
+      "trial": "試行",
+      "running": "実行中",
+      "paused": "一時停止",
+      "completed": "完了",
+      "failed": "失敗",
+      "cancelled": "キャンセル済み",
+      "pending": "待機中",
+      "passed": "成功",
+      "timeout": "タイムアウト",
+      "skipped": "スキップ"
+    },
+    "actions": {
+      "trial": "試行を実行",
+      "scale": "全 {{count}} 件に展開",
+      "resume": "再開",
+      "retryFailed": "失敗分を再試行",
+      "retryItem": "再試行",
+      "cancel": "バッチをキャンセル",
+      "cancelConfirmOk": "バッチをキャンセル",
+      "keepRunning": "続ける",
+      "export": "CSV をエクスポート"
+    },
+    "hints": {
+      "trialFirst": "先に試行してください。全試行項目が成功するまで展開できません",
+      "trialRunning": "試行の完了を待ってください",
+      "trialNotPassed": "展開には全試行項目の成功が必要です。失敗した試行項目を再試行してください"
+    },
+    "phase": {
+      "draft": {
+        "title": "下書き — 未試行",
+        "desc": "最初の {{trial}} 件で試行し、結果を確認してから全 {{total}} 件に展開します。"
+      },
+      "trialRunning": {
+        "title": "試行中",
+        "desc": "最初の {{trial}} 件を実行中です。完了すると結果がここに表示されます。"
+      },
+      "trialPassed": {
+        "title": "試行成功",
+        "desc": "全試行項目がチェックに合格しました。確認後、全 {{total}} 件に展開できます。"
+      },
+      "trialFailed": {
+        "title": "試行が不合格",
+        "desc": "一部の試行項目が失敗しました。エラーを確認し、必要に応じて調整して再試行してください。全試行項目が成功すると展開できます。"
+      },
+      "running": {
+        "title": "実行中",
+        "desc": "同時実行数の上限まで並行実行します。進捗はリアルタイムで更新されます。"
+      },
+      "pausedAfterRestart": {
+        "title": "アプリ再起動により一時停止",
+        "desc": "アプリ再起動時に実行中だった項目は失敗扱いとなり、バッチは一時停止しました。「再開」で残りを続行するか、失敗分を再試行してください。"
+      },
+      "paused": {
+        "title": "一時停止",
+        "desc": "「再開」で未実行の項目を続行します。"
+      },
+      "completed": {
+        "title": "完了",
+        "desc": "全項目がチェックに合格しました。CSV で全体レポートをエクスポートできます。"
+      },
+      "failed": {
+        "title": "失敗ありで終了",
+        "desc": "一部の項目が失敗またはタイムアウトしました。再試行するか CSV をエクスポートしてください。"
+      },
+      "cancelled": {
+        "title": "キャンセル済み",
+        "desc": "このバッチはキャンセルされました。完了済みの結果は保持されます。"
+      },
+      "unknown": {
+        "title": "不明な状態",
+        "desc": "このバージョンでは認識できない状態が Core から返されました。"
+      }
+    },
+    "columns": {
+      "target": "対象",
+      "status": "状態",
+      "checks": "チェック",
+      "error": "エラー"
+    },
+    "checkKinds": {
+      "file_exists": "ファイルの存在",
+      "glob": "glob 一致",
+      "json_schema": "JSON スキーマ"
+    },
+    "errors": {
+      "generic": "リクエストに失敗しました。もう一度お試しください",
+      "badRequest": "リクエストが拒否されました",
+      "agentDenied": "エージェントはバッチジョブを管理できません",
+      "notFound": "このバッチジョブは存在しません",
+      "notTrialed": "未試行です。展開する前に試行してください",
+      "trialRunning": "試行がまだ実行中です。完了を待ってください",
+      "trialNotPassed": "展開には全試行項目の成功が必要です。先に失敗した試行項目を再試行してください",
+      "retryTrialOnly": "展開前に再試行できるのは試行項目のみです",
+      "noRetryable": "再試行できる失敗項目はありません",
+      "concurrent": "バッチの状態が同時に変更されました。更新したのでもう一度お試しください",
+      "invalidState": "現在のバッチの状態ではこの操作はできません",
+      "unavailable": "依存先（アシスタント、ワークツリー、セッション）が利用できません",
+      "insufficientDisk": "このバッチを実行するにはディスク容量が不足しています"
+    },
+    "form": {
+      "intro": "バッチを作成しても何も実行されません。最初の項目を試行し、合格後に残りへ展開します。",
+      "title": "名前",
+      "titlePlaceholder": "例：依存関係の監査",
+      "assistant": "アシスタント",
+      "assistantPlaceholder": "アシスタントを選択",
+      "assistantHint": "各項目はこのアシスタントで個別のエージェントセッションとして実行されます。",
+      "prompt": "タスクテンプレート",
+      "promptPlaceholder": "1 つの対象に対するタスクを記述",
+      "promptHint": "変数：{{field}}（対象のフィールド）、{{target}}（対象全体の JSON）、{{seq}}（項目番号）。",
+      "targets": "対象",
+      "pathKindRepo": "リポジトリ",
+      "pathKindWorkspace": "ワークスペース",
+      "targetsPlaceholder": "/path/to/repo-a\n/path/to/repo-b\n\nまたは JSON 配列 / JSON Lines / repo か workspace 列を持つ CSV",
+      "targetsHint": "1 行に 1 つの絶対パス、または repo / workspace とテンプレート用フィールドを含む JSON / CSV。最大 500 件。",
+      "targetCount": "対象 {{count}} 件",
+      "moreIssues": "…ほか {{count}} 件",
+      "checks": "出力チェック",
+      "checksHint": "項目は成果物のみで判定されます。パスは項目のワークスペースからの相対パスです。",
+      "checkPattern": "glob（例：reports/*.json）",
+      "checkPath": "相対パス（例：report.json）",
+      "removeCheck": "削除",
+      "checkMin": "最小",
+      "checkMax": "最大",
+      "checkSchema": "JSON スキーマ（例：{\"type\":\"object\"}）",
+      "addCheck": "チェックを追加",
+      "concurrency": "同時実行数",
+      "timeoutMinutes": "タイムアウト（分）",
+      "trialSize": "試行件数",
+      "trialHint": "既定値：同時実行 4、項目ごと 30 分、試行 1 件。",
+      "cancel": "キャンセル",
+      "submit": "下書きを作成",
+      "targetIssues": {
+        "notObject": "対象 {{index}} はオブジェクトではありません",
+        "needsLocation": "対象 {{index}} に repo か workspace のパスが必要です",
+        "bothLocations": "対象 {{index}} に repo と workspace の両方が指定されています",
+        "notAbsolute": "対象 {{index}}：{{path}} は絶対パスではありません",
+        "duplicate": "対象 {{index}}：ワークスペース {{path}} が重複しています",
+        "missingField": "対象 {{index}} にテンプレートで使う {{field}} がありません"
+      },
+      "targetErrors": {
+        "empty": "対象がありません",
+        "invalidJson": "JSON が不正です",
+        "invalidCsv": "CSV の行が不正です",
+        "tooMany": "対象が多すぎます（最大 500）"
+      },
+      "checkIssues": {
+        "pathRequired": "パスを入力してください",
+        "pathNotRelative": "ワークスペース内の相対パスを指定してください",
+        "patternRequired": "パターンを入力してください",
+        "countInvalid": "最小 / 最大は整数で指定してください",
+        "maxBelowMin": "最大が最小を下回っています",
+        "schemaInvalid": "スキーマは JSON オブジェクトか真偽値にしてください"
+      },
+      "issues": {
+        "titleRequired": "名前を入力してください",
+        "assistantRequired": "アシスタントを選択してください",
+        "promptRequired": "タスクテンプレートを入力してください",
+        "targetsInvalid": "対象を修正してください",
+        "checksRequired": "チェックを 1 つ以上追加してください",
+        "tooManyChecks": "チェックは最大 20 件です",
+        "checkInvalid": "チェックを修正してください",
+        "trialTooLarge": "試行件数が対象数を超えています"
+      }
+    }
   }
 }

@@ -1482,5 +1482,193 @@
     "bodyUnknownTool": "Dieser Squad Leader ist im Nur-Verteilen-Modus, daher wurde dieses Tool blockiert.",
     "allowed": "Erlaubte Tools:",
     "hint": "Der Leader sollte diese Arbeit per team_send_message oder Aufgabe an ein Teammitglied übergeben."
+  },
+  "batchJobs": {
+    "title": "Batch-Jobs",
+    "description": "Eine Aufgabe über viele Repositories ausführen – erst wenige testen, dann hochskalieren",
+    "newJob": "Neuer Batch",
+    "empty": "Noch keine Batch-Jobs",
+    "selectHint": "Wählen Sie einen Batch-Job, um seine Einträge zu sehen",
+    "loadFailed": "Batch-Jobs konnten nicht geladen werden",
+    "reload": "Neu laden",
+    "back": "Zurück zur Liste",
+    "listSummary": "{{passed}}/{{total}} bestanden · {{failed}} fehlgeschlagen",
+    "created": "Batch als Entwurf erstellt. Starten Sie als Nächstes den Testlauf.",
+    "exported": "CSV exportiert",
+    "createTitle": "Neuer Batch-Job",
+    "meta": "Parallelität {{concurrency}} · Timeout {{minutes}} Min. pro Eintrag · Testlauf {{trial}}",
+    "cancelConfirm": "Diesen Batch abbrechen? Ausstehende Einträge laufen nicht mehr, laufende werden gestoppt.",
+    "progressTrial": "Fortschritt Testlauf",
+    "progressAll": "Gesamtfortschritt",
+    "trialBadge": "Test",
+    "attempt": "Versuch {{count}}",
+    "openSession": "Sitzung öffnen",
+    "diskDetail": "Benötigt etwa {{need}} MiB, nur {{free}} MiB frei. Geben Sie Speicher frei oder senken Sie die Parallelität und versuchen Sie es erneut.",
+    "status": {
+      "draft": "Entwurf",
+      "trial": "Testlauf",
+      "running": "Läuft",
+      "paused": "Pausiert",
+      "completed": "Abgeschlossen",
+      "failed": "Fehlgeschlagen",
+      "cancelled": "Abgebrochen",
+      "pending": "Ausstehend",
+      "passed": "Bestanden",
+      "timeout": "Zeitüberschreitung",
+      "skipped": "Übersprungen"
+    },
+    "actions": {
+      "trial": "Testlauf starten",
+      "scale": "Auf alle {{count}} skalieren",
+      "resume": "Fortsetzen",
+      "retryFailed": "Fehlgeschlagene wiederholen",
+      "retryItem": "Wiederholen",
+      "cancel": "Batch abbrechen",
+      "cancelConfirmOk": "Batch abbrechen",
+      "keepRunning": "Behalten",
+      "export": "CSV exportieren"
+    },
+    "hints": {
+      "trialFirst": "Zuerst den Testlauf starten – Skalieren ist erst möglich, wenn alle Testeinträge bestanden haben",
+      "trialRunning": "Warten Sie, bis der Testlauf fertig ist",
+      "trialNotPassed": "Vor dem Skalieren müssen alle Testeinträge bestehen; wiederholen Sie die fehlgeschlagenen"
+    },
+    "phase": {
+      "draft": {
+        "title": "Entwurf – noch nicht getestet",
+        "desc": "Testen Sie die ersten {{trial}} Einträge und prüfen Sie die Ergebnisse, bevor Sie auf alle {{total}} skalieren."
+      },
+      "trialRunning": {
+        "title": "Testlauf läuft",
+        "desc": "Die ersten {{trial}} Einträge laufen. Ergebnisse erscheinen hier, sobald sie fertig sind."
+      },
+      "trialPassed": {
+        "title": "Testlauf bestanden",
+        "desc": "Alle Testeinträge haben ihre Prüfungen bestanden. Prüfen Sie sie und skalieren Sie dann auf alle {{total}} Einträge."
+      },
+      "trialFailed": {
+        "title": "Testlauf nicht bestanden",
+        "desc": "Einige Testeinträge sind fehlgeschlagen. Prüfen Sie die Fehler, passen Sie bei Bedarf an und wiederholen Sie sie; Skalieren wird freigegeben, sobald alle bestanden haben."
+      },
+      "running": {
+        "title": "Läuft",
+        "desc": "Einträge laufen parallel bis zur Parallelitätsgrenze. Der Fortschritt aktualisiert sich live."
+      },
+      "pausedAfterRestart": {
+        "title": "Nach App-Neustart pausiert",
+        "desc": "Einträge, die beim Neustart der App liefen, wurden als fehlgeschlagen markiert und der Batch pausiert. Setzen Sie fort, um die ausstehenden Einträge auszuführen, oder wiederholen Sie die fehlgeschlagenen."
+      },
+      "paused": {
+        "title": "Pausiert",
+        "desc": "Fortsetzen, um die ausstehenden Einträge auszuführen."
+      },
+      "completed": {
+        "title": "Abgeschlossen",
+        "desc": "Alle Einträge haben ihre Prüfungen bestanden. Exportieren Sie die CSV für den vollständigen Bericht."
+      },
+      "failed": {
+        "title": "Mit Fehlern beendet",
+        "desc": "Einige Einträge sind fehlgeschlagen oder abgelaufen. Wiederholen Sie sie oder exportieren Sie die CSV."
+      },
+      "cancelled": {
+        "title": "Abgebrochen",
+        "desc": "Dieser Batch wurde abgebrochen. Fertige Ergebnisse bleiben erhalten."
+      },
+      "unknown": {
+        "title": "Unbekannter Status",
+        "desc": "Der Core meldet einen Status, den diese Version nicht kennt."
+      }
+    },
+    "columns": {
+      "target": "Ziel",
+      "status": "Status",
+      "checks": "Prüfungen",
+      "error": "Fehler"
+    },
+    "checkKinds": {
+      "file_exists": "Datei vorhanden",
+      "glob": "Glob-Treffer",
+      "json_schema": "JSON-Schema"
+    },
+    "errors": {
+      "generic": "Anfrage fehlgeschlagen, bitte erneut versuchen",
+      "badRequest": "Die Anfrage wurde abgelehnt",
+      "agentDenied": "Agenten dürfen keine Batch-Jobs verwalten",
+      "notFound": "Dieser Batch-Job existiert nicht mehr",
+      "notTrialed": "Noch nicht getestet – starten Sie vor dem Skalieren den Testlauf",
+      "trialRunning": "Der Testlauf läuft noch; bitte warten",
+      "trialNotPassed": "Vor dem Skalieren müssen alle Testeinträge bestehen; wiederholen Sie zuerst die fehlgeschlagenen",
+      "retryTrialOnly": "Vor dem Skalieren können nur Testeinträge wiederholt werden",
+      "noRetryable": "Keine fehlgeschlagenen Einträge zum Wiederholen",
+      "concurrent": "Der Batch hat sich zwischenzeitlich geändert; aktualisiert, bitte erneut versuchen",
+      "invalidState": "Diese Aktion ist im aktuellen Status des Batches nicht erlaubt",
+      "unavailable": "Eine Abhängigkeit ist nicht verfügbar (Assistent, Worktree oder Sitzung)",
+      "insufficientDisk": "Nicht genug Speicherplatz für diesen Batch"
+    },
+    "form": {
+      "intro": "Beim Erstellen läuft noch nichts. Die ersten Einträge laufen als Test; erst danach skalieren Sie auf den Rest.",
+      "title": "Name",
+      "titlePlaceholder": "z. B. Abhängigkeitsprüfung",
+      "assistant": "Assistent",
+      "assistantPlaceholder": "Assistent wählen",
+      "assistantHint": "Jeder Eintrag läuft als eigene Agentensitzung mit diesem Assistenten.",
+      "prompt": "Aufgabenvorlage",
+      "promptPlaceholder": "Beschreiben Sie die Aufgabe für ein Ziel",
+      "promptHint": "Variablen: {{field}} (ein Zielfeld), {{target}} (das ganze Ziel als JSON), {{seq}} (Eintragsnummer).",
+      "targets": "Ziele",
+      "pathKindRepo": "Repositories",
+      "pathKindWorkspace": "Arbeitsbereiche",
+      "targetsPlaceholder": "/path/to/repo-a\n/path/to/repo-b\n\noder ein JSON-Array / JSON Lines / CSV mit Spalte repo oder workspace",
+      "targetsHint": "Ein absoluter Pfad pro Zeile oder JSON-/CSV-Objekte mit repo oder workspace plus Vorlagenfeldern. Höchstens 500.",
+      "targetCount": "{{count}} Ziel(e)",
+      "moreIssues": "…und {{count}} weitere",
+      "checks": "Ergebnisprüfungen",
+      "checksHint": "Einträge werden nur nach ihren Artefakten bewertet. Pfade sind relativ zum Arbeitsbereich des Eintrags.",
+      "checkPattern": "Glob, z. B. reports/*.json",
+      "checkPath": "Relativer Pfad, z. B. report.json",
+      "removeCheck": "Entfernen",
+      "checkMin": "Min.",
+      "checkMax": "Max.",
+      "checkSchema": "JSON-Schema, z. B. {\"type\":\"object\"}",
+      "addCheck": "Prüfung hinzufügen",
+      "concurrency": "Parallelität",
+      "timeoutMinutes": "Timeout (Min.)",
+      "trialSize": "Testeinträge",
+      "trialHint": "Standard: Parallelität 4, 30 Min. pro Eintrag, 1 Testeintrag.",
+      "cancel": "Abbrechen",
+      "submit": "Entwurf erstellen",
+      "targetIssues": {
+        "notObject": "Ziel {{index}} ist kein Objekt",
+        "needsLocation": "Ziel {{index}} benötigt einen repo- oder workspace-Pfad",
+        "bothLocations": "Ziel {{index}} setzt sowohl repo als auch workspace",
+        "notAbsolute": "Ziel {{index}}: {{path}} ist kein absoluter Pfad",
+        "duplicate": "Ziel {{index}}: Arbeitsbereich {{path}} wird mehrfach verwendet",
+        "missingField": "Ziel {{index}} fehlt das von der Vorlage genutzte Feld {{field}}"
+      },
+      "targetErrors": {
+        "empty": "Keine Ziele",
+        "invalidJson": "Ungültiges JSON",
+        "invalidCsv": "Ungültige CSV-Zeile",
+        "tooMany": "Zu viele Ziele (max. 500)"
+      },
+      "checkIssues": {
+        "pathRequired": "Pfad erforderlich",
+        "pathNotRelative": "Verwenden Sie einen relativen Pfad im Arbeitsbereich",
+        "patternRequired": "Muster erforderlich",
+        "countInvalid": "Min./Max. müssen ganze Zahlen sein",
+        "maxBelowMin": "Max. liegt unter Min.",
+        "schemaInvalid": "Das Schema muss ein JSON-Objekt oder Boolean sein"
+      },
+      "issues": {
+        "titleRequired": "Namen eingeben",
+        "assistantRequired": "Assistent wählen",
+        "promptRequired": "Aufgabenvorlage eingeben",
+        "targetsInvalid": "Ziele korrigieren",
+        "checksRequired": "Mindestens eine Prüfung hinzufügen",
+        "tooManyChecks": "Höchstens 20 Prüfungen",
+        "checkInvalid": "Prüfungen korrigieren",
+        "trialTooLarge": "Mehr Testeinträge als Ziele"
+      }
+    }
   }
 }
