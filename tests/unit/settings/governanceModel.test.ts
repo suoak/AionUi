@@ -139,6 +139,9 @@ describe('getGovernanceErrorMessage', () => {
     expect(getGovernanceErrorMessage(httpError(403, 'x', 'GOVERNANCE_REQUIRES_USER'), t, 'policy')).toBe(
       'settings.governance.error.requiresUser'
     );
+    expect(getGovernanceErrorMessage(httpError(403, 'x', 'AUDIT_REQUIRES_USER'), t, 'audit')).toBe(
+      'settings.governance.error.requiresUser'
+    );
     expect(getGovernanceErrorMessage(httpError(403, 'x', 'GOVERNANCE_ROLE_REQUIRED'), t, 'policy')).toBe(
       'settings.governance.error.forbidden'
     );

@@ -157,7 +157,8 @@ export type GovernanceAction = 'load' | 'policy' | 'role' | 'permission' | 'audi
 export function getGovernanceErrorMessage(error: unknown, t: TFunction, action: GovernanceAction): string {
   const fallback = t(`settings.governance.error.${action}`);
   if (!isBackendHttpError(error)) return fallback;
-  if (error.code === 'GOVERNANCE_REQUIRES_USER') return t('settings.governance.error.requiresUser');
+  if (error.code === 'GOVERNANCE_REQUIRES_USER' || error.code === 'AUDIT_REQUIRES_USER')
+    return t('settings.governance.error.requiresUser');
   if (error.code === 'GOVERNANCE_ROLE_REQUIRED' || error.status === 403) {
     return t('settings.governance.error.forbidden');
   }
