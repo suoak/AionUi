@@ -16,7 +16,7 @@
   },
   "connect": {
     "scanTitle": "Scan QR Code",
-    "scanHint": "Open CSBU WorkMate desktop → Settings → WebUI → Show QR Code",
+    "scanHint": "Open CSBU WorkMate on your desktop → Settings → Mobile devices → Pair device",
     "cameraPermissionTitle": "Camera Access Required",
     "cameraPermissionMessage": "CSBU WorkMate needs camera access to scan QR codes for quick server login.",
     "requestPermission": "Allow Camera",
@@ -26,15 +26,16 @@
     "invalidToken": "Invalid or expired token",
     "disconnected": "Disconnected from server",
     "pasteLink": "Paste Link",
-    "pasteLinkHint": "Paste the QR code link from desktop",
-    "urlPlaceholder": "Paste QR login URL here",
+    "pasteLinkHint": "Paste the pairing link shown with the QR code on your desktop",
+    "urlPlaceholder": "Paste pairing link here",
     "connect": "Connect",
-    "invalidURL": "Invalid URL. Please paste the QR login link from CSBU WorkMate desktop."
+    "invalidURL": "Invalid link. Use the pairing QR code from CSBU WorkMate desktop → Settings → Mobile devices."
   },
   "tabs": {
     "chat": "Chat",
     "files": "Files",
-    "settings": "Settings"
+    "settings": "Settings",
+    "inbox": "Inbox"
   },
   "conversations": {
     "title": "Conversations",
@@ -138,5 +139,90 @@
     "about": "About",
     "version": "Version",
     "language": "Language"
+  },
+  "pairing": {
+    "defaultDeviceName": "CSBU WorkMate phone",
+    "codeTitle": "Enter pairing code",
+    "codeHint": "Enter the {{count}}-digit code shown on your desktop.",
+    "pairingWith": "Server {{server}} · this phone: {{device}}",
+    "confirm": "Pair",
+    "codeFormat": "The code has {{count}} digits.",
+    "legacyQr": "This QR code signs in the browser WebUI. To connect this phone, open CSBU WorkMate desktop → Settings → Mobile devices → Pair device and scan that code.",
+    "signedOutTitle": "Pair this phone again",
+    "signedOutRevoked": "This phone was removed on the desktop or its access expired. Pair it again to continue.",
+    "signedOutLegacy": "This phone now connects with device pairing. Pair it once from the desktop to continue.",
+    "errors": {
+      "qrInvalid": "This QR code expired or was already used. Generate a new code on the desktop.",
+      "codeInvalid": "Wrong code. Try again.",
+      "codeInvalidAttempts": "Wrong code. Attempts left: {{count}}.",
+      "closed": "This pairing request has ended (expired, cancelled or rejected). Start again from the desktop.",
+      "deviceLimit": "Too many paired devices. Remove one on the desktop first.",
+      "deviceLimitMax": "Too many paired devices (max {{count}}). Remove one on the desktop first.",
+      "invalidRequest": "The desktop rejected this pairing request.",
+      "network": "Cannot reach the desktop. Check that remote access is on and the phone is on the same network.",
+      "unknown": "Pairing failed. Try again."
+    }
+  },
+  "inbox": {
+    "title": "Inbox",
+    "detailTitle": "Details",
+    "markAllRead": "Mark all read",
+    "agentApprovalsSection": "Agent requests ({{count}})",
+    "itemsSection": "Notifications",
+    "empty": "Nothing needs your attention",
+    "loadFailed": "Failed to load inbox",
+    "notFound": "This item no longer exists",
+    "openOnDesktop": "Open CSBU WorkMate on your desktop to see the full details.",
+    "resolved": "Resolved",
+    "kind": {
+      "approval": "Approval",
+      "blocked": "Blocked",
+      "completed": "Completed",
+      "failed": "Failed",
+      "question": "Question",
+      "mention": "Mention"
+    }
+  },
+  "approval": {
+    "approve": "Approve",
+    "deny": "Deny",
+    "reject": "Reject",
+    "agentTitle": "Agent wants to change configuration",
+    "agentKind": {
+      "mcp": "MCP server",
+      "provider": "Model provider",
+      "settings": "Settings",
+      "agent": "Agent",
+      "assistant": "Assistant",
+      "skill": "Skill",
+      "cron": "Scheduled task",
+      "squad": "Squad",
+      "work_item": "Work item"
+    },
+    "summaryTruncated": "The request is too long to show in full.",
+    "summaryTruncatedDesktop": "The request is too long to show in full here. Review and approve it on the desktop. You can still deny it.",
+    "agentApproved": "Approved",
+    "agentDenied": "Denied",
+    "alreadyHandled": "This request was already handled or expired.",
+    "decisionFailed": "Could not send your decision. Try again.",
+    "loadFailed": "Failed to load the approval",
+    "taskMissing": "This approval no longer exists.",
+    "artifactMissing": "The content to review is not available.",
+    "planTitle": "Plan approval",
+    "goalTitle": "Goal approval",
+    "status": {
+      "pending": "Waiting for you",
+      "approved": "Approved",
+      "rejected": "Rejected",
+      "expired": "Expired",
+      "cancelled": "Cancelled"
+    },
+    "planApprovedRunOnDesktop": "Plan approved. Open CSBU WorkMate on your desktop to start running it.",
+    "planExecutionStarted": "Plan approved and started.",
+    "planExecutionFailed": "Plan approved, but it could not be started from the phone. Start it on the desktop.",
+    "taskApproved": "Approved",
+    "taskRejected": "Rejected",
+    "taskConflict": "This approval changed meanwhile (already decided or a newer version). Reload and check again.",
+    "commentPlaceholder": "Comment (optional)"
   }
 }

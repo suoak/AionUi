@@ -16,7 +16,7 @@
   },
   "connect": {
     "scanTitle": "扫描二维码",
-    "scanHint": "打开 CSBU WorkMate 桌面端 → 设置 → WebUI → 显示二维码",
+    "scanHint": "在电脑上打开 CSBU WorkMate → 设置 → 移动设备 → 配对设备",
     "cameraPermissionTitle": "需要相机权限",
     "cameraPermissionMessage": "CSBU WorkMate 需要使用相机来扫描二维码，以快速登录服务器。",
     "requestPermission": "允许使用相机",
@@ -26,15 +26,16 @@
     "invalidToken": "Token 无效或已过期",
     "disconnected": "已断开与服务器的连接",
     "pasteLink": "粘贴链接",
-    "pasteLinkHint": "从桌面端复制二维码链接粘贴到此处",
-    "urlPlaceholder": "粘贴二维码登录链接",
+    "pasteLinkHint": "粘贴电脑上与二维码一起显示的配对链接",
+    "urlPlaceholder": "在此粘贴配对链接",
     "connect": "连接",
-    "invalidURL": "链接无效，请粘贴 CSBU WorkMate 桌面端生成的二维码链接。"
+    "invalidURL": "链接无效。请使用 CSBU WorkMate 电脑端「设置 → 移动设备」中的配对二维码。"
   },
   "tabs": {
     "chat": "聊天",
     "files": "文件",
-    "settings": "设置"
+    "settings": "设置",
+    "inbox": "收件箱"
   },
   "conversations": {
     "title": "对话列表",
@@ -138,5 +139,90 @@
     "about": "关于",
     "version": "版本",
     "language": "语言"
+  },
+  "pairing": {
+    "defaultDeviceName": "CSBU WorkMate 手机",
+    "codeTitle": "输入配对码",
+    "codeHint": "输入电脑上显示的 {{count}} 位配对码。",
+    "pairingWith": "服务器 {{server}} · 本机：{{device}}",
+    "confirm": "配对",
+    "codeFormat": "配对码为 {{count}} 位数字。",
+    "legacyQr": "这个二维码用于浏览器 WebUI 登录。要连接手机，请在 CSBU WorkMate 电脑端打开「设置 → 移动设备 → 配对设备」并扫描那里的二维码。",
+    "signedOutTitle": "请重新配对手机",
+    "signedOutRevoked": "这台手机已在电脑上被移除或访问已过期，请重新配对后继续。",
+    "signedOutLegacy": "手机现在改用设备配对连接，请在电脑上配对一次后继续。",
+    "errors": {
+      "qrInvalid": "二维码已过期或已被使用，请在电脑上重新生成。",
+      "codeInvalid": "配对码错误，请重试。",
+      "codeInvalidAttempts": "配对码错误，剩余尝试次数：{{count}}。",
+      "closed": "本次配对已结束（过期、取消或被拒绝），请在电脑上重新开始。",
+      "deviceLimit": "已配对设备过多，请先在电脑上移除一台。",
+      "deviceLimitMax": "已配对设备过多（最多 {{count}} 台），请先在电脑上移除一台。",
+      "invalidRequest": "电脑拒绝了这次配对请求。",
+      "network": "无法连接到电脑。请确认已开启远程访问，且手机与电脑网络可达。",
+      "unknown": "配对失败，请重试。"
+    }
+  },
+  "inbox": {
+    "title": "收件箱",
+    "detailTitle": "详情",
+    "markAllRead": "全部已读",
+    "agentApprovalsSection": "智能体请求（{{count}}）",
+    "itemsSection": "通知",
+    "empty": "暂无需要处理的事项",
+    "loadFailed": "收件箱加载失败",
+    "notFound": "该事项已不存在",
+    "openOnDesktop": "请在电脑上打开 CSBU WorkMate 查看完整详情。",
+    "resolved": "已处理",
+    "kind": {
+      "approval": "审批",
+      "blocked": "受阻",
+      "completed": "已完成",
+      "failed": "失败",
+      "question": "提问",
+      "mention": "提及"
+    }
+  },
+  "approval": {
+    "approve": "批准",
+    "deny": "拒绝",
+    "reject": "驳回",
+    "agentTitle": "智能体请求修改配置",
+    "agentKind": {
+      "mcp": "MCP 服务器",
+      "provider": "模型提供商",
+      "settings": "设置",
+      "agent": "智能体",
+      "assistant": "助手",
+      "skill": "技能",
+      "cron": "定时任务",
+      "squad": "小队",
+      "work_item": "工作项"
+    },
+    "summaryTruncated": "请求内容过长，无法完整显示。",
+    "summaryTruncatedDesktop": "请求内容过长，手机上无法完整显示。请到电脑上查看并批准；你仍可在此拒绝。",
+    "agentApproved": "已批准",
+    "agentDenied": "已拒绝",
+    "alreadyHandled": "该请求已被处理或已过期。",
+    "decisionFailed": "决定发送失败，请重试。",
+    "loadFailed": "审批加载失败",
+    "taskMissing": "该审批已不存在。",
+    "artifactMissing": "待审内容不可用。",
+    "planTitle": "计划审批",
+    "goalTitle": "目标审批",
+    "status": {
+      "pending": "等待你处理",
+      "approved": "已批准",
+      "rejected": "已驳回",
+      "expired": "已过期",
+      "cancelled": "已取消"
+    },
+    "planApprovedRunOnDesktop": "计划已批准。请在电脑上打开 CSBU WorkMate 开始执行。",
+    "planExecutionStarted": "计划已批准并开始执行。",
+    "planExecutionFailed": "计划已批准，但无法从手机启动执行，请在电脑上开始。",
+    "taskApproved": "已批准",
+    "taskRejected": "已驳回",
+    "taskConflict": "该审批已变化（已被处理或有新版本），请刷新后再确认。",
+    "commentPlaceholder": "备注（可选）"
   }
 }

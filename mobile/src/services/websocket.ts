@@ -28,6 +28,7 @@ export class WebSocketService {
   private host = '';
   private port = '';
   private token = '';
+  private secure = false;
   private lastPingReceived = 0;
   private deadConnectionTimer: ReturnType<typeof setInterval> | null = null;
   private authChallengeHandler: (() => Promise<boolean>) | null = null;
@@ -52,10 +53,11 @@ export class WebSocketService {
     this.messageHandler = handler;
   }
 
-  configure(host: string, port: string, token: string) {
+  configure(host: string, port: string, token: string, secure = false) {
     this.host = host;
     this.port = port;
     this.token = token;
+    this.secure = secure;
   }
 
   setAuthChallengeHandler(handler: (() => Promise<boolean>) | null) {
@@ -85,7 +87,7 @@ export class WebSocketService {
     this.shouldReconnect = true;
     this.setState('connecting');
 
-    const url = `ws://${this.host}:${this.port}`;
+    const url = `${this.secure ? 'wss' : 'ws'}://${this.host}:${this.port}`;
 
     try {
       // Pass token via Sec-WebSocket-Protocol header (server supports this)
