@@ -82,7 +82,9 @@
       "agent": "Agent",
       "assistant": "Assistant",
       "skill": "Skill",
-      "cron": "Scheduled task"
+      "cron": "Scheduled task",
+      "squad": "Squad template",
+      "work_item": "Board work item"
     }
   }
 }

@@ -82,7 +82,9 @@
       "agent": "Agente",
       "assistant": "Assistente",
       "skill": "Habilidade",
-      "cron": "Tarefa agendada"
+      "cron": "Tarefa agendada",
+      "squad": "Modelo de Squad",
+      "work_item": "Item de trabalho do quadro"
     }
   }
 }

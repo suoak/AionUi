@@ -97,4 +97,33 @@ describe('AgentActionApprovalHost', () => {
     act(() => mocks.handler?.({ ...pending('apr_3'), status: 'approved' }));
     await waitFor(() => expect(screen.queryByTestId('agent-action-approval-approve')).toBeNull());
   });
+
+  it('labels an agent work-item proposal (M8 Q9) with its own kind', async () => {
+    mocks.listPending.mockResolvedValue([
+      {
+        ...pending('apr_4'),
+        kind: 'work_item',
+        path: '/api/task-sessions',
+        summary: '{"title":"Follow up flaky test"}',
+      },
+    ]);
+    render(<AgentActionApprovalHost />);
+    await screen.findByTestId('agent-action-approval-approve');
+    expect(screen.getByText('tools.agentApproval.kind.work_item')).toBeTruthy();
+    expect(screen.getByText(/Follow up flaky test/)).toBeTruthy();
+  });
+
+  it('every approval kind has a label in every locale', async () => {
+    const kinds = ['mcp', 'provider', 'settings', 'agent', 'assistant', 'skill', 'cron', 'squad', 'work_item'];
+    const locales = import.meta.glob('@/renderer/services/i18n/locales/*/tools.json', { eager: true }) as Record<
+      string,
+      { default: { agentApproval: { kind: Record<string, string> } } }
+    >;
+    expect(Object.keys(locales).length).toBeGreaterThan(1);
+    for (const [file, mod] of Object.entries(locales)) {
+      for (const kind of kinds) {
+        expect(mod.default.agentApproval.kind[kind], `${file} ${kind}`).toBeTruthy();
+      }
+    }
+  });
 });

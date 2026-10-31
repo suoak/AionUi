@@ -4133,6 +4133,8 @@ export type I18nKey =
   | 'tools.agentApproval.kind.provider'
   | 'tools.agentApproval.kind.settings'
   | 'tools.agentApproval.kind.skill'
+  | 'tools.agentApproval.kind.squad'
+  | 'tools.agentApproval.kind.work_item'
   | 'tools.agentApproval.morePending'
   | 'tools.agentApproval.submitFailed'
   | 'tools.agentApproval.title'

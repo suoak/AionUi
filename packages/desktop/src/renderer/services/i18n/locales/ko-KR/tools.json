@@ -82,7 +82,9 @@
       "agent": "에이전트",
       "assistant": "어시스턴트",
       "skill": "스킬",
-      "cron": "예약 작업"
+      "cron": "예약 작업",
+      "squad": "Squad 템플릿",
+      "work_item": "보드 작업 항목"
     }
   }
 }
