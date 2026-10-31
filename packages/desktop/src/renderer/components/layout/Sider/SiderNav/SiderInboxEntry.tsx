@@ -22,6 +22,10 @@ type SiderInboxEntryProps = {
   onOpenConversation: (conversationId: string) => void;
   /** E6-6: when the item carries a task_session_id, open the board drawer. */
   onOpenTaskBoard?: (taskSessionId: string) => void;
+  /** E8: a batch summary item opens its batch job (`source_id` = job id). */
+  onOpenBatchJob?: (jobId: string) => void;
+  /** E8: an Autopilot failure with no conversation opens its scheduled task. */
+  onOpenScheduledJob?: (jobId: string) => void;
 };
 
 const KIND_COLOR: Record<string, string> = {
@@ -29,6 +33,11 @@ const KIND_COLOR: Record<string, string> = {
   blocked: 'text-[rgb(var(--danger-6))]',
   failed: 'text-[rgb(var(--danger-6))]',
   completed: 'text-[rgb(var(--success-6))]',
+};
+
+const ORIGIN_KEYS: Record<string, string> = {
+  batch: 'common.inbox.origin.batch',
+  autopilot: 'common.inbox.origin.autopilot',
 };
 
 const formatUnread = (n: number) => (n > 99 ? '99+' : String(n));
@@ -98,6 +107,15 @@ export const InboxPanel: React.FC<{
               >
                 <div className='flex items-center gap-6px min-w-0'>
                   {unread && <span className='size-6px rd-full bg-[rgb(var(--primary-6))] shrink-0' />}
+                  {item.origin && ORIGIN_KEYS[item.origin] && (
+                    <span
+                      data-testid='inbox-item-origin'
+                      data-origin={item.origin}
+                      className='shrink-0 rd-4px bg-fill-2 px-4px text-11px leading-16px text-t-secondary'
+                    >
+                      {t(ORIGIN_KEYS[item.origin])}
+                    </span>
+                  )}
                   <span className={classNames('text-12px shrink-0', KIND_COLOR[item.kind] ?? 'text-t-secondary')}>
                     {item.resolved_at && item.kind === 'approval'
                       ? t('common.inbox.resolved')
@@ -132,6 +150,8 @@ const SiderInboxEntry: React.FC<SiderInboxEntryProps> = ({
   siderTooltipProps,
   onOpenConversation,
   onOpenTaskBoard,
+  onOpenBatchJob,
+  onOpenScheduledJob,
 }) => {
   const { t } = useTranslation();
   const { support, unread, revision } = useInboxState();
@@ -153,9 +173,19 @@ const SiderInboxEntry: React.FC<SiderInboxEntryProps> = ({
         onOpenTaskBoard(item.task_session_id);
         return;
       }
-      if (item.conversation_id) onOpenConversation(item.conversation_id);
+      if (item.origin === 'batch' && item.source_id && onOpenBatchJob) {
+        onOpenBatchJob(item.source_id);
+        return;
+      }
+      if (item.conversation_id) {
+        onOpenConversation(item.conversation_id);
+        return;
+      }
+      if (item.origin === 'autopilot' && item.source_id && onOpenScheduledJob) {
+        onOpenScheduledJob(item.source_id);
+      }
     },
-    [onOpenConversation, onOpenTaskBoard]
+    [onOpenConversation, onOpenTaskBoard, onOpenBatchJob, onOpenScheduledJob]
   );
 
   if (support !== 'supported') return null;

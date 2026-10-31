@@ -163,5 +163,45 @@
     "conversationNotFound": "Conversa não encontrada",
     "scheduledTimePassed": "O tempo agendado já passou",
     "conversationBusy": "Conversa ocupada após {{count}} tentativas"
+  },
+  "autopilot": {
+    "title": "Autopilot",
+    "hint": "Executa esta tarefa sem supervisão, com proteções. Falhas vão para sua caixa de entrada.",
+    "modeBlocked": "O Autopilot não está disponível no modo {{mode}}: esse modo exige que uma pessoa revise cada etapa.",
+    "channelUnavailable": "Canal salvo (não está mais disponível)",
+    "guardrail": {
+      "ask": "Sem o modo totalmente automático, ações que precisam de permissão não são aprovadas automaticamente.",
+      "inbox": "Execuções com falha aparecem na sua caixa de entrada.",
+      "summary": "Um resumo curto de cada execução é enviado ao canal escolhido abaixo."
+    },
+    "yolo": {
+      "title": "Totalmente automático",
+      "hint": "Desativado por padrão. Quando ativado, toda ação é executada sem perguntar a você.",
+      "agentCreated": "Esta tarefa foi criada por um agente, então o modo totalmente automático não pode ser ativado.",
+      "confirmTitle": "Ativar o modo totalmente automático?",
+      "confirmOk": "Entendo o risco, ativar",
+      "confirmIntro": "Com o modo totalmente automático, esta tarefa roda conforme o agendamento sem ninguém acompanhando, e o agente não pergunta antes de agir. Por isso ele pode:",
+      "riskCommands": "executar comandos e alterar ou excluir arquivos do espaço de trabalho sem confirmação;",
+      "riskIrreversible": "realizar ações irreversíveis, como enviar mensagens ou alterar serviços externos;",
+      "riskUnattended": "repetir a mesma ação errada a cada execução agendada até você perceber.",
+      "confirmOutro": "Ative apenas em tarefas em que você confia totalmente. Você pode desativar a qualquer momento."
+    },
+    "channel": {
+      "title": "Canal de notificação",
+      "hint": "Somente seus próprios canais conectados são listados.",
+      "empty": "Você não tem nenhum canal conectado que possa receber mensagens. Os resumos ficam na caixa de entrada.",
+      "loadFailed": "Não foi possível carregar seus canais. Os resumos ficam na caixa de entrada.",
+      "none": "Nenhum (somente caixa de entrada)"
+    },
+    "status": {
+      "ask": "Ativado · modo Perguntar",
+      "fullAuto": "Ativado · totalmente automático"
+    },
+    "error": {
+      "forbidden": "Não permitido: somente você pode ativar o modo totalmente automático ou desativar o Autopilot, e tarefas criadas por um agente não podem usá-lo.",
+      "invalidChannel": "O canal escolhido não pode receber mensagens. Escolha outro canal ou \"Nenhum\".",
+      "modeBlocked": "O Autopilot não pode ser usado com o modo plan ou goal.",
+      "yoloNeedsAutopilot": "O modo totalmente automático exige que o Autopilot esteja ativado."
+    }
   }
 }

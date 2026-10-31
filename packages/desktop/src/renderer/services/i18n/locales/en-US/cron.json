@@ -163,5 +163,45 @@
     "conversationNotFound": "Conversation not found",
     "scheduledTimePassed": "Scheduled time has passed",
     "conversationBusy": "Conversation busy after {{count}} retries"
+  },
+  "autopilot": {
+    "title": "Autopilot",
+    "hint": "Run this task unattended with guardrails. Failures go to your Inbox.",
+    "modeBlocked": "Autopilot is unavailable in {{mode}} mode: it needs a person to review each step.",
+    "channelUnavailable": "Saved channel (no longer available)",
+    "guardrail": {
+      "ask": "Without full-auto, actions that need permission are not approved automatically.",
+      "inbox": "Failed runs show up in your Inbox.",
+      "summary": "A short run summary is sent to the channel you choose below."
+    },
+    "yolo": {
+      "title": "Full-auto",
+      "hint": "Off by default. When on, every action runs without asking you first.",
+      "agentCreated": "This task was created by an agent, so full-auto can't be turned on.",
+      "confirmTitle": "Turn on full-auto?",
+      "confirmOk": "I understand, turn it on",
+      "confirmIntro": "With full-auto on, this task runs on schedule with no one watching and the agent will not ask before acting. That means it may:",
+      "riskCommands": "run commands and edit or delete files in the workspace without confirmation;",
+      "riskIrreversible": "take actions that cannot be undone, such as sending messages or changing external services;",
+      "riskUnattended": "keep repeating a wrong action on every scheduled run until you notice.",
+      "confirmOutro": "Only turn this on for tasks you trust completely. You can turn it off at any time."
+    },
+    "channel": {
+      "title": "Notification channel",
+      "hint": "Only your own connected channels are listed.",
+      "empty": "You have no connected channel that can receive messages. Summaries stay in the Inbox.",
+      "loadFailed": "Couldn't load your channels. Summaries stay in the Inbox.",
+      "none": "None (Inbox only)"
+    },
+    "status": {
+      "ask": "On · Ask mode",
+      "fullAuto": "On · Full-auto"
+    },
+    "error": {
+      "forbidden": "Not allowed: only you can turn on full-auto or turn off Autopilot, and agent-created tasks can't use full-auto.",
+      "invalidChannel": "The selected channel can't receive messages. Pick another channel or choose None.",
+      "modeBlocked": "Autopilot can't be used with plan or goal mode.",
+      "yoloNeedsAutopilot": "Full-auto requires Autopilot to be on."
+    }
   }
 }

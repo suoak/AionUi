@@ -234,6 +234,10 @@
     "notifyFailedNamed": "失敗：{{name}}",
     "notifyFailed": "タスクが失敗しました",
     "notifyBlockedNamed": "ブロック中・対応が必要：{{name}}",
-    "notifyBlocked": "タスクがブロックされ、対応が必要です"
+    "notifyBlocked": "タスクがブロックされ、対応が必要です",
+    "origin": {
+      "batch": "バッチ",
+      "autopilot": "Autopilot"
+    }
   }
 }

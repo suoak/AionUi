@@ -237,6 +237,10 @@
     "notifyFailedNamed": "Помилка: {{name}}",
     "notifyFailed": "Завдання завершилося з помилкою",
     "notifyBlockedNamed": "Заблоковано, потрібна ваша участь: {{name}}",
-    "notifyBlocked": "Завдання заблоковане й чекає на вас"
+    "notifyBlocked": "Завдання заблоковане й чекає на вас",
+    "origin": {
+      "batch": "Пакет",
+      "autopilot": "Autopilot"
+    }
   }
 }

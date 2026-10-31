@@ -163,5 +163,45 @@
     "conversationNotFound": "Conversation introuvable",
     "scheduledTimePassed": "L'heure planifiée est dépassée",
     "conversationBusy": "Conversation occupée après {{count}} tentatives"
+  },
+  "autopilot": {
+    "title": "Autopilot",
+    "hint": "Exécute cette tâche sans surveillance, avec des garde-fous. Les échecs arrivent dans votre boîte de réception.",
+    "modeBlocked": "Autopilot n'est pas disponible en mode {{mode}} : ce mode exige qu'une personne vérifie chaque étape.",
+    "channelUnavailable": "Canal enregistré (plus disponible)",
+    "guardrail": {
+      "ask": "Sans le mode entièrement automatique, les actions qui demandent une autorisation ne sont pas approuvées automatiquement.",
+      "inbox": "Les exécutions en échec apparaissent dans votre boîte de réception.",
+      "summary": "Un court résumé de chaque exécution est envoyé au canal choisi ci-dessous."
+    },
+    "yolo": {
+      "title": "Entièrement automatique",
+      "hint": "Désactivé par défaut. Activé, chaque action s'exécute sans vous demander.",
+      "agentCreated": "Cette tâche a été créée par un agent : le mode entièrement automatique ne peut pas être activé.",
+      "confirmTitle": "Activer le mode entièrement automatique ?",
+      "confirmOk": "Je comprends le risque, activer",
+      "confirmIntro": "En mode entièrement automatique, cette tâche s'exécute selon le planning sans que personne ne la surveille, et l'agent ne demande rien avant d'agir. Il peut donc :",
+      "riskCommands": "exécuter des commandes et modifier ou supprimer des fichiers de l'espace de travail sans confirmation ;",
+      "riskIrreversible": "effectuer des actions irréversibles, comme envoyer des messages ou modifier des services externes ;",
+      "riskUnattended": "répéter la même action erronée à chaque exécution planifiée jusqu'à ce que vous le remarquiez.",
+      "confirmOutro": "Ne l'activez que pour des tâches en lesquelles vous avez entièrement confiance. Vous pouvez le désactiver à tout moment."
+    },
+    "channel": {
+      "title": "Canal de notification",
+      "hint": "Seuls vos propres canaux connectés sont listés.",
+      "empty": "Aucun de vos canaux connectés ne peut recevoir de messages. Les résumés restent dans la boîte de réception.",
+      "loadFailed": "Impossible de charger vos canaux. Les résumés restent dans la boîte de réception.",
+      "none": "Aucun (boîte de réception uniquement)"
+    },
+    "status": {
+      "ask": "Activé · mode Demander",
+      "fullAuto": "Activé · entièrement automatique"
+    },
+    "error": {
+      "forbidden": "Action refusée : vous seul pouvez activer le mode entièrement automatique ou désactiver Autopilot, et les tâches créées par un agent ne peuvent pas l'utiliser.",
+      "invalidChannel": "Le canal choisi ne peut pas recevoir de messages. Choisissez un autre canal ou « Aucun ».",
+      "modeBlocked": "Autopilot ne peut pas être utilisé avec le mode plan ou goal.",
+      "yoloNeedsAutopilot": "Le mode entièrement automatique nécessite qu'Autopilot soit activé."
+    }
   }
 }

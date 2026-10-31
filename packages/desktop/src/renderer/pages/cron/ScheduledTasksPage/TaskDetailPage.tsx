@@ -563,6 +563,15 @@ const TaskDetailPage: React.FC = () => {
               </div>
             </section>
 
+            {job.state.autopilot && (
+              <section className='flex flex-col gap-10px' data-testid='task-detail-autopilot'>
+                <h2 className='m-0 text-13px font-medium text-t-secondary'>{t('cron.autopilot.title')}</h2>
+                <span className='text-14px leading-22px text-t-primary'>
+                  {job.state.autopilot_yolo ? t('cron.autopilot.status.fullAuto') : t('cron.autopilot.status.ask')}
+                </span>
+              </section>
+            )}
+
             {job.metadata.agent_config?.model_id && (
               <section className='flex flex-col gap-10px'>
                 <h2 className='m-0 text-13px font-medium text-t-secondary'>{t('cron.page.form.model')}</h2>

@@ -163,5 +163,45 @@
     "conversationNotFound": "Gespräch nicht gefunden",
     "scheduledTimePassed": "Geplante Zeit ist abgelaufen",
     "conversationBusy": "Gespräch nach {{count}} Versuchen noch beschäftigt"
+  },
+  "autopilot": {
+    "title": "Autopilot",
+    "hint": "Führt diese Aufgabe unbeaufsichtigt mit Schutzmechanismen aus. Fehler landen in deinem Posteingang.",
+    "modeBlocked": "Im Modus {{mode}} ist Autopilot nicht verfügbar: Dort muss jeder Schritt von einer Person geprüft werden.",
+    "channelUnavailable": "Gespeicherter Kanal (nicht mehr verfügbar)",
+    "guardrail": {
+      "ask": "Ohne Vollautomatik werden Aktionen, die eine Berechtigung brauchen, nicht automatisch genehmigt.",
+      "inbox": "Fehlgeschlagene Läufe erscheinen in deinem Posteingang.",
+      "summary": "Eine kurze Zusammenfassung jedes Laufs geht an den unten gewählten Kanal."
+    },
+    "yolo": {
+      "title": "Vollautomatik",
+      "hint": "Standardmäßig aus. Wenn an, wird jede Aktion ohne Rückfrage ausgeführt.",
+      "agentCreated": "Diese Aufgabe wurde von einem Agenten erstellt, daher kann die Vollautomatik nicht aktiviert werden.",
+      "confirmTitle": "Vollautomatik aktivieren?",
+      "confirmOk": "Ich verstehe das Risiko, aktivieren",
+      "confirmIntro": "Mit Vollautomatik läuft diese Aufgabe nach Zeitplan, ohne dass jemand zusieht, und der Agent fragt vor Aktionen nicht nach. Er kann dadurch:",
+      "riskCommands": "ohne Bestätigung Befehle ausführen und Dateien im Arbeitsbereich ändern oder löschen;",
+      "riskIrreversible": "Aktionen ausführen, die sich nicht rückgängig machen lassen, etwa Nachrichten senden oder externe Dienste ändern;",
+      "riskUnattended": "bei jedem geplanten Lauf dieselbe falsche Aktion wiederholen, bis du es bemerkst.",
+      "confirmOutro": "Aktiviere sie nur für Aufgaben, denen du voll vertraust. Du kannst sie jederzeit wieder ausschalten."
+    },
+    "channel": {
+      "title": "Benachrichtigungskanal",
+      "hint": "Es werden nur deine eigenen verbundenen Kanäle angezeigt.",
+      "empty": "Du hast keinen verbundenen Kanal, der Nachrichten empfangen kann. Zusammenfassungen bleiben im Posteingang.",
+      "loadFailed": "Deine Kanäle konnten nicht geladen werden. Zusammenfassungen bleiben im Posteingang.",
+      "none": "Keiner (nur Posteingang)"
+    },
+    "status": {
+      "ask": "An · Rückfragemodus",
+      "fullAuto": "An · Vollautomatik"
+    },
+    "error": {
+      "forbidden": "Nicht erlaubt: Nur du selbst kannst die Vollautomatik aktivieren oder Autopilot ausschalten, und von Agenten erstellte Aufgaben können keine Vollautomatik nutzen.",
+      "invalidChannel": "Der gewählte Kanal kann keine Nachrichten empfangen. Wähle einen anderen Kanal oder „Keiner“.",
+      "modeBlocked": "Autopilot kann nicht mit dem Modus plan oder goal verwendet werden.",
+      "yoloNeedsAutopilot": "Für die Vollautomatik muss Autopilot aktiviert sein."
+    }
   }
 }

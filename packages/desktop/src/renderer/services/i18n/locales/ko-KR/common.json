@@ -234,6 +234,10 @@
     "notifyFailedNamed": "실패: {{name}}",
     "notifyFailed": "작업이 실패했습니다",
     "notifyBlockedNamed": "차단됨, 확인 필요: {{name}}",
-    "notifyBlocked": "작업이 차단되어 확인이 필요합니다"
+    "notifyBlocked": "작업이 차단되어 확인이 필요합니다",
+    "origin": {
+      "batch": "일괄",
+      "autopilot": "Autopilot"
+    }
   }
 }

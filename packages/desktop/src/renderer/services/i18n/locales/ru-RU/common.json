@@ -236,6 +236,10 @@
     "notifyFailedNamed": "Ошибка: {{name}}",
     "notifyFailed": "Задача завершилась с ошибкой",
     "notifyBlockedNamed": "Заблокировано, нужно ваше участие: {{name}}",
-    "notifyBlocked": "Задача заблокирована и ждёт вас"
+    "notifyBlocked": "Задача заблокирована и ждёт вас",
+    "origin": {
+      "batch": "Пакет",
+      "autopilot": "Autopilot"
+    }
   }
 }

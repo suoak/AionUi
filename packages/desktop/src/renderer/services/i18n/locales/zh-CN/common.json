@@ -234,6 +234,10 @@
     "notifyFailedNamed": "失败：{{name}}",
     "notifyFailed": "有任务失败了",
     "notifyBlockedNamed": "受阻，需要你处理：{{name}}",
-    "notifyBlocked": "有任务受阻，需要你处理"
+    "notifyBlocked": "有任务受阻，需要你处理",
+    "origin": {
+      "batch": "批量",
+      "autopilot": "Autopilot"
+    }
   }
 }

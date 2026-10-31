@@ -234,6 +234,10 @@
     "notifyFailedNamed": "Échec : {{name}}",
     "notifyFailed": "Une tâche a échoué",
     "notifyBlockedNamed": "Bloqué, action requise : {{name}}",
-    "notifyBlocked": "Une tâche est bloquée et attend votre action"
+    "notifyBlocked": "Une tâche est bloquée et attend votre action",
+    "origin": {
+      "batch": "Lot",
+      "autopilot": "Autopilot"
+    }
   }
 }
