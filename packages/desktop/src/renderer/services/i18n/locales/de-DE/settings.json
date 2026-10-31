@@ -1636,5 +1636,85 @@
   "fontWeightRegular": "Normal",
   "fontWeightMedium": "Mittel",
   "fontWeightSemibold": "Halbfett",
-  "fontWeightBold": "Fett"
+  "fontWeightBold": "Fett",
+  "devices": {
+    "navLabel": "Mobilgeräte",
+    "title": "Mobilgeräte",
+    "description": "Koppeln Sie Ihr Smartphone, um Freigabeanfragen zu erhalten und Pläne und Ziele auch unterwegs zu genehmigen oder abzulehnen.",
+    "count": "{{count}}/{{max}} Geräte",
+    "approvalNote": "Eine Genehmigung auf dem Smartphone speichert nur die Entscheidung. Ein genehmigter Plan wird weiterhin hier am Desktop ausgeführt.",
+    "limitReached": "Sie haben das Maximum von {{max}} Geräten gekoppelt. Widerrufen Sie eines, bevor Sie ein weiteres koppeln.",
+    "empty": "Noch keine gekoppelten Geräte",
+    "unnamed": "Unbenanntes Gerät",
+    "lastUsed": "Zuletzt verwendet: {{time}}",
+    "neverUsed": "Gekoppelt am {{time}}, noch nicht verwendet",
+    "idle": {
+      "days": "Seit {{days}} Tagen inaktiv",
+      "expired": "Seit über {{days}} Tagen nicht verwendet",
+      "expiringHint": "Bleibt es ungenutzt, wird es in etwa {{days}} Tagen automatisch abgemeldet."
+    },
+    "platform": {
+      "ios": "iOS",
+      "android": "Android",
+      "web": "Web",
+      "unknown": "Unbekannt"
+    },
+    "rename": "Umbenennen",
+    "renameTitle": "Gerät umbenennen",
+    "renamed": "Gerät umbenannt",
+    "nameError": {
+      "empty": "Geben Sie einen Namen ein",
+      "tooLong": "Höchstens {{max}} Zeichen",
+      "invalid": "Der Name darf keine Steuerzeichen enthalten"
+    },
+    "revoke": "Widerrufen",
+    "revokeTitle": "Dieses Gerät widerrufen?",
+    "revokeBody": "„{{name}}“ wird sofort abgemeldet und kann keine Freigaben mehr empfangen oder beantworten. Um es wieder zu nutzen, koppeln Sie es erneut.",
+    "revokeConfirm": "Widerrufen",
+    "revoked": "„{{name}}“ widerrufen",
+    "push": {
+      "label": "Push",
+      "none": "Kein Push",
+      "saved": "Push-Einstellung gespeichert",
+      "unavailableTarget": "IM-Sitzung nicht mehr verfügbar",
+      "noChannels": "Verbinden Sie einen IM-Kanal, um Freigabeanfragen an Ihren eigenen Chat zu senden."
+    },
+    "pair": {
+      "title": "Neues Gerät koppeln",
+      "description": "Scannen Sie den QR-Code mit Ihrem Smartphone und geben Sie dort den hier angezeigten Kopplungscode ein.",
+      "start": "Gerät koppeln",
+      "regenerate": "Neuen Code erzeugen",
+      "codeLabel": "Kopplungscode",
+      "expiresIn": "Läuft ab in {{time}}",
+      "requester": "{{name}} ({{platform}}) möchte gekoppelt werden. Fahren Sie nur fort, wenn es Ihr Smartphone ist.",
+      "reject": "Ablehnen",
+      "reachHint": "Ihr Smartphone erreicht diesen Desktop erst, wenn der Fernzugriff in den WebUI-Einstellungen aktiviert ist.",
+      "pairedToast": "{{name}} gekoppelt",
+      "status": {
+        "waiting": "Warten auf den Scan mit dem Smartphone…",
+        "paired": "{{name}} gekoppelt",
+        "rejected": "Kopplungsanfrage abgelehnt",
+        "voided": "Kopplung abgebrochen. Erzeugen Sie einen neuen Code und versuchen Sie es erneut.",
+        "expired": "Code abgelaufen. Erzeugen Sie einen neuen."
+      }
+    },
+    "error": {
+      "limit": "Sie können höchstens {{max}} Geräte koppeln. Widerrufen Sie zuerst eines.",
+      "requiresUser": "Geräte können nur über Ihren angemeldeten Desktop verwaltet werden.",
+      "pairingClosed": "Dieser Kopplungscode ist nicht mehr gültig. Erzeugen Sie einen neuen.",
+      "notFound": "Dieses Gerät existiert nicht mehr. Die Liste wurde aktualisiert.",
+      "invalidName": "Der Name muss aus 1–{{max}} druckbaren Zeichen bestehen.",
+      "pushUnavailable": "IM-Push ist derzeit nicht verfügbar.",
+      "pushTargetRequired": "Wählen Sie eine IM-Sitzung.",
+      "pushTargetInvalid": "Diese IM-Sitzung ist nicht verfügbar. Wählen Sie eine andere.",
+      "pushKindInvalid": "Diese Push-Einstellung wird nicht unterstützt.",
+      "unauthorized": "Ihre Sitzung ist abgelaufen. Melden Sie sich erneut an.",
+      "load": "Geräte konnten nicht geladen werden",
+      "pair": "Kopplungscode konnte nicht erstellt werden",
+      "rename": "Gerät konnte nicht umbenannt werden",
+      "revoke": "Gerät konnte nicht widerrufen werden",
+      "push": "Push-Einstellung konnte nicht gespeichert werden",
+      "reject": "Kopplungsanfrage konnte nicht abgelehnt werden"
+    }
+  }
 }

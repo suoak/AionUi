@@ -12,6 +12,7 @@ import classNames from 'classnames';
 import { ipcBridge } from '@/common';
 import type { IInboxItem } from '@/common/adapter/ipcBridge';
 import { setInboxUnread, useInboxState } from '@/renderer/hooks/system/inbox/inboxStore';
+import { getPhoneDecision, usePhoneApprovalDecisions } from '@/renderer/hooks/system/inbox/taskApprovalStore';
 import type { SiderTooltipProps } from '@renderer/utils/ui/siderTooltip';
 
 type SiderInboxEntryProps = {
@@ -42,6 +43,21 @@ const ORIGIN_KEYS: Record<string, string> = {
 
 const formatUnread = (n: number) => (n > 99 ? '99+' : String(n));
 
+/** Status label for an item: phone decisions (E9-3) beat the generic "resolved". */
+const itemStatusKey = (item: IInboxItem): { key: string; phone: boolean } => {
+  if (item.kind === 'approval') {
+    const phone = getPhoneDecision(item.approval_id);
+    if (phone) {
+      return {
+        key: phone.status === 'approved' ? 'common.inbox.phoneApproved' : 'common.inbox.phoneRejected',
+        phone: true,
+      };
+    }
+    if (item.resolved_at) return { key: 'common.inbox.resolved', phone: false };
+  }
+  return { key: `common.inbox.kind.${item.kind}`, phone: false };
+};
+
 export const InboxPanel: React.FC<{
   open: boolean;
   revision: number;
@@ -50,6 +66,8 @@ export const InboxPanel: React.FC<{
   const { t } = useTranslation();
   const [items, setItems] = useState<IInboxItem[]>([]);
   const [error, setError] = useState(false);
+  // Re-render when a phone decision lands so the label flips immediately.
+  usePhoneApprovalDecisions();
 
   const load = useCallback(() => {
     Promise.resolve()
@@ -97,6 +115,7 @@ export const InboxPanel: React.FC<{
         ) : (
           items.map((item) => {
             const unread = !item.read_at;
+            const status = itemStatusKey(item);
             return (
               <div
                 key={item.id}
@@ -116,10 +135,12 @@ export const InboxPanel: React.FC<{
                       {t(ORIGIN_KEYS[item.origin])}
                     </span>
                   )}
-                  <span className={classNames('text-12px shrink-0', KIND_COLOR[item.kind] ?? 'text-t-secondary')}>
-                    {item.resolved_at && item.kind === 'approval'
-                      ? t('common.inbox.resolved')
-                      : t(`common.inbox.kind.${item.kind}`, { defaultValue: item.kind })}
+                  <span
+                    data-testid='inbox-item-status'
+                    data-phone={status.phone ? 'true' : 'false'}
+                    className={classNames('text-12px shrink-0', KIND_COLOR[item.kind] ?? 'text-t-secondary')}
+                  >
+                    {t(status.key, { defaultValue: item.kind })}
                   </span>
                   <span
                     className={classNames(

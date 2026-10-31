@@ -1636,5 +1636,85 @@
   "fontWeightRegular": "Normal",
   "fontWeightMedium": "Media",
   "fontWeightSemibold": "Seminegrita",
-  "fontWeightBold": "Negrita"
+  "fontWeightBold": "Negrita",
+  "devices": {
+    "navLabel": "Dispositivos móviles",
+    "title": "Dispositivos móviles",
+    "description": "Vincula tu teléfono para recibir solicitudes de aprobación y aprobar o rechazar planes y objetivos cuando no estés en tu escritorio.",
+    "count": "{{count}}/{{max}} dispositivos",
+    "approvalNote": "Aprobar en el teléfono solo registra la decisión. Un plan aprobado se sigue ejecutando aquí, en el escritorio.",
+    "limitReached": "Has vinculado el máximo de {{max}} dispositivos. Revoca uno antes de vincular otro.",
+    "empty": "Aún no hay dispositivos vinculados",
+    "unnamed": "Dispositivo sin nombre",
+    "lastUsed": "Último uso: {{time}}",
+    "neverUsed": "Vinculado el {{time}}, sin usar todavía",
+    "idle": {
+      "days": "Inactivo {{days}} días",
+      "expired": "Sin usar más de {{days}} días",
+      "expiringHint": "Si sigue sin usarse, se cerrará su sesión automáticamente en unos {{days}} días."
+    },
+    "platform": {
+      "ios": "iOS",
+      "android": "Android",
+      "web": "Web",
+      "unknown": "Desconocido"
+    },
+    "rename": "Renombrar",
+    "renameTitle": "Renombrar dispositivo",
+    "renamed": "Dispositivo renombrado",
+    "nameError": {
+      "empty": "Introduce un nombre",
+      "tooLong": "Usa como máximo {{max}} caracteres",
+      "invalid": "El nombre no puede contener caracteres de control"
+    },
+    "revoke": "Revocar",
+    "revokeTitle": "¿Revocar este dispositivo?",
+    "revokeBody": "Se cerrará la sesión de \"{{name}}\" de inmediato y ya no podrá recibir ni responder aprobaciones. Para volver a usarlo, vincúlalo de nuevo.",
+    "revokeConfirm": "Revocar",
+    "revoked": "\"{{name}}\" revocado",
+    "push": {
+      "label": "Notificaciones",
+      "none": "No enviar",
+      "saved": "Configuración de notificaciones guardada",
+      "unavailableTarget": "La sesión de IM ya no está disponible",
+      "noChannels": "Conecta un canal de IM para enviar las solicitudes de aprobación a tu propio chat."
+    },
+    "pair": {
+      "title": "Vincular un dispositivo nuevo",
+      "description": "Escanea el código QR con tu teléfono y luego introduce en él el código de vinculación que se muestra aquí.",
+      "start": "Vincular dispositivo",
+      "regenerate": "Generar código nuevo",
+      "codeLabel": "Código de vinculación",
+      "expiresIn": "Caduca en {{time}}",
+      "requester": "{{name}} ({{platform}}) quiere vincularse. Continúa solo si es tu teléfono.",
+      "reject": "Rechazar",
+      "reachHint": "Tu teléfono solo puede conectarse a este escritorio si activas el acceso remoto en la configuración de WebUI.",
+      "pairedToast": "{{name}} vinculado",
+      "status": {
+        "waiting": "Esperando a que el teléfono escanee…",
+        "paired": "{{name}} vinculado",
+        "rejected": "Solicitud de vinculación rechazada",
+        "voided": "Vinculación cancelada. Genera un código nuevo para intentarlo otra vez.",
+        "expired": "El código caducó. Genera uno nuevo."
+      }
+    },
+    "error": {
+      "limit": "Puedes vincular hasta {{max}} dispositivos. Revoca uno primero.",
+      "requiresUser": "Los dispositivos solo se pueden gestionar desde tu escritorio con sesión iniciada.",
+      "pairingClosed": "Este código de vinculación ya no es válido. Genera uno nuevo.",
+      "notFound": "Este dispositivo ya no existe. La lista se ha actualizado.",
+      "invalidName": "El nombre debe tener entre 1 y {{max}} caracteres imprimibles.",
+      "pushUnavailable": "Las notificaciones por IM no están disponibles ahora.",
+      "pushTargetRequired": "Elige una sesión de IM.",
+      "pushTargetInvalid": "Esa sesión de IM no está disponible. Elige otra.",
+      "pushKindInvalid": "Esta configuración de notificaciones no es compatible.",
+      "unauthorized": "Tu sesión caducó. Vuelve a iniciar sesión.",
+      "load": "No se pudieron cargar los dispositivos",
+      "pair": "No se pudo crear el código de vinculación",
+      "rename": "No se pudo renombrar el dispositivo",
+      "revoke": "No se pudo revocar el dispositivo",
+      "push": "No se pudo guardar la configuración de notificaciones",
+      "reject": "No se pudo rechazar la solicitud de vinculación"
+    }
+  }
 }

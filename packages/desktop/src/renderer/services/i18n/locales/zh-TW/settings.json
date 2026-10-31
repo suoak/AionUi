@@ -1638,5 +1638,85 @@
   "fontWeightRegular": "標準",
   "fontWeightMedium": "中等",
   "fontWeightSemibold": "半粗",
-  "fontWeightBold": "粗體"
+  "fontWeightBold": "粗體",
+  "devices": {
+    "navLabel": "行動裝置",
+    "title": "行動裝置",
+    "description": "配對手機後，可在手機上收到審批請求，隨時核准或拒絕計畫和目標。",
+    "count": "{{count}}/{{max}} 台裝置",
+    "approvalNote": "在手機上核准只會記錄決定，核准後的計畫仍需在桌面端手動執行。",
+    "limitReached": "已達 {{max}} 台裝置上限，請先撤銷一台再配對新裝置。",
+    "empty": "尚未配對任何裝置",
+    "unnamed": "未命名裝置",
+    "lastUsed": "最近使用：{{time}}",
+    "neverUsed": "{{time}} 配對，尚未使用",
+    "idle": {
+      "days": "已閒置 {{days}} 天",
+      "expired": "已超過 {{days}} 天未使用",
+      "expiringHint": "若繼續不使用，約 {{days}} 天後將自動登出。"
+    },
+    "platform": {
+      "ios": "iOS",
+      "android": "Android",
+      "web": "Web",
+      "unknown": "未知"
+    },
+    "rename": "改名",
+    "renameTitle": "重新命名裝置",
+    "renamed": "裝置已重新命名",
+    "nameError": {
+      "empty": "請輸入名稱",
+      "tooLong": "最多 {{max}} 個字元",
+      "invalid": "名稱不能包含控制字元"
+    },
+    "revoke": "撤銷",
+    "revokeTitle": "撤銷這台裝置？",
+    "revokeBody": "「{{name}}」將立即登出，無法再接收或處理審批。若要再次使用，需要重新配對。",
+    "revokeConfirm": "撤銷",
+    "revoked": "已撤銷「{{name}}」",
+    "push": {
+      "label": "推播",
+      "none": "不推播",
+      "saved": "推播設定已儲存",
+      "unavailableTarget": "此 IM 對話已無法使用",
+      "noChannels": "連接 IM 頻道後，可將審批請求推播到你自己的對話。"
+    },
+    "pair": {
+      "title": "配對新裝置",
+      "description": "用手機掃描 QR 碼，然後在手機上輸入此處顯示的配對碼。",
+      "start": "配對裝置",
+      "regenerate": "重新產生",
+      "codeLabel": "配對碼",
+      "expiresIn": "{{time}} 後過期",
+      "requester": "{{name}}（{{platform}}）正在請求配對。僅在這是你的手機時再繼續。",
+      "reject": "拒絕",
+      "reachHint": "需先在 WebUI 設定中開啟遠端存取，手機才能連線到這台電腦。",
+      "pairedToast": "{{name}} 已配對",
+      "status": {
+        "waiting": "等待手機掃碼…",
+        "paired": "{{name}} 已配對",
+        "rejected": "已拒絕配對請求",
+        "voided": "配對已取消，請重新產生配對碼後再試。",
+        "expired": "配對碼已過期，請重新產生。"
+      }
+    },
+    "error": {
+      "limit": "每人最多配對 {{max}} 台裝置，請先撤銷一台。",
+      "requiresUser": "只能在已登入的桌面端管理裝置。",
+      "pairingClosed": "此配對碼已失效，請重新產生。",
+      "notFound": "此裝置已不存在，清單已重新整理。",
+      "invalidName": "名稱須為 1–{{max}} 個可列印字元。",
+      "pushUnavailable": "IM 推播暫時無法使用。",
+      "pushTargetRequired": "請選擇一個 IM 對話。",
+      "pushTargetInvalid": "此 IM 對話無法使用，請換一個。",
+      "pushKindInvalid": "不支援此推播設定。",
+      "unauthorized": "登入已過期，請重新登入。",
+      "load": "載入裝置失敗",
+      "pair": "產生配對碼失敗",
+      "rename": "重新命名裝置失敗",
+      "revoke": "撤銷裝置失敗",
+      "push": "儲存推播設定失敗",
+      "reject": "拒絕配對請求失敗"
+    }
+  }
 }

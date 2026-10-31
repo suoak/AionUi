@@ -238,6 +238,8 @@
     "origin": {
       "batch": "Toplu",
       "autopilot": "Autopilot"
-    }
+    },
+    "phoneApproved": "Telefonda onaylandı",
+    "phoneRejected": "Telefonda reddedildi"
   }
 }

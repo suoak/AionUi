@@ -1636,5 +1636,85 @@
   "fontWeightRegular": "Regular",
   "fontWeightMedium": "Medium",
   "fontWeightSemibold": "Semibold",
-  "fontWeightBold": "Bold"
+  "fontWeightBold": "Bold",
+  "devices": {
+    "navLabel": "Mobile devices",
+    "title": "Mobile devices",
+    "description": "Pair your phone to receive approval requests and approve or reject plans and goals away from your desk.",
+    "count": "{{count}}/{{max}} devices",
+    "approvalNote": "Approving on a phone only records the decision. Running an approved plan still happens here on the desktop.",
+    "limitReached": "You've paired the maximum of {{max}} devices. Revoke one before pairing another.",
+    "empty": "No paired devices yet",
+    "unnamed": "Unnamed device",
+    "lastUsed": "Last used {{time}}",
+    "neverUsed": "Paired {{time}}, not used yet",
+    "idle": {
+      "days": "Idle {{days}} days",
+      "expired": "Unused for {{days}}+ days",
+      "expiringHint": "If it stays unused, it will be signed out automatically in about {{days}} days."
+    },
+    "platform": {
+      "ios": "iOS",
+      "android": "Android",
+      "web": "Web",
+      "unknown": "Unknown"
+    },
+    "rename": "Rename",
+    "renameTitle": "Rename device",
+    "renamed": "Device renamed",
+    "nameError": {
+      "empty": "Enter a name",
+      "tooLong": "Use at most {{max}} characters",
+      "invalid": "The name can't contain control characters"
+    },
+    "revoke": "Revoke",
+    "revokeTitle": "Revoke this device?",
+    "revokeBody": "\"{{name}}\" will be signed out immediately and can no longer receive or answer approvals. To use it again, pair it again.",
+    "revokeConfirm": "Revoke",
+    "revoked": "\"{{name}}\" revoked",
+    "push": {
+      "label": "Push",
+      "none": "Don't push",
+      "saved": "Push setting saved",
+      "unavailableTarget": "IM session no longer available",
+      "noChannels": "Connect an IM channel to push approval requests to your own chat."
+    },
+    "pair": {
+      "title": "Pair a new device",
+      "description": "Scan the QR code with your phone, then enter the pairing code shown here on the phone.",
+      "start": "Pair device",
+      "regenerate": "Generate new code",
+      "codeLabel": "Pairing code",
+      "expiresIn": "Expires in {{time}}",
+      "requester": "{{name}} ({{platform}}) wants to pair. Only continue if this is your phone.",
+      "reject": "Reject",
+      "reachHint": "Your phone can only reach this desktop after remote access is turned on in WebUI settings.",
+      "pairedToast": "{{name}} paired",
+      "status": {
+        "waiting": "Waiting for your phone to scan…",
+        "paired": "{{name}} paired",
+        "rejected": "Pairing request rejected",
+        "voided": "Pairing cancelled. Generate a new code to try again.",
+        "expired": "Code expired. Generate a new one."
+      }
+    },
+    "error": {
+      "limit": "You can pair up to {{max}} devices. Revoke one first.",
+      "requiresUser": "Devices can only be managed from your signed-in desktop.",
+      "pairingClosed": "This pairing code is no longer valid. Generate a new one.",
+      "notFound": "This device no longer exists. The list has been refreshed.",
+      "invalidName": "The name must be 1–{{max}} printable characters.",
+      "pushUnavailable": "IM push isn't available right now.",
+      "pushTargetRequired": "Choose an IM session.",
+      "pushTargetInvalid": "That IM session isn't available. Choose another one.",
+      "pushKindInvalid": "This push setting isn't supported.",
+      "unauthorized": "Your session expired. Sign in again.",
+      "load": "Couldn't load devices",
+      "pair": "Couldn't create a pairing code",
+      "rename": "Couldn't rename the device",
+      "revoke": "Couldn't revoke the device",
+      "push": "Couldn't save the push setting",
+      "reject": "Couldn't reject the pairing request"
+    }
+  }
 }

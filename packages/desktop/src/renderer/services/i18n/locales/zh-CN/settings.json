@@ -1637,5 +1637,85 @@
   "fontWeightRegular": "常规",
   "fontWeightMedium": "中等",
   "fontWeightSemibold": "半粗",
-  "fontWeightBold": "粗体"
+  "fontWeightBold": "粗体",
+  "devices": {
+    "navLabel": "移动设备",
+    "title": "移动设备",
+    "description": "配对手机后，可在手机上收到审批请求，随时批准或拒绝计划和目标。",
+    "count": "{{count}}/{{max}} 台设备",
+    "approvalNote": "在手机上批准只会记录决定，批准后的计划仍需在桌面端手动执行。",
+    "limitReached": "已达到 {{max}} 台设备上限，请先撤销一台再配对新设备。",
+    "empty": "还没有配对的设备",
+    "unnamed": "未命名设备",
+    "lastUsed": "最近使用：{{time}}",
+    "neverUsed": "{{time}} 配对，尚未使用",
+    "idle": {
+      "days": "已闲置 {{days}} 天",
+      "expired": "已超过 {{days}} 天未使用",
+      "expiringHint": "若继续不使用，约 {{days}} 天后将自动退出登录。"
+    },
+    "platform": {
+      "ios": "iOS",
+      "android": "Android",
+      "web": "Web",
+      "unknown": "未知"
+    },
+    "rename": "改名",
+    "renameTitle": "重命名设备",
+    "renamed": "设备已重命名",
+    "nameError": {
+      "empty": "请输入名称",
+      "tooLong": "最多 {{max}} 个字符",
+      "invalid": "名称不能包含控制字符"
+    },
+    "revoke": "撤销",
+    "revokeTitle": "撤销这台设备？",
+    "revokeBody": "“{{name}}”将立即退出登录，不能再接收或处理审批。如需再次使用，需要重新配对。",
+    "revokeConfirm": "撤销",
+    "revoked": "已撤销“{{name}}”",
+    "push": {
+      "label": "推送",
+      "none": "不推送",
+      "saved": "推送设置已保存",
+      "unavailableTarget": "该 IM 会话已不可用",
+      "noChannels": "连接 IM 渠道后，可将审批请求推送到你自己的会话。"
+    },
+    "pair": {
+      "title": "配对新设备",
+      "description": "用手机扫描二维码，然后在手机上输入此处显示的配对码。",
+      "start": "配对设备",
+      "regenerate": "重新生成",
+      "codeLabel": "配对码",
+      "expiresIn": "{{time}} 后过期",
+      "requester": "{{name}}（{{platform}}）正在请求配对。仅当这是你的手机时再继续。",
+      "reject": "拒绝",
+      "reachHint": "需先在 WebUI 设置中开启远程访问，手机才能连接到这台电脑。",
+      "pairedToast": "{{name}} 已配对",
+      "status": {
+        "waiting": "等待手机扫码…",
+        "paired": "{{name}} 已配对",
+        "rejected": "已拒绝配对请求",
+        "voided": "配对已取消，请重新生成配对码后再试。",
+        "expired": "配对码已过期，请重新生成。"
+      }
+    },
+    "error": {
+      "limit": "每人最多配对 {{max}} 台设备，请先撤销一台。",
+      "requiresUser": "只能在已登录的桌面端管理设备。",
+      "pairingClosed": "该配对码已失效，请重新生成。",
+      "notFound": "该设备已不存在，列表已刷新。",
+      "invalidName": "名称须为 1–{{max}} 个可打印字符。",
+      "pushUnavailable": "IM 推送暂不可用。",
+      "pushTargetRequired": "请选择一个 IM 会话。",
+      "pushTargetInvalid": "该 IM 会话不可用，请换一个。",
+      "pushKindInvalid": "不支持该推送设置。",
+      "unauthorized": "登录已过期，请重新登录。",
+      "load": "加载设备失败",
+      "pair": "生成配对码失败",
+      "rename": "重命名设备失败",
+      "revoke": "撤销设备失败",
+      "push": "保存推送设置失败",
+      "reject": "拒绝配对请求失败"
+    }
+  }
 }

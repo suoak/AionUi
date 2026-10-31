@@ -240,6 +240,8 @@
     "origin": {
       "batch": "Пакет",
       "autopilot": "Autopilot"
-    }
+    },
+    "phoneApproved": "Одобрено на телефоне",
+    "phoneRejected": "Отклонено на телефоне"
   }
 }

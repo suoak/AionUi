@@ -1639,5 +1639,85 @@
   "fontWeightRegular": "Normal",
   "fontWeightMedium": "Média",
   "fontWeightSemibold": "Seminegrito",
-  "fontWeightBold": "Negrito"
+  "fontWeightBold": "Negrito",
+  "devices": {
+    "navLabel": "Dispositivos móveis",
+    "title": "Dispositivos móveis",
+    "description": "Pareie seu celular para receber solicitações de aprovação e aprovar ou rejeitar planos e metas longe da sua mesa.",
+    "count": "{{count}}/{{max}} dispositivos",
+    "approvalNote": "Aprovar no celular apenas registra a decisão. Um plano aprovado continua sendo executado aqui no desktop.",
+    "limitReached": "Você pareou o máximo de {{max}} dispositivos. Revogue um antes de parear outro.",
+    "empty": "Nenhum dispositivo pareado ainda",
+    "unnamed": "Dispositivo sem nome",
+    "lastUsed": "Último uso: {{time}}",
+    "neverUsed": "Pareado em {{time}}, ainda não usado",
+    "idle": {
+      "days": "Inativo há {{days}} dias",
+      "expired": "Sem uso há mais de {{days}} dias",
+      "expiringHint": "Se continuar sem uso, a sessão será encerrada automaticamente em cerca de {{days}} dias."
+    },
+    "platform": {
+      "ios": "iOS",
+      "android": "Android",
+      "web": "Web",
+      "unknown": "Desconhecido"
+    },
+    "rename": "Renomear",
+    "renameTitle": "Renomear dispositivo",
+    "renamed": "Dispositivo renomeado",
+    "nameError": {
+      "empty": "Digite um nome",
+      "tooLong": "Use no máximo {{max}} caracteres",
+      "invalid": "O nome não pode conter caracteres de controle"
+    },
+    "revoke": "Revogar",
+    "revokeTitle": "Revogar este dispositivo?",
+    "revokeBody": "A sessão de \"{{name}}\" será encerrada imediatamente e ele não poderá mais receber nem responder aprovações. Para usá-lo novamente, pareie-o outra vez.",
+    "revokeConfirm": "Revogar",
+    "revoked": "\"{{name}}\" revogado",
+    "push": {
+      "label": "Notificações",
+      "none": "Não enviar",
+      "saved": "Configuração de notificação salva",
+      "unavailableTarget": "Sessão de IM não está mais disponível",
+      "noChannels": "Conecte um canal de IM para enviar solicitações de aprovação ao seu próprio chat."
+    },
+    "pair": {
+      "title": "Parear novo dispositivo",
+      "description": "Escaneie o QR code com o celular e depois digite nele o código de pareamento mostrado aqui.",
+      "start": "Parear dispositivo",
+      "regenerate": "Gerar novo código",
+      "codeLabel": "Código de pareamento",
+      "expiresIn": "Expira em {{time}}",
+      "requester": "{{name}} ({{platform}}) quer parear. Continue somente se for o seu celular.",
+      "reject": "Rejeitar",
+      "reachHint": "Seu celular só consegue acessar este desktop depois que o acesso remoto for ativado nas configurações do WebUI.",
+      "pairedToast": "{{name}} pareado",
+      "status": {
+        "waiting": "Aguardando o celular escanear…",
+        "paired": "{{name}} pareado",
+        "rejected": "Solicitação de pareamento rejeitada",
+        "voided": "Pareamento cancelado. Gere um novo código para tentar de novo.",
+        "expired": "O código expirou. Gere um novo."
+      }
+    },
+    "error": {
+      "limit": "Você pode parear até {{max}} dispositivos. Revogue um primeiro.",
+      "requiresUser": "Os dispositivos só podem ser gerenciados pelo seu desktop conectado.",
+      "pairingClosed": "Este código de pareamento não é mais válido. Gere um novo.",
+      "notFound": "Este dispositivo não existe mais. A lista foi atualizada.",
+      "invalidName": "O nome deve ter de 1 a {{max}} caracteres imprimíveis.",
+      "pushUnavailable": "As notificações por IM não estão disponíveis agora.",
+      "pushTargetRequired": "Escolha uma sessão de IM.",
+      "pushTargetInvalid": "Essa sessão de IM não está disponível. Escolha outra.",
+      "pushKindInvalid": "Esta configuração de notificação não é compatível.",
+      "unauthorized": "Sua sessão expirou. Entre novamente.",
+      "load": "Não foi possível carregar os dispositivos",
+      "pair": "Não foi possível criar o código de pareamento",
+      "rename": "Não foi possível renomear o dispositivo",
+      "revoke": "Não foi possível revogar o dispositivo",
+      "push": "Não foi possível salvar a configuração de notificação",
+      "reject": "Não foi possível rejeitar a solicitação de pareamento"
+    }
+  }
 }

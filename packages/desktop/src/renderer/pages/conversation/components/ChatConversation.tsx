@@ -19,9 +19,15 @@ import { CronJobManager } from '@/renderer/pages/cron';
 import { resolveCronJobId } from '@/renderer/pages/cron/cronUtils';
 import { classifyConfigSetError, useAcpConfigOptions } from '@/renderer/hooks/agent/useAcpConfigOptions';
 import { useLayoutContext } from '@/renderer/hooks/context/LayoutContext';
+import {
+  phoneDecisionForLatestApproval,
+  usePhoneApprovalDecisions,
+  useTaskApprovalChanged,
+} from '@/renderer/hooks/system/inbox/taskApprovalStore';
 import { usePresetAssistantInfo } from '@/renderer/hooks/agent/usePresetAssistantInfo';
 import { iconColors } from '@/renderer/styles/colors';
 import {
+  Alert,
   Button,
   Dropdown,
   Input,
@@ -118,6 +124,23 @@ const TaskSessionControl: React.FC<{ conversation: TChatConversation; agentType:
   const refreshContract = async () => {
     await Promise.all([mutate(), mutateContract(), mutatePlanningIsolation()]);
   };
+
+  // E9-3: a decision made on a paired phone (or elsewhere) refreshes the card
+  // in place. Execution stays a manual desktop action.
+  useTaskApprovalChanged(taskSession?.id, () => {
+    void refreshContract();
+  });
+  usePhoneApprovalDecisions();
+  const phoneDecision = phoneDecisionForLatestApproval(contractData?.approvals);
+  const phoneDecisionLabel = phoneDecision
+    ? t(
+        phoneDecision.status === 'approved'
+          ? 'conversation.taskSession.contract.phoneApproved'
+          : 'conversation.taskSession.contract.phoneRejected'
+      )
+    : null;
+  const phoneApprovedAwaitingExecute =
+    phoneDecision?.status === 'approved' && phoneDecision.approval_id === approvedPlanApproval?.id;
 
   const planningIsolationKey = {
     guaranteed: 'conversation.taskSession.planning.guaranteed',
@@ -254,6 +277,15 @@ const TaskSessionControl: React.FC<{ conversation: TChatConversation; agentType:
           {t(planningIsolationKey[planningIsolation.level])}
         </Tag>
       ) : null}
+      {phoneDecisionLabel ? (
+        <Tag
+          size='small'
+          color={phoneDecision?.status === 'approved' ? 'green' : 'red'}
+          data-testid='task-session-phone-decision'
+        >
+          {phoneDecisionLabel}
+        </Tag>
+      ) : null}
       {taskSession && mode !== 'agent' ? (
         <Button
           size='mini'
@@ -285,6 +317,17 @@ const TaskSessionControl: React.FC<{ conversation: TChatConversation; agentType:
         onCancel={() => setContractVisible(false)}
       >
         <Space direction='vertical' className='w-full'>
+          {phoneDecisionLabel ? (
+            <Alert
+              type={phoneDecision?.status === 'approved' ? 'success' : 'warning'}
+              data-testid='task-session-phone-decision-notice'
+              content={
+                phoneApprovedAwaitingExecute
+                  ? `${phoneDecisionLabel} · ${t('conversation.taskSession.contract.phoneApprovedExecuteHint')}`
+                  : phoneDecisionLabel
+              }
+            />
+          ) : null}
           <Radio.Group
             type='button'
             value={artifactKind}

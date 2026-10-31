@@ -238,6 +238,8 @@
     "origin": {
       "batch": "일괄",
       "autopilot": "Autopilot"
-    }
+    },
+    "phoneApproved": "휴대폰에서 승인됨",
+    "phoneRejected": "휴대폰에서 거부됨"
   }
 }

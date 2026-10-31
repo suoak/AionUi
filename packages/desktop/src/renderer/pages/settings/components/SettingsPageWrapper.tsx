@@ -16,6 +16,7 @@ import {
   Earth,
   Inbox,
   Info,
+  Iphone,
   Lightning,
   LinkCloud,
   Puzzle,
@@ -77,6 +78,12 @@ export function getBuiltinSettingsNavItems(isDesktop: boolean, t: TranslateFn): 
       label: t('settings.webui'),
       icon: isDesktop ? <Earth theme='outline' size='16' /> : <Communication theme='outline' size='16' />,
       path: 'webui',
+    },
+    devices: {
+      id: 'devices',
+      label: t('settings.devices.navLabel'),
+      icon: <Iphone theme='outline' size='16' />,
+      path: 'devices',
     },
     pet: { id: 'pet', label: t('pet.desktopPet'), icon: <Cat theme='outline' size='16' />, path: 'pet' },
     usage: {

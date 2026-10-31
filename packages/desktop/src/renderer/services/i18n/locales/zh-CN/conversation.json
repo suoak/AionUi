@@ -1053,7 +1053,10 @@
       "pass": "通过",
       "fail": "失败",
       "review": "需要验证",
-      "userEvidence": "用户已确认"
+      "userEvidence": "用户已确认",
+      "phoneApproved": "已在手机上批准",
+      "phoneRejected": "已在手机上拒绝",
+      "phoneApprovedExecuteHint": "已在手机上批准。准备好后请在此处手动执行，不会自动开始。"
     },
     "review": {
       "open": "复核",

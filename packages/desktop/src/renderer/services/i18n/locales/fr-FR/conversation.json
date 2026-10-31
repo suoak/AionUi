@@ -1053,7 +1053,10 @@
       "pass": "Réussite",
       "fail": "Échec",
       "review": "Vérification requise",
-      "userEvidence": "Confirmé par l’utilisateur"
+      "userEvidence": "Confirmé par l’utilisateur",
+      "phoneApproved": "Approuvé sur le téléphone",
+      "phoneRejected": "Refusé sur le téléphone",
+      "phoneApprovedExecuteHint": "Approuvé sur votre téléphone. Lancez-le ici quand vous êtes prêt ; rien ne démarre automatiquement."
     },
     "review": {
       "open": "Review",
