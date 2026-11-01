@@ -121,6 +121,21 @@ export const LOCAL_API_SECRET_HEADER = 'x-aionui-local-secret';
  */
 export const LOCAL_AUTH_STDIN_ENV = 'AIONUI_LOCAL_AUTH_STDIN';
 
+/**
+ * Env flag telling aioncore that the stdin line after the local API secret is
+ * the desktop keychain copy of the storage-encryption root (M8 E12-6). Carries
+ * no secret itself. Must match AionCore `aionui_app::ENCRYPTION_STDIN_ENV`.
+ * Older backends ignore the extra line.
+ */
+export const ENCRYPTION_STDIN_ENV = 'AIONUI_ENCRYPTION_STDIN';
+
+/**
+ * Supplies the keychain-held storage-encryption root for a data dir, or null
+ * to send nothing. Called right before each spawn, while no backend owns the
+ * data dir.
+ */
+export type EncryptionRootProvider = (dataDir: string) => string | null | Promise<string | null>;
+
 /** Mint a fresh per-launch local API secret (32 random bytes, base64url). */
 export function generateLocalApiSecret(): string {
   return randomBytes(32).toString('base64url');
@@ -550,6 +565,7 @@ export class BackendLifecycleManager {
   private restartWindowStart = 0;
   private readonly maxRestarts = 3;
   private readonly restartWindowMs = 60_000;
+  private encryptionRootProvider: EncryptionRootProvider | null = null;
 
   constructor(
     private readonly appMeta: AppMetadata,
@@ -571,6 +587,27 @@ export class BackendLifecycleManager {
    */
   authHeaders(): Record<string, string> {
     return this._localApiSecret ? { [LOCAL_API_SECRET_HEADER]: this._localApiSecret } : {};
+  }
+
+  /**
+   * Register the desktop keychain root provider (M8 E12-6). The value goes to
+   * aioncore over stdin only, never argv or env, so agent subprocesses that
+   * inherit the backend environment cannot see it.
+   */
+  setEncryptionRootProvider(provider: EncryptionRootProvider | null): void {
+    this.encryptionRootProvider = provider;
+  }
+
+  private async resolveEncryptionRoot(dataDir: string): Promise<string | null> {
+    if (!this.encryptionRootProvider) return null;
+    try {
+      const root = await this.encryptionRootProvider(dataDir);
+      // One stdin line: a value with a line break cannot be framed safely.
+      return root && !/[\r\n]/.test(root) ? root : null;
+    } catch (error) {
+      console.warn(`[aioncore] encryption root provider failed: ${getErrorMessage(error)}`);
+      return null;
+    }
   }
 
   /** Current per-launch local API secret, or null before the first spawn. */
@@ -729,10 +766,14 @@ export class BackendLifecycleManager {
     // Per-launch local API secret: handed to aioncore over stdin (never argv,
     // env, or logs) so only this process can act as the desktop user.
     const localApiSecret = generateLocalApiSecret();
+    // Only yield when a provider is registered, so the no-provider spawn path is unchanged.
+    const encryptionRoot = this.encryptionRootProvider ? await this.resolveEncryptionRoot(dbPath) : null;
+    const spawnEnv: NodeJS.ProcessEnv = { ...buildSpawnEnv(dirs), [LOCAL_AUTH_STDIN_ENV]: '1' };
+    if (encryptionRoot) spawnEnv[ENCRYPTION_STDIN_ENV] = '1';
     try {
       this.childProcess = spawn(binaryPath, args, {
         stdio: ['pipe', 'pipe', 'pipe'],
-        env: { ...buildSpawnEnv(dirs), [LOCAL_AUTH_STDIN_ENV]: '1' },
+        env: spawnEnv,
         cwd: dirs?.workDir ?? dbPath,
         detached: process.platform !== 'win32',
       });
@@ -745,7 +786,7 @@ export class BackendLifecycleManager {
     // A child that dies before reading stdin surfaces EPIPE here; the exit
     // handlers below report the real startup failure.
     this.childProcess.stdin?.on('error', () => {});
-    this.childProcess.stdin?.end(`${localApiSecret}\n`);
+    this.childProcess.stdin?.end(encryptionRoot ? `${localApiSecret}\n${encryptionRoot}\n` : `${localApiSecret}\n`);
 
     backendPid = this.childProcess.pid;
     const pid = backendPid;

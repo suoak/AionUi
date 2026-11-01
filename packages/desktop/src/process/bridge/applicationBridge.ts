@@ -16,6 +16,7 @@ import { getGpuStatus, setGpuUserOverride } from '@process/utils/gpuRecovery';
 import { initApplicationBridgeCore } from './applicationBridgeCore';
 import type { IStartOnBootStatus } from '@/common/adapter/ipcBridge';
 import { restartApplication } from './restartApplication';
+import { getEncryptionRootStatus } from '@process/services/encryptionRoot/encryptionRoot';
 
 let mainWindowRef: BrowserWindow | null = null;
 
@@ -107,6 +108,8 @@ export function initApplicationBridge(): void {
     // when backend exits.
     return restartApplication(app);
   });
+
+  ipcBridge.application.getEncryptionRootStatus.provider(() => Promise.resolve(getEncryptionRootStatus()));
 
   ipcBridge.application.isDevToolsOpened.provider(() => {
     if (mainWindowRef && !mainWindowRef.isDestroyed()) {

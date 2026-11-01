@@ -19,6 +19,7 @@ import type {
   SkillSourceImportRequest,
   SkillSourceSyncResult,
 } from '@/common/types/skills/skillSources';
+import type { EncryptionRootStatus } from '@/common/types/encryptionRoot';
 import type { IConfirmation } from '@/common/chat/chatLib';
 import type { AcpSlashCommandApiItem } from '@/common/chat/slash/types';
 import { bridge } from '@/common/platform/bridge';
@@ -1584,6 +1585,8 @@ export const application = {
   restartInSafeMode: bridge.buildProvider<IAppRestartResult, void>('app.crash-recovery.restart-safe-mode'),
   openDevTools: bridge.buildProvider<boolean, void>('open-dev-tools'),
   isDevToolsOpened: bridge.buildProvider<boolean, void>('is-dev-tools-opened'),
+  /** M8 E12-6: desktop keychain mirror state of the storage-encryption root (desktop only). */
+  getEncryptionRootStatus: bridge.buildProvider<EncryptionRootStatus, void>('app.encryption-root.get-status'),
   systemInfo: withResponseMap(
     httpGet<{ cache_dir: string; work_dir: string; log_dir: string; platform: string; arch: string }, void>(
       '/api/system/info'
