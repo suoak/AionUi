@@ -8,10 +8,11 @@
 // skill detail page. A refresh that changes scripts sends the skill back to
 // the review queue (Core decides); we never apply anything automatically.
 // E10-4: older versions can be compared and restored (restore = new version).
+// E10-5: owner/admin share the skill with the installation team (multi-user only).
 
 import { ipcBridge } from '@/common';
-import type { SkillSourceDetail } from '@/common/types/skills/skillSources';
-import { Button, Message } from '@arco-design/web-react';
+import type { SkillGovernance, SkillSourceDetail } from '@/common/types/skills/skillSources';
+import { Button, Message, Modal, Tag } from '@arco-design/web-react';
 import React, { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
@@ -19,9 +20,71 @@ import useSWR, { mutate } from 'swr';
 import { PENDING_SKILL_REVIEWS_KEY, SkillReviewDetail } from './SkillReviewQueue';
 import { isRefreshableSource, skillReviewErrorKey } from './skillReviewModel';
 import { RestoreVersionButton, SkillVersionCompare } from './SkillVersionTools';
+import { TEAM_SKILLS_KEY, useTeamSkillLibrary } from './TeamSkillLibrary';
 
 const isNotFound = (error: unknown): boolean =>
   typeof error === 'object' && error !== null && (error as { status?: unknown }).status === 404;
+
+/** Share / stop sharing with the team. Hidden unless Core reports a team library. */
+export const TeamShareControl: React.FC<{ skill: SkillGovernance; sourceKey: string }> = ({ skill, sourceKey }) => {
+  const { t } = useTranslation();
+  const { data: library } = useTeamSkillLibrary();
+  const [busy, setBusy] = useState(false);
+  const shared = skill.visibility === 'team';
+
+  const apply = useCallback(
+    async (visibility: 'private' | 'team') => {
+      setBusy(true);
+      try {
+        await ipcBridge.fs.setSkillVisibility.invoke({ skill_id: skill.skill_id, visibility });
+        Message.success(
+          t(visibility === 'team' ? 'settings.skillsHub.team.published' : 'settings.skillsHub.team.unpublished', {
+            name: skill.name,
+          })
+        );
+      } catch (err) {
+        Message.error(t(skillReviewErrorKey(err)));
+      } finally {
+        setBusy(false);
+        void mutate(sourceKey);
+        void mutate(TEAM_SKILLS_KEY);
+      }
+    },
+    [skill.name, skill.skill_id, sourceKey, t]
+  );
+
+  if (!library?.enabled) return null;
+  // Members cannot publish; an owner may always stop sharing their own skill.
+  if (!shared && !library.can_manage) return null;
+  return (
+    <div className='flex items-center gap-8px'>
+      {shared && (
+        <Tag size='small' color='arcoblue' data-testid='skill-detail-team-shared'>
+          {t('settings.skillsHub.team.sharedTag')}
+        </Tag>
+      )}
+      <Button
+        size='mini'
+        loading={busy}
+        data-testid={shared ? 'skill-detail-team-unpublish' : 'skill-detail-team-publish'}
+        onClick={() => {
+          if (shared) {
+            void apply('private');
+            return;
+          }
+          Modal.confirm({
+            title: t('settings.skillsHub.team.publishConfirmTitle', { name: skill.name }),
+            content: t('settings.skillsHub.team.publishConfirmContent'),
+            okText: t('settings.skillsHub.team.publish'),
+            onOk: () => apply('team'),
+          });
+        }}
+      >
+        {t(shared ? 'settings.skillsHub.team.unpublish' : 'settings.skillsHub.team.publish')}
+      </Button>
+    </div>
+  );
+};
 
 const SkillSourceSection: React.FC<{ skillId: string }> = ({ skillId }) => {
   const { t } = useTranslation();
@@ -62,16 +125,19 @@ const SkillSourceSection: React.FC<{ skillId: string }> = ({ skillId }) => {
     <section data-testid='skill-detail-source' className='rounded-16px border border-border-2 bg-base px-20px py-18px'>
       <div className='mb-14px flex items-center justify-between gap-12px'>
         <h2 className='m-0 text-14px font-600 text-t-primary'>{t('settings.skillsHub.sourceSection.title')}</h2>
-        {data && isRefreshableSource(data.source) && (
-          <Button
-            size='mini'
-            loading={checking}
-            onClick={() => void checkUpdate()}
-            data-testid='skill-detail-source-check-update'
-          >
-            {t('settings.skillsHub.sourceSection.checkUpdate')}
-          </Button>
-        )}
+        <div className='flex items-center gap-8px'>
+          {data && <TeamShareControl skill={data.skill} sourceKey={sourceKey} />}
+          {data && isRefreshableSource(data.source) && (
+            <Button
+              size='mini'
+              loading={checking}
+              onClick={() => void checkUpdate()}
+              data-testid='skill-detail-source-check-update'
+            >
+              {t('settings.skillsHub.sourceSection.checkUpdate')}
+            </Button>
+          )}
+        </div>
       </div>
       <SkillReviewDetail
         skillId={skillId}

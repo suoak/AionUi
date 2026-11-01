@@ -99,3 +99,24 @@ export type SkillRestoreResult = {
   /** false: the live files already matched that version. */
   changed: boolean;
 };
+
+/** One skill in the installation team library (aioncore E10-5). */
+export type TeamSkill = {
+  skill_id: string;
+  name: string;
+  description: string;
+  owner_user_id: string;
+  review_status: SkillReviewStatus | string;
+  /** Published by the current user. */
+  mine: boolean;
+  updated_at: number;
+};
+
+/** `GET /api/skills/team`. `enabled` is false outside multi-user role modes. */
+export type TeamSkillLibrary = {
+  enabled: boolean;
+  team_id: string | null;
+  /** Owner / admin: may publish, unpublish and review team skills. */
+  can_manage: boolean;
+  skills: TeamSkill[];
+};

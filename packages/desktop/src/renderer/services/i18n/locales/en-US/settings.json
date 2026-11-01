@@ -1316,7 +1316,11 @@
         "skill_source_not_refreshable": "This source cannot be refreshed (only git / url sources can)",
         "skill_import_no_skill_found": "No skill found in the source (SKILL.md missing)",
         "source_git_unsupported": "Your git is too old (2.37 or later required). Upgrade git or import via URL instead",
-        "skill_restore_renamed": "That version uses a different skill name and cannot be restored"
+        "skill_restore_renamed": "That version uses a different skill name and cannot be restored",
+        "skill_copy_own": "This team skill is already yours",
+        "skill_copy_unavailable": "This team skill is waiting for review or is disabled",
+        "skill_name_taken": "You already have a skill with this name",
+        "skill_publish_forbidden": "Only owners and admins can share skills with the team"
       },
       "import": {
         "open": "Import from source",
@@ -1367,6 +1371,26 @@
       "restored": "Restored v{{from}} as v{{version}}",
       "restoreNoChange": "The current files already match v{{version}}",
       "restoredNeedsReview": "Restored v{{from}} as v{{version}}; the skill is waiting for review and unavailable until approved"
+    },
+    "team": {
+      "tab": "Team",
+      "introManage": "Skills shared with everyone on this installation. As an owner or admin you share skills from a skill's detail page and can stop sharing any of them.",
+      "introMember": "Skills shared by your team. You can use them as they are, or copy one into your own skills to change it.",
+      "empty": "No team skills yet",
+      "mineTag": "Shared by you",
+      "heldTag": "Waiting for review",
+      "copy": "Copy to my skills",
+      "copied": "Copied \"{{name}}\" to your skills",
+      "copiedNeedsReview": "Copied \"{{name}}\". It contains scripts and waits for review before it can be used",
+      "unpublish": "Stop sharing",
+      "unpublishConfirmTitle": "Stop sharing \"{{name}}\"?",
+      "unpublishConfirmContent": "Team members can no longer use it. Copies they already made are not affected.",
+      "unpublished": "\"{{name}}\" is no longer shared",
+      "publish": "Share with team",
+      "publishConfirmTitle": "Share \"{{name}}\" with the team?",
+      "publishConfirmContent": "Everyone on this installation will be able to use it and copy it into their own skills.",
+      "published": "\"{{name}}\" is now shared with the team",
+      "sharedTag": "Shared with team"
     }
   },
   "assistant.connectionFailed": "Connection failed",

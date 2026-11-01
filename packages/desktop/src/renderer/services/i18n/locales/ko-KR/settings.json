@@ -1318,7 +1318,11 @@
         "skill_source_not_refreshable": "이 소스에서는 새로 고칠 수 없습니다(git / url 소스만 지원)",
         "skill_import_no_skill_found": "소스에서 스킬을 찾을 수 없습니다(SKILL.md 없음)",
         "source_git_unsupported": "git 버전이 너무 낮습니다(2.37 이상 필요). git을 업그레이드하거나 URL로 가져오세요",
-        "skill_restore_renamed": "이 버전은 다른 스킬 이름을 사용하므로 복원할 수 없습니다"
+        "skill_restore_renamed": "이 버전은 다른 스킬 이름을 사용하므로 복원할 수 없습니다",
+        "skill_copy_own": "이 팀 스킬은 이미 내 스킬입니다",
+        "skill_copy_unavailable": "이 팀 스킬은 검토 대기 중이거나 비활성화되어 있습니다",
+        "skill_name_taken": "같은 이름의 스킬이 이미 있습니다",
+        "skill_publish_forbidden": "소유자와 관리자만 팀과 스킬을 공유할 수 있습니다"
       },
       "import": {
         "open": "소스에서 가져오기",
@@ -1369,6 +1373,26 @@
       "restored": "v{{from}}을(를) v{{version}}(으)로 복원했습니다",
       "restoreNoChange": "현재 파일이 이미 v{{version}}과(와) 같습니다",
       "restoredNeedsReview": "v{{from}}을(를) v{{version}}(으)로 복원했습니다. 스킬이 검토 대기 중이며 승인 전까지 사용할 수 없습니다"
+    },
+    "team": {
+      "tab": "팀",
+      "introManage": "이 설치의 모든 사용자와 공유하는 스킬입니다. 소유자 또는 관리자는 스킬 상세 페이지에서 공유하고, 어떤 스킬이든 공유를 중지할 수 있습니다.",
+      "introMember": "팀에서 공유한 스킬입니다. 그대로 사용하거나 내 스킬로 복사해 수정할 수 있습니다.",
+      "empty": "아직 팀 스킬이 없습니다",
+      "mineTag": "내가 공유함",
+      "heldTag": "검토 대기 중",
+      "copy": "내 스킬로 복사",
+      "copied": "\"{{name}}\"을(를) 내 스킬로 복사했습니다",
+      "copiedNeedsReview": "\"{{name}}\"을(를) 복사했습니다. 스크립트가 포함되어 있어 검토 후 사용할 수 있습니다",
+      "unpublish": "공유 중지",
+      "unpublishConfirmTitle": "\"{{name}}\" 공유를 중지할까요?",
+      "unpublishConfirmContent": "팀원은 더 이상 사용할 수 없습니다. 이미 만든 복사본에는 영향이 없습니다.",
+      "unpublished": "\"{{name}}\" 공유를 중지했습니다",
+      "publish": "팀과 공유",
+      "publishConfirmTitle": "\"{{name}}\"을(를) 팀과 공유할까요?",
+      "publishConfirmContent": "이 설치의 모든 사용자가 사용하고 내 스킬로 복사할 수 있습니다.",
+      "published": "\"{{name}}\"을(를) 팀과 공유했습니다",
+      "sharedTag": "팀과 공유됨"
     }
   },
   "assistant.connectionFailed": "Connection failed",

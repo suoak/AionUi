@@ -1316,7 +1316,11 @@
         "skill_source_not_refreshable": "无法从该来源刷新（仅 git / url 来源支持）",
         "skill_import_no_skill_found": "来源中没有找到技能（缺少 SKILL.md）",
         "source_git_unsupported": "本机 git 版本过低（需要 2.37 及以上），请升级 git 或改用 URL 导入",
-        "skill_restore_renamed": "该版本使用了不同的技能名称，无法恢复"
+        "skill_restore_renamed": "该版本使用了不同的技能名称，无法恢复",
+        "skill_copy_own": "这个团队技能本来就是你的",
+        "skill_copy_unavailable": "这个团队技能正在等待审核或已停用",
+        "skill_name_taken": "你已经有同名技能",
+        "skill_publish_forbidden": "只有所有者和管理员可以将技能共享给团队"
       },
       "import": {
         "open": "从来源导入",
@@ -1367,6 +1371,26 @@
       "restored": "已将 v{{from}} 恢复为 v{{version}}",
       "restoreNoChange": "当前文件已与 v{{version}} 一致",
       "restoredNeedsReview": "已将 v{{from}} 恢复为 v{{version}}；技能正在等待审核，批准前不可用"
+    },
+    "team": {
+      "tab": "团队",
+      "introManage": "本安装中所有人共享的技能。作为所有者或管理员，你可以在技能详情页共享技能，并可以停止共享其中任何一个。",
+      "introMember": "团队共享的技能。你可以直接使用，也可以复制到自己的技能中再修改。",
+      "empty": "暂无团队技能",
+      "mineTag": "由你共享",
+      "heldTag": "等待审核",
+      "copy": "复制到我的技能",
+      "copied": "已将“{{name}}”复制到你的技能",
+      "copiedNeedsReview": "已复制“{{name}}”。它包含脚本，审核通过后才能使用",
+      "unpublish": "停止共享",
+      "unpublishConfirmTitle": "停止共享“{{name}}”？",
+      "unpublishConfirmContent": "团队成员将无法再使用它，已复制的副本不受影响。",
+      "unpublished": "“{{name}}”已停止共享",
+      "publish": "共享给团队",
+      "publishConfirmTitle": "将“{{name}}”共享给团队？",
+      "publishConfirmContent": "本安装中的所有人都可以使用它，并可复制到自己的技能中。",
+      "published": "“{{name}}”已共享给团队",
+      "sharedTag": "已共享给团队"
     }
   },
   "assistant.connectionFailed": "连接失败",

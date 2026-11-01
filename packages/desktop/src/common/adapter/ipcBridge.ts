@@ -20,6 +20,7 @@ import type {
   SkillSourceImportRequest,
   SkillSourceSyncResult,
   SkillVersionDiff,
+  TeamSkillLibrary,
 } from '@/common/types/skills/skillSources';
 import type { EncryptionRootStatus } from '@/common/types/encryptionRoot';
 import type { IConfirmation } from '@/common/chat/chatLib';
@@ -1889,6 +1890,8 @@ export const fs = {
       registry_origin?: SkillRegistryOrigin;
       /** M8 E10: DB id for source/version APIs; absent on older Core and disk-scan fallbacks. */
       skill_id?: string;
+      /** M8 E10-5: published to the team by another user (usable, read-only). */
+      team_shared?: boolean;
     }>,
     void
   >('/api/skills'),
@@ -1935,6 +1938,16 @@ export const fs = {
   ),
   restoreSkillVersion: httpPost<SkillRestoreResult, { skill_id: string; version_no: number }>(
     (p) => `/api/skills/id/${encodeURIComponent(p.skill_id)}/versions/${p.version_no}/restore`,
+    () => ({})
+  ),
+  // M8 E10-5: installation team skill library (multi-user role modes only).
+  getTeamSkillLibrary: httpGet<TeamSkillLibrary, void>('/api/skills/team'),
+  setSkillVisibility: httpPut<SkillGovernance, { skill_id: string; visibility: 'private' | 'team' }>(
+    (p) => `/api/skills/id/${encodeURIComponent(p.skill_id)}/visibility`,
+    (p) => ({ visibility: p.visibility })
+  ),
+  copyTeamSkillToPrivate: httpPost<SkillSourceSyncResult, { skill_id: string }>(
+    (p) => `/api/skills/id/${encodeURIComponent(p.skill_id)}/copy-to-private`,
     () => ({})
   ),
   reviewSkill: httpPost<SkillGovernance, { skill_id: string; decision: SkillReviewDecision }>(

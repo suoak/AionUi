@@ -15,7 +15,8 @@ import { WorkMateSearchInput } from '@/renderer/components/base';
 import { formatDateTime } from '@/renderer/services/i18n/format';
 import { buildSkillImportNotice, getSkillImportErrorMessage } from './skillImportMessages';
 import SkillReviewQueue, { PENDING_SKILL_REVIEWS_KEY } from './SkillReviewQueue';
-import { pendingImportedNames } from './skillReviewModel';
+import { isTeamLibraryEnabled, pendingImportedNames } from './skillReviewModel';
+import TeamSkillLibrary, { useTeamSkillLibrary } from './TeamSkillLibrary';
 import type { SkillGovernance } from '@/common/types/skills/skillSources';
 import OfficialOnlineSkills from './OfficialOnlineSkills';
 
@@ -33,6 +34,8 @@ interface SkillInfo {
   is_auto_inject: boolean;
   is_custom: boolean;
   source?: 'builtin' | 'custom' | 'cron' | 'extension';
+  /** M8 E10-5: another user's team skill (usable, listed in the Team tab only). */
+  team_shared?: boolean;
   registry_origin?: {
     registry_key: string;
     namespace: string;
@@ -139,11 +142,16 @@ interface SkillsHubSettingsProps {
   withWrapper?: boolean;
 }
 
-type SkillsTab = 'custom' | 'official' | 'online' | 'review';
+type SkillsTab = 'custom' | 'official' | 'online' | 'review' | 'team';
 
 const getSkillsTabFromState = (state: unknown): SkillsTab => {
   if (typeof state === 'object' && state !== null && 'skillsTab' in state) {
-    if (state.skillsTab === 'official' || state.skillsTab === 'online' || state.skillsTab === 'review')
+    if (
+      state.skillsTab === 'official' ||
+      state.skillsTab === 'online' ||
+      state.skillsTab === 'review' ||
+      state.skillsTab === 'team'
+    )
       return state.skillsTab;
   }
   return 'custom';
@@ -180,8 +188,14 @@ const SkillsHubSettings: React.FC<SkillsHubSettingsProps> = ({ withWrapper = tru
     [activeTab, navigate]
   );
 
-  // "Custom" tab: only user-imported skills.
-  const mySkills = useMemo(() => availableSkills.filter((s) => s.source === 'custom'), [availableSkills]);
+  // "Custom" tab: only user-imported skills (others' team skills live in the Team tab).
+  const mySkills = useMemo(
+    () => availableSkills.filter((s) => s.source === 'custom' && !s.team_shared),
+    [availableSkills]
+  );
+  // M8 E10-5: the Team tab exists only when Core reports multi-user roles.
+  const { data: teamLibrary } = useTeamSkillLibrary();
+  const teamEnabled = isTeamLibraryEnabled(teamLibrary);
   // "Official" tab: built-in non-auto-injected skills shown as the primary list,
   // with extension skills and auto-injected skills kept as separate read-only sections.
   const officialSkills = useMemo(
@@ -1089,6 +1103,15 @@ const SkillsHubSettings: React.FC<SkillsHubSettingsProps> = ({ withWrapper = tru
             key: 'review',
             label: t('settings.skillsHub.review.tab'),
           },
+          ...(teamEnabled
+            ? [
+                {
+                  key: 'team',
+                  label: t('settings.skillsHub.team.tab'),
+                  count: teamLibrary?.skills.length,
+                },
+              ]
+            : []),
         ]}
         activeTab={activeTab}
         onTabChange={(key) => {
@@ -1102,6 +1125,12 @@ const SkillsHubSettings: React.FC<SkillsHubSettingsProps> = ({ withWrapper = tru
         officialPane
       ) : activeTab === 'review' ? (
         <SkillReviewQueue />
+      ) : activeTab === 'team' ? (
+        teamEnabled ? (
+          <TeamSkillLibrary onCopied={fetchData} />
+        ) : (
+          customPane
+        )
       ) : (
         <OfficialOnlineSkills onInstalled={fetchData} />
       )}

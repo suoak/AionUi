@@ -1318,7 +1318,11 @@
         "skill_source_not_refreshable": "このソースからは更新できません（git / url ソースのみ対応）",
         "skill_import_no_skill_found": "ソースにスキルが見つかりません（SKILL.md がありません）",
         "source_git_unsupported": "git のバージョンが古すぎます（2.37 以上が必要）。git を更新するか URL からインポートしてください",
-        "skill_restore_renamed": "このバージョンは別のスキル名を使っているため復元できません"
+        "skill_restore_renamed": "このバージョンは別のスキル名を使っているため復元できません",
+        "skill_copy_own": "このチームスキルはすでにあなたのものです",
+        "skill_copy_unavailable": "このチームスキルはレビュー待ちか無効です",
+        "skill_name_taken": "同じ名前のスキルがすでにあります",
+        "skill_publish_forbidden": "チームにスキルを共有できるのはオーナーと管理者のみです"
       },
       "import": {
         "open": "ソースからインポート",
@@ -1369,6 +1373,26 @@
       "restored": "v{{from}} を v{{version}} として復元しました",
       "restoreNoChange": "現在のファイルはすでに v{{version}} と同じです",
       "restoredNeedsReview": "v{{from}} を v{{version}} として復元しました。スキルはレビュー待ちで、承認まで使用できません"
+    },
+    "team": {
+      "tab": "チーム",
+      "introManage": "このインストールの全員で共有しているスキルです。オーナーまたは管理者として、スキルの詳細ページから共有し、どのスキルでも共有を停止できます。",
+      "introMember": "チームで共有されているスキルです。そのまま使うか、自分のスキルにコピーして変更できます。",
+      "empty": "チームスキルはまだありません",
+      "mineTag": "自分が共有",
+      "heldTag": "レビュー待ち",
+      "copy": "自分のスキルにコピー",
+      "copied": "「{{name}}」を自分のスキルにコピーしました",
+      "copiedNeedsReview": "「{{name}}」をコピーしました。スクリプトを含むため、レビュー後に使用できます",
+      "unpublish": "共有を停止",
+      "unpublishConfirmTitle": "「{{name}}」の共有を停止しますか？",
+      "unpublishConfirmContent": "チームメンバーは使用できなくなります。作成済みのコピーには影響しません。",
+      "unpublished": "「{{name}}」の共有を停止しました",
+      "publish": "チームに共有",
+      "publishConfirmTitle": "「{{name}}」をチームに共有しますか？",
+      "publishConfirmContent": "このインストールの全員が使用でき、自分のスキルにコピーできます。",
+      "published": "「{{name}}」をチームに共有しました",
+      "sharedTag": "チームに共有中"
     }
   },
   "assistant.connectionFailed": "Connection failed",
