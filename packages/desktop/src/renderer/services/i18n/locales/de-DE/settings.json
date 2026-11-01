@@ -1315,7 +1315,8 @@
         "generic": "Etwas ist schiefgelaufen, bitte erneut versuchen",
         "skill_source_not_refreshable": "Diese Quelle kann nicht aktualisiert werden (nur git- / url-Quellen)",
         "skill_import_no_skill_found": "In der Quelle wurde kein Skill gefunden (SKILL.md fehlt)",
-        "source_git_unsupported": "Deine git-Version ist zu alt (2.37 oder neuer nötig). Aktualisiere git oder importiere per URL"
+        "source_git_unsupported": "Deine git-Version ist zu alt (2.37 oder neuer nötig). Aktualisiere git oder importiere per URL",
+        "skill_restore_renamed": "Diese Version verwendet einen anderen Skill-Namen und kann nicht wiederhergestellt werden"
       },
       "import": {
         "open": "Aus Quelle importieren",
@@ -1338,13 +1339,34 @@
         "import": "Import",
         "evolution": "Auto-Evolution"
       },
-      "importNeedsReview": "{{count}} importierte(r) Skill(s) enthalten Skripte und müssen unter „Prüfung ausstehend“ freigegeben werden: {{names}}"
+      "importNeedsReview": "{{count}} importierte(r) Skill(s) enthalten Skripte und müssen unter „Prüfung ausstehend“ freigegeben werden: {{names}}",
+      "restoredFrom": "wiederhergestellt aus v{{version}}"
     },
     "sourceSection": {
       "title": "Quelle & Versionen",
       "checkUpdate": "Nach Update suchen",
       "updated": "Auf eine neue Version aktualisiert",
-      "movedToReview": "Das Update ändert Skripte; der Skill wurde in „Prüfung ausstehend“ verschoben und ist bis zur Freigabe nicht verfügbar"
+      "movedToReview": "Das Update ändert Skripte; der Skill wurde in „Prüfung ausstehend“ verschoben und ist bis zur Freigabe nicht verfügbar",
+      "compare": "Versionen vergleichen",
+      "compareFrom": "Von",
+      "compareTo": "Nach",
+      "compareRun": "Vergleichen",
+      "compareSame": "Wähle zwei verschiedene Versionen",
+      "noDifferences": "Keine Unterschiede",
+      "file": {
+        "added": "Hinzugefügt",
+        "removed": "Entfernt",
+        "modified": "Geändert"
+      },
+      "binaryFile": "Binärdatei, Inhalt wird nicht angezeigt",
+      "tooLarge": "Datei zu groß, um die Änderungen anzuzeigen",
+      "restore": "Wiederherstellen",
+      "restoreTitle": "v{{version}} wiederherstellen?",
+      "restoreContent": "Die Dateien von v{{version}} ersetzen die aktuellen Dateien. Das wird als neue Version gespeichert; der Verlauf bleibt erhalten.",
+      "restoreScripts": "Diese Version enthält Skripte. Der Skill geht daher in die Prüfung und ist bis zur Freigabe nicht verfügbar.",
+      "restored": "v{{from}} als v{{version}} wiederhergestellt",
+      "restoreNoChange": "Die aktuellen Dateien entsprechen bereits v{{version}}",
+      "restoredNeedsReview": "v{{from}} als v{{version}} wiederhergestellt; der Skill wartet auf Prüfung und ist bis zur Freigabe nicht verfügbar"
     }
   },
   "assistant.connectionFailed": "Verbindung fehlgeschlagen",

@@ -68,3 +68,34 @@ export type SkillSourceImportRequest = {
   subpath?: string;
   origin_app?: 'claude' | 'codex';
 };
+
+/** One changed file between two versions (aioncore E10-3). */
+export type SkillFileDiff = {
+  path: string;
+  status: 'added' | 'removed' | 'modified' | string;
+  /** Binary / non-UTF-8: listed only, never diffed. */
+  binary: boolean;
+  /** A script in either version. */
+  script: boolean;
+  /** Unified diff (3 lines of context); null for binary or oversized files. */
+  diff: string | null;
+  /** Text over Core's diff cap: listed only. */
+  too_large: boolean;
+};
+
+export type SkillVersionDiff = {
+  skill_id: string;
+  from_version: number;
+  to_version: number;
+  /** Changed files only, sorted by path. */
+  files: SkillFileDiff[];
+};
+
+export type SkillRestoreResult = {
+  skill: SkillGovernance;
+  /** The version the live skill now matches (new unless nothing changed). */
+  version: SkillVersion;
+  restored_from: number;
+  /** false: the live files already matched that version. */
+  changed: boolean;
+};

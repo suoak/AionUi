@@ -1315,7 +1315,8 @@
         "generic": "Bir sorun oluştu, lütfen tekrar deneyin",
         "skill_source_not_refreshable": "Bu kaynak yenilenemez (yalnızca git / url kaynakları)",
         "skill_import_no_skill_found": "Kaynakta beceri bulunamadı (SKILL.md yok)",
-        "source_git_unsupported": "git sürümünüz çok eski (2.37 veya üzeri gerekli). git'i güncelleyin ya da URL ile içe aktarın"
+        "source_git_unsupported": "git sürümünüz çok eski (2.37 veya üzeri gerekli). git'i güncelleyin ya da URL ile içe aktarın",
+        "skill_restore_renamed": "Bu sürüm farklı bir beceri adı kullandığı için geri yüklenemez"
       },
       "import": {
         "open": "Kaynaktan içe aktar",
@@ -1338,13 +1339,34 @@
         "import": "İçe aktarma",
         "evolution": "Otomatik evrim"
       },
-      "importNeedsReview": "İçe aktarılan {{count}} beceri betik içeriyor ve kullanılmadan önce İnceleme bekliyor bölümünde onaylanmalı: {{names}}"
+      "importNeedsReview": "İçe aktarılan {{count}} beceri betik içeriyor ve kullanılmadan önce İnceleme bekliyor bölümünde onaylanmalı: {{names}}",
+      "restoredFrom": "v{{version}} sürümünden geri yüklendi"
     },
     "sourceSection": {
       "title": "Kaynak ve sürümler",
       "checkUpdate": "Güncellemeyi denetle",
       "updated": "Yeni bir sürüme güncellendi",
-      "movedToReview": "Güncelleme betikleri değiştiriyor; beceri İnceleme bekliyor bölümüne taşındı ve onaylanana kadar kullanılamaz"
+      "movedToReview": "Güncelleme betikleri değiştiriyor; beceri İnceleme bekliyor bölümüne taşındı ve onaylanana kadar kullanılamaz",
+      "compare": "Sürümleri karşılaştır",
+      "compareFrom": "Kaynak",
+      "compareTo": "Hedef",
+      "compareRun": "Karşılaştır",
+      "compareSame": "İki farklı sürüm seçin",
+      "noDifferences": "Fark yok",
+      "file": {
+        "added": "Eklendi",
+        "removed": "Kaldırıldı",
+        "modified": "Değiştirildi"
+      },
+      "binaryFile": "İkili dosya, içerik gösterilmiyor",
+      "tooLarge": "Dosya çok büyük, değişiklikler gösterilemiyor",
+      "restore": "Geri yükle",
+      "restoreTitle": "v{{version}} geri yüklensin mi?",
+      "restoreContent": "v{{version}} dosyaları mevcut dosyaların yerini alır. Bu yeni bir sürüm olarak kaydedilir; geçmiş korunur.",
+      "restoreScripts": "Bu sürüm betik içeriyor; beceri incelemeye alınır ve onaylanana kadar kullanılamaz.",
+      "restored": "v{{from}}, v{{version}} olarak geri yüklendi",
+      "restoreNoChange": "Mevcut dosyalar zaten v{{version}} ile aynı",
+      "restoredNeedsReview": "v{{from}}, v{{version}} olarak geri yüklendi; beceri inceleme bekliyor ve onaylanana kadar kullanılamaz"
     }
   },
   "assistant.connectionFailed": "Bağlantı başarısız",

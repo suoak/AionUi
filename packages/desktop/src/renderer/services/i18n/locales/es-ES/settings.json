@@ -1315,7 +1315,8 @@
         "generic": "Algo salió mal, inténtalo de nuevo",
         "skill_source_not_refreshable": "Esta fuente no se puede actualizar (solo fuentes git / url)",
         "skill_import_no_skill_found": "No se encontró ninguna habilidad en la fuente (falta SKILL.md)",
-        "source_git_unsupported": "Tu git es demasiado antiguo (se requiere 2.37 o posterior). Actualiza git o importa por URL"
+        "source_git_unsupported": "Tu git es demasiado antiguo (se requiere 2.37 o posterior). Actualiza git o importa por URL",
+        "skill_restore_renamed": "Esa versión usa otro nombre de habilidad y no se puede restaurar"
       },
       "import": {
         "open": "Importar desde fuente",
@@ -1338,13 +1339,34 @@
         "import": "Importación",
         "evolution": "Autoevolución"
       },
-      "importNeedsReview": "{{count}} habilidad(es) importada(s) contienen scripts y deben aprobarse en Pendiente de revisión antes de usarse: {{names}}"
+      "importNeedsReview": "{{count}} habilidad(es) importada(s) contienen scripts y deben aprobarse en Pendiente de revisión antes de usarse: {{names}}",
+      "restoredFrom": "restaurada desde v{{version}}"
     },
     "sourceSection": {
       "title": "Origen y versiones",
       "checkUpdate": "Buscar actualización",
       "updated": "Actualizado a una nueva versión",
-      "movedToReview": "La actualización cambia scripts: la habilidad pasó a Revisión pendiente y no estará disponible hasta que se apruebe"
+      "movedToReview": "La actualización cambia scripts: la habilidad pasó a Revisión pendiente y no estará disponible hasta que se apruebe",
+      "compare": "Comparar versiones",
+      "compareFrom": "Desde",
+      "compareTo": "Hasta",
+      "compareRun": "Comparar",
+      "compareSame": "Elige dos versiones distintas",
+      "noDifferences": "Sin diferencias",
+      "file": {
+        "added": "Añadido",
+        "removed": "Eliminado",
+        "modified": "Modificado"
+      },
+      "binaryFile": "Archivo binario, no se muestra el contenido",
+      "tooLarge": "Archivo demasiado grande para mostrar los cambios",
+      "restore": "Restaurar",
+      "restoreTitle": "¿Restaurar v{{version}}?",
+      "restoreContent": "Los archivos de v{{version}} sustituyen a los actuales. Se guarda como una versión nueva; el historial se conserva.",
+      "restoreScripts": "Esta versión contiene scripts, así que la habilidad pasa a revisión pendiente y no estará disponible hasta su aprobación.",
+      "restored": "v{{from}} restaurada como v{{version}}",
+      "restoreNoChange": "Los archivos actuales ya coinciden con v{{version}}",
+      "restoredNeedsReview": "v{{from}} restaurada como v{{version}}; la habilidad espera revisión y no estará disponible hasta su aprobación"
     }
   },
   "assistant.connectionFailed": "Error de conexión",

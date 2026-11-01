@@ -7,6 +7,7 @@
 // M8 E10: source, version history and "check for update" on the regular
 // skill detail page. A refresh that changes scripts sends the skill back to
 // the review queue (Core decides); we never apply anything automatically.
+// E10-4: older versions can be compared and restored (restore = new version).
 
 import { ipcBridge } from '@/common';
 import type { SkillSourceDetail } from '@/common/types/skills/skillSources';
@@ -17,6 +18,7 @@ import { useNavigate } from 'react-router-dom';
 import useSWR, { mutate } from 'swr';
 import { PENDING_SKILL_REVIEWS_KEY, SkillReviewDetail } from './SkillReviewQueue';
 import { isRefreshableSource, skillReviewErrorKey } from './skillReviewModel';
+import { RestoreVersionButton, SkillVersionCompare } from './SkillVersionTools';
 
 const isNotFound = (error: unknown): boolean =>
   typeof error === 'object' && error !== null && (error as { status?: unknown }).status === 404;
@@ -71,7 +73,17 @@ const SkillSourceSection: React.FC<{ skillId: string }> = ({ skillId }) => {
           </Button>
         )}
       </div>
-      <SkillReviewDetail skillId={skillId} />
+      <SkillReviewDetail
+        skillId={skillId}
+        renderVersionActions={(version, isLatest) =>
+          isLatest ? null : <RestoreVersionButton skillId={skillId} version={version} />
+        }
+      />
+      {data && data.versions.length >= 2 && (
+        <div className='mt-12px'>
+          <SkillVersionCompare skillId={skillId} versions={data.versions} />
+        </div>
+      )}
     </section>
   );
 };

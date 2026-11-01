@@ -1315,7 +1315,8 @@
         "generic": "Something went wrong, please try again",
         "skill_source_not_refreshable": "This source cannot be refreshed (only git / url sources can)",
         "skill_import_no_skill_found": "No skill found in the source (SKILL.md missing)",
-        "source_git_unsupported": "Your git is too old (2.37 or later required). Upgrade git or import via URL instead"
+        "source_git_unsupported": "Your git is too old (2.37 or later required). Upgrade git or import via URL instead",
+        "skill_restore_renamed": "That version uses a different skill name and cannot be restored"
       },
       "import": {
         "open": "Import from source",
@@ -1338,13 +1339,34 @@
         "import": "Import",
         "evolution": "Auto-evolution"
       },
-      "importNeedsReview": "{{count}} imported skill(s) contain scripts and must be approved under Pending review before use: {{names}}"
+      "importNeedsReview": "{{count}} imported skill(s) contain scripts and must be approved under Pending review before use: {{names}}",
+      "restoredFrom": "restored from v{{version}}"
     },
     "sourceSection": {
       "title": "Source & versions",
       "checkUpdate": "Check for update",
       "updated": "Updated to a new version",
-      "movedToReview": "The update changes scripts, so the skill moved to Pending review and is unavailable until approved"
+      "movedToReview": "The update changes scripts, so the skill moved to Pending review and is unavailable until approved",
+      "compare": "Compare versions",
+      "compareFrom": "From",
+      "compareTo": "To",
+      "compareRun": "Compare",
+      "compareSame": "Pick two different versions",
+      "noDifferences": "No differences",
+      "file": {
+        "added": "Added",
+        "removed": "Removed",
+        "modified": "Modified"
+      },
+      "binaryFile": "Binary file, content not shown",
+      "tooLarge": "File too large to show the changes",
+      "restore": "Restore",
+      "restoreTitle": "Restore v{{version}}?",
+      "restoreContent": "The files of v{{version}} replace the current files. This is saved as a new version; the history is kept.",
+      "restoreScripts": "This version contains scripts, so the skill goes to Pending review and stays unavailable until approved.",
+      "restored": "Restored v{{from}} as v{{version}}",
+      "restoreNoChange": "The current files already match v{{version}}",
+      "restoredNeedsReview": "Restored v{{from}} as v{{version}}; the skill is waiting for review and unavailable until approved"
     }
   },
   "assistant.connectionFailed": "Connection failed",

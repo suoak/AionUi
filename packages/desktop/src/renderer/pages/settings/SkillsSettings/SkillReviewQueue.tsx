@@ -9,20 +9,30 @@
 // There is deliberately no auto-apply / bulk-approve entry.
 
 import { ipcBridge } from '@/common';
-import type { SkillGovernance, SkillReviewDecision } from '@/common/types/skills/skillSources';
+import type { SkillGovernance, SkillReviewDecision, SkillVersion } from '@/common/types/skills/skillSources';
 import { Alert, Button, Empty, Message, Modal, Spin, Tag } from '@arco-design/web-react';
 import React, { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import useSWR from 'swr';
 import SkillSourceImportModal from './SkillSourceImportModal';
-import { isUntrustedSource, latestHasScripts, skillReviewErrorKey, versionCreatedByKey } from './skillReviewModel';
+import {
+  isUntrustedSource,
+  latestHasScripts,
+  restoredFromVersion,
+  skillReviewErrorKey,
+  versionCreatedByKey,
+} from './skillReviewModel';
 
 export const PENDING_SKILL_REVIEWS_KEY = 'skills.reviews.pending';
 
 const formatTime = (ms: number | null | undefined): string => (ms ? new Date(ms).toLocaleString() : '—');
 
 /** Source + version history of one skill; shared with the skill detail page. */
-export const SkillReviewDetail: React.FC<{ skillId: string }> = ({ skillId }) => {
+export const SkillReviewDetail: React.FC<{
+  skillId: string;
+  /** Extra controls on a version row (the detail page adds "Restore"). */
+  renderVersionActions?: (version: SkillVersion, isLatest: boolean) => React.ReactNode;
+}> = ({ skillId, renderVersionActions }) => {
   const { t } = useTranslation();
   const { data, error, isLoading } = useSWR(`skills.source.${skillId}`, () =>
     ipcBridge.fs.getSkillSourceDetail.invoke({ skill_id: skillId })
@@ -55,17 +65,27 @@ export const SkillReviewDetail: React.FC<{ skillId: string }> = ({ skillId }) =>
       )}
       <div className='text-t-secondary'>{t('settings.skillsHub.review.versions')}</div>
       <ul className='m-0 pl-16px'>
-        {versions.map((v) => (
-          <li key={v.version_no} data-testid={`skill-review-version-${v.version_no}`}>
-            v{v.version_no} · {formatTime(v.created_at)} ·{' '}
-            {versionCreatedByKey(v.created_by) ? t(versionCreatedByKey(v.created_by)!) : v.created_by}
-            {v.has_scripts && (
-              <Tag size='small' color='orangered' className='ml-6px'>
-                {t('settings.skillsHub.review.scriptsBadge')}
-              </Tag>
-            )}
-          </li>
-        ))}
+        {versions.map((v, i) => {
+          const restoredFrom = restoredFromVersion(v.source_ref);
+          return (
+            <li key={v.version_no} data-testid={`skill-review-version-${v.version_no}`}>
+              v{v.version_no} · {formatTime(v.created_at)} ·{' '}
+              {versionCreatedByKey(v.created_by) ? t(versionCreatedByKey(v.created_by)!) : v.created_by}
+              {restoredFrom !== null && (
+                <span className='text-t-secondary'>
+                  {' '}
+                  · {t('settings.skillsHub.review.restoredFrom', { version: restoredFrom })}
+                </span>
+              )}
+              {v.has_scripts && (
+                <Tag size='small' color='orangered' className='ml-6px'>
+                  {t('settings.skillsHub.review.scriptsBadge')}
+                </Tag>
+              )}
+              {renderVersionActions?.(v, i === 0)}
+            </li>
+          );
+        })}
       </ul>
     </div>
   );

@@ -1315,7 +1315,8 @@
         "generic": "Une erreur est survenue, veuillez réessayer",
         "skill_source_not_refreshable": "Cette source ne peut pas être actualisée (sources git / url uniquement)",
         "skill_import_no_skill_found": "Aucune compétence trouvée dans la source (SKILL.md manquant)",
-        "source_git_unsupported": "Votre git est trop ancien (2.37 ou plus requis). Mettez git à jour ou importez via une URL"
+        "source_git_unsupported": "Votre git est trop ancien (2.37 ou plus requis). Mettez git à jour ou importez via une URL",
+        "skill_restore_renamed": "Cette version utilise un autre nom de compétence et ne peut pas être restaurée"
       },
       "import": {
         "open": "Importer depuis une source",
@@ -1338,13 +1339,34 @@
         "import": "Import",
         "evolution": "Auto-évolution"
       },
-      "importNeedsReview": "{{count}} compétence(s) importée(s) contiennent des scripts et doivent être approuvées dans « En attente de vérification » avant utilisation : {{names}}"
+      "importNeedsReview": "{{count}} compétence(s) importée(s) contiennent des scripts et doivent être approuvées dans « En attente de vérification » avant utilisation : {{names}}",
+      "restoredFrom": "restaurée depuis v{{version}}"
     },
     "sourceSection": {
       "title": "Source et versions",
       "checkUpdate": "Rechercher une mise à jour",
       "updated": "Mis à jour vers une nouvelle version",
-      "movedToReview": "La mise à jour modifie des scripts : la compétence est passée en Révision en attente et reste indisponible jusqu'à approbation"
+      "movedToReview": "La mise à jour modifie des scripts : la compétence est passée en Révision en attente et reste indisponible jusqu'à approbation",
+      "compare": "Comparer des versions",
+      "compareFrom": "De",
+      "compareTo": "À",
+      "compareRun": "Comparer",
+      "compareSame": "Choisissez deux versions différentes",
+      "noDifferences": "Aucune différence",
+      "file": {
+        "added": "Ajouté",
+        "removed": "Supprimé",
+        "modified": "Modifié"
+      },
+      "binaryFile": "Fichier binaire, contenu non affiché",
+      "tooLarge": "Fichier trop volumineux pour afficher les modifications",
+      "restore": "Restaurer",
+      "restoreTitle": "Restaurer v{{version}} ?",
+      "restoreContent": "Les fichiers de v{{version}} remplacent les fichiers actuels. Cela est enregistré comme nouvelle version ; l’historique est conservé.",
+      "restoreScripts": "Cette version contient des scripts : la compétence passe en attente de vérification et reste indisponible jusqu’à son approbation.",
+      "restored": "v{{from}} restaurée en tant que v{{version}}",
+      "restoreNoChange": "Les fichiers actuels correspondent déjà à v{{version}}",
+      "restoredNeedsReview": "v{{from}} restaurée en tant que v{{version}} ; la compétence attend une vérification et reste indisponible jusqu’à son approbation"
     }
   },
   "assistant.connectionFailed": "Échec de la connexion",

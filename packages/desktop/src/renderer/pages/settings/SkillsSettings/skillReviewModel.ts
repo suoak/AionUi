@@ -36,6 +36,7 @@ const KNOWN_ERRORS = new Set([
   'source_url_invalid',
   'source_address_blocked',
   'source_git_unsupported',
+  'skill_restore_renamed',
 ]);
 
 /** 413/502/504 bodies carry only a generic public message, so map by status. */
@@ -93,3 +94,13 @@ const CREATED_BY = new Set(['user', 'import', 'evolution']);
 /** i18n key for SkillVersion.created_by, or null to show the raw value. */
 export const versionCreatedByKey = (createdBy: string): string | null =>
   CREATED_BY.has(createdBy) ? `settings.skillsHub.review.createdBy.${createdBy}` : null;
+
+/** `source_ref` of a version created by a restore (Core E10-3): `restore:v{n}`. */
+export const restoredFromVersion = (sourceRef: string | null | undefined): number | null => {
+  const m = /^restore:v(\d+)$/.exec(sourceRef ?? '');
+  return m ? Number(m[1]) : null;
+};
+
+/** Default compare pair: previous → newest (versions are newest first). */
+export const defaultComparePair = (versionNos: number[]): { from: number; to: number } | null =>
+  versionNos.length >= 2 ? { from: versionNos[1], to: versionNos[0] } : null;

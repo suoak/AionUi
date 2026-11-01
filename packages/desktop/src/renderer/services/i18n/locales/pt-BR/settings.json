@@ -1318,7 +1318,8 @@
         "generic": "Algo deu errado, tente novamente",
         "skill_source_not_refreshable": "Esta fonte não pode ser atualizada (apenas fontes git / url)",
         "skill_import_no_skill_found": "Nenhuma habilidade encontrada na fonte (SKILL.md ausente)",
-        "source_git_unsupported": "Seu git é antigo demais (requer 2.37 ou superior). Atualize o git ou importe por URL"
+        "source_git_unsupported": "Seu git é antigo demais (requer 2.37 ou superior). Atualize o git ou importe por URL",
+        "skill_restore_renamed": "Essa versão usa outro nome de skill e não pode ser restaurada"
       },
       "import": {
         "open": "Importar de fonte",
@@ -1341,13 +1342,34 @@
         "import": "Importação",
         "evolution": "Autoevolução"
       },
-      "importNeedsReview": "{{count}} habilidade(s) importada(s) contêm scripts e precisam ser aprovadas em Aguardando revisão antes do uso: {{names}}"
+      "importNeedsReview": "{{count}} habilidade(s) importada(s) contêm scripts e precisam ser aprovadas em Aguardando revisão antes do uso: {{names}}",
+      "restoredFrom": "restaurada da v{{version}}"
     },
     "sourceSection": {
       "title": "Origem e versões",
       "checkUpdate": "Verificar atualização",
       "updated": "Atualizado para uma nova versão",
-      "movedToReview": "A atualização altera scripts; a habilidade foi para Revisão pendente e fica indisponível até ser aprovada"
+      "movedToReview": "A atualização altera scripts; a habilidade foi para Revisão pendente e fica indisponível até ser aprovada",
+      "compare": "Comparar versões",
+      "compareFrom": "De",
+      "compareTo": "Para",
+      "compareRun": "Comparar",
+      "compareSame": "Escolha duas versões diferentes",
+      "noDifferences": "Sem diferenças",
+      "file": {
+        "added": "Adicionado",
+        "removed": "Removido",
+        "modified": "Modificado"
+      },
+      "binaryFile": "Arquivo binário, conteúdo não exibido",
+      "tooLarge": "Arquivo grande demais para mostrar as alterações",
+      "restore": "Restaurar",
+      "restoreTitle": "Restaurar v{{version}}?",
+      "restoreContent": "Os arquivos da v{{version}} substituem os atuais. Isso é salvo como uma nova versão; o histórico é mantido.",
+      "restoreScripts": "Esta versão contém scripts, então a skill vai para revisão pendente e fica indisponível até ser aprovada.",
+      "restored": "v{{from}} restaurada como v{{version}}",
+      "restoreNoChange": "Os arquivos atuais já correspondem à v{{version}}",
+      "restoredNeedsReview": "v{{from}} restaurada como v{{version}}; a skill aguarda revisão e fica indisponível até ser aprovada"
     }
   },
   "assistant.connectionFailed": "Falha na conexão",

@@ -1317,7 +1317,8 @@
         "generic": "エラーが発生しました。もう一度お試しください",
         "skill_source_not_refreshable": "このソースからは更新できません（git / url ソースのみ対応）",
         "skill_import_no_skill_found": "ソースにスキルが見つかりません（SKILL.md がありません）",
-        "source_git_unsupported": "git のバージョンが古すぎます（2.37 以上が必要）。git を更新するか URL からインポートしてください"
+        "source_git_unsupported": "git のバージョンが古すぎます（2.37 以上が必要）。git を更新するか URL からインポートしてください",
+        "skill_restore_renamed": "このバージョンは別のスキル名を使っているため復元できません"
       },
       "import": {
         "open": "ソースからインポート",
@@ -1340,13 +1341,34 @@
         "import": "インポート",
         "evolution": "自動進化"
       },
-      "importNeedsReview": "インポートしたスキルのうち {{count}} 件はスクリプトを含むため、「審査待ち」で承認するまで使用できません：{{names}}"
+      "importNeedsReview": "インポートしたスキルのうち {{count}} 件はスクリプトを含むため、「審査待ち」で承認するまで使用できません：{{names}}",
+      "restoredFrom": "v{{version}} から復元"
     },
     "sourceSection": {
       "title": "ソースとバージョン",
       "checkUpdate": "更新を確認",
       "updated": "新しいバージョンに更新しました",
-      "movedToReview": "スクリプトの変更を含む更新のため、スキルは「審査待ち」に移動しました。承認されるまで使用できません"
+      "movedToReview": "スクリプトの変更を含む更新のため、スキルは「審査待ち」に移動しました。承認されるまで使用できません",
+      "compare": "バージョンを比較",
+      "compareFrom": "比較元",
+      "compareTo": "比較先",
+      "compareRun": "比較",
+      "compareSame": "異なる2つのバージョンを選択してください",
+      "noDifferences": "差分はありません",
+      "file": {
+        "added": "追加",
+        "removed": "削除",
+        "modified": "変更"
+      },
+      "binaryFile": "バイナリファイルのため内容は表示されません",
+      "tooLarge": "ファイルが大きすぎるため変更を表示できません",
+      "restore": "復元",
+      "restoreTitle": "v{{version}} を復元しますか？",
+      "restoreContent": "v{{version}} のファイルで現在のファイルを置き換えます。新しいバージョンとして保存され、履歴は残ります。",
+      "restoreScripts": "このバージョンにはスクリプトが含まれるため、スキルはレビュー待ちになり、承認まで使用できません。",
+      "restored": "v{{from}} を v{{version}} として復元しました",
+      "restoreNoChange": "現在のファイルはすでに v{{version}} と同じです",
+      "restoredNeedsReview": "v{{from}} を v{{version}} として復元しました。スキルはレビュー待ちで、承認まで使用できません"
     }
   },
   "assistant.connectionFailed": "Connection failed",
