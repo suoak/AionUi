@@ -1837,6 +1837,15 @@
       "rolesInactive": "Rollen gelten nur im WebUI-Mehrbenutzermodus.",
       "conflict": "Speichern fehlgeschlagen: {{reason}}",
       "invalid": "Ungültiger Wert: {{reason}}"
+    },
+    "encryptionRoot": {
+      "title": "Speicher-Verschlüsselungsschlüssel",
+      "keychain": "Eine Kopie des Speicher-Verschlüsselungsschlüssels liegt im System-Schlüsselbund und wird bei jedem Start geprüft. Der Schlüssel in der lokalen Datenbank bleibt der Hauptschlüssel.",
+      "migrated": "Der Speicher-Verschlüsselungsschlüssel wurde bei diesem Start in den System-Schlüsselbund kopiert. Der Schlüssel in der lokalen Datenbank bleibt der Hauptschlüssel.",
+      "pending": "Der Speicher-Verschlüsselungsschlüssel wird beim nächsten Start von CSBU WorkMate in den System-Schlüsselbund kopiert.",
+      "unavailable": "Der System-Schlüsselbund ist auf diesem Gerät nicht verfügbar. CSBU WorkMate verwendet weiterhin den Schlüssel aus der lokalen Datenbank.",
+      "error": "Die Kopie im System-Schlüsselbund konnte nicht geprüft werden. CSBU WorkMate verwendet weiterhin den Schlüssel aus der lokalen Datenbank.",
+      "staleReplaced": "Eine ältere Kopie im Schlüsselbund stimmte nicht überein und wurde beiseitegelegt (nicht gelöscht)."
     }
   }
 }

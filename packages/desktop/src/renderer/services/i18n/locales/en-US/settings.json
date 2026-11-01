@@ -1837,6 +1837,15 @@
       "rolesInactive": "Roles only apply in multi-user WebUI mode.",
       "conflict": "Couldn't save: {{reason}}",
       "invalid": "Invalid value: {{reason}}"
+    },
+    "encryptionRoot": {
+      "title": "Storage encryption key",
+      "keychain": "A copy of the storage encryption key is kept in the system keychain and checked at every launch. The copy in the local database is still kept as the primary key.",
+      "migrated": "The storage encryption key was copied to the system keychain during this launch. The copy in the local database is still kept as the primary key.",
+      "pending": "The storage encryption key will be copied to the system keychain on the next launch of CSBU WorkMate.",
+      "unavailable": "The system keychain is not available on this device, so CSBU WorkMate keeps using the key stored in its local database.",
+      "error": "Couldn't check the system keychain copy. CSBU WorkMate keeps using the key stored in its local database.",
+      "staleReplaced": "An older keychain copy did not match and was set aside (not deleted)."
     }
   }
 }

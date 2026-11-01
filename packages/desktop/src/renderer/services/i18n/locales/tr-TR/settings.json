@@ -1837,6 +1837,15 @@
       "rolesInactive": "Roller yalnızca çok kullanıcılı WebUI modunda geçerlidir.",
       "conflict": "Kaydedilemedi: {{reason}}",
       "invalid": "Geçersiz değer: {{reason}}"
+    },
+    "encryptionRoot": {
+      "title": "Depolama şifreleme anahtarı",
+      "keychain": "Depolama şifreleme anahtarının bir kopyası sistem anahtar zincirinde tutulur ve her açılışta kontrol edilir. Yerel veritabanındaki anahtar birincil anahtar olarak kalır.",
+      "migrated": "Depolama şifreleme anahtarı bu açılışta sistem anahtar zincirine kopyalandı. Yerel veritabanındaki anahtar birincil anahtar olarak kalır.",
+      "pending": "Depolama şifreleme anahtarı, CSBU WorkMate bir sonraki açılışında sistem anahtar zincirine kopyalanacak.",
+      "unavailable": "Bu cihazda sistem anahtar zinciri kullanılamıyor; CSBU WorkMate yerel veritabanında saklanan anahtarı kullanmaya devam ediyor.",
+      "error": "Sistem anahtar zincirindeki kopya kontrol edilemedi. CSBU WorkMate yerel veritabanında saklanan anahtarı kullanmaya devam ediyor.",
+      "staleReplaced": "Eski bir anahtar zinciri kopyası eşleşmedi ve kenara alındı (silinmedi)."
     }
   }
 }

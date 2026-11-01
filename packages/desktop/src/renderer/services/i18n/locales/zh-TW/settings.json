@@ -1839,6 +1839,15 @@
       "rolesInactive": "角色只在多使用者 WebUI 模式下生效。",
       "conflict": "無法儲存：{{reason}}",
       "invalid": "值無效：{{reason}}"
+    },
+    "encryptionRoot": {
+      "title": "儲存加密金鑰",
+      "keychain": "儲存加密金鑰已在系統鑰匙圈中保存一份副本，每次啟動都會校驗。本機資料庫中的金鑰仍作為主金鑰保留。",
+      "migrated": "本次啟動已將儲存加密金鑰複製到系統鑰匙圈。本機資料庫中的金鑰仍作為主金鑰保留。",
+      "pending": "下次啟動 CSBU WorkMate 時會將儲存加密金鑰複製到系統鑰匙圈。",
+      "unavailable": "此裝置上的系統鑰匙圈無法使用，CSBU WorkMate 繼續使用本機資料庫中保存的金鑰。",
+      "error": "無法檢查系統鑰匙圈中的副本。CSBU WorkMate 繼續使用本機資料庫中保存的金鑰。",
+      "staleReplaced": "舊的鑰匙圈副本與目前金鑰不一致，已另存備份（未刪除）。"
     }
   }
 }

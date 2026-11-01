@@ -1838,6 +1838,15 @@
       "rolesInactive": "角色只在多用户 WebUI 模式下生效。",
       "conflict": "无法保存：{{reason}}",
       "invalid": "值无效：{{reason}}"
+    },
+    "encryptionRoot": {
+      "title": "存储加密密钥",
+      "keychain": "存储加密密钥已在系统钥匙串中保存一份副本，每次启动都会校验。本地数据库中的密钥仍作为主密钥保留。",
+      "migrated": "本次启动已把存储加密密钥复制到系统钥匙串。本地数据库中的密钥仍作为主密钥保留。",
+      "pending": "下次启动 CSBU WorkMate 时会把存储加密密钥复制到系统钥匙串。",
+      "unavailable": "此设备上的系统钥匙串不可用，CSBU WorkMate 继续使用本地数据库中保存的密钥。",
+      "error": "无法检查系统钥匙串中的副本。CSBU WorkMate 继续使用本地数据库中保存的密钥。",
+      "staleReplaced": "旧的钥匙串副本与当前密钥不一致，已另存备份（未删除）。"
     }
   }
 }

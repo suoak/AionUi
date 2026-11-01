@@ -1837,6 +1837,15 @@
       "rolesInactive": "Los roles solo se aplican en el modo WebUI multiusuario.",
       "conflict": "No se pudo guardar: {{reason}}",
       "invalid": "Valor no válido: {{reason}}"
+    },
+    "encryptionRoot": {
+      "title": "Clave de cifrado del almacenamiento",
+      "keychain": "Se guarda una copia de la clave de cifrado del almacenamiento en el llavero del sistema y se comprueba en cada inicio. La clave de la base de datos local sigue siendo la clave principal.",
+      "migrated": "La clave de cifrado del almacenamiento se copió al llavero del sistema en este inicio. La clave de la base de datos local sigue siendo la clave principal.",
+      "pending": "La clave de cifrado del almacenamiento se copiará al llavero del sistema la próxima vez que inicies CSBU WorkMate.",
+      "unavailable": "El llavero del sistema no está disponible en este dispositivo, así que CSBU WorkMate sigue usando la clave guardada en su base de datos local.",
+      "error": "No se pudo comprobar la copia del llavero del sistema. CSBU WorkMate sigue usando la clave guardada en su base de datos local.",
+      "staleReplaced": "Una copia anterior del llavero no coincidía y se apartó (no se eliminó)."
     }
   }
 }

@@ -18,6 +18,7 @@ import SettingsPageHeader from '../components/SettingsPageHeader';
 import SettingsPageWrapper from '../components/SettingsPageWrapper';
 import AgentPermissionsPanel, { type AssistantOption } from './AgentPermissionsPanel';
 import AuditPanel from './AuditPanel';
+import EncryptionRootHint from './EncryptionRootHint';
 import PoliciesPanel from './PoliciesPanel';
 import RolesPanel from './RolesPanel';
 import { getGovernanceErrorMessage } from './governanceModel';
@@ -91,6 +92,7 @@ export const GovernanceSettingsContent: React.FC<GovernanceSettingsContentProps>
       {me && !me.roles_active ? (
         <Alert type='info' data-testid='governance-single-user' content={t('settings.governance.singleUser')} />
       ) : null}
+      <EncryptionRootHint />
       {!me && !loadError ? <Spin className='self-center' /> : null}
       {me ? (
         <Tabs activeTab={tab} onChange={(key) => setTab(key as GovernanceTab)} data-testid='governance-tabs'>
