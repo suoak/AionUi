@@ -14,10 +14,12 @@
 
 import type {
   SkillGovernance,
+  SkillRestoreResult,
   SkillReviewDecision,
   SkillSourceDetail,
   SkillSourceImportRequest,
   SkillSourceSyncResult,
+  SkillVersionDiff,
 } from '@/common/types/skills/skillSources';
 import type { EncryptionRootStatus } from '@/common/types/encryptionRoot';
 import type { IConfirmation } from '@/common/chat/chatLib';
@@ -1925,6 +1927,14 @@ export const fs = {
   ),
   refreshSkillFromSource: httpPost<SkillSourceSyncResult, { skill_id: string }>(
     (p) => `/api/skills/id/${encodeURIComponent(p.skill_id)}/refresh`,
+    () => ({})
+  ),
+  // M8 E10-3 (aioncore #220): compare two stored versions / restore one as a new version.
+  diffSkillVersions: httpGet<SkillVersionDiff, { skill_id: string; from: number; to: number }>(
+    (p) => `/api/skills/id/${encodeURIComponent(p.skill_id)}/versions/${p.from}/diff/${p.to}`
+  ),
+  restoreSkillVersion: httpPost<SkillRestoreResult, { skill_id: string; version_no: number }>(
+    (p) => `/api/skills/id/${encodeURIComponent(p.skill_id)}/versions/${p.version_no}/restore`,
     () => ({})
   ),
   reviewSkill: httpPost<SkillGovernance, { skill_id: string; decision: SkillReviewDecision }>(

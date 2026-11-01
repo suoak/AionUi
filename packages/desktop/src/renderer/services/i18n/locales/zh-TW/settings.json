@@ -1317,7 +1317,8 @@
         "generic": "操作失敗，請重試",
         "skill_source_not_refreshable": "無法從此來源重新整理（僅 git / url 來源支援）",
         "skill_import_no_skill_found": "來源中沒有找到技能（缺少 SKILL.md）",
-        "source_git_unsupported": "本機 git 版本過低（需要 2.37 以上），請升級 git 或改用 URL 匯入"
+        "source_git_unsupported": "本機 git 版本過低（需要 2.37 以上），請升級 git 或改用 URL 匯入",
+        "skill_restore_renamed": "此版本使用不同的技能名稱，無法還原"
       },
       "import": {
         "open": "從來源匯入",
@@ -1340,13 +1341,34 @@
         "import": "匯入",
         "evolution": "自動進化"
       },
-      "importNeedsReview": "{{count}} 個匯入的技能含腳本，需要在「待審核」中核准後才能使用：{{names}}"
+      "importNeedsReview": "{{count}} 個匯入的技能含腳本，需要在「待審核」中核准後才能使用：{{names}}",
+      "restoredFrom": "還原自 v{{version}}"
     },
     "sourceSection": {
       "title": "來源與版本",
       "checkUpdate": "檢查更新",
       "updated": "已更新到新版本",
-      "movedToReview": "更新包含腳本變更，技能已移入「待審核」，核准前無法使用"
+      "movedToReview": "更新包含腳本變更，技能已移入「待審核」，核准前無法使用",
+      "compare": "比較版本",
+      "compareFrom": "起始",
+      "compareTo": "目標",
+      "compareRun": "比較",
+      "compareSame": "請選擇兩個不同的版本",
+      "noDifferences": "沒有差異",
+      "file": {
+        "added": "新增",
+        "removed": "刪除",
+        "modified": "修改"
+      },
+      "binaryFile": "二進位檔案，不顯示內容",
+      "tooLarge": "檔案過大，無法顯示變更",
+      "restore": "還原",
+      "restoreTitle": "還原 v{{version}}？",
+      "restoreContent": "v{{version}} 的檔案將取代目前檔案。還原會儲存為新版本，歷史版本保留。",
+      "restoreScripts": "此版本包含腳本，還原後技能將進入待審核，核准前無法使用。",
+      "restored": "已將 v{{from}} 還原為 v{{version}}",
+      "restoreNoChange": "目前檔案已與 v{{version}} 一致",
+      "restoredNeedsReview": "已將 v{{from}} 還原為 v{{version}}；技能正在等待審核，核准前無法使用"
     }
   },
   "assistant.connectionFailed": "Connection failed",

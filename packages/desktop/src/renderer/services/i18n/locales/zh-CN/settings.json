@@ -1315,7 +1315,8 @@
         "generic": "操作失败，请重试",
         "skill_source_not_refreshable": "无法从该来源刷新（仅 git / url 来源支持）",
         "skill_import_no_skill_found": "来源中没有找到技能（缺少 SKILL.md）",
-        "source_git_unsupported": "本机 git 版本过低（需要 2.37 及以上），请升级 git 或改用 URL 导入"
+        "source_git_unsupported": "本机 git 版本过低（需要 2.37 及以上），请升级 git 或改用 URL 导入",
+        "skill_restore_renamed": "该版本使用了不同的技能名称，无法恢复"
       },
       "import": {
         "open": "从来源导入",
@@ -1338,13 +1339,34 @@
         "import": "导入",
         "evolution": "自动进化"
       },
-      "importNeedsReview": "{{count}} 个导入的技能含脚本，需要在「待审核」中批准后才能使用：{{names}}"
+      "importNeedsReview": "{{count}} 个导入的技能含脚本，需要在「待审核」中批准后才能使用：{{names}}",
+      "restoredFrom": "恢复自 v{{version}}"
     },
     "sourceSection": {
       "title": "来源与版本",
       "checkUpdate": "检查更新",
       "updated": "已更新到新版本",
-      "movedToReview": "更新包含脚本变更，技能已移入「待审核」，批准前不可用"
+      "movedToReview": "更新包含脚本变更，技能已移入「待审核」，批准前不可用",
+      "compare": "对比版本",
+      "compareFrom": "起始",
+      "compareTo": "目标",
+      "compareRun": "对比",
+      "compareSame": "请选择两个不同的版本",
+      "noDifferences": "没有差异",
+      "file": {
+        "added": "新增",
+        "removed": "删除",
+        "modified": "修改"
+      },
+      "binaryFile": "二进制文件，不显示内容",
+      "tooLarge": "文件过大，无法显示改动",
+      "restore": "恢复",
+      "restoreTitle": "恢复 v{{version}}？",
+      "restoreContent": "v{{version}} 的文件将替换当前文件。恢复会保存为一个新版本，历史版本保留。",
+      "restoreScripts": "该版本包含脚本，恢复后技能将进入待审核，批准前不可用。",
+      "restored": "已将 v{{from}} 恢复为 v{{version}}",
+      "restoreNoChange": "当前文件已与 v{{version}} 一致",
+      "restoredNeedsReview": "已将 v{{from}} 恢复为 v{{version}}；技能正在等待审核，批准前不可用"
     }
   },
   "assistant.connectionFailed": "连接失败",
