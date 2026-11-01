@@ -36,6 +36,7 @@ describe('resolveFeedbackModule', () => {
     ['/settings/pet', 'display-desktop'],
     ['/settings/webui', 'webui-remote'],
     ['/settings/devices', 'webui-remote'],
+    ['/settings/governance', 'system-settings'],
     ['/settings/ext/telegram', 'channel'],
     ['/settings/system', 'system-settings'],
     ['/settings/about', 'system-settings'],

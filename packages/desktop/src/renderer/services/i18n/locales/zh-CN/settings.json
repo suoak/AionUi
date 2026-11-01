@@ -1717,5 +1717,127 @@
       "push": "保存推送设置失败",
       "reject": "拒绝配对请求失败"
     }
+  },
+  "governance": {
+    "navLabel": "治理",
+    "title": "治理",
+    "description": "管理 CSBU WorkMate 的启动策略、角色、智能体运行权限，以及防篡改的审计日志。",
+    "yourRole": "你的角色：{{role}}",
+    "singleUser": "当前是单用户桌面模式：角色不生效，你就是所有者。策略和审计日志照常生效。",
+    "save": "保存",
+    "tabs": {
+      "policies": "策略",
+      "roles": "角色",
+      "permissions": "智能体权限",
+      "audit": "审计日志"
+    },
+    "role": {
+      "owner": "所有者",
+      "admin": "管理员",
+      "member": "成员"
+    },
+    "policies": {
+      "readOnly": "只有所有者或管理员可以修改策略。",
+      "saved": "策略已保存",
+      "updated": "{{user}} 于 {{time}} 修改",
+      "no_yolo": {
+        "title": "禁用 YOLO 模式",
+        "description": "拒绝启动自动批准所有工具调用的会话、定时任务和批量任务。"
+      },
+      "mcp_strict_only": {
+        "title": "仅允许托管 MCP",
+        "description": "只允许 MCP 服务器列表由 WorkMate 管理的会话，智能体不能自行加载本地 MCP 服务器。"
+      },
+      "force_sandbox": {
+        "title": "强制沙箱",
+        "description": "拒绝关闭沙箱的模式，批量任务必须使用托管的 worktree。"
+      },
+      "banned_backends": {
+        "title": "禁用的智能体后端",
+        "description": "这些智能体类型不能启动。多个名称用逗号或空格分隔。",
+        "placeholder": "例如 codex, gemini",
+        "invalid": "无效名称：{{names}}"
+      }
+    },
+    "roles": {
+      "hintOwner": "所有者可以修改任何人的角色；管理员负责策略和权限。",
+      "hintAdmin": "只有所有者可以修改角色。",
+      "inactive": "角色只在多用户 WebUI 模式下生效。",
+      "empty": "没有用户",
+      "you": "你",
+      "default": "默认",
+      "saved": "角色已更新"
+    },
+    "permissions": {
+      "hint": "限制哪些角色可以启动某个助手或智能体类型。未列出的对象所有人都可以启动。",
+      "notEnforced": "运行权限会保存，但只在多用户 WebUI 模式下生效。",
+      "add": "添加规则",
+      "empty": "没有运行权限规则",
+      "edit": "编辑",
+      "editTitle": "编辑规则",
+      "kindLabel": "类型",
+      "subjectLabel": "适用对象",
+      "assistantPlaceholder": "选择助手",
+      "agentTypePlaceholder": "智能体类型，例如 claude",
+      "restrict": "只有以下角色可以启动",
+      "unrestricted": "所有人",
+      "nobody": "无人",
+      "nobodyWarning": "一个角色都不选的话，任何人都无法启动。",
+      "saved": "权限已保存",
+      "kind": {
+        "assistant": "助手",
+        "agent_type": "智能体类型"
+      }
+    },
+    "audit": {
+      "scopeAll": "显示所有用户的事件。",
+      "scopeOwn": "只显示你自己的事件。",
+      "allActions": "全部操作",
+      "allActors": "全部操作者",
+      "actorPlaceholder": "操作者 ID",
+      "verify": "校验完整性",
+      "chainOk": "哈希链完整：已校验 {{count}} 条事件",
+      "chainBroken": "哈希链在 #{{seq}} 处断开（已校验 {{count}} 条事件）",
+      "export": "导出 CSV",
+      "exported": "审计日志已导出",
+      "empty": "没有审计事件",
+      "loadMore": "加载更多",
+      "hash": "哈希",
+      "user": "用户 {{user}}",
+      "approved": "由 {{approver}} 批准",
+      "family": {
+        "config": "配置",
+        "approval": "审批",
+        "tool": "工具调用",
+        "policy": "策略",
+        "role": "角色",
+        "agent_permission": "智能体权限",
+        "device": "设备",
+        "skill": "技能",
+        "conversation": "会话",
+        "session_message": "跨会话消息",
+        "channel": "IM 渠道"
+      },
+      "actorKind": {
+        "user": "用户",
+        "agent": "智能体",
+        "device": "设备",
+        "system": "系统"
+      }
+    },
+    "error": {
+      "load": "无法加载治理设置",
+      "policy": "无法保存策略",
+      "role": "无法修改角色",
+      "permission": "无法保存权限",
+      "audit": "无法加载审计日志",
+      "verify": "无法校验审计日志",
+      "export": "无法导出审计日志",
+      "requiresUser": "治理设置只能在已登录的桌面端或 WebUI 会话中管理。",
+      "forbidden": "你没有执行此操作的权限。",
+      "rolesInactive": "角色只在多用户 WebUI 模式下生效。",
+      "conflict": "无法保存：{{reason}}",
+      "invalid": "值无效：{{reason}}"
+    }
   }
 }

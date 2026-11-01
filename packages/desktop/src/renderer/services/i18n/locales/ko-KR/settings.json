@@ -1718,5 +1718,127 @@
       "push": "푸시 설정을 저장하지 못했습니다",
       "reject": "페어링 요청을 거부하지 못했습니다"
     }
+  },
+  "governance": {
+    "navLabel": "거버넌스",
+    "title": "거버넌스",
+    "description": "CSBU WorkMate의 실행 정책, 역할, 에이전트 실행 권한, 변조 방지 감사 로그를 관리합니다.",
+    "yourRole": "내 역할: {{role}}",
+    "singleUser": "단일 사용자 데스크톱 모드입니다. 역할은 적용되지 않으며 내가 소유자입니다. 정책과 감사 로그는 계속 적용됩니다.",
+    "save": "저장",
+    "tabs": {
+      "policies": "정책",
+      "roles": "역할",
+      "permissions": "에이전트 권한",
+      "audit": "감사 로그"
+    },
+    "role": {
+      "owner": "소유자",
+      "admin": "관리자",
+      "member": "멤버"
+    },
+    "policies": {
+      "readOnly": "소유자 또는 관리자만 정책을 변경할 수 있습니다.",
+      "saved": "정책을 저장했습니다",
+      "updated": "{{time}}에 {{user}}이(가) 변경",
+      "no_yolo": {
+        "title": "YOLO 모드 차단",
+        "description": "모든 도구 호출을 자동 승인하는 세션, 예약 작업, 일괄 실행을 시작하지 않습니다."
+      },
+      "mcp_strict_only": {
+        "title": "관리형 MCP만 허용",
+        "description": "WorkMate가 MCP 서버 목록을 관리하는 세션만 허용하여 에이전트가 로컬 MCP 서버를 임의로 불러오지 못하게 합니다."
+      },
+      "force_sandbox": {
+        "title": "샌드박스 필수",
+        "description": "샌드박스를 끄는 모드를 거부하고 일괄 실행에는 관리형 worktree를 사용하도록 합니다."
+      },
+      "banned_backends": {
+        "title": "차단된 에이전트 백엔드",
+        "description": "시작할 수 없는 에이전트 유형입니다. 이름은 쉼표나 공백으로 구분하세요.",
+        "placeholder": "예: codex, gemini",
+        "invalid": "잘못된 이름: {{names}}"
+      }
+    },
+    "roles": {
+      "hintOwner": "소유자는 모든 사용자의 역할을 변경할 수 있습니다. 관리자는 정책과 권한을 관리합니다.",
+      "hintAdmin": "소유자만 역할을 변경할 수 있습니다.",
+      "inactive": "역할은 다중 사용자 WebUI 모드에서만 적용됩니다.",
+      "empty": "사용자가 없습니다",
+      "you": "나",
+      "default": "기본값",
+      "saved": "역할을 업데이트했습니다"
+    },
+    "permissions": {
+      "hint": "어시스턴트나 에이전트 유형을 시작할 수 있는 역할을 제한합니다. 목록에 없는 대상은 누구나 시작할 수 있습니다.",
+      "notEnforced": "실행 권한은 저장되지만 다중 사용자 WebUI 모드에서만 적용됩니다.",
+      "add": "규칙 추가",
+      "empty": "실행 권한 규칙이 없습니다",
+      "edit": "편집",
+      "editTitle": "규칙 편집",
+      "kindLabel": "유형",
+      "subjectLabel": "적용 대상",
+      "assistantPlaceholder": "어시스턴트 선택",
+      "agentTypePlaceholder": "에이전트 유형(예: claude)",
+      "restrict": "다음 역할만 시작 가능",
+      "unrestricted": "모든 사용자",
+      "nobody": "없음",
+      "nobodyWarning": "역할을 선택하지 않으면 아무도 시작할 수 없습니다.",
+      "saved": "권한을 저장했습니다",
+      "kind": {
+        "assistant": "어시스턴트",
+        "agent_type": "에이전트 유형"
+      }
+    },
+    "audit": {
+      "scopeAll": "모든 사용자의 이벤트를 표시합니다.",
+      "scopeOwn": "내 이벤트만 표시합니다.",
+      "allActions": "모든 작업",
+      "allActors": "모든 행위자",
+      "actorPlaceholder": "행위자 ID",
+      "verify": "무결성 검증",
+      "chainOk": "체인 정상: 이벤트 {{count}}개 확인",
+      "chainBroken": "#{{seq}}에서 체인이 끊어졌습니다(이벤트 {{count}}개 확인)",
+      "export": "CSV 내보내기",
+      "exported": "감사 로그를 내보냈습니다",
+      "empty": "감사 이벤트가 없습니다",
+      "loadMore": "더 보기",
+      "hash": "해시",
+      "user": "사용자 {{user}}",
+      "approved": "{{approver}}이(가) 승인",
+      "family": {
+        "config": "구성",
+        "approval": "승인",
+        "tool": "도구 호출",
+        "policy": "정책",
+        "role": "역할",
+        "agent_permission": "에이전트 권한",
+        "device": "기기",
+        "skill": "스킬",
+        "conversation": "대화",
+        "session_message": "세션 간 메시지",
+        "channel": "IM 채널"
+      },
+      "actorKind": {
+        "user": "사용자",
+        "agent": "에이전트",
+        "device": "기기",
+        "system": "시스템"
+      }
+    },
+    "error": {
+      "load": "거버넌스 설정을 불러오지 못했습니다",
+      "policy": "정책을 저장하지 못했습니다",
+      "role": "역할을 변경하지 못했습니다",
+      "permission": "권한을 저장하지 못했습니다",
+      "audit": "감사 로그를 불러오지 못했습니다",
+      "verify": "감사 로그를 검증하지 못했습니다",
+      "export": "감사 로그를 내보내지 못했습니다",
+      "requiresUser": "거버넌스는 로그인한 데스크톱 또는 WebUI 세션에서만 관리할 수 있습니다.",
+      "forbidden": "이 작업을 수행할 권한이 없습니다.",
+      "rolesInactive": "역할은 다중 사용자 WebUI 모드에서만 적용됩니다.",
+      "conflict": "저장하지 못했습니다: {{reason}}",
+      "invalid": "잘못된 값: {{reason}}"
+    }
   }
 }
