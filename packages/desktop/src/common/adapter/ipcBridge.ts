@@ -2759,7 +2759,15 @@ export const cron = {
 // ---------------------------------------------------------------------------
 
 export type AgentActionKind =
-  'mcp' | 'provider' | 'settings' | 'agent' | 'assistant' | 'skill' | 'cron' | 'squad' | 'work_item';
+  | 'mcp'
+  | 'provider'
+  | 'settings'
+  | 'agent'
+  | 'assistant'
+  | 'skill'
+  | 'cron'
+  | 'squad'
+  | 'work_item';
 export type AgentApprovalStatus = 'pending' | 'approved' | 'denied' | 'consumed' | 'expired';
 
 export interface IAgentApprovalRecord {
@@ -3210,7 +3218,13 @@ export interface IConversationTurnCompletedEvent {
   turn_id: string;
   status: 'pending' | 'running' | 'finished';
   state:
-    'ai_generating' | 'ai_waiting_input' | 'ai_waiting_confirmation' | 'initializing' | 'stopped' | 'error' | 'unknown';
+    | 'ai_generating'
+    | 'ai_waiting_input'
+    | 'ai_waiting_confirmation'
+    | 'initializing'
+    | 'stopped'
+    | 'error'
+    | 'unknown';
   detail: string;
   can_send_message: boolean;
   runtime: {
