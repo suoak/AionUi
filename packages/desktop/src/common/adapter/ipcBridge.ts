@@ -44,6 +44,16 @@ import type {
   ISetDevicePushInput,
   ITaskApprovalChangedEvent,
 } from '../types/device';
+import type {
+  IAgentPermissions,
+  IAuditChainVerification,
+  IAuditEventPage,
+  IAuditQuery,
+  IGovernanceMe,
+  IGovernancePolicies,
+  IGovernanceRoles,
+  ISetAgentPermissionInput,
+} from '../types/governance';
 import type { OpenDialogOptions } from 'electron';
 import type {
   ICssTheme,
@@ -3582,6 +3592,54 @@ export const device = {
     ),
     changed: wsEmitter<IDevicePairingView>('device.pairing'),
   },
+};
+
+/** Build `?a=1&b=x` from the defined, non-empty audit filters. */
+export function buildAuditQueryString(query: IAuditQuery | undefined): string {
+  if (!query) return '';
+  const params = new URLSearchParams();
+  for (const [key, value] of Object.entries(query)) {
+    if (value === undefined || value === null || value === '') continue;
+    params.set(key, String(value));
+  }
+  const text = params.toString();
+  return text ? `?${text}` : '';
+}
+
+/**
+ * M8 E12 governance: roles, agent run permissions and launch policies.
+ * User-session only (Core answers 403 `GOVERNANCE_REQUIRES_USER` to device and
+ * agent tokens). Every change is written to the audit ledger by Core.
+ */
+export const governance = {
+  me: httpGet<IGovernanceMe, void>('/api/governance/me'),
+  policies: httpGet<IGovernancePolicies, void>('/api/governance/policies'),
+  setPolicy: httpPut<IGovernancePolicies, { key: string; value: unknown }>(
+    (p) => `/api/governance/policies/${encodeURIComponent(p.key)}`,
+    (p) => ({ value: p.value })
+  ),
+  roles: httpGet<IGovernanceRoles, void>('/api/governance/roles'),
+  setRole: httpPut<IGovernanceRoles, { user_id: string; role: string }>(
+    (p) => `/api/governance/roles/${encodeURIComponent(p.user_id)}`,
+    (p) => ({ role: p.role })
+  ),
+  agentPermissions: httpGet<IAgentPermissions, void>('/api/governance/agent-permissions'),
+  setAgentPermission: httpPut<IAgentPermissions, ISetAgentPermissionInput>(
+    '/api/governance/agent-permissions',
+    (p) => ({ subject_kind: p.subject_kind, subject_id: p.subject_id, allowed_roles: p.allowed_roles })
+  ),
+};
+
+/** M8 E12 append-only audit ledger (read / verify / CSV export). */
+export const audit = {
+  /** Newest first; page backwards with `before_seq = next_before_seq`. */
+  events: httpGet<IAuditEventPage, IAuditQuery | undefined>((q) => `/api/audit/events${buildAuditQueryString(q)}`),
+  /** Re-hash the whole chain. */
+  verify: httpGet<IAuditChainVerification, void>('/api/audit/verify'),
+  /** RFC 4180 CSV in chain order. */
+  exportCsv: httpGet<string, IAuditQuery | undefined>((q) => `/api/audit/export.csv${buildAuditQueryString(q)}`, {
+    responseType: 'text',
+  }),
 };
 
 export const channel = {

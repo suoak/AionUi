@@ -1716,5 +1716,127 @@
       "push": "Bildirim ayarı kaydedilemedi",
       "reject": "Eşleştirme isteği reddedilemedi"
     }
+  },
+  "governance": {
+    "navLabel": "Yönetişim",
+    "title": "Yönetişim",
+    "description": "CSBU WorkMate için başlatma politikaları, roller, ajan çalıştırma izinleri ve kurcalamaya dayanıklı denetim günlüğü.",
+    "yourRole": "Rolünüz: {{role}}",
+    "singleUser": "Tek kullanıcılı masaüstü modu: roller uygulanmaz ve sahip sizsiniz. Politikalar ve denetim günlüğü yine geçerlidir.",
+    "save": "Kaydet",
+    "tabs": {
+      "policies": "Politikalar",
+      "roles": "Roller",
+      "permissions": "Ajan izinleri",
+      "audit": "Denetim günlüğü"
+    },
+    "role": {
+      "owner": "Sahip",
+      "admin": "Yönetici",
+      "member": "Üye"
+    },
+    "policies": {
+      "readOnly": "Politikaları yalnızca bir sahip veya yönetici değiştirebilir.",
+      "saved": "Politika kaydedildi",
+      "updated": "{{time}} tarihinde {{user}} değiştirdi",
+      "no_yolo": {
+        "title": "YOLO modunu engelle",
+        "description": "Her araç çağrısını otomatik onaylayan oturumları, zamanlanmış görevleri veya toplu çalıştırmaları başlatma."
+      },
+      "mcp_strict_only": {
+        "title": "Yalnızca yönetilen MCP",
+        "description": "Yalnızca MCP sunucu listesi WorkMate tarafından yönetilen oturumlara izin ver; ajanlar yerel MCP sunucularını kendileri yükleyemez."
+      },
+      "force_sandbox": {
+        "title": "Sandbox zorunlu",
+        "description": "Sandbox'ı kapatan modları reddet ve toplu çalıştırmaların yönetilen bir worktree kullanmasını zorunlu kıl."
+      },
+      "banned_backends": {
+        "title": "Engellenen ajan arka uçları",
+        "description": "Başlatılamayan ajan türleri. Adları virgül veya boşlukla ayırın.",
+        "placeholder": "örn. codex, gemini",
+        "invalid": "Geçersiz adlar: {{names}}"
+      }
+    },
+    "roles": {
+      "hintOwner": "Sahipler herkesin rolünü değiştirebilir. Yöneticiler politikaları ve izinleri yönetir.",
+      "hintAdmin": "Rolleri yalnızca bir sahip değiştirebilir.",
+      "inactive": "Roller yalnızca çok kullanıcılı WebUI modunda geçerlidir.",
+      "empty": "Kullanıcı yok",
+      "you": "Siz",
+      "default": "Varsayılan",
+      "saved": "Rol güncellendi"
+    },
+    "permissions": {
+      "hint": "Bir asistanı veya ajan türünü hangi rollerin başlatabileceğini sınırlayın. Listede olmayanları herkes başlatabilir.",
+      "notEnforced": "Çalıştırma izinleri kaydedilir ancak yalnızca çok kullanıcılı WebUI modunda uygulanır.",
+      "add": "Kural ekle",
+      "empty": "Çalıştırma izni kuralı yok",
+      "edit": "Düzenle",
+      "editTitle": "Kuralı düzenle",
+      "kindLabel": "Tür",
+      "subjectLabel": "Uygulandığı yer",
+      "assistantPlaceholder": "Bir asistan seçin",
+      "agentTypePlaceholder": "Ajan türü, örn. claude",
+      "restrict": "Yalnızca bu roller başlatabilir",
+      "unrestricted": "Herkes",
+      "nobody": "Hiç kimse",
+      "nobodyWarning": "Hiç rol seçilmezse kimse başlatamaz.",
+      "saved": "İzin kaydedildi",
+      "kind": {
+        "assistant": "Asistan",
+        "agent_type": "Ajan türü"
+      }
+    },
+    "audit": {
+      "scopeAll": "Tüm kullanıcıların olayları gösteriliyor.",
+      "scopeOwn": "Yalnızca sizin olaylarınız gösteriliyor.",
+      "allActions": "Tüm eylemler",
+      "allActors": "Tüm aktörler",
+      "actorPlaceholder": "Aktör kimliği",
+      "verify": "Bütünlüğü doğrula",
+      "chainOk": "Zincir sağlam: {{count}} olay kontrol edildi",
+      "chainBroken": "Zincir #{{seq}} noktasında kırık ({{count}} olay kontrol edildi)",
+      "export": "CSV olarak dışa aktar",
+      "exported": "Denetim günlüğü dışa aktarıldı",
+      "empty": "Denetim olayı yok",
+      "loadMore": "Daha fazla yükle",
+      "hash": "Hash",
+      "user": "Kullanıcı {{user}}",
+      "approved": "Onaylayan: {{approver}}",
+      "family": {
+        "config": "Yapılandırma",
+        "approval": "Onaylar",
+        "tool": "Araç çağrıları",
+        "policy": "Politikalar",
+        "role": "Roller",
+        "agent_permission": "Ajan izinleri",
+        "device": "Cihazlar",
+        "skill": "Beceriler",
+        "conversation": "Konuşmalar",
+        "session_message": "Oturumlar arası mesajlar",
+        "channel": "IM kanalları"
+      },
+      "actorKind": {
+        "user": "Kullanıcı",
+        "agent": "Ajan",
+        "device": "Cihaz",
+        "system": "Sistem"
+      }
+    },
+    "error": {
+      "load": "Yönetişim ayarları yüklenemedi",
+      "policy": "Politika kaydedilemedi",
+      "role": "Rol değiştirilemedi",
+      "permission": "İzin kaydedilemedi",
+      "audit": "Denetim günlüğü yüklenemedi",
+      "verify": "Denetim günlüğü doğrulanamadı",
+      "export": "Denetim günlüğü dışa aktarılamadı",
+      "requiresUser": "Yönetişim yalnızca oturum açılmış bir masaüstü veya WebUI oturumundan yönetilebilir.",
+      "forbidden": "Bunu yapma izniniz yok.",
+      "rolesInactive": "Roller yalnızca çok kullanıcılı WebUI modunda geçerlidir.",
+      "conflict": "Kaydedilemedi: {{reason}}",
+      "invalid": "Geçersiz değer: {{reason}}"
+    }
   }
 }

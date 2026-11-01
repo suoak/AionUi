@@ -1716,5 +1716,127 @@
       "push": "Push-Einstellung konnte nicht gespeichert werden",
       "reject": "Kopplungsanfrage konnte nicht abgelehnt werden"
     }
+  },
+  "governance": {
+    "navLabel": "Governance",
+    "title": "Governance",
+    "description": "Startrichtlinien, Rollen, Agent-Ausführungsrechte und das manipulationssichere Audit-Protokoll von CSBU WorkMate.",
+    "yourRole": "Deine Rolle: {{role}}",
+    "singleUser": "Desktop-Einzelbenutzermodus: Rollen werden nicht durchgesetzt und du bist Eigentümer. Richtlinien und Audit-Protokoll gelten weiterhin.",
+    "save": "Speichern",
+    "tabs": {
+      "policies": "Richtlinien",
+      "roles": "Rollen",
+      "permissions": "Agent-Berechtigungen",
+      "audit": "Audit-Protokoll"
+    },
+    "role": {
+      "owner": "Eigentümer",
+      "admin": "Admin",
+      "member": "Mitglied"
+    },
+    "policies": {
+      "readOnly": "Nur ein Eigentümer oder Admin kann Richtlinien ändern.",
+      "saved": "Richtlinie gespeichert",
+      "updated": "Geändert am {{time}} von {{user}}",
+      "no_yolo": {
+        "title": "YOLO-Modus sperren",
+        "description": "Sitzungen, geplante Aufgaben oder Batch-Läufe, die jeden Tool-Aufruf automatisch genehmigen, werden nicht gestartet."
+      },
+      "mcp_strict_only": {
+        "title": "Nur verwaltetes MCP",
+        "description": "Nur Sitzungen erlauben, deren MCP-Serverliste von WorkMate verwaltet wird, damit Agents keine lokalen MCP-Server selbst laden."
+      },
+      "force_sandbox": {
+        "title": "Sandbox erzwingen",
+        "description": "Modi ablehnen, die die Sandbox abschalten, und für Batch-Läufe einen verwalteten Worktree verlangen."
+      },
+      "banned_backends": {
+        "title": "Gesperrte Agent-Backends",
+        "description": "Agent-Typen, die nicht gestartet werden können. Namen mit Kommas oder Leerzeichen trennen.",
+        "placeholder": "z. B. codex, gemini",
+        "invalid": "Ungültige Namen: {{names}}"
+      }
+    },
+    "roles": {
+      "hintOwner": "Eigentümer können alle Rollen ändern. Admins verwalten Richtlinien und Berechtigungen.",
+      "hintAdmin": "Nur ein Eigentümer kann Rollen ändern.",
+      "inactive": "Rollen gelten nur im WebUI-Mehrbenutzermodus.",
+      "empty": "Keine Benutzer",
+      "you": "Du",
+      "default": "Standard",
+      "saved": "Rolle aktualisiert"
+    },
+    "permissions": {
+      "hint": "Legt fest, welche Rollen einen Assistenten oder Agent-Typ starten dürfen. Nicht aufgeführte Einträge darf jeder starten.",
+      "notEnforced": "Ausführungsrechte werden gespeichert, aber nur im WebUI-Mehrbenutzermodus durchgesetzt.",
+      "add": "Regel hinzufügen",
+      "empty": "Keine Regeln für Ausführungsrechte",
+      "edit": "Bearbeiten",
+      "editTitle": "Regel bearbeiten",
+      "kindLabel": "Typ",
+      "subjectLabel": "Gilt für",
+      "assistantPlaceholder": "Assistenten wählen",
+      "agentTypePlaceholder": "Agent-Typ, z. B. claude",
+      "restrict": "Nur diese Rollen dürfen starten",
+      "unrestricted": "Alle",
+      "nobody": "Niemand",
+      "nobodyWarning": "Ohne ausgewählte Rolle kann niemand starten.",
+      "saved": "Berechtigung gespeichert",
+      "kind": {
+        "assistant": "Assistent",
+        "agent_type": "Agent-Typ"
+      }
+    },
+    "audit": {
+      "scopeAll": "Ereignisse aller Benutzer werden angezeigt.",
+      "scopeOwn": "Nur deine eigenen Ereignisse werden angezeigt.",
+      "allActions": "Alle Aktionen",
+      "allActors": "Alle Akteure",
+      "actorPlaceholder": "Akteur-ID",
+      "verify": "Integrität prüfen",
+      "chainOk": "Kette intakt: {{count}} Ereignisse geprüft",
+      "chainBroken": "Kette bei #{{seq}} unterbrochen ({{count}} Ereignisse geprüft)",
+      "export": "CSV exportieren",
+      "exported": "Audit-Protokoll exportiert",
+      "empty": "Keine Audit-Ereignisse",
+      "loadMore": "Mehr laden",
+      "hash": "Hash",
+      "user": "Benutzer {{user}}",
+      "approved": "Genehmigt von {{approver}}",
+      "family": {
+        "config": "Konfiguration",
+        "approval": "Genehmigungen",
+        "tool": "Tool-Aufrufe",
+        "policy": "Richtlinien",
+        "role": "Rollen",
+        "agent_permission": "Agent-Berechtigungen",
+        "device": "Geräte",
+        "skill": "Skills",
+        "conversation": "Unterhaltungen",
+        "session_message": "Sitzungsübergreifende Nachrichten",
+        "channel": "IM-Kanäle"
+      },
+      "actorKind": {
+        "user": "Benutzer",
+        "agent": "Agent",
+        "device": "Gerät",
+        "system": "System"
+      }
+    },
+    "error": {
+      "load": "Governance-Einstellungen konnten nicht geladen werden",
+      "policy": "Richtlinie konnte nicht gespeichert werden",
+      "role": "Rolle konnte nicht geändert werden",
+      "permission": "Berechtigung konnte nicht gespeichert werden",
+      "audit": "Audit-Protokoll konnte nicht geladen werden",
+      "verify": "Audit-Protokoll konnte nicht geprüft werden",
+      "export": "Audit-Protokoll konnte nicht exportiert werden",
+      "requiresUser": "Governance kann nur aus einer angemeldeten Desktop- oder WebUI-Sitzung verwaltet werden.",
+      "forbidden": "Dafür hast du keine Berechtigung.",
+      "rolesInactive": "Rollen gelten nur im WebUI-Mehrbenutzermodus.",
+      "conflict": "Speichern fehlgeschlagen: {{reason}}",
+      "invalid": "Ungültiger Wert: {{reason}}"
+    }
   }
 }
