@@ -1476,6 +1476,25 @@
         "removed": "حذف شد",
         "orphaned": "یتیم"
       }
+    },
+    "githubImport": {
+      "open": "وارد کردن از GitHub",
+      "title": "وارد کردن Issueهای GitHub",
+      "hint": "Issueهای باز یک مخزن را با ورود GitHub CLI (gh) شما به Backlog وارد می‌کند. فقط خواندنی: چیزی در GitHub نوشته نمی‌شود. وارد کردن دوباره فقط عنوان، توضیح و برچسب‌ها را به‌روز می‌کند.",
+      "repo": "مخزن",
+      "query": "فیلتر",
+      "queryPlaceholder": "اختیاری، مثلاً label:bug",
+      "submit": "وارد کردن",
+      "result": "{{created}} ایجاد، {{updated}} به‌روزرسانی، {{unchanged}} بدون تغییر.",
+      "errors": {
+        "cliMissing": "GitHub CLI (gh) نصب نیست. آن را نصب کنید و gh auth login را اجرا کنید.",
+        "notAuthenticated": "GitHub CLI وارد نشده است. gh auth login را اجرا کنید و دوباره تلاش کنید.",
+        "repoNotFound": "مخزن پیدا نشد یا حساب GitHub شما به آن دسترسی ندارد.",
+        "timeout": "GitHub به‌موقع پاسخ نداد. دوباره تلاش کنید.",
+        "invalidInput": "مخزن (owner/name) و فیلتر را بررسی کنید.",
+        "unsupported": "این نسخه از بک‌اند هنوز از وارد کردن GitHub پشتیبانی نمی‌کند.",
+        "failed": "وارد کردن ناموفق بود. جزئیات را در گزارش بک‌اند ببینید."
+      }
     }
   },
   "squadRouteOnly": {

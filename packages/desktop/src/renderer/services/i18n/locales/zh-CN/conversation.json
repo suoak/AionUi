@@ -1476,6 +1476,25 @@
         "removed": "已移除",
         "orphaned": "孤立"
       }
+    },
+    "githubImport": {
+      "open": "从 GitHub 导入",
+      "title": "导入 GitHub Issues",
+      "hint": "使用你本机 GitHub CLI（gh）的登录，把一个仓库的未关闭 Issue 导入到待办（Backlog）。只读：不会回写 GitHub。再次导入只刷新标题、描述和标签。",
+      "repo": "仓库",
+      "query": "筛选",
+      "queryPlaceholder": "可选，例如 label:bug",
+      "submit": "导入",
+      "result": "新建 {{created}} 个，更新 {{updated}} 个，未变化 {{unchanged}} 个。",
+      "errors": {
+        "cliMissing": "未安装 GitHub CLI（gh）。请安装后运行 gh auth login。",
+        "notAuthenticated": "GitHub CLI 未登录。请运行 gh auth login 后重试。",
+        "repoNotFound": "仓库不存在，或你的 GitHub 账号无权访问。",
+        "timeout": "GitHub 响应超时，请重试。",
+        "invalidInput": "请检查仓库（owner/name）和筛选条件。",
+        "unsupported": "当前后端版本尚不支持 GitHub 导入。",
+        "failed": "导入失败，详情请查看后端日志。"
+      }
     }
   },
   "squadRouteOnly": {

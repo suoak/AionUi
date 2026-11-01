@@ -1477,6 +1477,25 @@
         "removed": "Entfernt",
         "orphaned": "Verwaist"
       }
+    },
+    "githubImport": {
+      "open": "Aus GitHub importieren",
+      "title": "GitHub-Issues importieren",
+      "hint": "Importiert offene Issues eines Repositorys mit deiner GitHub-CLI-Anmeldung (gh) in den Backlog. Nur lesend: Nichts wird nach GitHub zurückgeschrieben. Ein erneuter Import aktualisiert nur Titel, Beschreibung und Labels.",
+      "repo": "Repository",
+      "query": "Filter",
+      "queryPlaceholder": "Optional, z. B. label:bug",
+      "submit": "Importieren",
+      "result": "{{created}} erstellt, {{updated}} aktualisiert, {{unchanged}} unverändert.",
+      "errors": {
+        "cliMissing": "Die GitHub CLI (gh) ist nicht installiert. Installiere sie und führe gh auth login aus.",
+        "notAuthenticated": "Die GitHub CLI ist nicht angemeldet. Führe gh auth login aus und versuche es erneut.",
+        "repoNotFound": "Repository nicht gefunden oder dein GitHub-Konto hat keinen Zugriff.",
+        "timeout": "GitHub hat nicht rechtzeitig geantwortet. Versuche es erneut.",
+        "invalidInput": "Prüfe das Repository (owner/name) und den Filter.",
+        "unsupported": "Diese Backend-Version unterstützt den GitHub-Import noch nicht.",
+        "failed": "Import fehlgeschlagen. Details stehen im Backend-Protokoll."
+      }
     }
   },
   "squadRouteOnly": {
