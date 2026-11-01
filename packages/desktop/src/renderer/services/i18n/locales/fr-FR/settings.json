@@ -1316,7 +1316,11 @@
         "skill_source_not_refreshable": "Cette source ne peut pas être actualisée (sources git / url uniquement)",
         "skill_import_no_skill_found": "Aucune compétence trouvée dans la source (SKILL.md manquant)",
         "source_git_unsupported": "Votre git est trop ancien (2.37 ou plus requis). Mettez git à jour ou importez via une URL",
-        "skill_restore_renamed": "Cette version utilise un autre nom de compétence et ne peut pas être restaurée"
+        "skill_restore_renamed": "Cette version utilise un autre nom de compétence et ne peut pas être restaurée",
+        "skill_copy_own": "Cette compétence d'équipe vous appartient déjà",
+        "skill_copy_unavailable": "Cette compétence d'équipe est en attente de vérification ou désactivée",
+        "skill_name_taken": "Vous avez déjà une compétence portant ce nom",
+        "skill_publish_forbidden": "Seuls les propriétaires et administrateurs peuvent partager des compétences avec l'équipe"
       },
       "import": {
         "open": "Importer depuis une source",
@@ -1367,6 +1371,26 @@
       "restored": "v{{from}} restaurée en tant que v{{version}}",
       "restoreNoChange": "Les fichiers actuels correspondent déjà à v{{version}}",
       "restoredNeedsReview": "v{{from}} restaurée en tant que v{{version}} ; la compétence attend une vérification et reste indisponible jusqu’à son approbation"
+    },
+    "team": {
+      "tab": "Équipe",
+      "introManage": "Compétences partagées avec tous les utilisateurs de cette installation. En tant que propriétaire ou administrateur, vous partagez une compétence depuis sa page de détails et pouvez arrêter le partage de n'importe laquelle.",
+      "introMember": "Compétences partagées par votre équipe. Vous pouvez les utiliser telles quelles ou les copier dans vos compétences pour les modifier.",
+      "empty": "Aucune compétence d'équipe pour l'instant",
+      "mineTag": "Partagée par vous",
+      "heldTag": "En attente de vérification",
+      "copy": "Copier dans mes compétences",
+      "copied": "« {{name}} » a été copiée dans vos compétences",
+      "copiedNeedsReview": "« {{name}} » a été copiée. Elle contient des scripts et doit être vérifiée avant utilisation",
+      "unpublish": "Arrêter le partage",
+      "unpublishConfirmTitle": "Arrêter le partage de « {{name}} » ?",
+      "unpublishConfirmContent": "Les membres de l'équipe ne pourront plus l'utiliser. Les copies déjà faites ne sont pas affectées.",
+      "unpublished": "« {{name}} » n'est plus partagée",
+      "publish": "Partager avec l'équipe",
+      "publishConfirmTitle": "Partager « {{name}} » avec l'équipe ?",
+      "publishConfirmContent": "Tous les utilisateurs de cette installation pourront l'utiliser et la copier dans leurs compétences.",
+      "published": "« {{name}} » est maintenant partagée avec l'équipe",
+      "sharedTag": "Partagée avec l'équipe"
     }
   },
   "assistant.connectionFailed": "Échec de la connexion",

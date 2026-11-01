@@ -1319,7 +1319,11 @@
         "skill_source_not_refreshable": "Esta fonte não pode ser atualizada (apenas fontes git / url)",
         "skill_import_no_skill_found": "Nenhuma habilidade encontrada na fonte (SKILL.md ausente)",
         "source_git_unsupported": "Seu git é antigo demais (requer 2.37 ou superior). Atualize o git ou importe por URL",
-        "skill_restore_renamed": "Essa versão usa outro nome de skill e não pode ser restaurada"
+        "skill_restore_renamed": "Essa versão usa outro nome de skill e não pode ser restaurada",
+        "skill_copy_own": "Esta habilidade da equipe já é sua",
+        "skill_copy_unavailable": "Esta habilidade da equipe está aguardando revisão ou desativada",
+        "skill_name_taken": "Você já tem uma habilidade com este nome",
+        "skill_publish_forbidden": "Somente proprietários e administradores podem compartilhar habilidades com a equipe"
       },
       "import": {
         "open": "Importar de fonte",
@@ -1370,6 +1374,26 @@
       "restored": "v{{from}} restaurada como v{{version}}",
       "restoreNoChange": "Os arquivos atuais já correspondem à v{{version}}",
       "restoredNeedsReview": "v{{from}} restaurada como v{{version}}; a skill aguarda revisão e fica indisponível até ser aprovada"
+    },
+    "team": {
+      "tab": "Equipe",
+      "introManage": "Habilidades compartilhadas com todos nesta instalação. Como proprietário ou administrador, você compartilha habilidades na página de detalhes e pode parar de compartilhar qualquer uma.",
+      "introMember": "Habilidades compartilhadas pela sua equipe. Você pode usá-las como estão ou copiá-las para suas habilidades para alterá-las.",
+      "empty": "Ainda não há habilidades da equipe",
+      "mineTag": "Compartilhada por você",
+      "heldTag": "Aguardando revisão",
+      "copy": "Copiar para minhas habilidades",
+      "copied": "\"{{name}}\" foi copiada para suas habilidades",
+      "copiedNeedsReview": "\"{{name}}\" foi copiada. Ela contém scripts e precisa de revisão antes de ser usada",
+      "unpublish": "Parar de compartilhar",
+      "unpublishConfirmTitle": "Parar de compartilhar \"{{name}}\"?",
+      "unpublishConfirmContent": "Os membros da equipe não poderão mais usá-la. Cópias já feitas não são afetadas.",
+      "unpublished": "\"{{name}}\" não é mais compartilhada",
+      "publish": "Compartilhar com a equipe",
+      "publishConfirmTitle": "Compartilhar \"{{name}}\" com a equipe?",
+      "publishConfirmContent": "Todos nesta instalação poderão usá-la e copiá-la para suas próprias habilidades.",
+      "published": "\"{{name}}\" agora é compartilhada com a equipe",
+      "sharedTag": "Compartilhada com a equipe"
     }
   },
   "assistant.connectionFailed": "Falha na conexão",

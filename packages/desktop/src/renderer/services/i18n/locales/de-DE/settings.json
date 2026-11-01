@@ -1316,7 +1316,11 @@
         "skill_source_not_refreshable": "Diese Quelle kann nicht aktualisiert werden (nur git- / url-Quellen)",
         "skill_import_no_skill_found": "In der Quelle wurde kein Skill gefunden (SKILL.md fehlt)",
         "source_git_unsupported": "Deine git-Version ist zu alt (2.37 oder neuer nötig). Aktualisiere git oder importiere per URL",
-        "skill_restore_renamed": "Diese Version verwendet einen anderen Skill-Namen und kann nicht wiederhergestellt werden"
+        "skill_restore_renamed": "Diese Version verwendet einen anderen Skill-Namen und kann nicht wiederhergestellt werden",
+        "skill_copy_own": "Dieser Team-Skill gehört bereits dir",
+        "skill_copy_unavailable": "Dieser Team-Skill wartet auf Prüfung oder ist deaktiviert",
+        "skill_name_taken": "Du hast bereits einen Skill mit diesem Namen",
+        "skill_publish_forbidden": "Nur Owner und Admins können Skills mit dem Team teilen"
       },
       "import": {
         "open": "Aus Quelle importieren",
@@ -1367,6 +1371,26 @@
       "restored": "v{{from}} als v{{version}} wiederhergestellt",
       "restoreNoChange": "Die aktuellen Dateien entsprechen bereits v{{version}}",
       "restoredNeedsReview": "v{{from}} als v{{version}} wiederhergestellt; der Skill wartet auf Prüfung und ist bis zur Freigabe nicht verfügbar"
+    },
+    "team": {
+      "tab": "Team",
+      "introManage": "Skills, die mit allen in dieser Installation geteilt werden. Als Owner oder Admin teilst du Skills auf deren Detailseite und kannst das Teilen jedes Skills beenden.",
+      "introMember": "Von deinem Team geteilte Skills. Du kannst sie direkt nutzen oder in deine eigenen Skills kopieren, um sie zu ändern.",
+      "empty": "Noch keine Team-Skills",
+      "mineTag": "Von dir geteilt",
+      "heldTag": "Wartet auf Prüfung",
+      "copy": "In meine Skills kopieren",
+      "copied": "„{{name}}“ wurde in deine Skills kopiert",
+      "copiedNeedsReview": "„{{name}}“ wurde kopiert. Er enthält Skripte und kann erst nach der Prüfung verwendet werden",
+      "unpublish": "Teilen beenden",
+      "unpublishConfirmTitle": "Teilen von „{{name}}“ beenden?",
+      "unpublishConfirmContent": "Teammitglieder können ihn nicht mehr verwenden. Bereits erstellte Kopien sind nicht betroffen.",
+      "unpublished": "„{{name}}“ wird nicht mehr geteilt",
+      "publish": "Mit Team teilen",
+      "publishConfirmTitle": "„{{name}}“ mit dem Team teilen?",
+      "publishConfirmContent": "Alle in dieser Installation können ihn verwenden und in ihre eigenen Skills kopieren.",
+      "published": "„{{name}}“ wird jetzt mit dem Team geteilt",
+      "sharedTag": "Mit Team geteilt"
     }
   },
   "assistant.connectionFailed": "Verbindung fehlgeschlagen",

@@ -37,6 +37,10 @@ const KNOWN_ERRORS = new Set([
   'source_address_blocked',
   'source_git_unsupported',
   'skill_restore_renamed',
+  'skill_copy_own',
+  'skill_copy_unavailable',
+  'skill_name_taken',
+  'skill_publish_forbidden',
 ]);
 
 /** 413/502/504 bodies carry only a generic public message, so map by status. */
@@ -104,3 +108,19 @@ export const restoredFromVersion = (sourceRef: string | null | undefined): numbe
 /** Default compare pair: previous → newest (versions are newest first). */
 export const defaultComparePair = (versionNos: number[]): { from: number; to: number } | null =>
   versionNos.length >= 2 ? { from: versionNos[1], to: versionNos[0] } : null;
+
+/**
+ * E10-5: what the current user may do with one team-library entry. Core
+ * enforces all of this; the UI only hides buttons that would be refused.
+ * Members copy others' usable skills; owner/admin (canManage) also unpublish.
+ */
+export const teamSkillActions = (
+  skill: { mine: boolean; review_status: string },
+  canManage: boolean
+): { canCopy: boolean; canUnpublish: boolean } => ({
+  canCopy: !skill.mine && (skill.review_status === 'none' || skill.review_status === 'approved'),
+  canUnpublish: skill.mine || canManage,
+});
+
+/** E10-5: the Team tab exists only when Core reports an active team library. */
+export const isTeamLibraryEnabled = (library: { enabled: boolean } | null | undefined): boolean => !!library?.enabled;

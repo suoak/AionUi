@@ -1316,7 +1316,11 @@
         "skill_source_not_refreshable": "Bu kaynak yenilenemez (yalnızca git / url kaynakları)",
         "skill_import_no_skill_found": "Kaynakta beceri bulunamadı (SKILL.md yok)",
         "source_git_unsupported": "git sürümünüz çok eski (2.37 veya üzeri gerekli). git'i güncelleyin ya da URL ile içe aktarın",
-        "skill_restore_renamed": "Bu sürüm farklı bir beceri adı kullandığı için geri yüklenemez"
+        "skill_restore_renamed": "Bu sürüm farklı bir beceri adı kullandığı için geri yüklenemez",
+        "skill_copy_own": "Bu ekip yeteneği zaten sizin",
+        "skill_copy_unavailable": "Bu ekip yeteneği inceleme bekliyor veya devre dışı",
+        "skill_name_taken": "Bu adla bir yeteneğiniz zaten var",
+        "skill_publish_forbidden": "Yetenekleri yalnızca sahipler ve yöneticiler ekiple paylaşabilir"
       },
       "import": {
         "open": "Kaynaktan içe aktar",
@@ -1367,6 +1371,26 @@
       "restored": "v{{from}}, v{{version}} olarak geri yüklendi",
       "restoreNoChange": "Mevcut dosyalar zaten v{{version}} ile aynı",
       "restoredNeedsReview": "v{{from}}, v{{version}} olarak geri yüklendi; beceri inceleme bekliyor ve onaylanana kadar kullanılamaz"
+    },
+    "team": {
+      "tab": "Ekip",
+      "introManage": "Bu kurulumdaki herkesle paylaşılan yetenekler. Sahip veya yönetici olarak yetenekleri ayrıntı sayfasından paylaşır ve herhangi birinin paylaşımını durdurabilirsiniz.",
+      "introMember": "Ekibinizin paylaştığı yetenekler. Olduğu gibi kullanabilir veya değiştirmek için kendi yeteneklerinize kopyalayabilirsiniz.",
+      "empty": "Henüz ekip yeteneği yok",
+      "mineTag": "Sizin paylaştığınız",
+      "heldTag": "İnceleme bekliyor",
+      "copy": "Yeteneklerime kopyala",
+      "copied": "\"{{name}}\" yeteneklerinize kopyalandı",
+      "copiedNeedsReview": "\"{{name}}\" kopyalandı. Betik içerdiği için incelendikten sonra kullanılabilir",
+      "unpublish": "Paylaşımı durdur",
+      "unpublishConfirmTitle": "\"{{name}}\" paylaşımı durdurulsun mu?",
+      "unpublishConfirmContent": "Ekip üyeleri artık kullanamaz. Önceden alınmış kopyalar etkilenmez.",
+      "unpublished": "\"{{name}}\" artık paylaşılmıyor",
+      "publish": "Ekiple paylaş",
+      "publishConfirmTitle": "\"{{name}}\" ekiple paylaşılsın mı?",
+      "publishConfirmContent": "Bu kurulumdaki herkes kullanabilir ve kendi yeteneklerine kopyalayabilir.",
+      "published": "\"{{name}}\" artık ekiple paylaşılıyor",
+      "sharedTag": "Ekiple paylaşıldı"
     }
   },
   "assistant.connectionFailed": "Bağlantı başarısız",
