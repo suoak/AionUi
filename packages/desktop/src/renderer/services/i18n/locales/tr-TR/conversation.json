@@ -1478,6 +1478,25 @@
         "removed": "Kaldırıldı",
         "orphaned": "Sahipsiz"
       }
+    },
+    "githubImport": {
+      "open": "GitHub'dan içe aktar",
+      "title": "GitHub Issue'larını içe aktar",
+      "hint": "GitHub CLI (gh) oturumunuzla bir deponun açık issue'larını Backlog'a aktarır. Salt okunur: GitHub'a hiçbir şey geri yazılmaz. Yeniden içe aktarma yalnızca başlık, açıklama ve etiketleri günceller.",
+      "repo": "Depo",
+      "query": "Filtre",
+      "queryPlaceholder": "İsteğe bağlı, ör. label:bug",
+      "submit": "İçe aktar",
+      "result": "{{created}} oluşturuldu, {{updated}} güncellendi, {{unchanged}} değişmedi.",
+      "errors": {
+        "cliMissing": "GitHub CLI (gh) yüklü değil. Yükleyip gh auth login komutunu çalıştırın.",
+        "notAuthenticated": "GitHub CLI oturumu açık değil. gh auth login çalıştırıp tekrar deneyin.",
+        "repoNotFound": "Depo bulunamadı veya GitHub hesabınızın erişimi yok.",
+        "timeout": "GitHub zamanında yanıt vermedi. Tekrar deneyin.",
+        "invalidInput": "Depoyu (owner/name) ve filtreyi kontrol edin.",
+        "unsupported": "Bu arka uç sürümü henüz GitHub içe aktarmayı desteklemiyor.",
+        "failed": "İçe aktarma başarısız. Ayrıntılar için arka uç günlüğüne bakın."
+      }
     }
   },
   "squadRouteOnly": {

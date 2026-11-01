@@ -1476,6 +1476,25 @@
         "removed": "已移除",
         "orphaned": "孤立"
       }
+    },
+    "githubImport": {
+      "open": "從 GitHub 匯入",
+      "title": "匯入 GitHub Issues",
+      "hint": "使用你本機 GitHub CLI（gh）的登入，把一個儲存庫的未關閉 Issue 匯入到待辦（Backlog）。唯讀：不會回寫 GitHub。再次匯入只更新標題、描述和標籤。",
+      "repo": "儲存庫",
+      "query": "篩選",
+      "queryPlaceholder": "選填，例如 label:bug",
+      "submit": "匯入",
+      "result": "新建 {{created}} 個，更新 {{updated}} 個，未變更 {{unchanged}} 個。",
+      "errors": {
+        "cliMissing": "未安裝 GitHub CLI（gh）。請安裝後執行 gh auth login。",
+        "notAuthenticated": "GitHub CLI 尚未登入。請執行 gh auth login 後重試。",
+        "repoNotFound": "儲存庫不存在，或你的 GitHub 帳號無權存取。",
+        "timeout": "GitHub 回應逾時，請重試。",
+        "invalidInput": "請檢查儲存庫（owner/name）和篩選條件。",
+        "unsupported": "目前後端版本尚不支援 GitHub 匯入。",
+        "failed": "匯入失敗，詳情請查看後端日誌。"
+      }
     }
   },
   "squadRouteOnly": {

@@ -1476,6 +1476,25 @@
         "removed": "削除済み",
         "orphaned": "孤立"
       }
+    },
+    "githubImport": {
+      "open": "GitHub からインポート",
+      "title": "GitHub Issues をインポート",
+      "hint": "GitHub CLI（gh）のサインインを使い、1 つのリポジトリのオープンな Issue をバックログに取り込みます。読み取り専用で、GitHub には書き戻しません。再インポートではタイトル・説明・ラベルのみ更新します。",
+      "repo": "リポジトリ",
+      "query": "フィルター",
+      "queryPlaceholder": "任意（例: label:bug）",
+      "submit": "インポート",
+      "result": "作成 {{created}} 件、更新 {{updated}} 件、変更なし {{unchanged}} 件。",
+      "errors": {
+        "cliMissing": "GitHub CLI（gh）がインストールされていません。インストール後に gh auth login を実行してください。",
+        "notAuthenticated": "GitHub CLI にサインインしていません。gh auth login を実行して再試行してください。",
+        "repoNotFound": "リポジトリが見つからないか、GitHub アカウントにアクセス権がありません。",
+        "timeout": "GitHub の応答がタイムアウトしました。再試行してください。",
+        "invalidInput": "リポジトリ（owner/name）とフィルターを確認してください。",
+        "unsupported": "このバックエンドのバージョンは GitHub インポートに未対応です。",
+        "failed": "インポートに失敗しました。詳細はバックエンドのログを確認してください。"
+      }
     }
   },
   "squadRouteOnly": {

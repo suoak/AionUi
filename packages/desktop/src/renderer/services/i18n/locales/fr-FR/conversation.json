@@ -1476,6 +1476,25 @@
         "removed": "Supprimé",
         "orphaned": "Orphelin"
       }
+    },
+    "githubImport": {
+      "open": "Importer depuis GitHub",
+      "title": "Importer des issues GitHub",
+      "hint": "Importe dans le backlog les issues ouvertes d’un dépôt avec ta connexion GitHub CLI (gh). Lecture seule : rien n’est réécrit sur GitHub. Un nouvel import met à jour uniquement le titre, la description et les étiquettes.",
+      "repo": "Dépôt",
+      "query": "Filtre",
+      "queryPlaceholder": "Facultatif, ex. label:bug",
+      "submit": "Importer",
+      "result": "{{created}} créées, {{updated}} mises à jour, {{unchanged}} inchangées.",
+      "errors": {
+        "cliMissing": "GitHub CLI (gh) n’est pas installé. Installe-le puis exécute gh auth login.",
+        "notAuthenticated": "GitHub CLI n’est pas connecté. Exécute gh auth login puis réessaie.",
+        "repoNotFound": "Dépôt introuvable ou inaccessible avec ton compte GitHub.",
+        "timeout": "GitHub n’a pas répondu à temps. Réessaie.",
+        "invalidInput": "Vérifie le dépôt (owner/name) et le filtre.",
+        "unsupported": "Cette version du backend ne prend pas encore en charge l’import GitHub.",
+        "failed": "Échec de l’import. Consulte le journal du backend pour plus de détails."
+      }
     }
   },
   "squadRouteOnly": {

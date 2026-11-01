@@ -1476,6 +1476,25 @@
         "removed": "제거됨",
         "orphaned": "고립됨"
       }
+    },
+    "githubImport": {
+      "open": "GitHub에서 가져오기",
+      "title": "GitHub Issues 가져오기",
+      "hint": "GitHub CLI(gh) 로그인을 사용해 한 저장소의 열린 이슈를 백로그로 가져옵니다. 읽기 전용이며 GitHub에 다시 쓰지 않습니다. 다시 가져오면 제목, 설명, 라벨만 갱신됩니다.",
+      "repo": "저장소",
+      "query": "필터",
+      "queryPlaceholder": "선택 사항, 예: label:bug",
+      "submit": "가져오기",
+      "result": "생성 {{created}}개, 갱신 {{updated}}개, 변경 없음 {{unchanged}}개.",
+      "errors": {
+        "cliMissing": "GitHub CLI(gh)가 설치되어 있지 않습니다. 설치 후 gh auth login을 실행하세요.",
+        "notAuthenticated": "GitHub CLI에 로그인되어 있지 않습니다. gh auth login을 실행한 뒤 다시 시도하세요.",
+        "repoNotFound": "저장소를 찾을 수 없거나 GitHub 계정에 접근 권한이 없습니다.",
+        "timeout": "GitHub 응답 시간이 초과되었습니다. 다시 시도하세요.",
+        "invalidInput": "저장소(owner/name)와 필터를 확인하세요.",
+        "unsupported": "현재 백엔드 버전은 GitHub 가져오기를 지원하지 않습니다.",
+        "failed": "가져오기에 실패했습니다. 자세한 내용은 백엔드 로그를 확인하세요."
+      }
     }
   },
   "squadRouteOnly": {

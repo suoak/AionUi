@@ -26,6 +26,7 @@ import { useLayoutContext } from '@renderer/hooks/context/LayoutContext';
 import SettingsPageHeader from '@/renderer/pages/settings/components/SettingsPageHeader';
 import TaskBoardCard from './TaskBoardCard';
 import TaskBoardDetailDrawer from './TaskBoardDetailDrawer';
+import GithubIssueImportModal from './GithubIssueImportModal';
 import { useWorkItemWorktrees } from './useWorkItemWorktrees';
 import {
   REALTIME_FALLBACK_MS,
@@ -117,6 +118,7 @@ const TasksBoardPage: React.FC = () => {
   const [selectedId, setSelectedId] = useState<string | null>(deepLinkTask);
   const [dragFrom, setDragFrom] = useState<TaskBoardStatus | null>(null);
   const [refreshKey, setRefreshKey] = useState(0);
+  const [importOpen, setImportOpen] = useState(false);
   const loadSeq = useRef(0);
   // The pointer-up that ends a drag also clicks the card; ignore that click.
   const lastDragEndAt = useRef(0);
@@ -316,6 +318,11 @@ const TasksBoardPage: React.FC = () => {
                 />
                 {t('conversation.taskBoard.showCancelled')}
               </label>
+              {interactive ? (
+                <Button size='small' data-testid='tasks-board-github-import' onClick={() => setImportOpen(true)}>
+                  {t('conversation.taskBoard.githubImport.open')}
+                </Button>
+              ) : null}
               <Button size='small' onClick={() => load()} loading={loadState === 'loading'}>
                 {t('conversation.taskBoard.refresh')}
               </Button>
@@ -400,6 +407,7 @@ const TasksBoardPage: React.FC = () => {
         worktree={selectedTask ? (worktrees.get(selectedTask.id) ?? null) : null}
         onSquadStarted={() => setRefreshKey((k) => k + 1)}
       />
+      <GithubIssueImportModal visible={importOpen} onClose={() => setImportOpen(false)} onImported={() => load(true)} />
     </div>
   );
 };
