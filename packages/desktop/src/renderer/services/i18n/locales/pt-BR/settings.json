@@ -1840,6 +1840,15 @@
       "rolesInactive": "As funções só se aplicam no modo WebUI multiusuário.",
       "conflict": "Não foi possível salvar: {{reason}}",
       "invalid": "Valor inválido: {{reason}}"
+    },
+    "encryptionRoot": {
+      "title": "Chave de criptografia do armazenamento",
+      "keychain": "Uma cópia da chave de criptografia do armazenamento fica no chaveiro do sistema e é verificada a cada inicialização. A chave do banco de dados local continua sendo a chave principal.",
+      "migrated": "A chave de criptografia do armazenamento foi copiada para o chaveiro do sistema nesta inicialização. A chave do banco de dados local continua sendo a chave principal.",
+      "pending": "A chave de criptografia do armazenamento será copiada para o chaveiro do sistema na próxima vez que o CSBU WorkMate for iniciado.",
+      "unavailable": "O chaveiro do sistema não está disponível neste dispositivo, então o CSBU WorkMate continua usando a chave salva no banco de dados local.",
+      "error": "Não foi possível verificar a cópia no chaveiro do sistema. O CSBU WorkMate continua usando a chave salva no banco de dados local.",
+      "staleReplaced": "Uma cópia antiga do chaveiro não correspondia e foi separada (não excluída)."
     }
   }
 }
