@@ -2739,7 +2739,6 @@ export const worktreePty = {
   onExit: bridge.buildEmitter<{ id: string; exitCode: number; signal?: number }>('worktreePty.exit'),
 };
 
-
 // ---------------------------------------------------------------------------
 // Cron — routed to /api/cron/*
 // ---------------------------------------------------------------------------
