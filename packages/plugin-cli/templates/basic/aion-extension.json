@@ -1,0 +1,25 @@
+{
+  "$schema": "https://raw.githubusercontent.com/suoak/AionUi/main/schemas/aion-extension-v1.json",
+  "name": "{{name}}",
+  "displayName": "{{displayName}}",
+  "version": "0.1.0",
+  "description": "{{description}}",
+  "engine": {
+    "aionui": "^2.6.0"
+  },
+  "permissions": {
+    "storage": true,
+    "network": false,
+    "shell": false,
+    "filesystem": "extension-only",
+    "events": true
+  },
+  "contributes": {
+    "commands": [
+      {
+        "id": "{{name}}.hello",
+        "title": "Hello from {{displayName}}"
+      }
+    ]
+  }
+}
