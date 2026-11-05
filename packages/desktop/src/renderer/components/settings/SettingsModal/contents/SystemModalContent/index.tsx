@@ -28,6 +28,7 @@ import { useSettingsViewMode } from '../../settingsViewContext';
 import BrowserNotificationGrant from './BrowserNotificationGrant';
 import DevSettings from './DevSettings';
 import BrowserDataSection from './BrowserDataSection';
+import SessionImportSection from './SessionImportSection';
 import RemoteHostSshSection from './RemoteHostSshSection';
 import DirInputItem from './DirInputItem';
 import PreferenceRow from './PreferenceRow';
@@ -601,6 +602,8 @@ const SystemModalContent: React.FC = () => {
           {/* In-app browser: sign-in state and cache */}
           <BrowserDataSection />
           <RemoteHostSshSection />
+
+          <SessionImportSection />
 
           {/* Developer settings: DevTools + CDP (only visible in dev mode) */}
           <DevSettings />

@@ -12,6 +12,7 @@ import { initNotificationBridge } from './notificationBridge';
 import { initWebuiBridge } from './webuiBridge';
 import { initThemeBridge } from './themeBridge';
 import { initUpdateBridge } from './updateBridge';
+import { initSessionImportBridge } from './sessionImportBridge';
 import { initWorktreePtyBridge } from './worktreePtyBridge';
 import { initSshTunnelBridge } from './sshTunnelBridge';
 
@@ -26,6 +27,7 @@ export function initAllBridges(_deps: BridgeDependencies = {}): void {
   initWebuiBridge();
   initThemeBridge();
   initUpdateBridge();
+  initSessionImportBridge();
   initWorktreePtyBridge();
   initSshTunnelBridge();
 }
@@ -37,6 +39,7 @@ export {
   initSystemSettingsBridge,
   initThemeBridge,
   initUpdateBridge,
+  initSessionImportBridge,
   initWindowControlsBridge,
   initWebuiBridge,
   initWorktreePtyBridge,
