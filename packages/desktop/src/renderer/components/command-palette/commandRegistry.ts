@@ -52,6 +52,13 @@ export const STATIC_PALETTE_COMMANDS: readonly PaletteCommand[] = [
     path: '/settings/governance',
     keywords: ['rbac', 'roles', 'permissions'],
   },
+  {
+    id: 'nav.settings.localKb',
+    title: 'Local knowledge base',
+    group: 'settings',
+    path: '/settings/local-kb',
+    keywords: ['local-kb', 'knowledge', 'kb', 'documents'],
+  },
 ] as const;
 
 export function normalizePaletteQuery(query: string): string {

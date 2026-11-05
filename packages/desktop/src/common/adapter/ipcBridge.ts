@@ -49,6 +49,14 @@ import type {
   ITaskApprovalChangedEvent,
 } from '../types/device';
 import type {
+  CreateLocalKbSourceRequest,
+  LocalKbSearchHit,
+  LocalKbSearchRequest,
+  LocalKbSettings,
+  LocalKbSource,
+  UpdateLocalKbSettingsRequest,
+} from '../types/localKb';
+import type {
   IAgentPermissions,
   IAuditChainVerification,
   IAuditEventPage,
@@ -3703,6 +3711,20 @@ export const inbox = {
  * M8 E9 paired mobile devices. User-session only: Core answers 403
  * `DEVICE_MANAGEMENT_REQUIRES_USER` to device/agent tokens.
  */
+
+/**
+ * M9 E15 local-kb. Default OFF. Not KnowHub / experience library.
+ * Not auto-injected into daily chat.
+ */
+export const localKb = {
+  getSettings: httpGet<LocalKbSettings, void>('/api/local-kb/settings'),
+  updateSettings: httpPut<LocalKbSettings, UpdateLocalKbSettingsRequest>('/api/local-kb/settings'),
+  listSources: httpGet<LocalKbSource[], void>('/api/local-kb/sources'),
+  createSource: httpPost<LocalKbSource, CreateLocalKbSourceRequest>('/api/local-kb/sources'),
+  deleteSource: httpDelete<void, { id: string }>((p) => `/api/local-kb/sources/${encodeURIComponent(p.id)}`),
+  search: httpPost<LocalKbSearchHit[], LocalKbSearchRequest>('/api/local-kb/search'),
+};
+
 export const device = {
   list: httpGet<IDevice[], void>('/api/auth/devices'),
   rename: httpPatch<IDevice, { id: string; name: string }>(

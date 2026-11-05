@@ -10,6 +10,7 @@ import { type IExtensionSettingsTab } from '@/common/adapter/ipcBridge';
 import { useExtensionSettingsTabs } from '@/renderer/hooks/system/useExtensionSettingsTabs';
 import {
   Analysis,
+  BookOne,
   Cat,
   Communication,
   Computer,
@@ -85,6 +86,12 @@ export function getBuiltinSettingsNavItems(isDesktop: boolean, t: TranslateFn): 
       label: t('settings.devices.navLabel'),
       icon: <Iphone theme='outline' size='16' />,
       path: 'devices',
+    },
+    'local-kb': {
+      id: 'local-kb',
+      label: t('settings.localKb.navLabel'),
+      icon: <BookOne theme='outline' size='16' />,
+      path: 'local-kb',
     },
     governance: {
       id: 'governance',

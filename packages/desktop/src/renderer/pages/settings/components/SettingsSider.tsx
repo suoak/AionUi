@@ -5,6 +5,7 @@ import { useExtI18n } from '@/renderer/hooks/system/useExtI18n';
 import { useExtensionSettingsTabs } from '@/renderer/hooks/system/useExtensionSettingsTabs';
 import {
   Analysis,
+  BookOne,
   Cat,
   Communication,
   Computer,
@@ -37,6 +38,7 @@ export const BUILTIN_TAB_IDS = [
   'appearance',
   'webui',
   'devices',
+  'local-kb',
   'governance',
   'pet',
   'usage',
@@ -122,6 +124,12 @@ const SettingsSider: React.FC<{ collapsed?: boolean; tooltipEnabled?: boolean }>
         path: 'webui',
       },
       devices: { id: 'devices', label: t('settings.devices.navLabel'), icon: <Iphone />, path: 'devices' },
+      'local-kb': {
+        id: 'local-kb',
+        label: t('settings.localKb.navLabel'),
+        icon: <BookOne />,
+        path: 'local-kb',
+      },
       governance: {
         id: 'governance',
         label: t('settings.governance.navLabel'),
