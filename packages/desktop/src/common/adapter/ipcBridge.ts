@@ -2710,6 +2710,35 @@ export const webui = {
 };
 
 // ---------------------------------------------------------------------------
+// E14 SSH tunnel — desktop-only; spawns system OpenSSH (no AGPL).
+// ---------------------------------------------------------------------------
+
+export type ISshTunnelStatus = {
+  running: boolean;
+  remote?: string;
+  localPort?: number;
+  remotePort?: number;
+  localUrl?: string;
+  display?: string;
+  pid?: number;
+  lastError?: string;
+};
+
+export type ISshTunnelStartParams = {
+  remote: string;
+  localPort: number;
+  remotePort: number;
+  identityFile?: string;
+  extraOptions?: string[];
+};
+
+export const sshTunnel = {
+  getStatus: bridge.buildProvider<ISshTunnelStatus, void>('sshTunnel.get-status'),
+  start: bridge.buildProvider<ISshTunnelStatus, ISshTunnelStartParams>('sshTunnel.start'),
+  stop: bridge.buildProvider<ISshTunnelStatus, void>('sshTunnel.stop'),
+};
+
+// ---------------------------------------------------------------------------
 // Cron — routed to /api/cron/*
 // ---------------------------------------------------------------------------
 
