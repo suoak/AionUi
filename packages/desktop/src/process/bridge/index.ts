@@ -12,6 +12,7 @@ import { initNotificationBridge } from './notificationBridge';
 import { initWebuiBridge } from './webuiBridge';
 import { initThemeBridge } from './themeBridge';
 import { initUpdateBridge } from './updateBridge';
+import { initSshTunnelBridge } from './sshTunnelBridge';
 
 export type BridgeDependencies = Record<string, never>;
 
@@ -24,6 +25,7 @@ export function initAllBridges(_deps: BridgeDependencies = {}): void {
   initWebuiBridge();
   initThemeBridge();
   initUpdateBridge();
+  initSshTunnelBridge();
 }
 
 export {
@@ -35,6 +37,7 @@ export {
   initUpdateBridge,
   initWindowControlsBridge,
   initWebuiBridge,
+  initSshTunnelBridge,
 };
 export { registerWindowMaximizeListeners } from './windowControlsBridge';
 export const disposeAllTeamSessions = (): Promise<void> => Promise.resolve();
