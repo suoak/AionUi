@@ -159,8 +159,33 @@ describe('WebUI browser bridge socket', () => {
     const reconnected = latestSocket();
     reconnected.acceptUpgrade();
 
-    expect(reconnected.sent).toHaveLength(1);
-    expect(JSON.parse(reconnected.sent[0])).toEqual({ name: 'queued-event', data: { value: 7 } });
+    // E14 resume is sent on every open, then the queued app emit is flushed.
+    expect(reconnected.sent).toHaveLength(2);
+    expect(JSON.parse(reconnected.sent[0])).toEqual({ name: 'resume', data: {} });
+    expect(JSON.parse(reconnected.sent[1])).toEqual({ name: 'queued-event', data: { value: 7 } });
+  });
+
+  it('sends resume with stored cursor after Host stamped an event', async () => {
+    await loadBrowserAdapter();
+    const first = latestSocket();
+    first.acceptUpgrade();
+    expect(JSON.parse(first.sent[0])).toEqual({ name: 'resume', data: {} });
+
+    first.deliver({
+      name: 'chat:update',
+      data: { id: 1 },
+      cursor: { epoch: 1, sequence: 4 },
+    });
+    first.close();
+
+    await vi.advanceTimersByTimeAsync(500);
+    const next = latestSocket();
+    next.acceptUpgrade();
+    expect(JSON.parse(next.sent[0])).toEqual({
+      name: 'resume',
+      data: {},
+      cursor: { epoch: 1, sequence: 4 },
+    });
   });
 
   it('backs off when the server accepts the upgrade and drops it immediately', async () => {
