@@ -1,10 +1,12 @@
 import { Button, Message, Modal, Tabs, Typography } from '@arco-design/web-react';
 import { ipcBridge } from '@/common';
 import type { AgentCenterListItem, AgentVisibility } from '@/common/types/agent/agentCenterTypes';
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import type { IGovernanceMe } from '@/common/types/governance';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { formatAgentCenterError } from './agentCenterErrors';
+import { isEmptyDueToPermissions } from './agentCenterEmpty';
 
 const { Title, Text } = Typography;
 const TabPane = Tabs.TabPane;
@@ -31,6 +33,7 @@ const AgentCenterListPage: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [loadError, setLoadError] = useState<string | null>(null);
   const [busyId, setBusyId] = useState<string | null>(null);
+  const [me, setMe] = useState<IGovernanceMe | null>(null);
   const [message, messageContext] = Message.useMessage({ maxCount: 5 });
   // Arco useMessage() returns a new API object each render — keep a ref so
   // load() deps stay stable and we do not re-fetch in a loop.
@@ -57,6 +60,27 @@ const AgentCenterListPage: React.FC = () => {
   useEffect(() => {
     void load();
   }, [load]);
+
+  useEffect(() => {
+    let cancelled = false;
+    void ipcBridge.governance.me
+      .invoke()
+      .then((result) => {
+        if (!cancelled) setMe(result ?? null);
+      })
+      .catch(() => {
+        if (!cancelled) setMe(null);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  /** Member with roles active + empty list → catalog filtered by agent_run_permissions. */
+  const emptyDueToPermissions = useMemo(
+    () => isEmptyDueToPermissions(me, { loading, loadError, itemCount: items.length }),
+    [me, loading, loadError, items.length]
+  );
 
   const handleTryRun = async (id: string) => {
     setBusyId(id);
@@ -155,7 +179,22 @@ const AgentCenterListPage: React.FC = () => {
           </div>
         )}
         {!loading && !loadError && items.length === 0 && (
-          <Text type='secondary'>暂无智能体。点击「创建智能体」开始配置与试跑。</Text>
+          <div data-testid='agent-center-empty' className='flex flex-col gap-8px'>
+            {emptyDueToPermissions ? (
+              <>
+                <Text type='secondary' data-testid='agent-center-empty-permission-hint'>
+                  {t('agent.agentCenter.empty.permissionHint')}
+                </Text>
+                <Text type='secondary' className='text-12px'>
+                  {t('agent.agentCenter.empty.permissionHintDetail')}
+                </Text>
+              </>
+            ) : (
+              <Text type='secondary' data-testid='agent-center-empty-create-hint'>
+                {t('agent.agentCenter.empty.createHint')}
+              </Text>
+            )}
+          </div>
         )}
         {items.map((item) => {
           const id = item.assistant.id;
