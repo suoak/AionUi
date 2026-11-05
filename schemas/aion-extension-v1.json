@@ -1,0 +1,213 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://csbu.workmate/schemas/aion-extension-v1.json",
+  "title": "CSBU WorkMate Plugin Contract v1",
+  "description": "Manifest schema for curated CSBU WorkMate extensions (aion-extension.json). v1 is curated-install only; not a full sandbox.",
+  "type": "object",
+  "required": ["name", "version"],
+  "additionalProperties": true,
+  "properties": {
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Extension id. Must not use reserved prefixes (aionui-, csbu-workmate- builtins)."
+    },
+    "version": {
+      "type": "string",
+      "description": "Semver version string."
+    },
+    "displayName": { "type": "string" },
+    "display_name": { "type": "string" },
+    "description": { "type": "string" },
+    "author": { "type": "string" },
+    "license": { "type": "string" },
+    "homepage": { "type": "string" },
+    "icon": { "type": "string" },
+    "apiVersion": { "type": "string" },
+    "api_version": { "type": "string" },
+    "entryPoint": { "type": "string" },
+    "entry_point": { "type": "string" },
+    "engine": {
+      "type": "object",
+      "properties": {
+        "aionui": { "type": "string", "description": "Semver range for the host engine." }
+      },
+      "additionalProperties": true
+    },
+    "dependencies": {
+      "type": "object",
+      "additionalProperties": { "type": "string" }
+    },
+    "i18n": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "lifecycle": {
+      "type": "object",
+      "properties": {
+        "onInstall": { "type": "string" },
+        "onUninstall": { "type": "string" },
+        "onActivate": { "type": "string" },
+        "onDeactivate": { "type": "string" },
+        "on_install": { "type": "string" },
+        "on_uninstall": { "type": "string" },
+        "on_activate": { "type": "string" },
+        "on_deactivate": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "permissions": { "$ref": "#/$defs/permissions" },
+    "contributes": { "$ref": "#/$defs/contributes" }
+  },
+  "$defs": {
+    "permissions": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "storage": { "type": "boolean" },
+        "network": {
+          "oneOf": [
+            { "type": "boolean" },
+            {
+              "type": "object",
+              "required": ["allowedDomains", "reasoning"],
+              "properties": {
+                "allowedDomains": {
+                  "type": "array",
+                  "items": { "type": "string" }
+                },
+                "reasoning": { "type": "string" }
+              }
+            }
+          ]
+        },
+        "shell": { "type": "boolean" },
+        "filesystem": {
+          "type": "string",
+          "enum": ["extension-only", "workspace", "full"]
+        },
+        "clipboard": { "type": "boolean" },
+        "activeUser": { "type": "boolean" },
+        "active_user": { "type": "boolean" },
+        "events": { "type": "boolean" }
+      }
+    },
+    "contributes": {
+      "type": "object",
+      "description": "Contribution points. Unknown keys are ignored by the host (forward compatible).",
+      "additionalProperties": true,
+      "properties": {
+        "commands": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/command" }
+        },
+        "panels": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/panel" }
+        },
+        "workPanelViews": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/workPanelView" }
+        },
+        "work_panel_views": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/workPanelView" }
+        },
+        "agentTools": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/agentTool" }
+        },
+        "agent_tools": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/agentTool" }
+        },
+        "backgroundServices": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/backgroundService" }
+        },
+        "background_services": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/backgroundService" }
+        },
+        "acpAdapters": { "type": "array", "items": { "type": "object" } },
+        "acp_adapters": { "type": "array", "items": { "type": "object" } },
+        "mcpServers": { "type": "array", "items": { "type": "object" } },
+        "mcp_servers": { "type": "array", "items": { "type": "object" } },
+        "assistants": { "type": "array", "items": { "type": "object" } },
+        "agents": { "type": "array", "items": { "type": "object" } },
+        "skills": { "type": "array", "items": { "type": "object" } },
+        "themes": { "type": "array", "items": { "type": "object" } },
+        "channelPlugins": { "type": "array", "items": { "type": "object" } },
+        "channel_plugins": { "type": "array", "items": { "type": "object" } },
+        "webui": { "type": "array", "items": { "type": "object" } },
+        "settingsTabs": { "type": "array", "items": { "type": "object" } },
+        "settings_tabs": { "type": "array", "items": { "type": "object" } },
+        "modelProviders": { "type": "array", "items": { "type": "object" } },
+        "model_providers": { "type": "array", "items": { "type": "object" } }
+      }
+    },
+    "command": {
+      "type": "object",
+      "required": ["id", "title"],
+      "additionalProperties": true,
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "title": { "type": "string", "minLength": 1 },
+        "keybinding": { "type": "string" },
+        "when": { "type": "string", "description": "Optional when-clause context." }
+      }
+    },
+    "panel": {
+      "type": "object",
+      "required": ["id", "title", "entryPoint"],
+      "additionalProperties": true,
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "title": { "type": "string", "minLength": 1 },
+        "entryPoint": { "type": "string", "minLength": 1 },
+        "entry_point": { "type": "string" },
+        "icon": { "type": "string" }
+      }
+    },
+    "workPanelView": {
+      "type": "object",
+      "required": ["id", "title", "entryPoint"],
+      "additionalProperties": true,
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "title": { "type": "string", "minLength": 1 },
+        "entryPoint": { "type": "string", "minLength": 1 },
+        "entry_point": { "type": "string" },
+        "placement": { "type": "string" },
+        "icon": { "type": "string" }
+      }
+    },
+    "agentTool": {
+      "type": "object",
+      "required": ["id", "name", "planSafeActions"],
+      "additionalProperties": true,
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "name": { "type": "string", "minLength": 1 },
+        "description": { "type": "string" },
+        "planSafeActions": {
+          "type": "boolean",
+          "description": "When true, the tool may run automatically while the session is in plan mode. Default in host parse path is false if omitted at runtime; schema requires the field so authors decide explicitly."
+        },
+        "plan_safe_actions": { "type": "boolean" },
+        "handler": { "type": "string", "description": "Relative entry for the tool implementation." }
+      }
+    },
+    "backgroundService": {
+      "type": "object",
+      "required": ["id", "entryPoint"],
+      "additionalProperties": true,
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "entryPoint": { "type": "string", "minLength": 1 },
+        "entry_point": { "type": "string" },
+        "description": { "type": "string" }
+      }
+    }
+  }
+}
