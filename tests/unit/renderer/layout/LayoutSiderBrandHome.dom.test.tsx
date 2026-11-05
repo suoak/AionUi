@@ -71,7 +71,11 @@ vi.mock('@renderer/hooks/ui/useConversationShortcuts', () => ({
     shortcutMocks.params = params;
   },
 }));
-vi.mock('@renderer/utils/platform', () => ({ isElectronDesktop: platformMocks.isElectronDesktopMock }));
+vi.mock('@renderer/utils/platform', () => ({
+  isElectronDesktop: platformMocks.isElectronDesktopMock,
+  // Layout mounts Cmd+K palette which reads primary modifier via isMacOS.
+  isMacOS: () => false,
+}));
 vi.mock('@renderer/pages/conversation/Preview/context/PreviewContext', () => ({
   usePreviewContext: () => ({ closePreview: () => {} }),
 }));
