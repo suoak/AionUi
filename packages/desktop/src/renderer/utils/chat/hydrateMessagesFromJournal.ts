@@ -14,6 +14,7 @@ import {
   type JournalTranscript,
   type JournalTranscriptItem,
 } from '@/common/types/journalTranscript';
+import { isElectronDesktop } from '@/renderer/utils/platform';
 
 export function isUserTextMessage(message: Pick<TMessage, 'type' | 'position'>): boolean {
   return message.type === 'text' && message.position === 'right';
@@ -307,6 +308,24 @@ function alignJournalMessageTimestamps(messages: TMessage[]): TMessage[] {
   return aligned;
 }
 
+async function tryImportedJournalTranscript(conversationId: string): Promise<JournalTranscript | null> {
+  // sessionImport is desktop IPC only; unregistered invoke hangs forever (webui/tests).
+  if (!isElectronDesktop()) {
+    return null;
+  }
+  try {
+    const imported = await ipcBridge.sessionImport.getImportedTranscript.invoke({
+      conversation_id: conversationId,
+    });
+    if (!imported?.items?.length) {
+      return null;
+    }
+    return normalizeJournalTranscript(imported, conversationId);
+  } catch {
+    return null;
+  }
+}
+
 export async function hydrateConversationMessagesFromJournal(
   conversationId: string,
   messages: TMessage[],
@@ -331,16 +350,7 @@ export async function hydrateConversationMessagesFromJournal(
     // E11: fall back to a locally imported Claude/Codex transcript when Host
     // journal is empty (read-only import → WorkMate transcript on disk).
     if (!transcript.items.length) {
-      try {
-        const imported = await ipcBridge.sessionImport.getImportedTranscript.invoke({
-          conversation_id: conversationId,
-        });
-        if (imported?.items?.length) {
-          transcript = normalizeJournalTranscript(imported, conversationId);
-        }
-      } catch {
-        // Desktop-only bridge; ignore in webui / older builds.
-      }
+      transcript = (await tryImportedJournalTranscript(conversationId)) ?? transcript;
     }
     if (!transcript.items.length) {
       return messages;
@@ -349,18 +359,11 @@ export async function hydrateConversationMessagesFromJournal(
     return mergeDbWithJournalTranscript(messages, recovered);
   } catch {
     // Older AionCore builds do not expose /transcript; keep the DB projection.
-    // Still try local import fallback.
-    try {
-      const imported = await ipcBridge.sessionImport.getImportedTranscript.invoke({
-        conversation_id: conversationId,
-      });
-      if (imported?.items?.length) {
-        const transcript = normalizeJournalTranscript(imported, conversationId);
-        const recovered = messagesFromJournalTranscript(conversationId, transcript);
-        return mergeDbWithJournalTranscript(messages, recovered);
-      }
-    } catch {
-      // ignore
+    // Still try local import fallback on desktop.
+    const imported = await tryImportedJournalTranscript(conversationId);
+    if (imported?.items?.length) {
+      const recovered = messagesFromJournalTranscript(conversationId, imported);
+      return mergeDbWithJournalTranscript(messages, recovered);
     }
     return messages;
   }
