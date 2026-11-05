@@ -241,5 +241,12 @@
     },
     "phoneApproved": "휴대폰에서 승인됨",
     "phoneRejected": "휴대폰에서 거부됨"
+  },
+  "primaryNav": {
+    "sessions": "세션",
+    "workItems": "작업 항목",
+    "agents": "에이전트",
+    "skills": "스킬",
+    "batch": "배치"
   }
 }

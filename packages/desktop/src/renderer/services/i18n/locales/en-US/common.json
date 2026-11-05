@@ -241,5 +241,12 @@
     },
     "phoneApproved": "Approved on phone",
     "phoneRejected": "Rejected on phone"
+  },
+  "primaryNav": {
+    "sessions": "Sessions",
+    "workItems": "Work items",
+    "agents": "Agents",
+    "skills": "Skills",
+    "batch": "Batch"
   }
 }

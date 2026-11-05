@@ -4,6 +4,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import { PRIMARY_NAV_ENTRIES } from '@renderer/components/layout/primaryNav/primaryNav';
+
 export type CommandGroup = 'navigation' | 'agents' | 'settings';
 
 export type PaletteCommand = {
@@ -16,6 +18,22 @@ export type PaletteCommand = {
 };
 
 /** Static navigation commands for Cmd/Ctrl+K v1 (no shell, no plugin wiring). */
+const PRIMARY_NAV_TITLES: Record<(typeof PRIMARY_NAV_ENTRIES)[number]['key'], string> = {
+  sessions: 'Sessions',
+  workItems: 'Work items',
+  agents: 'Agents',
+  skills: 'Skills',
+  batch: 'Batch',
+};
+
+const PRIMARY_NAV_PALETTE_COMMANDS: readonly PaletteCommand[] = PRIMARY_NAV_ENTRIES.map((entry) => ({
+  id: `nav.primary.${entry.key}`,
+  title: PRIMARY_NAV_TITLES[entry.key],
+  group: 'navigation' as const,
+  path: entry.path,
+  keywords: [...entry.keywords, 'primary', entry.key],
+}));
+
 export const STATIC_PALETTE_COMMANDS: readonly PaletteCommand[] = [
   {
     id: 'nav.new-chat',
@@ -24,6 +42,7 @@ export const STATIC_PALETTE_COMMANDS: readonly PaletteCommand[] = [
     path: '/guid',
     keywords: ['home', 'compose', 'guid'],
   },
+  ...PRIMARY_NAV_PALETTE_COMMANDS,
   {
     id: 'nav.agent-center',
     title: 'Agent Center',
