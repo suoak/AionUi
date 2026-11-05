@@ -1894,5 +1894,35 @@
       "error": "无法检查系统钥匙串中的副本。CSBU WorkMate 继续使用本地数据库中保存的密钥。",
       "staleReplaced": "旧的钥匙串副本与当前密钥不一致，已另存备份（未删除）。"
     }
+  },
+  "localKb": {
+    "navLabel": "本地知识库",
+    "title": "本地知识库",
+    "description": "可选的本机文档库；仅在任务显式选择 local-kb 时检索。默认关闭。",
+    "scopeNote": "这不是 KnowHub，也不是技能经验库。不会自动注入日常对话。",
+    "enableLabel": "启用本地知识库",
+    "enableHint": "关闭时，搜索与 ContextProvider 不可用。",
+    "disabledHint": "开启后可导入文本来源并检索。",
+    "enabledToast": "已启用本地知识库",
+    "disabledToast": "已关闭本地知识库",
+    "deleted": "来源已删除",
+    "add": {
+      "title": "添加文本来源",
+      "labelPlaceholder": "标签",
+      "bodyPlaceholder": "粘贴文档正文…",
+      "submit": "添加来源",
+      "required": "标签与正文必填",
+      "success": "来源已添加"
+    },
+    "sources": {
+      "title": "来源",
+      "empty": "暂无来源",
+      "meta": "{{kind}} · {{count}} 篇文档",
+      "delete": "删除"
+    },
+    "error": {
+      "load": "无法加载本地知识库设置",
+      "save": "无法更新本地知识库"
+    }
   }
 }

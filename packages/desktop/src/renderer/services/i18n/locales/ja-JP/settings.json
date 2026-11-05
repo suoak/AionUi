@@ -1895,5 +1895,35 @@
       "error": "キーチェーンのコピーを確認できませんでした。CSBU WorkMate はローカルデータベースに保存されたキーを引き続き使用します。",
       "staleReplaced": "以前のキーチェーンのコピーが一致しなかったため、退避しました（削除はしていません）。"
     }
+  },
+  "localKb": {
+    "navLabel": "Local knowledge base",
+    "title": "Local knowledge base",
+    "description": "Optional on-device documents you can search when a task explicitly selects local-kb. Off by default.",
+    "scopeNote": "This is not KnowHub and not the skill experience library. It is never auto-injected into daily chat.",
+    "enableLabel": "Enable local-kb",
+    "enableHint": "When off, search and ContextProvider return unavailable.",
+    "disabledHint": "Turn on local-kb to import text sources and search them.",
+    "enabledToast": "Local-kb enabled",
+    "disabledToast": "Local-kb disabled",
+    "deleted": "Source deleted",
+    "add": {
+      "title": "Add text source",
+      "labelPlaceholder": "Label",
+      "bodyPlaceholder": "Paste document text…",
+      "submit": "Add source",
+      "required": "Label and text are required",
+      "success": "Source added"
+    },
+    "sources": {
+      "title": "Sources",
+      "empty": "No sources yet",
+      "meta": "{{kind}} · {{count}} documents",
+      "delete": "Delete"
+    },
+    "error": {
+      "load": "Could not load local-kb settings",
+      "save": "Could not update local-kb"
+    }
   }
 }

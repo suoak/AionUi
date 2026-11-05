@@ -1895,5 +1895,35 @@
       "error": "키체인 사본을 확인하지 못했습니다. CSBU WorkMate가 로컬 데이터베이스에 저장된 키를 계속 사용합니다.",
       "staleReplaced": "이전 키체인 사본이 일치하지 않아 따로 보관했습니다(삭제하지 않음)."
     }
+  },
+  "localKb": {
+    "navLabel": "Local knowledge base",
+    "title": "Local knowledge base",
+    "description": "Optional on-device documents you can search when a task explicitly selects local-kb. Off by default.",
+    "scopeNote": "This is not KnowHub and not the skill experience library. It is never auto-injected into daily chat.",
+    "enableLabel": "Enable local-kb",
+    "enableHint": "When off, search and ContextProvider return unavailable.",
+    "disabledHint": "Turn on local-kb to import text sources and search them.",
+    "enabledToast": "Local-kb enabled",
+    "disabledToast": "Local-kb disabled",
+    "deleted": "Source deleted",
+    "add": {
+      "title": "Add text source",
+      "labelPlaceholder": "Label",
+      "bodyPlaceholder": "Paste document text…",
+      "submit": "Add source",
+      "required": "Label and text are required",
+      "success": "Source added"
+    },
+    "sources": {
+      "title": "Sources",
+      "empty": "No sources yet",
+      "meta": "{{kind}} · {{count}} documents",
+      "delete": "Delete"
+    },
+    "error": {
+      "load": "Could not load local-kb settings",
+      "save": "Could not update local-kb"
+    }
   }
 }
