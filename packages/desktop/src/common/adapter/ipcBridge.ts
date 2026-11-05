@@ -115,6 +115,8 @@ import type {
   CreatePullRequestResult,
   ScmDelivery,
   ScmHostStatus,
+  ImportGithubIssuesInput,
+  ImportGithubIssuesResult,
   TaskBoardItem,
   TaskBoardQuery,
   TaskBoardResponse,
@@ -1300,6 +1302,8 @@ export const taskSession = {
       const qs = query.toString();
       return qs ? `/api/task-sessions/board?${qs}` : '/api/task-sessions/board';
     }),
+    /** M8 E6-7: manual, read-only GitHub Issue import into the backlog. */
+    importGithub: httpPost<ImportGithubIssuesResult, ImportGithubIssuesInput>('/api/task-sessions/import/github'),
     update: httpPatch<TaskBoardItem, { id: string; updates: UpdateTaskBoardInput }>(
       (params) => `/api/task-sessions/${encodeURIComponent(params.id)}/board`,
       (params) => params.updates

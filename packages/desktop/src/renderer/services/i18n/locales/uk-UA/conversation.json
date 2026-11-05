@@ -1494,6 +1494,25 @@
         "removed": "Видалено",
         "orphaned": "Покинутий"
       }
+    },
+    "githubImport": {
+      "open": "Імпорт із GitHub",
+      "title": "Імпорт GitHub Issues",
+      "hint": "Імпортує відкриті issues одного репозиторію до беклогу за допомогою вашого входу в GitHub CLI (gh). Лише читання: до GitHub нічого не записується. Повторний імпорт оновлює лише назву, опис і мітки.",
+      "repo": "Репозиторій",
+      "query": "Фільтр",
+      "queryPlaceholder": "Необов’язково, напр. label:bug",
+      "submit": "Імпортувати",
+      "result": "Створено: {{created}}, оновлено: {{updated}}, без змін: {{unchanged}}.",
+      "errors": {
+        "cliMissing": "GitHub CLI (gh) не встановлено. Встановіть його та виконайте gh auth login.",
+        "notAuthenticated": "Вхід у GitHub CLI не виконано. Виконайте gh auth login і спробуйте ще раз.",
+        "repoNotFound": "Репозиторій не знайдено або ваш обліковий запис GitHub не має доступу.",
+        "timeout": "GitHub не відповів вчасно. Спробуйте ще раз.",
+        "invalidInput": "Перевірте репозиторій (owner/name) і фільтр.",
+        "unsupported": "Ця версія бекенда ще не підтримує імпорт із GitHub.",
+        "failed": "Імпорт не вдався. Подробиці — у журналі бекенда."
+      }
     }
   },
   "squadRouteOnly": {

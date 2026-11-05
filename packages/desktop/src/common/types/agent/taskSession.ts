@@ -111,7 +111,41 @@ export type TaskBoardRejectionReason =
   | 'not_allowed';
 
 /** What caused a `task.board.updated` event. */
-export type TaskBoardChange = 'board' | 'review' | 'squad_run';
+export type TaskBoardChange = 'board' | 'review' | 'squad_run' | 'import';
+
+/**
+ * M8 E6-7 `POST /api/task-sessions/import/github`: one manual, read-only
+ * import of a repository's open GitHub Issues into the backlog, using the
+ * user's own `gh` CLI login. Nothing is written back to GitHub.
+ */
+export type ImportGithubIssuesInput = {
+  /** `owner/name` (a github.com URL is accepted too). */
+  repo: string;
+  /** GitHub search qualifiers, e.g. `label:bug`. */
+  query?: string;
+  /** 1–100, default 30. */
+  limit?: number;
+};
+
+export type ImportedIssueOutcome = 'created' | 'updated' | 'unchanged';
+
+export type ImportedIssueItem = {
+  /** `github:owner/name#123`. */
+  external_ref: string;
+  task_session_id: string;
+  number: number;
+  title: string;
+  url: string;
+  outcome: ImportedIssueOutcome;
+};
+
+export type ImportGithubIssuesResult = {
+  repo: string;
+  created: number;
+  updated: number;
+  unchanged: number;
+  items: ImportedIssueItem[];
+};
 
 /** WS `task.board.updated`: the item after a successful board change. */
 export type TaskBoardUpdatedEvent = {
