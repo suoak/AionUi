@@ -490,6 +490,14 @@ export type TChatConversation =
         last_token_usage?: TokenUsageData;
         /** Cron job ID that spawned this conversation */
         cron_job_id?: string;
+        /** E11: Claude Code / Codex local import (read-only transcript on disk). */
+        imported_session?: {
+          source: 'claude-code' | 'codex';
+          source_path: string;
+          source_session_id: string;
+          cwd?: string;
+          imported_at: number;
+        };
       }
     >;
 

@@ -321,13 +321,27 @@ export async function hydrateConversationMessagesFromJournal(
     return messages;
   }
   try {
-    const transcript = normalizeJournalTranscript(
+    let transcript = normalizeJournalTranscript(
       await ipcBridge.conversation.getJournalTranscript.invoke({
         conversation_id: conversationId,
         visibility: 'model',
       }),
       conversationId
     );
+    // E11: fall back to a locally imported Claude/Codex transcript when Host
+    // journal is empty (read-only import → WorkMate transcript on disk).
+    if (!transcript.items.length) {
+      try {
+        const imported = await ipcBridge.sessionImport.getImportedTranscript.invoke({
+          conversation_id: conversationId,
+        });
+        if (imported?.items?.length) {
+          transcript = normalizeJournalTranscript(imported, conversationId);
+        }
+      } catch {
+        // Desktop-only bridge; ignore in webui / older builds.
+      }
+    }
     if (!transcript.items.length) {
       return messages;
     }
@@ -335,6 +349,19 @@ export async function hydrateConversationMessagesFromJournal(
     return mergeDbWithJournalTranscript(messages, recovered);
   } catch {
     // Older AionCore builds do not expose /transcript; keep the DB projection.
+    // Still try local import fallback.
+    try {
+      const imported = await ipcBridge.sessionImport.getImportedTranscript.invoke({
+        conversation_id: conversationId,
+      });
+      if (imported?.items?.length) {
+        const transcript = normalizeJournalTranscript(imported, conversationId);
+        const recovered = messagesFromJournalTranscript(conversationId, transcript);
+        return mergeDbWithJournalTranscript(messages, recovered);
+      }
+    } catch {
+      // ignore
+    }
     return messages;
   }
 }

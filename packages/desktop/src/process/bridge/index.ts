@@ -12,6 +12,7 @@ import { initNotificationBridge } from './notificationBridge';
 import { initWebuiBridge } from './webuiBridge';
 import { initThemeBridge } from './themeBridge';
 import { initUpdateBridge } from './updateBridge';
+import { initSessionImportBridge } from './sessionImportBridge';
 
 export type BridgeDependencies = Record<string, never>;
 
@@ -24,6 +25,7 @@ export function initAllBridges(_deps: BridgeDependencies = {}): void {
   initWebuiBridge();
   initThemeBridge();
   initUpdateBridge();
+  initSessionImportBridge();
 }
 
 export {
@@ -33,6 +35,7 @@ export {
   initSystemSettingsBridge,
   initThemeBridge,
   initUpdateBridge,
+  initSessionImportBridge,
   initWindowControlsBridge,
   initWebuiBridge,
 };

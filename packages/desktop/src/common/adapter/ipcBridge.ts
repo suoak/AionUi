@@ -2634,6 +2634,51 @@ export const systemSettings = {
 };
 
 // ---------------------------------------------------------------------------
+// E11: Claude Code / Codex local session import (read-only → WorkMate transcript)
+// ---------------------------------------------------------------------------
+
+export type ISessionImportSource = 'claude-code' | 'codex';
+
+export type IImportedSessionSummary = {
+  source: ISessionImportSource;
+  path: string;
+  sessionId: string;
+  label: string;
+  cwd?: string;
+  mtimeMs: number;
+  sizeBytes: number;
+  preview?: string;
+};
+
+export type IImportedSessionMeta = {
+  source: ISessionImportSource;
+  source_path: string;
+  source_session_id: string;
+  cwd?: string;
+  imported_at: number;
+};
+
+export const sessionImport = {
+  list: bridge.buildProvider<IImportedSessionSummary[], void>('sessionImport.list'),
+  preview: bridge.buildProvider<
+    {
+      transcript: import('@/common/types/journalTranscript').JournalTranscript;
+      meta: IImportedSessionMeta;
+      itemCount: number;
+    },
+    { source: ISessionImportSource; path: string }
+  >('sessionImport.preview'),
+  bind: bridge.buildProvider<
+    { meta: IImportedSessionMeta; itemCount: number; title: string },
+    { conversation_id: string; source: ISessionImportSource; path: string }
+  >('sessionImport.bind'),
+  getImportedTranscript: bridge.buildProvider<
+    import('@/common/types/journalTranscript').JournalTranscript | null,
+    { conversation_id: string }
+  >('sessionImport.getImportedTranscript'),
+};
+
+// ---------------------------------------------------------------------------
 // Notification — stays IPC (Electron-native Notification API)
 // ---------------------------------------------------------------------------
 
