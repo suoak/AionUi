@@ -115,7 +115,9 @@ const WorktreeTerminalPanel: React.FC<WorktreeTerminalPanelProps> = ({ isDesktop
     if (!session?.available || !termRef.current) return;
     const term = termRef.current;
     const inputDisp = term.onData((data) => {
-      void worktreePty.write.invoke({ id: session.id, data }).catch(() => undefined);
+      void worktreePty.write.invoke({ id: session.id, data }).catch(() => {
+        /* ignore write errors after kill */
+      });
     });
     const offData = worktreePty.onData.on((event) => {
       if (event.id === session.id) term.write(event.data);
