@@ -7,7 +7,7 @@
 /**
  * M9 E16 / S11 IA-0 — five primary information-architecture entries.
  *
- * Taxonomy + path mapping only. Does not reorder the sider yet (IA-1).
+ * Taxonomy + path mapping. IA-1 groups/relabels the sider fixed nav.
  * Brand: CSBU WorkMate.
  */
 

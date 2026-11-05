@@ -27,7 +27,7 @@ const SiderSkillEvolutionEntry: React.FC<SiderSkillEvolutionEntryProps> = ({
   onClick,
 }) => {
   const { t } = useTranslation();
-  const label = t('agent.skillEvolution.title');
+  const label = t('common.primaryNav.skills');
 
   if (collapsed) {
     return (

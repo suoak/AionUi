@@ -23,6 +23,7 @@ import SiderFooter from './SiderFooter';
 import TeamSiderSection from './TeamSiderSection';
 import FanoutSiderGroup from './FanoutSiderGroup';
 import siderStyles from './Sider.module.css';
+import { isPrimaryNavActive, primaryNavEntryByKey } from '../primaryNav/primaryNav';
 
 const WorkspaceGroupedHistory = React.lazy(() => import('@renderer/pages/conversation/GroupedHistory'));
 const SettingsSider = React.lazy(() => import('@renderer/pages/settings/components/SettingsSider'));
@@ -334,20 +335,29 @@ const Sider: React.FC<SiderProps> = ({ onSessionClick, collapsed = false }) => {
                 onSessionClick={onSessionClick}
               />
             )}
-            {/* Assistant nav entry - fixed above Scheduled */}
+            {/* M9 E16 IA-1: five primary slots — workItems, agents, skills, batch
+                (sessions remain toolbar + history). Secondary: assistants, scheduled,
+                usage, inbox. Routes unchanged. */}
+            <SiderTasksBoardEntry
+              isMobile={isMobile}
+              isActive={isPrimaryNavActive(primaryNavEntryByKey('workItems'), pathname)}
+              collapsed={collapsed}
+              siderTooltipProps={siderTooltipProps}
+              onClick={handleTasksBoardClick}
+            />
+            <SiderScheduledEntry
+              isMobile={isMobile}
+              isActive={pathname === '/scheduled' || pathname.startsWith('/scheduled/')}
+              collapsed={collapsed}
+              siderTooltipProps={siderTooltipProps}
+              onClick={handleScheduledClick}
+            />
             <SiderAgentCenterEntry
               isMobile={isMobile}
-              isActive={pathname.startsWith('/agent-center')}
+              isActive={isPrimaryNavActive(primaryNavEntryByKey('agents'), pathname)}
               collapsed={collapsed}
               siderTooltipProps={siderTooltipProps}
               onClick={handleAgentCenterClick}
-            />
-            <SiderSkillEvolutionEntry
-              isMobile={isMobile}
-              isActive={pathname.startsWith('/skill-evolution')}
-              collapsed={collapsed}
-              siderTooltipProps={siderTooltipProps}
-              onClick={handleSkillEvolutionClick}
             />
             <SiderAssistantEntry
               isMobile={isMobile}
@@ -356,26 +366,16 @@ const Sider: React.FC<SiderProps> = ({ onSessionClick, collapsed = false }) => {
               siderTooltipProps={siderTooltipProps}
               onClick={handleAssistantClick}
             />
-            {/* Scheduled tasks nav entry - fixed above scroll */}
-            <SiderScheduledEntry
+            <SiderSkillEvolutionEntry
               isMobile={isMobile}
-              isActive={pathname === '/scheduled'}
+              isActive={isPrimaryNavActive(primaryNavEntryByKey('skills'), pathname)}
               collapsed={collapsed}
               siderTooltipProps={siderTooltipProps}
-              onClick={handleScheduledClick}
+              onClick={handleSkillEvolutionClick}
             />
-            {/* Work-item board (M8 E6-4) */}
-            <SiderTasksBoardEntry
-              isMobile={isMobile}
-              isActive={pathname === '/tasks'}
-              collapsed={collapsed}
-              siderTooltipProps={siderTooltipProps}
-              onClick={handleTasksBoardClick}
-            />
-            {/* Batch jobs (M8 E8-5) */}
             <SiderBatchEntry
               isMobile={isMobile}
-              isActive={pathname === '/batch'}
+              isActive={isPrimaryNavActive(primaryNavEntryByKey('batch'), pathname)}
               collapsed={collapsed}
               siderTooltipProps={siderTooltipProps}
               onClick={handleBatchClick}
