@@ -11,7 +11,7 @@ import {
   primaryNavEntryByKey,
 } from '@renderer/components/layout/primaryNav/primaryNav';
 
-describe('primaryNav IA-0', () => {
+describe('primaryNav IA-0/IA-1', () => {
   it('exposes exactly five primary entries in canonical order', () => {
     expect(PRIMARY_NAV_ENTRIES.map((e) => e.key)).toEqual(['sessions', 'workItems', 'agents', 'skills', 'batch']);
   });
@@ -31,5 +31,12 @@ describe('primaryNav IA-0', () => {
     expect(isPrimaryNavActive(sessions, '/tasks')).toBe(false);
     expect(isPrimaryNavActive(workItems, '/scheduled/job-1')).toBe(true);
     expect(isPrimaryNavActive(workItems, '/batch')).toBe(false);
+  });
+
+  it('workItems activePrefixes cover /tasks and /scheduled', () => {
+    const workItems = primaryNavEntryByKey('workItems');
+    expect(isPrimaryNavActive(workItems, '/tasks')).toBe(true);
+    expect(isPrimaryNavActive(workItems, '/tasks/xyz')).toBe(true);
+    expect(isPrimaryNavActive(workItems, '/scheduled')).toBe(true);
   });
 });

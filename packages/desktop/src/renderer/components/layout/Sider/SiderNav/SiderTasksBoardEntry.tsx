@@ -30,7 +30,7 @@ const SiderTasksBoardEntry: React.FC<SiderTasksBoardEntryProps> = ({
 
   if (collapsed) {
     return (
-      <Tooltip {...siderTooltipProps} content={t('conversation.taskBoard.title')} position='right'>
+      <Tooltip {...siderTooltipProps} content={t('common.primaryNav.workItems')} position='right'>
         <div
           className={classNames(
             'w-full h-34px flex items-center justify-center cursor-pointer transition-colors rd-8px text-t-primary',
@@ -52,7 +52,7 @@ const SiderTasksBoardEntry: React.FC<SiderTasksBoardEntryProps> = ({
   }
 
   return (
-    <Tooltip {...siderTooltipProps} content={t('conversation.taskBoard.title')} position='right'>
+    <Tooltip {...siderTooltipProps} content={t('common.primaryNav.workItems')} position='right'>
       <div
         className={classNames(
           'box-border group h-34px w-full flex items-center justify-start gap-8px ps-10px pe-8px rd-0.5rem cursor-pointer shrink-0 transition-all text-t-primary',
@@ -72,7 +72,7 @@ const SiderTasksBoardEntry: React.FC<SiderTasksBoardEntryProps> = ({
           />
         </span>
         <span className='collapsed-hidden text-t-primary text-14px font-[500] leading-24px'>
-          {t('conversation.taskBoard.title')}
+          {t('common.primaryNav.workItems')}
         </span>
       </div>
     </Tooltip>

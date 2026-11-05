@@ -27,7 +27,7 @@ const SiderAgentCenterEntry: React.FC<SiderAgentCenterEntryProps> = ({
   onClick,
 }) => {
   const { t } = useTranslation();
-  const label = t('agent.agentCenter.title');
+  const label = t('common.primaryNav.agents');
 
   if (collapsed) {
     return (
