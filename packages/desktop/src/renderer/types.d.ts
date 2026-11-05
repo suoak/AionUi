@@ -73,3 +73,5 @@ declare module 'wavedrom/skins/dark.js' {
   const skin: import('wavedrom').WaveSkin;
   export default skin;
 }
+
+declare module '@xterm/xterm/css/xterm.css';
