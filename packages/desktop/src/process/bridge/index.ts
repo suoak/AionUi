@@ -13,6 +13,7 @@ import { initWebuiBridge } from './webuiBridge';
 import { initThemeBridge } from './themeBridge';
 import { initUpdateBridge } from './updateBridge';
 import { initSessionImportBridge } from './sessionImportBridge';
+import { initWorktreePtyBridge } from './worktreePtyBridge';
 import { initSshTunnelBridge } from './sshTunnelBridge';
 
 export type BridgeDependencies = Record<string, never>;
@@ -27,6 +28,7 @@ export function initAllBridges(_deps: BridgeDependencies = {}): void {
   initThemeBridge();
   initUpdateBridge();
   initSessionImportBridge();
+  initWorktreePtyBridge();
   initSshTunnelBridge();
 }
 
@@ -40,6 +42,7 @@ export {
   initSessionImportBridge,
   initWindowControlsBridge,
   initWebuiBridge,
+  initWorktreePtyBridge,
   initSshTunnelBridge,
 };
 export { registerWindowMaximizeListeners } from './windowControlsBridge';

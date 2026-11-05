@@ -1,3 +1,4 @@
+import path from 'node:path';
 import { describe, expect, it } from 'vitest';
 import {
   claudeProjectsRoot,
@@ -8,9 +9,9 @@ import {
 
 describe('discoverPaths', () => {
   it('builds default roots', () => {
-    expect(claudeProjectsRoot('/home/u')).toContain('.claude/projects');
-    expect(codexSessionsRoot('/home/u')).toContain('.codex/sessions');
-    expect(codexSessionsRoot('/home/u', '/custom/codex')).toBe('/custom/codex/sessions');
+    expect(claudeProjectsRoot('/home/u')).toBe(path.join('/home/u', '.claude', 'projects'));
+    expect(codexSessionsRoot('/home/u')).toBe(path.join('/home/u', '.codex', 'sessions'));
+    expect(codexSessionsRoot('/home/u', '/custom/codex')).toBe(path.join('/custom/codex', 'sessions'));
   });
 
   it('parses session ids from filenames', () => {
