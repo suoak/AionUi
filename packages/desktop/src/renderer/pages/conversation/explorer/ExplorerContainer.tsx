@@ -64,6 +64,8 @@ import type { SearchHit } from './search/searchModel';
 import { ScmPanel } from '../SourceControl/ScmPanel';
 import { rediscoverRepos, refreshAllRepos } from '../SourceControl/scmStore';
 
+import { WorktreeTerminalPanel } from '@/renderer/components/worktree-terminal';
+
 export type ExplorerContainerProps = {
   /** Owning project id — scopes the store's fact cache + localStorage UI state. */
   projectId: string;
@@ -647,6 +649,9 @@ export const ExplorerContainer: React.FC<ExplorerContainerProps> = ({ projectId 
           <ScmPanel projectId={projectId} />
         </div>
       )}
+      <div className='flex-shrink-0'>
+        <WorktreeTerminalPanel />
+      </div>
       <Modal
         title={nameDialog ? t(nameDialogTitleKey(nameDialog.mode)) : ''}
         visible={nameDialog !== null}
