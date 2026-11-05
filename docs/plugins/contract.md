@@ -1,6 +1,6 @@
 # CSBU WorkMate Plugin Contract v1
 
-Status: **S8 public contract**. Host already loads extensions via Core `aionui-extension`. This document freezes the *public* shape authors should target. Brand: **CSBU WorkMate** only.
+Status: **S8 public contract**. Host already loads extensions via Core `aionui-extension`. This document freezes the _public_ shape authors should target. Brand: **CSBU WorkMate** only.
 
 ## Security posture
 
@@ -40,15 +40,15 @@ Extension `name` must not use reserved prefixes owned by the product (see Core `
 
 ## Permissions
 
-| Key | Meaning |
-|---|---|
-| `storage` | Extension-local storage |
-| `network` | `true`, `false`, or `{ allowedDomains, reasoning }` |
-| `shell` | Spawn shell commands |
-| `filesystem` | `extension-only` \| `workspace` \| `full` |
-| `clipboard` | Clipboard read/write |
-| `activeUser` | Current user identity |
-| `events` | Host event bus |
+| Key          | Meaning                                             |
+| ------------ | --------------------------------------------------- |
+| `storage`    | Extension-local storage                             |
+| `network`    | `true`, `false`, or `{ allowedDomains, reasoning }` |
+| `shell`      | Spawn shell commands                                |
+| `filesystem` | `extension-only` \| `workspace` \| `full`           |
+| `clipboard`  | Clipboard read/write                                |
+| `activeUser` | Current user identity                               |
+| `events`     | Host event bus                                      |
 
 ## Contribution points
 
@@ -121,7 +121,7 @@ Manifest values may use `$file:relative/path.json` to inline JSON (or text) from
 
 ## Forward compatibility
 
-Unknown top-level or `contributes.*` keys are **ignored** (with host logs). Invalid *known* entries are skipped per item when possible so one bad tool does not block themes.
+Unknown top-level or `contributes.*` keys are **ignored** (with host logs). Invalid _known_ entries are skipped per item when possible so one bad tool does not block themes.
 
 ## CLI
 
