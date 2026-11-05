@@ -10,6 +10,7 @@ import PwaPullToRefresh from '@/renderer/components/layout/PwaPullToRefresh';
 import Titlebar from '@/renderer/components/layout/Titlebar';
 import UpdateNotificationCard from '@/renderer/components/settings/UpdateNotificationCard';
 import AgentActionApprovalHost from '@/renderer/components/agentApproval/AgentActionApprovalHost';
+import { CommandPalette, useCommandPalette } from '@/renderer/components/command-palette';
 import { Layout as ArcoLayout, Tooltip } from '@arco-design/web-react';
 import classNames from 'classnames';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
@@ -136,6 +137,7 @@ const Layout: React.FC<{
     setCollapsed((previous) => !previous);
   }, []);
   useConversationShortcuts({ navigate, toggleSider });
+  const { open: commandPaletteOpen, closePalette } = useCommandPalette();
   // Expose navigate to code running outside the Router tree (e.g. the globally
   // mounted FeedbackReportModal's "via chat" action).
   useEffect(() => {
@@ -554,6 +556,7 @@ const Layout: React.FC<{
       </NavigationHistoryProvider>
       <UpdateNotificationCard />
       <AgentActionApprovalHost />
+      <CommandPalette open={commandPaletteOpen} onClose={closePalette} />
     </LayoutContext.Provider>
   );
 };
