@@ -31,7 +31,7 @@ describe('workmate-plugin-cli validateManifest', () => {
         name: 'x',
         version: '1.0.0',
         contributes: { agent_tools: [{ id: 'a', name: 'A', plan_safe_actions: false }] },
-      }),
+      })
     ).toEqual([]);
   });
 });
