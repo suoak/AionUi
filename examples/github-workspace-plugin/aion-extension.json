@@ -1,0 +1,109 @@
+{
+  "$schema": "../../schemas/aion-extension-v1.json",
+  "name": "github-workspace",
+  "displayName": "GitHub Workspace",
+  "version": "0.1.0",
+  "description": "Curated sample: GitHub PR/issue workspace panel, plan-safe read tools, and gated write tools for CSBU WorkMate agents.",
+  "author": "CSBU WorkMate",
+  "license": "Apache-2.0",
+  "apiVersion": "1",
+  "entryPoint": "src/activate.js",
+  "engine": {
+    "aionui": "^2.6.0"
+  },
+  "lifecycle": {
+    "onActivate": "src/activate.js",
+    "onDeactivate": "src/deactivate.js"
+  },
+  "permissions": {
+    "storage": true,
+    "network": {
+      "allowedDomains": [
+        "github.com",
+        "api.github.com"
+      ],
+      "reasoning": "Fetch PR/issue metadata and diffs from GitHub REST/GraphQL APIs only."
+    },
+    "shell": false,
+    "filesystem": "workspace",
+    "events": true
+  },
+  "contributes": {
+    "commands": [
+      {
+        "id": "github-workspace.openPr",
+        "title": "GitHub: Open Pull Request",
+        "when": "workspaceHasGit"
+      },
+      {
+        "id": "github-workspace.listIssues",
+        "title": "GitHub: List Issues"
+      },
+      {
+        "id": "github-workspace.sync",
+        "title": "GitHub: Sync Workspace Metadata"
+      }
+    ],
+    "panels": [
+      {
+        "id": "github-workspace.panel",
+        "title": "GitHub Workspace",
+        "entryPoint": "ui/panel.html",
+        "icon": "assets/icon.svg"
+      }
+    ],
+    "workPanelViews": [
+      {
+        "id": "github-workspace.prSidebar",
+        "title": "PR Context",
+        "entryPoint": "ui/pr-sidebar.html",
+        "placement": "sidebar",
+        "icon": "assets/icon.svg"
+      }
+    ],
+    "agentTools": [
+      {
+        "id": "github-workspace.listPrs",
+        "name": "List Pull Requests",
+        "description": "List open PRs for the current repository.",
+        "planSafeActions": true,
+        "handler": "src/tools/list-prs.js"
+      },
+      {
+        "id": "github-workspace.getFile",
+        "name": "Get Repository File",
+        "description": "Read a file from the linked GitHub repository.",
+        "planSafeActions": true,
+        "handler": "src/tools/get-file.js"
+      },
+      {
+        "id": "github-workspace.createPr",
+        "name": "Create Pull Request",
+        "description": "Open a pull request (mutates remote state).",
+        "planSafeActions": false,
+        "handler": "src/tools/create-pr.js"
+      },
+      {
+        "id": "github-workspace.commentIssue",
+        "name": "Comment on Issue",
+        "description": "Post a comment on a GitHub issue or PR.",
+        "planSafeActions": false,
+        "handler": "src/tools/comment-issue.js"
+      }
+    ],
+    "backgroundServices": [
+      {
+        "id": "github-workspace.syncService",
+        "entryPoint": "src/services/sync.js",
+        "description": "Periodically refresh PR/issue metadata into extension storage."
+      }
+    ],
+    "skills": [
+      {
+        "name": "github-pr-review",
+        "description": "Review a GitHub pull request with evidence-backed findings.",
+        "file": "skills/github-pr-review.md"
+      }
+    ]
+  }
+}

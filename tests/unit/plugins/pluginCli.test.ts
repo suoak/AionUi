@@ -55,3 +55,31 @@ describe('workmate-plugin-cli init/check/pack', () => {
     expect(existsSync(join(root, 'out.wmx'))).toBe(true);
   });
 });
+
+describe('Contract v1 curated sample plugins', () => {
+  const samples = [
+    'github-workspace-plugin',
+    'session-analysis-plugin',
+    'deck-template-pack-plugin',
+  ] as const;
+
+  for (const name of samples) {
+    it(`checks ${name}`, () => {
+      const dir = join(process.cwd(), 'examples', name);
+      expect(existsSync(join(dir, 'aion-extension.json'))).toBe(true);
+      expect(cmdCheck(dir)).toBe(0);
+      const manifest = JSON.parse(readFileSync(join(dir, 'aion-extension.json'), 'utf8')) as {
+        name: string;
+        license?: string;
+        contributes?: { agentTools?: Array<{ planSafeActions?: boolean }> };
+      };
+      expect(manifest.license).toBe('Apache-2.0');
+      expect(manifest.name).toBeTruthy();
+      const tools = manifest.contributes?.agentTools ?? [];
+      expect(tools.length).toBeGreaterThan(0);
+      for (const tool of tools) {
+        expect(typeof tool.planSafeActions).toBe('boolean');
+      }
+    });
+  }
+});

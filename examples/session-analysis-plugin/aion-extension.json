@@ -1,0 +1,83 @@
+{
+  "$schema": "../../schemas/aion-extension-v1.json",
+  "name": "session-analysis",
+  "displayName": "Session Analysis",
+  "version": "0.1.0",
+  "description": "Curated sample: analyze conversation sessions for summaries, action items, and quality signals (read-only tools).",
+  "author": "CSBU WorkMate",
+  "license": "Apache-2.0",
+  "apiVersion": "1",
+  "entryPoint": "src/activate.js",
+  "engine": {
+    "aionui": "^2.6.0"
+  },
+  "lifecycle": {
+    "onActivate": "src/activate.js",
+    "onDeactivate": "src/deactivate.js"
+  },
+  "permissions": {
+    "storage": true,
+    "network": false,
+    "shell": false,
+    "filesystem": "extension-only",
+    "events": true,
+    "activeUser": true
+  },
+  "contributes": {
+    "commands": [
+      {
+        "id": "session-analysis.analyzeCurrent",
+        "title": "Analyze Current Session"
+      },
+      {
+        "id": "session-analysis.exportReport",
+        "title": "Export Session Report"
+      }
+    ],
+    "panels": [
+      {
+        "id": "session-analysis.dashboard",
+        "title": "Session Analytics",
+        "entryPoint": "ui/dashboard.html",
+        "icon": "assets/icon.svg"
+      }
+    ],
+    "agentTools": [
+      {
+        "id": "session-analysis.summarize",
+        "name": "Summarize Session",
+        "description": "Produce a concise summary of the active session.",
+        "planSafeActions": true,
+        "handler": "src/tools/summarize.js"
+      },
+      {
+        "id": "session-analysis.extractActions",
+        "name": "Extract Action Items",
+        "description": "List actionable follow-ups from the session transcript.",
+        "planSafeActions": true,
+        "handler": "src/tools/extract-actions.js"
+      },
+      {
+        "id": "session-analysis.scoreQuality",
+        "name": "Score Session Quality",
+        "description": "Heuristic quality signals (clarity, completeness).",
+        "planSafeActions": true,
+        "handler": "src/tools/score-quality.js"
+      }
+    ],
+    "backgroundServices": [
+      {
+        "id": "session-analysis.indexer",
+        "entryPoint": "src/services/indexer.js",
+        "description": "Index closed sessions into extension storage for analytics."
+      }
+    ],
+    "skills": [
+      {
+        "name": "session-retrospective",
+        "description": "Run a structured retrospective on a finished session.",
+        "file": "skills/session-retrospective.md"
+      }
+    ]
+  }
+}

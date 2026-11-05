@@ -1,0 +1,86 @@
+{
+  "$schema": "../../schemas/aion-extension-v1.json",
+  "name": "deck-template-pack",
+  "displayName": "Deck Template Pack",
+  "version": "0.1.0",
+  "description": "Curated sample: slide/deck templates, gallery panel, and agent tools to list or apply templates.",
+  "author": "CSBU WorkMate",
+  "license": "Apache-2.0",
+  "apiVersion": "1",
+  "entryPoint": "src/activate.js",
+  "engine": {
+    "aionui": "^2.6.0"
+  },
+  "lifecycle": {
+    "onActivate": "src/activate.js",
+    "onDeactivate": "src/deactivate.js"
+  },
+  "permissions": {
+    "storage": true,
+    "network": false,
+    "shell": false,
+    "filesystem": "extension-only",
+    "events": true
+  },
+  "contributes": {
+    "commands": [
+      {
+        "id": "deck-template-pack.newFromTemplate",
+        "title": "Deck: New from Template"
+      },
+      {
+        "id": "deck-template-pack.insertSlide",
+        "title": "Deck: Insert Slide"
+      }
+    ],
+    "panels": [
+      {
+        "id": "deck-template-pack.gallery",
+        "title": "Deck Templates",
+        "entryPoint": "ui/gallery.html",
+        "icon": "assets/icon.svg"
+      }
+    ],
+    "agentTools": [
+      {
+        "id": "deck-template-pack.listTemplates",
+        "name": "List Deck Templates",
+        "description": "Enumerate available deck templates in this pack.",
+        "planSafeActions": true,
+        "handler": "src/tools/list-templates.js"
+      },
+      {
+        "id": "deck-template-pack.applyTemplate",
+        "name": "Apply Deck Template",
+        "description": "Apply a template to the current deck (writes content).",
+        "planSafeActions": false,
+        "handler": "src/tools/apply-template.js"
+      }
+    ],
+    "skills": [
+      {
+        "name": "deck-exec-brief",
+        "description": "Executive brief deck structure.",
+        "file": "skills/deck-exec-brief.md"
+      },
+      {
+        "name": "deck-product-update",
+        "description": "Product update deck structure.",
+        "file": "skills/deck-product-update.md"
+      },
+      {
+        "name": "deck-retro",
+        "description": "Team retrospective deck structure.",
+        "file": "skills/deck-retro.md"
+      }
+    ],
+    "themes": [
+      {
+        "id": "deck-template-pack.presentation",
+        "name": "WorkMate Deck",
+        "cssFile": "themes/deck-presentation.css",
+        "description": "Clean presentation theme for generated decks."
+      }
+    ]
+  }
+}
