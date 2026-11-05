@@ -140,4 +140,3 @@ Curated Contract v1 samples (not an open marketplace):
 - `examples/deck-template-pack-plugin` — deck template pack (skills + themes)
 
 Validate with `workmate-plugin-cli check <dir>`.
-

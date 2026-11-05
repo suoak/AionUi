@@ -2,12 +2,12 @@
 
 Contract v1 curated sample for CSBU WorkMate.
 
-| Contribute | Purpose |
-| --- | --- |
-| commands / panels / workPanelViews | PR workspace UI |
-| agentTools | plan-safe reads + gated writes |
-| backgroundServices | metadata sync stub |
-| skills | PR review playbook |
+| Contribute                         | Purpose                        |
+| ---------------------------------- | ------------------------------ |
+| commands / panels / workPanelViews | PR workspace UI                |
+| agentTools                         | plan-safe reads + gated writes |
+| backgroundServices                 | metadata sync stub             |
+| skills                             | PR review playbook             |
 
 ```bash
 bun packages/plugin-cli/bin/workmate-plugin-cli.js check examples/github-workspace-plugin

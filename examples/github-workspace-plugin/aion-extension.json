@@ -18,10 +18,7 @@
   "permissions": {
     "storage": true,
     "network": {
-      "allowedDomains": [
-        "github.com",
-        "api.github.com"
-      ],
+      "allowedDomains": ["github.com", "api.github.com"],
       "reasoning": "Fetch PR/issue metadata and diffs from GitHub REST/GraphQL APIs only."
     },
     "shell": false,

@@ -12,10 +12,10 @@ Scaffold and validate with `workmate-plugin-cli` (package `@csbu-workmate/plugin
 
 Examples under `examples/*-extension` remain the living fixtures. Contract v1 **curated sample plugins**:
 
-| Directory | Sample |
-| --- | --- |
-| [`examples/github-workspace-plugin`](../../examples/github-workspace-plugin) | GitHub PR/issue workspace |
-| [`examples/session-analysis-plugin`](../../examples/session-analysis-plugin) | Session analytics |
+| Directory                                                                        | Sample                     |
+| -------------------------------------------------------------------------------- | -------------------------- |
+| [`examples/github-workspace-plugin`](../../examples/github-workspace-plugin)     | GitHub PR/issue workspace  |
+| [`examples/session-analysis-plugin`](../../examples/session-analysis-plugin)     | Session analytics          |
 | [`examples/deck-template-pack-plugin`](../../examples/deck-template-pack-plugin) | Deck / slide template pack |
 
 See [`examples/SAMPLE-PLUGINS.md`](../../examples/SAMPLE-PLUGINS.md). The internal curated marketplace ships later (M9 S10).

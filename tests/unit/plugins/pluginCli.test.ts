@@ -57,11 +57,7 @@ describe('workmate-plugin-cli init/check/pack', () => {
 });
 
 describe('Contract v1 curated sample plugins', () => {
-  const samples = [
-    'github-workspace-plugin',
-    'session-analysis-plugin',
-    'deck-template-pack-plugin',
-  ] as const;
+  const samples = ['github-workspace-plugin', 'session-analysis-plugin', 'deck-template-pack-plugin'] as const;
 
   for (const name of samples) {
     it(`checks ${name}`, () => {
