@@ -7,6 +7,12 @@
 import { bridge } from '@/common/platform/bridge';
 import { WEBUI_DEFAULT_PORT } from '@/common/config/constants';
 import { refreshSession } from './sessionRefresh';
+import {
+  applyResumeComplete,
+  buildResumeMessage,
+  createSessionCursorStore,
+  cursorFromEnvelope,
+} from './eventResumeCursor';
 import type { ElectronBridgeAPI } from '@/common/types/platform/electron';
 
 interface CustomWindow extends Window {
@@ -15,7 +21,7 @@ interface CustomWindow extends Window {
   __websocketReconnect?: () => void;
 }
 
-type BrowserWebSocketPayload = { name: string; data?: unknown };
+type BrowserWebSocketPayload = { name: string; data?: unknown; cursor?: unknown };
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null;
@@ -96,6 +102,7 @@ if (win.electronAPI) {
   let shouldReconnect = true; // Flag to control reconnection
 
   const messageQueue: QueuedMessage[] = [];
+  const eventCursorStore = createSessionCursorStore();
 
   // 1.发送队列中积压的消息，确保在重新建立连接后不会丢事件
   const flushQueue = () => {
@@ -161,6 +168,12 @@ if (win.electronAPI) {
 
     currentSocket.addEventListener('open', () => {
       connectedAt = Date.now();
+      // E14: resume retained Host events after reconnect (and on first open).
+      try {
+        currentSocket.send(JSON.stringify(buildResumeMessage(eventCursorStore.get())));
+      } catch {
+        /* ignore — queue path still works for app emits */
+      }
       flushQueue();
     });
 
@@ -174,6 +187,14 @@ if (win.electronAPI) {
 
         if (!isBrowserWebSocketPayload(payload)) {
           return;
+        }
+
+        const inboundCursor = cursorFromEnvelope(payload);
+        if (inboundCursor) {
+          eventCursorStore.note(inboundCursor);
+        }
+        if (payload.name === 'resume.complete') {
+          applyResumeComplete(eventCursorStore, payload.data, inboundCursor);
         }
 
         // 处理服务端心跳 ping，立即回复 pong 以保持连接

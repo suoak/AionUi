@@ -7,6 +7,13 @@
  */
 
 import { getBackendAuthHeaders } from './backendAuth';
+import {
+  applyResumeComplete,
+  buildResumeMessage,
+  createSessionCursorStore,
+  cursorFromEnvelope,
+  type EventCursorStore,
+} from './eventResumeCursor';
 import { refreshSession, WS_CLOSE_POLICY_VIOLATION } from './sessionRefresh';
 
 // ---------------------------------------------------------------------------
@@ -410,6 +417,8 @@ let ws: WebSocket | null = null;
 let wsReconnectTimer: ReturnType<typeof setTimeout> | null = null;
 let wsReconnectAttempt = 0;
 let wsHasOpened = false;
+/** E14: last Host EventCursor for reconnect resume (session-scoped). */
+const eventCursorStore: EventCursorStore = createSessionCursorStore();
 
 function dispatchWsEvent(eventName: string, payload: unknown): void {
   const handlers = wsListeners.get(eventName);
@@ -450,6 +459,12 @@ function ensureWs(): void {
     const isReconnect = wsHasOpened;
     wsHasOpened = true;
     wsReconnectAttempt = 0;
+    // E14: ask Host to replay retained live events after our last cursor.
+    try {
+      current.send(JSON.stringify(buildResumeMessage(eventCursorStore.get())));
+    } catch (e) {
+      console.error('[ensureWs] resume send failed:', e);
+    }
     if (isReconnect) {
       dispatchWsEvent(REALTIME_RECONNECTED_EVENT, { timestamp: Date.now() });
     }
@@ -481,9 +496,17 @@ function ensureWs(): void {
         event?: string;
         data?: unknown;
         payload?: unknown;
+        cursor?: unknown;
       };
       const eventName = msg.name ?? msg.event;
       const payload = msg.data ?? msg.payload;
+      const cursor = cursorFromEnvelope(msg);
+      if (cursor) {
+        eventCursorStore.note(cursor);
+      }
+      if (eventName === 'resume.complete') {
+        applyResumeComplete(eventCursorStore, payload, cursor);
+      }
       console.debug('[WS:msg]', eventName, JSON.stringify(payload).slice(0, 200));
       if (eventName) {
         dispatchWsEvent(eventName, payload);
