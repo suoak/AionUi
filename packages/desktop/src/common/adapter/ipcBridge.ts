@@ -2738,7 +2738,6 @@ export const sshTunnel = {
   stop: bridge.buildProvider<ISshTunnelStatus, void>('sshTunnel.stop'),
 };
 
-
 // ---------------------------------------------------------------------------
 // Cron — routed to /api/cron/*
 // ---------------------------------------------------------------------------
