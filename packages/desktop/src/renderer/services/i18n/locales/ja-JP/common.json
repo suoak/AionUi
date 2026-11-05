@@ -241,5 +241,12 @@
     },
     "phoneApproved": "スマートフォンで承認済み",
     "phoneRejected": "スマートフォンで却下済み"
+  },
+  "primaryNav": {
+    "sessions": "セッション",
+    "workItems": "作業項目",
+    "agents": "エージェント",
+    "skills": "スキル",
+    "batch": "バッチ"
   }
 }

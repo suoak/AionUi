@@ -241,5 +241,12 @@
     },
     "phoneApproved": "已在手机上批准",
     "phoneRejected": "已在手机上拒绝"
+  },
+  "primaryNav": {
+    "sessions": "会话",
+    "workItems": "工作项",
+    "agents": "智能体",
+    "skills": "技能",
+    "batch": "批量"
   }
 }

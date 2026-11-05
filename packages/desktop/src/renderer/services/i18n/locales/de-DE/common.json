@@ -241,5 +241,12 @@
     },
     "phoneApproved": "Auf dem Smartphone genehmigt",
     "phoneRejected": "Auf dem Smartphone abgelehnt"
+  },
+  "primaryNav": {
+    "sessions": "Sitzungen",
+    "workItems": "Arbeitselemente",
+    "agents": "Agenten",
+    "skills": "Skills",
+    "batch": "Batch"
   }
 }
