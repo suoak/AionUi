@@ -52,9 +52,7 @@ export const LocalKbSettingsContent: React.FC = () => {
     try {
       const settings = await ipcBridge.localKb.updateSettings.invoke({ enabled: next });
       setEnabled(!!settings.enabled);
-      Message.success(
-        settings.enabled ? t('settings.localKb.enabledToast') : t('settings.localKb.disabledToast')
-      );
+      Message.success(settings.enabled ? t('settings.localKb.enabledToast') : t('settings.localKb.disabledToast'));
       await reload();
     } catch (err) {
       Message.error(err instanceof Error ? err.message : t('settings.localKb.error.save'));
@@ -99,10 +97,7 @@ export const LocalKbSettingsContent: React.FC = () => {
 
   return (
     <div className='flex flex-col gap-16px' data-testid='local-kb-settings'>
-      <SettingsPageHeader
-        title={t('settings.localKb.title')}
-        description={t('settings.localKb.description')}
-      />
+      <SettingsPageHeader title={t('settings.localKb.title')} description={t('settings.localKb.description')} />
       <Alert type='info' content={t('settings.localKb.scopeNote')} />
       {loadError ? <Alert type='error' data-testid='local-kb-load-error' content={loadError} /> : null}
 
