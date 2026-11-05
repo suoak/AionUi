@@ -8,3 +8,5 @@ declare module 'cookie' {
 
   export function parse(cookieHeader: string, options?: CookieParseOptions): Record<string, string>;
 }
+
+declare module 'node-pty';

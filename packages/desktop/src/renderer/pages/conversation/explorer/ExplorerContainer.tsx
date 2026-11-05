@@ -650,7 +650,7 @@ export const ExplorerContainer: React.FC<ExplorerContainerProps> = ({ projectId 
         </div>
       )}
       <div className='flex-shrink-0'>
-        <WorktreeTerminalPanel />
+        <WorktreeTerminalPanel cwd={workspacePath} />
       </div>
       <Modal
         title={nameDialog ? t(nameDialogTitleKey(nameDialog.mode)) : ''}

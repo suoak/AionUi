@@ -12,6 +12,7 @@ import { initNotificationBridge } from './notificationBridge';
 import { initWebuiBridge } from './webuiBridge';
 import { initThemeBridge } from './themeBridge';
 import { initUpdateBridge } from './updateBridge';
+import { initWorktreePtyBridge } from './worktreePtyBridge';
 
 export type BridgeDependencies = Record<string, never>;
 
@@ -24,6 +25,7 @@ export function initAllBridges(_deps: BridgeDependencies = {}): void {
   initWebuiBridge();
   initThemeBridge();
   initUpdateBridge();
+  initWorktreePtyBridge();
 }
 
 export {
@@ -35,6 +37,7 @@ export {
   initUpdateBridge,
   initWindowControlsBridge,
   initWebuiBridge,
+  initWorktreePtyBridge,
 };
 export { registerWindowMaximizeListeners } from './windowControlsBridge';
 export const disposeAllTeamSessions = (): Promise<void> => Promise.resolve();

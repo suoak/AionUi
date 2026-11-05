@@ -2710,6 +2710,37 @@ export const webui = {
 };
 
 // ---------------------------------------------------------------------------
+// E11 worktree PTY — desktop node-pty + xterm; agent reads gated by attach.
+// ---------------------------------------------------------------------------
+
+export type IWorktreePtySession = {
+  id: string;
+  cwd: string;
+  pid?: number;
+  agentAttached: boolean;
+  available: boolean;
+  error?: string;
+};
+
+export const worktreePty = {
+  list: bridge.buildProvider<IWorktreePtySession[], void>('worktreePty.list'),
+  get: bridge.buildProvider<IWorktreePtySession | null, { id: string }>('worktreePty.get'),
+  create: bridge.buildProvider<IWorktreePtySession, { cwd: string; cols?: number; rows?: number }>(
+    'worktreePty.create'
+  ),
+  write: bridge.buildProvider<void, { id: string; data: string }>('worktreePty.write'),
+  resize: bridge.buildProvider<void, { id: string; cols: number; rows: number }>('worktreePty.resize'),
+  kill: bridge.buildProvider<void, { id: string }>('worktreePty.kill'),
+  setAgentAttached: bridge.buildProvider<IWorktreePtySession, { id: string; attached: boolean }>(
+    'worktreePty.set-agent-attached'
+  ),
+  readForAgent: bridge.buildProvider<{ data: string }, { id: string }>('worktreePty.read-for-agent'),
+  onData: bridge.buildEmitter<{ id: string; data: string }>('worktreePty.data'),
+  onExit: bridge.buildEmitter<{ id: string; exitCode: number; signal?: number }>('worktreePty.exit'),
+};
+
+
+// ---------------------------------------------------------------------------
 // Cron — routed to /api/cron/*
 // ---------------------------------------------------------------------------
 
