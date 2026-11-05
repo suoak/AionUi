@@ -21,12 +21,17 @@ export function useCommandPalette() {
 
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
-      if (
-        !isPrimaryApplicationShortcut(event, {
+      let matched = false;
+      try {
+        matched = isPrimaryApplicationShortcut(event, {
           key: 'k',
           targetGuard: 'embedded-editor',
-        })
-      ) {
+        });
+      } catch {
+        // Incomplete platform mocks in unrelated Layout tests must not crash.
+        return;
+      }
+      if (!matched) {
         return;
       }
       event.preventDefault();
