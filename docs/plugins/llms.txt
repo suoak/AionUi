@@ -1,0 +1,11 @@
+# CSBU WorkMate Plugin Contract v1 (llms.txt)
+
+Product: CSBU WorkMate only. Manifest file: aion-extension.json. Schema: schemas/aion-extension-v1.json. Full human doc: docs/plugins/contract.md.
+
+Required: name, version (semver). Permissions: storage, network, shell, filesystem (extension-only|workspace|full), clipboard, activeUser, events.
+
+Contributes (existing): acpAdapters, mcpServers, assistants, agents, skills, themes, channelPlugins, webui, settingsTabs, modelProviders.
+
+Contributes (v1 contract additions): commands[{id,title,keybinding?,when?}]; panels[{id,title,entryPoint,icon?}]; workPanelViews[{id,title,entryPoint,placement?,icon?}]; agentTools[{id,name,description?,planSafeActions(required bool),handler?}]; backgroundServices[{id,entryPoint,description?}].
+
+Rules: curated install only in v1 (no full sandbox); planSafeActions must be explicit; unknown keys ignored; no AGPL; brand CSBU WorkMate. CLI: workmate-plugin-cli init|check|pack|watch. Marketplace later (S10).
