@@ -13,7 +13,12 @@ const STORAGE_KEY = 'workmate.realtime.eventCursor';
 export function isEventCursor(value: unknown): value is EventCursor {
   if (typeof value !== 'object' || value === null) return false;
   const v = value as Record<string, unknown>;
-  return typeof v.epoch === 'number' && typeof v.sequence === 'number' && Number.isFinite(v.epoch) && Number.isFinite(v.sequence);
+  return (
+    typeof v.epoch === 'number' &&
+    typeof v.sequence === 'number' &&
+    Number.isFinite(v.epoch) &&
+    Number.isFinite(v.sequence)
+  );
 }
 
 export function cursorFromEnvelope(payload: unknown): EventCursor | null {
@@ -56,11 +61,7 @@ export function createMemoryCursorStore(initial: EventCursor | null = null): Eve
 /** sessionStorage-backed store; falls back to memory when storage is unavailable. */
 export function createSessionCursorStore(storage?: Storage | null): EventCursorStore {
   const memory = createMemoryCursorStore(null);
-  const ss =
-    storage ??
-    (typeof sessionStorage !== 'undefined'
-      ? sessionStorage
-      : null);
+  const ss = storage ?? (typeof sessionStorage !== 'undefined' ? sessionStorage : null);
 
   const read = (): EventCursor | null => {
     if (!ss) return memory.get();
@@ -114,11 +115,7 @@ export function buildResumeMessage(cursor: EventCursor | null): {
 }
 
 /** Apply Host `resume.complete` data (+ optional envelope cursor) into the store. */
-export function applyResumeComplete(
-  store: EventCursorStore,
-  data: unknown,
-  envelopeCursor: EventCursor | null
-): void {
+export function applyResumeComplete(store: EventCursorStore, data: unknown, envelopeCursor: EventCursor | null): void {
   const fromEnvelope = envelopeCursor;
   let fromData: EventCursor | null = null;
   if (typeof data === 'object' && data !== null) {
