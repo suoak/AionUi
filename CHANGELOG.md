@@ -1,5 +1,69 @@
 # Changelog
 
+## [2.6.0](https://github.com/suoak/AionUi/compare/v2.4.3...v2.6.0) (2026-11-05)
+
+### Desktop
+
+#### Features
+
+- **tasks:** work board with drag-to-move, assignee, priority, review gate, comment timeline and realtime updates; a work item can start a Squad that shares one worktree, and a completed run moves the card to review ([#204](https://github.com/suoak/AionUi/pull/204)–[#207](https://github.com/suoak/AionUi/pull/207), [#219](https://github.com/suoak/AionUi/pull/219), [#220](https://github.com/suoak/AionUi/pull/220)).
+- **squad:** Squad templates, preview and create-team-from-Squad; Squad run state on board cards; route-only Leader tool rejections are explained in chat ([#212](https://github.com/suoak/AionUi/pull/212)–[#217](https://github.com/suoak/AionUi/pull/217), [#221](https://github.com/suoak/AionUi/pull/221)).
+- **tasks:** read-only GitHub Issue import into the work board, triggered manually; needs a signed-in `gh` on this computer ([#233](https://github.com/suoak/AionUi/pull/233)).
+- **batch:** batch jobs page — run one task across many repositories, judged by artifacts, with per-item retry and cancel ([#218](https://github.com/suoak/AionUi/pull/218), [#222](https://github.com/suoak/AionUi/pull/222)).
+- **cron:** Autopilot controls in the scheduled-task editor; results go to the Inbox and IM, and Inbox items show where they came from ([#223](https://github.com/suoak/AionUi/pull/223)).
+- **devices:** pair a phone, manage paired phones, and label approvals decided on a phone ([#224](https://github.com/suoak/AionUi/pull/224)).
+- **settings:** governance page — audit log with chain verification and CSV export, roles (WebUI multi-user only), launch policies (all off by default), and the keychain status of the storage encryption key ([#227](https://github.com/suoak/AionUi/pull/227), [#230](https://github.com/suoak/AionUi/pull/230)).
+- **desktop:** mirror the storage encryption root into the system keychain (safeStorage); the existing secret is kept, nothing is removed ([#228](https://github.com/suoak/AionUi/pull/228)).
+- **skills:** pending-review queue, source and version history, compare and restore versions (restore saves the current content as a new version first), and a team skill library in multi-user mode (owner/admin publish, members use or copy to private) ([#208](https://github.com/suoak/AionUi/pull/208), [#210](https://github.com/suoak/AionUi/pull/210), [#211](https://github.com/suoak/AionUi/pull/211), [#231](https://github.com/suoak/AionUi/pull/231), [#232](https://github.com/suoak/AionUi/pull/232)).
+- **worktree:** conversation worktree mode, fan-out best-of-N groups (beta) with compare and adopt, annotatable diffs sent to the agent, inline commit/push and PR/MR creation through the local `gh`/`glab` ([#183](https://github.com/suoak/AionUi/pull/183)–[#192](https://github.com/suoak/AionUi/pull/192), [#200](https://github.com/suoak/AionUi/pull/200), [#201](https://github.com/suoak/AionUi/pull/201), [#203](https://github.com/suoak/AionUi/pull/203)).
+- **task:** Inbox with unread badge, run replay with live tail, retry/timeout policy, cost ledger panel and context ring ([#195](https://github.com/suoak/AionUi/pull/195)–[#199](https://github.com/suoak/AionUi/pull/199)).
+- **extensions:** settings-tab iframes use a short-lived asset token ([#194](https://github.com/suoak/AionUi/pull/194)).
+
+#### Bug Fixes
+
+- **guid:** don't send an empty MCP allowlist before the catalog loads ([#202](https://github.com/suoak/AionUi/pull/202)).
+- **markdown:** reset mermaid zoom together with the diagram swap ([#209](https://github.com/suoak/AionUi/pull/209)).
+- **ci:** macOS builds move from the retired `macos-14` runner to `macos-15` ([#229](https://github.com/suoak/AionUi/pull/229)).
+
+#### Known limitations
+
+- The Squad flow (work item → Squad → PR → human review), batch jobs over real repositories, and phone approvals have only been verified by automated and scripted tests, not end to end in this packaged app.
+- The phone app is not part of this release; pairing and approvals need a separately built phone client.
+- Fan-out stays beta; Windows path edge cases (long, Chinese or space-containing paths) have only build-level coverage.
+- Upgrading from 2.4.x runs database migrations 065–080 once; going back to 2.4.x afterwards is refused at startup.
+
+#### 内网更新说明
+
+<!-- internal-release-notes:start -->
+
+**由运营管理部提供**
+
+- 新增工作看板：工作项可以拖动、指派、评审，带评论时间线；工作项可以一键启动 Squad 协作，完成后自动进入待评审。
+- 支持从代码仓库手动导入 Issue 到看板（只读，需要本机已登录对应命令行工具）。
+- 新增批量任务：同一任务在多个仓库上执行，按产物判定成败，可单项重试或取消。
+- 定时任务支持 Autopilot，结果发送到收件箱和 IM。
+- 支持配对手机并在手机上审批；手机端应用不随本次安装包发布。
+- 新增治理页面：审计日志（可校验、可导出）、角色（仅多用户模式）和启动策略（默认全部关闭）；存储加密密钥会同步保存到系统钥匙串，原有密钥保留不删除。
+- 技能支持查看来源与版本、对比和恢复历史版本；多用户模式下新增团队技能库。待审核或被拒绝的技能不会再被智能体使用。
+- 新增会话工作树模式、多方案并行择优（测试版）、差异批注、提交推送和创建合并请求。
+- 新增收件箱、运行回放、重试与超时设置、费用面板和上下文占用圆环。
+- Squad 端到端流程、批量任务和手机审批目前只经过自动化测试，尚未在正式安装包中完成完整验收。
+- 升级后会自动迁移本地数据库，之后无法再回退到 2.4.x 版本。
+
+<!-- internal-release-notes:end -->
+
+### Core ([v0.4.0](https://github.com/suoak/AionCore/releases/tag/v0.4.0))
+
+- Task board, Squad templates and runs, work-item worktrees and Leader timeline (suoak/AionCore#182–#202).
+- Batch jobs with artifact checks, retry and boot recovery; Autopilot guardrails, IM/Inbox delivery and startup notification buffer (suoak/AionCore#197, #203–#208, #222, #226).
+- Mobile device pairing, scoped device tokens, approval push, and auto-closing of invalidated approvals (suoak/AionCore#209–#215).
+- Hash-chained audit ledger, roles, launch policies (`no_yolo` also blocks Autopilot full-auto) and keychain encryption root (suoak/AionCore#216–#219, #225).
+- Skill versions diff/restore, review gate in the resolver, team skill library and evolution evidence (suoak/AionCore#186–#188, #220, #221, #223, #224).
+- Read-only GitHub Issue import (suoak/AionCore#227).
+- Also first release of the M7 Core work: worktrees, fan-out, review threads, SCM delivery, usage ledger, replay, retry/cancel and the E1 security tail (suoak/AionCore#156–#181).
+
+---
+
 ## [2.4.3](https://github.com/suoak/AionUi/compare/v2.4.2...v2.4.3) (2026-10-22)
 
 ### Desktop
