@@ -324,6 +324,11 @@
         },
         "leaderUnenforceableNamed": "{{name}} は {{backend}} で動作しており、割り振り専用 Leader の制限を強制できません"
       }
+    },
+    "empty": {
+      "createHint": "No agents yet. Click “Create agent” to configure and try a run.",
+      "permissionHint": "No agents are available for your role.",
+      "permissionHintDetail": "An owner or admin must grant you run permission for published agents. You can still create private agents under “Mine” if allowed."
     }
   },
   "skillEvolution": {

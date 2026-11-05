@@ -324,6 +324,11 @@
         },
         "leaderUnenforceableNamed": "{{name}} 运行在 {{backend}} 上，无法强制只派活 Leader 的限制"
       }
+    },
+    "empty": {
+      "createHint": "暂无智能体。点击「创建智能体」开始配置与试跑。",
+      "permissionHint": "当前角色下暂无可用智能体。",
+      "permissionHintDetail": "请联系所有者或管理员为你开通已发布智能体的运行权限（智能体目录按权限过滤）。若组织允许，仍可在「我的」下创建私有智能体。"
     }
   },
   "skillEvolution": {
