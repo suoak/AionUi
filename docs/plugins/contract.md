@@ -130,3 +130,13 @@ Unknown top-level or `contributes.*` keys are **ignored** (with host logs). Inva
 ## Marketplace
 
 Enterprise curated hub / signing — **M9 S10**, not part of this contract freeze.
+
+## Sample plugins
+
+Curated Contract v1 samples (not an open marketplace):
+
+- `examples/github-workspace-plugin` — GitHub workspace (network allowlist + plan-safe reads / gated writes)
+- `examples/session-analysis-plugin` — session analytics (read-only `agentTools`)
+- `examples/deck-template-pack-plugin` — deck template pack (skills + themes)
+
+Validate with `workmate-plugin-cli check <dir>`.
