@@ -241,5 +241,13 @@
     },
     "phoneApproved": "Telefonda onaylandı",
     "phoneRejected": "Telefonda reddedildi"
+  },
+  "extensionPanels": {
+    "groupTitle": "Eklenti panelleri",
+    "openInWorkspace": "Çalışma alanında aç",
+    "loading": "Panel yükleniyor…",
+    "unavailable": "Bu panel kullanılamıyor. CSBU WorkMate yalnızca doğrulanmış bir uzantı varlığını barındırabilir.",
+    "closeTab": "Paneli kapat",
+    "empty": "Açık eklenti paneli yok"
   }
 }

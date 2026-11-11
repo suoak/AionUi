@@ -48,7 +48,7 @@ type UseProjectPanelCollapseParams = {
   projectId: string | null;
   /** Mobile viewport — starts collapsed, force-collapses on project change, no persist. */
   isMobile: boolean;
-  /** True when a project host is live (project bound). Gates event handling. */
+  /** True when the session-workspace host is live (project and/or plugin panels). Gates event handling. */
   active: boolean;
 };
 
@@ -82,11 +82,11 @@ export function useProjectPanelCollapse({
   useEffect(() => {
     if (typeof window === 'undefined') return undefined;
     const handleToggle = (event: Event) => {
-      if (!active || !projectId) return; // non-project conversation → ChatLayout owns it
+      if (!active) return; // no workspace column → ChatLayout may own the event
       event.preventDefault();
       const next = !collapsedRef.current;
       setCollapsed(next);
-      if (!isMobile) {
+      if (!isMobile && projectId) {
         try {
           localStorage.setItem(collapseKey(projectId), next ? 'collapsed' : 'expanded');
         } catch {

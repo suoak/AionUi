@@ -3420,6 +3420,25 @@ export interface IExtensionSettingsTab {
   extensionName: string;
 }
 
+/** Resolved standalone panel from GET /api/extensions/panels (B3-filtered). */
+export interface IExtensionPanel {
+  extensionName: string;
+  id: string;
+  title: string;
+  entryPoint: string;
+  icon?: string;
+}
+
+/** Resolved work-panel / sidebar view from GET /api/extensions/work-panel-views (B3-filtered). */
+export interface IExtensionWorkPanelView {
+  extensionName: string;
+  id: string;
+  title: string;
+  entryPoint: string;
+  placement?: string;
+  icon?: string;
+}
+
 export interface IExtensionWebuiContribution {
   extensionName: string;
   apiRoutes: Array<{ path: string; auth: boolean }>;
@@ -3465,6 +3484,10 @@ export const extensions = {
   getMcpServers: httpGet<Record<string, unknown>[], void>('/api/extensions/mcp-servers'),
   getSkills: httpGet<Array<{ name: string; description: string; location: string }>, void>('/api/extensions/skills'),
   getSettingsTabs: httpGet<IExtensionSettingsTab[], void>('/api/extensions/settings-tabs'),
+  /** Standalone panels. Core already applies B3 listing authorization; no new routes. */
+  getPanels: httpGet<IExtensionPanel[], void>('/api/extensions/panels'),
+  /** Work-panel / sidebar views. Core already applies B3 listing authorization; no new routes. */
+  getWorkPanelViews: httpGet<IExtensionWorkPanelView[], void>('/api/extensions/work-panel-views'),
   /** Short-lived, extension-scoped token for settings-tab iframe assets (aioncore ≥ E1 tail ④). */
   issueAssetToken: httpPost<{ token: string; expires_at: number; base_path: string }, { name: string }>(
     ({ name }) => `/api/extensions/${encodeURIComponent(name)}/asset-token`,

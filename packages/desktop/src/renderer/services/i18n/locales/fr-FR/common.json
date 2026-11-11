@@ -241,5 +241,13 @@
     },
     "phoneApproved": "Approuvé sur le téléphone",
     "phoneRejected": "Refusé sur le téléphone"
+  },
+  "extensionPanels": {
+    "groupTitle": "Panneaux d’extensions",
+    "openInWorkspace": "Ouvrir dans l’espace de travail",
+    "loading": "Chargement du panneau…",
+    "unavailable": "Ce panneau n’est pas disponible. CSBU WorkMate ne peut héberger qu’une ressource d’extension vérifiée.",
+    "closeTab": "Fermer le panneau",
+    "empty": "Aucun panneau d’extension n’est ouvert"
   }
 }

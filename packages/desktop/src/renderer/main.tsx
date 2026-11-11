@@ -54,6 +54,7 @@ import { AuthProvider } from './hooks/context/AuthContext';
 import { FeedbackProvider } from './hooks/context/FeedbackContext';
 import { ThemeProvider } from './hooks/context/ThemeContext';
 import { PreviewProvider } from './pages/conversation/Preview/context/PreviewContext';
+import { ExtensionPanelSessionProvider } from './hooks/system/ExtensionPanelSessionContext';
 
 // Arco Design
 import { ConfigProvider, Modal, Typography } from '@arco-design/web-react';
@@ -312,14 +313,18 @@ const AppProviders: React.FC<PropsWithChildren> = ({ children }) =>
           PreviewProvider,
           null,
           React.createElement(
-            FeedbackProvider,
+            ExtensionPanelSessionProvider,
             null,
             React.createElement(
-              React.Fragment,
+              FeedbackProvider,
               null,
-              React.createElement(RuntimeFailureDialogs, null),
-              React.createElement(GpuAutoDisableNotice, null),
-              children
+              React.createElement(
+                React.Fragment,
+                null,
+                React.createElement(RuntimeFailureDialogs, null),
+                React.createElement(GpuAutoDisableNotice, null),
+                children
+              )
             )
           )
         )

@@ -248,5 +248,13 @@
     "agents": "エージェント",
     "skills": "スキル",
     "batch": "バッチ"
+  },
+  "extensionPanels": {
+    "groupTitle": "プラグインパネル",
+    "openInWorkspace": "ワークスペースで開く",
+    "loading": "パネルを読み込み中…",
+    "unavailable": "このパネルは利用できません。CSBU WorkMate は検証済みの拡張アセットのみをホストします。",
+    "closeTab": "パネルを閉じる",
+    "empty": "開いているプラグインパネルはありません"
   }
 }

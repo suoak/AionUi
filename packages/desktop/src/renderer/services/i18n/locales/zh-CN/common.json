@@ -248,5 +248,13 @@
     "agents": "智能体",
     "skills": "技能",
     "batch": "批量"
+  },
+  "extensionPanels": {
+    "groupTitle": "插件面板",
+    "openInWorkspace": "在工作区打开",
+    "loading": "正在加载面板…",
+    "unavailable": "此面板不可用。CSBU WorkMate 只能承载经过验证的扩展资源。",
+    "closeTab": "关闭面板",
+    "empty": "尚未打开插件面板"
   }
 }

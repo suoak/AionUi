@@ -241,5 +241,13 @@
     },
     "phoneApproved": "Aprovado no celular",
     "phoneRejected": "Rejeitado no celular"
+  },
+  "extensionPanels": {
+    "groupTitle": "Painéis de plugins",
+    "openInWorkspace": "Abrir no espaço de trabalho",
+    "loading": "Carregando painel…",
+    "unavailable": "Este painel não está disponível. O CSBU WorkMate só pode hospedar um recurso de extensão verificado.",
+    "closeTab": "Fechar painel",
+    "empty": "Nenhum painel de plugin está aberto"
   }
 }

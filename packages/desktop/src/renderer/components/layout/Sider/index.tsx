@@ -22,6 +22,7 @@ import {
 import SiderFooter from './SiderFooter';
 import TeamSiderSection from './TeamSiderSection';
 import FanoutSiderGroup from './FanoutSiderGroup';
+import SiderPluginPanelsGroup from './SiderPluginPanelsGroup';
 import siderStyles from './Sider.module.css';
 import { isPrimaryNavActive, primaryNavEntryByKey } from '../primaryNav/primaryNav';
 
@@ -396,6 +397,7 @@ const Sider: React.FC<SiderProps> = ({ onSessionClick, collapsed = false }) => {
               onOpenBatchJob={handleInboxOpenBatchJob}
               onOpenScheduledJob={handleInboxOpenScheduledJob}
             />
+            <SiderPluginPanelsGroup collapsed={collapsed} siderTooltipProps={siderTooltipProps} />
             {/* Divider between fixed top nav and scrollable content area */}
             <div
               className={classNames(
