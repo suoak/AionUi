@@ -248,5 +248,13 @@
     "agents": "Agents",
     "skills": "Skills",
     "batch": "Batch"
+  },
+  "extensionPanels": {
+    "groupTitle": "Plugin panels",
+    "openInWorkspace": "Open in workspace",
+    "loading": "Loading panel…",
+    "unavailable": "This panel isn't available. CSBU WorkMate can only host a verified extension asset.",
+    "closeTab": "Close panel",
+    "empty": "No plugin panel is open"
   }
 }

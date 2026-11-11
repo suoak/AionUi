@@ -82,4 +82,12 @@ describe('useProjectPanelCollapse (P3 host collapse)', () => {
     // Initial broadcast (expanded=false) + after toggle (collapsed=true).
     expect(states).toContain(true);
   });
+
+  it('toggles a plugin-only workspace column (no project id) and does not persist', () => {
+    const { result } = renderHook(() => useProjectPanelCollapse({ projectId: null, isMobile: false, active: true }));
+    expect(result.current.collapsed).toBe(false);
+    fireToggle();
+    expect(result.current.collapsed).toBe(true);
+    expect(Object.keys(localStorage).every((key) => !key.startsWith('project-panel-collapse:'))).toBe(true);
+  });
 });

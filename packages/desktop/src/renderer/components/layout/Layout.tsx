@@ -27,6 +27,7 @@ import { useProjectExplorerColumnWidth } from '@renderer/hooks/ui/useProjectExpl
 import { useResizableSplit } from '@renderer/hooks/ui/useResizableSplit';
 import { useProjectPreviewRegionWidth } from '@renderer/hooks/ui/useProjectPreviewRegionWidth';
 import { useProjectPanelCollapse } from '@renderer/hooks/ui/useProjectPanelCollapse';
+import { useExtensionPanelSession } from '@renderer/hooks/system/ExtensionPanelSessionContext';
 import { dispatchWorkspaceToggleEvent } from '@renderer/utils/workspace/workspaceEvents';
 import { MIN_PREVIEW_PANEL_PX } from '@renderer/pages/conversation/utils/layoutCalc';
 import { PreviewPanel } from '@renderer/pages/conversation/Preview';
@@ -181,8 +182,11 @@ const Layout: React.FC<{
   // [content | explorer] row, clamp the explorer width so chat (+ preview) keep
   // their reserve. Active only when a project is bound and on desktop.
   const currentProject = useCurrentProject();
+  const { workspaceColumnRequested, activeWorkspaceTabId } = useExtensionPanelSession();
   const { containerRef: mainRowRef, containerWidth: mainRowWidth } = useContainerWidth();
-  const explorerActive = Boolean(currentProject) && !isMobile;
+  // The right session-workspace column is live for a bound project (explorer) and
+  // also when plugin work-panel views or an opened standalone panel need a host.
+  const explorerActive = (Boolean(currentProject) || workspaceColumnRequested) && !isMobile;
   const { widthPx: explorerWidthPx, createDragHandle: createExplorerDragHandle } = useProjectExplorerColumnWidth(
     mainRowWidth,
     isPreviewOpen,
@@ -190,14 +194,21 @@ const Layout: React.FC<{
   );
   // P3: host-level collapse (project-scoped on desktop; overlay on mobile). The
   // explorer stays mounted (width 0) on collapse, so it is not remounted.
-  const { collapsed: explorerCollapsed } = useProjectPanelCollapse({
+  // Plugin-only (no project) still uses this seam so the titlebar toggle works.
+  const { collapsed: explorerCollapsed, setCollapsed: setExplorerCollapsed } = useProjectPanelCollapse({
     projectId: currentProject,
     isMobile,
-    active: Boolean(currentProject),
+    active: Boolean(currentProject) || workspaceColumnRequested,
   });
   const toggleExplorer = useCallback(() => {
     dispatchWorkspaceToggleEvent();
   }, []);
+  // Opening a plugin panel from the sider should reveal the workspace column.
+  useEffect(() => {
+    if (!isMobile && activeWorkspaceTabId) {
+      setExplorerCollapsed(false);
+    }
+  }, [activeWorkspaceTabId, isMobile, setExplorerCollapsed]);
   // Mobile overlay width: most of the viewport, capped.
   const explorerMobileWidthPx = Math.min(420, Math.max(280, Math.round(viewportWidth * 0.85)));
   // P4 (②B): hoist the preview region to the Layout host for project

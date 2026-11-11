@@ -248,5 +248,13 @@
     "agents": "Agenten",
     "skills": "Skills",
     "batch": "Batch"
+  },
+  "extensionPanels": {
+    "groupTitle": "Plugin-Bereiche",
+    "openInWorkspace": "Im Arbeitsbereich öffnen",
+    "loading": "Bereich wird geladen…",
+    "unavailable": "Dieser Bereich ist nicht verfügbar. CSBU WorkMate kann nur ein verifiziertes Erweiterungs-Asset hosten.",
+    "closeTab": "Bereich schließen",
+    "empty": "Kein Plugin-Bereich geöffnet"
   }
 }

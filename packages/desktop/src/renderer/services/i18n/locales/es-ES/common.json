@@ -248,5 +248,13 @@
     "agents": "Agentes",
     "skills": "Habilidades",
     "batch": "Lote"
+  },
+  "extensionPanels": {
+    "groupTitle": "Paneles de complementos",
+    "openInWorkspace": "Abrir en el espacio de trabajo",
+    "loading": "Cargando panel…",
+    "unavailable": "Este panel no está disponible. CSBU WorkMate solo puede alojar un recurso de extensión verificado.",
+    "closeTab": "Cerrar panel",
+    "empty": "No hay ningún panel de complemento abierto"
   }
 }

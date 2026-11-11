@@ -241,5 +241,13 @@
     },
     "phoneApproved": "已在手機上核准",
     "phoneRejected": "已在手機上拒絕"
+  },
+  "extensionPanels": {
+    "groupTitle": "外掛面板",
+    "openInWorkspace": "在工作區開啟",
+    "loading": "正在載入面板…",
+    "unavailable": "此面板不可用。CSBU WorkMate 只能承載經過驗證的擴充資源。",
+    "closeTab": "關閉面板",
+    "empty": "尚未開啟外掛面板"
   }
 }

@@ -241,5 +241,13 @@
     },
     "phoneApproved": "روی تلفن تأیید شد",
     "phoneRejected": "روی تلفن رد شد"
+  },
+  "extensionPanels": {
+    "groupTitle": "پنل‌های افزونه",
+    "openInWorkspace": "باز کردن در فضای کاری",
+    "loading": "در حال بارگذاری پنل…",
+    "unavailable": "این پنل در دسترس نیست. CSBU WorkMate فقط می‌تواند یک دارایی تأییدشده افزونه را میزبانی کند.",
+    "closeTab": "بستن پنل",
+    "empty": "هیچ پنل افزونه‌ای باز نیست"
   }
 }

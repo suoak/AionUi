@@ -248,5 +248,13 @@
     "agents": "에이전트",
     "skills": "스킬",
     "batch": "배치"
+  },
+  "extensionPanels": {
+    "groupTitle": "플러그인 패널",
+    "openInWorkspace": "워크스페이스에서 열기",
+    "loading": "패널 불러오는 중…",
+    "unavailable": "이 패널을 사용할 수 없습니다. CSBU WorkMate는 검증된 확장 에셋만 호스트합니다.",
+    "closeTab": "패널 닫기",
+    "empty": "열린 플러그인 패널이 없습니다"
   }
 }
