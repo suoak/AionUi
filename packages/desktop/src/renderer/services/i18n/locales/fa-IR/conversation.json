@@ -1690,6 +1690,35 @@
         "checkInvalid": "بررسی‌ها را اصلاح کنید",
         "trialTooLarge": "تعداد موارد آزمایشی از هدف‌ها بیشتر است"
       }
+    },
+    "presets": {
+      "label": "شروع با یک الگو (اختیاری)",
+      "placeholder": "یک الگو انتخاب کنید یا فرم را خودتان پر کنید",
+      "hint": "الگو عنوان، پرامپت، نوع هدف و بررسی‌های خروجی را پر می‌کند. اهداف و دستیار شما تغییر نمی‌کنند.",
+      "weeklyReportDecks": {
+        "name": "ارائه‌های گزارش هفتگی (‎.pptx‎)",
+        "description": "برای هر تیم یک پوشه با یادداشت‌ها و داده‌های هفته → در هر پوشه یک weekly-report.pptx.",
+        "title": "ارائه‌های گزارش هفتگی",
+        "prompt": "Read this week's notes, metrics, and documents in {{target}}. Using the bundled `officecli` command, create a 6–10 slide PowerPoint deck saved as {{output}} in that folder: title slide, highlights, key metrics (chart or table), progress against plan, risks and blockers, decisions needed, and next week's priorities. One idea per slide with an action title, at most 5 short bullets, and only facts from the folder. Re-open the deck to check that no slide is empty or overflowing."
+      },
+      "departmentWorkbooks": {
+        "name": "کارپوشه‌های واحدها (‎.xlsx‎)",
+        "description": "برای هر واحد یک پوشه با دادهٔ خام → در هر پوشه یک department-summary.xlsx با فرمول.",
+        "title": "کارپوشه‌های خلاصهٔ واحدها",
+        "prompt": "Collect the data files (CSV, Excel, exports) in {{target}}. Using the bundled `officecli` command, build an Excel workbook saved as {{output}} in that folder with: a Summary sheet (key totals, trends, and short commentary), one cleaned data sheet per source with typed columns, and a Notes sheet listing sources and assumptions. Use live formulas for every total and ratio, apply number and date formats, and freeze header rows. Do not invent data; flag gaps. Re-open the workbook and confirm no formula shows an error."
+      },
+      "clientBriefs": {
+        "name": "خلاصه‌های مشتری (‎.docx‎)",
+        "description": "برای هر مشتری یک پوشه با یادداشت‌ها و مدارک → در هر پوشه یک client-brief.docx.",
+        "title": "خلاصه‌های مشتری",
+        "prompt": "Review the notes, emails, and materials in {{target}}. Using the bundled `officecli` command, write a 1–2 page Word brief saved as {{output}} in that folder: client overview, current situation, goals, open issues and risks, recommended next steps with owners and dates, and key contacts. Use heading styles, short paragraphs, and a table where it helps. Only use facts from the folder and mark anything unconfirmed. Re-open the document to check its structure."
+      },
+      "repoReview": {
+        "name": "بازبینی مخزن",
+        "description": "هر خط یک مخزن → در هر مخزن یک REVIEW.md و یک review-findings.json ماشین‌خوان.",
+        "title": "بازبینی مخزن",
+        "prompt": "Review the repository at {{target}} for correctness, security, maintainability, and missing tests. Do not change source files. Write the human-readable report to {{output}} (summary, then findings ordered by severity with file and line references and a concrete fix) and the same findings to {{findings}} as JSON: {\"summary\": string, \"findings\": [{\"severity\": \"blocker\" | \"major\" | \"minor\" | \"info\", \"title\": string, \"file\"?: string, \"line\"?: integer, \"recommendation\"?: string}]}. Report only real, verifiable issues."
+      }
     }
   }
 }

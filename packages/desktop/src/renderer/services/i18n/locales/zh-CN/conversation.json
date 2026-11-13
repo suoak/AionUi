@@ -1690,6 +1690,35 @@
         "checkInvalid": "请修正检查",
         "trialTooLarge": "试跑项数超过目标数量"
       }
+    },
+    "presets": {
+      "label": "从预设开始（可选）",
+      "placeholder": "选择一个预设，或自己填写表单",
+      "hint": "预设会填好标题、提示词、目标类型和产物检查；已填的目标和助手不会改变。",
+      "weeklyReportDecks": {
+        "name": "周报 PPT（.pptx）",
+        "description": "每个团队一个文件夹，放本周笔记和数据 → 每个文件夹生成一份 weekly-report.pptx。",
+        "title": "周报 PPT",
+        "prompt": "阅读 {{target}} 中本周的笔记、指标和文档。使用内置的 `officecli` 命令，在该文件夹中生成一份 6–10 页的 PowerPoint，保存为 {{output}}：标题页、本周亮点、关键指标（图表或表格）、计划进展、风险与阻碍、需要的决策、下周重点。每页一个观点、结论式标题、最多 5 条简短要点，只使用文件夹中的事实。完成后重新打开，确认没有空白页或内容溢出。"
+      },
+      "departmentWorkbooks": {
+        "name": "部门数据工作簿（.xlsx）",
+        "description": "每个部门一个文件夹，放原始数据 → 每个文件夹生成一份带公式的 department-summary.xlsx。",
+        "title": "部门汇总工作簿",
+        "prompt": "收集 {{target}} 中的数据文件（CSV、Excel、导出文件）。使用内置的 `officecli` 命令，在该文件夹中生成 Excel 工作簿，保存为 {{output}}，包含：「汇总」工作表（关键合计、趋势和简短解读）、每个数据来源一张清洗后的数据表（列类型明确）、「说明」工作表（数据来源和假设）。所有合计和比率都用实时公式，设置数字和日期格式，冻结表头。不得编造数据，缺失要标注。完成后重新打开，确认没有公式报错。"
+      },
+      "clientBriefs": {
+        "name": "客户简报（.docx）",
+        "description": "每个客户一个文件夹，放笔记和资料 → 每个文件夹生成一份 client-brief.docx。",
+        "title": "客户简报",
+        "prompt": "查阅 {{target}} 中的笔记、邮件和资料。使用内置的 `officecli` 命令，在该文件夹中撰写一份 1–2 页的 Word 简报，保存为 {{output}}：客户概况、当前情况、目标、待解决问题与风险、建议的下一步（含负责人和时间）、关键联系人。使用标题样式和短段落，必要时用表格。只使用文件夹中的事实，未确认的信息要标注。完成后重新打开检查文档结构。"
+      },
+      "repoReview": {
+        "name": "代码仓库评审",
+        "description": "每行一个仓库 → 每个仓库生成 REVIEW.md 和机器可读的 review-findings.json。",
+        "title": "代码仓库评审",
+        "prompt": "评审位于 {{target}} 的代码仓库，关注正确性、安全性、可维护性和缺失的测试。不要修改源代码。把面向人的报告写入 {{output}}（先摘要，再按严重程度列出问题，附文件和行号以及具体修复建议），并把同样的问题以 JSON 写入 {{findings}}：{\"summary\": string, \"findings\": [{\"severity\": \"blocker\" | \"major\" | \"minor\" | \"info\", \"title\": string, \"file\"?: string, \"line\"?: integer, \"recommendation\"?: string}]}。只报告真实、可验证的问题。"
+      }
     }
   }
 }

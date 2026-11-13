@@ -32,6 +32,7 @@ import {
   type CheckDraft,
   type TargetIssue,
 } from './batchModel';
+import { BATCH_PRESET_IDS, applyBatchPreset, type BatchPresetId } from './batchTemplates';
 
 const F = 'conversation.batchJobs.form';
 const MAX_ISSUES_SHOWN = 5;
@@ -57,6 +58,7 @@ const BatchCreateDrawer: React.FC<Props> = ({ visible, onClose, onCreated }) => 
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [serverError, setServerError] = useState<{ key: string; reason: string | null } | null>(null);
+  const [presetId, setPresetId] = useState<BatchPresetId | undefined>(undefined);
 
   useEffect(() => {
     if (!visible) return;
@@ -95,8 +97,17 @@ const BatchCreateDrawer: React.FC<Props> = ({ visible, onClose, onCreated }) => 
       field: 'field' in issue ? issue.field : '',
     });
 
+  const choosePreset = (id: BatchPresetId | undefined) => {
+    setPresetId(id);
+    if (!id) return;
+    setForm((f) => applyBatchPreset(f, id, t));
+    setSubmitted(false);
+    setServerError(null);
+  };
+
   const reset = () => {
     setForm(defaultBatchForm());
+    setPresetId(undefined);
     setSubmitted(false);
     setServerError(null);
   };
@@ -141,6 +152,25 @@ const BatchCreateDrawer: React.FC<Props> = ({ visible, onClose, onCreated }) => 
     >
       <div className='flex flex-col gap-18px' data-testid='batch-create-form'>
         <Alert type='info' content={t(`${F}.intro`)} />
+        <div data-testid='batch-form-preset'>
+          {label(t('conversation.batchJobs.presets.label'))}
+          <Select
+            allowClear
+            value={presetId}
+            placeholder={t('conversation.batchJobs.presets.placeholder')}
+            onChange={(v?: BatchPresetId) => choosePreset(v || undefined)}
+            data-testid='batch-form-preset-select'
+            options={BATCH_PRESET_IDS.map((id) => ({
+              label: t(`conversation.batchJobs.presets.${id}.name`),
+              value: id,
+            }))}
+          />
+          {hint(
+            presetId
+              ? t(`conversation.batchJobs.presets.${presetId}.description`)
+              : t('conversation.batchJobs.presets.hint')
+          )}
+        </div>
         <div>
           {label(t(`${F}.title`))}
           <Input

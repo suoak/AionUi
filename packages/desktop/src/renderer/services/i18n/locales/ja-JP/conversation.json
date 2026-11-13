@@ -1690,6 +1690,35 @@
         "checkInvalid": "チェックを修正してください",
         "trialTooLarge": "試行件数が対象数を超えています"
       }
+    },
+    "presets": {
+      "label": "プリセットから開始（任意）",
+      "placeholder": "プリセットを選ぶか、フォームを自分で入力",
+      "hint": "プリセットはタイトル、プロンプト、ターゲット種別、成果物チェックを入力します。ターゲットとアシスタントは変更されません。",
+      "weeklyReportDecks": {
+        "name": "週次レポート資料（.pptx）",
+        "description": "チームごとのフォルダー（今週のメモとデータ）→ 各フォルダーに weekly-report.pptx。",
+        "title": "週次レポート資料",
+        "prompt": "Read this week's notes, metrics, and documents in {{target}}. Using the bundled `officecli` command, create a 6–10 slide PowerPoint deck saved as {{output}} in that folder: title slide, highlights, key metrics (chart or table), progress against plan, risks and blockers, decisions needed, and next week's priorities. One idea per slide with an action title, at most 5 short bullets, and only facts from the folder. Re-open the deck to check that no slide is empty or overflowing."
+      },
+      "departmentWorkbooks": {
+        "name": "部門別ワークブック（.xlsx）",
+        "description": "部門ごとのフォルダー（生データ）→ 各フォルダーに数式付きの department-summary.xlsx。",
+        "title": "部門別集計ワークブック",
+        "prompt": "Collect the data files (CSV, Excel, exports) in {{target}}. Using the bundled `officecli` command, build an Excel workbook saved as {{output}} in that folder with: a Summary sheet (key totals, trends, and short commentary), one cleaned data sheet per source with typed columns, and a Notes sheet listing sources and assumptions. Use live formulas for every total and ratio, apply number and date formats, and freeze header rows. Do not invent data; flag gaps. Re-open the workbook and confirm no formula shows an error."
+      },
+      "clientBriefs": {
+        "name": "顧客ブリーフ（.docx）",
+        "description": "顧客ごとのフォルダー（メモと資料）→ 各フォルダーに client-brief.docx。",
+        "title": "顧客ブリーフ",
+        "prompt": "Review the notes, emails, and materials in {{target}}. Using the bundled `officecli` command, write a 1–2 page Word brief saved as {{output}} in that folder: client overview, current situation, goals, open issues and risks, recommended next steps with owners and dates, and key contacts. Use heading styles, short paragraphs, and a table where it helps. Only use facts from the folder and mark anything unconfirmed. Re-open the document to check its structure."
+      },
+      "repoReview": {
+        "name": "リポジトリ レビュー",
+        "description": "1 行に 1 リポジトリ → 各リポジトリに REVIEW.md と機械可読な review-findings.json。",
+        "title": "リポジトリ レビュー",
+        "prompt": "Review the repository at {{target}} for correctness, security, maintainability, and missing tests. Do not change source files. Write the human-readable report to {{output}} (summary, then findings ordered by severity with file and line references and a concrete fix) and the same findings to {{findings}} as JSON: {\"summary\": string, \"findings\": [{\"severity\": \"blocker\" | \"major\" | \"minor\" | \"info\", \"title\": string, \"file\"?: string, \"line\"?: integer, \"recommendation\"?: string}]}. Report only real, verifiable issues."
+      }
     }
   }
 }
