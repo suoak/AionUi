@@ -2,6 +2,7 @@ import React, { Suspense, useEffect } from 'react';
 import { HashRouter, Navigate, Route, Routes, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import AppLoader from '@renderer/components/layout/AppLoader';
+import { renderIaRouteAliases } from '@renderer/components/layout/primaryNav/routeAliases';
 import { useCrossSessionRateLimitNotice } from '@/renderer/hooks/system/useCrossSessionRateLimitNotice';
 import { useAuth } from '@renderer/hooks/context/AuthContext';
 import { DESKTOP_PET_FEATURE_ENABLED, TEAM_MODE_ENABLED } from '@/common/config/constants';
@@ -191,6 +192,8 @@ const PanelRoute: React.FC<{ layout: React.ReactElement }> = ({ layout }) => {
           <Route path='/scheduled/:job_id' element={withRouteFallback(TaskDetailPage)} />
           <Route path='/tasks' element={withRouteFallback(TasksBoardPage)} />
           <Route path='/batch' element={withRouteFallback(BatchJobsPage)} />
+          {/* IA-2: canonical five-entry aliases → existing pages */}
+          {renderIaRouteAliases()}
         </Route>
         <Route path='*' element={<Navigate to={status === 'authenticated' ? '/guid' : '/login'} replace />} />
       </Routes>

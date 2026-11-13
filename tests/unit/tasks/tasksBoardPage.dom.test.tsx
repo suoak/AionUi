@@ -517,6 +517,28 @@ describe('TasksBoardPage', () => {
     expect(mocks.boardGet).toHaveBeenCalledTimes(2);
     expect(mocks.list).not.toHaveBeenCalled();
   });
+
+  it('opens Scheduled under the Work items alias (IA-3)', async () => {
+    mocks.boardGet.mockResolvedValue(board(item('s1', 'todo')));
+    render(<TasksBoardPage />);
+    await screen.findByTestId('task-board-card-s1');
+
+    const button = screen.getByTestId('tasks-board-open-scheduled');
+    expect(button.textContent).toBe('conversation.taskBoard.openScheduled');
+    fireEvent.click(button);
+    expect(mocks.navigate).toHaveBeenCalledWith('/work-items/scheduled');
+  });
+
+  it('renders the empty-column hint in every empty column (IA-3)', async () => {
+    mocks.boardGet.mockResolvedValue(board(item('only', 'todo')));
+    render(<TasksBoardPage />);
+    await screen.findByTestId('task-board-card-only');
+
+    for (const status of ['backlog', 'in_progress', 'in_review', 'done'] as TaskBoardStatus[]) {
+      expect(within(column(status)).getByText('conversation.taskBoard.emptyColumnHint')).toBeTruthy();
+    }
+    expect(within(column('todo')).queryByText('conversation.taskBoard.emptyColumnHint')).toBeNull();
+  });
 });
 
 it('opens the drawer from ?task= deep link (E6-6)', async () => {
