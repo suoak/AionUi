@@ -249,5 +249,12 @@
     "unavailable": "Ce panneau n’est pas disponible. CSBU WorkMate ne peut héberger qu’une ressource d’extension vérifiée.",
     "closeTab": "Fermer le panneau",
     "empty": "Aucun panneau d’extension n’est ouvert"
+  },
+  "primaryNav": {
+    "sessions": "Sessions",
+    "workItems": "Éléments de travail",
+    "agents": "Agents",
+    "skills": "Compétences",
+    "batch": "Lots"
   }
 }

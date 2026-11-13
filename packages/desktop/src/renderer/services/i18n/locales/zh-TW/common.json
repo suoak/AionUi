@@ -249,5 +249,12 @@
     "unavailable": "此面板不可用。CSBU WorkMate 只能承載經過驗證的擴充資源。",
     "closeTab": "關閉面板",
     "empty": "尚未開啟外掛面板"
+  },
+  "primaryNav": {
+    "sessions": "會話",
+    "workItems": "工作項",
+    "agents": "智慧體",
+    "skills": "技能",
+    "batch": "批次"
   }
 }

@@ -249,5 +249,12 @@
     "unavailable": "Bu panel kullanılamıyor. CSBU WorkMate yalnızca doğrulanmış bir uzantı varlığını barındırabilir.",
     "closeTab": "Paneli kapat",
     "empty": "Açık eklenti paneli yok"
+  },
+  "primaryNav": {
+    "sessions": "Oturumlar",
+    "workItems": "İş öğeleri",
+    "agents": "Ajanlar",
+    "skills": "Beceriler",
+    "batch": "Toplu"
   }
 }
