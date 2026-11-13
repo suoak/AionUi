@@ -224,5 +224,25 @@
       "sent": "{{count}} not gönderildi",
       "failed": "Gönderilemedi: {{message}}"
     }
+  },
+  "officeReview": {
+    "title": "İnceleme",
+    "toggle": "İnceleme ({{count}})",
+    "unresolvedCount": "{{count}} çözülmedi",
+    "send": "Ajana gönder ({{count}})",
+    "close": "İnceleme panelini kapat",
+    "target": "Hedef",
+    "slide": "Slayt {{number}}",
+    "page": "Sayfa {{number}}",
+    "row": "Satır {{number}}",
+    "slideLabel": "Slayt",
+    "pageLabel": "Sayfa",
+    "rowLabel": "Satır",
+    "element": "Öge veya konum",
+    "elementPlaceholder": "Grafik, başlık, C4:E10",
+    "commentPlaceholder": "Bir yorum bırakın (Markdown desteklenir)",
+    "commentSubmit": "Yorum yap",
+    "empty": "Henüz inceleme yorumu yok",
+    "threads": "Yorumlar"
   }
 }

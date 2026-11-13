@@ -224,5 +224,25 @@
       "sent": "已傳送 {{count}} 則註解",
       "failed": "傳送失敗：{{message}}"
     }
+  },
+  "officeReview": {
+    "title": "審閱",
+    "toggle": "審閱 ({{count}})",
+    "unresolvedCount": "{{count}} 則未解決",
+    "send": "傳送給智慧體 ({{count}})",
+    "close": "關閉審閱面板",
+    "target": "目標",
+    "slide": "投影片 {{number}}",
+    "page": "第 {{number}} 頁",
+    "row": "第 {{number}} 列",
+    "slideLabel": "投影片",
+    "pageLabel": "頁",
+    "rowLabel": "列",
+    "element": "元素或位置",
+    "elementPlaceholder": "圖表、標題、C4:E10",
+    "commentPlaceholder": "留下評論（支援 Markdown）",
+    "commentSubmit": "評論",
+    "empty": "尚無審閱評論",
+    "threads": "評論"
   }
 }

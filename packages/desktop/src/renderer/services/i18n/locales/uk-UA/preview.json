@@ -226,5 +226,25 @@
       "sent": "Надіслано анотацій: {{count}}",
       "failed": "Не вдалося надіслати: {{message}}"
     }
+  },
+  "officeReview": {
+    "title": "Рецензія",
+    "toggle": "Рецензія ({{count}})",
+    "unresolvedCount": "{{count}} не розв’язано",
+    "send": "Надіслати агенту ({{count}})",
+    "close": "Закрити панель рецензії",
+    "target": "Ціль",
+    "slide": "Слайд {{number}}",
+    "page": "Сторінка {{number}}",
+    "row": "Рядок {{number}}",
+    "slideLabel": "Слайд",
+    "pageLabel": "Сторінка",
+    "rowLabel": "Рядок",
+    "element": "Елемент або місце",
+    "elementPlaceholder": "Діаграма, заголовок, C4:E10",
+    "commentPlaceholder": "Залиште коментар (підтримується Markdown)",
+    "commentSubmit": "Коментувати",
+    "empty": "Поки що немає коментарів рецензії",
+    "threads": "Коментарі"
   }
 }

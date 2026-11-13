@@ -224,5 +224,25 @@
       "sent": "주석 {{count}}개를 보냈습니다",
       "failed": "보내기 실패: {{message}}"
     }
+  },
+  "officeReview": {
+    "title": "검토",
+    "toggle": "검토 ({{count}})",
+    "unresolvedCount": "미해결 {{count}}개",
+    "send": "에이전트에 보내기 ({{count}})",
+    "close": "검토 패널 닫기",
+    "target": "대상",
+    "slide": "슬라이드 {{number}}",
+    "page": "{{number}}페이지",
+    "row": "{{number}}행",
+    "slideLabel": "슬라이드",
+    "pageLabel": "페이지",
+    "rowLabel": "행",
+    "element": "요소 또는 위치",
+    "elementPlaceholder": "차트, 제목, C4:E10",
+    "commentPlaceholder": "댓글을 남기세요(Markdown 지원)",
+    "commentSubmit": "댓글",
+    "empty": "검토 댓글이 없습니다",
+    "threads": "댓글"
   }
 }

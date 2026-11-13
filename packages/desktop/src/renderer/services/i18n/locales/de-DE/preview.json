@@ -224,5 +224,25 @@
       "sent": "{{count}} Anmerkungen gesendet",
       "failed": "Senden fehlgeschlagen: {{message}}"
     }
+  },
+  "officeReview": {
+    "title": "Review",
+    "toggle": "Review ({{count}})",
+    "unresolvedCount": "{{count}} unerledigt",
+    "send": "An Agent senden ({{count}})",
+    "close": "Review-Bereich schließen",
+    "target": "Ziel",
+    "slide": "Folie {{number}}",
+    "page": "Seite {{number}}",
+    "row": "Zeile {{number}}",
+    "slideLabel": "Folie",
+    "pageLabel": "Seite",
+    "rowLabel": "Zeile",
+    "element": "Element oder Position",
+    "elementPlaceholder": "Diagramm, Überschrift, C4:E10",
+    "commentPlaceholder": "Kommentar hinterlassen (Markdown wird unterstützt)",
+    "commentSubmit": "Kommentieren",
+    "empty": "Noch keine Review-Kommentare",
+    "threads": "Kommentare"
   }
 }

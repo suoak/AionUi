@@ -224,5 +224,25 @@
       "sent": "{{count}} annotations envoyées",
       "failed": "Échec de l'envoi : {{message}}"
     }
+  },
+  "officeReview": {
+    "title": "Relecture",
+    "toggle": "Relecture ({{count}})",
+    "unresolvedCount": "{{count}} non résolu(s)",
+    "send": "Envoyer à l’agent ({{count}})",
+    "close": "Fermer le panneau de relecture",
+    "target": "Cible",
+    "slide": "Diapositive {{number}}",
+    "page": "Page {{number}}",
+    "row": "Ligne {{number}}",
+    "slideLabel": "Diapositive",
+    "pageLabel": "Page",
+    "rowLabel": "Ligne",
+    "element": "Élément ou emplacement",
+    "elementPlaceholder": "Graphique, titre, C4:E10",
+    "commentPlaceholder": "Laisser un commentaire (Markdown pris en charge)",
+    "commentSubmit": "Commenter",
+    "empty": "Aucun commentaire de relecture pour le moment",
+    "threads": "Commentaires"
   }
 }
