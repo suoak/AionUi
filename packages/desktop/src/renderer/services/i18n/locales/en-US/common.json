@@ -62,6 +62,24 @@
   "historyBack": "Back",
   "more": "More",
   "refresh": "Refresh",
+  "commandPalette": {
+    "placeholder": "Search sessions, work items, agents…",
+    "empty": "No matching commands",
+    "loading": "Loading…",
+    "untitled": "Untitled",
+    "groups": {
+      "navigation": "Navigation",
+      "sessions": "Sessions",
+      "workItems": "Work items",
+      "agents": "Agents",
+      "settings": "Settings"
+    },
+    "badge": {
+      "scheduled": "Scheduled",
+      "scheduledPaused": "Scheduled · paused",
+      "agent": "Agent"
+    }
+  },
   "readOnly": "Read only",
   "tray.showWindow": "Show CSBU WorkMate",
   "tray.newChat": "New Chat",

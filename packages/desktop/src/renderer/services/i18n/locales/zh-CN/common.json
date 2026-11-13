@@ -62,6 +62,24 @@
   "historyBack": "后退",
   "more": "更多",
   "refresh": "刷新",
+  "commandPalette": {
+    "placeholder": "搜索会话、工作项、智能体…",
+    "empty": "没有匹配的命令",
+    "loading": "加载中…",
+    "untitled": "未命名",
+    "groups": {
+      "navigation": "导航",
+      "sessions": "会话",
+      "workItems": "工作项",
+      "agents": "智能体",
+      "settings": "设置"
+    },
+    "badge": {
+      "scheduled": "定时任务",
+      "scheduledPaused": "定时任务 · 已暂停",
+      "agent": "智能体"
+    }
+  },
   "readOnly": "只读",
   "tray.showWindow": "显示 CSBU WorkMate",
   "tray.newChat": "新建对话",
