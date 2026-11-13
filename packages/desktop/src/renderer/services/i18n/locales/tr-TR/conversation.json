@@ -1497,7 +1497,9 @@
         "unsupported": "Bu arka uç sürümü henüz GitHub içe aktarmayı desteklemiyor.",
         "failed": "İçe aktarma başarısız. Ayrıntılar için arka uç günlüğüne bakın."
       }
-    }
+    },
+    "openScheduled": "Zamanlanmış",
+    "emptyColumnHint": "Burada henüz iş öğesi yok. Bir görev oluşturun veya Zamanlanmış’ı açın."
   },
   "squadRouteOnly": {
     "title": "Squad Leader yalnızca iş dağıtabilir",

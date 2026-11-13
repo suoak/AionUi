@@ -61,6 +61,24 @@
   "historyBack": "Zurück",
   "more": "Mehr",
   "refresh": "Aktualisieren",
+  "commandPalette": {
+    "placeholder": "Sitzungen, Arbeitselemente, Agenten suchen…",
+    "empty": "Keine passenden Befehle",
+    "loading": "Wird geladen…",
+    "untitled": "Ohne Titel",
+    "groups": {
+      "navigation": "Navigation",
+      "sessions": "Sitzungen",
+      "workItems": "Arbeitselemente",
+      "agents": "Agenten",
+      "settings": "Einstellungen"
+    },
+    "badge": {
+      "scheduled": "Geplant",
+      "scheduledPaused": "Geplant · pausiert",
+      "agent": "Agent"
+    }
+  },
   "readOnly": "Schreibgeschützt",
   "tray.showWindow": "CSBU WorkMate anzeigen",
   "tray.newChat": "Neuer Chat",

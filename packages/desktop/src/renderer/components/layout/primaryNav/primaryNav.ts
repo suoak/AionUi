@@ -5,10 +5,10 @@
  */
 
 /**
- * M9 E16 / S11 IA-0 — five primary information-architecture entries.
+ * M9 E16 / S11 IA — five primary information-architecture entries.
  *
- * Taxonomy + path mapping. IA-1 groups/relabels the sider fixed nav.
- * Brand: CSBU WorkMate.
+ * IA-2: canonical alias paths (`/sessions`, `/work-items`, …) with redirects
+ * to existing pages. Brand: CSBU WorkMate.
  */
 
 export type PrimaryNavKey = 'sessions' | 'workItems' | 'agents' | 'skills' | 'batch';
@@ -17,7 +17,7 @@ export type PrimaryNavEntry = {
   key: PrimaryNavKey;
   /** i18n key under `common.primaryNav.*` */
   labelKey: `common.primaryNav.${PrimaryNavKey}`;
-  /** Existing route this entry opens today (may gain aliases in IA-2). */
+  /** Canonical deep-link path (alias); legacy routes remain active. */
   path: string;
   /** Extra path prefixes treated as "active" for this entry. */
   activePrefixes: readonly string[];
@@ -29,29 +29,29 @@ export const PRIMARY_NAV_ENTRIES: readonly PrimaryNavEntry[] = [
   {
     key: 'sessions',
     labelKey: 'common.primaryNav.sessions',
-    path: '/guid',
-    activePrefixes: ['/guid', '/conversation'],
+    path: '/sessions',
+    activePrefixes: ['/sessions', '/guid', '/conversation'],
     keywords: ['chat', 'conversation', 'history', '会话'],
   },
   {
     key: 'workItems',
     labelKey: 'common.primaryNav.workItems',
-    path: '/tasks',
-    activePrefixes: ['/tasks', '/scheduled'],
+    path: '/work-items',
+    activePrefixes: ['/work-items', '/tasks', '/scheduled'],
     keywords: ['board', 'tasks', 'scheduled', '工作项'],
   },
   {
     key: 'agents',
     labelKey: 'common.primaryNav.agents',
-    path: '/agent-center',
-    activePrefixes: ['/agent-center', '/assistants'],
+    path: '/agents',
+    activePrefixes: ['/agents', '/agent-center', '/assistants'],
     keywords: ['assistant', '智能体', 'agent center'],
   },
   {
     key: 'skills',
     labelKey: 'common.primaryNav.skills',
-    path: '/skill-evolution',
-    activePrefixes: ['/skill-evolution', '/settings/skills'],
+    path: '/skills',
+    activePrefixes: ['/skills', '/skill-evolution', '/settings/skills'],
     keywords: ['skill', 'evolution', '技能'],
   },
   {

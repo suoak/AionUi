@@ -62,6 +62,24 @@
   "historyBack": "Назад",
   "more": "Більше",
   "refresh": "Оновити",
+  "commandPalette": {
+    "placeholder": "Пошук сеансів, робочих елементів, агентів…",
+    "empty": "Немає відповідних команд",
+    "loading": "Завантаження…",
+    "untitled": "Без назви",
+    "groups": {
+      "navigation": "Навігація",
+      "sessions": "Сеанси",
+      "workItems": "Робочі елементи",
+      "agents": "Агенти",
+      "settings": "Налаштування"
+    },
+    "badge": {
+      "scheduled": "Заплановано",
+      "scheduledPaused": "Заплановано · призупинено",
+      "agent": "Агент"
+    }
+  },
   "readOnly": "Лише читання",
   "tray.showWindow": "Показати CSBU WorkMate",
   "tray.newChat": "Новий чат",
@@ -252,5 +270,12 @@
     "unavailable": "Ця панель недоступна. CSBU WorkMate може розміщувати лише перевірений ресурс розширення.",
     "closeTab": "Закрити панель",
     "empty": "Панель плагіна не відкрито"
+  },
+  "primaryNav": {
+    "sessions": "Сеанси",
+    "workItems": "Робочі елементи",
+    "agents": "Агенти",
+    "skills": "Навички",
+    "batch": "Пакети"
   }
 }

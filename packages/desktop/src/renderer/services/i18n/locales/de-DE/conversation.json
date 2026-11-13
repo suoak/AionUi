@@ -1496,7 +1496,9 @@
         "unsupported": "Diese Backend-Version unterstützt den GitHub-Import noch nicht.",
         "failed": "Import fehlgeschlagen. Details stehen im Backend-Protokoll."
       }
-    }
+    },
+    "openScheduled": "Geplant",
+    "emptyColumnHint": "Hier gibt es noch keine Arbeitselemente. Erstellen Sie eine Aufgabe oder öffnen Sie „Geplant“."
   },
   "squadRouteOnly": {
     "title": "Squad Leader darf nur Arbeit verteilen",

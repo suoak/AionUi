@@ -1495,7 +1495,9 @@
         "unsupported": "当前后端版本尚不支持 GitHub 导入。",
         "failed": "导入失败，详情请查看后端日志。"
       }
-    }
+    },
+    "openScheduled": "定时任务",
+    "emptyColumnHint": "此列暂无工作项。可新建任务或打开定时任务。"
   },
   "squadRouteOnly": {
     "title": "Squad Leader 只能派活",

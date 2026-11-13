@@ -10,7 +10,6 @@ import { useThemeContext } from '@renderer/hooks/context/ThemeContext';
 import {
   SiderToolbar,
   SiderSearchEntry,
-  SiderScheduledEntry,
   SiderAgentCenterEntry,
   SiderSkillEvolutionEntry,
   SiderAssistantEntry,
@@ -97,25 +96,12 @@ const Sider: React.FC<SiderProps> = ({ onSessionClick, collapsed = false }) => {
     setIsBatchMode(false);
   };
 
-  const handleScheduledClick = () => {
-    cleanupSiderTooltips();
-    blurActiveElement();
-    closePreview();
-    setIsBatchMode(false);
-    Promise.resolve(navigate('/scheduled')).catch((error) => {
-      console.error('Navigation failed:', error);
-    });
-    if (onSessionClick) {
-      onSessionClick();
-    }
-  };
-
   const handleTasksBoardClick = () => {
     cleanupSiderTooltips();
     blurActiveElement();
     closePreview();
     setIsBatchMode(false);
-    Promise.resolve(navigate('/tasks')).catch((error) => {
+    Promise.resolve(navigate('/work-items')).catch((error) => {
       console.error('Navigation failed:', error);
     });
     if (onSessionClick) {
@@ -211,7 +197,7 @@ const Sider: React.FC<SiderProps> = ({ onSessionClick, collapsed = false }) => {
     blurActiveElement();
     closePreview();
     setIsBatchMode(false);
-    Promise.resolve(navigate('/agent-center')).catch((error) => {
+    Promise.resolve(navigate('/agents')).catch((error) => {
       console.error('Navigation failed:', error);
     });
     if (onSessionClick) {
@@ -224,7 +210,7 @@ const Sider: React.FC<SiderProps> = ({ onSessionClick, collapsed = false }) => {
     blurActiveElement();
     closePreview();
     setIsBatchMode(false);
-    Promise.resolve(navigate('/skill-evolution')).catch((error) => {
+    Promise.resolve(navigate('/skills')).catch((error) => {
       console.error('Navigation failed:', error);
     });
     if (onSessionClick) {
@@ -337,8 +323,8 @@ const Sider: React.FC<SiderProps> = ({ onSessionClick, collapsed = false }) => {
               />
             )}
             {/* M9 E16 IA-1: five primary slots — workItems, agents, skills, batch
-                (sessions remain toolbar + history). Secondary: assistants, scheduled,
-                usage, inbox. Routes unchanged. */}
+                (sessions remain toolbar + history). Secondary: assistants, usage, inbox.
+                Scheduled lives under Work items (IA-3). */}
             <SiderTasksBoardEntry
               isMobile={isMobile}
               isActive={isPrimaryNavActive(primaryNavEntryByKey('workItems'), pathname)}
@@ -346,13 +332,7 @@ const Sider: React.FC<SiderProps> = ({ onSessionClick, collapsed = false }) => {
               siderTooltipProps={siderTooltipProps}
               onClick={handleTasksBoardClick}
             />
-            <SiderScheduledEntry
-              isMobile={isMobile}
-              isActive={pathname === '/scheduled' || pathname.startsWith('/scheduled/')}
-              collapsed={collapsed}
-              siderTooltipProps={siderTooltipProps}
-              onClick={handleScheduledClick}
-            />
+            {/* M9 E16 IA-3: Scheduled collapsed under Work items (board header + /work-items/scheduled). */}
             <SiderAgentCenterEntry
               isMobile={isMobile}
               isActive={isPrimaryNavActive(primaryNavEntryByKey('agents'), pathname)}

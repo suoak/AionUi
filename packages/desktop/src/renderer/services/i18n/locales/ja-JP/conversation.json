@@ -1495,7 +1495,9 @@
         "unsupported": "このバックエンドのバージョンは GitHub インポートに未対応です。",
         "failed": "インポートに失敗しました。詳細はバックエンドのログを確認してください。"
       }
-    }
+    },
+    "openScheduled": "スケジュール",
+    "emptyColumnHint": "まだ作業項目はありません。タスクを作成するか、スケジュールを開いてください。"
   },
   "squadRouteOnly": {
     "title": "Squad Leader は作業の割り振りのみ可能です",

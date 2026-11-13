@@ -1501,7 +1501,9 @@
         "unsupported": "Esta versão do backend ainda não oferece importação do GitHub.",
         "failed": "Falha na importação. Veja os detalhes no log do backend."
       }
-    }
+    },
+    "openScheduled": "Agendadas",
+    "emptyColumnHint": "Ainda não há itens de trabalho aqui. Crie uma tarefa ou abra Agendadas."
   },
   "squadRouteOnly": {
     "title": "O Squad Leader só pode distribuir trabalho",
