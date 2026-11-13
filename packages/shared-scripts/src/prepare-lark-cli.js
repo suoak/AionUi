@@ -12,6 +12,7 @@ const crypto = require('crypto');
 const fs = require('fs');
 const os = require('os');
 const path = require('path');
+const { extractArchive: extractArchiveShared } = require('./extract-archive');
 
 const GITHUB_OWNER = 'larksuite';
 const GITHUB_REPO = 'cli';
@@ -105,29 +106,13 @@ function downloadFile(url, outputPath) {
   );
 }
 
-function extractArchive(archivePath, outputDir, platform) {
-  fs.mkdirSync(outputDir, { recursive: true });
-  if (archivePath.endsWith('.zip')) {
-    if (process.platform === 'win32') {
-      execFileSync(
-        'powershell',
-        [
-          '-NoProfile',
-          '-NonInteractive',
-          '-Command',
-          "$ErrorActionPreference='Stop'; Expand-Archive -LiteralPath $env:LARK_CLI_ARCHIVE -DestinationPath $env:LARK_CLI_DEST -Force",
-        ],
-        {
-          env: { ...process.env, LARK_CLI_ARCHIVE: archivePath, LARK_CLI_DEST: outputDir },
-          stdio: 'inherit',
-        }
-      );
-    } else {
-      execFileSync('unzip', ['-o', archivePath, '-d', outputDir], { stdio: 'inherit' });
-    }
-    return;
-  }
-  execFileSync('tar', ['-xzf', archivePath, '-C', outputDir], { stdio: 'inherit' });
+function extractArchive(archivePath, outputDir, platform, options = {}) {
+  // Keep Windows zip extraction on the same resilient helper as prepare-aioncore:
+  // prefer tar -xf, then pwsh, then .NET ZipFile — never PowerShell 5.1 Expand-Archive -Force.
+  return extractArchiveShared(archivePath, outputDir, platform, {
+    ...options,
+    execOptions: { stdio: 'inherit', ...options.execOptions },
+  });
 }
 
 function findFile(directory, fileName) {
@@ -249,6 +234,7 @@ function prepareLarkCli({ projectRoot, platform, arch, version }) {
 }
 
 module.exports = {
+  extractArchive,
   getLarkCliAssetName,
   getLarkCliBinaryName,
   normalizeVersion,

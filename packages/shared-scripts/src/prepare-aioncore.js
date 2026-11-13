@@ -20,6 +20,7 @@ const crypto = require('crypto');
 const fs = require('fs');
 const os = require('os');
 const path = require('path');
+const { extractArchive } = require('./extract-archive');
 const { verifyBundledAioncoreResources } = require('./verify-bundled-aioncore-resources');
 
 const GITHUB_OWNER = 'suoak';
@@ -276,20 +277,6 @@ function downloadFile(url, outputPath) {
     execFileSync('curl', ['-L', '--fail', '--silent', '--show-error', '-o', outputPath, url], { timeout: 120000 });
   } catch {
     execFileSync('wget', ['-q', '-O', outputPath, url], { timeout: 120000 });
-  }
-}
-
-function extractArchive(archivePath, outputDir, platform) {
-  ensureDirectory(outputDir);
-  if (platform === 'win32' || archivePath.endsWith('.zip')) {
-    if (platform === 'win32') {
-      const ps = `Expand-Archive -LiteralPath '${archivePath.replace(/'/g, "''")}' -DestinationPath '${outputDir.replace(/'/g, "''")}' -Force`;
-      execFileSync('powershell', ['-NoProfile', '-NonInteractive', '-Command', ps]);
-    } else {
-      execFileSync('unzip', ['-o', archivePath, '-d', outputDir]);
-    }
-  } else {
-    execFileSync('tar', ['-xzf', archivePath, '-C', outputDir]);
   }
 }
 
@@ -646,6 +633,7 @@ function prepareAioncore(options) {
 
 module.exports = {
   AioncoreIntegrityError,
+  extractArchive,
   getActionsArtifactMissingMessage,
   getActionsArtifactName,
   getAssetName,
