@@ -1495,7 +1495,9 @@
         "unsupported": "Cette version du backend ne prend pas encore en charge l’import GitHub.",
         "failed": "Échec de l’import. Consulte le journal du backend pour plus de détails."
       }
-    }
+    },
+    "openScheduled": "Planifiées",
+    "emptyColumnHint": "Aucun élément de travail ici pour l’instant. Créez une tâche ou ouvrez Planifiées."
   },
   "squadRouteOnly": {
     "title": "Le Squad Leader ne peut que répartir le travail",

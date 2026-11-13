@@ -5,6 +5,7 @@ import path from 'node:path';
 import { afterEach, describe, expect, it } from 'vitest';
 
 const {
+  extractArchive,
   getLarkCliAssetName,
   normalizeVersion,
   parseChecksum,
@@ -90,5 +91,30 @@ describe('prepare Lark CLI build resources', () => {
     });
 
     expect(result.errors).toEqual([expect.stringContaining('binary checksum mismatch')]);
+  });
+});
+
+describe('Lark CLI archive extraction', () => {
+  it('extracts win32 zip archives with tar -xf and never uses powershell Expand-Archive -Force', () => {
+    const directory = createTemporaryDirectory();
+    const archive = path.join(directory, 'lark-cli.zip');
+    const outputDir = path.join(directory, 'out');
+    writeFileSync(archive, 'archive');
+    const calls: Array<{ command: string; args: string[] }> = [];
+
+    extractArchive(archive, outputDir, 'win32', {
+      execFileSync: (command: string, args: string[]) => {
+        calls.push({ command, args });
+      },
+    });
+
+    expect(calls).toEqual([{ command: 'tar', args: ['-xf', archive, '-C', outputDir] }]);
+    expect(
+      calls.some(
+        (call) =>
+          call.command === 'powershell' &&
+          call.args.some((arg) => arg.includes('Expand-Archive') && arg.includes('-Force'))
+      )
+    ).toBe(false);
   });
 });

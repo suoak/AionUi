@@ -1495,7 +1495,9 @@
         "unsupported": "目前後端版本尚不支援 GitHub 匯入。",
         "failed": "匯入失敗，詳情請查看後端日誌。"
       }
-    }
+    },
+    "openScheduled": "排程任務",
+    "emptyColumnHint": "此欄暫無工作項。可新增任務或開啟排程任務。"
   },
   "squadRouteOnly": {
     "title": "Squad Leader 只能派工",

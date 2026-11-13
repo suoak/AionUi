@@ -62,6 +62,24 @@
   "historyBack": "Retour",
   "more": "Plus",
   "refresh": "Actualiser",
+  "commandPalette": {
+    "placeholder": "Rechercher sessions, éléments de travail, agents…",
+    "empty": "Aucune commande correspondante",
+    "loading": "Chargement…",
+    "untitled": "Sans titre",
+    "groups": {
+      "navigation": "Navigation",
+      "sessions": "Sessions",
+      "workItems": "Éléments de travail",
+      "agents": "Agents",
+      "settings": "Paramètres"
+    },
+    "badge": {
+      "scheduled": "Planifiée",
+      "scheduledPaused": "Planifiée · en pause",
+      "agent": "Agent"
+    }
+  },
   "readOnly": "Lecture seule",
   "tray.showWindow": "Afficher CSBU WorkMate",
   "tray.newChat": "Nouveau chat",
@@ -249,5 +267,12 @@
     "unavailable": "Ce panneau n’est pas disponible. CSBU WorkMate ne peut héberger qu’une ressource d’extension vérifiée.",
     "closeTab": "Fermer le panneau",
     "empty": "Aucun panneau d’extension n’est ouvert"
+  },
+  "primaryNav": {
+    "sessions": "Sessions",
+    "workItems": "Éléments de travail",
+    "agents": "Agents",
+    "skills": "Compétences",
+    "batch": "Lots"
   }
 }

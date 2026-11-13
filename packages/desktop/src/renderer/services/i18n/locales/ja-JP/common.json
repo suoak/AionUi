@@ -62,6 +62,24 @@
   "historyBack": "戻る",
   "more": "その他",
   "refresh": "更新",
+  "commandPalette": {
+    "placeholder": "セッション、作業項目、エージェントを検索…",
+    "empty": "一致するコマンドはありません",
+    "loading": "読み込み中…",
+    "untitled": "無題",
+    "groups": {
+      "navigation": "ナビゲーション",
+      "sessions": "セッション",
+      "workItems": "作業項目",
+      "agents": "エージェント",
+      "settings": "設定"
+    },
+    "badge": {
+      "scheduled": "スケジュール",
+      "scheduledPaused": "スケジュール · 一時停止中",
+      "agent": "エージェント"
+    }
+  },
   "readOnly": "読み取り専用",
   "tray.showWindow": "CSBU WorkMate を表示",
   "tray.newChat": "新しいチャット",

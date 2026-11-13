@@ -62,6 +62,24 @@
   "historyBack": "Voltar",
   "more": "Mais",
   "refresh": "Atualizar",
+  "commandPalette": {
+    "placeholder": "Pesquisar sessões, itens de trabalho, agentes…",
+    "empty": "Nenhum comando correspondente",
+    "loading": "Carregando…",
+    "untitled": "Sem título",
+    "groups": {
+      "navigation": "Navegação",
+      "sessions": "Sessões",
+      "workItems": "Itens de trabalho",
+      "agents": "Agentes",
+      "settings": "Configurações"
+    },
+    "badge": {
+      "scheduled": "Agendada",
+      "scheduledPaused": "Agendada · pausada",
+      "agent": "Agente"
+    }
+  },
   "readOnly": "Somente leitura",
   "tray.showWindow": "Mostrar CSBU WorkMate",
   "tray.newChat": "Novo Chat",
@@ -249,5 +267,12 @@
     "unavailable": "Este painel não está disponível. O CSBU WorkMate só pode hospedar um recurso de extensão verificado.",
     "closeTab": "Fechar painel",
     "empty": "Nenhum painel de plugin está aberto"
+  },
+  "primaryNav": {
+    "sessions": "Sessões",
+    "workItems": "Itens de trabalho",
+    "agents": "Agentes",
+    "skills": "Habilidades",
+    "batch": "Lote"
   }
 }

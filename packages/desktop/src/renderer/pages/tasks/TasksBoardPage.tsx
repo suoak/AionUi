@@ -323,6 +323,14 @@ const TasksBoardPage: React.FC = () => {
                   {t('conversation.taskBoard.githubImport.open')}
                 </Button>
               ) : null}
+              <Button
+                size='small'
+                type='outline'
+                data-testid='tasks-board-open-scheduled'
+                onClick={() => navigate('/work-items/scheduled')}
+              >
+                {t('conversation.taskBoard.openScheduled', { defaultValue: 'Scheduled' })}
+              </Button>
               <Button size='small' onClick={() => load()} loading={loadState === 'loading'}>
                 {t('conversation.taskBoard.refresh')}
               </Button>
@@ -376,7 +384,12 @@ const TasksBoardPage: React.FC = () => {
                 </header>
                 <div className='flex-1 min-h-0 overflow-y-auto px-8px pb-8px flex flex-col gap-8px'>
                   {columns[status].length === 0 ? (
-                    <Empty className='py-16px' description={t('conversation.taskBoard.emptyColumn')} />
+                    <Empty
+                      className='py-16px'
+                      description={t('conversation.taskBoard.emptyColumnHint', {
+                        defaultValue: 'No work items here yet. Create a task or open Scheduled.',
+                      })}
+                    />
                   ) : (
                     columns[status].map((item) => (
                       <DraggableCard

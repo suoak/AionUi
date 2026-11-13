@@ -1496,7 +1496,9 @@
         "unsupported": "Esta versión del backend aún no admite la importación desde GitHub.",
         "failed": "La importación falló. Consulta el registro del backend para más detalles."
       }
-    }
+    },
+    "openScheduled": "Programadas",
+    "emptyColumnHint": "Todavía no hay elementos de trabajo aquí. Crea una tarea o abre Programadas."
   },
   "squadRouteOnly": {
     "title": "El Squad Leader solo puede repartir trabajo",

@@ -62,6 +62,24 @@
   "historyBack": "عقب",
   "more": "بیشتر",
   "refresh": "بازخوانی",
+  "commandPalette": {
+    "placeholder": "جستجوی جلسه‌ها، موارد کاری، عامل‌ها…",
+    "empty": "فرمان منطبقی وجود ندارد",
+    "loading": "در حال بارگذاری…",
+    "untitled": "بدون عنوان",
+    "groups": {
+      "navigation": "ناوبری",
+      "sessions": "جلسه‌ها",
+      "workItems": "موارد کاری",
+      "agents": "عامل‌ها",
+      "settings": "تنظیمات"
+    },
+    "badge": {
+      "scheduled": "زمان‌بندی‌شده",
+      "scheduledPaused": "زمان‌بندی‌شده · متوقف",
+      "agent": "عامل"
+    }
+  },
   "readOnly": "فقط خواندنی",
   "tray.showWindow": "نمایش CSBU WorkMate",
   "tray.newChat": "چت جدید",
@@ -249,5 +267,12 @@
     "unavailable": "این پنل در دسترس نیست. CSBU WorkMate فقط می‌تواند یک دارایی تأییدشده افزونه را میزبانی کند.",
     "closeTab": "بستن پنل",
     "empty": "هیچ پنل افزونه‌ای باز نیست"
+  },
+  "primaryNav": {
+    "sessions": "جلسه‌ها",
+    "workItems": "موارد کاری",
+    "agents": "عامل‌ها",
+    "skills": "مهارت‌ها",
+    "batch": "دسته‌ای"
   }
 }

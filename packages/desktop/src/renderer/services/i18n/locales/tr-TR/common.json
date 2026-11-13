@@ -62,6 +62,24 @@
   "historyBack": "Geri",
   "more": "Daha Fazla",
   "refresh": "Yenile",
+  "commandPalette": {
+    "placeholder": "Oturum, iş öğesi, ajan ara…",
+    "empty": "Eşleşen komut yok",
+    "loading": "Yükleniyor…",
+    "untitled": "Adsız",
+    "groups": {
+      "navigation": "Gezinme",
+      "sessions": "Oturumlar",
+      "workItems": "İş öğeleri",
+      "agents": "Ajanlar",
+      "settings": "Ayarlar"
+    },
+    "badge": {
+      "scheduled": "Zamanlanmış",
+      "scheduledPaused": "Zamanlanmış · duraklatıldı",
+      "agent": "Ajan"
+    }
+  },
   "readOnly": "Salt okunur",
   "tray.showWindow": "CSBU WorkMate'yi Göster",
   "tray.newChat": "Yeni Sohbet",
@@ -249,5 +267,12 @@
     "unavailable": "Bu panel kullanılamıyor. CSBU WorkMate yalnızca doğrulanmış bir uzantı varlığını barındırabilir.",
     "closeTab": "Paneli kapat",
     "empty": "Açık eklenti paneli yok"
+  },
+  "primaryNav": {
+    "sessions": "Oturumlar",
+    "workItems": "İş öğeleri",
+    "agents": "Ajanlar",
+    "skills": "Beceriler",
+    "batch": "Toplu"
   }
 }

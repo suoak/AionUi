@@ -1495,7 +1495,9 @@
         "unsupported": "This backend version does not support GitHub import yet.",
         "failed": "Import failed. Check the backend log for details."
       }
-    }
+    },
+    "openScheduled": "Scheduled",
+    "emptyColumnHint": "No work items here yet. Create a task or open Scheduled."
   },
   "squadRouteOnly": {
     "title": "Squad Leader can only route work",
