@@ -61,6 +61,24 @@
   "forward": "Вперёд",
   "more": "Ещё",
   "refresh": "Обновить",
+  "commandPalette": {
+    "placeholder": "Поиск сеансов, рабочих элементов, агентов…",
+    "empty": "Нет подходящих команд",
+    "loading": "Загрузка…",
+    "untitled": "Без названия",
+    "groups": {
+      "navigation": "Навигация",
+      "sessions": "Сеансы",
+      "workItems": "Рабочие элементы",
+      "agents": "Агенты",
+      "settings": "Настройки"
+    },
+    "badge": {
+      "scheduled": "Запланировано",
+      "scheduledPaused": "Запланировано · приостановлено",
+      "agent": "Агент"
+    }
+  },
   "readOnly": "Только чтение",
   "tray.showWindow": "Показать CSBU WorkMate",
   "tray.newChat": "Новый чат",

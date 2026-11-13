@@ -62,6 +62,24 @@
   "historyBack": "後退",
   "more": "更多",
   "refresh": "重新整理",
+  "commandPalette": {
+    "placeholder": "搜尋會話、工作項、智慧體…",
+    "empty": "沒有符合的命令",
+    "loading": "載入中…",
+    "untitled": "未命名",
+    "groups": {
+      "navigation": "導覽",
+      "sessions": "會話",
+      "workItems": "工作項",
+      "agents": "智慧體",
+      "settings": "設定"
+    },
+    "badge": {
+      "scheduled": "排程任務",
+      "scheduledPaused": "排程任務 · 已暫停",
+      "agent": "智慧體"
+    }
+  },
   "readOnly": "唯讀",
   "tray.showWindow": "顯示 CSBU WorkMate",
   "tray.newChat": "新建對話",
