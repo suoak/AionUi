@@ -33,9 +33,6 @@ permissions:
   id-token: write
 
 env:
-  # TEMP (reverted before merge): acceptance against Core main Manual Build artifacts
-  CSBU_WORKMATE_BACKEND_RUN_ID: '43564081100'
-  E2E_EXPECT_BUILTIN_PACKS: '1'
   BUN_INSTALL_REGISTRY: 'https://registry.npmjs.org/'
 
 jobs:
@@ -277,6 +274,10 @@ jobs:
     if: github.event.action != 'closed' && github.event.pull_request.draft == false && inputs.skip_build_test != true
     runs-on: ${{ matrix.os }}
     timeout-minutes: 45
+    # TEMP (reverted before merge): Core main artifacts; Windows uses the Core #301 fix build.
+    env:
+      CSBU_WORKMATE_BACKEND_RUN_ID: ${{ matrix.platform == 'windows-x64' && '43569636887' || '43564081100' }}
+      E2E_EXPECT_BUILTIN_PACKS: '1'
     strategy:
       fail-fast: false
       matrix:
