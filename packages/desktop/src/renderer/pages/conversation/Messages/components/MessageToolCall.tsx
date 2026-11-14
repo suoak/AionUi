@@ -18,6 +18,8 @@ import { createTwoFilesPatch } from 'diff';
 import React, { useCallback, useMemo, useState } from 'react';
 import type { BadgeProps } from '@arco-design/web-react';
 import { useTranslation } from 'react-i18next';
+import { ExtensionReasonMessage } from '@/renderer/components/extensions/ExtensionReasonMessage';
+import { findExtensionReasonCode } from '@/renderer/extensions/reasonCodes';
 import './MessageToolGroupSummary.css';
 
 const statusToBadge = (status: NormalizedToolStatus): BadgeProps['status'] => {
@@ -139,7 +141,13 @@ const GenericToolCall: React.FC<{ message: IMessageToolCall }> = ({ message }) =
                   })}
                 </div>
               ) : null}
-              <pre className='tool-detail-content'>{displayOutput}</pre>
+              {findExtensionReasonCode(displayOutput) ? (
+                <div className='tool-detail-content'>
+                  <ExtensionReasonMessage raw={displayOutput} />
+                </div>
+              ) : (
+                <pre className='tool-detail-content'>{displayOutput}</pre>
+              )}
               {canLoadFull ? (
                 <Button
                   className='mt-8px'

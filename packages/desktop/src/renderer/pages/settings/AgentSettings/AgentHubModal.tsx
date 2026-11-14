@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Typography, Tooltip } from '@arco-design/web-react';
+import { Button, Message, Typography, Tooltip } from '@arco-design/web-react';
 import { IconDownload, IconRefresh } from '@arco-design/web-react/icon';
 import { useTranslation } from 'react-i18next';
 import WorkMateModal from '@/renderer/components/base/WorkMateModal';
@@ -7,6 +7,7 @@ import { useHubAgents } from '@/renderer/hooks/agent/useHubAgents';
 import type { IHubAgentItem } from '@/common/types/agent/hub';
 import { resolveAgentAvatar, useAgentLogos } from '@renderer/utils/model/agentLogo';
 import ThemedLogo from '@/renderer/components/agent/ThemedLogo';
+import { ExtensionReasonMessage } from '@/renderer/components/extensions/ExtensionReasonMessage';
 
 interface AgentHubModalProps {
   visible: boolean;
@@ -18,6 +19,9 @@ export const AgentHubModal: React.FC<AgentHubModalProps> = ({ visible, onCancel 
   const logos = useAgentLogos();
   const { agents, loading, error, install, retryInstall, update } = useHubAgents();
   const actionButtonClassName = '!min-w-80px !rounded-9px !px-10px';
+  const notifyHubFailure = (msg: string | undefined) => {
+    if (msg) Message.error({ content: <ExtensionReasonMessage raw={msg} /> });
+  };
   const renderActionBtn = (agent: IHubAgentItem) => {
     switch (agent.status) {
       case 'not_installed':
@@ -27,7 +31,7 @@ export const AgentHubModal: React.FC<AgentHubModalProps> = ({ visible, onCancel 
             size='small'
             icon={<IconDownload />}
             className={actionButtonClassName}
-            onClick={() => install(agent.name)}
+            onClick={() => void install(agent.name).then(notifyHubFailure)}
           >
             {t('settings.agentManagement.marketInstall', { defaultValue: 'Install' })}
           </Button>
@@ -47,13 +51,21 @@ export const AgentHubModal: React.FC<AgentHubModalProps> = ({ visible, onCancel 
         );
       case 'install_failed':
         return (
-          <Tooltip content={agent.installError || t('common.failed', { defaultValue: 'Failed' })}>
+          <Tooltip
+            content={
+              agent.installError ? (
+                <ExtensionReasonMessage raw={agent.installError} />
+              ) : (
+                t('common.failed', { defaultValue: 'Failed' })
+              )
+            }
+          >
             <Button
               status='danger'
               size='small'
               icon={<IconRefresh />}
               className={actionButtonClassName}
-              onClick={() => retryInstall(agent.name)}
+              onClick={() => void retryInstall(agent.name).then(notifyHubFailure)}
             >
               {t('common.retry', { defaultValue: 'Retry' })}
             </Button>
@@ -66,7 +78,7 @@ export const AgentHubModal: React.FC<AgentHubModalProps> = ({ visible, onCancel 
             size='small'
             icon={<IconDownload />}
             className={actionButtonClassName}
-            onClick={() => update(agent.name)}
+            onClick={() => void update(agent.name).then(notifyHubFailure)}
           >
             {t('settings.agentManagement.marketUpdate', { defaultValue: 'Update' })}
           </Button>
@@ -97,7 +109,7 @@ export const AgentHubModal: React.FC<AgentHubModalProps> = ({ visible, onCancel 
         ) : error ? (
           <div className='flex items-center justify-center py-48px text-center'>
             <Typography.Text type='secondary' className='text-13px text-t-secondary'>
-              {error}
+              <ExtensionReasonMessage raw={error} />
             </Typography.Text>
           </div>
         ) : agents.length === 0 ? (

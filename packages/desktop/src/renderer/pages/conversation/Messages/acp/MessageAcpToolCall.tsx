@@ -19,6 +19,8 @@ import { Download } from '@icon-park/react';
 import { createTwoFilesPatch } from 'diff';
 import React, { useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { ExtensionReasonMessage } from '@/renderer/components/extensions/ExtensionReasonMessage';
+import { findExtensionReasonCode } from '@/renderer/extensions/reasonCodes';
 import MarkdownView from '@renderer/components/Markdown';
 import SquadRouteOnlyNotice from '../components/SquadRouteOnlyNotice';
 
@@ -125,7 +127,11 @@ const ContentView: React.FC<{
             </div>
           ) : null}
           <div className='overflow-x-auto break-words'>
-            <MarkdownView>{text}</MarkdownView>
+            {findExtensionReasonCode(text) ? (
+              <ExtensionReasonMessage raw={text} />
+            ) : (
+              <MarkdownView>{text}</MarkdownView>
+            )}
           </div>
           {canLoadFull ? (
             <Button

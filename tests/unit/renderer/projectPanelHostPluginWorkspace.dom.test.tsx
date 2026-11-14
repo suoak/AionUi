@@ -35,6 +35,10 @@ vi.mock('@/renderer/hooks/system/useExtensionAssetSessionUrl', () => ({
     url ? `http://core${url.replace('/assets/', '/asset-session/tok/')}` : undefined,
 }));
 
+vi.mock('@/renderer/hooks/system/useExtensionAssetProbe', () => ({
+  useExtensionAssetProbe: (url?: string) => (url ? { status: 'ready' as const } : { status: 'idle' as const }),
+}));
+
 vi.mock('react-i18next', () => ({
   useTranslation: () => ({
     t: (key: string, fallback?: string) => {

@@ -8,6 +8,8 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { extensions as extensionsIpc } from '@/common/adapter/ipcBridge';
 import WebviewHost from '@/renderer/components/media/WebviewHost';
+import { ExtensionAssetRefusal } from '@/renderer/components/extensions/ExtensionReasonMessage';
+import { useExtensionAssetProbe } from '@/renderer/hooks/system/useExtensionAssetProbe';
 import { useExtensionAssetSessionUrl } from '@/renderer/hooks/system/useExtensionAssetSessionUrl';
 
 const isExternalSettingsUrl = (url?: string): boolean => /^https?:\/\//i.test(url || '');
@@ -32,6 +34,7 @@ const ExtensionSettingsTabContent: React.FC<ExtensionSettingsTabContentProps> = 
   const [loading, setLoading] = useState(true);
   const resolvedUrl = useExtensionAssetSessionUrl(url, extensionName);
   const isExternalTab = isExternalSettingsUrl(resolvedUrl);
+  const probe = useExtensionAssetProbe(isExternalTab ? undefined : resolvedUrl);
 
   useEffect(() => {
     setLoading(true);
@@ -98,30 +101,34 @@ const ExtensionSettingsTabContent: React.FC<ExtensionSettingsTabContentProps> = 
           partition={`persist:ext-settings-${tabId}`}
           style={{ minHeight: '200px' }}
         />
+      ) : probe.status === 'refused' ? (
+        <ExtensionAssetRefusal raw={probe.raw} />
       ) : (
         <>
-          {loading && (
+          {(loading || probe.status !== 'ready') && (
             <div className='absolute inset-0 flex items-center justify-center text-t-secondary text-14px'>
               <span className='animate-pulse'>Loading…</span>
             </div>
           )}
-          <iframe
-            ref={iframeRef}
-            key={tabId}
-            src={resolvedUrl}
-            onLoad={() => {
-              // No src yet while the asset token is in flight; ignore about:blank.
-              if (resolvedUrl) setLoading(false);
-            }}
-            sandbox='allow-scripts allow-same-origin'
-            className='w-full h-full border-none'
-            style={{
-              minHeight: '200px',
-              opacity: loading ? 0 : 1,
-              transition: 'opacity 150ms ease-in',
-            }}
-            title={`Extension settings: ${tabId}`}
-          />
+          {probe.status === 'ready' && (
+            <iframe
+              ref={iframeRef}
+              key={tabId}
+              src={resolvedUrl}
+              onLoad={() => {
+                // No src yet while the asset token is in flight; ignore about:blank.
+                if (resolvedUrl) setLoading(false);
+              }}
+              sandbox='allow-scripts allow-same-origin'
+              className='w-full h-full border-none'
+              style={{
+                minHeight: '200px',
+                opacity: loading ? 0 : 1,
+                transition: 'opacity 150ms ease-in',
+              }}
+              title={`Extension settings: ${tabId}`}
+            />
+          )}
         </>
       )}
     </div>
