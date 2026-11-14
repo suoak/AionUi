@@ -358,6 +358,12 @@
     "package_root_create_failed": "The extension folder could not be created. Check free disk space and permissions, then try again.",
     "package_write_failed": "The extension files could not be written. Check free disk space, then try again.",
     "package_retain_failed": "The extension was installed but could not be activated. Restart CSBU WorkMate.",
-    "package_unsupported_platform": "Signed extensions cannot be installed on this platform."
+    "package_unsupported_platform": "Signed extensions cannot be installed on this platform.",
+    "agent_tool_not_plan_safe": "This tool can make changes, and extension tools that make changes cannot run in this version of CSBU WorkMate.",
+    "hub_package_not_found": "The extension's files were not found in the hub folder. Refresh the hub list and try again.",
+    "hub_verification_failed": "The extension's description file is invalid, so it was not installed. Contact the extension's publisher.",
+    "hub_not_installed": "This extension is not installed, so it cannot be updated. Install it first.",
+    "hub_remove_failed": "The extension could not be removed completely. Close anything that uses it and try again.",
+    "package_lifecycle_hooks_refused": "This extension asks to run setup programs, which signed extensions cannot do. Contact the extension's publisher."
   }
 }

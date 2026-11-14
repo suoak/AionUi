@@ -9,3 +9,4 @@ Contributes (existing): acpAdapters, mcpServers, assistants, agents, skills, the
 Contributes (v1 contract additions): commands[{id,title,keybinding?,when?}]; panels[{id,title,entryPoint,icon?}]; workPanelViews[{id,title,entryPoint,placement?,icon?}]; agentTools[{id,name,description?,planSafeActions(required bool),handler?}]; backgroundServices[{id,entryPoint,description?}].
 
 Rules: curated install only in v1 (no full sandbox); planSafeActions must be explicit; unknown keys ignored; no AGPL; brand CSBU WorkMate. CLI: workmate-plugin-cli init|check|pack|watch. Marketplace later (S10).
+Pages (panels, workPanelViews, settingsTabs) run in a sandboxed iframe with an opaque origin (iframe sandbox + Host CSP `sandbox allow-scripts`): no localStorage/sessionStorage/cookies/parent DOM, no popups, forms or top navigation, no network (`connect-src 'none'`). Load same-package classic scripts/styles/images; talk to the host only via postMessage (`aion:get-locale` → `aion:init`).

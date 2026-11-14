@@ -11,6 +11,7 @@ import WebviewHost from '@/renderer/components/media/WebviewHost';
 import { ExtensionAssetRefusal } from '@/renderer/components/extensions/ExtensionReasonMessage';
 import { useExtensionAssetProbe } from '@/renderer/hooks/system/useExtensionAssetProbe';
 import { useExtensionAssetSessionUrl } from '@/renderer/hooks/system/useExtensionAssetSessionUrl';
+import { EXTENSION_SETTINGS_IFRAME_SANDBOX } from '@/renderer/hooks/system/extensionPanelCatalog';
 
 const isExternalSettingsUrl = (url?: string): boolean => /^https?:\/\//i.test(url || '');
 
@@ -119,7 +120,7 @@ const ExtensionSettingsTabContent: React.FC<ExtensionSettingsTabContentProps> = 
                 // No src yet while the asset token is in flight; ignore about:blank.
                 if (resolvedUrl) setLoading(false);
               }}
-              sandbox='allow-scripts allow-same-origin'
+              sandbox={EXTENSION_SETTINGS_IFRAME_SANDBOX}
               className='w-full h-full border-none'
               style={{
                 minHeight: '200px',

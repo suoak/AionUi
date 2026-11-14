@@ -116,6 +116,8 @@ test.describe('Extension: Iframe Content Rendering', () => {
 
     const sandbox = await iframe.first().getAttribute('sandbox');
     expect(sandbox).toContain('allow-scripts');
+    // Opaque origin (security review F1): settings pages never share the app's origin.
+    expect(sandbox).not.toContain('allow-same-origin');
   });
 });
 
