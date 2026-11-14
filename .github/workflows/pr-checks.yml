@@ -33,6 +33,9 @@ permissions:
   id-token: write
 
 env:
+  # TEMP (reverted before merge): acceptance against Core main Manual Build artifacts
+  CSBU_WORKMATE_BACKEND_RUN_ID: '43564081100'
+  E2E_EXPECT_BUILTIN_PACKS: '1'
   BUN_INSTALL_REGISTRY: 'https://registry.npmjs.org/'
 
 jobs:
