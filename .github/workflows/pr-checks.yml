@@ -432,6 +432,20 @@ jobs:
               ;;
           esac
 
+      # 3.0.0 packaged acceptance smoke (branding, five-entry sider, packaged node-pty terminal,
+      # built-in signed packs) against the app just built in out/. Linux runs under xvfb.
+      - name: Packaged acceptance smoke (${{ matrix.platform }})
+        shell: bash
+        run: |
+          if [ "$RUNNER_OS" = "Linux" ]; then
+            sudo apt-get update -qq && sudo apt-get install -y --no-install-recommends xvfb >/dev/null
+            xvfb-run -a -s "-screen 0 1440x900x24" npm run test:e2e:packaged-acceptance
+          else
+            npm run test:e2e:packaged-acceptance
+          fi
+        env:
+          CI: true
+
       - name: M3 packaged strict planning release gate (Windows x64)
         if: matrix.platform == 'windows-x64'
         shell: pwsh
