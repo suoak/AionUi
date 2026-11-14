@@ -3874,14 +3874,22 @@ export const channel = {
 // ---------------------------------------------------------------------------
 
 import type { HubExtensionStatus, IHubAgentItem } from '@/common/types/agent/hub';
+/** Result of install / update / uninstall; `msg` may contain a catalogue reason code. */
+export type HubOperationResponse = {
+  success: boolean;
+  msg?: string | null;
+};
+
 export const hub = {
   getExtensionList: httpGet<IHubAgentItem[], void>('/api/hub/extensions'),
-  install: httpPost<void, { name: string }>('/api/hub/install'),
-  uninstall: httpPost<void, { name: string }>('/api/hub/uninstall'),
-  retryInstall: httpPost<void, { name: string }>('/api/hub/retry-install'),
+  install: httpPost<HubOperationResponse, { name: string }>('/api/hub/install'),
+  uninstall: httpPost<HubOperationResponse, { name: string }>('/api/hub/uninstall'),
+  retryInstall: httpPost<HubOperationResponse, { name: string }>('/api/hub/retry-install'),
   checkUpdates: httpPost<{ name: string }[], void>('/api/hub/check-updates'),
-  update: httpPost<void, { name: string }>('/api/hub/update'),
-  onStateChanged: wsEmitter<{ name: string; status: HubExtensionStatus; error?: string }>('hub.state-changed'),
+  update: httpPost<HubOperationResponse, { name: string }>('/api/hub/update'),
+  onStateChanged: wsEmitter<{ name: string; status: HubExtensionStatus | 'failed'; error?: string }>(
+    'hub.state-changed'
+  ),
 };
 
 // ---------------------------------------------------------------------------

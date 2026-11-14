@@ -11,6 +11,8 @@ import { extensions as extensionsIpc, type IExtensionSettingsTab } from '@/commo
 import { useExtI18n } from '@/renderer/hooks/system/useExtI18n';
 import { useExtensionSettingsTabs } from '@/renderer/hooks/system/useExtensionSettingsTabs';
 import WebviewHost from '@/renderer/components/media/WebviewHost';
+import { ExtensionAssetRefusal } from '@/renderer/components/extensions/ExtensionReasonMessage';
+import { useExtensionAssetProbe } from '@/renderer/hooks/system/useExtensionAssetProbe';
 import { useExtensionAssetSessionUrl } from '@/renderer/hooks/system/useExtensionAssetSessionUrl';
 import SettingsPageWrapper from './components/SettingsPageWrapper';
 
@@ -46,6 +48,7 @@ const ExtensionSettingsPage: React.FC = () => {
 
   const resolvedUrl = useExtensionAssetSessionUrl(tab?.url, tab?.extensionName);
   const isExternalTab = isExternalSettingsUrl(resolvedUrl);
+  const probe = useExtensionAssetProbe(isExternalTab ? undefined : resolvedUrl);
 
   useEffect(() => {
     setLoading(true);
@@ -122,31 +125,35 @@ const ExtensionSettingsPage: React.FC = () => {
                 height: 'calc(100vh - 200px)',
               }}
             />
+          ) : probe.status === 'refused' ? (
+            <ExtensionAssetRefusal raw={probe.raw} />
           ) : (
             <>
-              {loading && (
+              {(loading || probe.status !== 'ready') && (
                 <div className='absolute inset-0 flex items-center justify-center text-t-secondary text-14px'>
                   <span className='animate-pulse'>Loading…</span>
                 </div>
               )}
-              <iframe
-                ref={iframeRef}
-                key={tab.id}
-                src={resolvedUrl}
-                onLoad={() => {
-                  // No src yet while the asset token is in flight; ignore about:blank.
-                  if (resolvedUrl) setLoading(false);
-                }}
-                sandbox='allow-scripts allow-same-origin'
-                className='w-full border-none'
-                style={{
-                  minHeight: '400px',
-                  height: 'calc(100vh - 200px)',
-                  opacity: loading ? 0 : 1,
-                  transition: 'opacity 150ms ease-in',
-                }}
-                title={`Extension settings: ${resolveExtTabName(tab)}`}
-              />
+              {probe.status === 'ready' && (
+                <iframe
+                  ref={iframeRef}
+                  key={tab.id}
+                  src={resolvedUrl}
+                  onLoad={() => {
+                    // No src yet while the asset token is in flight; ignore about:blank.
+                    if (resolvedUrl) setLoading(false);
+                  }}
+                  sandbox='allow-scripts allow-same-origin'
+                  className='w-full border-none'
+                  style={{
+                    minHeight: '400px',
+                    height: 'calc(100vh - 200px)',
+                    opacity: loading ? 0 : 1,
+                    transition: 'opacity 150ms ease-in',
+                  }}
+                  title={`Extension settings: ${resolveExtTabName(tab)}`}
+                />
+              )}
             </>
           ))}
       </div>

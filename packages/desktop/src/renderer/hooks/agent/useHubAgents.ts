@@ -1,7 +1,13 @@
 import { useState, useEffect, useCallback } from 'react';
-import type { IHubAgentItem } from '@/common/types/agent/hub';
+import type { HubExtensionStatus, IHubAgentItem } from '@/common/types/agent/hub';
 import { ipcBridge } from '@/common';
+import { collectErrorText } from '@/renderer/extensions/reasonCodes';
 import { refreshManagedAgentCatalogAndAssistants } from './useManagedAgents';
+
+function normalizeHubStatus(status: string | undefined): HubExtensionStatus | undefined {
+  if (status === 'failed') return 'install_failed';
+  return status as HubExtensionStatus | undefined;
+}
 
 export function useHubAgents() {
   const [agents, setAgents] = useState<IHubAgentItem[]>([]);
@@ -19,7 +25,7 @@ export function useHubAgents() {
         setAgents(agentExtensions);
       }
     } catch (err) {
-      setError(String(err));
+      setError(collectErrorText(err) || String(err));
     } finally {
       setLoading(false);
     }
@@ -30,12 +36,15 @@ export function useHubAgents() {
 
     // Listen to state changes from backend
     const unsubscribe = ipcBridge.hub.onStateChanged.on((payload) => {
+      const status = normalizeHubStatus(payload.status);
+      if (!status) return;
+
       setAgents((prev) =>
         prev.map((agent) => {
           if (agent.name === payload.name) {
             return {
               ...agent,
-              status: payload.status,
+              status,
               installError: payload.error,
             };
           }
@@ -46,7 +55,7 @@ export function useHubAgents() {
       // Hub installs can change both the management diagnostics view and
       // the generated generated-assistant catalog, so refresh both through the
       // shared helper used by AgentSettings.
-      if (payload.status === 'installed') {
+      if (status === 'installed') {
         void refreshManagedAgentCatalogAndAssistants();
       }
     });
@@ -56,30 +65,30 @@ export function useHubAgents() {
     };
   }, [fetchAgents]);
 
-  const install = async (name: string) => {
+  const runHubAction = async (action: 'install' | 'retryInstall' | 'update', name: string, failedLabel: string) => {
     try {
-      await ipcBridge.hub.install.invoke({ name });
+      const result = await ipcBridge.hub[action].invoke({ name });
+      if (result && result.success === false) {
+        const msg = result.msg || failedLabel;
+        setAgents((prev) =>
+          prev.map((agent) => (agent.name === name ? { ...agent, status: 'install_failed', installError: msg } : agent))
+        );
+        return msg;
+      }
     } catch (err) {
-      console.error('Install failed:', err);
-      // Wait for IPC status update to catch the error and reflect it in UI
+      const msg = collectErrorText(err) || failedLabel;
+      console.error(`${failedLabel}:`, err);
+      setAgents((prev) =>
+        prev.map((agent) => (agent.name === name ? { ...agent, status: 'install_failed', installError: msg } : agent))
+      );
+      return msg;
     }
+    return undefined;
   };
 
-  const retryInstall = async (name: string) => {
-    try {
-      await ipcBridge.hub.retryInstall.invoke({ name });
-    } catch (err) {
-      console.error('Retry failed:', err);
-    }
-  };
-
-  const update = async (name: string) => {
-    try {
-      await ipcBridge.hub.update.invoke({ name });
-    } catch (err) {
-      console.error('Update failed:', err);
-    }
-  };
+  const install = async (name: string) => runHubAction('install', name, 'Install failed');
+  const retryInstall = async (name: string) => runHubAction('retryInstall', name, 'Retry failed');
+  const update = async (name: string) => runHubAction('update', name, 'Update failed');
 
   return {
     agents,
