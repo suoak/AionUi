@@ -1692,6 +1692,35 @@
         "checkInvalid": "請修正檢查",
         "trialTooLarge": "試跑項數超過目標數量"
       }
+    },
+    "presets": {
+      "label": "從預設開始（選用）",
+      "placeholder": "選擇一個預設，或自行填寫表單",
+      "hint": "預設會填好標題、提示詞、目標類型和產物檢查；已填的目標和助理不會改變。",
+      "weeklyReportDecks": {
+        "name": "週報簡報（.pptx）",
+        "description": "每個團隊一個資料夾，放本週筆記和數據 → 每個資料夾產生一份 weekly-report.pptx。",
+        "title": "週報簡報",
+        "prompt": "閱讀 {{target}} 中本週的筆記、指標和文件。使用內建的 `officecli` 指令，在該資料夾中產生一份 6–10 頁的 PowerPoint，儲存為 {{output}}：標題頁、本週亮點、關鍵指標（圖表或表格）、計畫進度、風險與阻礙、需要的決策、下週重點。每頁一個觀點、結論式標題、最多 5 條簡短要點，只使用資料夾中的事實。完成後重新開啟，確認沒有空白頁或內容溢出。"
+      },
+      "departmentWorkbooks": {
+        "name": "部門資料活頁簿（.xlsx）",
+        "description": "每個部門一個資料夾，放原始資料 → 每個資料夾產生一份含公式的 department-summary.xlsx。",
+        "title": "部門彙總活頁簿",
+        "prompt": "收集 {{target}} 中的資料檔（CSV、Excel、匯出檔）。使用內建的 `officecli` 指令，在該資料夾中產生 Excel 活頁簿，儲存為 {{output}}，包含：「彙總」工作表（關鍵合計、趨勢和簡短解讀）、每個資料來源一張整理後的資料表（欄位型別明確）、「說明」工作表（資料來源和假設）。所有合計和比率都使用即時公式，設定數字和日期格式，凍結標題列。不得捏造資料，缺漏要標註。完成後重新開啟，確認沒有公式錯誤。"
+      },
+      "clientBriefs": {
+        "name": "客戶簡報（.docx）",
+        "description": "每個客戶一個資料夾，放筆記和資料 → 每個資料夾產生一份 client-brief.docx。",
+        "title": "客戶簡報",
+        "prompt": "查閱 {{target}} 中的筆記、郵件和資料。使用內建的 `officecli` 指令，在該資料夾中撰寫一份 1–2 頁的 Word 簡報，儲存為 {{output}}：客戶概況、目前狀況、目標、待解決問題與風險、建議的下一步（含負責人和時間）、主要聯絡人。使用標題樣式和短段落，必要時使用表格。只使用資料夾中的事實，未確認的資訊要標註。完成後重新開啟檢查文件結構。"
+      },
+      "repoReview": {
+        "name": "程式碼儲存庫審查",
+        "description": "每行一個儲存庫 → 每個儲存庫產生 REVIEW.md 和機器可讀的 review-findings.json。",
+        "title": "程式碼儲存庫審查",
+        "prompt": "審查位於 {{target}} 的程式碼儲存庫，關注正確性、安全性、可維護性和缺少的測試。不要修改原始碼。把給人閱讀的報告寫入 {{output}}（先摘要，再依嚴重程度列出問題，附檔案和行號以及具體修正建議），並把同樣的問題以 JSON 寫入 {{findings}}：{\"summary\": string, \"findings\": [{\"severity\": \"blocker\" | \"major\" | \"minor\" | \"info\", \"title\": string, \"file\"?: string, \"line\"?: integer, \"recommendation\"?: string}]}。只回報真實、可驗證的問題。"
+      }
     }
   }
 }

@@ -1692,6 +1692,35 @@
         "checkInvalid": "검사를 수정하세요",
         "trialTooLarge": "시험 항목 수가 대상 수보다 많습니다"
       }
+    },
+    "presets": {
+      "label": "프리셋으로 시작(선택)",
+      "placeholder": "프리셋을 고르거나 양식을 직접 작성하세요",
+      "hint": "프리셋은 제목, 프롬프트, 대상 종류, 산출물 검사를 채웁니다. 대상과 어시스턴트는 그대로 유지됩니다.",
+      "weeklyReportDecks": {
+        "name": "주간 보고 자료(.pptx)",
+        "description": "팀별 폴더(이번 주 메모와 데이터) → 폴더마다 weekly-report.pptx.",
+        "title": "주간 보고 자료",
+        "prompt": "Read this week's notes, metrics, and documents in {{target}}. Using the bundled `officecli` command, create a 6–10 slide PowerPoint deck saved as {{output}} in that folder: title slide, highlights, key metrics (chart or table), progress against plan, risks and blockers, decisions needed, and next week's priorities. One idea per slide with an action title, at most 5 short bullets, and only facts from the folder. Re-open the deck to check that no slide is empty or overflowing."
+      },
+      "departmentWorkbooks": {
+        "name": "부서별 통합문서(.xlsx)",
+        "description": "부서별 폴더(원시 데이터) → 폴더마다 수식이 포함된 department-summary.xlsx.",
+        "title": "부서별 요약 통합문서",
+        "prompt": "Collect the data files (CSV, Excel, exports) in {{target}}. Using the bundled `officecli` command, build an Excel workbook saved as {{output}} in that folder with: a Summary sheet (key totals, trends, and short commentary), one cleaned data sheet per source with typed columns, and a Notes sheet listing sources and assumptions. Use live formulas for every total and ratio, apply number and date formats, and freeze header rows. Do not invent data; flag gaps. Re-open the workbook and confirm no formula shows an error."
+      },
+      "clientBriefs": {
+        "name": "고객 브리프(.docx)",
+        "description": "고객별 폴더(메모와 자료) → 폴더마다 client-brief.docx.",
+        "title": "고객 브리프",
+        "prompt": "Review the notes, emails, and materials in {{target}}. Using the bundled `officecli` command, write a 1–2 page Word brief saved as {{output}} in that folder: client overview, current situation, goals, open issues and risks, recommended next steps with owners and dates, and key contacts. Use heading styles, short paragraphs, and a table where it helps. Only use facts from the folder and mark anything unconfirmed. Re-open the document to check its structure."
+      },
+      "repoReview": {
+        "name": "저장소 리뷰",
+        "description": "한 줄에 저장소 하나 → 저장소마다 REVIEW.md와 기계 판독용 review-findings.json.",
+        "title": "저장소 리뷰",
+        "prompt": "Review the repository at {{target}} for correctness, security, maintainability, and missing tests. Do not change source files. Write the human-readable report to {{output}} (summary, then findings ordered by severity with file and line references and a concrete fix) and the same findings to {{findings}} as JSON: {\"summary\": string, \"findings\": [{\"severity\": \"blocker\" | \"major\" | \"minor\" | \"info\", \"title\": string, \"file\"?: string, \"line\"?: integer, \"recommendation\"?: string}]}. Report only real, verifiable issues."
+      }
     }
   }
 }

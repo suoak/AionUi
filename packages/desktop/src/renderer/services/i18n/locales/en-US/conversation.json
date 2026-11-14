@@ -1692,6 +1692,35 @@
         "checkInvalid": "Fix the checks",
         "trialTooLarge": "Trial items exceed the number of targets"
       }
+    },
+    "presets": {
+      "label": "Start from a preset (optional)",
+      "placeholder": "Choose a preset or fill in the form yourself",
+      "hint": "Presets fill in the title, prompt, target kind, and artifact checks. Your targets and assistant stay unchanged.",
+      "weeklyReportDecks": {
+        "name": "Weekly report decks (.pptx)",
+        "description": "One folder per team with this week's notes and data → a weekly-report.pptx in each folder.",
+        "title": "Weekly report decks",
+        "prompt": "Read this week's notes, metrics, and documents in {{target}}. Using the bundled `officecli` command, create a 6–10 slide PowerPoint deck saved as {{output}} in that folder: title slide, highlights, key metrics (chart or table), progress against plan, risks and blockers, decisions needed, and next week's priorities. One idea per slide with an action title, at most 5 short bullets, and only facts from the folder. Re-open the deck to check that no slide is empty or overflowing."
+      },
+      "departmentWorkbooks": {
+        "name": "Department workbooks (.xlsx)",
+        "description": "One folder per department with raw data → a department-summary.xlsx with formulas in each folder.",
+        "title": "Department summary workbooks",
+        "prompt": "Collect the data files (CSV, Excel, exports) in {{target}}. Using the bundled `officecli` command, build an Excel workbook saved as {{output}} in that folder with: a Summary sheet (key totals, trends, and short commentary), one cleaned data sheet per source with typed columns, and a Notes sheet listing sources and assumptions. Use live formulas for every total and ratio, apply number and date formats, and freeze header rows. Do not invent data; flag gaps. Re-open the workbook and confirm no formula shows an error."
+      },
+      "clientBriefs": {
+        "name": "Client briefs (.docx)",
+        "description": "One folder per client with notes and materials → a client-brief.docx in each folder.",
+        "title": "Client briefs",
+        "prompt": "Review the notes, emails, and materials in {{target}}. Using the bundled `officecli` command, write a 1–2 page Word brief saved as {{output}} in that folder: client overview, current situation, goals, open issues and risks, recommended next steps with owners and dates, and key contacts. Use heading styles, short paragraphs, and a table where it helps. Only use facts from the folder and mark anything unconfirmed. Re-open the document to check its structure."
+      },
+      "repoReview": {
+        "name": "Repository review",
+        "description": "One repository per line → a REVIEW.md plus machine-readable review-findings.json in each repo.",
+        "title": "Repository review",
+        "prompt": "Review the repository at {{target}} for correctness, security, maintainability, and missing tests. Do not change source files. Write the human-readable report to {{output}} (summary, then findings ordered by severity with file and line references and a concrete fix) and the same findings to {{findings}} as JSON: {\"summary\": string, \"findings\": [{\"severity\": \"blocker\" | \"major\" | \"minor\" | \"info\", \"title\": string, \"file\"?: string, \"line\"?: integer, \"recommendation\"?: string}]}. Report only real, verifiable issues."
+      }
     }
   }
 }

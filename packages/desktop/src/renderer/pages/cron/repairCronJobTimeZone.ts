@@ -74,3 +74,9 @@ export function repairAllCronJobTimeZonesOnce(): Promise<ICronJob[]> {
 
   return repairAllInFlight;
 }
+
+/** Clears in-flight repair memoization. For unit tests only. */
+export function resetCronJobTimeZoneRepairState(): void {
+  repairInFlight.clear();
+  repairAllInFlight = null;
+}
