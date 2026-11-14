@@ -358,6 +358,12 @@
     "package_root_create_failed": "無法建立擴充功能資料夾。請檢查磁碟空間和權限後再試。",
     "package_write_failed": "擴充功能檔案無法寫入。請檢查磁碟空間後再試。",
     "package_retain_failed": "擴充功能已安裝，但未能啟用。請重新啟動 CSBU WorkMate。",
-    "package_unsupported_platform": "已簽署的擴充功能無法在目前平台上安裝。"
+    "package_unsupported_platform": "已簽署的擴充功能無法在目前平台上安裝。",
+    "agent_tool_not_plan_safe": "此工具會修改內容，目前版本的 CSBU WorkMate 不支援執行會修改內容的擴充功能工具。",
+    "hub_package_not_found": "在擴充功能中心資料夾中找不到此擴充功能的檔案。請重新整理擴充功能清單後重試。",
+    "hub_verification_failed": "此擴充功能的描述檔無效，因此未安裝。請聯絡擴充功能發布者。",
+    "hub_not_installed": "此擴充功能尚未安裝，無法更新。請先安裝。",
+    "hub_remove_failed": "未能完全移除此擴充功能。請關閉正在使用它的項目後重試。",
+    "package_lifecycle_hooks_refused": "此擴充功能要求執行安裝程式，已簽署的擴充功能不允許這樣做。請聯絡擴充功能發布者。"
   }
 }

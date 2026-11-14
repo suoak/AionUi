@@ -358,6 +358,12 @@
     "package_root_create_failed": "无法创建扩展文件夹。请检查磁盘空间和权限后再试。",
     "package_write_failed": "扩展文件无法写入。请检查磁盘空间后再试。",
     "package_retain_failed": "扩展已安装，但未能激活。请重启 CSBU WorkMate。",
-    "package_unsupported_platform": "已签名的扩展无法在当前平台上安装。"
+    "package_unsupported_platform": "已签名的扩展无法在当前平台上安装。",
+    "agent_tool_not_plan_safe": "此工具会修改内容，当前版本的 CSBU WorkMate 不支持运行会修改内容的扩展工具。",
+    "hub_package_not_found": "在扩展中心文件夹中找不到该扩展的文件。请刷新扩展列表后重试。",
+    "hub_verification_failed": "该扩展的描述文件无效，因此未安装。请联系扩展发布者。",
+    "hub_not_installed": "此扩展尚未安装，无法更新。请先安装。",
+    "hub_remove_failed": "未能完全移除该扩展。请关闭正在使用它的内容后重试。",
+    "package_lifecycle_hooks_refused": "此扩展要求运行安装程序，已签名扩展不允许这样做。请联系扩展发布者。"
   }
 }

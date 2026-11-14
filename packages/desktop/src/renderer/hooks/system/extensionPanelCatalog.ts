@@ -22,6 +22,16 @@ export type WorkPanelSurface = 'sidebar' | 'workspace';
  */
 export const EXTENSION_PANEL_IFRAME_SANDBOX = 'allow-scripts';
 
+/**
+ * Settings-tab iframe sandbox (backend-served local tabs). Same opaque origin as
+ * panels: no `allow-same-origin`, because the page is served from the app's (WebUI)
+ * or backend's origin and `allow-scripts allow-same-origin` on same-origin content
+ * is no isolation at all (internal security review F1). The `aion:get-locale` /
+ * `aion:init` bridge uses `postMessage` with `event.source` checks, which work
+ * with an opaque origin. Core also enforces `sandbox allow-scripts` in the asset CSP.
+ */
+export const EXTENSION_SETTINGS_IFRAME_SANDBOX = 'allow-scripts';
+
 /** Work-panel `placement` → host surface. Unknown / empty / "secondary" land in the session workspace. */
 export function workPanelPlacementSurface(placement: string | undefined): WorkPanelSurface {
   const value = (placement ?? '').trim().toLowerCase();
