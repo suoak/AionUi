@@ -224,5 +224,25 @@
       "sent": "{{count}} anotaciones enviadas",
       "failed": "Error al enviar: {{message}}"
     }
+  },
+  "officeReview": {
+    "title": "Revisión",
+    "toggle": "Revisión ({{count}})",
+    "unresolvedCount": "{{count}} sin resolver",
+    "send": "Enviar al agente ({{count}})",
+    "close": "Cerrar el panel de revisión",
+    "target": "Destino",
+    "slide": "Diapositiva {{number}}",
+    "page": "Página {{number}}",
+    "row": "Fila {{number}}",
+    "slideLabel": "Diapositiva",
+    "pageLabel": "Página",
+    "rowLabel": "Fila",
+    "element": "Elemento o ubicación",
+    "elementPlaceholder": "Gráfico, título, C4:E10",
+    "commentPlaceholder": "Deja un comentario (admite Markdown)",
+    "commentSubmit": "Comentar",
+    "empty": "Aún no hay comentarios de revisión",
+    "threads": "Comentarios"
   }
 }

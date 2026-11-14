@@ -13,6 +13,7 @@ interface ExcelPreviewProps {
   file_path?: string;
   content?: string;
   workspace?: string;
+  file_name?: string;
 }
 
 const ExcelPreview: React.FC<ExcelPreviewProps> = (props) => <OfficeWatchViewer docType='excel' {...props} />;

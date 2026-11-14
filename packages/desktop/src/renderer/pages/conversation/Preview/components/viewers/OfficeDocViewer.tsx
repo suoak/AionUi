@@ -13,6 +13,7 @@ interface OfficeDocPreviewProps {
   file_path?: string;
   content?: string;
   workspace?: string;
+  file_name?: string;
 }
 
 const OfficeDocPreview: React.FC<OfficeDocPreviewProps> = (props) => <OfficeWatchViewer docType='word' {...props} />;

@@ -224,5 +224,25 @@
       "sent": "{{count}} یادداشت ارسال شد",
       "failed": "ارسال ناموفق بود: {{message}}"
     }
+  },
+  "officeReview": {
+    "title": "بازبینی",
+    "toggle": "بازبینی ({{count}})",
+    "unresolvedCount": "{{count}} حل‌نشده",
+    "send": "ارسال به عامل ({{count}})",
+    "close": "بستن پنل بازبینی",
+    "target": "هدف",
+    "slide": "اسلاید {{number}}",
+    "page": "صفحه {{number}}",
+    "row": "ردیف {{number}}",
+    "slideLabel": "اسلاید",
+    "pageLabel": "صفحه",
+    "rowLabel": "ردیف",
+    "element": "عنصر یا موقعیت",
+    "elementPlaceholder": "نمودار، عنوان، C4:E10",
+    "commentPlaceholder": "یک دیدگاه بنویسید (پشتیبانی از Markdown)",
+    "commentSubmit": "دیدگاه",
+    "empty": "هنوز دیدگاه بازبینی وجود ندارد",
+    "threads": "دیدگاه‌ها"
   }
 }

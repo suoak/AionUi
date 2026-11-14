@@ -1152,6 +1152,7 @@ const PreviewPanel: React.FC = () => {
           file_path={metadata?.file_path}
           content={content}
           workspace={metadata?.workspace}
+          file_name={metadata?.file_name || metadata?.title}
         />
       );
     } else if (content_type === 'word') {
@@ -1161,6 +1162,7 @@ const PreviewPanel: React.FC = () => {
           file_path={metadata?.file_path}
           content={content}
           workspace={metadata?.workspace}
+          file_name={metadata?.file_name || metadata?.title}
         />
       );
     } else if (content_type === 'excel') {
@@ -1170,6 +1172,7 @@ const PreviewPanel: React.FC = () => {
           file_path={metadata?.file_path}
           content={content}
           workspace={metadata?.workspace}
+          file_name={metadata?.file_name || metadata?.title}
         />
       );
     } else if (content_type === 'image') {

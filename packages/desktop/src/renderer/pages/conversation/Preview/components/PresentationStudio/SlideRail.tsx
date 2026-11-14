@@ -10,13 +10,23 @@ type Props = {
   slides: DeckSlide[];
   assets: DeckAsset[];
   selectedId: string;
+  unresolvedCounts?: Record<string, number>;
   onSelect: (id: string) => void;
   onMove: (from: number, to: number) => void;
   onDuplicate: (id: string) => void;
   onDelete: (id: string) => void;
 };
 
-const SlideRail: React.FC<Props> = ({ slides, assets, selectedId, onSelect, onMove, onDuplicate, onDelete }) => {
+const SlideRail: React.FC<Props> = ({
+  slides,
+  assets,
+  selectedId,
+  unresolvedCounts,
+  onSelect,
+  onMove,
+  onDuplicate,
+  onDelete,
+}) => {
   const { t } = useTranslation();
   return (
     <div className='w-190px flex-shrink-0 overflow-y-auto border-r border-border-2 p-10px bg-bg-2'>
@@ -43,6 +53,14 @@ const SlideRail: React.FC<Props> = ({ slides, assets, selectedId, onSelect, onMo
                 {slideHasUnresolvedMedia(slide, assets) && (
                   <span className='text-warning-6' data-testid={`slide-pending-media-${slide.id}`}>
                     {t('presentation.slide.pendingMedia')}
+                  </span>
+                )}
+                {(unresolvedCounts?.[slide.id] ?? 0) > 0 && (
+                  <span
+                    className='inline-flex items-center justify-center min-w-16px h-16px px-4px rd-8px bg-primary text-11px text-white'
+                    data-testid={`slide-review-count-${slide.id}`}
+                  >
+                    {unresolvedCounts?.[slide.id]}
                   </span>
                 )}
               </span>

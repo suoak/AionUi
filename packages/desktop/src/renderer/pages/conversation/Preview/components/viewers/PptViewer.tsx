@@ -13,6 +13,7 @@ interface PptViewerProps {
   file_path?: string;
   content?: string;
   workspace?: string;
+  file_name?: string;
 }
 
 const PptViewer: React.FC<PptViewerProps> = (props) => <OfficeWatchViewer docType='ppt' {...props} />;

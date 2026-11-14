@@ -224,5 +224,25 @@
       "sent": "Sent {{count}} annotations",
       "failed": "Failed to send: {{message}}"
     }
+  },
+  "officeReview": {
+    "title": "Review",
+    "toggle": "Review ({{count}})",
+    "unresolvedCount": "{{count}} unresolved",
+    "send": "Send to agent ({{count}})",
+    "close": "Close review panel",
+    "target": "Target",
+    "slide": "Slide {{number}}",
+    "page": "Page {{number}}",
+    "row": "Row {{number}}",
+    "slideLabel": "Slide",
+    "pageLabel": "Page",
+    "rowLabel": "Row",
+    "element": "Element or location",
+    "elementPlaceholder": "Chart, Heading, C4:E10",
+    "commentPlaceholder": "Leave a comment (Markdown supported)",
+    "commentSubmit": "Comment",
+    "empty": "No review comments yet",
+    "threads": "Comments"
   }
 }

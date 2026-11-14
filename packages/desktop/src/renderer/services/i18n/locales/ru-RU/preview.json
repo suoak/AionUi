@@ -226,5 +226,25 @@
       "sent": "Отправлено аннотаций: {{count}}",
       "failed": "Не удалось отправить: {{message}}"
     }
+  },
+  "officeReview": {
+    "title": "Рецензия",
+    "toggle": "Рецензия ({{count}})",
+    "unresolvedCount": "{{count}} не решено",
+    "send": "Отправить агенту ({{count}})",
+    "close": "Закрыть панель рецензии",
+    "target": "Цель",
+    "slide": "Слайд {{number}}",
+    "page": "Страница {{number}}",
+    "row": "Строка {{number}}",
+    "slideLabel": "Слайд",
+    "pageLabel": "Страница",
+    "rowLabel": "Строка",
+    "element": "Элемент или место",
+    "elementPlaceholder": "Диаграмма, заголовок, C4:E10",
+    "commentPlaceholder": "Оставьте комментарий (поддерживается Markdown)",
+    "commentSubmit": "Комментировать",
+    "empty": "Пока нет комментариев рецензии",
+    "threads": "Комментарии"
   }
 }
