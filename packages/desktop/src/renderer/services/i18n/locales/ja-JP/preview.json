@@ -224,5 +224,25 @@
       "sent": "{{count}} 件の注釈を送信しました",
       "failed": "送信に失敗しました: {{message}}"
     }
+  },
+  "officeReview": {
+    "title": "レビュー",
+    "toggle": "レビュー ({{count}})",
+    "unresolvedCount": "未解決 {{count}} 件",
+    "send": "エージェントに送信 ({{count}})",
+    "close": "レビューパネルを閉じる",
+    "target": "対象",
+    "slide": "スライド {{number}}",
+    "page": "{{number}} ページ",
+    "row": "{{number}} 行目",
+    "slideLabel": "スライド",
+    "pageLabel": "ページ",
+    "rowLabel": "行",
+    "element": "要素または位置",
+    "elementPlaceholder": "グラフ、見出し、C4:E10",
+    "commentPlaceholder": "コメントを入力（Markdown 対応）",
+    "commentSubmit": "コメント",
+    "empty": "レビューコメントはまだありません",
+    "threads": "コメント"
   }
 }

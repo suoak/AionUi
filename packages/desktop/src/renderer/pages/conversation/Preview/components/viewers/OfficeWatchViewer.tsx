@@ -11,8 +11,12 @@ import WebviewHost from '@/renderer/components/media/WebviewHost';
 import { openExternalUrl } from '@/renderer/utils/platform';
 import { isElectronDesktop } from '@/renderer/utils/platform';
 import { Button, Spin } from '@arco-design/web-react';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import OfficeReviewDrawer from '../annotate/OfficeReviewDrawer';
+import { buildOfficeReviewScope } from '../annotate/officeReviewModel';
+import { useOfficeReviewToolbar } from '../annotate/useOfficeReviewToolbar';
+import { useReviewThreads } from '../annotate/useReviewThreads';
 
 type DocType = 'ppt' | 'word' | 'excel';
 type OfficeWatchErrorCode =
@@ -82,6 +86,8 @@ interface OfficeWatchViewerProps {
   file_path?: string;
   content?: string;
   workspace?: string;
+  /** Filename fallback when only a ChatFileRef / title is available. */
+  file_name?: string;
 }
 
 interface OfficeWatchErrorState {
@@ -162,9 +168,27 @@ export function resolveOfficeErrorActions(
  * Used by PptViewer, OfficeDocViewer, and ExcelViewer — each passes its
  * docType to select the correct IPC bridge, proxy path, and i18n keys.
  */
-const OfficeWatchViewer: React.FC<OfficeWatchViewerProps> = ({ docType, fileRef, file_path, workspace }) => {
+const OfficeWatchViewer: React.FC<OfficeWatchViewerProps> = ({ docType, fileRef, file_path, workspace, file_name }) => {
   const { t } = useTranslation();
   const keys = I18N_KEYS[docType];
+  const reviewScope = useMemo(
+    () =>
+      buildOfficeReviewScope({
+        fileRef,
+        filePath: file_path,
+        fileName: file_name,
+        workspace,
+        routeHash: typeof window === 'undefined' ? '' : window.location.hash,
+      }),
+    [fileRef, file_path, file_name, workspace]
+  );
+  const review = useReviewThreads(reviewScope);
+  const [reviewOpen, setReviewOpen] = useState(false);
+  const { showFallbackToggle, toggleButton } = useOfficeReviewToolbar({
+    review,
+    open: reviewOpen,
+    setOpen: setReviewOpen,
+  });
 
   const [watchUrl, setWatchUrl] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
@@ -253,66 +277,86 @@ const OfficeWatchViewer: React.FC<OfficeWatchViewerProps> = ({ docType, fileRef,
     };
   }, [docType, fileRef, file_path, retryKey, t, workspace]);
 
-  if (loading) {
-    return (
-      <div className='h-full w-full flex items-center justify-center bg-bg-1'>
-        <div className='flex flex-col items-center gap-12px'>
-          <Spin size={32} />
-          <span className='text-13px text-t-secondary'>
-            {status === 'installing' ? t(keys.installing) : t(keys.loading)}
-          </span>
+  const previewSurface = (() => {
+    if (loading) {
+      return (
+        <div className='h-full w-full flex items-center justify-center bg-bg-1'>
+          <div className='flex flex-col items-center gap-12px'>
+            <Spin size={32} />
+            <span className='text-13px text-t-secondary'>
+              {status === 'installing' ? t(keys.installing) : t(keys.loading)}
+            </span>
+          </div>
         </div>
-      </div>
-    );
-  }
+      );
+    }
 
-  if (error) {
-    const { showServerInstallGuide, showInstallLink, showRetry } = resolveOfficeErrorActions(
-      error.code,
-      isElectronDesktop()
-    );
+    if (error) {
+      const { showServerInstallGuide, showInstallLink, showRetry } = resolveOfficeErrorActions(
+        error.code,
+        isElectronDesktop()
+      );
 
-    return (
-      <div className='h-full w-full flex items-center justify-center bg-bg-1'>
-        <div className='text-center max-w-400px'>
-          <div className='text-16px text-danger mb-8px'>{error.message}</div>
-          {!error.code && <div className='text-12px text-t-secondary mb-12px'>{t(keys.installHint)}</div>}
-          {showServerInstallGuide && (
-            <div className='text-start mb-12px'>
-              <div className='text-12px text-t-secondary mb-8px'>{t('preview.office.serverInstall.hint')}</div>
-              <code className='block select-all rounded-8px bg-2 px-10px py-8px text-12px text-t-primary'>
-                {OFFICECLI_SERVER_INSTALL_COMMAND}
-              </code>
-              <div className='text-12px text-t-secondary mt-8px'>{t('preview.office.serverInstall.icuNote')}</div>
-            </div>
-          )}
-          {showInstallLink && (
-            <div className='flex justify-center'>
-              <Button type='text' size='small' onClick={() => void openExternalUrl(OFFICECLI_INSTALL_URL)}>
-                {t('preview.office.installLinkText')}
-              </Button>
-            </div>
-          )}
-          {showRetry && (
-            <div className='flex justify-center'>
-              <Button size='small' type='primary' onClick={() => setRetryKey((value) => value + 1)}>
-                {t('common.retry', { defaultValue: 'Retry' })}
-              </Button>
-            </div>
-          )}
+      return (
+        <div className='h-full w-full flex items-center justify-center bg-bg-1'>
+          <div className='text-center max-w-400px'>
+            <div className='text-16px text-danger mb-8px'>{error.message}</div>
+            {!error.code && <div className='text-12px text-t-secondary mb-12px'>{t(keys.installHint)}</div>}
+            {showServerInstallGuide && (
+              <div className='text-start mb-12px'>
+                <div className='text-12px text-t-secondary mb-8px'>{t('preview.office.serverInstall.hint')}</div>
+                <code className='block select-all rounded-8px bg-2 px-10px py-8px text-12px text-t-primary'>
+                  {OFFICECLI_SERVER_INSTALL_COMMAND}
+                </code>
+                <div className='text-12px text-t-secondary mt-8px'>{t('preview.office.serverInstall.icuNote')}</div>
+              </div>
+            )}
+            {showInstallLink && (
+              <div className='flex justify-center'>
+                <Button type='text' size='small' onClick={() => void openExternalUrl(OFFICECLI_INSTALL_URL)}>
+                  {t('preview.office.installLinkText')}
+                </Button>
+              </div>
+            )}
+            {showRetry && (
+              <div className='flex justify-center'>
+                <Button size='small' type='primary' onClick={() => setRetryKey((value) => value + 1)}>
+                  {t('common.retry', { defaultValue: 'Retry' })}
+                </Button>
+              </div>
+            )}
+          </div>
         </div>
+      );
+    }
+
+    if (!watchUrl) return null;
+
+    // Electron: use <webview> via WebviewHost for full Electron integration.
+    // Web server mode: use <iframe> since <webview> is Electron-only.
+    if (isElectronDesktop()) {
+      return <WebviewHost url={watchUrl} className='bg-bg-1' />;
+    }
+    return <iframe src={watchUrl} className='w-full h-full border-0 bg-bg-1' title={IFRAME_TITLE[docType]} />;
+  })();
+
+  return (
+    <div className='relative flex h-full w-full overflow-hidden' data-testid='office-watch-shell'>
+      <div className='flex-1 min-w-0 h-full overflow-hidden' data-testid='office-watch-surface'>
+        {previewSurface}
       </div>
-    );
-  }
-
-  if (!watchUrl) return null;
-
-  // Electron: use <webview> via WebviewHost for full Electron integration.
-  // Web server mode: use <iframe> since <webview> is Electron-only.
-  if (isElectronDesktop()) {
-    return <WebviewHost url={watchUrl} className='bg-bg-1' />;
-  }
-  return <iframe src={watchUrl} className='w-full h-full border-0 bg-bg-1' title={IFRAME_TITLE[docType]} />;
+      {showFallbackToggle ? <div className='absolute top-8px right-8px z-1'>{toggleButton}</div> : null}
+      {reviewScope && reviewOpen && review.ready ? (
+        <OfficeReviewDrawer
+          scope={reviewScope}
+          docType={docType}
+          open={reviewOpen}
+          onClose={() => setReviewOpen(false)}
+          interactiveTarget
+        />
+      ) : null}
+    </div>
+  );
 };
 
 export default OfficeWatchViewer;

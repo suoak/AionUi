@@ -16,6 +16,11 @@ import { downloadTextContent } from '@/renderer/utils/file/download';
 import { uploadFileViaHttp } from '@/renderer/services/FileService';
 import { usePreviewContext } from '../../context/PreviewContext';
 import { classifySaveOutcome } from '../PreviewPanel/previewToolbarUtils';
+import OfficeReviewDrawer from '../annotate/OfficeReviewDrawer';
+import { buildOfficeReviewScope } from '../annotate/officeReviewModel';
+import { useOfficeReviewToolbar } from '../annotate/useOfficeReviewToolbar';
+import { useReviewThreads } from '../annotate/useReviewThreads';
+import type { ReviewThread } from '@/common/types/agent/taskSession';
 import DeckCanvas from './DeckCanvas';
 import Inspector from './Inspector';
 import SlideRail from './SlideRail';
@@ -84,6 +89,42 @@ const PresentationStudio: React.FC<Props> = ({
   const activeJob = useRef<PresentationRenderJob | undefined>(undefined);
   const reloadRequested = useRef(false);
   specRef.current = spec;
+
+  const reviewScope = useMemo(
+    () =>
+      buildOfficeReviewScope({
+        fileRef,
+        filePath,
+        fileName,
+        workspace,
+        routeHash: typeof window === 'undefined' ? '' : window.location.hash,
+      }),
+    [fileRef, filePath, fileName, workspace]
+  );
+  const review = useReviewThreads(reviewScope);
+  const [reviewOpen, setReviewOpen] = useState(false);
+  const { showFallbackToggle, toggleButton } = useOfficeReviewToolbar({
+    review,
+    open: reviewOpen,
+    setOpen: setReviewOpen,
+  });
+  const unresolvedBySlideId = useMemo(() => {
+    const counts: Record<string, number> = {};
+    if (!spec) return counts;
+    for (const thread of review.threads) {
+      if (thread.status === 'resolved') continue;
+      const target = spec.slides[thread.start_line - 1];
+      if (!target) continue;
+      counts[target.id] = (counts[target.id] ?? 0) + 1;
+    }
+    return counts;
+  }, [review.threads, spec]);
+  const jumpToReviewThread = useCallback((thread: ReviewThread) => {
+    const target = specRef.current?.slides[thread.start_line - 1];
+    if (!target) return;
+    setSelectedSlideId(target.id);
+    setSelectedBlockId(undefined);
+  }, []);
 
   const cancelActiveRender = useCallback(() => {
     if (activeJob.current && ['queued', 'running'].includes(activeJob.current.status)) {
@@ -353,6 +394,28 @@ const PresentationStudio: React.FC<Props> = ({
     onChange(serializeDeckSpec(next));
   };
 
+  const selectedSlideIndex = spec.slides.findIndex((item) => item.id === slide.id) + 1;
+  const selectedBlockSummary = block
+    ? {
+        id: block.id,
+        type: block.type,
+        text: (block.text || block.value || block.label || block.items?.join(' ') || '')
+          .replace(/\s+/g, ' ')
+          .trim()
+          .slice(0, 80),
+      }
+    : undefined;
+  const lockedTarget = {
+    unitNumber: Math.max(1, selectedSlideIndex),
+    unitLabel: t('preview.officeReview.slideLabel'),
+    elementLabel: selectedBlockSummary
+      ? selectedBlockSummary.text
+        ? `${selectedBlockSummary.type} · ${selectedBlockSummary.text}`
+        : selectedBlockSummary.type
+      : undefined,
+    snippet: [slide.title || slide.role, selectedBlockSummary?.text].filter(Boolean).join(' — '),
+  };
+
   return (
     <div className='h-full min-h-0 flex flex-col bg-bg-1'>
       <div className='h-48px flex-shrink-0 flex items-center gap-8px border-b border-border-2 px-12px bg-bg-2'>
@@ -423,6 +486,7 @@ const PresentationStudio: React.FC<Props> = ({
         >
           {t('presentation.action.export')}
         </Button>
+        {showFallbackToggle ? toggleButton : null}
       </div>
       {spec.stage === 'outline' && (
         <div
@@ -596,6 +660,7 @@ const PresentationStudio: React.FC<Props> = ({
           slides={spec.slides}
           assets={spec.assets}
           selectedId={slide.id}
+          unresolvedCounts={unresolvedBySlideId}
           onSelect={(id) => {
             setSelectedSlideId(id);
             setSelectedBlockId(undefined);
@@ -657,6 +722,16 @@ const PresentationStudio: React.FC<Props> = ({
           }}
           importingAssetId={importingAssetId}
         />
+        {reviewScope && reviewOpen && review.ready ? (
+          <OfficeReviewDrawer
+            scope={reviewScope}
+            docType='presentation'
+            open={reviewOpen}
+            onClose={() => setReviewOpen(false)}
+            lockedTarget={lockedTarget}
+            onSelectThread={jumpToReviewThread}
+          />
+        ) : null}
       </div>
     </div>
   );
