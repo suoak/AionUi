@@ -449,6 +449,17 @@ jobs:
         env:
           CI: true
 
+      - name: TEMP diag - Core signed-extension log lines
+        if: failure()
+        shell: bash
+        run: |
+          for root in "$APPDATA" "$LOCALAPPDATA" "$HOME/.config" "$HOME/Library" "$RUNNER_TEMP" "$TEMP"; do
+            [ -d "$root" ] || continue
+            find "$root" -name '*.aioncore.log' 2>/dev/null | while read -r f; do
+              echo "== $f"; grep -iE 'signed|builtin|built-in|extension' "$f" | tail -40
+            done
+          done
+
       - name: M3 packaged strict planning release gate (Windows x64)
         if: matrix.platform == 'windows-x64'
         shell: pwsh
