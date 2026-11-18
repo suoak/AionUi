@@ -12,9 +12,8 @@ import { CronJobIndicator } from '@/renderer/pages/cron';
 import { resolveConversationLeadingMark } from '@/renderer/pages/conversation/utils/conversationAssistantIdentity';
 import { cleanupSiderTooltips, getSiderTooltipProps } from '@/renderer/utils/ui/siderTooltip';
 import { useLayoutContext } from '@/renderer/hooks/context/LayoutContext';
-import { Checkbox, Dropdown, Menu, Spin, Tooltip } from '@arco-design/web-react';
+import { Checkbox, Dropdown, Menu, Tooltip } from '@arco-design/web-react';
 import {
-  Attention,
   BranchOne,
   Delete,
   EditOne,
@@ -28,6 +27,7 @@ import {
   Timer,
 } from '@icon-park/react';
 import ForkBranchIcon from '@renderer/components/base/ForkBranchIcon';
+import { StatusGlyph } from '@renderer/components/design';
 import classNames from 'classnames';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -155,17 +155,8 @@ const ConversationRow: React.FC<ConversationRowProps> = (props) => {
   // the distinct icon would never win.
   const showWaitingConfirmation = isWaitingConfirmation && !batchMode;
 
-  const renderCompletionUnreadDot = () => {
-    if (batchMode || !hasUnread || isGenerating || isWaitingConfirmation) {
-      return null;
-    }
-
-    return (
-      <span className='absolute end-8px top-1/2 -translate-y-1/2 flex items-center justify-center group-hover:hidden'>
-        <span className='h-8px w-8px rounded-full bg-#2C7FFF shadow-[0_0_0_2px_rgba(44,127,255,0.18)]' />
-      </span>
-    );
-  };
+  // 3.0: unread rows read bold instead of carrying a badge (design-system §5).
+  const showUnreadEmphasis = hasUnread && !batchMode && !isGenerating && !isWaitingConfirmation;
 
   return (
     <>
@@ -204,14 +195,13 @@ const ConversationRow: React.FC<ConversationRowProps> = (props) => {
           )}
           <span className='size-22px flex items-center justify-center shrink-0 relative'>
             {showWaitingConfirmation ? (
-              <Attention
-                theme='filled'
-                size='16'
-                className='line-height-0 flex-shrink-0 text-warning animate-wiggle'
-                data-testid={`conversation-waiting-confirmation-${conversation.id}`}
-              />
+              <span className='line-height-0 flex' data-testid={`conversation-waiting-confirmation-${conversation.id}`}>
+                <StatusGlyph status='needsYou' size={14} />
+              </span>
             ) : isGenerating && !batchMode ? (
-              <Spin size={16} />
+              <span className='line-height-0 flex' data-testid={`conversation-working-${conversation.id}`}>
+                <StatusGlyph status='working' size={14} />
+              </span>
             ) : (
               renderLeadingIcon()
             )}
@@ -240,7 +230,13 @@ const ConversationRow: React.FC<ConversationRowProps> = (props) => {
               popupHoverStay={false}
               position='top'
             >
-              <div className='chat-history__item-name overflow-hidden text-ellipsis flex items-center gap-4px w-full text-14px font-[500] lh-24px whitespace-nowrap min-w-0 text-t-primary'>
+              <div
+                data-unread={showUnreadEmphasis ? 'true' : undefined}
+                className={classNames(
+                  'chat-history__item-name overflow-hidden text-ellipsis flex items-center gap-4px w-full text-14px lh-24px whitespace-nowrap min-w-0 text-t-primary',
+                  showUnreadEmphasis ? 'font-700' : 'font-[500]'
+                )}
+              >
                 <span className='block overflow-hidden text-ellipsis whitespace-nowrap min-w-0'>
                   {conversation.name}
                 </span>
@@ -262,7 +258,6 @@ const ConversationRow: React.FC<ConversationRowProps> = (props) => {
             </Tooltip>
           </FlexFullContainer>
 
-          {renderCompletionUnreadDot()}
           {!batchMode && (
             <div
               className={classNames(

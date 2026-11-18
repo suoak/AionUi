@@ -296,5 +296,23 @@
       "scheduled": "За розкладом",
       "batch": "Пакети"
     }
+  },
+  "statusBar": {
+    "label": "Рядок стану",
+    "hostLocal": "Цей комп’ютер",
+    "hostRemote": "Віддалений · {{host}}",
+    "hostTooltip": "Налаштування підключення до хоста",
+    "working": "Виконується: {{count}}",
+    "needsYou": "Чекають на вас: {{count}}",
+    "needsYouTooltip": "Відкрити розмову, що чекає на вас",
+    "usageToday": "Сьогодні {{tokens}}",
+    "usageTooltip": "Переглянути використання",
+    "updateReady": "Оновлення готове {{version}}",
+    "commandPalette": "Палітра команд",
+    "commandPaletteWithKeys": "Палітра команд ({{keys}})"
+  },
+  "newMenu": {
+    "more": "Інші способи почати",
+    "importTasks": "Імпортувати завдання з GitHub Issues"
   }
 }

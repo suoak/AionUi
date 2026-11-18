@@ -6,8 +6,8 @@
 
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { Tooltip } from '@arco-design/web-react';
-import { ListCheckbox, Plus } from '@icon-park/react';
+import { Button, Dropdown, Menu, Tooltip } from '@arco-design/web-react';
+import { Down, Github, ListCheckbox, Plus } from '@icon-park/react';
 import classNames from 'classnames';
 import type { SiderTooltipProps } from '@renderer/utils/ui/siderTooltip';
 import styles from '../Sider.module.css';
@@ -19,6 +19,8 @@ interface SiderToolbarProps {
   siderTooltipProps: SiderTooltipProps;
   onNewChat: () => void;
   onToggleBatchMode: () => void;
+  /** 3.0 "New ▾": import GitHub issues as tasks. */
+  onImportTasks?: () => void;
 }
 
 const SiderToolbar: React.FC<SiderToolbarProps> = ({
@@ -28,8 +30,40 @@ const SiderToolbar: React.FC<SiderToolbarProps> = ({
   siderTooltipProps,
   onNewChat,
   onToggleBatchMode,
+  onImportTasks,
 }) => {
   const { t } = useTranslation();
+
+  const newMenu = (
+    <Menu
+      onClickMenuItem={(key) => {
+        if (key === 'new-chat') onNewChat();
+        else if (key === 'import-tasks') onImportTasks?.();
+        else if (key === 'batch-manage') onToggleBatchMode();
+      }}
+    >
+      <Menu.Item key='new-chat' data-testid='sider-new-menu-chat'>
+        <span className='inline-flex items-center gap-8px'>
+          <Plus theme='outline' size='14' fill='currentColor' />
+          {t('conversation.welcome.newConversation')}
+        </span>
+      </Menu.Item>
+      {onImportTasks && (
+        <Menu.Item key='import-tasks' data-testid='sider-new-menu-import-tasks'>
+          <span className='inline-flex items-center gap-8px'>
+            <Github theme='outline' size='14' fill='currentColor' />
+            {t('common.newMenu.importTasks')}
+          </span>
+        </Menu.Item>
+      )}
+      <Menu.Item key='batch-manage' data-testid='sider-new-menu-batch-manage'>
+        <span className='inline-flex items-center gap-8px'>
+          <ListCheckbox theme='outline' size='14' fill='currentColor' />
+          {t('conversation.history.batchManage')}
+        </span>
+      </Menu.Item>
+    </Menu>
+  );
 
   if (collapsed) {
     return (
@@ -80,25 +114,34 @@ const SiderToolbar: React.FC<SiderToolbarProps> = ({
           </span>
         </div>
       </Tooltip>
-      <Tooltip
-        {...siderTooltipProps}
-        content={isBatchMode ? t('conversation.history.batchModeExit') : t('conversation.history.batchManage')}
-        position='right'
-      >
-        <div
-          className={classNames(
-            'size-26px rd-6px flex items-center justify-center cursor-pointer shrink-0 transition-colors border border-solid border-transparent text-t-secondary hover:text-t-primary',
-            isMobile && 'sider-action-icon-btn-mobile',
-            {
-              'hover:bg-fill-3': !isBatchMode,
-              'bg-[rgba(var(--primary-6),0.12)] border-[rgba(var(--primary-6),0.24)] !text-primary': isBatchMode,
-            }
-          )}
-          onClick={onToggleBatchMode}
-        >
-          <ListCheckbox theme='outline' size='14' className='block leading-none shrink-0' style={{ lineHeight: 0 }} />
-        </div>
-      </Tooltip>
+      {isBatchMode ? (
+        <Tooltip {...siderTooltipProps} content={t('conversation.history.batchModeExit')} position='right'>
+          <div
+            data-testid='sider-batch-mode-exit'
+            className={classNames(
+              'size-26px rd-6px flex items-center justify-center cursor-pointer shrink-0 transition-colors border border-solid bg-[rgba(var(--primary-6),0.12)] border-[rgba(var(--primary-6),0.24)] !text-primary',
+              isMobile && 'sider-action-icon-btn-mobile'
+            )}
+            onClick={onToggleBatchMode}
+          >
+            <ListCheckbox theme='outline' size='14' className='block leading-none shrink-0' style={{ lineHeight: 0 }} />
+          </div>
+        </Tooltip>
+      ) : (
+        <Dropdown droplist={newMenu} trigger='click' position='bl'>
+          <Button
+            type='text'
+            size='mini'
+            data-testid='sider-new-menu-trigger'
+            aria-label={t('common.newMenu.more')}
+            className={classNames(
+              '!size-26px !p-0 !min-w-0 shrink-0 !text-t-secondary hover:!text-t-primary hover:!bg-fill-3',
+              isMobile && 'sider-action-icon-btn-mobile'
+            )}
+            icon={<Down theme='outline' size='14' fill='currentColor' />}
+          />
+        </Dropdown>
+      )}
     </div>
   );
 };

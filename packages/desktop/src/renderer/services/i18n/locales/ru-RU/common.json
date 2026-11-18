@@ -295,5 +295,23 @@
       "scheduled": "По расписанию",
       "batch": "Пакеты"
     }
+  },
+  "statusBar": {
+    "label": "Строка состояния",
+    "hostLocal": "Этот компьютер",
+    "hostRemote": "Удалённый · {{host}}",
+    "hostTooltip": "Настройки подключения к хосту",
+    "working": "Выполняется: {{count}}",
+    "needsYou": "Ждут вас: {{count}}",
+    "needsYouTooltip": "Открыть беседу, которая ждёт вас",
+    "usageToday": "Сегодня {{tokens}}",
+    "usageTooltip": "Открыть использование",
+    "updateReady": "Обновление готово {{version}}",
+    "commandPalette": "Палитра команд",
+    "commandPaletteWithKeys": "Палитра команд ({{keys}})"
+  },
+  "newMenu": {
+    "more": "Другие способы начать",
+    "importTasks": "Импортировать задачи из GitHub Issues"
   }
 }

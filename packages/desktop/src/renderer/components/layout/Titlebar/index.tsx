@@ -1,6 +1,16 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import classNames from 'classnames';
-import { ArrowCircleLeft, ArrowLeft, ArrowRight, ExpandLeft, ExpandRight, Peoples, Search } from '@icon-park/react';
+import { Button, Tooltip } from '@arco-design/web-react';
+import {
+  ArrowCircleLeft,
+  ArrowLeft,
+  ArrowRight,
+  Command,
+  ExpandLeft,
+  ExpandRight,
+  Peoples,
+  Search,
+} from '@icon-park/react';
 import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate } from 'react-router-dom';
 
@@ -8,7 +18,10 @@ import { ipcBridge } from '@/common';
 import { TEAM_MODE_ENABLED } from '@/common/config/constants';
 import ConversationSearchPopover from '@renderer/pages/conversation/GroupedHistory/ConversationSearchPopover';
 import MobileConversationBrand from './MobileConversationBrand';
-import WindowControls from '../WindowControls';
+import WindowControls from './WindowControls';
+import InboxBell from './InboxBell';
+import { requestCommandPalette } from '@renderer/components/command-palette/useCommandPalette';
+import { formatKeys } from '@renderer/components/design';
 import { WORKSPACE_STATE_EVENT, dispatchWorkspaceToggleEvent } from '@renderer/utils/workspace/workspaceEvents';
 import type { WorkspaceStateDetail } from '@renderer/utils/workspace/workspaceEvents';
 import { useLayoutContext } from '@/renderer/hooks/context/LayoutContext';
@@ -161,6 +174,7 @@ const Titlebar: React.FC<TitlebarProps> = ({ workspaceAvailable }) => {
   // mobile keeps search inside the sidebar.
   const showSearchButton = !layout?.isMobile;
   const searchTooltip = t('conversation.historySearch.tooltip', { defaultValue: 'Search conversations' });
+  const commandPaletteTooltip = t('common.statusBar.commandPaletteWithKeys', { keys: formatKeys(['Mod', 'K']) });
 
   const handleSiderToggle = () => {
     if (!showSiderToggle || !layout?.setSiderCollapsed) return;
@@ -408,6 +422,20 @@ const Titlebar: React.FC<TitlebarProps> = ({ workspaceAvailable }) => {
       </div>
       <div ref={toolbarRef} className='app-titlebar__toolbar'>
         {layout?.isMobile && <div id='app-titlebar-actions-slot' className='app-titlebar__actions-slot' />}
+        {!layout?.isMobile && <InboxBell iconSize={iconSize} strokeWidth={desktopIconStroke} />}
+        {!layout?.isMobile && (
+          <Tooltip content={commandPaletteTooltip} position='bottom' mini>
+            <Button
+              type='text'
+              data-testid='titlebar-command-palette'
+              aria-label={commandPaletteTooltip}
+              className='app-titlebar__button !p-0 !min-w-0 !text-t-primary'
+              onClick={requestCommandPalette}
+            >
+              <Command theme='outline' size={iconSize} fill='currentColor' strokeWidth={desktopIconStroke} />
+            </Button>
+          </Tooltip>
+        )}
         {FEEDBACK_REPORTING_ENABLED && (
           <button
             type='button'

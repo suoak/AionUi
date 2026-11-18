@@ -11,6 +11,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 const mocks = vi.hoisted(() => ({
   navigate: vi.fn(),
   pathname: '/guid',
+  isMobile: false,
   scheduledRendered: vi.fn(),
 }));
 
@@ -24,7 +25,7 @@ vi.mock('@renderer/pages/conversation/Preview/context/PreviewContext', () => ({
 vi.mock('@renderer/hooks/context/AuthContext', () => ({
   useAuth: () => ({ logout: vi.fn(), status: 'authenticated' }),
 }));
-vi.mock('@renderer/hooks/context/LayoutContext', () => ({ useLayoutContext: () => ({ isMobile: false }) }));
+vi.mock('@renderer/hooks/context/LayoutContext', () => ({ useLayoutContext: () => ({ isMobile: mocks.isMobile }) }));
 vi.mock('@renderer/hooks/context/ThemeContext', () => ({
   useThemeContext: () => ({ theme: 'light', setTheme: vi.fn() }),
 }));
@@ -52,7 +53,7 @@ vi.mock('@renderer/components/layout/Sider/SiderNav', () => ({
   SiderSkillEvolutionEntry: entry('sider-skills'),
   SiderAssistantEntry: entry('sider-assistants'),
   SiderUsageEntry: entry('sider-usage'),
-  SiderInboxEntry: () => null,
+  SiderInboxEntry: entry('sider-inbox'),
   SiderTasksBoardEntry: entry('sider-tasks'),
   SiderAutomationsEntry: entry('sider-automations'),
 }));
@@ -70,6 +71,7 @@ describe('Sider 3.0 IA navigation (U1)', () => {
     mocks.navigate.mockReset();
     mocks.scheduledRendered.mockReset();
     mocks.pathname = '/guid';
+    mocks.isMobile = false;
   });
   afterEach(cleanup);
 
@@ -83,18 +85,24 @@ describe('Sider 3.0 IA navigation (U1)', () => {
 
   it('orders the primary entries before secondary ones', () => {
     render(<Sider />);
-    const order = [
-      'sider-tasks',
-      'sider-agents',
-      'sider-skills',
-      'sider-automations',
-      'sider-assistants',
-      'sider-usage',
-    ];
+    const order = ['sider-tasks', 'sider-agents', 'sider-skills', 'sider-automations', 'sider-assistants'];
     const nodes = order.map((id) => screen.getByTestId(id));
     for (let i = 1; i < nodes.length; i++) {
       expect(nodes[i - 1].compareDocumentPosition(nodes[i]) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
     }
+  });
+
+  it('moves usage and inbox out of the desktop sider (status bar + titlebar bell)', () => {
+    render(<Sider />);
+    expect(screen.queryByTestId('sider-usage')).toBeNull();
+    expect(screen.queryByTestId('sider-inbox')).toBeNull();
+  });
+
+  it('keeps usage and inbox in the mobile sider, which has no status bar or bell', () => {
+    mocks.isMobile = true;
+    render(<Sider />);
+    expect(screen.getByTestId('sider-usage')).toBeTruthy();
+    expect(screen.getByTestId('sider-inbox')).toBeTruthy();
   });
 
   it.each(['/work-items', '/tasks', '/tasks/abc'])('highlights Tasks on %s', (pathname) => {

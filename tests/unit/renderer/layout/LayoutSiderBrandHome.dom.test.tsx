@@ -52,6 +52,7 @@ vi.mock('@/common/config/constants', () => ({
 }));
 vi.mock('@/renderer/components/layout/PwaPullToRefresh', () => ({ default: () => null }));
 vi.mock('@/renderer/components/layout/Titlebar', () => ({ default: () => null }));
+vi.mock('@/renderer/components/layout/StatusBar', () => ({ default: () => null }));
 vi.mock('@/renderer/components/agentApproval/AgentActionApprovalHost', () => ({
   default: () => null,
 }));

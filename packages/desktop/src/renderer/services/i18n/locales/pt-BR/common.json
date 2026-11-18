@@ -293,5 +293,23 @@
       "scheduled": "Agendadas",
       "batch": "Lotes"
     }
+  },
+  "statusBar": {
+    "label": "Barra de status",
+    "hostLocal": "Este computador",
+    "hostRemote": "Remoto · {{host}}",
+    "hostTooltip": "Configurações de conexão do host",
+    "working": "{{count}} em execução",
+    "needsYou": "{{count}} precisam de você",
+    "needsYouTooltip": "Abrir a conversa que precisa de você",
+    "usageToday": "Hoje {{tokens}}",
+    "usageTooltip": "Ver uso",
+    "updateReady": "Atualização pronta {{version}}",
+    "commandPalette": "Paleta de comandos",
+    "commandPaletteWithKeys": "Paleta de comandos ({{keys}})"
+  },
+  "newMenu": {
+    "more": "Mais formas de começar",
+    "importTasks": "Importar tarefas de issues do GitHub"
   }
 }

@@ -293,5 +293,23 @@
       "scheduled": "Geplant",
       "batch": "Stapel"
     }
+  },
+  "statusBar": {
+    "label": "Statusleiste",
+    "hostLocal": "Dieser Computer",
+    "hostRemote": "Remote · {{host}}",
+    "hostTooltip": "Host-Verbindungseinstellungen",
+    "working": "{{count}} aktiv",
+    "needsYou": "{{count}} brauchen dich",
+    "needsYouTooltip": "Unterhaltung öffnen, die dich braucht",
+    "usageToday": "Heute {{tokens}}",
+    "usageTooltip": "Nutzung anzeigen",
+    "updateReady": "Update bereit {{version}}",
+    "commandPalette": "Befehlspalette",
+    "commandPaletteWithKeys": "Befehlspalette ({{keys}})"
+  },
+  "newMenu": {
+    "more": "Weitere Optionen zum Starten",
+    "importTasks": "Aufgaben aus GitHub-Issues importieren"
   }
 }

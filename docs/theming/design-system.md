@@ -141,18 +141,32 @@ using logical CSS properties (`margin-inline-start`, `inset-inline-end`).
 ## 7. App shell (V3) / 应用外框
 
 ```
-┌ titlebar ───────────────────────────── search ⌘K · 🔔 · window ┐
-│ sidebar          │ content                     │ icon rail     │
-│ ─ 会话           │                             │ (files, diff, │
-│ ─ 任务           │                             │  preview,     │
-│ ─ 智能体         │                             │  terminal)    │
-│ ─ 技能           │                             │               │
-│ ─ 自动化         │                             │               │
-│ recent / pinned  │                             │               │
-├ status bar 24 px: agent · model · context ring · running tasks · remote host ┤
+┌ titlebar ─────────────────────────── search · 🔔 · ⌘K · panel · window ┐
+│ sidebar            │ content                     │ icon rail (V4)   │
+│ [+ 新会话 ▾]       │                             │                  │
+│ ─ 任务             │                             │                  │
+│ ─ 智能体           │                             │                  │
+│ ─ 技能             │                             │                  │
+│ ─ 自动化           │                             │                  │
+│ ─ 助手 (until U4)  │                             │                  │
+│ plugin panels      │                             │                  │
+│ pinned / projects  │                             │                  │
+├ status bar 24 px: host · running · needs you ······ today · update · ⌘K ┤
 ```
 
 Primary navigation keys: `sessions | tasks | agents | skills | automations`.
+
+- **Sidebar fixed area is at most six rows.** "New ▾" holds new chat, import tasks from GitHub
+  issues and batch-manage conversations. Plugin panels scroll with the history.
+- **Rows use the run-state glyphs.** A conversation shows `working` or `needsYou` in place of
+  its icon; unread rows are bold, with no badge.
+- **Titlebar bell = inbox.** The badge counts unread items; opening an item marks it read and
+  deep-links to the task drawer, batch job, conversation or scheduled task.
+- **Status bar (desktop).** Host (this computer or the remote host, opens Host settings) ·
+  running conversations · conversations that need you (opens the first one) · today's tokens
+  (opens Usage) · a downloaded update (opens About) · ⌘K. Mobile and narrow WebUI have no
+  status bar or bell, so the sidebar keeps its usage and inbox rows there.
+- Open the command palette from code with `requestCommandPalette()`.
 
 ## 8. Attribution / 署名
 
