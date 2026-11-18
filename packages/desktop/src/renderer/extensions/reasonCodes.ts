@@ -28,6 +28,7 @@ export const EXTENSION_REASON_CODES = [
   'bound_service_invalid_snapshot',
   'bound_service_signed_snapshot_inconclusive',
   'bound_service_integrity_required',
+  'unsigned_extension_code_disabled',
   'bound_service_entry_mismatch',
   'bound_service_entry_missing',
   'bound_service_entry_unreadable',
