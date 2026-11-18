@@ -30,7 +30,10 @@
     "engine": {
       "type": "object",
       "properties": {
-        "aionui": { "type": "string", "description": "Semver range for the host engine." }
+        "aionui": {
+          "type": "string",
+          "description": "Host app version requirement in Cargo semver syntax: comma-separated comparators, e.g. \">=2.6.0, <4.0.0\". npm-style space or || ranges are rejected by the Host."
+        }
       },
       "additionalProperties": true
     },

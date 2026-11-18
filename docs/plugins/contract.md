@@ -20,7 +20,7 @@ Root file: **`aion-extension.json`** (name kept for compatibility).
   "displayName": "My Plugin",
   "version": "1.0.0",
   "description": "…",
-  "engine": { "aionui": "^2.6.0" },
+  "engine": { "aionui": ">=2.6.0, <4.0.0" },
   "permissions": {
     "storage": true,
     "network": false,
@@ -31,6 +31,8 @@ Root file: **`aion-extension.json`** (name kept for compatibility).
   "contributes": {}
 }
 ```
+
+`engine.aionui` is checked by the Host with Cargo semver syntax: separate comparators with commas (`>=2.6.0, <4.0.0` accepts 2.6.x and 3.x). npm-style `>=2.6.0 <4.0.0` or `||` ranges do not parse, and the Host then skips the plugin. `^2.6.0` stops matching at 3.0.0.
 
 CamelCase and snake_case keys are both accepted; the host normalizes to snake_case on parse.
 
