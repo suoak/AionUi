@@ -767,6 +767,20 @@ export const auth = {
 // Conversation — REST + WS
 // ---------------------------------------------------------------------------
 
+/** POST /api/conversations/{id}/journal/seed — opaque text items only, never a source path. */
+export type ISeedJournalItem = {
+  transcript_kind: string;
+  content: string;
+  call_id?: string;
+};
+
+export type ISeedJournalResponse = {
+  conversation_id: string;
+  event_count: number;
+  model_visible_count: number;
+  journal_sha256: string;
+};
+
 export const conversation = {
   create: withResponseMap(
     httpPost<TChatConversation, ICreateConversationParams>('/api/conversations', (p) => buildCreateConversationBody(p)),
@@ -932,6 +946,23 @@ export const conversation = {
       (p) => buildJournalTranscriptPath(p.conversation_id, p.visibility ?? 'host')
     ),
     (raw) => normalizeJournalTranscript(raw, raw?.conversation_id ?? '')
+  ),
+  /** Seed a parsed import into an empty Host journal (Core journal/seed). Older Hosts 404 — callers fail soft. */
+  seedImportedJournal: httpPost<
+    ISeedJournalResponse,
+    {
+      conversation_id: string;
+      items: ISeedJournalItem[];
+      source?: string;
+      source_session_id?: string;
+    }
+  >(
+    (p) => `/api/conversations/${encodeURIComponent(p.conversation_id)}/journal/seed`,
+    (p) => ({
+      items: p.items,
+      source: p.source,
+      source_session_id: p.source_session_id,
+    })
   ),
   getTrajectory: httpGet<TrajectoryProjection, TrajectoryPageParams>((p) => buildTrajectoryPath(p)),
   getRawTrajectory: httpGet<RawTrajectoryProjection, TrajectoryPageParams>((p) => buildTrajectoryPath(p, true)),
