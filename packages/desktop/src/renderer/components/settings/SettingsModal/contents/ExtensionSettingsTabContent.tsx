@@ -30,7 +30,7 @@ interface ExtensionSettingsTabContentProps {
  * - Backend-served local URLs → sandboxed iframe with postMessage bridge.
  */
 const ExtensionSettingsTabContent: React.FC<ExtensionSettingsTabContentProps> = ({ url, tabId, extensionName }) => {
-  const { i18n } = useTranslation();
+  const { t, i18n } = useTranslation();
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const [loading, setLoading] = useState(true);
   const resolvedUrl = useExtensionAssetSessionUrl(url, extensionName);
@@ -108,7 +108,7 @@ const ExtensionSettingsTabContent: React.FC<ExtensionSettingsTabContentProps> = 
         <>
           {(loading || probe.status !== 'ready') && (
             <div className='absolute inset-0 flex items-center justify-center text-t-secondary text-14px'>
-              <span className='animate-pulse'>Loading…</span>
+              <span className='animate-pulse'>{t('settings.extensionSettings.loading')}</span>
             </div>
           )}
           {probe.status === 'ready' && (
@@ -127,7 +127,7 @@ const ExtensionSettingsTabContent: React.FC<ExtensionSettingsTabContentProps> = 
                 opacity: loading ? 0 : 1,
                 transition: 'opacity 150ms ease-in',
               }}
-              title={`Extension settings: ${tabId}`}
+              title={t('settings.extensionSettings.iframeTitle', { name: tabId })}
             />
           )}
         </>

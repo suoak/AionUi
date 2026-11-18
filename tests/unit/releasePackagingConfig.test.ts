@@ -165,9 +165,13 @@ describe('release packaging configuration', () => {
     const afterSign = readProjectFile('scripts/afterSign.js');
     const buildScript = readProjectFile('scripts/build-with-builder.js');
     const reusableWorkflow = readProjectFile('.github/workflows/_build-reusable.yml');
+    const builderYml = readProjectFile('packages/desktop/electron-builder.yml');
 
     expect(packageJson.author.name).toBe('CSBU');
     expect(packageJson.productName).toBe('CSBU WorkMate');
+    expect(builderYml, 'Linux packages need homepage metadata even without a git remote').toMatch(
+      /^homepage:\s*https:\/\/github\.com\/suoak\/AionUi\s*$/m
+    );
     expect(afterPack).not.toContain('锐捷Codex');
     expect(afterSign).not.toContain('setWindowsExecutableMetadata');
     expect(buildScript).not.toContain('锐捷Codex');

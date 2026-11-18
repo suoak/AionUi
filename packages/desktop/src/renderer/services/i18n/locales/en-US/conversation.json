@@ -989,7 +989,7 @@
     "skillsMarket": "CSBU WorkMate Skills Market",
     "none": "None",
     "quickActionsTitle": "What can CSBU WorkMate do?",
-    "newConversation": "New Chat"
+    "newConversation": "New conversation"
   },
   "officePreview": {
     "fileWatchUnavailable": "Live file watching is unavailable because the system may have run out of file-watch handles. Auto-preview of new Office files is disabled. Increase the system file-watch limit or close programs using many watchers."

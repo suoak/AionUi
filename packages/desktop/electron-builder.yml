@@ -2,6 +2,10 @@ appId: com.csbu.workmate
 productName: CSBU WorkMate
 executableName: CSBU WorkMate
 copyright: Copyright © 2026 CSBU
+# Required for Linux .deb/.rpm Homepage metadata. Without this, electron-builder
+# fails with "Please specify project homepage" when it cannot infer a repository
+# URL from git (worktrees, source archives). Already the publish target below.
+homepage: https://github.com/suoak/AionUi
 
 protocols:
   - name: CSBU WorkMate Protocol
