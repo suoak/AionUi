@@ -150,7 +150,7 @@ const AgentCenterDetailPage: React.FC = () => {
         agentWorkflowInputPlaceholder: detail?.meta.workflow.input.placeholder,
         agentCenterPreviewMode: detail?.meta.status === 'published' ? 'published' : 'draft',
         focusPrefill: true,
-        agentCenterReturnTo: `/agent-center/${id}`,
+        agentCenterReturnTo: `/agents/${id}`,
       },
     });
   };
@@ -164,7 +164,7 @@ const AgentCenterDetailPage: React.FC = () => {
         selectedAssistantId: id,
         agentCenterFanoutTrial: true,
         focusPrefill: true,
-        agentCenterReturnTo: `/agent-center/${id}`,
+        agentCenterReturnTo: `/agents/${id}`,
       },
     });
   };
@@ -242,7 +242,7 @@ const AgentCenterDetailPage: React.FC = () => {
               agentWorkflowRetryRunId: run.id,
               prefillPrompt: node?.agent_plan?.message,
               focusPrefill: true,
-              agentCenterReturnTo: `/agent-center/${run.assistant_id}`,
+              agentCenterReturnTo: `/agents/${run.assistant_id}`,
             },
           });
           return;
@@ -307,7 +307,7 @@ const AgentCenterDetailPage: React.FC = () => {
   const handleEdit = () => {
     if (!id || !detail) return;
     if (detail.meta.status !== 'published') {
-      navigate(`/agent-center/${id}/edit`);
+      navigate(`/agents/${id}/edit`);
       return;
     }
     Modal.confirm({
@@ -319,7 +319,7 @@ const AgentCenterDetailPage: React.FC = () => {
         setBusy(true);
         try {
           await ipcBridge.agentCenter.unpublish.invoke({ id });
-          navigate(`/agent-center/${id}/edit`);
+          navigate(`/agents/${id}/edit`);
         } catch (error) {
           console.error(error);
           messageRef.current.error(formatAgentCenterError(error, t('agent.agentCenter.unpublish.error')));
@@ -342,7 +342,7 @@ const AgentCenterDetailPage: React.FC = () => {
   return (
     <div className='h-full overflow-auto p-24px max-w-880px' data-testid='agent-center-detail'>
       {messageContext}
-      <Button type='text' className='!px-0 mb-8px' onClick={() => navigate('/agent-center')}>
+      <Button type='text' className='!px-0 mb-8px' onClick={() => navigate('/agents')}>
         ← 返回智能体中心
       </Button>
 

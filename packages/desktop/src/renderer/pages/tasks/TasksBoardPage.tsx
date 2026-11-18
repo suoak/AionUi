@@ -327,7 +327,7 @@ const TasksBoardPage: React.FC = () => {
                 size='small'
                 type='outline'
                 data-testid='tasks-board-open-scheduled'
-                onClick={() => navigate('/work-items/scheduled')}
+                onClick={() => navigate('/scheduled')}
               >
                 {t('conversation.taskBoard.openScheduled', { defaultValue: 'Scheduled' })}
               </Button>

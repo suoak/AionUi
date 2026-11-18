@@ -70,7 +70,7 @@
     "groups": {
       "navigation": "导航",
       "sessions": "会话",
-      "workItems": "工作项",
+      "workItems": "任务",
       "files": "文件",
       "agents": "智能体",
       "commands": "命令",
@@ -265,10 +265,10 @@
   },
   "primaryNav": {
     "sessions": "会话",
-    "workItems": "工作项",
+    "tasks": "任务",
     "agents": "智能体",
     "skills": "技能",
-    "batch": "批量"
+    "automations": "自动化"
   },
   "extensionPanels": {
     "groupTitle": "插件面板",
@@ -379,5 +379,11 @@
       "idle": "空闲"
     },
     "contextUsage": "上下文已用 {{percent}}%"
+  },
+  "automations": {
+    "tabs": {
+      "scheduled": "定时",
+      "batch": "批量"
+    }
   }
 }

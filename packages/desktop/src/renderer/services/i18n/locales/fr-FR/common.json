@@ -70,7 +70,7 @@
     "groups": {
       "navigation": "Navigation",
       "sessions": "Sessions",
-      "workItems": "Éléments de travail",
+      "workItems": "Tâches",
       "agents": "Agents",
       "settings": "Paramètres",
       "files": "Fichiers",
@@ -273,10 +273,10 @@
   },
   "primaryNav": {
     "sessions": "Sessions",
-    "workItems": "Éléments de travail",
+    "tasks": "Tâches",
     "agents": "Agents",
     "skills": "Compétences",
-    "batch": "Lots"
+    "automations": "Automatisations"
   },
   "designSystem": {
     "status": {
@@ -287,5 +287,11 @@
       "idle": "Inactif"
     },
     "contextUsage": "Contexte utilisé à {{percent}} %"
+  },
+  "automations": {
+    "tabs": {
+      "scheduled": "Planifiées",
+      "batch": "Lots"
+    }
   }
 }

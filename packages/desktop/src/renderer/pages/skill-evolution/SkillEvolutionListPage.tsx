@@ -197,7 +197,7 @@ const SkillEvolutionListPage: React.FC = () => {
                     className='ml-4px'
                     onClick={(e) => {
                       e.preventDefault();
-                      navigate(`/agent-center/${aid}`);
+                      navigate(`/agents/${aid}`);
                     }}
                   >
                     查看智能体
@@ -219,7 +219,7 @@ const SkillEvolutionListPage: React.FC = () => {
                             },
                           });
                         } catch {
-                          navigate(`/agent-center/${aid}`);
+                          navigate(`/agents/${aid}`);
                         }
                       })();
                     }}
@@ -231,7 +231,7 @@ const SkillEvolutionListPage: React.FC = () => {
                     className='ml-4px'
                     onClick={(e) => {
                       e.preventDefault();
-                      navigate(`/agent-center/${aid}/edit`, { state: { focusStep: 4 } });
+                      navigate(`/agents/${aid}/edit`, { state: { focusStep: 4 } });
                     }}
                   >
                     发布 pin
@@ -307,7 +307,7 @@ const SkillEvolutionListPage: React.FC = () => {
               >
                 清除筛选
               </Button>
-              <Button size='mini' type='text' onClick={() => navigate(`/agent-center/${assistantFilter}`)}>
+              <Button size='mini' type='text' onClick={() => navigate(`/agents/${assistantFilter}`)}>
                 打开智能体详情
               </Button>
             </div>

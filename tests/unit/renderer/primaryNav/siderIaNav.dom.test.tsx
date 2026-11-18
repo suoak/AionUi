@@ -48,13 +48,13 @@ vi.mock('@renderer/components/layout/Sider/SiderNav', () => ({
     mocks.scheduledRendered();
     return entry('sider-scheduled')(props);
   },
-  SiderAgentCenterEntry: entry('sider-agents'),
+  SiderAgentsEntry: entry('sider-agents'),
   SiderSkillEvolutionEntry: entry('sider-skills'),
   SiderAssistantEntry: entry('sider-assistants'),
   SiderUsageEntry: entry('sider-usage'),
   SiderInboxEntry: () => null,
-  SiderTasksBoardEntry: entry('sider-work-items'),
-  SiderBatchEntry: entry('sider-batch'),
+  SiderTasksBoardEntry: entry('sider-tasks'),
+  SiderAutomationsEntry: entry('sider-automations'),
 }));
 vi.mock('@renderer/components/layout/Sider/SiderFooter', () => ({ default: () => null }));
 vi.mock('@renderer/components/layout/Sider/TeamSiderSection', () => ({ default: () => null }));
@@ -65,7 +65,7 @@ import Sider from '@renderer/components/layout/Sider';
 
 const active = (testId: string) => screen.getByTestId(testId).dataset.active === 'true';
 
-describe('Sider IA-2/IA-3 navigation', () => {
+describe('Sider 3.0 IA navigation (U1)', () => {
   beforeEach(() => {
     mocks.navigate.mockReset();
     mocks.scheduledRendered.mockReset();
@@ -77,29 +77,44 @@ describe('Sider IA-2/IA-3 navigation', () => {
     render(<Sider />);
     expect(screen.queryByTestId('sider-scheduled')).toBeNull();
     expect(mocks.scheduledRendered).not.toHaveBeenCalled();
-    expect(screen.getByTestId('sider-work-items')).toBeTruthy();
+    expect(screen.getByTestId('sider-tasks')).toBeTruthy();
+    expect(screen.getByTestId('sider-automations')).toBeTruthy();
   });
 
-  it.each(['/work-items', '/work-items/scheduled', '/tasks', '/tasks/abc', '/scheduled', '/scheduled/job-1'])(
-    'highlights Work items on %s',
-    (pathname) => {
-      mocks.pathname = pathname;
-      render(<Sider />);
-      expect(active('sider-work-items')).toBe(true);
-      expect(active('sider-agents')).toBe(false);
-      expect(active('sider-batch')).toBe(false);
-    }
-  );
-
-  it('does not highlight Work items elsewhere', () => {
-    mocks.pathname = '/batch';
+  it('orders the primary entries before secondary ones', () => {
     render(<Sider />);
-    expect(active('sider-work-items')).toBe(false);
-    expect(active('sider-batch')).toBe(true);
+    const order = [
+      'sider-tasks',
+      'sider-agents',
+      'sider-skills',
+      'sider-automations',
+      'sider-assistants',
+      'sider-usage',
+    ];
+    const nodes = order.map((id) => screen.getByTestId(id));
+    for (let i = 1; i < nodes.length; i++) {
+      expect(nodes[i - 1].compareDocumentPosition(nodes[i]) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    }
+  });
+
+  it.each(['/work-items', '/tasks', '/tasks/abc'])('highlights Tasks on %s', (pathname) => {
+    mocks.pathname = pathname;
+    render(<Sider />);
+    expect(active('sider-tasks')).toBe(true);
+    expect(active('sider-agents')).toBe(false);
+    expect(active('sider-automations')).toBe(false);
+  });
+
+  it.each(['/automations', '/scheduled', '/scheduled/job-1', '/batch'])('highlights Automations on %s', (pathname) => {
+    mocks.pathname = pathname;
+    render(<Sider />);
+    expect(active('sider-automations')).toBe(true);
+    expect(active('sider-tasks')).toBe(false);
   });
 
   it.each([
     ['/agents', 'sider-agents'],
+    ['/agents/x/edit', 'sider-agents'],
     ['/agent-center/x', 'sider-agents'],
     ['/skills', 'sider-skills'],
     ['/skill-evolution', 'sider-skills'],
@@ -109,11 +124,12 @@ describe('Sider IA-2/IA-3 navigation', () => {
     expect(active(testId)).toBe(true);
   });
 
-  it('navigates primary entries to canonical alias paths', () => {
+  it('navigates primary entries to canonical paths', () => {
     render(<Sider />);
-    fireEvent.click(screen.getByTestId('sider-work-items'));
+    fireEvent.click(screen.getByTestId('sider-tasks'));
     fireEvent.click(screen.getByTestId('sider-agents'));
     fireEvent.click(screen.getByTestId('sider-skills'));
-    expect(mocks.navigate.mock.calls.map((c) => c[0])).toEqual(['/work-items', '/agents', '/skills']);
+    fireEvent.click(screen.getByTestId('sider-automations'));
+    expect(mocks.navigate.mock.calls.map((c) => c[0])).toEqual(['/tasks', '/agents', '/skills', '/automations']);
   });
 });

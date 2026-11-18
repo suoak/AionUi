@@ -23,12 +23,14 @@ import ThemedLogo from '@/renderer/components/agent/ThemedLogo';
 import TalkToButlerButton from '@/renderer/components/base/TalkToButlerButton';
 import { WorkMateSearchInput } from '@/renderer/components/base';
 import SettingsPageHeader from '@/renderer/pages/settings/components/SettingsPageHeader';
+import { useAutomationsTabs } from '@/renderer/pages/cron/useAutomationsTabs';
 import { Attention, Robot } from '@icon-park/react';
 
 const ScheduledTasksPage: React.FC = () => {
   const layout = useLayoutContext();
   const isMobile = layout?.isMobile ?? false;
   const { t, i18n } = useTranslation();
+  const automationsTabs = useAutomationsTabs('scheduled');
   const locale = i18n?.language;
   const navigate = useNavigate();
   const { jobs, loading, pauseJob, resumeJob } = useAllCronJobs();
@@ -131,6 +133,7 @@ const ScheduledTasksPage: React.FC = () => {
             data-testid='scheduled-tasks-header'
             title={t('cron.scheduledTasks')}
             description={t('cron.page.description')}
+            {...automationsTabs}
             actions={
               <>
                 {!isMobile && (

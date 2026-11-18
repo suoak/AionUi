@@ -131,7 +131,7 @@ export async function loadAgentCommands(): Promise<PaletteCommand[]> {
         id: `agent.${assistant.id}`,
         title: clean(assistant.name) || assistant.id,
         group: 'agents',
-        path: `/agent-center/${encodeURIComponent(assistant.id)}`,
+        path: `/agents/${encodeURIComponent(assistant.id)}`,
         subtitleKey: 'common.commandPalette.badge.agent',
         keywords: [
           clean(assistant.description),

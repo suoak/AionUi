@@ -18,7 +18,7 @@ describe('filterPaletteCommands', () => {
 
   it('matches title substring', () => {
     const hits = filterPaletteCommands(STATIC_PALETTE_COMMANDS, 'agent');
-    expect(hits.some((c) => c.id === 'nav.agent-center')).toBe(true);
+    expect(hits.some((c) => c.id === 'nav.primary.agents')).toBe(true);
   });
 
   it('matches keywords', () => {
