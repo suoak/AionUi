@@ -20,7 +20,7 @@ describe('design system scales', () => {
   it('keeps the type scale to seven ascending steps', () => {
     const sizes = Object.values(WM_FONT_SIZES);
     expect(sizes).toHaveLength(7);
-    expect([...sizes].sort((a, b) => a - b)).toEqual(sizes);
+    expect(sizes.every((size, i) => i === 0 || size > sizes[i - 1])).toBe(true);
   });
 
   it('uses a 4-point spacing grid', () => {
