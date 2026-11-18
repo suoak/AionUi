@@ -1930,5 +1930,26 @@
       "load": "无法加载本地知识库设置",
       "save": "无法更新本地知识库"
     }
+  },
+  "remoteHost": {
+    "title": "遠端主機（SSH）",
+    "desktopOnly": "透過 SSH 隧道連線無界面 Host 僅支援桌面端。請開啟 CSBU WorkMate 桌面應用程式。",
+    "description": "用系統內建的 OpenSSH 把本機回環埠轉發到無界面 aioncore。只使用金鑰或 ssh-agent，命令列不會出現密碼（D14-3）。",
+    "alert": "遠端需以 aioncore --headless 在回環位址上執行。連線後請使用既有的工作區帳號登入（D14-2）。",
+    "sshDestination": "SSH 目標（user@host）",
+    "localPort": "本機埠",
+    "remotePort": "遠端 Host 埠",
+    "identityFile": "身分檔（選填）",
+    "startTunnel": "啟動隧道",
+    "stopTunnel": "停止",
+    "tunnelUp": "隧道已建立：{{url}}",
+    "tunnelStopped": "SSH 隧道已停止",
+    "running": "執行中{{pidSuffix}}：{{display}}",
+    "pidSuffix": "（pid {{pid}}）",
+    "connect": "將桌面連線到此 Host",
+    "disconnect": "中斷（改用本機 Host）",
+    "connectConfirmTitle": "連線到遠端 Host？",
+    "connectConfirmContent": "CSBU WorkMate 將重新載入，並改為使用 {{url}} 上的 Host。請使用工作區帳號登入。本機 Host 會在背景繼續執行。",
+    "connectedBanner": "已連線到遠端 Host（{{url}}）。本機 Host 仍在背景執行。"
   }
 }

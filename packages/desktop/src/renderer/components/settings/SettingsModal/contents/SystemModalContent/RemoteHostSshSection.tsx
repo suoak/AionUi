@@ -4,20 +4,23 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { sshTunnel, type ISshTunnelStatus } from '@/common/adapter/ipcBridge';
+import { remoteBackend, sshTunnel, type IRemoteBackendStatus, type ISshTunnelStatus } from '@/common/adapter/ipcBridge';
 import { isElectronDesktop } from '@/renderer/utils/platform';
-import { Alert, Button, Form, Input, InputNumber, Message, Space, Typography } from '@arco-design/web-react';
+import { Alert, Button, Form, Input, InputNumber, Message, Modal, Space, Typography } from '@arco-design/web-react';
 import React, { useCallback, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 const { Text, Title } = Typography;
 
 /**
- * E14: start a system-OpenSSH local forward to a headless WorkMate Host.
- * Desktop-only. No password field (D14-3).
+ * E14: start a system-OpenSSH local forward and point the desktop renderer at
+ * the headless WorkMate Host on the other end. Desktop-only. No password field (D14-3).
  */
 const RemoteHostSshSection: React.FC = () => {
+  const { t } = useTranslation();
   const isDesktop = isElectronDesktop();
   const [status, setStatus] = useState<ISshTunnelStatus>({ running: false });
+  const [connection, setConnection] = useState<IRemoteBackendStatus>({ mode: 'local', port: 0 });
   const [busy, setBusy] = useState(false);
   const [remote, setRemote] = useState('');
   const [localPort, setLocalPort] = useState(25808);
@@ -27,8 +30,12 @@ const RemoteHostSshSection: React.FC = () => {
   const refresh = useCallback(async () => {
     if (!isDesktop) return;
     try {
-      const next = await sshTunnel.getStatus.invoke();
-      setStatus(next);
+      const [nextTunnel, nextConnection] = await Promise.all([
+        sshTunnel.getStatus.invoke(),
+        remoteBackend.getStatus.invoke(),
+      ]);
+      setStatus(nextTunnel);
+      setConnection(nextConnection);
     } catch {
       // bridge unavailable in webui / tests
     }
@@ -41,11 +48,15 @@ const RemoteHostSshSection: React.FC = () => {
   if (!isDesktop) {
     return (
       <div className='py-12px' data-testid='remote-host-ssh-section'>
-        <Title heading={6}>Remote Host (SSH)</Title>
-        <Text type='secondary'>SSH tunnels to a headless Host are desktop-only. Open CSBU WorkMate desktop.</Text>
+        <Title heading={6}>{t('settings.remoteHost.title')}</Title>
+        <Text type='secondary'>{t('settings.remoteHost.desktopOnly')}</Text>
       </div>
     );
   }
+
+  const connectPort = status.running && typeof status.localPort === 'number' ? status.localPort : localPort;
+  const connectUrl = `http://127.0.0.1:${connectPort}`;
+  const isRemote = connection.mode === 'remote';
 
   const onStart = async () => {
     setBusy(true);
@@ -57,7 +68,7 @@ const RemoteHostSshSection: React.FC = () => {
         identityFile: identityFile.trim() || undefined,
       });
       setStatus(next);
-      Message.success(`Tunnel up — use ${next.localUrl ?? `http://127.0.0.1:${localPort}`} (existing auth)`);
+      Message.success(t('settings.remoteHost.tunnelUp', { url: next.localUrl ?? `http://127.0.0.1:${localPort}` }));
     } catch (error) {
       Message.error(error instanceof Error ? error.message : String(error));
       await refresh();
@@ -71,7 +82,40 @@ const RemoteHostSshSection: React.FC = () => {
     try {
       const next = await sshTunnel.stop.invoke();
       setStatus(next);
-      Message.success('SSH tunnel stopped');
+      Message.success(t('settings.remoteHost.tunnelStopped'));
+      await refresh();
+    } catch (error) {
+      Message.error(error instanceof Error ? error.message : String(error));
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  const onConnect = () => {
+    Modal.confirm({
+      title: t('settings.remoteHost.connectConfirmTitle'),
+      content: t('settings.remoteHost.connectConfirmContent', { url: connectUrl }),
+      okText: t('settings.remoteHost.connect'),
+      onOk: async () => {
+        setBusy(true);
+        try {
+          const next = await remoteBackend.connect.invoke({ port: connectPort });
+          setConnection(next);
+        } catch (error) {
+          Message.error(error instanceof Error ? error.message : String(error));
+          throw error;
+        } finally {
+          setBusy(false);
+        }
+      },
+    });
+  };
+
+  const onDisconnect = async () => {
+    setBusy(true);
+    try {
+      const next = await remoteBackend.disconnect.invoke();
+      setConnection(next);
     } catch (error) {
       Message.error(error instanceof Error ? error.message : String(error));
     } finally {
@@ -81,17 +125,23 @@ const RemoteHostSshSection: React.FC = () => {
 
   return (
     <div className='py-12px border-t border-[var(--color-border-2)]' data-testid='remote-host-ssh-section'>
-      <Title heading={6}>Remote Host (SSH)</Title>
+      <Title heading={6}>{t('settings.remoteHost.title')}</Title>
       <Text type='secondary' className='block mb-8px'>
-        Forward loopback to a headless aioncore via system OpenSSH. Keys/agent only — no password in argv (D14-3).
+        {t('settings.remoteHost.description')}
       </Text>
-      <Alert
-        type='info'
-        content='Remote must run aioncore --headless on loopback. Client keeps existing workspace auth (D14-2).'
-        className='mb-12px'
-      />
+      <Alert type='info' content={t('settings.remoteHost.alert')} className='mb-12px' />
+      {isRemote ? (
+        <Alert
+          type='success'
+          className='mb-12px'
+          data-testid='remote-host-connected'
+          content={t('settings.remoteHost.connectedBanner', {
+            url: connection.baseUrl ?? `http://127.0.0.1:${connection.port}`,
+          })}
+        />
+      ) : null}
       <Form layout='vertical' size='small' style={{ maxWidth: 480 }}>
-        <Form.Item label='SSH destination (user@host)' required>
+        <Form.Item label={t('settings.remoteHost.sshDestination')} required>
           <Input
             data-testid='ssh-tunnel-remote'
             placeholder='user@gpu-box'
@@ -100,7 +150,7 @@ const RemoteHostSshSection: React.FC = () => {
             disabled={status.running}
           />
         </Form.Item>
-        <Form.Item label='Local port'>
+        <Form.Item label={t('settings.remoteHost.localPort')}>
           <InputNumber
             data-testid='ssh-tunnel-local-port'
             min={1}
@@ -110,7 +160,7 @@ const RemoteHostSshSection: React.FC = () => {
             disabled={status.running}
           />
         </Form.Item>
-        <Form.Item label='Remote Host port'>
+        <Form.Item label={t('settings.remoteHost.remotePort')}>
           <InputNumber
             data-testid='ssh-tunnel-remote-port'
             min={1}
@@ -120,7 +170,7 @@ const RemoteHostSshSection: React.FC = () => {
             disabled={status.running}
           />
         </Form.Item>
-        <Form.Item label='Identity file (optional)'>
+        <Form.Item label={t('settings.remoteHost.identityFile')}>
           <Input
             data-testid='ssh-tunnel-identity'
             placeholder='~/.ssh/id_ed25519'
@@ -130,22 +180,42 @@ const RemoteHostSshSection: React.FC = () => {
           />
         </Form.Item>
       </Form>
-      <Space>
+      <Space wrap>
         <Button
           type='primary'
           loading={busy}
           disabled={status.running || !remote.trim()}
           onClick={() => void onStart()}
         >
-          Start tunnel
+          {t('settings.remoteHost.startTunnel')}
         </Button>
         <Button loading={busy} disabled={!status.running} onClick={() => void onStop()}>
-          Stop
+          {t('settings.remoteHost.stopTunnel')}
+        </Button>
+        <Button
+          type={isRemote ? 'secondary' : 'primary'}
+          loading={busy}
+          disabled={isRemote}
+          data-testid='remote-host-connect'
+          onClick={() => onConnect()}
+        >
+          {t('settings.remoteHost.connect')}
+        </Button>
+        <Button
+          loading={busy}
+          disabled={!isRemote}
+          data-testid='remote-host-disconnect'
+          onClick={() => void onDisconnect()}
+        >
+          {t('settings.remoteHost.disconnect')}
         </Button>
       </Space>
       {status.running ? (
         <Text className='mt-8px block' data-testid='ssh-tunnel-running'>
-          Running{status.pid ? ` (pid ${status.pid})` : ''}: {status.display ?? status.localUrl}
+          {t('settings.remoteHost.running', {
+            pidSuffix: status.pid ? t('settings.remoteHost.pidSuffix', { pid: status.pid }) : '',
+            display: status.display ?? status.localUrl,
+          })}
         </Text>
       ) : null}
       {status.lastError && !status.running ? (

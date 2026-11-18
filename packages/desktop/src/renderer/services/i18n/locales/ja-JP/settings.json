@@ -1925,5 +1925,26 @@
       "load": "Could not load local-kb settings",
       "save": "Could not update local-kb"
     }
+  },
+  "remoteHost": {
+    "title": "Remote Host (SSH)",
+    "desktopOnly": "SSH tunnels to a headless Host are desktop-only. Open CSBU WorkMate desktop.",
+    "description": "Forward loopback to a headless aioncore via system OpenSSH. Keys or ssh-agent only — no password in the command (D14-3).",
+    "alert": "The remote machine must run aioncore --headless on loopback. After you connect, sign in with your existing workspace account (D14-2).",
+    "sshDestination": "SSH destination (user@host)",
+    "localPort": "Local port",
+    "remotePort": "Remote Host port",
+    "identityFile": "Identity file (optional)",
+    "startTunnel": "Start tunnel",
+    "stopTunnel": "Stop",
+    "tunnelUp": "Tunnel up at {{url}}",
+    "tunnelStopped": "SSH tunnel stopped",
+    "running": "Running{{pidSuffix}}: {{display}}",
+    "pidSuffix": " (pid {{pid}})",
+    "connect": "Connect desktop to this Host",
+    "disconnect": "Disconnect (use local Host)",
+    "connectConfirmTitle": "Connect to remote Host?",
+    "connectConfirmContent": "CSBU WorkMate will reload and talk to the Host at {{url}}. You will sign in with your workspace account. The local Host stays running in the background.",
+    "connectedBanner": "Connected to the remote Host at {{url}}. The local Host is still running in the background."
   }
 }
