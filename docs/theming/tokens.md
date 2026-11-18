@@ -9,6 +9,9 @@ below (driven by `appearance` → `data-theme`); decorative & user themes use `c
 > 或 `css` 字段覆盖这些变量。内置 `Light`/`Dark` 依赖下面的基底样式表(由 `appearance` →
 > `data-theme` 驱动);装饰主题与用户主题用 `css` 字段。
 
+> Design system v2 (3.0.0): scales, the `--wm-*` semantic layer and component rules are in
+> [design-system.md](./design-system.md). / 3.0.0 设计系统见 design-system.md。
+
 ## How tokens are applied / Token 如何生效
 
 - **Source of truth (base values):** `packages/desktop/src/renderer/styles/themes/default-color-scheme.css`
