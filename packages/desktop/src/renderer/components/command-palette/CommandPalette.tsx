@@ -168,7 +168,9 @@ const CommandPalette: React.FC<CommandPaletteProps> = ({
         value={query}
         onChange={setQuery}
         onKeyDown={onKeyDown}
-        placeholder={t('common.commandPalette.placeholder', { defaultValue: 'Search sessions, work items, files, agents, commands…' })}
+        placeholder={t('common.commandPalette.placeholder', {
+          defaultValue: 'Search sessions, work items, files, agents, commands…',
+        })}
         allowClear
         data-testid='command-palette-input'
         autoComplete='off'
@@ -192,9 +194,7 @@ const CommandPalette: React.FC<CommandPaletteProps> = ({
             </Text>
             {section.commands.map((cmd) => {
               const index = flatIndex++;
-              const subtitle = cmd.subtitleKey
-                ? t(cmd.subtitleKey, { defaultValue: '' })
-                : (cmd.subtitle ?? '');
+              const subtitle = cmd.subtitleKey ? t(cmd.subtitleKey, { defaultValue: '' }) : (cmd.subtitle ?? '');
               return (
                 <button
                   key={cmd.id}

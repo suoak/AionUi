@@ -293,20 +293,25 @@ describe('CommandPalette files and plugin commands', () => {
   });
 
   it('invokes a plugin command and opens the hinted panel', async () => {
-    mocks.getCommands.mockResolvedValue([
-      { id: 'ext-notes-open', extensionName: 'notes', title: 'Open notes' },
-    ]);
+    mocks.getCommands.mockResolvedValue([{ id: 'ext-notes-open', extensionName: 'notes', title: 'Open notes' }]);
     mocks.invokeCommand.mockResolvedValue({
       status: 'accepted',
       command: { id: 'ext-notes-open', extensionName: 'notes', title: 'Open notes' },
-      openPanel: { id: 'ext-notes-panel', extensionName: 'notes', title: 'Notes', entryPoint: '/api/extensions/notes/assets/panel.html' },
+      openPanel: {
+        id: 'ext-notes-panel',
+        extensionName: 'notes',
+        title: 'Notes',
+        entryPoint: '/api/extensions/notes/assets/panel.html',
+      },
     });
     const onClose = vi.fn();
     render(<CommandPalette open onClose={onClose} />);
     await screen.findByTestId('command-palette-item-command.notes.ext-notes-open');
     expect(groups()).toContain('commands');
     fireEvent.click(screen.getByTestId('command-palette-item-command.notes.ext-notes-open'));
-    await waitFor(() => expect(mocks.invokeCommand).toHaveBeenCalledWith({ id: 'ext-notes-open', extensionName: 'notes' }));
+    await waitFor(() =>
+      expect(mocks.invokeCommand).toHaveBeenCalledWith({ id: 'ext-notes-open', extensionName: 'notes' })
+    );
     expect(mocks.openPanel).toHaveBeenCalledWith('ext-notes-panel');
     expect(mocks.navigate).not.toHaveBeenCalled();
     expect(onClose).toHaveBeenCalled();

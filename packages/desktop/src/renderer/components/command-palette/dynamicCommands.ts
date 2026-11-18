@@ -26,7 +26,6 @@ export type DynamicSourceKey = 'sessions' | 'workItems' | 'files' | 'agents' | '
 
 export type DynamicLoaderContext = { workspace?: string };
 
-
 const byRecencyDesc = (a: PaletteCommand, b: PaletteCommand) => (b.recency ?? 0) - (a.recency ?? 0);
 
 const clean = (value: unknown): string => (typeof value === 'string' ? value.trim() : '');

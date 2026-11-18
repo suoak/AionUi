@@ -177,7 +177,13 @@ export function rankPaletteCommands(commands: readonly PaletteCommand[], query: 
 /** Max entries shown per dynamic group (empty query vs. typed query). */
 export const DYNAMIC_GROUP_LIMIT_IDLE = 5;
 export const DYNAMIC_GROUP_LIMIT_QUERY = 8;
-export const DYNAMIC_GROUPS: ReadonlySet<CommandGroup> = new Set(['sessions', 'workItems', 'files', 'agents', 'commands']);
+export const DYNAMIC_GROUPS: ReadonlySet<CommandGroup> = new Set([
+  'sessions',
+  'workItems',
+  'files',
+  'agents',
+  'commands',
+]);
 
 export type PaletteSection = { group: CommandGroup; commands: PaletteCommand[] };
 

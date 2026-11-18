@@ -70,7 +70,15 @@ const dyn = (id: string, group: PaletteCommand['group'], title: string): Palette
 
 describe('dynamic groups, ranking and sections (E11 PR2)', () => {
   it('groups expose the palette groups in order', () => {
-    expect(PALETTE_GROUP_ORDER).toEqual(['navigation', 'sessions', 'workItems', 'files', 'agents', 'commands', 'settings']);
+    expect(PALETTE_GROUP_ORDER).toEqual([
+      'navigation',
+      'sessions',
+      'workItems',
+      'files',
+      'agents',
+      'commands',
+      'settings',
+    ]);
     const g = groupPaletteCommands([dyn('s', 'sessions', 'S'), dyn('w', 'workItems', 'W')]);
     expect(g.sessions.map((c) => c.id)).toEqual(['s']);
     expect(g.workItems.map((c) => c.id)).toEqual(['w']);

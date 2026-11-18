@@ -64,7 +64,10 @@ export function usePaletteDynamicCommands(open: boolean, enabled = true, ctx?: D
       }
       setSources((prev) => ({
         ...prev,
-        [key]: { status: hit ? 'ready' : 'loading', commands: hit?.commands ?? (key === 'files' ? [] : prev[key].commands) },
+        [key]: {
+          status: hit ? 'ready' : 'loading',
+          commands: hit?.commands ?? (key === 'files' ? [] : prev[key].commands),
+        },
       }));
       let promise: Promise<PaletteCommand[]>;
       try {
