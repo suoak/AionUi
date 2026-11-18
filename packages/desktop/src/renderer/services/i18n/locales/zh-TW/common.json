@@ -63,7 +63,7 @@
   "more": "更多",
   "refresh": "重新整理",
   "commandPalette": {
-    "placeholder": "搜尋會話、工作項、智慧體…",
+    "placeholder": "搜尋會話、工作項、檔案、智慧體、命令…",
     "empty": "沒有符合的命令",
     "loading": "載入中…",
     "untitled": "未命名",
@@ -71,14 +71,17 @@
       "navigation": "導覽",
       "sessions": "會話",
       "workItems": "工作項",
+      "files": "檔案",
       "agents": "智慧體",
+      "commands": "命令",
       "settings": "設定"
     },
     "badge": {
       "scheduled": "排程任務",
       "scheduledPaused": "排程任務 · 已暫停",
       "agent": "智慧體"
-    }
+    },
+    "actionFailed": "無法執行該命令"
   },
   "readOnly": "唯讀",
   "tray.showWindow": "顯示 CSBU WorkMate",

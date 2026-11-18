@@ -62,7 +62,7 @@
   "more": "Ещё",
   "refresh": "Обновить",
   "commandPalette": {
-    "placeholder": "Поиск сеансов, рабочих элементов, агентов…",
+    "placeholder": "Поиск сессий, задач, файлов, агентов, команд…",
     "empty": "Нет подходящих команд",
     "loading": "Загрузка…",
     "untitled": "Без названия",
@@ -71,13 +71,16 @@
       "sessions": "Сеансы",
       "workItems": "Рабочие элементы",
       "agents": "Агенты",
-      "settings": "Настройки"
+      "settings": "Настройки",
+      "files": "Файлы",
+      "commands": "Команды"
     },
     "badge": {
       "scheduled": "Запланировано",
       "scheduledPaused": "Запланировано · приостановлено",
       "agent": "Агент"
-    }
+    },
+    "actionFailed": "Не удалось выполнить команду"
   },
   "readOnly": "Только чтение",
   "tray.showWindow": "Показать CSBU WorkMate",

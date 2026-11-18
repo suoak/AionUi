@@ -29,6 +29,27 @@ describe('filterPaletteCommands', () => {
   it('returns empty when nothing matches', () => {
     expect(filterPaletteCommands(STATIC_PALETTE_COMMANDS, 'zzz-no-such')).toEqual([]);
   });
+
+  it('matches a file relative path or plugin subtitle', () => {
+    const cmds: PaletteCommand[] = [
+      {
+        id: 'file.src/app.ts',
+        title: 'app.ts',
+        group: 'files',
+        subtitle: 'src/app.ts',
+        file: { name: 'app.ts', relativePath: 'src/app.ts', fullPath: '/ws/src/app.ts' },
+      },
+      {
+        id: 'command.notes.open',
+        title: 'Open notes',
+        group: 'commands',
+        subtitle: 'notes',
+        pluginCommand: { id: 'open', extensionName: 'notes' },
+      },
+    ];
+    expect(filterPaletteCommands(cmds, 'src/app').map((c) => c.id)).toEqual(['file.src/app.ts']);
+    expect(filterPaletteCommands(cmds, 'notes').map((c) => c.id)).toEqual(['command.notes.open']);
+  });
 });
 
 describe('groupPaletteCommands', () => {
@@ -48,8 +69,16 @@ const dyn = (id: string, group: PaletteCommand['group'], title: string): Palette
 });
 
 describe('dynamic groups, ranking and sections (E11 PR2)', () => {
-  it('groups expose the five palette groups in order', () => {
-    expect(PALETTE_GROUP_ORDER).toEqual(['navigation', 'sessions', 'workItems', 'agents', 'settings']);
+  it('groups expose the palette groups in order', () => {
+    expect(PALETTE_GROUP_ORDER).toEqual([
+      'navigation',
+      'sessions',
+      'workItems',
+      'files',
+      'agents',
+      'commands',
+      'settings',
+    ]);
     const g = groupPaletteCommands([dyn('s', 'sessions', 'S'), dyn('w', 'workItems', 'W')]);
     expect(g.sessions.map((c) => c.id)).toEqual(['s']);
     expect(g.workItems.map((c) => c.id)).toEqual(['w']);

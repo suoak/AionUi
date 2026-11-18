@@ -62,7 +62,7 @@
   "more": "Más",
   "refresh": "Actualizar",
   "commandPalette": {
-    "placeholder": "Buscar sesiones, elementos de trabajo, agentes…",
+    "placeholder": "Buscar sesiones, elementos, archivos, agentes, comandos…",
     "empty": "No hay comandos coincidentes",
     "loading": "Cargando…",
     "untitled": "Sin título",
@@ -71,13 +71,16 @@
       "sessions": "Sesiones",
       "workItems": "Elementos de trabajo",
       "agents": "Agentes",
-      "settings": "Ajustes"
+      "settings": "Ajustes",
+      "files": "Archivos",
+      "commands": "Comandos"
     },
     "badge": {
       "scheduled": "Programada",
       "scheduledPaused": "Programada · en pausa",
       "agent": "Agente"
-    }
+    },
+    "actionFailed": "No se pudo ejecutar el comando"
   },
   "readOnly": "Solo lectura",
   "tray.showWindow": "Mostrar CSBU WorkMate",

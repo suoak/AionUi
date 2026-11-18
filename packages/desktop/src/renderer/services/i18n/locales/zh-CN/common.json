@@ -63,7 +63,7 @@
   "more": "更多",
   "refresh": "刷新",
   "commandPalette": {
-    "placeholder": "搜索会话、工作项、智能体…",
+    "placeholder": "搜索会话、工作项、文件、智能体、命令…",
     "empty": "没有匹配的命令",
     "loading": "加载中…",
     "untitled": "未命名",
@@ -71,14 +71,17 @@
       "navigation": "导航",
       "sessions": "会话",
       "workItems": "工作项",
+      "files": "文件",
       "agents": "智能体",
+      "commands": "命令",
       "settings": "设置"
     },
     "badge": {
       "scheduled": "定时任务",
       "scheduledPaused": "定时任务 · 已暂停",
       "agent": "智能体"
-    }
+    },
+    "actionFailed": "无法执行该命令"
   },
   "readOnly": "只读",
   "tray.showWindow": "显示 CSBU WorkMate",
