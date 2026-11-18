@@ -1949,5 +1949,20 @@
     "connectConfirmTitle": "Connect to remote Host?",
     "connectConfirmContent": "CSBU WorkMate will reload and talk to the Host at {{url}}. You will sign in with your workspace account. The local Host stays running in the background.",
     "connectedBanner": "Connected to the remote Host at {{url}}. The local Host is still running in the background."
+  },
+  "sessionImport": {
+    "title": "Import Claude / Codex sessions",
+    "desktopOnly": "Local session import is desktop-only.",
+    "description": "Read-only scan of ~/.claude/projects and ~/.codex/sessions. Converts to a WorkMate transcript; source files are never modified.",
+    "hydrateHint": "Imported conversations hydrate from a local transcript copy when the Host journal is empty.",
+    "refresh": "Refresh",
+    "source": "Source",
+    "label": "Label",
+    "size": "Size",
+    "sizeKb": "{{size}} KB",
+    "import": "Import",
+    "noTurns": "No model-visible turns found in that session file",
+    "importedName": "[Imported] {{id}}",
+    "success": "Imported {{count}} turns → {{title}}"
   }
 }
