@@ -9,7 +9,7 @@ import type { PropsWithChildren } from 'react';
 import React, { createContext, useCallback, useContext } from 'react';
 import type { Theme, ThemeAppearance } from '@/common/theme/types';
 import useTheme from '@renderer/hooks/system/useTheme';
-import { LIGHT_THEME_ID, DARK_THEME_ID } from '@/common/theme/constants';
+import { appearanceToggleTargetId } from '@/common/theme/resolveTheme';
 import useFontScale from '@renderer/hooks/ui/font/useFontScale';
 import useFontSizes from '@renderer/hooks/ui/font/useFontSizes';
 import useFontFamilies from '@renderer/hooks/ui/font/useFontFamilies';
@@ -21,7 +21,7 @@ import type { FontWeightKey, FontWeights } from '@/common/config/fontWeights';
 interface ThemeContextValue {
   // Light/Dark appearance of the active theme (back-compat for existing consumers)
   theme: ThemeAppearance;
-  // Back-compat light/dark toggle → selects the Light or Dark built-in theme
+  // Back-compat light/dark toggle → Ember / Dusk, or the classic pair when the user opted out
   setTheme: (appearance: ThemeAppearance) => Promise<void>;
   // The full unified active theme + selector by id (used by the new gallery)
   activeTheme: Theme | null;
@@ -52,8 +52,8 @@ export const ThemeProvider: React.FC<PropsWithChildren> = ({ children }) => {
   const { fontWeights, setFontWeight } = useFontWeights();
   const theme: ThemeAppearance = activeTheme?.appearance ?? 'light';
   const setTheme = useCallback(
-    (appearance: ThemeAppearance) => selectTheme(appearance === 'dark' ? DARK_THEME_ID : LIGHT_THEME_ID),
-    [selectTheme]
+    (appearance: ThemeAppearance) => selectTheme(appearanceToggleTargetId(activeId, appearance)),
+    [selectTheme, activeId]
   );
 
   return (

@@ -9,8 +9,34 @@ const textColors = {
   // 自定义语义化文字色 / Custom semantic text colors
   't-primary': 'var(--text-primary)', // text-t-primary - 主要文字
   't-secondary': 'var(--text-secondary)', // text-t-secondary - 次要文字
-  't-tertiary': 'var(--bg-6)', // text-t-tertiary - 三级说明/提示文字
+  't-tertiary': 'var(--wm-text-tertiary)', // text-t-tertiary - 三级说明/提示文字 (AA on every surface)
   't-disabled': 'var(--text-disabled)', // text-t-disabled - 禁用文字
+};
+
+// ==================== 设计系统 v2 / Design system v2 (--wm-*) ====================
+// Usage: bg-wm-canvas, text-wm-accent, border-wm-border-strong, text-wm-status-done ...
+// See docs/theming/design-system.md.
+const wmColors = {
+  'wm-canvas': 'var(--wm-surface-canvas)',
+  'wm-sidebar': 'var(--wm-surface-sidebar)',
+  'wm-panel': 'var(--wm-surface-panel)',
+  'wm-raised': 'var(--wm-surface-raised)',
+  'wm-text-primary': 'var(--wm-text-primary)',
+  'wm-text-secondary': 'var(--wm-text-secondary)',
+  'wm-text-tertiary': 'var(--wm-text-tertiary)',
+  'wm-text-disabled': 'var(--wm-text-disabled)',
+  'wm-on-accent': 'var(--wm-text-on-accent)',
+  'wm-border-subtle': 'var(--wm-border-subtle)',
+  'wm-border-default': 'var(--wm-border-default)',
+  'wm-border-strong': 'var(--wm-border-strong)',
+  'wm-accent': 'var(--wm-accent)',
+  'wm-accent-hover': 'var(--wm-accent-hover)',
+  'wm-accent-subtle': 'var(--wm-accent-subtle)',
+  'wm-status-working': 'var(--wm-status-working)',
+  'wm-status-needs-you': 'var(--wm-status-needs-you)',
+  'wm-status-done': 'var(--wm-status-done)',
+  'wm-status-failed': 'var(--wm-status-failed)',
+  'wm-status-idle': 'var(--wm-status-idle)',
 };
 
 // ==================== 语义状态色 / Semantic State Colors ====================
@@ -211,6 +237,7 @@ export default defineConfig({
       ...aouColors,
       ...componentColors,
       ...specialColors,
+      ...wmColors,
     },
     fontFamily: {
       // Reference the centralized --font-mono token (defined in arco-override.css)

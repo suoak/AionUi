@@ -2,8 +2,9 @@
 
 This is the canonical list of semantic design tokens used by CSBU WorkMate's theming system.
 A **Theme** (`packages/desktop/src/common/theme/types.ts`) can override any of these via its
-optional `tokens` map, or via raw `css`. Built-in `Light`/`Dark` rely on the base stylesheet
-below (driven by `appearance` → `data-theme`); decorative & user themes use `css`.
+optional `tokens` map, or via raw `css`. Classic Light/Dark rely on the base stylesheet
+below (driven by `appearance` → `data-theme`); the default Ember/Dusk themes, decorative and user
+themes layer `css` on top of it (see [design-system.md](./design-system.md)).
 
 > 这是 CSBU WorkMate 主题系统的语义 Token 权威清单。一个 **Theme** 可以通过可选的 `tokens` 映射
 > 或 `css` 字段覆盖这些变量。内置 `Light`/`Dark` 依赖下面的基底样式表(由 `appearance` →

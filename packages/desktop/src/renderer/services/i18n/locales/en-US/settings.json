@@ -368,7 +368,21 @@
     "addToPreset": "Add Theme",
     "name": "Name",
     "applyFailed": "Failed to apply theme",
-    "applied": "Applied theme: {{name}}"
+    "applied": "Applied theme: {{name}}",
+    "builtinNames": {
+      "ember": "Ember · Light",
+      "dusk": "Dusk · Dark",
+      "classicLight": "Classic Light",
+      "classicDark": "Classic Dark"
+    },
+    "classicFollowSystem": "Classic · Follow System",
+    "moreThemes": "More themes",
+    "refreshNotice": {
+      "title": "A new look: Dusk & Ember",
+      "content": "CSBU WorkMate 3.0 uses the Ember (light) and Dusk (dark) themes by default. You can switch any time in Settings › Appearance.",
+      "keep": "Keep new look",
+      "restoreClassic": "Restore classic look"
+    }
   },
   "customModelSupportNote": "Note: Only CSBU WorkMate currently supports custom models.",
   "webui.allowRemote": "Allow Remote Access",

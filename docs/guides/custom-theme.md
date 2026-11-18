@@ -1,6 +1,7 @@
 # Custom Themes - Authoring Guide
 
-CSBU WorkMate ships with **Light** and **Dark** themes, but you can create your own
+CSBU WorkMate ships with **Ember** (light) and **Dusk** (dark) as its default themes, plus
+**Classic Light / Classic Dark** (the pre-3.0 palette), but you can create your own
 color themes without touching any code. A custom theme is just a small block of
 CSS that overrides a set of documented **theme variables** (CSS custom
 properties). This guide shows you exactly what to write and how to apply it.
@@ -21,7 +22,7 @@ variables** rather than hardcoded values. For example, the accent color is
 always `var(--primary)`, the main background is always `var(--bg-base)`, and so
 on. A theme simply supplies new values for those variables.
 
-Your custom theme layers **on top of** the built-in Light or Dark baseline:
+Your custom theme layers **on top of** the classic Light or Dark baseline (not Ember / Dusk):
 
 - You pick a **base appearance** (`light` or `dark`) when you create the theme.
   That decides the starting point (default neutrals, Arco Design widget styling,

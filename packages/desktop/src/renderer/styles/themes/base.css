@@ -3,6 +3,43 @@
 :root {
   --app-min-width: 360px;
   --titlebar-height: 36px;
+
+  /* Design system v2 scales (mirrors common/theme/designTokens.ts) */
+  --wm-font-caption: 11px;
+  --wm-font-secondary: 12px;
+  --wm-font-ui: 13px;
+  --wm-font-body: 14px;
+  --wm-font-subtitle: 16px;
+  --wm-font-title: 20px;
+  --wm-font-hero: 28px;
+  --wm-radius-inner: 4px;
+  --wm-radius-control: 6px;
+  --wm-radius-card: 10px;
+  --wm-radius-panel: 14px;
+  --wm-radius-pill: 9999px;
+  --wm-duration-hover: 120ms;
+  --wm-duration-panel: 180ms;
+  --wm-duration-page: 240ms;
+  --wm-ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+/* Respect the OS "reduce motion" setting everywhere: animations and transitions
+ * collapse to an instant change, and smooth scrolling is turned off. */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --wm-duration-hover: 0ms;
+    --wm-duration-panel: 0ms;
+    --wm-duration-page: 0ms;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
 
 .app-shell {

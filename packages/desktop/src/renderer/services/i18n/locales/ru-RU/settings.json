@@ -365,7 +365,21 @@
     "addToPreset": "Добавить тему",
     "name": "Название",
     "applyFailed": "Не удалось применить тему",
-    "applied": "Применена тема: {{name}}"
+    "applied": "Применена тема: {{name}}",
+    "builtinNames": {
+      "ember": "Ember · Светлая",
+      "dusk": "Dusk · Тёмная",
+      "classicLight": "Классическая светлая",
+      "classicDark": "Классическая тёмная"
+    },
+    "classicFollowSystem": "Классическая · Как в системе",
+    "moreThemes": "Другие темы",
+    "refreshNotice": {
+      "title": "Новый облик: Dusk & Ember",
+      "content": "В CSBU WorkMate 3.0 по умолчанию используются темы Ember (светлая) и Dusk (тёмная). Переключиться можно в любой момент в разделе «Настройки › Оформление».",
+      "keep": "Оставить новый облик",
+      "restoreClassic": "Вернуть классический облик"
+    }
   },
   "customModelSupportNote": "Примечание: В настоящее время только CSBU WorkMate поддерживает пользовательские модели.",
   "webui.allowRemote": "Разрешить удалённый доступ",

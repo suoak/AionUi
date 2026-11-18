@@ -1,0 +1,134 @@
+/* Ember — CSBU WorkMate default light theme.
+ * Colour values derived from Orca "Dusk & Ember Themes" (MIT, Copyright (c) 2026 Lovecast Inc.);
+ * see NOTICE.md in this directory. Values adjusted for WCAG AA where noted.
+ * Loaded as the `css` of the built-in `light` theme; every declaration gets !important.
+ */
+
+/* Declared on <body> too: Arco declares its --color-* tokens there. */
+body,
+:root {
+  /* Design system v2 semantic layer */
+  --wm-surface-canvas: #fffaf4;
+  --wm-surface-sidebar: #fde6cf;
+  --wm-surface-panel: #fff6ec;
+  --wm-surface-raised: #ffffff;
+  --wm-text-primary: #3b1d0a;
+  --wm-text-secondary: #6b3c1c;
+  --wm-text-tertiary: #845f45; /* AA on every surface (Orca #906b50 is 3.9:1 on the sidebar) */
+  --wm-text-disabled: #c9a588;
+  --wm-text-on-accent: #ffffff;
+  --wm-border-subtle: #f5ddc5;
+  --wm-border-default: #ecc9a5;
+  --wm-border-strong: #bd7048; /* >= 3:1 for control boundaries */
+  --wm-accent: #b4410f;
+  --wm-accent-hover: #9e390d;
+  --wm-accent-subtle: #f6e0d1;
+  --wm-status-working: #b4410f;
+  --wm-status-needs-you: #b45309;
+  --wm-status-done: #15803d;
+  --wm-status-failed: #dc2626;
+  --wm-status-idle: #845f45;
+
+  /* Legacy tokens follow the semantic layer */
+  --primary: #b4410f;
+  --color-primary: #b4410f;
+  --color-primary-light-1: #c46b44;
+  --color-primary-light-2: #d6967b;
+  --color-primary-light-3: #e5bcab;
+  --color-primary-dark-1: #9e390d;
+  --primary-rgb: 180, 65, 15;
+  --primary-foreground: #ffffff;
+  --brand: #b4410f;
+  --brand-light: #f6e0d1;
+  --brand-hover: #9e390d;
+  --color-brand-fill: #b4410f;
+  --color-brand-bg: #f6e0d1;
+  --aou-1: #f9e8da;
+  --aou-2: #f2d5c4;
+  --aou-3: #e7bca5;
+  --aou-4: #db9f82;
+  --aou-5: #cf825f;
+  --aou-6: #c26237;
+  --aou-7: #b4410f;
+  --aou-8: #94350c;
+  --aou-9: #732a0a;
+  --aou-10: #561f07;
+  --bg-base: #fffaf4;
+  --bg-1: #fff6ec;
+  --bg-2: #fdeedd;
+  --bg-3: #f5ddc5;
+  --bg-4: #ecc9a5;
+  --bg-5: #d9b08f;
+  --bg-6: #845f45;
+  --bg-8: #6b3c1c;
+  --bg-9: #3b1d0a;
+  --bg-10: #2a1406;
+  --bg-hover: #fbecdc;
+  --bg-active: #f8e0c8;
+  --color-bg-1: #fffaf4;
+  --color-bg-2: #fff6ec;
+  --color-bg-3: #ffffff;
+  --color-bg-4: #ffffff;
+  --color-bg-5: #ffffff;
+  --color-bg-white: #ffffff;
+  --color-fill-1: #fcf0e3;
+  --color-fill-2: #f8e6d3;
+  --color-fill-3: #f2d9c0;
+  --color-fill-4: #ebcaaa;
+  --fill: #fff8f0;
+  --color-fill: #fff8f0;
+  --fill-0: #ffffff;
+  --fill-white-to-black: #ffffff;
+  --dialog-fill-0: #ffffff;
+  --inverse: #ffffff;
+  --text-primary: #3b1d0a;
+  --text-secondary: #6b3c1c;
+  --text-disabled: #c9a588;
+  --text-0: #3b1d0a;
+  --text-white: #ffffff;
+  --color-text-1: #3b1d0a;
+  --color-text-2: #6b3c1c;
+  --color-text-3: #845f45;
+  --color-text-4: #c9a588;
+  --color-border: #ecc9a5;
+  --color-border-1: #f5ddc5;
+  --color-border-2: #ecc9a5;
+  --color-border-3: #d9b08f;
+  --color-border-4: #bd7048;
+  --border-base: #ecc9a5;
+  --border-light: #f5ddc5;
+  --border-special: #ecc9a5;
+  --success: #15803d;
+  --warning: #b45309;
+  --danger: #dc2626;
+  --info: #b4410f;
+  --message-user-bg: #f6e0d1;
+  --message-tips-bg: #fbecdc;
+  --workspace-btn-bg: #fbecdc;
+  --thought-gradient: linear-gradient(90deg, #fdeedd 0%, #fff6ec 100%);
+  --color-guid-agent-bar: #fbecdc;
+  --sider-bg: #fde6cf;
+  --sider-fg: #3b1d0a;
+  --sider-border: #ecc9a5;
+  --sider-accent: #f8d2ad;
+  --sider-accent-fg: #3b1d0a;
+}
+
+/* Arco primary / link scales (RGB triplets) live on <body>. */
+body {
+  --arcoblue-1: 249, 240, 236;
+  --arcoblue-2: 242, 221, 212;
+  --arcoblue-3: 229, 188, 171;
+  --arcoblue-4: 214, 150, 123;
+  --arcoblue-5: 196, 107, 68;
+  --arcoblue-6: 180, 65, 15;
+  --arcoblue-7: 158, 57, 13;
+  --arcoblue-8: 135, 49, 11;
+  --arcoblue-9: 108, 39, 9;
+  --arcoblue-10: 81, 29, 7;
+}
+
+.layout-sider {
+  background-color: var(--sider-bg);
+  color: var(--sider-fg);
+}

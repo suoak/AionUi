@@ -363,7 +363,21 @@
     "addToPreset": "Adicionar Tema",
     "name": "Name",
     "applyFailed": "Falha ao aplicar tema",
-    "applied": "Tema aplicado: {{name}}"
+    "applied": "Tema aplicado: {{name}}",
+    "builtinNames": {
+      "ember": "Ember · Claro",
+      "dusk": "Dusk · Escuro",
+      "classicLight": "Clássico claro",
+      "classicDark": "Clássico escuro"
+    },
+    "classicFollowSystem": "Clássico · Seguir o sistema",
+    "moreThemes": "Mais temas",
+    "refreshNotice": {
+      "title": "Um novo visual: Dusk & Ember",
+      "content": "O CSBU WorkMate 3.0 usa os temas Ember (claro) e Dusk (escuro) por padrão. Você pode trocar a qualquer momento em Configurações › Aparência.",
+      "keep": "Manter o novo visual",
+      "restoreClassic": "Restaurar o visual clássico"
+    }
   },
   "customModelSupportNote": "Nota: Apenas o CSBU WorkMate suporta modelos personalizados atualmente.",
   "webui.allowRemote": "Permitir Acesso Remoto",

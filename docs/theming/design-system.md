@@ -41,20 +41,37 @@ Existing Light/Dark users move to them automatically and can switch back with on
 | `--wm-surface-raised`   | `#ffffff`     | `#2c1f4d`   | Cards, inputs, popovers / 卡片、输入框 |
 | `--wm-text-primary`     | `#3b1d0a`     | `#e8e0ff`   | Primary text                           |
 | `--wm-text-secondary`   | `#6b3c1c`     | `#b9aee0`   | Secondary text                         |
-| `--wm-text-tertiary`    | `#906b50`     | `#9288b5`   | Tertiary text (AA on canvas)           |
+| `--wm-text-tertiary`    | `#845f45`     | `#9288b5`   | Tertiary text (AA on every surface)    |
 | `--wm-border-subtle`    | `#f5ddc5`     | `#36265d`   | Region dividers                        |
 | `--wm-border-default`   | `#ecc9a5`     | `#4a3480`   | Cards, inputs                          |
-| `--wm-border-strong`    | `#d9926c`     | `#6d4e95`   | Control boundaries                     |
+| `--wm-border-strong`    | `#bd7048`     | `#8461b0`   | Control boundaries (>= 3:1)            |
 | `--wm-accent`           | `#b4410f`     | `#c38bff`   | The accent / 强调色                    |
 | `--wm-accent-hover`     | `#9e390d`     | `#ca99ff`   | Accent hover                           |
 | `--wm-accent-subtle`    | `#f6e0d1`     | `#31234b`   | Accent-tinted background               |
 | `--wm-status-working`   | accent        | accent      | Working (spinner) / 进行中             |
-| `--wm-status-needs-you` | `#d97706`     | `#fbbf24`   | Needs you / 需要你                     |
-| `--wm-status-done`      | `#16a34a`     | `#34d399`   | Done / 完成                            |
+| `--wm-status-needs-you` | `#b45309`     | `#fbbf24`   | Needs you / 需要你                     |
+| `--wm-status-done`      | `#15803d`     | `#34d399`   | Done / 完成                            |
 | `--wm-status-failed`    | `#dc2626`     | `#f87171`   | Failed / 失败                          |
 | `--wm-status-idle`      | tertiary text | tertiary    | Idle / 空闲                            |
 
-Exact values are verified by contrast tests when the stylesheet lands (V1).
+Values live in `packages/desktop/src/renderer/theme/default/{ember,dusk}.css` and are checked by
+`tests/unit/theme/design/defaultThemes.test.ts` (every text token ≥ 4.5:1 on all four surfaces;
+strong borders and status colours ≥ 3:1). Four Orca values were adjusted to pass: Ember tertiary text
+(`#906b50` → `#845f45`), both strong borders, and the Ember needs-you / done colours.
+
+### 2.1.1 How the themes are wired / 主题接线
+
+- Built-in ids `light` / `dark` now carry the Ember / Dusk stylesheet as their `css`, so existing
+  Light, Dark and Follow System selections switch automatically.
+- `classic-light`, `classic-dark` and the `system-classic` sentinel are the pre-3.0 palette (no
+  overrides). The quick light/dark toggle stays inside whichever family is active.
+- A one-time notice (`theme.refreshNoticeShown`) offers "Restore classic look" to users whose
+  selection moved to Ember / Dusk. Classic, decorative and custom themes never see it.
+- The seven decorative presets are listed under a collapsed "More themes" group (expanded when
+  one of them is active).
+- Classic and decorative themes get the `--wm-*` layer from `default-color-scheme.css`, mapped onto
+  their legacy variables, with an AA-safe tertiary text colour.
+- `prefers-reduced-motion: reduce` collapses all animations and transitions (`base.css`).
 
 ### 2.2 Legacy variable mapping / 旧变量映射
 

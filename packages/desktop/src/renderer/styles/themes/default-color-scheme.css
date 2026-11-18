@@ -71,6 +71,24 @@
   --fill-white-to-black: #ffffff; /* 白到黑填充色 */
   --border-special: var(--bg-3); /* 特殊边框色 */
   --color-guid-agent-bar: #eaecf7; /* 首页 Agent 选择条背景 - 亮色 */
+  /* Design system v2 semantic layer (classic + decorative themes).
+   * Ember / Dusk override these with explicit values; see docs/theming/design-system.md. */
+  --wm-surface-canvas: var(--bg-base);
+  --wm-surface-sidebar: var(--bg-1);
+  --wm-surface-panel: var(--bg-1);
+  --wm-surface-raised: var(--fill-0);
+  --wm-text-primary: var(--text-primary);
+  --wm-text-secondary: var(--text-secondary);
+  --wm-text-tertiary: #6b7280; /* was --bg-6 (#86909c, 3.3:1); now AA on bg-base and bg-1 */
+  --wm-text-disabled: var(--text-disabled);
+  --wm-text-on-accent: #ffffff;
+  --wm-border-subtle: var(--border-light);
+  --wm-border-default: var(--border-base);
+  --wm-border-strong: #8a919c;
+  --wm-status-needs-you: var(--warning);
+  --wm-status-done: var(--success);
+  --wm-status-failed: var(--danger);
+  --wm-status-idle: var(--wm-text-tertiary);
 }
 
 /* Dark Mode */
@@ -143,4 +161,17 @@
   --fill-0: rgba(255, 255, 255, 0.08); /* 填充色 0 - 暗色模式下为半透明白色 */
   --fill-white-to-black: #000000; /* 白到黑填充色（暗色模式下为黑色） */
   --border-special: #60677e; /* 特殊边框色 */
+
+  /* Design system v2 semantic layer (dark) */
+  --wm-text-tertiary: #8c8c8c; /* was --bg-6 (#5a5a5a, 2.8:1) */
+  --wm-border-strong: #6b6b6b;
+  --wm-text-on-accent: #ffffff;
+}
+
+/* Accent tokens resolve Arco's RGB scale, which Arco declares on <body>. */
+body {
+  --wm-accent: rgb(var(--primary-6));
+  --wm-accent-hover: rgb(var(--primary-5));
+  --wm-accent-subtle: rgb(var(--primary-1));
+  --wm-status-working: rgb(var(--primary-6));
 }

@@ -363,7 +363,21 @@
     "addToPreset": "Theme hinzufügen",
     "name": "Name",
     "applyFailed": "Theme anwenden fehlgeschlagen",
-    "applied": "Theme angewendet: {{name}}"
+    "applied": "Theme angewendet: {{name}}",
+    "builtinNames": {
+      "ember": "Ember · Hell",
+      "dusk": "Dusk · Dunkel",
+      "classicLight": "Klassisch hell",
+      "classicDark": "Klassisch dunkel"
+    },
+    "classicFollowSystem": "Klassisch · System folgen",
+    "moreThemes": "Weitere Designs",
+    "refreshNotice": {
+      "title": "Neues Aussehen: Dusk & Ember",
+      "content": "CSBU WorkMate 3.0 verwendet standardmäßig die Designs Ember (hell) und Dusk (dunkel). Du kannst jederzeit unter Einstellungen › Darstellung wechseln.",
+      "keep": "Neues Aussehen behalten",
+      "restoreClassic": "Klassisches Aussehen wiederherstellen"
+    }
   },
   "customModelSupportNote": "Hinweis: CSBU WorkMate und Gemini CLI-Agent unterstützen derzeit benutzerdefinierte Modelle.",
   "webui.allowRemote": "Remote-Zugriff erlauben",

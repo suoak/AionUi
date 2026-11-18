@@ -363,7 +363,21 @@
     "addToPreset": "افزودن تم",
     "name": "نام",
     "applyFailed": "اعمال تم ناموفق بود",
-    "applied": "تم اعمال شد: {{name}}"
+    "applied": "تم اعمال شد: {{name}}",
+    "builtinNames": {
+      "ember": "Ember · روشن",
+      "dusk": "Dusk · تیره",
+      "classicLight": "کلاسیک روشن",
+      "classicDark": "کلاسیک تیره"
+    },
+    "classicFollowSystem": "کلاسیک · پیروی از سیستم",
+    "moreThemes": "پوسته‌های بیشتر",
+    "refreshNotice": {
+      "title": "ظاهر جدید: Dusk & Ember",
+      "content": "CSBU WorkMate 3.0 به‌طور پیش‌فرض از پوسته‌های Ember (روشن) و Dusk (تیره) استفاده می‌کند. هر زمان بخواهید می‌توانید از تنظیمات › ظاهر آن را تغییر دهید.",
+      "keep": "حفظ ظاهر جدید",
+      "restoreClassic": "بازگشت به ظاهر کلاسیک"
+    }
   },
   "customModelSupportNote": "توجه: فعلاً فقط CSBU WorkMate از مدل‌های سفارشی پشتیبانی می‌کند.",
   "webui.allowRemote": "اجازه دسترسی ریموت",

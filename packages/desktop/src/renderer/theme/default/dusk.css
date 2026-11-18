@@ -1,0 +1,141 @@
+/* Dusk — CSBU WorkMate default dark theme.
+ * Colour values derived from Orca "Dusk & Ember Themes" (MIT, Copyright (c) 2026 Lovecast Inc.);
+ * see NOTICE.md in this directory. Values adjusted for WCAG AA where noted.
+ * Loaded as the `css` of the built-in `dark` theme; every declaration gets !important.
+ */
+
+/* Declared on <body> too: Arco declares its --color-* tokens there. */
+body,
+:root {
+  /* Design system v2 semantic layer */
+  --wm-surface-canvas: #241843;
+  --wm-surface-sidebar: #150f28;
+  --wm-surface-panel: #1d1533;
+  --wm-surface-raised: #2c1f4d;
+  --wm-text-primary: #e8e0ff;
+  --wm-text-secondary: #b9aee0;
+  --wm-text-tertiary: #9288b5;
+  --wm-text-disabled: #5d4a86;
+  --wm-text-on-accent: #1b1430;
+  --wm-border-subtle: #36265d;
+  --wm-border-default: #4a3480;
+  --wm-border-strong: #8461b0; /* >= 3:1 for control boundaries */
+  --wm-accent: #c38bff;
+  --wm-accent-hover: #ca99ff;
+  --wm-accent-subtle: #31234b;
+  --wm-status-working: #c38bff;
+  --wm-status-needs-you: #fbbf24;
+  --wm-status-done: #34d399;
+  --wm-status-failed: #f87171;
+  --wm-status-idle: #9288b5;
+
+  /* Legacy tokens follow the semantic layer */
+  --primary: #c38bff;
+  --color-primary: #c38bff;
+  --color-primary-light-1: #a374d9;
+  --color-primary-light-2: #875fb8;
+  --color-primary-light-3: #6c4c98;
+  --color-primary-dark-1: #ca99ff;
+  --primary-rgb: 195, 139, 255;
+  --primary-foreground: #1b1430;
+  --brand: #c38bff;
+  --brand-light: #31234b;
+  --brand-hover: #ca99ff;
+  --color-brand-fill: #c38bff;
+  --color-brand-bg: #31234b;
+  --aou-1: #2a1e43;
+  --aou-2: #3b2a58;
+  --aou-3: #523b74;
+  --aou-4: #6d4e95;
+  --aou-5: #8761b6;
+  --aou-6: #a576da;
+  --aou-7: #c38bff;
+  --aou-8: #cea0ff;
+  --aou-9: #d9b5ff;
+  --aou-10: #e2c7ff;
+  --bg-base: #241843;
+  --bg-1: #1d1533;
+  --bg-2: #2c1f4d;
+  --bg-3: #36265d;
+  --bg-4: #4a3480;
+  --bg-5: #5d4a86;
+  --bg-6: #9288b5;
+  --bg-8: #b9aee0;
+  --bg-9: #d8d0f5;
+  --bg-10: #e8e0ff;
+  --bg-hover: #2c1f4d;
+  --bg-active: #36265d;
+  --color-bg-1: #241843;
+  --color-bg-2: #1d1533;
+  --color-bg-3: #2c1f4d;
+  --color-bg-4: #33245a;
+  --color-bg-5: #3a2963;
+  --color-bg-white: #2c1f4d;
+  --color-fill-1: #2a1d48;
+  --color-fill-2: #31234f;
+  --color-fill-3: #3a2a5c;
+  --color-fill-4: #46336b;
+  --fill: #1b1430;
+  --color-fill: #1b1430;
+  --fill-0: rgba(232, 224, 255, 0.06);
+  --fill-white-to-black: #150f28;
+  --dialog-fill-0: #2c1f4d;
+  --inverse: #ffffff;
+  --text-primary: #e8e0ff;
+  --text-secondary: #b9aee0;
+  --text-disabled: #5d4a86;
+  --text-0: #e8e0ff;
+  --text-white: #ffffff;
+  --color-text-1: #e8e0ff;
+  --color-text-2: #b9aee0;
+  --color-text-3: #9288b5;
+  --color-text-4: #5d4a86;
+  --color-border: #4a3480;
+  --color-border-1: #36265d;
+  --color-border-2: #4a3480;
+  --color-border-3: #5d4a86;
+  --color-border-4: #8461b0;
+  --border-base: #4a3480;
+  --border-light: #36265d;
+  --border-special: #6d4e95;
+  --success: #34d399;
+  --warning: #fbbf24;
+  --danger: #f87171;
+  --info: #c38bff;
+  --message-user-bg: #342650;
+  --message-tips-bg: #2a1d48;
+  --workspace-btn-bg: #2c1f4d;
+  --thought-gradient: linear-gradient(135deg, #33245a 0%, #241843 100%);
+  --color-guid-agent-bar: #2c1f4d;
+  --sider-bg: #150f28;
+  --sider-fg: #e8e0ff;
+  --sider-border: #36265d;
+  --sider-accent: #33225c;
+  --sider-accent-fg: #f3edff;
+}
+
+/* Arco primary / link scales (RGB triplets) live on <body>; dark ramp runs dark → light. */
+body {
+  --arcoblue-1: 60, 41, 95;
+  --arcoblue-2: 81, 56, 120;
+  --arcoblue-3: 108, 76, 152;
+  --arcoblue-4: 135, 95, 184;
+  --arcoblue-5: 163, 116, 217;
+  --arcoblue-6: 195, 139, 255;
+  --arcoblue-7: 204, 156, 255;
+  --arcoblue-8: 214, 176, 255;
+  --arcoblue-9: 225, 197, 255;
+  --arcoblue-10: 237, 220, 255;
+}
+
+.layout-sider {
+  background-color: var(--sider-bg);
+  color: var(--sider-fg);
+}
+
+/* Lilac fills need dark text: white on #c38bff is only 2.4:1. */
+.arco-btn-primary:not(.arco-btn-disabled),
+.arco-btn-primary:not(.arco-btn-disabled):hover,
+.arco-btn-primary:not(.arco-btn-disabled):active {
+  color: var(--wm-text-on-accent);
+}

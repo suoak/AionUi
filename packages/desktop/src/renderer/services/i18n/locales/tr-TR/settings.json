@@ -363,7 +363,21 @@
     "addToPreset": "Tema Ekle",
     "name": "İsim",
     "applyFailed": "Tema uygulanamadı",
-    "applied": "Tema uygulandı: {{name}}"
+    "applied": "Tema uygulandı: {{name}}",
+    "builtinNames": {
+      "ember": "Ember · Açık",
+      "dusk": "Dusk · Koyu",
+      "classicLight": "Klasik açık",
+      "classicDark": "Klasik koyu"
+    },
+    "classicFollowSystem": "Klasik · Sistemi izle",
+    "moreThemes": "Daha fazla tema",
+    "refreshNotice": {
+      "title": "Yeni görünüm: Dusk & Ember",
+      "content": "CSBU WorkMate 3.0 varsayılan olarak Ember (açık) ve Dusk (koyu) temalarını kullanır. İstediğiniz zaman Ayarlar › Görünüm bölümünden değiştirebilirsiniz.",
+      "keep": "Yeni görünümü koru",
+      "restoreClassic": "Klasik görünüme dön"
+    }
   },
   "customModelSupportNote": "Not: Şu anda yalnızca CSBU WorkMate özel modelleri destekliyor.",
   "webui.allowRemote": "Uzaktan Erişime İzin Ver",
