@@ -5,6 +5,7 @@
  */
 
 import { conversation, sessionImport, type IImportedSessionSummary } from '@/common/adapter/ipcBridge';
+import { seedHostJournal } from '@/common/sessionImport';
 import { isElectronDesktop } from '@/renderer/utils/platform';
 import { Alert, Button, Message, Space, Table, Typography } from '@arco-design/web-react';
 import React, { useCallback, useEffect, useState } from 'react';
@@ -71,6 +72,15 @@ const SessionImportSection: React.FC = () => {
         conversation_id: created.id,
         source: row.source,
         path: row.path,
+      });
+
+      // Best-effort Host journal seed so WebUI/remote can hydrate. Local
+      // transcript copy remains the fallback on older Cores (404/405).
+      await seedHostJournal({
+        conversation_id: created.id,
+        items: preview.transcript.items,
+        source: row.source,
+        source_session_id: preview.meta.source_session_id,
       });
 
       await conversation.update.invoke({

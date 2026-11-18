@@ -14,3 +14,5 @@ export {
 export { parseClaudeCodeJsonl } from './claudeCodeJsonl';
 export { parseCodexRolloutJsonl } from './codexRolloutJsonl';
 export { itemsToJournalTranscript } from './toJournalTranscript';
+export { seedHostJournal, transcriptItemsToSeedPayload } from './seedHostJournal';
+export type { SeedHostJournalResult } from './seedHostJournal';
