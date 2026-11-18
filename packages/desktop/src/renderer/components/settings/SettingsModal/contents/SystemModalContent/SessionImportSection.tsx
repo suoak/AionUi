@@ -115,9 +115,7 @@ const SessionImportSection: React.FC = () => {
 
   return (
     <div className='py-12px border-t border-[var(--color-border-2)]' data-testid='session-import-section'>
-      <Title heading={6}>
-        {t('settings.sessionImport.title', { defaultValue: 'Import Claude / Codex sessions' })}
-      </Title>
+      <Title heading={6}>{t('settings.sessionImport.title', { defaultValue: 'Import Claude / Codex sessions' })}</Title>
       <Text type='secondary' className='block mb-8px'>
         {t('settings.sessionImport.description', {
           defaultValue:
