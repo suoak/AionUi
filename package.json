@@ -2,8 +2,8 @@
   "name": "csbu-workmate",
   "version": "2.6.0",
   "description": "CSBU's internal AI workspace for everyday office tasks.",
-  "homepage": "https://github.com/suoak/AionUi",
   "keywords": [],
+  "homepage": "https://github.com/suoak/AionUi",
   "license": "Apache-2.0",
   "author": {
     "name": "CSBU"
