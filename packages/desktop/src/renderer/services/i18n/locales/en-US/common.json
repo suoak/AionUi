@@ -295,6 +295,7 @@
     "bound_service_invalid_snapshot": "The extension's list of signed files is invalid, so the service was not started. Reinstall the extension or contact its publisher.",
     "bound_service_signed_snapshot_inconclusive": "The signed description of this service is incomplete or ambiguous, so it was not started. Contact the extension's publisher.",
     "bound_service_integrity_required": "This service is not covered by the extension's signature, so it was not started. Contact the extension's publisher.",
+    "unsigned_extension_code_disabled": "This extension is not signed, so its hooks and background services do not run in this build. An administrator can allow them with WORKMATE_ALLOW_UNSIGNED_EXTENSION_CODE=1.",
     "bound_service_entry_mismatch": "The service does not match its signed description, so it was not started. Reinstall the extension from the WorkMate hub.",
     "bound_service_entry_missing": "The service's program file is missing from the installation. Reinstall the extension from the WorkMate hub.",
     "bound_service_entry_unreadable": "The service's program file could not be read safely. Reinstall the extension from the WorkMate hub.",

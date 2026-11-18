@@ -674,6 +674,7 @@ export type I18nKey =
   | 'common.extensionReasonCodes.supportCode'
   | 'common.extensionReasonCodes.theme_css_invalid_path'
   | 'common.extensionReasonCodes.theme_css_not_utf8'
+  | 'common.extensionReasonCodes.unsigned_extension_code_disabled'
   | 'common.extensionReasonCodes.verified_asset_integrity_mismatch'
   | 'common.extensionReasonCodes.verified_asset_invalid_snapshot'
   | 'common.extensionReasonCodes.verified_asset_missing'

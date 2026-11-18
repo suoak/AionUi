@@ -295,6 +295,7 @@
     "bound_service_invalid_snapshot": "這個擴充功能的已簽署檔案清單無效，服務沒有啟動。請重新安裝，或聯絡發行者。",
     "bound_service_signed_snapshot_inconclusive": "這個服務的簽署資訊不完整或不明確，因此沒有啟動。請聯絡擴充功能發行者。",
     "bound_service_integrity_required": "這個服務不在擴充功能簽署的涵蓋範圍內，因此沒有啟動。請聯絡擴充功能發行者。",
+    "unsigned_extension_code_disabled": "此擴充功能未簽署，因此在此版本中不會執行其掛鉤和背景服務。管理員可設定 WORKMATE_ALLOW_UNSIGNED_EXTENSION_CODE=1 允許執行。",
     "bound_service_entry_mismatch": "這個服務與其簽署描述不一致，因此沒有啟動。請從 WorkMate 擴充中心重新安裝。",
     "bound_service_entry_missing": "這個服務的程式檔已從安裝中遺失。請從 WorkMate 擴充中心重新安裝。",
     "bound_service_entry_unreadable": "這個服務的程式檔無法安全讀取。請從 WorkMate 擴充中心重新安裝。",
