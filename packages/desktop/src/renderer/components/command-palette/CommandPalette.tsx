@@ -4,11 +4,16 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Input, Modal, Typography } from '@arco-design/web-react';
+import { ipcBridge } from '@/common';
+import { Message, Input, Modal, Typography } from '@arco-design/web-react';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
+import { useConversationContextSafe } from '@/renderer/hooks/context/ConversationContext';
+import { usePreviewLauncher } from '@/renderer/hooks/file/usePreviewLauncher';
+import { useExtensionPanelSession } from '@/renderer/hooks/system/ExtensionPanelSessionContext';
 import {
+  DYNAMIC_GROUPS,
   PALETTE_GROUP_ORDER,
   STATIC_PALETTE_COMMANDS,
   buildPaletteSections,
@@ -16,6 +21,7 @@ import {
   type PaletteCommand,
 } from './commandRegistry';
 import type { DynamicSourceKey } from './dynamicCommands';
+import { runPaletteCommand } from './runPaletteCommand';
 import { usePaletteDynamicCommands } from './usePaletteDynamicCommands';
 
 const { Text } = Typography;
@@ -33,11 +39,11 @@ const GROUP_LABEL_DEFAULTS: Record<CommandGroup, string> = {
   navigation: 'Navigation',
   sessions: 'Sessions',
   workItems: 'Work items',
+  files: 'Files',
   agents: 'Agents',
+  commands: 'Commands',
   settings: 'Settings',
 };
-
-const DYNAMIC_GROUPS: ReadonlySet<CommandGroup> = new Set<CommandGroup>(['sessions', 'workItems', 'agents']);
 
 const CommandPalette: React.FC<CommandPaletteProps> = ({
   open,
@@ -47,11 +53,16 @@ const CommandPalette: React.FC<CommandPaletteProps> = ({
 }) => {
   const navigate = useNavigate();
   const { t } = useTranslation();
+  const conversation = useConversationContextSafe();
+  const { launchPreview } = usePreviewLauncher();
+  const { openPanel } = useExtensionPanelSession();
   const [query, setQuery] = useState('');
   const [activeIndex, setActiveIndex] = useState(0);
   const inputRef = useRef<HTMLInputElement | null>(null);
   const listRef = useRef<HTMLDivElement | null>(null);
-  const { commands: dynamicCommands, sources } = usePaletteDynamicCommands(open, dynamic);
+  const { commands: dynamicCommands, sources } = usePaletteDynamicCommands(open, dynamic, {
+    workspace: conversation?.workspace,
+  });
 
   const allCommands = useMemo(
     () => (dynamic ? [...commands, ...dynamicCommands] : [...commands]),
@@ -94,10 +105,19 @@ const CommandPalette: React.FC<CommandPaletteProps> = ({
   }, [activeIndex]);
 
   const runCommand = (cmd: PaletteCommand) => {
-    if (cmd.path) {
-      navigate(cmd.path);
-    }
-    onClose();
+    void runPaletteCommand(cmd, {
+      navigate,
+      launchPreview,
+      invokeCommand: (req) => ipcBridge.extensions.invokeCommand.invoke(req),
+      openPanel,
+    })
+      .then(() => {
+        onClose();
+      })
+      .catch((error: unknown) => {
+        console.warn('[command-palette] command failed', error);
+        Message.error(t('common.commandPalette.actionFailed', { defaultValue: 'Could not run that command' }));
+      });
   };
 
   const onKeyDown = (event: React.KeyboardEvent) => {
@@ -148,7 +168,7 @@ const CommandPalette: React.FC<CommandPaletteProps> = ({
         value={query}
         onChange={setQuery}
         onKeyDown={onKeyDown}
-        placeholder={t('common.commandPalette.placeholder', { defaultValue: 'Search sessions, work items, agents…' })}
+        placeholder={t('common.commandPalette.placeholder', { defaultValue: 'Search sessions, work items, files, agents, commands…' })}
         allowClear
         data-testid='command-palette-input'
         autoComplete='off'
@@ -172,7 +192,9 @@ const CommandPalette: React.FC<CommandPaletteProps> = ({
             </Text>
             {section.commands.map((cmd) => {
               const index = flatIndex++;
-              const subtitle = cmd.subtitleKey ? t(cmd.subtitleKey, { defaultValue: '' }) : '';
+              const subtitle = cmd.subtitleKey
+                ? t(cmd.subtitleKey, { defaultValue: '' })
+                : (cmd.subtitle ?? '');
               return (
                 <button
                   key={cmd.id}

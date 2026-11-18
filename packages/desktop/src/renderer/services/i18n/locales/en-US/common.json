@@ -63,7 +63,7 @@
   "more": "More",
   "refresh": "Refresh",
   "commandPalette": {
-    "placeholder": "Search sessions, work items, agents…",
+    "placeholder": "Search sessions, work items, files, agents, commands…",
     "empty": "No matching commands",
     "loading": "Loading…",
     "untitled": "Untitled",
@@ -71,14 +71,17 @@
       "navigation": "Navigation",
       "sessions": "Sessions",
       "workItems": "Work items",
+      "files": "Files",
       "agents": "Agents",
+      "commands": "Commands",
       "settings": "Settings"
     },
     "badge": {
       "scheduled": "Scheduled",
       "scheduledPaused": "Scheduled · paused",
       "agent": "Agent"
-    }
+    },
+    "actionFailed": "Could not run that command"
   },
   "readOnly": "Read only",
   "tray.showWindow": "Show CSBU WorkMate",

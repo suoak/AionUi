@@ -63,7 +63,7 @@
   "more": "더보기",
   "refresh": "새로고침",
   "commandPalette": {
-    "placeholder": "세션, 작업 항목, 에이전트 검색…",
+    "placeholder": "세션, 작업 항목, 파일, 에이전트, 명령 검색…",
     "empty": "일치하는 명령이 없습니다",
     "loading": "불러오는 중…",
     "untitled": "제목 없음",
@@ -72,13 +72,16 @@
       "sessions": "세션",
       "workItems": "작업 항목",
       "agents": "에이전트",
-      "settings": "설정"
+      "settings": "설정",
+      "files": "파일",
+      "commands": "명령"
     },
     "badge": {
       "scheduled": "예약됨",
       "scheduledPaused": "예약됨 · 일시 중지",
       "agent": "에이전트"
-    }
+    },
+    "actionFailed": "명령을 실행할 수 없습니다"
   },
   "readOnly": "읽기 전용",
   "tray.showWindow": "CSBU WorkMate 표시",

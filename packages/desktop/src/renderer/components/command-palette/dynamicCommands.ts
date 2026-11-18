@@ -8,19 +8,24 @@ import { ipcBridge } from '@/common';
 import type { PaletteCommand } from './commandRegistry';
 
 /**
- * E11 PR2 — dynamic palette entries (Sessions, Work items, Agents).
+ * Dynamic palette entries (Sessions, Work items, Files, Agents, plugin commands).
  *
- * Read-only in-app navigation only (D11-k3): every loader goes through an
- * existing renderer bridge the pages already use, never a new route, and every
- * result becomes a `path` the router opens. Loaders fail soft: a rejected or
- * malformed response yields `[]` so the static commands stay usable.
+ * In-app only (D11-k3): every loader goes through an existing renderer bridge
+ * the pages already use, never a new route, and never a shell. Sessions / work
+ * items / agents still open a `path`. Files open the in-app preview; plugin
+ * commands POST `/api/extensions/commands/invoke` and may open a panel.
+ * Loaders fail soft: a rejected or malformed response yields `[]` so the
+ * static commands stay usable.
  */
 
 /** How many rows each source keeps in memory (display caps are smaller). */
 export const DYNAMIC_SOURCE_CAP = 50;
 const SESSIONS_FETCH_LIMIT = 100;
 
-export type DynamicSourceKey = 'sessions' | 'workItems' | 'agents';
+export type DynamicSourceKey = 'sessions' | 'workItems' | 'files' | 'agents' | 'commands';
+
+export type DynamicLoaderContext = { workspace?: string };
+
 
 const byRecencyDesc = (a: PaletteCommand, b: PaletteCommand) => (b.recency ?? 0) - (a.recency ?? 0);
 
@@ -142,8 +147,67 @@ export async function loadAgentCommands(): Promise<PaletteCommand[]> {
   return out.toSorted(byRecencyDesc).slice(0, DYNAMIC_SOURCE_CAP);
 }
 
-export const DYNAMIC_LOADERS: Record<DynamicSourceKey, () => Promise<PaletteCommand[]>> = {
-  sessions: loadSessionCommands,
-  workItems: loadWorkItemCommands,
-  agents: loadAgentCommands,
+/**
+ * Workspace files for the current conversation. Empty when no workspace is
+ * bound (palette on the board / settings / home). Opens via in-app preview.
+ */
+export async function loadFileCommands(workspace?: string): Promise<PaletteCommand[]> {
+  const root = clean(workspace);
+  if (!root) return [];
+  const files = await ipcBridge.fs.listWorkspaceFiles.invoke({ root });
+  if (!Array.isArray(files)) return [];
+  return files
+    .filter((file) => file && clean(file.relativePath) && clean(file.name))
+    .map((file): PaletteCommand => {
+      const relativePath = clean(file.relativePath);
+      return {
+        id: `file.${relativePath}`,
+        title: clean(file.name),
+        group: 'files',
+        action: 'open-file',
+        file: {
+          name: clean(file.name),
+          relativePath,
+          fullPath: clean(file.fullPath),
+        },
+        subtitle: relativePath,
+        keywords: [relativePath, 'file', 'preview'],
+      };
+    })
+    .slice(0, DYNAMIC_SOURCE_CAP);
+}
+
+/**
+ * Curated plugin commands from GET /api/extensions/commands (Host already
+ * applies listing authorization). Invoke is a Host ack and may hint a panel.
+ */
+export async function loadPluginCommands(): Promise<PaletteCommand[]> {
+  const items = await ipcBridge.extensions.getCommands.invoke();
+  if (!Array.isArray(items)) return [];
+  return items
+    .filter((item) => item && clean(item.id) && clean(item.extensionName))
+    .map((item): PaletteCommand => {
+      const id = clean(item.id);
+      const extensionName = clean(item.extensionName);
+      const title = clean(item.title) || id;
+      const keybinding = clean(item.keybinding);
+      return {
+        id: `command.${extensionName}.${id}`,
+        title,
+        group: 'commands',
+        action: 'invoke-command',
+        pluginCommand: { id, extensionName },
+        subtitle: [extensionName, keybinding].filter(Boolean).join(' · '),
+        keywords: [extensionName, keybinding, id, 'plugin', 'command', 'extension'].filter(Boolean),
+      };
+    })
+    .slice(0, DYNAMIC_SOURCE_CAP);
+}
+
+export const DYNAMIC_LOADERS: Record<DynamicSourceKey, (ctx?: DynamicLoaderContext) => Promise<PaletteCommand[]>> = {
+  sessions: () => loadSessionCommands(),
+  workItems: () => loadWorkItemCommands(),
+  agents: () => loadAgentCommands(),
+  files: (ctx) => loadFileCommands(ctx?.workspace),
+  commands: () => loadPluginCommands(),
 };
