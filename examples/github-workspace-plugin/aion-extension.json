@@ -9,7 +9,7 @@
   "apiVersion": "1",
   "entryPoint": "src/activate.js",
   "engine": {
-    "aionui": "^2.6.0"
+    "aionui": ">=2.6.0, <4.0.0"
   },
   "lifecycle": {
     "onActivate": "src/activate.js",
