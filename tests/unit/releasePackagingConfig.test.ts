@@ -160,6 +160,7 @@ describe('release packaging configuration', () => {
     const packageJson = JSON.parse(readProjectFile('package.json')) as {
       author: { name: string };
       productName: string;
+      homepage: string;
     };
     const afterPack = readProjectFile('scripts/afterPack.js');
     const afterSign = readProjectFile('scripts/afterSign.js');
@@ -168,6 +169,9 @@ describe('release packaging configuration', () => {
 
     expect(packageJson.author.name).toBe('CSBU');
     expect(packageJson.productName).toBe('CSBU WorkMate');
+    expect(packageJson.homepage, 'Linux packages need homepage metadata even without a git remote').toBe(
+      'https://github.com/suoak/AionUi'
+    );
     expect(afterPack).not.toContain('锐捷Codex');
     expect(afterSign).not.toContain('setWindowsExecutableMetadata');
     expect(buildScript).not.toContain('锐捷Codex');

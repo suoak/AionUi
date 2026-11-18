@@ -25,7 +25,7 @@ const isExternalSettingsUrl = (url?: string): boolean => /^https?:\/\//i.test(ur
  */
 const ExtensionSettingsPage: React.FC = () => {
   const { tabId } = useParams<{ tabId: string }>();
-  const { i18n } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { resolveExtTabName } = useExtI18n();
   const extensionTabs = useExtensionSettingsTabs();
   const [loading, setLoading] = useState(true);
@@ -33,7 +33,7 @@ const ExtensionSettingsPage: React.FC = () => {
 
   const { tab, error } = useMemo<{ tab: IExtensionSettingsTab | null; error: string | null }>(() => {
     if (!tabId) {
-      return { tab: null, error: 'No tab ID provided' };
+      return { tab: null, error: t('settings.extensionSettings.tabNotFound') };
     }
     // While shared cache is still warming up (empty on first mount), defer
     // the "not found" error so a freshly-loaded tab list can resolve it.
@@ -44,8 +44,8 @@ const ExtensionSettingsPage: React.FC = () => {
     if (found) {
       return { tab: found, error: null };
     }
-    return { tab: null, error: `Settings tab "${tabId}" not found` };
-  }, [tabId, extensionTabs]);
+    return { tab: null, error: t('settings.extensionSettings.tabNotFound') };
+  }, [tabId, extensionTabs, t]);
 
   const resolvedUrl = useExtensionAssetSessionUrl(tab?.url, tab?.extensionName);
   const isExternalTab = isExternalSettingsUrl(resolvedUrl);
@@ -110,7 +110,7 @@ const ExtensionSettingsPage: React.FC = () => {
       <div className='relative w-full h-full min-h-400px'>
         {!tab && !error && (
           <div className='absolute inset-0 flex items-center justify-center text-t-secondary text-14px'>
-            <span className='animate-pulse'>Loading…</span>
+            <span className='animate-pulse'>{t('settings.extensionSettings.loading')}</span>
           </div>
         )}
         {error && <div className='flex items-center justify-center h-full text-t-secondary text-14px'>{error}</div>}
@@ -132,7 +132,7 @@ const ExtensionSettingsPage: React.FC = () => {
             <>
               {(loading || probe.status !== 'ready') && (
                 <div className='absolute inset-0 flex items-center justify-center text-t-secondary text-14px'>
-                  <span className='animate-pulse'>Loading…</span>
+                  <span className='animate-pulse'>{t('settings.extensionSettings.loading')}</span>
                 </div>
               )}
               {probe.status === 'ready' && (
@@ -152,7 +152,7 @@ const ExtensionSettingsPage: React.FC = () => {
                     opacity: loading ? 0 : 1,
                     transition: 'opacity 150ms ease-in',
                   }}
-                  title={`Extension settings: ${resolveExtTabName(tab)}`}
+                  title={t('settings.extensionSettings.iframeTitle', { name: resolveExtTabName(tab) })}
                 />
               )}
             </>

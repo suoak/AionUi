@@ -1,4 +1,9 @@
 {
+  "extensionSettings": {
+    "loading": "載入中…",
+    "tabNotFound": "找不到這個設定頁，它可能已被移除。",
+    "iframeTitle": "擴充功能設定：{{name}}"
+  },
   "imageGenSupportedTooltipOpenAI": "相容 OpenAI Images API 的模型：GPT Image、Grok Imagine、Seedream、FLUX、Stable Diffusion、Recraft、Qwen Image、Ideogram 及其他閘道模型",
   "imageGenCustomModelWarning": "自訂模型尚未驗證；僅當供應商透過相容的 Images API 或聊天回應傳回圖片時才能運作。",
   "imageGenCompatibilityNote": "未實作相容 Images API 或聊天回應的廠商原生介面暫不支援直連。",

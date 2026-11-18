@@ -82,7 +82,7 @@
   },
   "readOnly": "只读",
   "tray.showWindow": "显示 CSBU WorkMate",
-  "tray.newChat": "新建对话",
+  "tray.newChat": "新建会话",
   "tray.closeToTray": "隐藏到托盘",
   "tray.about": "关于 CSBU WorkMate",
   "tray.restart": "重启应用",
