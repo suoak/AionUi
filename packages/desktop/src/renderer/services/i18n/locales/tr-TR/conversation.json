@@ -1724,5 +1724,21 @@
         "prompt": "Review the repository at {{target}} for correctness, security, maintainability, and missing tests. Do not change source files. Write the human-readable report to {{output}} (summary, then findings ordered by severity with file and line references and a concrete fix) and the same findings to {{findings}} as JSON: {\"summary\": string, \"findings\": [{\"severity\": \"blocker\" | \"major\" | \"minor\" | \"info\", \"title\": string, \"file\"?: string, \"line\"?: integer, \"recommendation\"?: string}]}. Report only real, verifiable issues."
       }
     }
+  },
+  "worktreeTerminal": {
+    "title": "Terminal",
+    "start": "Start",
+    "stop": "Stop",
+    "show": "Show",
+    "hide": "Hide",
+    "attach": "Attach agent",
+    "detach": "Detach agent",
+    "openWorkspaceWarning": "Open a project workspace to start the worktree terminal",
+    "ptyUnavailable": "PTY unavailable",
+    "attachedHint": "Agent can read this terminal output while attached",
+    "detachedHint": "Agent attach removed — agent cannot read this terminal",
+    "desktopOnly": "Worktree terminal is desktop-only in this version. Open CSBU WorkMate desktop to use an embedded terminal for the current project worktree.",
+    "attachHelp": "Agent cannot read this terminal unless you click Attach agent. Uses the system shell via node-pty (MIT) + xterm.",
+    "selectWorkspace": "Select a workspace to choose the PTY working directory."
   }
 }

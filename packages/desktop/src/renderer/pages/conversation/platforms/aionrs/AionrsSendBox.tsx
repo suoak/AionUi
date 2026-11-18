@@ -56,6 +56,7 @@ import { Brain, Lightning, MagicHat, Shield } from '@icon-park/react';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { classifyConversationBusyError } from '../conversationBusyError';
+import { withAttachedTerminalContext } from '@/renderer/utils/chat/withAttachedTerminalContext';
 import { useAionrsMessage } from './useAionrsMessage';
 import type { AionrsModelSelection } from './useAionrsModelSelection';
 
@@ -264,6 +265,7 @@ const AionrsSendBox: React.FC<{
   const executeCommand = useCallback(
     async ({ input, files, sessions }: Pick<ConversationCommandQueueItem, 'input' | 'files' | 'sessions'>) => {
       if (teamPermission) await teamPermission.warmupSession();
+      const payloadInput = await withAttachedTerminalContext(input, conversationContext?.workspace);
       if (!current_model?.use_model) {
         Message.warning(t('conversation.chat.noModelSelected'));
         throw new Error('No model selected');
@@ -275,7 +277,7 @@ const AionrsSendBox: React.FC<{
       try {
         void checkAndUpdateTitle(conversation_id, input);
         if (teamSendMessage) {
-          await teamSendMessage({ input, files });
+          await teamSendMessage({ input: payloadInput, files });
           emitter.emit('chat.history.refresh');
           if (files.length > 0) {
             emitter.emit('aionrs.workspace.refresh');
@@ -286,7 +288,7 @@ const AionrsSendBox: React.FC<{
         markSendStarted();
         setWaitingResponse(true);
         const res = await ipcBridge.conversation.sendMessage.invoke({
-          input,
+          input: payloadInput,
           conversation_id,
           files,
           // `@@` references. Omitting this makes the whole feature silently
@@ -331,6 +333,7 @@ const AionrsSendBox: React.FC<{
       setWaitingResponse,
       t,
       teamPermission,
+      conversationContext,
       teamSendMessage,
     ]
   );

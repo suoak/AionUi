@@ -53,6 +53,7 @@ import { Brain, Lightning, MagicHat, Shield } from '@icon-park/react';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { classifyConversationBusyError } from '../conversationBusyError';
+import { withAttachedTerminalContext } from '@/renderer/utils/chat/withAttachedTerminalContext';
 import { buildSendFailureError } from './buildSendFailureError';
 import { useAcpInitialMessage } from './useAcpInitialMessage';
 import type { UseAcpMessageReturn } from './useAcpMessage';
@@ -295,11 +296,12 @@ const AcpSendBox: React.FC<{
     async ({ input, files, sessions }: Pick<ConversationCommandQueueItem, 'input' | 'files' | 'sessions'>) => {
       // Plain user text; the backend resolves each ChatFileRef and injects the
       // [[AION_FILES]] marker at the send edge (no front-end path/marker building).
+      const payloadInput = await withAttachedTerminalContext(input, conversationContext?.workspace);
       try {
         if (teamPermission) await teamPermission.warmupSession();
         void checkAndUpdateTitle(conversation_id, input);
         if (teamSendMessage) {
-          await teamSendMessage({ input, files });
+          await teamSendMessage({ input: payloadInput, files });
           emitter.emit('chat.history.refresh');
           if (files.length > 0) {
             emitter.emit('acp.workspace.refresh');
@@ -310,7 +312,7 @@ const AcpSendBox: React.FC<{
         markSendStarted();
         setAiProcessing(true);
         const result = await ipcBridge.acpConversation.sendMessage.invoke({
-          input,
+          input: payloadInput,
           conversation_id,
           files,
           // `@@` references. Dropping this here is a silent failure: the agent
@@ -410,6 +412,7 @@ Please check your local CLI tool authentication status`,
       setAiProcessing,
       t,
       teamPermission,
+      conversationContext,
       teamSendMessage,
     ]
   );
