@@ -1950,5 +1950,20 @@
     "connectConfirmTitle": "连接到远程 Host？",
     "connectConfirmContent": "CSBU WorkMate 将重新加载，并改为使用 {{url}} 上的 Host。请使用工作区账号登录。本地 Host 会在后台继续运行。",
     "connectedBanner": "已连接到远程 Host（{{url}}）。本地 Host 仍在后台运行。"
+  },
+  "sessionImport": {
+    "title": "导入 Claude / Codex 会话",
+    "desktopOnly": "本地会话导入仅支持桌面端。",
+    "description": "只读扫描 ~/.claude/projects 和 ~/.codex/sessions，转换为 WorkMate 会话记录；不会修改源文件。",
+    "hydrateHint": "当 Host 日志为空时，导入的会话会从本地会话副本加载。",
+    "refresh": "刷新",
+    "source": "来源",
+    "label": "标签",
+    "size": "大小",
+    "sizeKb": "{{size}} KB",
+    "import": "导入",
+    "noTurns": "该会话文件中没有模型可见的回合",
+    "importedName": "[已导入] {{id}}",
+    "success": "已导入 {{count}} 个回合 → {{title}}"
   }
 }

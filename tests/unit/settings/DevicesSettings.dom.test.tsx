@@ -189,7 +189,7 @@ describe('DevicesSettings', () => {
       platform: 'android',
       expires_at: offer.expires_at,
     });
-    fireEvent.click(screen.getByTestId('device-pair-reject'));
+    fireEvent.click(await screen.findByTestId('device-pair-reject'));
     await waitFor(() => expect(mocks.reject).toHaveBeenCalledWith({ offer_id: 'offer_1' }));
     expect(await screen.findByTestId('device-pair-result')).toHaveAttribute('data-status', 'rejected');
     expect(screen.getByTestId('device-pair-start')).toHaveTextContent('settings.devices.pair.regenerate');
