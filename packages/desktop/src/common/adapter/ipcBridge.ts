@@ -3450,6 +3450,22 @@ export interface IExtensionPanel {
   icon?: string;
 }
 
+/** Resolved command from GET /api/extensions/commands (B3-filtered). */
+export interface IExtensionCommand {
+  extensionName: string;
+  id: string;
+  title: string;
+  keybinding?: string;
+  when?: string;
+}
+
+/** POST /api/extensions/commands/invoke — Host ack; may hint a panel to open. */
+export interface IExtensionCommandInvokeResult {
+  status: string;
+  command: IExtensionCommand;
+  openPanel?: IExtensionPanel;
+}
+
 /** Resolved work-panel / sidebar view from GET /api/extensions/work-panel-views (B3-filtered). */
 export interface IExtensionWorkPanelView {
   extensionName: string;
@@ -3505,6 +3521,12 @@ export const extensions = {
   getMcpServers: httpGet<Record<string, unknown>[], void>('/api/extensions/mcp-servers'),
   getSkills: httpGet<Array<{ name: string; description: string; location: string }>, void>('/api/extensions/skills'),
   getSettingsTabs: httpGet<IExtensionSettingsTab[], void>('/api/extensions/settings-tabs'),
+  /** Plugin Contract v1 command contributions. Core already applies listing authorization; no new routes. */
+  getCommands: httpGet<IExtensionCommand[], void>('/api/extensions/commands'),
+  /** Host ack for a curated command; may return an `openPanel` hint. */
+  invokeCommand: httpPost<IExtensionCommandInvokeResult, { id: string; extensionName?: string }>(
+    '/api/extensions/commands/invoke'
+  ),
   /** Standalone panels. Core already applies B3 listing authorization; no new routes. */
   getPanels: httpGet<IExtensionPanel[], void>('/api/extensions/panels'),
   /** Work-panel / sidebar views. Core already applies B3 listing authorization; no new routes. */

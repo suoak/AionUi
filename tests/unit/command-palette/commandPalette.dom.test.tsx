@@ -14,6 +14,12 @@ const mocks = vi.hoisted(() => ({
   board: vi.fn(),
   cron: vi.fn(),
   agents: vi.fn(),
+  listFiles: vi.fn(),
+  getCommands: vi.fn(),
+  invokeCommand: vi.fn(),
+  launchPreview: vi.fn(),
+  openPanel: vi.fn(),
+  conversation: vi.fn(() => null as { workspace?: string } | null),
 }));
 
 vi.mock('@/common', () => ({
@@ -22,7 +28,24 @@ vi.mock('@/common', () => ({
     taskSession: { board: { get: { invoke: mocks.board } } },
     cron: { listJobs: { invoke: mocks.cron } },
     agentCenter: { list: { invoke: mocks.agents } },
+    fs: { listWorkspaceFiles: { invoke: mocks.listFiles } },
+    extensions: {
+      getCommands: { invoke: mocks.getCommands },
+      invokeCommand: { invoke: mocks.invokeCommand },
+    },
   },
+}));
+
+vi.mock('@/renderer/hooks/file/usePreviewLauncher', () => ({
+  usePreviewLauncher: () => ({ launchPreview: mocks.launchPreview, loading: false, errorKind: null }),
+}));
+
+vi.mock('@/renderer/hooks/context/ConversationContext', () => ({
+  useConversationContextSafe: () => mocks.conversation(),
+}));
+
+vi.mock('@/renderer/hooks/system/ExtensionPanelSessionContext', () => ({
+  useExtensionPanelSession: () => ({ openPanel: mocks.openPanel }),
 }));
 
 vi.mock('react-router-dom', () => ({ useNavigate: () => mocks.navigate }));
@@ -90,6 +113,11 @@ const seedDefaults = () => {
       scope === 'mine' ? [{ assistant: { id: 'a1', name: 'Writer', name_i18n: {}, enabled: true }, meta: {} }] : []
     )
   );
+  mocks.listFiles.mockResolvedValue([]);
+  mocks.getCommands.mockResolvedValue([]);
+  mocks.invokeCommand.mockResolvedValue({ status: 'accepted' });
+  mocks.launchPreview.mockResolvedValue(undefined);
+  mocks.conversation.mockReturnValue(null);
 };
 
 describe('CommandPalette dynamic groups (E11 PR2)', () => {
@@ -137,7 +165,7 @@ describe('CommandPalette dynamic groups (E11 PR2)', () => {
     expect(selectedId()).toBe('command-palette-item-session.c1');
     key('Enter');
     expect(mocks.navigate).toHaveBeenCalledWith('/conversation/c1');
-    expect(onClose).toHaveBeenCalled();
+    await waitFor(() => expect(onClose).toHaveBeenCalled());
   });
 
   it('arrow keys walk the flattened group order and click opens work items / agents', async () => {
@@ -217,5 +245,75 @@ describe('CommandPalette dynamic groups (E11 PR2)', () => {
     now.mockReturnValue(1_000_000 + PALETTE_DYNAMIC_TTL_MS + 1);
     rerender(<CommandPalette open onClose={vi.fn()} />);
     await waitFor(() => expect(mocks.conversations).toHaveBeenCalledTimes(2));
+  });
+});
+
+describe('CommandPalette files and plugin commands', () => {
+  beforeEach(() => {
+    for (const m of Object.values(mocks)) m.mockReset();
+    resetPaletteDynamicCache();
+    vi.spyOn(console, 'warn').mockImplementation(() => {});
+    seedDefaults();
+  });
+  afterEach(() => {
+    cleanup();
+    vi.restoreAllMocks();
+  });
+
+  it('does not list files when no conversation workspace is bound', async () => {
+    render(<CommandPalette open onClose={vi.fn()} />);
+    await screen.findByTestId('command-palette-item-session.c0');
+    expect(mocks.listFiles).not.toHaveBeenCalled();
+    expect(groups()).toEqual(['navigation', 'sessions', 'workItems', 'agents', 'settings']);
+  });
+
+  it('lists workspace files and opens the in-app preview', async () => {
+    mocks.conversation.mockReturnValue({ workspace: '/ws' });
+    mocks.listFiles.mockResolvedValue([
+      { name: 'notes.md', relativePath: 'docs/notes.md', fullPath: '/ws/docs/notes.md' },
+    ]);
+    const onClose = vi.fn();
+    render(<CommandPalette open onClose={onClose} />);
+    await screen.findByTestId('command-palette-item-file.docs/notes.md');
+    expect(groups()).toContain('files');
+    expect(mocks.listFiles).toHaveBeenCalledWith({ root: '/ws' });
+    fireEvent.click(screen.getByTestId('command-palette-item-file.docs/notes.md'));
+    await waitFor(() => expect(mocks.launchPreview).toHaveBeenCalledTimes(1));
+    expect(mocks.launchPreview).toHaveBeenCalledWith(
+      expect.objectContaining({
+        relativePath: 'docs/notes.md',
+        originalPath: '/ws/docs/notes.md',
+        file_name: 'notes.md',
+        contentType: 'markdown',
+        editable: true,
+      })
+    );
+    expect(mocks.navigate).not.toHaveBeenCalled();
+    expect(onClose).toHaveBeenCalled();
+  });
+
+  it('invokes a plugin command and opens the hinted panel', async () => {
+    mocks.getCommands.mockResolvedValue([{ id: 'ext-notes-open', extensionName: 'notes', title: 'Open notes' }]);
+    mocks.invokeCommand.mockResolvedValue({
+      status: 'accepted',
+      command: { id: 'ext-notes-open', extensionName: 'notes', title: 'Open notes' },
+      openPanel: {
+        id: 'ext-notes-panel',
+        extensionName: 'notes',
+        title: 'Notes',
+        entryPoint: '/api/extensions/notes/assets/panel.html',
+      },
+    });
+    const onClose = vi.fn();
+    render(<CommandPalette open onClose={onClose} />);
+    await screen.findByTestId('command-palette-item-command.notes.ext-notes-open');
+    expect(groups()).toContain('commands');
+    fireEvent.click(screen.getByTestId('command-palette-item-command.notes.ext-notes-open'));
+    await waitFor(() =>
+      expect(mocks.invokeCommand).toHaveBeenCalledWith({ id: 'ext-notes-open', extensionName: 'notes' })
+    );
+    expect(mocks.openPanel).toHaveBeenCalledWith('ext-notes-panel');
+    expect(mocks.navigate).not.toHaveBeenCalled();
+    expect(onClose).toHaveBeenCalled();
   });
 });

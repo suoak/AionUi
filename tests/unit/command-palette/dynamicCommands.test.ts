@@ -11,6 +11,8 @@ const mocks = vi.hoisted(() => ({
   board: vi.fn(),
   cron: vi.fn(),
   agents: vi.fn(),
+  listFiles: vi.fn(),
+  getCommands: vi.fn(),
 }));
 
 vi.mock('@/common', () => ({
@@ -19,12 +21,16 @@ vi.mock('@/common', () => ({
     taskSession: { board: { get: { invoke: mocks.board } } },
     cron: { listJobs: { invoke: mocks.cron } },
     agentCenter: { list: { invoke: mocks.agents } },
+    fs: { listWorkspaceFiles: { invoke: mocks.listFiles } },
+    extensions: { getCommands: { invoke: mocks.getCommands } },
   },
 }));
 
 import {
   DYNAMIC_SOURCE_CAP,
   loadAgentCommands,
+  loadFileCommands,
+  loadPluginCommands,
   loadSessionCommands,
   loadWorkItemCommands,
 } from '@/renderer/components/command-palette/dynamicCommands';
@@ -166,5 +172,65 @@ describe('loadAgentCommands', () => {
   it('rejects when every scope fails', async () => {
     mocks.agents.mockRejectedValue(new Error('down'));
     await expect(loadAgentCommands()).rejects.toThrow('down');
+  });
+});
+
+describe('loadFileCommands', () => {
+  it('returns nothing without a workspace and does not touch the bridge', async () => {
+    expect(await loadFileCommands(undefined)).toEqual([]);
+    expect(await loadFileCommands('  ')).toEqual([]);
+    expect(mocks.listFiles).not.toHaveBeenCalled();
+  });
+
+  it('maps workspace files into preview actions and skips malformed rows', async () => {
+    mocks.listFiles.mockResolvedValue([
+      { name: 'README.md', relativePath: 'README.md', fullPath: '/ws/README.md' },
+      { name: 'app.ts', relativePath: 'src/app.ts', fullPath: '/ws/src/app.ts' },
+      { name: '', relativePath: 'empty', fullPath: '/ws/empty' },
+      null,
+    ]);
+    const cmds = await loadFileCommands('/ws');
+    expect(mocks.listFiles).toHaveBeenCalledWith({ root: '/ws' });
+    expect(cmds).toHaveLength(2);
+    expect(cmds[0]).toMatchObject({
+      id: 'file.README.md',
+      title: 'README.md',
+      group: 'files',
+      action: 'open-file',
+      subtitle: 'README.md',
+      file: { name: 'README.md', relativePath: 'README.md', fullPath: '/ws/README.md' },
+    });
+    expect(cmds[1].id).toBe('file.src/app.ts');
+    expect(cmds[1].keywords).toContain('src/app.ts');
+  });
+
+  it('returns empty for a non-array payload', async () => {
+    mocks.listFiles.mockResolvedValue(undefined);
+    expect(await loadFileCommands('/ws')).toEqual([]);
+  });
+});
+
+describe('loadPluginCommands', () => {
+  it('maps Host commands into invoke actions and skips incomplete rows', async () => {
+    mocks.getCommands.mockResolvedValue([
+      { id: 'ext-notes-open', extensionName: 'notes', title: 'Open notes', keybinding: 'Ctrl+Shift+N' },
+      { id: 'missing-ext', title: 'Nope' },
+      { extensionName: 'notes' },
+    ]);
+    const cmds = await loadPluginCommands();
+    expect(cmds).toHaveLength(1);
+    expect(cmds[0]).toMatchObject({
+      id: 'command.notes.ext-notes-open',
+      title: 'Open notes',
+      group: 'commands',
+      action: 'invoke-command',
+      subtitle: 'notes · Ctrl+Shift+N',
+      pluginCommand: { id: 'ext-notes-open', extensionName: 'notes' },
+    });
+  });
+
+  it('returns empty for a non-array payload', async () => {
+    mocks.getCommands.mockResolvedValue({ commands: [] });
+    expect(await loadPluginCommands()).toEqual([]);
   });
 });

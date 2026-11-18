@@ -63,7 +63,7 @@
   "more": "Daha Fazla",
   "refresh": "Yenile",
   "commandPalette": {
-    "placeholder": "Oturum, iş öğesi, ajan ara…",
+    "placeholder": "Oturumlar, iş öğeleri, dosyalar, ajanlar, komutlar ara…",
     "empty": "Eşleşen komut yok",
     "loading": "Yükleniyor…",
     "untitled": "Adsız",
@@ -72,13 +72,16 @@
       "sessions": "Oturumlar",
       "workItems": "İş öğeleri",
       "agents": "Ajanlar",
-      "settings": "Ayarlar"
+      "settings": "Ayarlar",
+      "files": "Dosyalar",
+      "commands": "Komutlar"
     },
     "badge": {
       "scheduled": "Zamanlanmış",
       "scheduledPaused": "Zamanlanmış · duraklatıldı",
       "agent": "Ajan"
-    }
+    },
+    "actionFailed": "Komut çalıştırılamadı"
   },
   "readOnly": "Salt okunur",
   "tray.showWindow": "CSBU WorkMate'yi Göster",

@@ -63,7 +63,7 @@
   "more": "بیشتر",
   "refresh": "بازخوانی",
   "commandPalette": {
-    "placeholder": "جستجوی جلسه‌ها، موارد کاری، عامل‌ها…",
+    "placeholder": "جستجوی نشست‌ها، آیتم‌ها، پرونده‌ها، عامل‌ها، دستورها…",
     "empty": "فرمان منطبقی وجود ندارد",
     "loading": "در حال بارگذاری…",
     "untitled": "بدون عنوان",
@@ -72,13 +72,16 @@
       "sessions": "جلسه‌ها",
       "workItems": "موارد کاری",
       "agents": "عامل‌ها",
-      "settings": "تنظیمات"
+      "settings": "تنظیمات",
+      "files": "پرونده‌ها",
+      "commands": "دستورها"
     },
     "badge": {
       "scheduled": "زمان‌بندی‌شده",
       "scheduledPaused": "زمان‌بندی‌شده · متوقف",
       "agent": "عامل"
-    }
+    },
+    "actionFailed": "اجرای این دستور ممکن نشد"
   },
   "readOnly": "فقط خواندنی",
   "tray.showWindow": "نمایش CSBU WorkMate",

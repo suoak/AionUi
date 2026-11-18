@@ -63,7 +63,7 @@
   "more": "Більше",
   "refresh": "Оновити",
   "commandPalette": {
-    "placeholder": "Пошук сеансів, робочих елементів, агентів…",
+    "placeholder": "Пошук сесій, завдань, файлів, агентів, команд…",
     "empty": "Немає відповідних команд",
     "loading": "Завантаження…",
     "untitled": "Без назви",
@@ -72,13 +72,16 @@
       "sessions": "Сеанси",
       "workItems": "Робочі елементи",
       "agents": "Агенти",
-      "settings": "Налаштування"
+      "settings": "Налаштування",
+      "files": "Файли",
+      "commands": "Команди"
     },
     "badge": {
       "scheduled": "Заплановано",
       "scheduledPaused": "Заплановано · призупинено",
       "agent": "Агент"
-    }
+    },
+    "actionFailed": "Не вдалося виконати команду"
   },
   "readOnly": "Лише читання",
   "tray.showWindow": "Показати CSBU WorkMate",

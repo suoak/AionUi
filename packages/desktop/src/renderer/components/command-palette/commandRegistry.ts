@@ -6,31 +6,52 @@
 
 import { PRIMARY_NAV_ENTRIES } from '@renderer/components/layout/primaryNav/primaryNav';
 
-export type CommandGroup = 'navigation' | 'sessions' | 'workItems' | 'agents' | 'settings';
+export type CommandGroup = 'navigation' | 'sessions' | 'workItems' | 'files' | 'agents' | 'commands' | 'settings';
 
 /** Render + keyboard order of palette groups. */
 export const PALETTE_GROUP_ORDER: readonly CommandGroup[] = [
   'navigation',
   'sessions',
   'workItems',
+  'files',
   'agents',
+  'commands',
   'settings',
 ] as const;
+
+export type PaletteFileRef = {
+  name: string;
+  relativePath: string;
+  fullPath: string;
+};
+
+export type PalettePluginCommandRef = {
+  id: string;
+  extensionName: string;
+};
+
+export type PaletteCommandAction = 'open-file' | 'invoke-command';
 
 export type PaletteCommand = {
   id: string;
   title: string;
   group: CommandGroup;
-  /** react-router path; optional when `run` is provided by the host. */
+  /** react-router path; optional when `action` is provided. */
   path?: string;
+  /** In-app action for dynamic rows (preview a file, invoke a plugin command). Never shell. */
+  action?: PaletteCommandAction;
+  file?: PaletteFileRef;
+  pluginCommand?: PalettePluginCommandRef;
   keywords?: string[];
-  /** i18n key for the secondary line (e.g. board column, "Scheduled"); falls back to the path. */
+  /** i18n key for the secondary line (e.g. board column, "Scheduled"); falls back to subtitle / path. */
   subtitleKey?: string;
+  /** Literal secondary line (relative path, extension name). */
+  subtitle?: string;
   /** Recency hint (ms epoch) used to order dynamic entries; higher = newer. */
   recency?: number;
 };
 
-/** Static navigation commands for Cmd/Ctrl+K v1 (no shell, no plugin wiring). */
+/** Static navigation commands for Cmd/Ctrl+K (files and plugin commands load dynamically; no shell). */
 const PRIMARY_NAV_TITLES: Record<(typeof PRIMARY_NAV_ENTRIES)[number]['key'], string> = {
   sessions: 'Sessions',
   workItems: 'Work items',
@@ -102,7 +123,18 @@ export function filterPaletteCommands(commands: readonly PaletteCommand[], query
   const q = normalizePaletteQuery(query);
   if (!q) return [...commands];
   return commands.filter((cmd) => {
-    const hay = [cmd.title, cmd.id, ...(cmd.keywords ?? [])].join(' ').toLowerCase();
+    const hay = [
+      cmd.title,
+      cmd.id,
+      cmd.subtitle,
+      cmd.file?.relativePath,
+      cmd.file?.name,
+      cmd.pluginCommand?.extensionName,
+      ...(cmd.keywords ?? []),
+    ]
+      .filter((part): part is string => typeof part === 'string' && part.length > 0)
+      .join(' ')
+      .toLowerCase();
     return hay.includes(q);
   });
 }
@@ -112,7 +144,9 @@ export function groupPaletteCommands(commands: readonly PaletteCommand[]): Recor
     navigation: [],
     sessions: [],
     workItems: [],
+    files: [],
     agents: [],
+    commands: [],
     settings: [],
   };
   for (const cmd of commands) {
@@ -143,7 +177,13 @@ export function rankPaletteCommands(commands: readonly PaletteCommand[], query: 
 /** Max entries shown per dynamic group (empty query vs. typed query). */
 export const DYNAMIC_GROUP_LIMIT_IDLE = 5;
 export const DYNAMIC_GROUP_LIMIT_QUERY = 8;
-const DYNAMIC_GROUPS: ReadonlySet<CommandGroup> = new Set(['sessions', 'workItems', 'agents']);
+export const DYNAMIC_GROUPS: ReadonlySet<CommandGroup> = new Set([
+  'sessions',
+  'workItems',
+  'files',
+  'agents',
+  'commands',
+]);
 
 export type PaletteSection = { group: CommandGroup; commands: PaletteCommand[] };
 
