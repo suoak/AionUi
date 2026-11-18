@@ -1722,5 +1722,21 @@
         "prompt": "審查位於 {{target}} 的程式碼儲存庫，關注正確性、安全性、可維護性和缺少的測試。不要修改原始碼。把給人閱讀的報告寫入 {{output}}（先摘要，再依嚴重程度列出問題，附檔案和行號以及具體修正建議），並把同樣的問題以 JSON 寫入 {{findings}}：{\"summary\": string, \"findings\": [{\"severity\": \"blocker\" | \"major\" | \"minor\" | \"info\", \"title\": string, \"file\"?: string, \"line\"?: integer, \"recommendation\"?: string}]}。只回報真實、可驗證的問題。"
       }
     }
+  },
+  "worktreeTerminal": {
+    "title": "終端機",
+    "start": "啟動",
+    "stop": "停止",
+    "show": "顯示",
+    "hide": "隱藏",
+    "attach": "附加智能體",
+    "detach": "取消附加",
+    "openWorkspaceWarning": "請先開啟專案工作區，再啟動工作樹終端機",
+    "ptyUnavailable": "PTY 無法使用",
+    "attachedHint": "已附加：智能體可以讀取此終端機輸出",
+    "detachedHint": "已取消附加：智能體無法讀取此終端機",
+    "desktopOnly": "此版本的工作樹終端機僅支援桌面端。請開啟 CSBU WorkMate 桌面應用程式，在目前專案工作樹中使用內嵌終端機。",
+    "attachHelp": "除非點選「附加智能體」，否則智能體無法讀取此終端機。使用系統 shell，經由 node-pty（MIT）與 xterm。",
+    "selectWorkspace": "請選擇工作區以決定 PTY 的工作目錄。"
   }
 }

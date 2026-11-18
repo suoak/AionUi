@@ -1722,5 +1722,21 @@
         "prompt": "评审位于 {{target}} 的代码仓库，关注正确性、安全性、可维护性和缺失的测试。不要修改源代码。把面向人的报告写入 {{output}}（先摘要，再按严重程度列出问题，附文件和行号以及具体修复建议），并把同样的问题以 JSON 写入 {{findings}}：{\"summary\": string, \"findings\": [{\"severity\": \"blocker\" | \"major\" | \"minor\" | \"info\", \"title\": string, \"file\"?: string, \"line\"?: integer, \"recommendation\"?: string}]}。只报告真实、可验证的问题。"
       }
     }
+  },
+  "worktreeTerminal": {
+    "title": "终端",
+    "start": "启动",
+    "stop": "停止",
+    "show": "显示",
+    "hide": "隐藏",
+    "attach": "附加智能体",
+    "detach": "取消附加",
+    "openWorkspaceWarning": "请先打开项目工作区，再启动工作树终端",
+    "ptyUnavailable": "PTY 不可用",
+    "attachedHint": "已附加：智能体可以读取此终端输出",
+    "detachedHint": "已取消附加：智能体无法读取此终端",
+    "desktopOnly": "此版本的工作树终端仅支持桌面端。请打开 CSBU WorkMate 桌面应用，在当前项目工作树中使用内嵌终端。",
+    "attachHelp": "除非点击「附加智能体」，否则智能体无法读取此终端。使用系统 shell，经由 node-pty（MIT）和 xterm。",
+    "selectWorkspace": "请选择工作区以确定 PTY 的工作目录。"
   }
 }

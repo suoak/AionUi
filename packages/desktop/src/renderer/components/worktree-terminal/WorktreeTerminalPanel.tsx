@@ -8,6 +8,7 @@ import { worktreePty, type IWorktreePtySession } from '@/common/adapter/ipcBridg
 import { isElectronDesktop } from '@/renderer/utils/platform';
 import { Button, Message, Space, Typography } from '@arco-design/web-react';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   WORKTREE_TERMINAL_DEFAULT_AGENT_ATTACHED,
   WORKTREE_TERMINAL_DEFAULT_OPEN,
@@ -30,6 +31,7 @@ export type WorktreeTerminalPanelProps = {
  * Agent cannot read PTY output until the user attaches (explicit gate).
  */
 const WorktreeTerminalPanel: React.FC<WorktreeTerminalPanelProps> = ({ isDesktop, cwd }) => {
+  const { t } = useTranslation();
   const desktop = isDesktop ?? isElectronDesktop();
   const availability = resolveWorktreeTerminalAvailability(desktop);
   const [open, setOpen] = useState(WORKTREE_TERMINAL_DEFAULT_OPEN);
@@ -72,7 +74,7 @@ const WorktreeTerminalPanel: React.FC<WorktreeTerminalPanelProps> = ({ isDesktop
 
   const startSession = useCallback(async () => {
     if (!desktop || !cwd) {
-      Message.warning('Open a project workspace to start the worktree terminal');
+      Message.warning(t('conversation.worktreeTerminal.openWorkspaceWarning'));
       return;
     }
     setBusy(true);
@@ -84,8 +86,10 @@ const WorktreeTerminalPanel: React.FC<WorktreeTerminalPanelProps> = ({ isDesktop
       setSession(created);
       setAgentAttached(created.agentAttached);
       if (!created.available) {
-        Message.warning(created.error ?? 'PTY unavailable');
-        termRef.current?.write(`\r\n[worktree-terminal] ${created.error ?? 'PTY unavailable'}\r\n`);
+        Message.warning(created.error ?? t('conversation.worktreeTerminal.ptyUnavailable'));
+        termRef.current?.write(
+          `\r\n[worktree-terminal] ${created.error ?? t('conversation.worktreeTerminal.ptyUnavailable')}\r\n`
+        );
         return;
       }
       termRef.current?.focus();
@@ -94,7 +98,7 @@ const WorktreeTerminalPanel: React.FC<WorktreeTerminalPanelProps> = ({ isDesktop
     } finally {
       setBusy(false);
     }
-  }, [cwd, desktop, ensureXterm]);
+  }, [cwd, desktop, ensureXterm, t]);
 
   const stopSession = useCallback(async () => {
     if (!session) return;
@@ -167,8 +171,8 @@ const WorktreeTerminalPanel: React.FC<WorktreeTerminalPanelProps> = ({ isDesktop
       setAgentAttached(updated.agentAttached);
       Message.info(
         updated.agentAttached
-          ? 'Agent can read this terminal output while attached'
-          : 'Agent attach removed — agent cannot read this terminal'
+          ? t('conversation.worktreeTerminal.attachedHint')
+          : t('conversation.worktreeTerminal.detachedHint')
       );
     } catch (error) {
       Message.error(error instanceof Error ? error.message : String(error));
@@ -179,14 +183,14 @@ const WorktreeTerminalPanel: React.FC<WorktreeTerminalPanelProps> = ({ isDesktop
     <div className='worktree-terminal border-t border-[var(--color-border-2)]' data-testid='worktree-terminal'>
       <div className='flex items-center justify-between px-12px py-8px gap-8px'>
         <Title heading={6} className='!mb-0'>
-          Terminal
+          {t('conversation.worktreeTerminal.title')}
         </Title>
         <Space size='mini'>
           {open && availability === 'desktop' ? (
             <>
               {!session ? (
                 <Button size='mini' type='primary' loading={busy} onClick={() => void startSession()}>
-                  Start
+                  {t('conversation.worktreeTerminal.start')}
                 </Button>
               ) : (
                 <>
@@ -196,10 +200,12 @@ const WorktreeTerminalPanel: React.FC<WorktreeTerminalPanelProps> = ({ isDesktop
                     data-testid='worktree-terminal-agent-attach'
                     onClick={() => void toggleAgentAttach()}
                   >
-                    {agentAttached ? 'Detach agent' : 'Attach agent'}
+                    {agentAttached
+                      ? t('conversation.worktreeTerminal.detach')
+                      : t('conversation.worktreeTerminal.attach')}
                   </Button>
                   <Button size='mini' loading={busy} onClick={() => void stopSession()}>
-                    Stop
+                    {t('conversation.worktreeTerminal.stop')}
                   </Button>
                 </>
               )}
@@ -210,7 +216,7 @@ const WorktreeTerminalPanel: React.FC<WorktreeTerminalPanelProps> = ({ isDesktop
             data-testid='worktree-terminal-toggle'
             onClick={() => setOpen((v) => nextTerminalOpenState(v))}
           >
-            {open ? 'Hide' : 'Show'}
+            {open ? t('conversation.worktreeTerminal.hide') : t('conversation.worktreeTerminal.show')}
           </Button>
         </Space>
       </div>
@@ -218,14 +224,12 @@ const WorktreeTerminalPanel: React.FC<WorktreeTerminalPanelProps> = ({ isDesktop
         <div className='px-12px pb-12px' data-testid='worktree-terminal-body'>
           {availability === 'webui-stub' ? (
             <Text type='secondary' data-testid='worktree-terminal-webui-stub'>
-              Worktree terminal is desktop-only in this version. Open CSBU WorkMate desktop to use an embedded terminal
-              for the current project worktree.
+              {t('conversation.worktreeTerminal.desktopOnly')}
             </Text>
           ) : (
             <>
               <Text type='secondary' className='block mb-8px text-12px'>
-                Agent cannot read this terminal unless you click Attach agent. Uses system shell via node-pty (MIT) +
-                xterm.
+                {t('conversation.worktreeTerminal.attachHelp')}
               </Text>
               <div
                 ref={hostRef}
@@ -234,7 +238,7 @@ const WorktreeTerminalPanel: React.FC<WorktreeTerminalPanelProps> = ({ isDesktop
               />
               {!cwd ? (
                 <Text type='secondary' className='block mt-8px'>
-                  Select a workspace to choose the PTY working directory.
+                  {t('conversation.worktreeTerminal.selectWorkspace')}
                 </Text>
               ) : null}
             </>
