@@ -274,10 +274,6 @@ jobs:
     if: github.event.action != 'closed' && github.event.pull_request.draft == false && inputs.skip_build_test != true
     runs-on: ${{ matrix.os }}
     timeout-minutes: 45
-    # TEMP (reverted before merge): verify Core #303 on Windows (Manual Build 43580674484); others Core main.
-    env:
-      CSBU_WORKMATE_BACKEND_RUN_ID: ${{ matrix.platform == 'windows-x64' && '43580674484' || '43564081100' }}
-      E2E_EXPECT_BUILTIN_PACKS: '1'
     strategy:
       fail-fast: false
       matrix:
