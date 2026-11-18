@@ -277,5 +277,15 @@
     "unavailable": "Dieser Bereich ist nicht verfügbar. CSBU WorkMate kann nur ein verifiziertes Erweiterungs-Asset hosten.",
     "closeTab": "Bereich schließen",
     "empty": "Kein Plugin-Bereich geöffnet"
+  },
+  "designSystem": {
+    "status": {
+      "working": "Läuft",
+      "needsYou": "Wartet auf dich",
+      "done": "Fertig",
+      "failed": "Fehlgeschlagen",
+      "idle": "Inaktiv"
+    },
+    "contextUsage": "Kontext zu {{percent}} % belegt"
   }
 }

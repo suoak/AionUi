@@ -277,5 +277,15 @@
     "agents": "Agentes",
     "skills": "Habilidades",
     "batch": "Lote"
+  },
+  "designSystem": {
+    "status": {
+      "working": "Em andamento",
+      "needsYou": "Precisa de você",
+      "done": "Concluído",
+      "failed": "Falhou",
+      "idle": "Ocioso"
+    },
+    "contextUsage": "Contexto {{percent}}% usado"
   }
 }

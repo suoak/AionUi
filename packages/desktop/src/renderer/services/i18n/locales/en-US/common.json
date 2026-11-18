@@ -369,5 +369,15 @@
     "hub_not_installed": "This extension is not installed, so it cannot be updated. Install it first.",
     "hub_remove_failed": "The extension could not be removed completely. Close anything that uses it and try again.",
     "package_lifecycle_hooks_refused": "This extension asks to run setup programs, which signed extensions cannot do. Contact the extension's publisher."
+  },
+  "designSystem": {
+    "status": {
+      "working": "Working",
+      "needsYou": "Needs you",
+      "done": "Done",
+      "failed": "Failed",
+      "idle": "Idle"
+    },
+    "contextUsage": "Context {{percent}}% used"
   }
 }

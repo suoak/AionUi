@@ -277,5 +277,15 @@
     "unavailable": "このパネルは利用できません。CSBU WorkMate は検証済みの拡張アセットのみをホストします。",
     "closeTab": "パネルを閉じる",
     "empty": "開いているプラグインパネルはありません"
+  },
+  "designSystem": {
+    "status": {
+      "working": "実行中",
+      "needsYou": "対応が必要",
+      "done": "完了",
+      "failed": "失敗",
+      "idle": "待機中"
+    },
+    "contextUsage": "コンテキスト使用率 {{percent}}%"
   }
 }

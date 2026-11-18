@@ -212,3 +212,30 @@ body,
 [data-theme='dark'] *:hover::-webkit-scrollbar-thumb {
   background: rgba(255, 255, 255, 0.1);
 }
+
+/* Design system v2 run-state glyph motion (StatusGlyph). Disabled by reduced motion above. */
+.wm-glyph-spin {
+  transform-origin: 50% 50%;
+  animation: wm-glyph-spin 0.9s linear infinite;
+}
+
+.wm-glyph-pulse {
+  transform-origin: 50% 50%;
+  animation: wm-glyph-pulse 1.6s var(--wm-ease) infinite;
+}
+
+@keyframes wm-glyph-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes wm-glyph-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.45;
+  }
+}

@@ -280,5 +280,15 @@
     "agents": "Агенти",
     "skills": "Навички",
     "batch": "Пакети"
+  },
+  "designSystem": {
+    "status": {
+      "working": "Виконується",
+      "needsYou": "Потрібна ваша дія",
+      "done": "Готово",
+      "failed": "Помилка",
+      "idle": "Очікування"
+    },
+    "contextUsage": "Контекст заповнено на {{percent}}%"
   }
 }

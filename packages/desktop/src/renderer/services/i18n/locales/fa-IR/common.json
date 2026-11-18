@@ -277,5 +277,15 @@
     "agents": "عامل‌ها",
     "skills": "مهارت‌ها",
     "batch": "دسته‌ای"
+  },
+  "designSystem": {
+    "status": {
+      "working": "در حال اجرا",
+      "needsYou": "نیازمند شما",
+      "done": "انجام شد",
+      "failed": "ناموفق",
+      "idle": "بیکار"
+    },
+    "contextUsage": "{{percent}}٪ از زمینه استفاده شده"
   }
 }

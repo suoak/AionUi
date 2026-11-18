@@ -277,5 +277,15 @@
     "unavailable": "이 패널을 사용할 수 없습니다. CSBU WorkMate는 검증된 확장 에셋만 호스트합니다.",
     "closeTab": "패널 닫기",
     "empty": "열린 플러그인 패널이 없습니다"
+  },
+  "designSystem": {
+    "status": {
+      "working": "진행 중",
+      "needsYou": "확인 필요",
+      "done": "완료",
+      "failed": "실패",
+      "idle": "대기"
+    },
+    "contextUsage": "컨텍스트 {{percent}}% 사용"
   }
 }
