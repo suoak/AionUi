@@ -2822,6 +2822,27 @@ export const sshTunnel = {
 };
 
 // ---------------------------------------------------------------------------
+// E14 remote Host — point the renderer at a loopback-forwarded headless Host.
+// The locally spawned aioncore stays running; main-process callers keep using it.
+// ---------------------------------------------------------------------------
+
+export type IRemoteBackendStatus = {
+  mode: 'local' | 'remote';
+  port: number;
+  baseUrl?: string;
+};
+
+export type IRemoteBackendConnectParams = {
+  port: number;
+};
+
+export const remoteBackend = {
+  getStatus: bridge.buildProvider<IRemoteBackendStatus, void>('remoteBackend.get-status'),
+  connect: bridge.buildProvider<IRemoteBackendStatus, IRemoteBackendConnectParams>('remoteBackend.connect'),
+  disconnect: bridge.buildProvider<IRemoteBackendStatus, void>('remoteBackend.disconnect'),
+};
+
+// ---------------------------------------------------------------------------
 // Cron — routed to /api/cron/*
 // ---------------------------------------------------------------------------
 

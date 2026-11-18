@@ -48,6 +48,13 @@ import { createEncryptionRootProvider } from './process/startup/encryptionRootPr
 import { pathToFileURL } from 'node:url';
 import { setBackendAuthHeadersProvider } from './common/adapter/backendAuth';
 import { installBackendLocalAuth } from './process/security/backendLocalAuth';
+import {
+  getRendererBackendPort,
+  initRemoteBackendManager,
+  disconnectRemoteBackendIfPort,
+} from './process/services/remoteBackendManager';
+import { setSshTunnelExitHandler } from './process/services/sshTunnelManager';
+
 import { resolveBinaryPath } from '@process/backend';
 import './process/bridge/feedbackBridge';
 import { wasLaunchedAtLogin } from '@process/bridge/applicationBridge';
@@ -339,7 +346,10 @@ function trustedRendererPrefixes(): string[] {
 }
 
 ipcMain.on('get-backend-port', (event) => {
-  event.returnValue = backendManager.port;
+  // When connected to a remote Host, the renderer uses the loopback forward
+  // port. Main-process callers keep using backendManager.port / __backendPort
+  // (the locally spawned child).
+  event.returnValue = getRendererBackendPort() || backendManager.port;
 });
 
 ipcMain.on('get-initial-language', (event) => {
@@ -823,9 +833,26 @@ const handleAppReady = async (): Promise<void> => {
   // Renderer requests to aioncore get the per-launch local secret attached in
   // the network layer; renderer JS never sees it.
   installBackendLocalAuth(session.defaultSession, {
+    // Keep the hook on the locally spawned child so the per-launch secret is
+    // never attached to a remote Host (D14-2).
     getBackendPort: () => backendManager.port,
     getLocalSecret: () => backendManager.localApiSecret,
     trustedRendererPrefixes: trustedRendererPrefixes(),
+  });
+
+  const reloadAppWindows = (): void => {
+    for (const win of BrowserWindow.getAllWindows()) {
+      if (!win.isDestroyed()) {
+        win.webContents.reload();
+      }
+    }
+  };
+  initRemoteBackendManager({
+    getLocalBackendPort: () => backendManager.port,
+    reloadAppWindows,
+  });
+  setSshTunnelExitHandler((localPort) => {
+    void disconnectRemoteBackendIfPort(localPort);
   });
 
   // Allow the renderer's Local Font Access queries (window.queryLocalFonts),

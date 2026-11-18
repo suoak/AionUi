@@ -27,6 +27,12 @@ type TunnelState = {
 };
 
 let active: TunnelState | null = null;
+let exitHandler: ((localPort: number) => void) | null = null;
+
+/** Called when the ssh child exits (including unexpected close). Not called after an intentional stop, because `active` is cleared first. */
+export function setSshTunnelExitHandler(handler: ((localPort: number) => void) | null): void {
+  exitHandler = handler;
+}
 
 export function getSshTunnelStatus(): SshTunnelStatus {
   if (!active) {
@@ -72,6 +78,7 @@ export async function startSshTunnel(request: SshTunnelRequest): Promise<SshTunn
   child.on('exit', () => {
     if (active?.child === child) {
       // keep lastError for status; mark not running via exitCode
+      exitHandler?.(active.request.localPort);
     }
   });
 

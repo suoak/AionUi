@@ -15,6 +15,7 @@ import { initUpdateBridge } from './updateBridge';
 import { initSessionImportBridge } from './sessionImportBridge';
 import { initWorktreePtyBridge } from './worktreePtyBridge';
 import { initSshTunnelBridge } from './sshTunnelBridge';
+import { initRemoteBackendBridge } from './remoteBackendBridge';
 
 export type BridgeDependencies = Record<string, never>;
 
@@ -30,6 +31,7 @@ export function initAllBridges(_deps: BridgeDependencies = {}): void {
   initSessionImportBridge();
   initWorktreePtyBridge();
   initSshTunnelBridge();
+  initRemoteBackendBridge();
 }
 
 export {
@@ -44,6 +46,7 @@ export {
   initWebuiBridge,
   initWorktreePtyBridge,
   initSshTunnelBridge,
+  initRemoteBackendBridge,
 };
 export { registerWindowMaximizeListeners } from './windowControlsBridge';
 export const disposeAllTeamSessions = (): Promise<void> => Promise.resolve();
