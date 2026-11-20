@@ -385,6 +385,7 @@
         "team": "팀",
         "enterprise": "기업"
       },
+      "skills_one": "스킬 {{count}}개",
       "skills_other": "스킬 {{count}}개"
     },
     "preflight": {

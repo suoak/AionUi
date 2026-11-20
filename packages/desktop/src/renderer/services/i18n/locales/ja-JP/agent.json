@@ -385,6 +385,7 @@
         "team": "チーム",
         "enterprise": "企業"
       },
+      "skills_one": "スキル {{count}} 件",
       "skills_other": "スキル {{count}} 件"
     },
     "preflight": {
