@@ -385,5 +385,23 @@
       "scheduled": "Scheduled",
       "batch": "Batch"
     }
+  },
+  "statusBar": {
+    "label": "Status bar",
+    "hostLocal": "This computer",
+    "hostRemote": "Remote · {{host}}",
+    "hostTooltip": "Host connection settings",
+    "working": "{{count}} running",
+    "needsYou": "{{count}} need you",
+    "needsYouTooltip": "Open the conversation that needs you",
+    "usageToday": "Today {{tokens}}",
+    "usageTooltip": "View usage",
+    "updateReady": "Update ready {{version}}",
+    "commandPalette": "Command palette",
+    "commandPaletteWithKeys": "Command palette ({{keys}})"
+  },
+  "newMenu": {
+    "more": "More ways to start",
+    "importTasks": "Import tasks from GitHub issues"
   }
 }

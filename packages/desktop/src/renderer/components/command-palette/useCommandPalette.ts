@@ -7,6 +7,14 @@
 import { useCallback, useEffect, useState } from 'react';
 import { isPrimaryApplicationShortcut } from '@/renderer/utils/ui/keyboardShortcuts';
 
+/** Window event that asks the mounted palette to open (titlebar ⌘K button, status bar, …). */
+export const OPEN_COMMAND_PALETTE_EVENT = 'csbu-workmate-open-command-palette';
+
+/** Opens the command palette from anywhere in the renderer. */
+export function requestCommandPalette(): void {
+  window.dispatchEvent(new Event(OPEN_COMMAND_PALETTE_EVENT));
+}
+
 /**
  * Global Cmd/Ctrl+K palette open state.
  * Uses `embedded-editor` guard so the shortcut works from chat inputs but not
@@ -38,8 +46,13 @@ export function useCommandPalette() {
       event.stopPropagation();
       setOpen((v) => !v);
     };
+    const onOpenRequest = () => setOpen(true);
     document.addEventListener('keydown', onKeyDown, true);
-    return () => document.removeEventListener('keydown', onKeyDown, true);
+    window.addEventListener(OPEN_COMMAND_PALETTE_EVENT, onOpenRequest);
+    return () => {
+      document.removeEventListener('keydown', onKeyDown, true);
+      window.removeEventListener(OPEN_COMMAND_PALETTE_EVENT, onOpenRequest);
+    };
   }, []);
 
   return { open, setOpen, openPalette, closePalette, togglePalette };

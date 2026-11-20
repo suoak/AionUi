@@ -109,6 +109,19 @@ const Sider: React.FC<SiderProps> = ({ onSessionClick, collapsed = false }) => {
     }
   };
 
+  const handleImportTasks = () => {
+    cleanupSiderTooltips();
+    blurActiveElement();
+    closePreview();
+    setIsBatchMode(false);
+    Promise.resolve(navigate('/tasks?import=github')).catch((error) => {
+      console.error('Navigation failed:', error);
+    });
+    if (onSessionClick) {
+      onSessionClick();
+    }
+  };
+
   const handleAutomationsClick = () => {
     cleanupSiderTooltips();
     blurActiveElement();
@@ -310,6 +323,7 @@ const Sider: React.FC<SiderProps> = ({ onSessionClick, collapsed = false }) => {
               siderTooltipProps={siderTooltipProps}
               onNewChat={handleNewChat}
               onToggleBatchMode={() => setIsBatchMode((prev) => !prev)}
+              onImportTasks={handleImportTasks}
             />
             {/* Search entry — desktop moves this into the titlebar toolbar;
                 mobile keeps it here in the sidebar. */}
@@ -324,7 +338,7 @@ const Sider: React.FC<SiderProps> = ({ onSessionClick, collapsed = false }) => {
             )}
             {/* 3.0 IA: five primary entries — sessions (toolbar + history), tasks, agents,
                 skills, automations (scheduled + batch). Secondary: assistants (until the
-                agents merge), usage, inbox, plugin panels. */}
+                agents merge). Fixed area is at most six rows. */}
             <SiderTasksBoardEntry
               isMobile={isMobile}
               isActive={isPrimaryNavActive(primaryNavEntryByKey('tasks'), pathname)}
@@ -360,23 +374,28 @@ const Sider: React.FC<SiderProps> = ({ onSessionClick, collapsed = false }) => {
               siderTooltipProps={siderTooltipProps}
               onClick={handleAssistantClick}
             />
-            <SiderUsageEntry
-              isMobile={isMobile}
-              isActive={pathname === '/settings/usage'}
-              collapsed={collapsed}
-              siderTooltipProps={siderTooltipProps}
-              onClick={handleUsageClick}
-            />
-            <SiderInboxEntry
-              isMobile={isMobile}
-              collapsed={collapsed}
-              siderTooltipProps={siderTooltipProps}
-              onOpenConversation={handleInboxOpenConversation}
-              onOpenTaskBoard={handleInboxOpenTaskBoard}
-              onOpenBatchJob={handleInboxOpenBatchJob}
-              onOpenScheduledJob={handleInboxOpenScheduledJob}
-            />
-            <SiderPluginPanelsGroup collapsed={collapsed} siderTooltipProps={siderTooltipProps} />
+            {/* 3.0 shell: on desktop usage lives in the status bar and the inbox in the
+                titlebar bell; mobile has neither, so it keeps both rows here. */}
+            {isMobile && (
+              <>
+                <SiderUsageEntry
+                  isMobile={isMobile}
+                  isActive={pathname === '/settings/usage'}
+                  collapsed={collapsed}
+                  siderTooltipProps={siderTooltipProps}
+                  onClick={handleUsageClick}
+                />
+                <SiderInboxEntry
+                  isMobile={isMobile}
+                  collapsed={collapsed}
+                  siderTooltipProps={siderTooltipProps}
+                  onOpenConversation={handleInboxOpenConversation}
+                  onOpenTaskBoard={handleInboxOpenTaskBoard}
+                  onOpenBatchJob={handleInboxOpenBatchJob}
+                  onOpenScheduledJob={handleInboxOpenScheduledJob}
+                />
+              </>
+            )}
             {/* Divider between fixed top nav and scrollable content area */}
             <div
               className={classNames(
@@ -386,6 +405,8 @@ const Sider: React.FC<SiderProps> = ({ onSessionClick, collapsed = false }) => {
             />
             {/* Scrollable content: pinned → team (slot) → projects → conversations */}
             <div className={classNames('flex-1 min-h-0 overflow-y-auto', siderStyles.scrollArea)}>
+              {/* Plugin panels sit above history so the fixed area stays at six rows. */}
+              <SiderPluginPanelsGroup collapsed={collapsed} siderTooltipProps={siderTooltipProps} />
               <Suspense fallback={<div className='min-h-200px' />}>
                 <WorkspaceGroupedHistory
                   {...workspaceHistoryProps}

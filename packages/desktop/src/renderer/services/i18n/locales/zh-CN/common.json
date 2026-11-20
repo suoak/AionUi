@@ -385,5 +385,23 @@
       "scheduled": "定时",
       "batch": "批量"
     }
+  },
+  "statusBar": {
+    "label": "状态栏",
+    "hostLocal": "本机",
+    "hostRemote": "远程 · {{host}}",
+    "hostTooltip": "Host 连接设置",
+    "working": "{{count}} 运行中",
+    "needsYou": "{{count}} 需要你",
+    "needsYouTooltip": "打开需要你处理的会话",
+    "usageToday": "今日 {{tokens}}",
+    "usageTooltip": "查看用量",
+    "updateReady": "更新可用 {{version}}",
+    "commandPalette": "命令面板",
+    "commandPaletteWithKeys": "命令面板（{{keys}}）"
+  },
+  "newMenu": {
+    "more": "更多新建选项",
+    "importTasks": "从 GitHub 议题导入任务"
   }
 }

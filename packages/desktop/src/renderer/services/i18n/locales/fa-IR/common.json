@@ -293,5 +293,23 @@
       "scheduled": "زمان‌بندی‌شده",
       "batch": "دسته‌ای"
     }
+  },
+  "statusBar": {
+    "label": "نوار وضعیت",
+    "hostLocal": "این رایانه",
+    "hostRemote": "راه دور · {{host}}",
+    "hostTooltip": "تنظیمات اتصال میزبان",
+    "working": "{{count}} در حال اجرا",
+    "needsYou": "{{count}} منتظر شما",
+    "needsYouTooltip": "باز کردن گفت‌وگویی که منتظر شماست",
+    "usageToday": "امروز {{tokens}}",
+    "usageTooltip": "مشاهده مصرف",
+    "updateReady": "به‌روزرسانی آماده است {{version}}",
+    "commandPalette": "پالت فرمان",
+    "commandPaletteWithKeys": "پالت فرمان ({{keys}})"
+  },
+  "newMenu": {
+    "more": "راه‌های دیگر برای شروع",
+    "importTasks": "وارد کردن کارها از ایشوهای GitHub"
   }
 }

@@ -7,7 +7,7 @@
 import { ipcBridge } from '@/common';
 import type { TChatConversation } from '@/common/config/storage';
 import { addEventListener } from '@/renderer/utils/emitter';
-import { useCallback, useEffect, useSyncExternalStore } from 'react';
+import { useCallback, useEffect, useMemo, useSyncExternalStore } from 'react';
 
 /**
  * Whitelist of message types that indicate content generation is in progress.
@@ -661,6 +661,39 @@ const initializeConversationListSyncStore = () => {
     clearGenerating(event.session_id, 'turnCompleted');
     refreshConversations();
   });
+};
+
+export type ConversationRunCounts = {
+  /** Conversations generating and not waiting on the user. */
+  working: number;
+  /** Conversations paused on a confirmation the user has to answer. */
+  needsYou: number;
+  /** One conversation that needs the user, for a "jump there" action. */
+  firstNeedsYouId: string | null;
+};
+
+/** Pure count over the sync sets; waiting on the user wins over generating. */
+export const countConversationRuns = (generating: Set<string>, waiting: Set<string>): ConversationRunCounts => {
+  let working = 0;
+  for (const id of generating) if (!waiting.has(id)) working += 1;
+  const first = waiting.values().next();
+  return { working, needsYou: waiting.size, firstNeedsYouId: first.done ? null : first.value };
+};
+
+/**
+ * Read-only run counts for shell chrome (status bar). Does not initialise the
+ * store; the sidebar history owns that, so this never starts a second fetch.
+ */
+export const useConversationRunCounts = (): ConversationRunCounts => {
+  const { generatingConversationIds, waitingConfirmationConversationIds } = useSyncExternalStore(
+    subscribeConversationListSync,
+    getConversationListSyncSnapshot,
+    getConversationListSyncSnapshot
+  );
+  return useMemo(
+    () => countConversationRuns(generatingConversationIds, waitingConfirmationConversationIds),
+    [generatingConversationIds, waitingConfirmationConversationIds]
+  );
 };
 
 export const useConversationListSync = () => {

@@ -549,3 +549,17 @@ it('opens the drawer from ?task= deep link (E6-6)', async () => {
   // Title sits on the Arco Drawer header (outside the detail panel).
   expect(screen.getAllByText('Deep link item').length).toBeGreaterThan(0);
 });
+
+it('opens the GitHub import from ?import=github and strips the param (V3 New ▾)', async () => {
+  mocks.searchParams = new URLSearchParams('import=github');
+  mocks.boardGet.mockResolvedValue(board(item('t1', 'todo')));
+  render(<TasksBoardPage />);
+  await waitFor(() => expect(mocks.setSearchParams).toHaveBeenCalled());
+  const [update, options] = mocks.setSearchParams.mock.calls.at(-1) as [
+    (prev: URLSearchParams) => URLSearchParams,
+    { replace: boolean },
+  ];
+  expect(options).toEqual({ replace: true });
+  expect(update(new URLSearchParams('import=github&x=1')).toString()).toBe('x=1');
+  expect(await screen.findByTestId('github-import-repo')).toBeTruthy();
+});

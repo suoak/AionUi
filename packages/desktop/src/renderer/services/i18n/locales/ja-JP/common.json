@@ -293,5 +293,23 @@
       "scheduled": "スケジュール",
       "batch": "バッチ"
     }
+  },
+  "statusBar": {
+    "label": "ステータスバー",
+    "hostLocal": "このコンピューター",
+    "hostRemote": "リモート · {{host}}",
+    "hostTooltip": "Host 接続設定",
+    "working": "{{count}} 件実行中",
+    "needsYou": "{{count}} 件対応待ち",
+    "needsYouTooltip": "対応が必要な会話を開く",
+    "usageToday": "今日 {{tokens}}",
+    "usageTooltip": "使用量を表示",
+    "updateReady": "アップデート可能 {{version}}",
+    "commandPalette": "コマンドパレット",
+    "commandPaletteWithKeys": "コマンドパレット（{{keys}}）"
+  },
+  "newMenu": {
+    "more": "その他の新規作成",
+    "importTasks": "GitHub Issue からタスクをインポート"
   }
 }

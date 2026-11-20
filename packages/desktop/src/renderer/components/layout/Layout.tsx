@@ -7,6 +7,7 @@
 import { ipcBridge } from '@/common';
 import { TEAM_MODE_ENABLED } from '@/common/config/constants';
 import PwaPullToRefresh from '@/renderer/components/layout/PwaPullToRefresh';
+import StatusBar from './StatusBar';
 import Titlebar from '@/renderer/components/layout/Titlebar';
 import UpdateNotificationCard from '@/renderer/components/settings/UpdateNotificationCard';
 import AgentActionApprovalHost from '@/renderer/components/agentApproval/AgentActionApprovalHost';
@@ -565,6 +566,7 @@ const Layout: React.FC<{
               />
             )}
           </ArcoLayout>
+          {!isMobile && <StatusBar />}
         </div>
       </NavigationHistoryProvider>
       <UpdateNotificationCard />

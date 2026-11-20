@@ -173,6 +173,21 @@ const TasksBoardPage: React.FC = () => {
     if (loadState === 'ready') setSelectedId(deepLinkTask);
   }, [deepLinkTask, loadState]);
 
+  // 3.0 sider "New ▾ → Import tasks" lands on `/tasks?import=github`.
+  const importRequested = searchParams.get('import') === 'github';
+  useEffect(() => {
+    if (!importRequested || !interactive) return;
+    setImportOpen(true);
+    setSearchParams(
+      (prev) => {
+        const next = new URLSearchParams(prev);
+        next.delete('import');
+        return next;
+      },
+      { replace: true }
+    );
+  }, [importRequested, interactive, setSearchParams]);
+
   useEffect(() => {
     const timers = pendingFallbacks.current;
     return () => {

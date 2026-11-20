@@ -293,5 +293,23 @@
       "scheduled": "Zamanlanmış",
       "batch": "Toplu"
     }
+  },
+  "statusBar": {
+    "label": "Durum çubuğu",
+    "hostLocal": "Bu bilgisayar",
+    "hostRemote": "Uzak · {{host}}",
+    "hostTooltip": "Host bağlantı ayarları",
+    "working": "{{count}} çalışıyor",
+    "needsYou": "{{count}} sizi bekliyor",
+    "needsYouTooltip": "Sizi bekleyen sohbeti aç",
+    "usageToday": "Bugün {{tokens}}",
+    "usageTooltip": "Kullanımı görüntüle",
+    "updateReady": "Güncelleme hazır {{version}}",
+    "commandPalette": "Komut paleti",
+    "commandPaletteWithKeys": "Komut paleti ({{keys}})"
+  },
+  "newMenu": {
+    "more": "Başlamanın diğer yolları",
+    "importTasks": "GitHub issue’larından görev içe aktar"
   }
 }

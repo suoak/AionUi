@@ -60,21 +60,39 @@ const renderRow = (props: Partial<ConversationRowProps>) => render(<Conversation
 
 describe('ConversationRow leading icon', () => {
   it('shows the waiting-confirmation icon (not the spinner) when waiting takes precedence over generating', () => {
-    const { container } = renderRow({ isWaitingConfirmation: true, isGenerating: true });
+    renderRow({ isWaitingConfirmation: true, isGenerating: true });
     expect(screen.getByTestId('conversation-waiting-confirmation-conv-1')).toBeInTheDocument();
-    expect(container.querySelector('.arco-spin')).toBeNull();
+    expect(
+      screen.getByTestId('conversation-waiting-confirmation-conv-1').querySelector('[data-status]')
+    ).toHaveAttribute('data-status', 'needsYou');
+    expect(screen.queryByTestId('conversation-working-conv-1')).toBeNull();
   });
 
   it('shows the generating spinner when generating but not waiting', () => {
-    const { container } = renderRow({ isWaitingConfirmation: false, isGenerating: true });
+    renderRow({ isWaitingConfirmation: false, isGenerating: true });
     expect(screen.queryByTestId('conversation-waiting-confirmation-conv-1')).toBeNull();
-    expect(container.querySelector('.arco-spin')).not.toBeNull();
+    expect(screen.getByTestId('conversation-working-conv-1').querySelector('[data-status]')).toHaveAttribute(
+      'data-status',
+      'working'
+    );
   });
 
   it('shows neither the waiting icon nor the spinner when idle', () => {
-    const { container } = renderRow({ isWaitingConfirmation: false, isGenerating: false });
+    renderRow({ isWaitingConfirmation: false, isGenerating: false });
     expect(screen.queryByTestId('conversation-waiting-confirmation-conv-1')).toBeNull();
-    expect(container.querySelector('.arco-spin')).toBeNull();
+    expect(screen.queryByTestId('conversation-working-conv-1')).toBeNull();
+  });
+
+  it('renders unread rows bold instead of with a badge', () => {
+    const { container } = renderRow({ hasUnread: true });
+    const name = container.querySelector('.chat-history__item-name');
+    expect(name).toHaveAttribute('data-unread', 'true');
+    expect(name?.className).toContain('font-700');
+  });
+
+  it('drops the unread emphasis while the row is generating', () => {
+    const { container } = renderRow({ hasUnread: true, isGenerating: true });
+    expect(container.querySelector('.chat-history__item-name')).not.toHaveAttribute('data-unread');
   });
 
   it('does not show the waiting icon in batch mode (selection UI takes over)', () => {

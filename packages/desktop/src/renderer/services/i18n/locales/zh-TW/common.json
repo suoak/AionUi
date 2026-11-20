@@ -385,5 +385,23 @@
       "scheduled": "排程",
       "batch": "批次"
     }
+  },
+  "statusBar": {
+    "label": "狀態列",
+    "hostLocal": "本機",
+    "hostRemote": "遠端 · {{host}}",
+    "hostTooltip": "Host 連線設定",
+    "working": "{{count}} 執行中",
+    "needsYou": "{{count}} 需要你",
+    "needsYouTooltip": "開啟需要你處理的對話",
+    "usageToday": "今日 {{tokens}}",
+    "usageTooltip": "查看用量",
+    "updateReady": "可更新 {{version}}",
+    "commandPalette": "命令面板",
+    "commandPaletteWithKeys": "命令面板（{{keys}}）"
+  },
+  "newMenu": {
+    "more": "更多新增選項",
+    "importTasks": "從 GitHub 議題匯入任務"
   }
 }
