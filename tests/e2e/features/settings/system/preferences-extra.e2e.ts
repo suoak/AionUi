@@ -39,6 +39,9 @@ test.describe('System Preferences — Extra', () => {
 
   // TC-PREF-06: Cron-notification sub-switch inside Collapse
   test('TC-PREF-06: should toggle cronNotification switch when notifications are on', async ({ page }) => {
+    // 3.0 V7: notifications have their own settings page.
+    await goToSettings(page, 'notifications');
+    await waitForSettle(page);
     const collapseHeader = page.locator('.arco-collapse-item-header');
     await expect(collapseHeader).toBeVisible();
     const notifSwitch = collapseHeader.locator(ARCO_SWITCH);

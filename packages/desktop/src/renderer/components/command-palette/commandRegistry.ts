@@ -120,6 +120,20 @@ export const STATIC_PALETTE_COMMANDS: readonly PaletteCommand[] = [
     keywords: ['local-kb', 'knowledge', 'kb', 'documents'],
   },
   {
+    id: 'nav.settings.notifications',
+    title: 'Notifications',
+    group: 'settings',
+    path: '/settings/notifications',
+    keywords: ['notification', 'alert', 'cron'],
+  },
+  {
+    id: 'nav.settings.shortcuts',
+    title: 'Keyboard shortcuts',
+    group: 'settings',
+    path: '/settings/shortcuts',
+    keywords: ['keyboard', 'shortcut', 'hotkey', 'keys'],
+  },
+  {
     id: 'nav.settings.remoteHost',
     title: 'Remote Host (SSH)',
     group: 'settings',

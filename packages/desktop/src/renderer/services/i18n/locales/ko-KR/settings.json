@@ -2036,5 +2036,41 @@
       "moderate": "중간 위험",
       "dangerous": "높은 위험"
     }
+  },
+  "notificationsPage": {
+    "navLabel": "알림",
+    "title": "알림",
+    "description": "CSBU WorkMate가 알림을 보낼 시점을 선택하세요. 예: 예약 작업이 끝났을 때.",
+    "movedHint": "알림은 이제 별도 설정 페이지에 있습니다.",
+    "openPage": "알림 열기"
+  },
+  "shortcutsPage": {
+    "navLabel": "키보드 단축키",
+    "title": "키보드 단축키",
+    "description": "CSBU WorkMate가 현재 지원하는 단축키이며, 이 컴퓨터의 키보드 기준으로 표시됩니다.",
+    "readOnlyNote": "단축키는 아직 변경할 수 없습니다.",
+    "desktopOnly": "데스크톱 앱 전용",
+    "or": "또는",
+    "sections": {
+      "general": "일반",
+      "conversations": "대화",
+      "composer": "메시지 입력창",
+      "preview": "파일 미리보기"
+    },
+    "actions": {
+      "commandPalette": "명령 팔레트 열기",
+      "toggleSidebar": "사이드바 표시/숨기기",
+      "toggleWorkspace": "작업 공간 패널 표시/숨기기",
+      "newConversation": "새 대화",
+      "nextConversation": "다음 대화",
+      "previousConversation": "이전 대화",
+      "send": "메시지 보내기",
+      "newLine": "줄 바꿈",
+      "saveToDraft": "Draft box에 추가",
+      "history": "보낸 메시지 탐색",
+      "leaveHistory": "메시지 기록 나가기",
+      "saveFile": "파일 저장",
+      "closeTab": "미리보기 탭 닫기"
+    }
   }
 }

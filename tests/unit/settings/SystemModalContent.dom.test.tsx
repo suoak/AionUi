@@ -404,13 +404,18 @@ describe('SystemModalContent directory settings', () => {
     );
     const moved = await screen.findByTestId('remote-host-moved');
     expect(screen.queryByTestId('remote-host-ssh-section')).toBeNull();
-    fireEvent.click(within(moved).getByTestId('remote-host-open-page'));
+    fireEvent.click(within(moved).getByTestId('remote-host-moved-open'));
     expect(navigateToTab).toHaveBeenCalledWith('remote-host');
+    expect(screen.queryByTestId('notification-settings-section')).toBeNull();
+    fireEvent.click(screen.getByTestId('notifications-moved-open'));
+    expect(navigateToTab).toHaveBeenCalledWith('notifications');
   });
 
   it('3.0 V7: the settings modal keeps the Remote Host SSH section', async () => {
     renderContent();
     expect(await screen.findByTestId('remote-host-ssh-section')).toBeTruthy();
     expect(screen.queryByTestId('remote-host-moved')).toBeNull();
+    expect(screen.getByTestId('notification-settings-section')).toBeTruthy();
+    expect(screen.queryByTestId('notifications-moved')).toBeNull();
   });
 });

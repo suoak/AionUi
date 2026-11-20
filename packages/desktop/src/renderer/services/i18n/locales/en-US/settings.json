@@ -2039,5 +2039,41 @@
       "moderate": "Medium risk",
       "dangerous": "High risk"
     }
+  },
+  "notificationsPage": {
+    "navLabel": "Notifications",
+    "title": "Notifications",
+    "description": "Choose when CSBU WorkMate notifies you, for example when a scheduled task finishes.",
+    "movedHint": "Notifications now have their own settings page.",
+    "openPage": "Open Notifications"
+  },
+  "shortcutsPage": {
+    "navLabel": "Keyboard shortcuts",
+    "title": "Keyboard shortcuts",
+    "description": "Shortcuts CSBU WorkMate handles today, shown for this computer's keyboard.",
+    "readOnlyNote": "Shortcuts can't be changed yet.",
+    "desktopOnly": "Desktop app only",
+    "or": "or",
+    "sections": {
+      "general": "General",
+      "conversations": "Conversations",
+      "composer": "Message box",
+      "preview": "File preview"
+    },
+    "actions": {
+      "commandPalette": "Open the command palette",
+      "toggleSidebar": "Show or hide the sidebar",
+      "toggleWorkspace": "Show or hide the workspace panel",
+      "newConversation": "New conversation",
+      "nextConversation": "Next conversation",
+      "previousConversation": "Previous conversation",
+      "send": "Send message",
+      "newLine": "New line",
+      "saveToDraft": "Save to Draft box",
+      "history": "Browse your sent messages",
+      "leaveHistory": "Leave message history",
+      "saveFile": "Save the file",
+      "closeTab": "Close the preview tab"
+    }
   }
 }

@@ -22,6 +22,7 @@ export const ROUTES = {
     webui: '#/settings/webui',
     usage: '#/settings/usage',
     system: '#/settings/system',
+    notifications: '#/settings/notifications',
     about: '#/settings/about',
   },
   /** Dynamic extension settings tab route */

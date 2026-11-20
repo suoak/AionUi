@@ -20,12 +20,13 @@ import {
 } from '@/renderer/utils/file/previewPayload';
 import { notifyManualRestartRequired } from '@/renderer/utils/appRestart';
 import { isElectronDesktop } from '@/renderer/utils/platform';
-import { Alert, Collapse, Form, InputNumber, Message, Modal, Switch } from '@arco-design/web-react';
+import { Alert, Form, InputNumber, Message, Modal, Switch } from '@arco-design/web-react';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import useSWR from 'swr';
 import { useSettingsTabNavigate, useSettingsViewMode } from '../../settingsViewContext';
-import BrowserNotificationGrant from './BrowserNotificationGrant';
+import NotificationSettingsSection from './NotificationSettingsSection';
+import SettingsMovedRow from './SettingsMovedRow';
 import DevSettings from './DevSettings';
 import BrowserDataSection from './BrowserDataSection';
 import SessionImportSection from './SessionImportSection';
@@ -69,8 +70,6 @@ const SystemModalContent: React.FC = () => {
   });
   const [closeToTray, setCloseToTray] = useState(false);
   const [gpuStatus, setGpuStatus] = useState<IGpuStatus | null>(null);
-  const [notificationEnabled, setNotificationEnabled] = useState(true);
-  const [cronNotificationEnabled, setCronNotificationEnabled] = useState(false);
   const [promptTimeout, setPromptTimeout] = useState<number>(300);
   const [agentIdleTimeout, setAgentIdleTimeout] = useState<number>(5);
   /**
@@ -126,8 +125,6 @@ const SystemModalContent: React.FC = () => {
         })
         .catch(() => {});
     }
-    setNotificationEnabled(configService.get('system.notificationEnabled') ?? true);
-    setCronNotificationEnabled(configService.get('system.cronNotificationEnabled') ?? false);
     setSaveUploadToWorkspace(configService.get('upload.saveToWorkspace') ?? false);
   }, [isDesktop]);
 
@@ -258,22 +255,6 @@ const SystemModalContent: React.FC = () => {
     },
     [startOnBoot, t]
   );
-
-  const handleNotificationEnabledChange = useCallback((checked: boolean) => {
-    setNotificationEnabled(checked);
-    configService.set('system.notificationEnabled', checked).catch(() => {
-      setNotificationEnabled(!checked);
-      configService.setLocal('system.notificationEnabled', !checked);
-    });
-  }, []);
-
-  const handleCronNotificationEnabledChange = useCallback((checked: boolean) => {
-    setCronNotificationEnabled(checked);
-    configService.set('system.cronNotificationEnabled', checked).catch(() => {
-      setCronNotificationEnabled(!checked);
-      configService.setLocal('system.cronNotificationEnabled', !checked);
-    });
-  }, []);
 
   const handlePromptTimeoutChange = useCallback((val: number | undefined) => {
     setPromptTimeout(val as number);
@@ -537,49 +518,18 @@ const SystemModalContent: React.FC = () => {
                 </PreferenceRow>
               ))}
             </div>
-            {/* Notification settings with collapsible sub-options */}
-            <Collapse
-              bordered={false}
-              activeKey={notificationEnabled ? ['notification'] : []}
-              onChange={(_, keys) => {
-                const shouldExpand = (keys as string[]).includes('notification');
-                if (shouldExpand && !notificationEnabled) {
-                  handleNotificationEnabledChange(true);
-                } else if (!shouldExpand && notificationEnabled) {
-                  handleNotificationEnabledChange(false);
-                }
-              }}
-              className='[&_.arco-collapse-item]:!border-none [&_.arco-collapse-item-header]:!px-0 [&_.arco-collapse-item-header-title]:!flex-1 [&_.arco-collapse-item-content-box]:!px-0 [&_.arco-collapse-item-content-box]:!pb-0'
-            >
-              <Collapse.Item
-                name='notification'
-                showExpandIcon={false}
-                header={
-                  <div className='flex flex-1 items-center justify-between w-full'>
-                    <span className='text-14px text-2 ms-12px'>{t('settings.notification')}</span>
-                    <Switch
-                      checked={notificationEnabled}
-                      onClick={(e) => e.stopPropagation()}
-                      onChange={handleNotificationEnabledChange}
-                    />
-                  </div>
-                }
-              >
-                {isDesktop ? (
-                  <div className='ps-12px'>
-                    <PreferenceRow label={t('settings.cronNotificationEnabled')}>
-                      <Switch
-                        checked={cronNotificationEnabled}
-                        disabled={!notificationEnabled}
-                        onChange={handleCronNotificationEnabledChange}
-                      />
-                    </PreferenceRow>
-                  </div>
-                ) : (
-                  <BrowserNotificationGrant />
-                )}
-              </Collapse.Item>
-            </Collapse>
+            {/* Notifications: 3.0 V7 gives them their own settings page; the modal keeps them here. */}
+            {isPageMode && navigateToTab ? (
+              <SettingsMovedRow
+                title={t('settings.notification')}
+                hint={t('settings.notificationsPage.movedHint')}
+                openLabel={t('settings.notificationsPage.openPage')}
+                onOpen={() => navigateToTab('notifications')}
+                data-testid='notifications-moved'
+              />
+            ) : (
+              <NotificationSettingsSection />
+            )}
             <Form form={form} layout='vertical' className='!mt-32px space-y-16px' onValuesChange={handleValuesChange}>
               <DirInputItem label={t('settings.workDir')} field='workDir' />
               <DirInputItem label={t('settings.logDir')} field='logDir' />

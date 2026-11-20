@@ -2037,5 +2037,41 @@
       "moderate": "Risco médio",
       "dangerous": "Risco alto"
     }
+  },
+  "notificationsPage": {
+    "navLabel": "Notificações",
+    "title": "Notificações",
+    "description": "Escolha quando o CSBU WorkMate notifica você, por exemplo quando uma tarefa agendada termina.",
+    "movedHint": "As notificações agora têm sua própria página de configurações.",
+    "openPage": "Abrir notificações"
+  },
+  "shortcutsPage": {
+    "navLabel": "Atalhos de teclado",
+    "title": "Atalhos de teclado",
+    "description": "Atalhos que o CSBU WorkMate aceita hoje, exibidos para o teclado deste computador.",
+    "readOnlyNote": "Os atalhos ainda não podem ser alterados.",
+    "desktopOnly": "Somente no app para desktop",
+    "or": "ou",
+    "sections": {
+      "general": "Geral",
+      "conversations": "Conversas",
+      "composer": "Caixa de mensagem",
+      "preview": "Visualização de arquivo"
+    },
+    "actions": {
+      "commandPalette": "Abrir a paleta de comandos",
+      "toggleSidebar": "Mostrar ou ocultar a barra lateral",
+      "toggleWorkspace": "Mostrar ou ocultar o painel do espaço de trabalho",
+      "newConversation": "Nova conversa",
+      "nextConversation": "Próxima conversa",
+      "previousConversation": "Conversa anterior",
+      "send": "Enviar mensagem",
+      "newLine": "Nova linha",
+      "saveToDraft": "Adicionar à caixa de rascunhos",
+      "history": "Navegar pelas mensagens enviadas",
+      "leaveHistory": "Sair do histórico de mensagens",
+      "saveFile": "Salvar o arquivo",
+      "closeTab": "Fechar a aba de visualização"
+    }
   }
 }

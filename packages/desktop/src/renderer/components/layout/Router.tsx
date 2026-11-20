@@ -36,6 +36,8 @@ const GovernanceSettings = React.lazy(() => import('@renderer/pages/settings/Gov
 const PetSettings = React.lazy(() => import('@renderer/pages/settings/PetSettings'));
 const ArchivedSettings = React.lazy(() => import('@renderer/pages/settings/ArchivedSettings'));
 const ExtensionSettingsPage = React.lazy(() => import('@renderer/pages/settings/ExtensionSettingsPage'));
+const NotificationsSettings = React.lazy(() => import('@renderer/pages/settings/NotificationsSettings'));
+const ShortcutsSettings = React.lazy(() => import('@renderer/pages/settings/ShortcutsSettings'));
 const RemoteHostSettings = React.lazy(() => import('@renderer/pages/settings/RemoteHostSettings'));
 const ExtensionsSettings = React.lazy(() => import('@renderer/pages/settings/ExtensionsSettings'));
 const LoginPage = React.lazy(() => import('@renderer/pages/login'));
@@ -187,6 +189,8 @@ const PanelRoute: React.FC<{ layout: React.ReactElement }> = ({ layout }) => {
           <Route path='/settings/usage' element={withRouteFallback(UsageSettings)} />
           <Route path='/settings/archived' element={withRouteFallback(ArchivedSettings)} />
           <Route path='/settings/system' element={withRouteFallback(SystemSettings)} />
+          <Route path='/settings/notifications' element={withRouteFallback(NotificationsSettings)} />
+          <Route path='/settings/shortcuts' element={withRouteFallback(ShortcutsSettings)} />
           <Route path='/settings/about' element={withRouteFallback(SystemSettings)} />
           <Route path='/settings/extensions' element={withRouteFallback(ExtensionsSettings)} />
           <Route path='/settings/ext/:tabId' element={withRouteFallback(ExtensionSettingsPage)} />

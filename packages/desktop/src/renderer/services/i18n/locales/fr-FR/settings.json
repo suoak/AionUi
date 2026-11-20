@@ -2034,5 +2034,41 @@
       "moderate": "Risque moyen",
       "dangerous": "Risque élevé"
     }
+  },
+  "notificationsPage": {
+    "navLabel": "Notifications",
+    "title": "Notifications",
+    "description": "Choisissez quand CSBU WorkMate vous avertit, par exemple à la fin d'une tâche planifiée.",
+    "movedHint": "Les notifications ont désormais leur propre page de paramètres.",
+    "openPage": "Ouvrir les notifications"
+  },
+  "shortcutsPage": {
+    "navLabel": "Raccourcis clavier",
+    "title": "Raccourcis clavier",
+    "description": "Raccourcis pris en charge aujourd'hui par CSBU WorkMate, affichés pour le clavier de cet ordinateur.",
+    "readOnlyNote": "Les raccourcis ne peuvent pas encore être modifiés.",
+    "desktopOnly": "Application de bureau uniquement",
+    "or": "ou",
+    "sections": {
+      "general": "Général",
+      "conversations": "Conversations",
+      "composer": "Zone de saisie",
+      "preview": "Aperçu de fichier"
+    },
+    "actions": {
+      "commandPalette": "Ouvrir la palette de commandes",
+      "toggleSidebar": "Afficher ou masquer la barre latérale",
+      "toggleWorkspace": "Afficher ou masquer le panneau d'espace de travail",
+      "newConversation": "Nouvelle conversation",
+      "nextConversation": "Conversation suivante",
+      "previousConversation": "Conversation précédente",
+      "send": "Envoyer le message",
+      "newLine": "Nouvelle ligne",
+      "saveToDraft": "Ajouter à la boîte de brouillons",
+      "history": "Parcourir les messages envoyés",
+      "leaveHistory": "Quitter l'historique des messages",
+      "saveFile": "Enregistrer le fichier",
+      "closeTab": "Fermer l'onglet d'aperçu"
+    }
   }
 }
