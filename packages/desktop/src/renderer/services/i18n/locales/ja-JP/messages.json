@@ -97,5 +97,21 @@
   "requestDetails": "リクエスト内容:",
   "delivery": {
     "pending": "未読"
+  },
+  "atAssistant": {
+    "group": "アシスタント",
+    "filesGroup": "ファイル"
+  },
+  "delegation": {
+    "title": "委任",
+    "open": "開く",
+    "status": {
+      "starting": "開始中",
+      "running": "実行中",
+      "completed": "完了",
+      "failed": "失敗"
+    },
+    "more_one": "ほか {{count}} 件",
+    "more_other": "ほか {{count}} 件"
   }
 }

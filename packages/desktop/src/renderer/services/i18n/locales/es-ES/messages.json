@@ -97,5 +97,21 @@
   "requestDetails": "Detalles de la solicitud:",
   "delivery": {
     "pending": "No leído"
+  },
+  "atAssistant": {
+    "group": "Asistentes",
+    "filesGroup": "Archivos"
+  },
+  "delegation": {
+    "title": "Delegaciones",
+    "open": "Abrir",
+    "status": {
+      "starting": "Iniciando",
+      "running": "En curso",
+      "completed": "Hecha",
+      "failed": "Fallida"
+    },
+    "more_one": "+{{count}} más",
+    "more_other": "+{{count}} más"
   }
 }

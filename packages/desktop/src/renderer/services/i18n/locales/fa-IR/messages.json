@@ -97,5 +97,21 @@
   "requestDetails": "جزئیات درخواست:",
   "delivery": {
     "pending": "خوانده‌نشده"
+  },
+  "atAssistant": {
+    "group": "دستیارها",
+    "filesGroup": "فایل‌ها"
+  },
+  "delegation": {
+    "title": "واگذاری‌ها",
+    "open": "باز کردن",
+    "status": {
+      "starting": "در حال شروع",
+      "running": "در حال اجرا",
+      "completed": "انجام شد",
+      "failed": "ناموفق"
+    },
+    "more_one": "+{{count}} مورد دیگر",
+    "more_other": "+{{count}} مورد دیگر"
   }
 }

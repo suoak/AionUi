@@ -7,6 +7,16 @@
 import { ipcBridge } from '@/common';
 import AtFileMenu from '@/renderer/components/chat/AtFileMenu';
 import AtSessionMenu from '@/renderer/components/chat/AtSessionMenu';
+import { useDelegableAssistants } from '@/renderer/hooks/chat/useDelegableAssistants';
+import { useConversationDelegations } from '@/renderer/hooks/chat/useConversationDelegations';
+import DelegationStrip from '@/renderer/components/chat/DelegationStrip';
+import {
+  assistantMentionText,
+  filterAssistantMentions,
+  type AssistantMentionItem,
+} from '@/renderer/utils/chat/assistantMention';
+import { resolveLocaleKey } from '@/common/utils';
+import { resolveAssistantName } from '@/renderer/utils/model/assistantDisplay';
 import BtwOverlay from '@/renderer/components/chat/BtwOverlay';
 import { useInputFocusRing } from '@/renderer/hooks/chat/useInputFocusRing';
 import SlashCommandMenu, { type SlashCommandMenuItem } from '@/renderer/components/chat/SlashCommandMenu';
@@ -715,6 +725,29 @@ const SendBox: React.FC<{
     }
     return filterWorkspaceMentionItems(workspaceMentionItems, deferredAtFileQuery);
   }, [deferredAtFileQuery, projectMention.active, projectMention.items, workspaceMentionItems]);
+  // 3.0 U7: `@` also lists assistants to delegate to (not in team chats, which
+  // route @ to teammates). Picking one is the only thing that grants it.
+  const canMentionAssistants = !isTeamConversation && Boolean(conversationContext?.conversation_id);
+  const assistantLocaleKey = resolveLocaleKey(i18n?.language ?? 'en-US');
+  const delegations = useConversationDelegations(
+    canMentionAssistants ? conversationContext?.conversation_id : undefined,
+    Boolean(loading)
+  );
+  const delegableAssistants = useDelegableAssistants(
+    canMentionAssistants && (isAtFileMenuOpen || delegations.items.length > 0)
+  );
+  const assistantNameById = useCallback(
+    (id: string) => {
+      const found = delegableAssistants.find((a) => a.id === id);
+      return found ? resolveAssistantName(found, assistantLocaleKey, id) : id;
+    },
+    [assistantLocaleKey, delegableAssistants]
+  );
+  const assistantMentionItems = useMemo(() => {
+    if (!canMentionAssistants || !isAtFileMenuOpen || /[\\/.]/.test(deferredAtFileQuery)) return [];
+    return filterAssistantMentions(delegableAssistants, deferredAtFileQuery, assistantLocaleKey);
+  }, [assistantLocaleKey, canMentionAssistants, deferredAtFileQuery, delegableAssistants, isAtFileMenuOpen]);
+  const atMenuItemCount = assistantMentionItems.length + visibleAtFileMenuItems.length;
   const isAtSessionMenuOpen =
     canMentionSessions &&
     Boolean(activeAtSessionQuery) &&
@@ -997,12 +1030,12 @@ const SendBox: React.FC<{
   }, [sessionMentionSearch.items]);
 
   useEffect(() => {
-    if (!visibleAtFileMenuItems.length) {
+    if (!atMenuItemCount) {
       setAtFileMenuActiveIndex(0);
       return;
     }
-    setAtFileMenuActiveIndex((previous) => Math.min(previous, visibleAtFileMenuItems.length - 1));
-  }, [visibleAtFileMenuItems]);
+    setAtFileMenuActiveIndex((previous) => Math.min(previous, atMenuItemCount - 1));
+  }, [atMenuItemCount]);
 
   useEffect(() => {
     if (!selectedWorkspaceItems || !onSelectedWorkspaceItemsChange) {
@@ -1204,6 +1237,40 @@ const SendBox: React.FC<{
       selectedWorkspaceItems,
       setInput,
     ]
+  );
+
+  const insertSelectedAssistant = useCallback(
+    (item: AssistantMentionItem) => {
+      if (!activeAtFileQuery) {
+        return;
+      }
+      const insertion = assistantMentionText(item);
+      const { value: nextValue, caret: nextCaret } = applyMentionInsertion(
+        input,
+        activeAtFileQuery.start,
+        activeAtFileQuery.end,
+        insertion
+      );
+      setDismissedAtFileToken(`${activeAtFileQuery.start}:${insertion.slice(1)}`);
+      setInput(nextValue);
+      const conversationId = conversationContext?.conversation_id;
+      if (conversationId) {
+        // Older cores have no delegation API (404): the mention stays plain text.
+        void ipcBridge.delegation?.grant
+          ?.invoke({ conversation_id: conversationId, assistant_ids: [item.id] })
+          .catch((error: unknown) => console.warn('[SendBox] delegation grant failed:', error));
+      }
+      requestAnimationFrame(() => {
+        const textarea = getTextareaElement();
+        if (!textarea) {
+          return;
+        }
+        textarea.focus();
+        textarea.setSelectionRange(nextCaret, nextCaret);
+        setCaretPosition(nextCaret);
+      });
+    },
+    [activeAtFileQuery, conversationContext?.conversation_id, getTextareaElement, input, setInput]
   );
 
   const insertSelectedAtSession = useCallback(
@@ -1494,7 +1561,7 @@ const SendBox: React.FC<{
       // Key→action contract lives in the pure `resolveAtFileMenuKey` (unit-tested).
       // Enter and Tab both accept; Tab is only hijacked while the dropdown is open
       // (guarded above), so with the menu closed Tab keeps normal focus behavior.
-      const action = resolveAtFileMenuKey(event.key, visibleAtFileMenuItems.length > 0);
+      const action = resolveAtFileMenuKey(event.key, atMenuItemCount > 0);
       if (!action) {
         return false;
       }
@@ -1506,16 +1573,22 @@ const SendBox: React.FC<{
       }
       if (action === 'down') {
         event.preventDefault();
-        setAtFileMenuActiveIndex((previous) => (previous + 1) % visibleAtFileMenuItems.length);
+        setAtFileMenuActiveIndex((previous) => (previous + 1) % atMenuItemCount);
         return true;
       }
       if (action === 'up') {
         event.preventDefault();
-        setAtFileMenuActiveIndex((previous) => (previous === 0 ? visibleAtFileMenuItems.length - 1 : previous - 1));
+        setAtFileMenuActiveIndex((previous) => (previous === 0 ? atMenuItemCount - 1 : previous - 1));
         return true;
       }
       // action === 'accept'
-      const selectedItem = visibleAtFileMenuItems[atFileMenuActiveIndex];
+      const assistant = assistantMentionItems[atFileMenuActiveIndex];
+      if (assistant) {
+        event.preventDefault();
+        insertSelectedAssistant(assistant);
+        return true;
+      }
+      const selectedItem = visibleAtFileMenuItems[atFileMenuActiveIndex - assistantMentionItems.length];
       if (!selectedItem) {
         return false;
       }
@@ -1523,7 +1596,16 @@ const SendBox: React.FC<{
       insertSelectedAtFile(selectedItem);
       return true;
     },
-    [activeAtFileTokenKey, atFileMenuActiveIndex, insertSelectedAtFile, isAtFileMenuOpen, visibleAtFileMenuItems]
+    [
+      activeAtFileTokenKey,
+      assistantMentionItems,
+      atFileMenuActiveIndex,
+      atMenuItemCount,
+      insertSelectedAssistant,
+      insertSelectedAtFile,
+      isAtFileMenuOpen,
+      visibleAtFileMenuItems,
+    ]
   );
 
   const sendMessageHandler = () => {
@@ -1907,6 +1989,7 @@ const SendBox: React.FC<{
         // panel's own untouched content, not re-fight that outer stacking.
         <div className='absolute right-12px top--28px z-3 pointer-events-auto'>{topRightOverlay}</div>
       )}
+      {canMentionAssistants ? <DelegationStrip items={delegations.items} assistantName={assistantNameById} /> : null}
       <div
         ref={containerRef}
         className={`sendbox-panel relative p-16px border-3 b bg-dialog-fill-0 b-solid rd-20px flex flex-col ${isOverlayOpen ? 'overflow-visible' : 'overflow-hidden'} ${isFileDragging ? 'b-dashed sendbox-panel--dragging' : ''}`}
@@ -1972,6 +2055,10 @@ const SendBox: React.FC<{
               loadingText={t('messages.atFile.loading', { defaultValue: 'Loading...' })}
               onHoverItem={setAtFileMenuActiveIndex}
               onSelectItem={insertSelectedAtFile}
+              assistants={assistantMentionItems}
+              assistantsLabel={t('messages.atAssistant.group')}
+              filesLabel={t('messages.atAssistant.filesGroup')}
+              onSelectAssistant={insertSelectedAssistant}
               getSubtitle={
                 projectMention.active
                   ? (item) =>

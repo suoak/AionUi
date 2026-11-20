@@ -97,5 +97,21 @@
   "requestDetails": "요청 내용:",
   "delivery": {
     "pending": "읽지 않음"
+  },
+  "atAssistant": {
+    "group": "어시스턴트",
+    "filesGroup": "파일"
+  },
+  "delegation": {
+    "title": "위임",
+    "open": "열기",
+    "status": {
+      "starting": "시작 중",
+      "running": "실행 중",
+      "completed": "완료",
+      "failed": "실패"
+    },
+    "more_one": "{{count}}개 더",
+    "more_other": "{{count}}개 더"
   }
 }

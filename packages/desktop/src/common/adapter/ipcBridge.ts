@@ -158,6 +158,7 @@ import type {
   FanoutCompare,
   FanoutGroup,
 } from '../types/fanout';
+import type { Delegation } from '../types/delegation';
 import {
   normalizeAgentCenterDetail,
   normalizeAgentCenterListItem,
@@ -4332,3 +4333,19 @@ export interface IContextBreakdown {
   source: ContextSegmentSource;
   segments: IContextBreakdownSegment[];
 }
+
+/**
+ * 3.0 C7 `@assistant` delegation (`/api/conversations/{id}/delegation*`,
+ * aioncore ≥ 0.6). Picking an assistant in the `@` menu is the only grant;
+ * older cores answer 404 and the UI hides delegation.
+ */
+export const delegation = {
+  grant: httpPost<void, { conversation_id: string; assistant_ids: string[] }>(
+    (p) => `/api/conversations/${encodeURIComponent(p.conversation_id)}/delegation-grants`,
+    (p) => ({ assistant_ids: p.assistant_ids })
+  ),
+  list: httpGet<Delegation[], { conversation_id: string }>(
+    (p) => `/api/conversations/${encodeURIComponent(p.conversation_id)}/delegations`,
+    { silentStatuses: [404] }
+  ),
+};
