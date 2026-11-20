@@ -1983,5 +1983,53 @@
     "noTurns": "No model-visible turns found in that session file",
     "importedName": "[Imported] {{id}}",
     "success": "Imported {{count}} turns → {{title}}"
+  },
+  "extensionsPage": {
+    "navLabel": "افزونه‌های نصب‌شده",
+    "title": "افزونه‌های نصب‌شده",
+    "description": "افزونه‌هایی که CSBU WorkMate بارگذاری کرده است. با خاموش کردن هر افزونه، زبانه‌های تنظیمات، فرمان‌ها و پنل‌های آن پنهان می‌شوند.",
+    "searchPlaceholder": "فیلتر افزونه‌ها",
+    "loading": "در حال بارگذاری افزونه‌ها…",
+    "loadFailed": "بارگذاری افزونه‌ها ممکن نشد.",
+    "retry": "تلاش دوباره",
+    "empty": "هیچ افزونه‌ای نصب نشده است.",
+    "noMatch": "هیچ افزونه‌ای مطابقت ندارد.",
+    "version": "v{{version}}",
+    "source": {
+      "local": "پوشهٔ محلی",
+      "appdata": "پوشهٔ داده‌های برنامه",
+      "env": "مسیر متغیر محیطی",
+      "other": "منبع: {{source}}"
+    },
+    "toggleLabel": "روشن یا خاموش کردن {{name}}",
+    "enableFailed": "روشن کردن {{name}} ممکن نشد.",
+    "disableFailed": "خاموش کردن {{name}} ممکن نشد.",
+    "enabledToast": "{{name}} روشن است.",
+    "disabledToast": "{{name}} خاموش است.",
+    "contributions": {
+      "settingsTabs": "زبانه‌های تنظیمات: {{count}}",
+      "commands": "فرمان‌ها: {{count}}",
+      "panels": "پنل‌ها: {{count}}",
+      "views": "نماهای پنل کار: {{count}}",
+      "separator": " · ",
+      "none": "هیچ مورد قابل‌مشاهده‌ای ندارد.",
+      "hiddenWhileOff": "خاموش: زبانه‌ها، فرمان‌ها و پنل‌های آن پنهان هستند."
+    },
+    "permissions": {
+      "show": "مجوزها",
+      "hide": "پنهان کردن مجوزها",
+      "loadFailed": "بارگذاری مجوزها ممکن نشد.",
+      "none": "هیچ مجوزی درخواست نشده است.",
+      "level": {
+        "none": "هیچ",
+        "limited": "محدود",
+        "full": "کامل"
+      }
+    },
+    "risk": {
+      "safe": "ریسک کم",
+      "moderate": "ریسک متوسط",
+      "dangerous": "ریسک زیاد"
+    }
   }
 }

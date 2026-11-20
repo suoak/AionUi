@@ -46,6 +46,7 @@ export const BUILTIN_TAB_IDS = [
   'webui',
   'devices',
   'local-kb',
+  'extensions',
   'governance',
   'usage',
   'archived',
@@ -123,6 +124,12 @@ const SettingsSider: React.FC<{ collapsed?: boolean; tooltipEnabled?: boolean }>
         label: t('settings.localKb.navLabel'),
         icon: <BookOne />,
         path: 'local-kb',
+      },
+      extensions: {
+        id: 'extensions',
+        label: t('settings.extensionsPage.navLabel'),
+        icon: <Puzzle />,
+        path: 'extensions',
       },
       governance: {
         id: 'governance',

@@ -1988,5 +1988,53 @@
     "noTurns": "No model-visible turns found in that session file",
     "importedName": "[Imported] {{id}}",
     "success": "Imported {{count}} turns → {{title}}"
+  },
+  "extensionsPage": {
+    "navLabel": "Installed extensions",
+    "title": "Installed extensions",
+    "description": "Extensions loaded by CSBU WorkMate. Turning one off hides its settings tabs, commands and panels.",
+    "searchPlaceholder": "Filter extensions",
+    "loading": "Loading extensions…",
+    "loadFailed": "Couldn't load extensions.",
+    "retry": "Retry",
+    "empty": "No extensions are installed.",
+    "noMatch": "No extensions match.",
+    "version": "v{{version}}",
+    "source": {
+      "local": "Local folder",
+      "appdata": "App data folder",
+      "env": "Environment path",
+      "other": "Source: {{source}}"
+    },
+    "toggleLabel": "Turn {{name}} on or off",
+    "enableFailed": "Couldn't turn on {{name}}.",
+    "disableFailed": "Couldn't turn off {{name}}.",
+    "enabledToast": "{{name}} is on.",
+    "disabledToast": "{{name}} is off.",
+    "contributions": {
+      "settingsTabs": "Settings tabs: {{count}}",
+      "commands": "Commands: {{count}}",
+      "panels": "Panels: {{count}}",
+      "views": "Work panel views: {{count}}",
+      "separator": " · ",
+      "none": "No visible contributions.",
+      "hiddenWhileOff": "Off: its tabs, commands and panels are hidden."
+    },
+    "permissions": {
+      "show": "Permissions",
+      "hide": "Hide permissions",
+      "loadFailed": "Couldn't load permissions.",
+      "none": "No permissions requested.",
+      "level": {
+        "none": "None",
+        "limited": "Limited",
+        "full": "Full"
+      }
+    },
+    "risk": {
+      "safe": "Low risk",
+      "moderate": "Medium risk",
+      "dangerous": "High risk"
+    }
   }
 }

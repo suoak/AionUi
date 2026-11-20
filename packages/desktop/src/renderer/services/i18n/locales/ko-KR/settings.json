@@ -1985,5 +1985,53 @@
     "noTurns": "No model-visible turns found in that session file",
     "importedName": "[Imported] {{id}}",
     "success": "Imported {{count}} turns → {{title}}"
+  },
+  "extensionsPage": {
+    "navLabel": "설치된 확장 프로그램",
+    "title": "설치된 확장 프로그램",
+    "description": "CSBU WorkMate가 불러온 확장 프로그램입니다. 끄면 해당 설정 탭, 명령, 패널이 숨겨집니다.",
+    "searchPlaceholder": "확장 프로그램 필터",
+    "loading": "확장 프로그램을 불러오는 중…",
+    "loadFailed": "확장 프로그램을 불러오지 못했습니다.",
+    "retry": "다시 시도",
+    "empty": "설치된 확장 프로그램이 없습니다.",
+    "noMatch": "일치하는 확장 프로그램이 없습니다.",
+    "version": "v{{version}}",
+    "source": {
+      "local": "로컬 폴더",
+      "appdata": "앱 데이터 폴더",
+      "env": "환경 변수 경로",
+      "other": "출처: {{source}}"
+    },
+    "toggleLabel": "{{name}} 켜기/끄기",
+    "enableFailed": "{{name}}을(를) 켜지 못했습니다.",
+    "disableFailed": "{{name}}을(를) 끄지 못했습니다.",
+    "enabledToast": "{{name}}이(가) 켜졌습니다.",
+    "disabledToast": "{{name}}이(가) 꺼졌습니다.",
+    "contributions": {
+      "settingsTabs": "설정 탭: {{count}}",
+      "commands": "명령: {{count}}",
+      "panels": "패널: {{count}}",
+      "views": "작업 패널 보기: {{count}}",
+      "separator": " · ",
+      "none": "표시되는 기여 항목이 없습니다.",
+      "hiddenWhileOff": "꺼짐: 탭, 명령, 패널이 숨겨져 있습니다."
+    },
+    "permissions": {
+      "show": "권한",
+      "hide": "권한 숨기기",
+      "loadFailed": "권한을 불러오지 못했습니다.",
+      "none": "요청된 권한이 없습니다.",
+      "level": {
+        "none": "없음",
+        "limited": "제한됨",
+        "full": "전체"
+      }
+    },
+    "risk": {
+      "safe": "낮은 위험",
+      "moderate": "중간 위험",
+      "dangerous": "높은 위험"
+    }
   }
 }

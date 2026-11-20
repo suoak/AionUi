@@ -1983,5 +1983,53 @@
     "noTurns": "No model-visible turns found in that session file",
     "importedName": "[Imported] {{id}}",
     "success": "Imported {{count}} turns → {{title}}"
+  },
+  "extensionsPage": {
+    "navLabel": "Installierte Erweiterungen",
+    "title": "Installierte Erweiterungen",
+    "description": "Von CSBU WorkMate geladene Erweiterungen. Wenn Sie eine ausschalten, werden ihre Einstellungs-Tabs, Befehle und Panels ausgeblendet.",
+    "searchPlaceholder": "Erweiterungen filtern",
+    "loading": "Erweiterungen werden geladen…",
+    "loadFailed": "Erweiterungen konnten nicht geladen werden.",
+    "retry": "Erneut versuchen",
+    "empty": "Es sind keine Erweiterungen installiert.",
+    "noMatch": "Keine passenden Erweiterungen.",
+    "version": "v{{version}}",
+    "source": {
+      "local": "Lokaler Ordner",
+      "appdata": "App-Datenordner",
+      "env": "Umgebungspfad",
+      "other": "Quelle: {{source}}"
+    },
+    "toggleLabel": "{{name}} ein- oder ausschalten",
+    "enableFailed": "{{name}} konnte nicht eingeschaltet werden.",
+    "disableFailed": "{{name}} konnte nicht ausgeschaltet werden.",
+    "enabledToast": "{{name}} ist eingeschaltet.",
+    "disabledToast": "{{name}} ist ausgeschaltet.",
+    "contributions": {
+      "settingsTabs": "Einstellungs-Tabs: {{count}}",
+      "commands": "Befehle: {{count}}",
+      "panels": "Panels: {{count}}",
+      "views": "Arbeitsbereich-Ansichten: {{count}}",
+      "separator": " · ",
+      "none": "Keine sichtbaren Beiträge.",
+      "hiddenWhileOff": "Aus: Tabs, Befehle und Panels sind ausgeblendet."
+    },
+    "permissions": {
+      "show": "Berechtigungen",
+      "hide": "Berechtigungen ausblenden",
+      "loadFailed": "Berechtigungen konnten nicht geladen werden.",
+      "none": "Keine Berechtigungen angefordert.",
+      "level": {
+        "none": "Keine",
+        "limited": "Eingeschränkt",
+        "full": "Voll"
+      }
+    },
+    "risk": {
+      "safe": "Geringes Risiko",
+      "moderate": "Mittleres Risiko",
+      "dangerous": "Hohes Risiko"
+    }
   }
 }

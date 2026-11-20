@@ -1983,5 +1983,53 @@
     "noTurns": "No model-visible turns found in that session file",
     "importedName": "[Imported] {{id}}",
     "success": "Imported {{count}} turns → {{title}}"
+  },
+  "extensionsPage": {
+    "navLabel": "Extensions installées",
+    "title": "Extensions installées",
+    "description": "Extensions chargées par CSBU WorkMate. En désactiver une masque ses onglets de paramètres, commandes et panneaux.",
+    "searchPlaceholder": "Filtrer les extensions",
+    "loading": "Chargement des extensions…",
+    "loadFailed": "Impossible de charger les extensions.",
+    "retry": "Réessayer",
+    "empty": "Aucune extension n'est installée.",
+    "noMatch": "Aucune extension ne correspond.",
+    "version": "v{{version}}",
+    "source": {
+      "local": "Dossier local",
+      "appdata": "Dossier de données de l'app",
+      "env": "Chemin d'environnement",
+      "other": "Source : {{source}}"
+    },
+    "toggleLabel": "Activer ou désactiver {{name}}",
+    "enableFailed": "Impossible d'activer {{name}}.",
+    "disableFailed": "Impossible de désactiver {{name}}.",
+    "enabledToast": "{{name}} est activée.",
+    "disabledToast": "{{name}} est désactivée.",
+    "contributions": {
+      "settingsTabs": "Onglets de paramètres : {{count}}",
+      "commands": "Commandes : {{count}}",
+      "panels": "Panneaux : {{count}}",
+      "views": "Vues du panneau de travail : {{count}}",
+      "separator": " · ",
+      "none": "Aucune contribution visible.",
+      "hiddenWhileOff": "Désactivée : ses onglets, commandes et panneaux sont masqués."
+    },
+    "permissions": {
+      "show": "Autorisations",
+      "hide": "Masquer les autorisations",
+      "loadFailed": "Impossible de charger les autorisations.",
+      "none": "Aucune autorisation demandée.",
+      "level": {
+        "none": "Aucun",
+        "limited": "Limité",
+        "full": "Complet"
+      }
+    },
+    "risk": {
+      "safe": "Risque faible",
+      "moderate": "Risque moyen",
+      "dangerous": "Risque élevé"
+    }
   }
 }

@@ -57,13 +57,15 @@ afterEach(() => {
 });
 
 describe('SettingsSider groups and search (3.0 V7)', () => {
-  it('shows the six groups in order, Extensions only when there are extension tabs', () => {
+  it('shows the six groups in order; Installed extensions leads the Extensions group', () => {
     renderSider();
-    expect(headers()).toEqual(['general', 'runtime', 'workspace', 'team', 'about']);
+    expect(headers()).toEqual(['general', 'runtime', 'workspace', 'extensions', 'team', 'about']);
+    expect(rows().indexOf('extensions')).toBe(rows().indexOf('governance') - 1);
     cleanup();
     extensionTabs.current = [{ id: 'ext-a', name: 'Ext A' }];
     renderSider();
     expect(headers()).toEqual(['general', 'runtime', 'workspace', 'extensions', 'team', 'about']);
+    expect(rows().indexOf('ext-a')).toBe(rows().indexOf('extensions') + 1);
     expect(rows().indexOf('ext-a')).toBe(rows().indexOf('governance') - 1);
     expect(screen.getByText('settings.groups.extensions')).toBeTruthy();
   });

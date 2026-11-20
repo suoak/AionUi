@@ -1997,5 +1997,53 @@
     "noTurns": "No model-visible turns found in that session file",
     "importedName": "[Imported] {{id}}",
     "success": "Imported {{count}} turns → {{title}}"
+  },
+  "extensionsPage": {
+    "navLabel": "Установленные расширения",
+    "title": "Установленные расширения",
+    "description": "Расширения, загруженные CSBU WorkMate. Если отключить расширение, его вкладки настроек, команды и панели будут скрыты.",
+    "searchPlaceholder": "Фильтр расширений",
+    "loading": "Загрузка расширений…",
+    "loadFailed": "Не удалось загрузить расширения.",
+    "retry": "Повторить",
+    "empty": "Расширения не установлены.",
+    "noMatch": "Нет подходящих расширений.",
+    "version": "v{{version}}",
+    "source": {
+      "local": "Локальная папка",
+      "appdata": "Папка данных приложения",
+      "env": "Путь из переменной окружения",
+      "other": "Источник: {{source}}"
+    },
+    "toggleLabel": "Включить или отключить {{name}}",
+    "enableFailed": "Не удалось включить {{name}}.",
+    "disableFailed": "Не удалось отключить {{name}}.",
+    "enabledToast": "{{name}} включено.",
+    "disabledToast": "{{name}} отключено.",
+    "contributions": {
+      "settingsTabs": "Вкладки настроек: {{count}}",
+      "commands": "Команды: {{count}}",
+      "panels": "Панели: {{count}}",
+      "views": "Представления рабочей панели: {{count}}",
+      "separator": " · ",
+      "none": "Нет видимых элементов.",
+      "hiddenWhileOff": "Отключено: вкладки, команды и панели скрыты."
+    },
+    "permissions": {
+      "show": "Разрешения",
+      "hide": "Скрыть разрешения",
+      "loadFailed": "Не удалось загрузить разрешения.",
+      "none": "Разрешения не запрашиваются.",
+      "level": {
+        "none": "Нет",
+        "limited": "Ограниченный",
+        "full": "Полный"
+      }
+    },
+    "risk": {
+      "safe": "Низкий риск",
+      "moderate": "Средний риск",
+      "dangerous": "Высокий риск"
+    }
   }
 }

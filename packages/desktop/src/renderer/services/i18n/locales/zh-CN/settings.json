@@ -1989,5 +1989,53 @@
     "noTurns": "该会话文件中没有模型可见的回合",
     "importedName": "[已导入] {{id}}",
     "success": "已导入 {{count}} 个回合 → {{title}}"
+  },
+  "extensionsPage": {
+    "navLabel": "已安装扩展",
+    "title": "已安装扩展",
+    "description": "CSBU WorkMate 已加载的扩展。关闭后，其设置页、命令和面板将被隐藏。",
+    "searchPlaceholder": "筛选扩展",
+    "loading": "正在加载扩展…",
+    "loadFailed": "无法加载扩展。",
+    "retry": "重试",
+    "empty": "尚未安装任何扩展。",
+    "noMatch": "没有匹配的扩展。",
+    "version": "v{{version}}",
+    "source": {
+      "local": "本地文件夹",
+      "appdata": "应用数据文件夹",
+      "env": "环境变量路径",
+      "other": "来源：{{source}}"
+    },
+    "toggleLabel": "开启或关闭 {{name}}",
+    "enableFailed": "无法开启 {{name}}。",
+    "disableFailed": "无法关闭 {{name}}。",
+    "enabledToast": "{{name}} 已开启。",
+    "disabledToast": "{{name}} 已关闭。",
+    "contributions": {
+      "settingsTabs": "设置页：{{count}}",
+      "commands": "命令：{{count}}",
+      "panels": "面板：{{count}}",
+      "views": "工作面板视图：{{count}}",
+      "separator": " · ",
+      "none": "没有可见的扩展内容。",
+      "hiddenWhileOff": "已关闭：其设置页、命令和面板已隐藏。"
+    },
+    "permissions": {
+      "show": "权限",
+      "hide": "隐藏权限",
+      "loadFailed": "无法加载权限。",
+      "none": "未请求任何权限。",
+      "level": {
+        "none": "无",
+        "limited": "受限",
+        "full": "完全"
+      }
+    },
+    "risk": {
+      "safe": "低风险",
+      "moderate": "中风险",
+      "dangerous": "高风险"
+    }
   }
 }

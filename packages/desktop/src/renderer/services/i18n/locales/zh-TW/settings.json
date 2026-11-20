@@ -1990,5 +1990,53 @@
     "noTurns": "該會話檔案中沒有模型可見的回合",
     "importedName": "[已匯入] {{id}}",
     "success": "已匯入 {{count}} 個回合 → {{title}}"
+  },
+  "extensionsPage": {
+    "navLabel": "已安裝擴充功能",
+    "title": "已安裝擴充功能",
+    "description": "CSBU WorkMate 已載入的擴充功能。關閉後，其設定頁、指令和面板將會隱藏。",
+    "searchPlaceholder": "篩選擴充功能",
+    "loading": "正在載入擴充功能…",
+    "loadFailed": "無法載入擴充功能。",
+    "retry": "重試",
+    "empty": "尚未安裝任何擴充功能。",
+    "noMatch": "沒有符合的擴充功能。",
+    "version": "v{{version}}",
+    "source": {
+      "local": "本機資料夾",
+      "appdata": "應用程式資料夾",
+      "env": "環境變數路徑",
+      "other": "來源：{{source}}"
+    },
+    "toggleLabel": "開啟或關閉 {{name}}",
+    "enableFailed": "無法開啟 {{name}}。",
+    "disableFailed": "無法關閉 {{name}}。",
+    "enabledToast": "{{name}} 已開啟。",
+    "disabledToast": "{{name}} 已關閉。",
+    "contributions": {
+      "settingsTabs": "設定頁：{{count}}",
+      "commands": "指令：{{count}}",
+      "panels": "面板：{{count}}",
+      "views": "工作面板檢視：{{count}}",
+      "separator": " · ",
+      "none": "沒有可見的擴充內容。",
+      "hiddenWhileOff": "已關閉：其設定頁、指令和面板已隱藏。"
+    },
+    "permissions": {
+      "show": "權限",
+      "hide": "隱藏權限",
+      "loadFailed": "無法載入權限。",
+      "none": "未要求任何權限。",
+      "level": {
+        "none": "無",
+        "limited": "受限",
+        "full": "完全"
+      }
+    },
+    "risk": {
+      "safe": "低風險",
+      "moderate": "中風險",
+      "dangerous": "高風險"
+    }
   }
 }

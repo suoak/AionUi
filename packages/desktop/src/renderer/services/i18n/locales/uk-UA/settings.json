@@ -1998,5 +1998,53 @@
     "noTurns": "No model-visible turns found in that session file",
     "importedName": "[Imported] {{id}}",
     "success": "Imported {{count}} turns → {{title}}"
+  },
+  "extensionsPage": {
+    "navLabel": "Встановлені розширення",
+    "title": "Встановлені розширення",
+    "description": "Розширення, завантажені CSBU WorkMate. Якщо вимкнути розширення, його вкладки налаштувань, команди й панелі буде приховано.",
+    "searchPlaceholder": "Фільтр розширень",
+    "loading": "Завантаження розширень…",
+    "loadFailed": "Не вдалося завантажити розширення.",
+    "retry": "Повторити",
+    "empty": "Розширення не встановлено.",
+    "noMatch": "Немає відповідних розширень.",
+    "version": "v{{version}}",
+    "source": {
+      "local": "Локальна тека",
+      "appdata": "Тека даних застосунку",
+      "env": "Шлях зі змінної середовища",
+      "other": "Джерело: {{source}}"
+    },
+    "toggleLabel": "Увімкнути або вимкнути {{name}}",
+    "enableFailed": "Не вдалося увімкнути {{name}}.",
+    "disableFailed": "Не вдалося вимкнути {{name}}.",
+    "enabledToast": "{{name}} увімкнено.",
+    "disabledToast": "{{name}} вимкнено.",
+    "contributions": {
+      "settingsTabs": "Вкладки налаштувань: {{count}}",
+      "commands": "Команди: {{count}}",
+      "panels": "Панелі: {{count}}",
+      "views": "Подання робочої панелі: {{count}}",
+      "separator": " · ",
+      "none": "Немає видимих елементів.",
+      "hiddenWhileOff": "Вимкнено: вкладки, команди й панелі приховано."
+    },
+    "permissions": {
+      "show": "Дозволи",
+      "hide": "Приховати дозволи",
+      "loadFailed": "Не вдалося завантажити дозволи.",
+      "none": "Дозволи не запитуються.",
+      "level": {
+        "none": "Немає",
+        "limited": "Обмежений",
+        "full": "Повний"
+      }
+    },
+    "risk": {
+      "safe": "Низький ризик",
+      "moderate": "Середній ризик",
+      "dangerous": "Високий ризик"
+    }
   }
 }

@@ -37,6 +37,7 @@ describe('settingsNav (3.0 V7)', () => {
     expect(new Set(SETTINGS_TAB_ORDER).size).toBe(SETTINGS_TAB_ORDER.length);
     expect(settingsGroupOfTab('devices')).toBe('workspace');
     expect(settingsGroupOfTab('governance')).toBe('team');
+    expect(settingsGroupOfTab('extensions')).toBe('extensions');
   });
 
   it('orders builtins by group and hides tabs that are not visible', () => {

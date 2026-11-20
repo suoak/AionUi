@@ -1983,5 +1983,53 @@
     "noTurns": "No model-visible turns found in that session file",
     "importedName": "[Imported] {{id}}",
     "success": "Imported {{count}} turns → {{title}}"
+  },
+  "extensionsPage": {
+    "navLabel": "Yüklü uzantılar",
+    "title": "Yüklü uzantılar",
+    "description": "CSBU WorkMate tarafından yüklenen uzantılar. Birini kapatmak, ayar sekmelerini, komutlarını ve panellerini gizler.",
+    "searchPlaceholder": "Uzantıları filtrele",
+    "loading": "Uzantılar yükleniyor…",
+    "loadFailed": "Uzantılar yüklenemedi.",
+    "retry": "Yeniden dene",
+    "empty": "Yüklü uzantı yok.",
+    "noMatch": "Eşleşen uzantı yok.",
+    "version": "v{{version}}",
+    "source": {
+      "local": "Yerel klasör",
+      "appdata": "Uygulama veri klasörü",
+      "env": "Ortam yolu",
+      "other": "Kaynak: {{source}}"
+    },
+    "toggleLabel": "{{name}} uzantısını aç veya kapat",
+    "enableFailed": "{{name}} açılamadı.",
+    "disableFailed": "{{name}} kapatılamadı.",
+    "enabledToast": "{{name}} açık.",
+    "disabledToast": "{{name}} kapalı.",
+    "contributions": {
+      "settingsTabs": "Ayar sekmeleri: {{count}}",
+      "commands": "Komutlar: {{count}}",
+      "panels": "Paneller: {{count}}",
+      "views": "Çalışma paneli görünümleri: {{count}}",
+      "separator": " · ",
+      "none": "Görünür katkı yok.",
+      "hiddenWhileOff": "Kapalı: sekmeleri, komutları ve panelleri gizli."
+    },
+    "permissions": {
+      "show": "İzinler",
+      "hide": "İzinleri gizle",
+      "loadFailed": "İzinler yüklenemedi.",
+      "none": "İzin istenmiyor.",
+      "level": {
+        "none": "Yok",
+        "limited": "Sınırlı",
+        "full": "Tam"
+      }
+    },
+    "risk": {
+      "safe": "Düşük risk",
+      "moderate": "Orta risk",
+      "dangerous": "Yüksek risk"
+    }
   }
 }
