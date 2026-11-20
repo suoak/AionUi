@@ -1427,6 +1427,16 @@
   "webui.initialPassword": "Mot de passe initial",
   "promptPreviewEmpty": "Aucun contenu à prévisualiser",
   "assistantSectionEnabled": "Activé",
+  "groups": {
+    "general": "Général",
+    "runtime": "Modèles et environnement des agents",
+    "workspace": "Espace de travail et connexions",
+    "extensions": "Extensions",
+    "team": "Équipe et gouvernance",
+    "about": "À propos",
+    "searchPlaceholder": "Rechercher dans les paramètres",
+    "searchEmpty": "Aucun paramètre ne correspond"
+  },
   "groupAbout": "Autres",
   "promptPreview": "Aperçu",
   "webui.copyPasswordTooltip": "Cliquer pour copier le mot de passe",

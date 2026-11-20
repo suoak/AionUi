@@ -1429,6 +1429,16 @@
   "webui.initialPassword": "初期パスワード",
   "promptPreviewEmpty": "プレビューするコンテンツがありません",
   "assistantSectionEnabled": "有効",
+  "groups": {
+    "general": "一般",
+    "runtime": "モデルとエージェント実行環境",
+    "workspace": "ワークスペースと接続",
+    "extensions": "拡張機能",
+    "team": "チームとガバナンス",
+    "about": "情報",
+    "searchPlaceholder": "設定を検索",
+    "searchEmpty": "一致する設定はありません"
+  },
   "groupAbout": "その他",
   "promptPreview": "プレビュー",
   "webui.copyPasswordTooltip": "クリックでパスワードをコピー",

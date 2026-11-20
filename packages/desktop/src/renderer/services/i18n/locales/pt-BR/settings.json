@@ -1430,6 +1430,16 @@
   "webui.initialPassword": "Senha Inicial",
   "promptPreviewEmpty": "Nenhum conteúdo para visualizar",
   "assistantSectionEnabled": "Ativado",
+  "groups": {
+    "general": "Geral",
+    "runtime": "Modelos e ambiente dos agentes",
+    "workspace": "Espaço de trabalho e conexões",
+    "extensions": "Extensões",
+    "team": "Equipe e governança",
+    "about": "Sobre",
+    "searchPlaceholder": "Pesquisar configurações",
+    "searchEmpty": "Nenhuma configuração corresponde"
+  },
   "groupAbout": "Outros",
   "promptPreview": "Visualizar",
   "webui.copyPasswordTooltip": "Clique para copiar a senha",

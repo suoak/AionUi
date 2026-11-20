@@ -1427,6 +1427,16 @@
   "webui.initialPassword": "رمز عبور اولیه",
   "promptPreviewEmpty": "محتوایی برای پیش‌نمایش وجود ندارد",
   "assistantSectionEnabled": "فعال",
+  "groups": {
+    "general": "عمومی",
+    "runtime": "مدل‌ها و محیط اجرای عامل",
+    "workspace": "فضای کار و اتصال‌ها",
+    "extensions": "افزونه‌ها",
+    "team": "تیم و حاکمیت",
+    "about": "درباره",
+    "searchPlaceholder": "جستجوی تنظیمات",
+    "searchEmpty": "هیچ تنظیمی مطابقت ندارد"
+  },
   "groupAbout": "سایر",
   "promptPreview": "پیش‌نمایش",
   "webui.copyPasswordTooltip": "برای کپی رمز عبور کلیک کنید",

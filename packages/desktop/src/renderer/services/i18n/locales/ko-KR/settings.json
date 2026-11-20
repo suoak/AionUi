@@ -1429,6 +1429,16 @@
   "webui.initialPassword": "초기 비밀번호",
   "promptPreviewEmpty": "미리보기할 내용 없음",
   "assistantSectionEnabled": "활성화됨",
+  "groups": {
+    "general": "일반",
+    "runtime": "모델 및 에이전트 런타임",
+    "workspace": "워크스페이스 및 연결",
+    "extensions": "확장",
+    "team": "팀 및 거버넌스",
+    "about": "정보",
+    "searchPlaceholder": "설정 검색",
+    "searchEmpty": "일치하는 설정이 없습니다"
+  },
   "groupAbout": "기타",
   "promptPreview": "미리보기",
   "webui.copyPasswordTooltip": "클릭하여 비밀번호 복사",

@@ -1438,6 +1438,16 @@
   "webui.initialPassword": "Початковий пароль",
   "promptPreviewEmpty": "Немає вмісту для перегляду",
   "assistantSectionEnabled": "Увімкнено",
+  "groups": {
+    "general": "Загальні",
+    "runtime": "Моделі та середовище агентів",
+    "workspace": "Робочий простір і підключення",
+    "extensions": "Розширення",
+    "team": "Команда та управління",
+    "about": "Про програму",
+    "searchPlaceholder": "Пошук налаштувань",
+    "searchEmpty": "Немає відповідних налаштувань"
+  },
   "groupAbout": "Інше",
   "promptPreview": "Попередній перегляд",
   "webui.copyPasswordTooltip": "Натисніть для копіювання пароля",
