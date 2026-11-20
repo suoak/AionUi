@@ -385,6 +385,7 @@
         "team": "团队共享",
         "enterprise": "企业"
       },
+      "skills_one": "{{count}} 个技能",
       "skills_other": "{{count}} 个技能"
     },
     "preflight": {

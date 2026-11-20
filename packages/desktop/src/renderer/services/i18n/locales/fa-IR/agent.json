@@ -385,6 +385,7 @@
         "team": "تیم",
         "enterprise": "سازمان"
       },
+      "skills_one": "{{count}} مهارت",
       "skills_other": "{{count}} مهارت"
     },
     "preflight": {
