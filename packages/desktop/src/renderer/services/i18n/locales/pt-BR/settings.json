@@ -786,9 +786,6 @@
   "pleaseEnterApiKey": "Por favor, insira a Chave de API",
   "mcpError": "Erro",
   "assistantBackToList": "Todos os assistentes",
-  "cdP": {
-    "title": "CDP (Chrome DevTools Protocol)"
-  },
   "startOnBootUpdateFailed": "Falha ao atualizar a configuração de inicialização com o sistema",
   "fullUrl": "URL Completa",
   "assistant.tokenRequired": "Por favor, insira um token do bot",

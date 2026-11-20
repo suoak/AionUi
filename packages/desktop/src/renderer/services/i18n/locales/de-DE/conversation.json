@@ -664,7 +664,6 @@
     "confirmationLoadError": "Bestätigungsdialog konnte nicht geladen werden",
     "apiErrorSwitched": "API-Fehler, automatisch zu {{cli}} CLI gewechselt",
     "quotaExceededNoFallback": "Modellkontingent erreicht. Bitte zu einem anderen verfügbaren Modell wechseln.",
-    "switchedToAgent": "Zu {{agent}} gewechselt",
     "sendMessageTo": "Nachricht an {{model}} senden",
     "apiErrorSwitchFailed": "Fallback-Gespräch konnte nicht erstellt werden.",
     "tryAnotherAgent": "Anderen Agenten versuchen:"

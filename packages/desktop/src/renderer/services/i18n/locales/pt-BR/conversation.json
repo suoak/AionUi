@@ -359,11 +359,6 @@
         "body": "O agente selecionado não terminou o handshake de inicialização a tempo. Verifique se ele ainda está iniciando ou bloqueado e tente novamente.",
         "title": "O handshake do agente expirou"
       },
-      "WORKSPACE_PATH_CONTAINS_WHITESPACE_RUNTIME_UNSUPPORTED": {
-        "title": "Este caminho de projeto não é mais compatível com execução",
-        "bodyWithPath": "O caminho de projeto existente \"{{workspacePath}}\" contém espaços ou outros caracteres de espaço em branco. O CSBU WorkMate não oferece mais suporte ao envio de mensagens em conversas ou tarefas que usam esse caminho. Crie uma nova conversa ou tarefa com um caminho de projeto sem espaços em branco.",
-        "body": "Esta conversa ou tarefa existente usa um caminho de projeto cujos nomes de diretório contêm espaços ou outros caracteres de espaço em branco. O CSBU WorkMate não oferece mais suporte ao envio de mensagens em caminhos desse tipo. Crie uma nova conversa ou tarefa com um caminho de projeto sem espaços em branco."
-      },
       "USER_AGENT_STARTUP_FAILED": {
         "body": "O processo do agente foi encerrado antes de ficar pronto. Verifique a instalação, o status de login e a configuração do comando local.",
         "title": "O agente selecionado falhou ao iniciar"
@@ -444,7 +439,6 @@
   },
   "createError": {
     "pathVariants": {
-      "WORKSPACE_PATH_CONTAINS_WHITESPACE_UNSUPPORTED": "O caminho do projeto selecionado \"{{workspacePath}}\" contém um nome de pasta com espaços ou outros caracteres de espaço em branco. Renomeie a pasta afetada ou escolha um caminho de projeto em que nenhum nome de diretório contenha espaços.",
       "WORKSPACE_PATH_UNAVAILABLE": "O caminho do projeto selecionado não está disponível. Verifique se o caminho do projeto \"{{workspacePath}}\" existe e está acessível."
     },
     "codes": {

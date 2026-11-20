@@ -42,6 +42,15 @@ const EXTENSION_KEY_PREFIXES: Record<string, string[]> = {
   settings: ['extensionSettings.'],
 };
 
+// Plural forms a locale may need beyond the en-US one/other pair (e.g. ru-RU, uk-UA few/many).
+const PLURAL_SUFFIX = /_(zero|one|two|few|many|other)$/;
+
+function isPluralVariantOf(key: string, reference: Flat): boolean {
+  if (!PLURAL_SUFFIX.test(key)) return false;
+  const base = key.replace(PLURAL_SUFFIX, '');
+  return base in reference || `${base}_one` in reference || `${base}_other` in reference;
+}
+
 const otherLocales = i18nConfig.supportedLanguages.filter((locale) => locale !== REFERENCE);
 
 describe('locale completeness', () => {
@@ -55,6 +64,18 @@ describe('locale completeness', () => {
       }
     }
     expect(missing).toEqual([]);
+  });
+
+  it.each(otherLocales)('%s has no keys that en-US does not have (plural forms aside)', (locale) => {
+    const orphans: string[] = [];
+    for (const moduleName of i18nConfig.modules) {
+      const reference = load(REFERENCE, moduleName);
+      const translated = load(locale, moduleName);
+      for (const key of Object.keys(translated)) {
+        if (!(key in reference) && !isPluralVariantOf(key, reference)) orphans.push(`${moduleName}:${key}`);
+      }
+    }
+    expect(orphans).toEqual([]);
   });
 
   it.each(otherLocales)('%s keeps en-US placeholders in extension strings', (locale) => {

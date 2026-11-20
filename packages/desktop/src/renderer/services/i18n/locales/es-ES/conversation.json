@@ -664,7 +664,6 @@
     "confirmationLoadError": "Error al cargar el diálogo de confirmación",
     "apiErrorSwitched": "Error de API, cambiado automáticamente a {{cli}} CLI",
     "quotaExceededNoFallback": "Cuota del modelo alcanzada. Por favor cambia a otro modelo disponible.",
-    "switchedToAgent": "Cambiado a {{agent}}",
     "sendMessageTo": "Enviar mensaje a {{model}}",
     "apiErrorSwitchFailed": "Error al crear la conversación alternativa.",
     "tryAnotherAgent": "Prueba otro agente:"

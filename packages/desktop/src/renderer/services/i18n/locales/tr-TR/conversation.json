@@ -686,8 +686,6 @@
     "search.empty": "Arama sonucu boş",
     "addFile": "Dosya Ekle",
     "dragOverlayHint": "İpucu: seçili klasöre içe aktarmak için herhangi bir yere bırakın.",
-    "collapse": "Projeyi Daralt",
-    "expand": "Projeyi Genişlet",
     "pasteConfirm_paste": "Yapıştır",
     "openWorkspace": "Proje klasörünü aç",
     "dragOverlayTitle": "İçe aktarmak için bırakın",
