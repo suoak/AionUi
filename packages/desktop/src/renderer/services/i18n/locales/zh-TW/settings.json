@@ -1434,6 +1434,16 @@
   "webui.initialPassword": "初始密碼",
   "promptPreviewEmpty": "暫無內容可預覽",
   "assistantSectionEnabled": "已啟用",
+  "groups": {
+    "general": "一般",
+    "runtime": "模型與智慧體執行環境",
+    "workspace": "工作區與連線",
+    "extensions": "擴充功能",
+    "team": "團隊與治理",
+    "about": "關於",
+    "searchPlaceholder": "搜尋設定",
+    "searchEmpty": "沒有符合的設定"
+  },
   "groupAbout": "其他",
   "promptPreview": "預覽",
   "webui.copyPasswordTooltip": "點擊複製密碼",

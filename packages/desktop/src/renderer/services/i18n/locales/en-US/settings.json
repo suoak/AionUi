@@ -1432,6 +1432,16 @@
   "webui.initialPassword": "Initial Password",
   "promptPreviewEmpty": "No content to preview",
   "assistantSectionEnabled": "Enabled",
+  "groups": {
+    "general": "General",
+    "runtime": "Models & agent runtime",
+    "workspace": "Workspace & connections",
+    "extensions": "Extensions",
+    "team": "Team & governance",
+    "about": "About",
+    "searchPlaceholder": "Search settings",
+    "searchEmpty": "No settings match"
+  },
   "groupAbout": "Other",
   "promptPreview": "Preview",
   "webui.copyPasswordTooltip": "Click to copy password",

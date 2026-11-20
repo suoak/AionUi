@@ -1437,6 +1437,16 @@
   "webui.initialPassword": "Начальный пароль",
   "promptPreviewEmpty": "Нет содержимого для предпросмотра",
   "assistantSectionEnabled": "Включено",
+  "groups": {
+    "general": "Общие",
+    "runtime": "Модели и среда агентов",
+    "workspace": "Рабочая область и подключения",
+    "extensions": "Расширения",
+    "team": "Команда и управление",
+    "about": "О программе",
+    "searchPlaceholder": "Поиск настроек",
+    "searchEmpty": "Нет подходящих настроек"
+  },
   "groupAbout": "О программе",
   "promptPreview": "Предпросмотр",
   "webui.copyPasswordTooltip": "Нажмите для копирования пароля",

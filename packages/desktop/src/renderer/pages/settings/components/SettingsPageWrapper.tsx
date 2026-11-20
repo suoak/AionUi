@@ -30,6 +30,7 @@ import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useExtI18n } from '@/renderer/hooks/system/useExtI18n';
 import { getVisibleBuiltinSettingsTabIds, LEGACY_ANCHOR_REMAP } from './SettingsSider';
+import { arrangeSettingsNav } from './settingsNav';
 import './settings.css';
 
 interface SettingsPageWrapperProps {
@@ -134,32 +135,6 @@ const SettingsPageWrapper: React.FC<SettingsPageWrapperProps> = ({ children, cla
   const menuItems = React.useMemo(() => {
     const builtins = getBuiltinSettingsNavItems(isDesktop, t);
 
-    // Insert extension tabs before system (unanchored default) or at anchor position
-    const result = [...builtins];
-    const unanchored: IExtensionSettingsTab[] = [];
-    const beforeMap = new Map<string, IExtensionSettingsTab[]>();
-    const afterMap = new Map<string, IExtensionSettingsTab[]>();
-
-    for (const tab of extensionTabs) {
-      if (!tab.position) {
-        unanchored.push(tab);
-        continue;
-      }
-      const { relativeTo: rawAnchor, placement } = tab.position;
-      const anchor = LEGACY_ANCHOR_REMAP[rawAnchor] ?? rawAnchor;
-      if (!result.some((item) => item.id === anchor)) {
-        unanchored.push(tab);
-        continue;
-      }
-      const map = placement === 'before' ? beforeMap : afterMap;
-      let list = map.get(anchor);
-      if (!list) {
-        list = [];
-        map.set(anchor, list);
-      }
-      list.push(tab);
-    }
-
     const toNavItem = (tab: IExtensionSettingsTab): NavItem => {
       const resolvedIcon = resolveExtensionAssetUrl(tab.icon) || tab.icon;
       return {
@@ -174,19 +149,8 @@ const SettingsPageWrapper: React.FC<SettingsPageWrapperProps> = ({ children, cla
       };
     };
 
-    for (let i = result.length - 1; i >= 0; i--) {
-      const id = result[i].id;
-      const afters = afterMap.get(id);
-      if (afters) result.splice(i + 1, 0, ...afters.map(toNavItem));
-      const befores = beforeMap.get(id);
-      if (befores) result.splice(i, 0, ...befores.map(toNavItem));
-    }
-
-    if (unanchored.length > 0) {
-      const sysIdx = result.findIndex((item) => item.id === 'system');
-      const idx = sysIdx >= 0 ? sysIdx : result.length;
-      result.splice(idx, 0, ...unanchored.map(toNavItem));
-    }
+    // 3.0 V7: same grouped order as the desktop sider.
+    const result = arrangeSettingsNav(builtins, extensionTabs, toNavItem, LEGACY_ANCHOR_REMAP).map(({ item }) => item);
 
     return result;
   }, [isDesktop, t, extensionTabs, resolveExtTabName]);

@@ -1427,6 +1427,16 @@
   "webui.initialPassword": "İlk Şifre",
   "promptPreviewEmpty": "Önizlenecek içerik yok",
   "assistantSectionEnabled": "Etkin",
+  "groups": {
+    "general": "Genel",
+    "runtime": "Modeller ve ajan çalışma ortamı",
+    "workspace": "Çalışma alanı ve bağlantılar",
+    "extensions": "Uzantılar",
+    "team": "Ekip ve yönetişim",
+    "about": "Hakkında",
+    "searchPlaceholder": "Ayarlarda ara",
+    "searchEmpty": "Eşleşen ayar yok"
+  },
   "groupAbout": "Diğer",
   "promptPreview": "Önizleme",
   "webui.copyPasswordTooltip": "Şifreyi kopyalamak için tıklayın",
