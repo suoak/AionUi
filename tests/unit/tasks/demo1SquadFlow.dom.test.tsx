@@ -410,7 +410,16 @@ const renderBoard = () =>
     </SWRConfig>
   );
 
-const column = (status: TaskBoardStatus) => screen.getByTestId(`tasks-board-column-${status}`);
+// 3.0 U2: board columns are shown as lanes (backlog+todo → To do, in_review → Needs you).
+const LANE_OF: Record<TaskBoardStatus, string> = {
+  backlog: 'todo',
+  todo: 'todo',
+  in_progress: 'in_progress',
+  in_review: 'needs_you',
+  done: 'done',
+  cancelled: 'cancelled',
+};
+const column = (status: TaskBoardStatus) => screen.getByTestId(`tasks-board-lane-${LANE_OF[status]}`);
 const drawer = () => screen.getByTestId('task-board-detail');
 const timeline = () => screen.getByTestId('task-board-timeline');
 

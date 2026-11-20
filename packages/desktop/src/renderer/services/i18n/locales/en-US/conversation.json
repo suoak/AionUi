@@ -1497,7 +1497,35 @@
       }
     },
     "openScheduled": "Scheduled",
-    "emptyColumnHint": "No work items here yet. Create a task or open Scheduled."
+    "emptyColumnHint": "No work items here yet. Create a task or open Scheduled.",
+    "lanes": {
+      "todo": "To do",
+      "in_progress": "In progress",
+      "needs_you": "Needs you",
+      "done": "Done",
+      "cancelled": "Cancelled"
+    },
+    "needsYou": {
+      "plan_approval": "Plan to approve",
+      "tool_permission": "Tool permission",
+      "review": "Ready for review",
+      "failed": "Failed",
+      "merge_conflict": "Merge conflict",
+      "input": "Waiting for input"
+    },
+    "flow": {
+      "viewBoard": "Board",
+      "viewList": "List",
+      "start": "Start",
+      "startFailed": "The task could not be started.",
+      "queued": "All run slots are busy; the task is queued and starts when one frees up.",
+      "queuedBadge": "Queued",
+      "planFirst": "Plan first",
+      "planProgress": "{{done}}/{{total}}",
+      "planProgressStep": "{{done}}/{{total}} · {{step}}",
+      "needsYouCount_one": "{{count}} task needs you",
+      "needsYouCount_other": "{{count}} tasks need you"
+    }
   },
   "squadRouteOnly": {
     "title": "Squad Leader can only route work",

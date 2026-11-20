@@ -47,7 +47,42 @@ export type TaskBoardItem = {
    * show; omitted otherwise (not null).
    */
   squad_run?: SquadRunPayload;
+  // ---- 3.0 task flow (aioncore ≥ 0.6, plan B C1–C3). Absent on older cores. ----
+  /** Derived lane; Core 0.6 always sends it, so its presence marks a task-flow Core. */
+  lane?: TaskLane;
+  needs_you_reason?: TaskNeedsYouReason;
+  latest_plan?: TaskPlanSummary;
+  source?: TaskSource;
+  assistant_id?: string;
+  plan_first?: boolean;
+  /** Set while the task waits for a run slot. */
+  queued_at?: number;
+  /** Adopt / PR outcome, e.g. `{ adopt: { status, strategy, result_commit }, pull_request: { url } }`. */
+  delivery?: Record<string, unknown>;
 };
+
+/** 3.0 board lane, derived by Core from `board_status` and the run state. */
+export type TaskLane = 'todo' | 'in_progress' | 'needs_you' | 'done' | 'cancelled';
+export const TASK_LANES: readonly TaskLane[] = ['todo', 'in_progress', 'needs_you', 'done', 'cancelled'];
+
+export type TaskNeedsYouReason = 'plan_approval' | 'tool_permission' | 'review' | 'failed' | 'merge_conflict' | 'input';
+
+export type TaskSource = 'manual' | 'conversation' | 'github' | 'cron' | 'agent';
+
+/** Progress of the agent's own checklist. */
+export type TaskPlanSummary = { done: number; total: number; current?: string };
+
+export type TaskStartState = 'started' | 'queued' | 'already_running' | 'already_queued';
+
+/** `POST /api/task-sessions/{id}/start` (aioncore ≥ 0.6). Idempotent. */
+export type StartTaskInput = {
+  /** Issue tasks only. */
+  approach?: 'fix' | 'plan_first' | 'review_only';
+  /** Pick the assistant now (imported Issues have none yet). */
+  assistant_id?: string;
+};
+
+export type StartTaskResult = { state: TaskStartState; item: TaskBoardItem };
 
 /** `GET /api/task-sessions/board`: always all six columns, in display order. */
 export type TaskBoardResponse = {
@@ -240,6 +275,16 @@ export type CreateTaskSessionInput = Pick<TaskSession, 'title' | 'mode' | 'objec
   acceptance_criteria?: string[];
   status?: Extract<TaskSessionStatus, 'draft' | 'ready'>;
   agent_session_id?: string;
+  // ---- 3.0 task flow (aioncore ≥ 0.6, plan B C1); older cores ignore them. ----
+  assistant_id?: string;
+  /** Composer state (text, file refs, skills, options). */
+  prompt?: Record<string, unknown>;
+  repo_path?: string;
+  base_ref?: string;
+  plan_first?: boolean;
+  source?: Extract<TaskSource, 'manual' | 'conversation'>;
+  /** Message id the task was made from (`source = conversation`). */
+  source_ref?: string;
 };
 
 export type UpdateTaskSessionInput = Partial<
