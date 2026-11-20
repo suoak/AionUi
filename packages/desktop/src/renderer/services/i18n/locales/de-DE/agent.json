@@ -360,7 +360,157 @@
     }
   },
   "skillEvolution": {
-    "title": "Skill-Evolution"
+    "title": "Skill-Evolution",
+    "status": {
+      "draft": "Entwurf",
+      "pending_review": "Zur Prüfung",
+      "approved": "Genehmigt",
+      "rejected": "Abgelehnt",
+      "applied": "Angewendet",
+      "rolled_back": "Zurückgesetzt"
+    },
+    "kind": {
+      "pattern": "Muster",
+      "skill_impact": "Auswirkungsnotiz",
+      "rejected_note": "Ablehnungsnotiz",
+      "index": "Index",
+      "general": "Allgemein"
+    },
+    "visibility": {
+      "private": "Privat",
+      "team": "Team",
+      "owner_editors": "Nur Eigentümer/Bearbeiter",
+      "all": "Alle Sichtbarkeiten"
+    },
+    "gateMode": {
+      "human_only": "Nur menschliche Prüfung (Standard)",
+      "heuristic_assist": "Heuristisch unterstütztes Einreichen",
+      "auto_apply_on_pass": "Bei hoher Bewertung automatisch anwenden (riskant; nie bei Skills mit Skripten)"
+    },
+    "gate": {
+      "score": "Prüfung {{score}}",
+      "approve": "Genehmigung empfohlen",
+      "reject": "Ablehnung empfohlen",
+      "review": "Prüfung nötig"
+    },
+    "errors": {
+      "load": "Laden fehlgeschlagen (benötigt einen Core mit der Skill-Evolution-API)",
+      "loadDetail": "Vorschlag konnte nicht geladen werden",
+      "saveSettings": "Einstellungen konnten nicht gespeichert werden",
+      "action": "Aktion fehlgeschlagen",
+      "copy": "Kopieren fehlgeschlagen"
+    },
+    "toast": {
+      "settingsSaved": "Prüfeinstellungen gespeichert",
+      "submitted": "Zur Prüfung eingereicht",
+      "approved": "Genehmigt; kann auf {{path}} angewendet werden",
+      "rejected": "Abgelehnt; in der Erfahrungsbibliothek vermerkt",
+      "appliedTo": "Geschrieben und angewendet: {{parts}}.",
+      "appliedMarked": "Als angewendet markiert.",
+      "nextStep": "Weiter:",
+      "viewAgent": "Agent anzeigen",
+      "tryRun": "Testlauf",
+      "publishPin": "Pin veröffentlichen",
+      "bindHint": "Binde den Skill an einen Agenten, um ihn zu testen oder zu veröffentlichen",
+      "workspacePath": "Arbeitsbereich: {{path}}",
+      "pinned": "Angeheftet: {{ref}}",
+      "evolved": "Erneut destilliert",
+      "rolledBack": "Skill-Zeiger zurückgesetzt (Erfahrungsbibliothek bleibt)",
+      "copied": "SKILL.md in die Zwischenablage kopiert"
+    },
+    "page": {
+      "title": "Skill-Evolution",
+      "description": "SKILL.md-Vorschläge aus Gesprächserfahrung destillieren → heuristische Prüfung (konfigurierbar) → menschliche Prüfung → in den Skills Hub schreiben / anheften. Die Erfahrungsbibliothek dient nur der Skill-Evolution und wird nie in normale Chats eingespeist; die Wissensdatenbank bleibt getrennt.",
+      "experienceCount": "{{count}} Erfahrungsartikel",
+      "filteredByAgent": "Nach Agent gefiltert: {{id}}…",
+      "clearFilter": "Filter entfernen",
+      "openAgent": "Agentendetails öffnen",
+      "distill": "Skill aus einem Gespräch destillieren"
+    },
+    "tabs": {
+      "experience": "Erfahrung",
+      "experienceCount": "Erfahrung ({{count}})",
+      "settings": "Prüfeinstellungen",
+      "all": "Alle Vorschläge"
+    },
+    "settings": {
+      "intro": "Standard: nur menschliche Prüfung. Heuristische Werte sind nur Empfehlungen; automatisches Anwenden muss ausdrücklich aktiviert werden, schreibt nach einer hohen Bewertung trotzdem skill_impact und lässt sich mit einem Klick zurücksetzen. Skills mit Skripten werden immer von Menschen geprüft und in keinem Modus automatisch angewendet. Die Erfahrungsbibliothek wird nie in normale Chats eingespeist.",
+      "loading": "Wird geladen…",
+      "gateMode": "Prüfmodus",
+      "autoApplyWarning": "Warnung: Automatisches Anwenden überspringt bei hoher Bewertung das manuelle Genehmigen/Schreiben (außer bei Skills mit Skripten; diese brauchen immer eine menschliche Prüfung). Stelle sicher, dass die Richtlinie deiner Organisation das erlaubt, und setze bei Bedarf zurück.",
+      "assistThreshold": "Schwelle für unterstütztes Einreichen (heuristic_assist)",
+      "autoThreshold": "Schwelle für automatisches Anwenden (auto_apply_on_pass)",
+      "defaultVisibility": "Standardsichtbarkeit neuer Erfahrung",
+      "crossModel": "Hinweise zum Modellwechsel (kurz)"
+    },
+    "experience": {
+      "intro": "Die Erfahrungsbibliothek dient nur der Skill-Evolution und wird nie in normale Chats eingespeist.",
+      "empty": "Noch keine Erfahrungsartikel. Sie erscheinen, nachdem du einen Vorschlag destillierst oder ablehnst.",
+      "conversation": "Gespräch {{id}}…",
+      "pickHint": "Wähle links einen Erfahrungsartikel, um Text und Verknüpfungen zu sehen.",
+      "body": "Inhalt",
+      "sources": "Quellgespräche: {{ids}}",
+      "tags": "Tags: {{tags}}"
+    },
+    "proposals": {
+      "empty": "Noch keine Vorschläge. Destilliere zuerst einen Skill aus einem Gespräch.",
+      "untitledSkill": "Unbenannter Skill",
+      "evolveAgain": "Erneut destillieren",
+      "submit": "Zur Prüfung einreichen",
+      "approve": "Genehmigen",
+      "reject": "Ablehnen",
+      "writeHub": "In den Skills Hub schreiben",
+      "rollback": "Zurücksetzen",
+      "pickHint": "Wähle links einen Vorschlag, um Entwurf und Prüfung zu sehen.",
+      "signals": "Heuristische Prüfsignale",
+      "signalWeight": "(Gewicht {{weight}})",
+      "mode": "Modus: {{mode}}",
+      "summary": "Erfahrungszusammenfassung",
+      "emptyValue": "(leer)",
+      "linkedExperience": "Verknüpfte Erfahrung: {{ids}}",
+      "draft": "SKILL.md-Entwurf",
+      "comment": "Prüfkommentar (optional)",
+      "commentPlaceholder": "Optional beim Genehmigen, Ablehnen oder Zurücksetzen",
+      "exportPreview": "Exportvorschau",
+      "copySkill": "SKILL.md kopieren"
+    },
+    "create": {
+      "back": "← Zurück zur Skill-Evolution",
+      "intro": "Wähle einen Verlauf aus einem aktuellen Gespräch → „Destillieren“ startet Maintainer/Proposer → bearbeite den Entwurf und reiche ihn zur Prüfung ein. Die Erfahrungsbibliothek dient nur der Skill-Evolution und wird nie in normale Chats eingespeist.",
+      "pickConversation": "Gespräch *",
+      "pickPlaceholder": "Aus aktuellen Gesprächen wählen",
+      "pasteHint": "Du kannst auch eine Gesprächs-ID einfügen",
+      "pastePlaceholder": "oder eine conversation id einfügen",
+      "overview": "Verlaufsübersicht",
+      "lastModel": "Zuletzt destilliert mit: {{model}}",
+      "evolve": "Destillieren",
+      "evolveHint": "Benötigt ein funktionierendes Modell; danach erhältst du einen bearbeitbaren Vorschlag",
+      "titleLabel": "Titel *",
+      "titlePlaceholder": "z. B. Wochenbericht formatieren",
+      "assistantLabel": "Ziel-Agent-ID (optional; nach Genehmigung anheftbar)",
+      "visibilityLabel": "Sichtbarkeit der Erfahrung",
+      "visibilityPrivate": "Privat (nur ich)",
+      "visibilityTeam": "Team (Mitglieder können lesen)",
+      "teamId": "Team-ID *",
+      "teamIdPlaceholder": "team id (für Team-Sichtbarkeit erforderlich)",
+      "skillKey": "Vorgeschlagener Skill-Schlüssel",
+      "summaryLabel": "Erfahrungszusammenfassung",
+      "summaryPlaceholder": "Was hat in diesem Gespräch funktioniert? Was war die Ursache von Fehlern?",
+      "draftLabel": "SKILL.md-Entwurf (leer lassen für eine Vorlage)",
+      "draftPlaceholder": "Leer lassen, dann erzeugt der Server eine Vorlage; Destillieren füllt sie",
+      "submitNow": "Nach dem Erstellen direkt zur Prüfung einreichen",
+      "create": "Vorschlag manuell erstellen",
+      "cancel": "Abbrechen",
+      "untitled": "Ohne Titel",
+      "needConversation": "Wähle zuerst ein Gespräch",
+      "evolved": "Destilliert; {{count}} Erfahrungsartikel geschrieben",
+      "evolvedModel": "Modell: {{model}}",
+      "evolveFailed": "Destillieren fehlgeschlagen (prüfe, ob ein Modell konfiguriert ist und der Core die Phase-2-API hat)",
+      "needTitle": "Gib einen Titel ein",
+      "createdSubmitted": "Vorschlag erstellt und zur Prüfung eingereicht",
+      "draftSaved": "Vorschlagsentwurf gespeichert",
+      "createFailed": "Erstellen fehlgeschlagen (prüfe die Gesprächszugehörigkeit und die Core-Version)"
+    }
   },
   "runtimeRestart": {
     "tooltip": "Agent neu verbinden",
