@@ -357,6 +357,52 @@
       "createHint": "No agents yet. Click “Create agent” to configure and try a run.",
       "permissionHint": "No agents are available for your role.",
       "permissionHintDetail": "An owner or admin must grant you run permission for published agents. You can still create private agents under “Mine” if allowed."
+    },
+    "list": {
+      "create": "新しいエージェント",
+      "tabs": {
+        "mine": "自分",
+        "team": "チームで共有"
+      },
+      "loading": "読み込み中…",
+      "retry": "再試行",
+      "loadFailed": "エージェントを読み込めませんでした",
+      "tryRun": "試す",
+      "tryRunFailed": "試行を準備できませんでした",
+      "edit": "編集",
+      "publish": "公開",
+      "publishedToast": "v{{version}} を公開しました",
+      "publishFailed": "公開できませんでした",
+      "unpublished": "未公開",
+      "lastUsed": "最終使用 {{time}}",
+      "status": {
+        "draft": "下書き",
+        "published": "公開済み",
+        "archived": "アーカイブ済み"
+      },
+      "visibility": {
+        "private": "自分のみ",
+        "team": "チーム",
+        "enterprise": "企業"
+      },
+      "skills_other": "スキル {{count}} 件"
+    },
+    "preflight": {
+      "level": {
+        "pass": "利用可能",
+        "warn": "要確認",
+        "fail": "利用不可"
+      },
+      "fix": "修復",
+      "check": {
+        "enabled": "有効",
+        "installed": "インストール",
+        "runtime": "ランタイム",
+        "connection": "接続",
+        "auth": "サインイン",
+        "provider": "モデルプロバイダー",
+        "version": "バージョン"
+      }
     }
   },
   "skillEvolution": {

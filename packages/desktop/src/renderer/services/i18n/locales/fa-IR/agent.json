@@ -357,6 +357,52 @@
       "createHint": "No agents yet. Click “Create agent” to configure and try a run.",
       "permissionHint": "No agents are available for your role.",
       "permissionHintDetail": "An owner or admin must grant you run permission for published agents. You can still create private agents under “Mine” if allowed."
+    },
+    "list": {
+      "create": "عامل جدید",
+      "tabs": {
+        "mine": "مال من",
+        "team": "اشتراکی با تیم"
+      },
+      "loading": "در حال بارگذاری…",
+      "retry": "تلاش دوباره",
+      "loadFailed": "بارگذاری عامل‌ها ممکن نشد",
+      "tryRun": "امتحان",
+      "tryRunFailed": "آماده‌سازی اجرای آزمایشی ممکن نشد",
+      "edit": "ویرایش",
+      "publish": "انتشار",
+      "publishedToast": "نسخهٔ {{version}} منتشر شد",
+      "publishFailed": "انتشار ممکن نشد",
+      "unpublished": "منتشرنشده",
+      "lastUsed": "آخرین استفاده {{time}}",
+      "status": {
+        "draft": "پیش‌نویس",
+        "published": "منتشرشده",
+        "archived": "بایگانی‌شده"
+      },
+      "visibility": {
+        "private": "فقط من",
+        "team": "تیم",
+        "enterprise": "سازمان"
+      },
+      "skills_other": "{{count}} مهارت"
+    },
+    "preflight": {
+      "level": {
+        "pass": "آماده",
+        "warn": "بررسی کنید",
+        "fail": "آماده نیست"
+      },
+      "fix": "رفع",
+      "check": {
+        "enabled": "فعال",
+        "installed": "نصب‌شده",
+        "runtime": "محیط اجرا",
+        "connection": "اتصال",
+        "auth": "ورود",
+        "provider": "ارائه‌دهندهٔ مدل",
+        "version": "نسخه"
+      }
     }
   },
   "skillEvolution": {

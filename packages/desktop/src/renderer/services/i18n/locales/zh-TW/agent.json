@@ -357,6 +357,52 @@
       "createHint": "No agents yet. Click “Create agent” to configure and try a run.",
       "permissionHint": "No agents are available for your role.",
       "permissionHintDetail": "An owner or admin must grant you run permission for published agents. You can still create private agents under “Mine” if allowed."
+    },
+    "list": {
+      "create": "新增智慧體",
+      "tabs": {
+        "mine": "我的",
+        "team": "團隊共享"
+      },
+      "loading": "載入中…",
+      "retry": "重試",
+      "loadFailed": "載入智慧體清單失敗",
+      "tryRun": "試跑",
+      "tryRunFailed": "準備試跑失敗",
+      "edit": "編輯",
+      "publish": "發布",
+      "publishedToast": "已發布 v{{version}}",
+      "publishFailed": "發布失敗",
+      "unpublished": "未發布",
+      "lastUsed": "最近使用 {{time}}",
+      "status": {
+        "draft": "草稿",
+        "published": "已發布",
+        "archived": "已封存"
+      },
+      "visibility": {
+        "private": "僅自己",
+        "team": "團隊共享",
+        "enterprise": "企業"
+      },
+      "skills_other": "{{count}} 個技能"
+    },
+    "preflight": {
+      "level": {
+        "pass": "可用",
+        "warn": "需注意",
+        "fail": "不可用"
+      },
+      "fix": "修復",
+      "check": {
+        "enabled": "已啟用",
+        "installed": "已安裝",
+        "runtime": "執行環境",
+        "connection": "連線",
+        "auth": "登入",
+        "provider": "模型服務",
+        "version": "版本"
+      }
     }
   },
   "skillEvolution": {
