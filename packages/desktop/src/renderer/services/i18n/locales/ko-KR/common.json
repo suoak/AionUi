@@ -70,7 +70,7 @@
     "groups": {
       "navigation": "탐색",
       "sessions": "세션",
-      "workItems": "작업 항목",
+      "workItems": "작업",
       "agents": "에이전트",
       "settings": "설정",
       "files": "파일",
@@ -265,10 +265,10 @@
   },
   "primaryNav": {
     "sessions": "세션",
-    "workItems": "작업 항목",
+    "tasks": "작업",
     "agents": "에이전트",
     "skills": "스킬",
-    "batch": "배치"
+    "automations": "자동화"
   },
   "extensionPanels": {
     "groupTitle": "플러그인 패널",
@@ -287,5 +287,11 @@
       "idle": "대기"
     },
     "contextUsage": "컨텍스트 {{percent}}% 사용"
+  },
+  "automations": {
+    "tabs": {
+      "scheduled": "예약",
+      "batch": "일괄"
+    }
   }
 }

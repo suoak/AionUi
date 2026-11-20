@@ -70,7 +70,7 @@
     "groups": {
       "navigation": "Navigation",
       "sessions": "Sessions",
-      "workItems": "Work items",
+      "workItems": "Tasks",
       "files": "Files",
       "agents": "Agents",
       "commands": "Commands",
@@ -265,10 +265,10 @@
   },
   "primaryNav": {
     "sessions": "Sessions",
-    "workItems": "Work items",
+    "tasks": "Tasks",
     "agents": "Agents",
     "skills": "Skills",
-    "batch": "Batch"
+    "automations": "Automations"
   },
   "extensionPanels": {
     "groupTitle": "Plugin panels",
@@ -379,5 +379,11 @@
       "idle": "Idle"
     },
     "contextUsage": "Context {{percent}}% used"
+  },
+  "automations": {
+    "tabs": {
+      "scheduled": "Scheduled",
+      "batch": "Batch"
+    }
   }
 }

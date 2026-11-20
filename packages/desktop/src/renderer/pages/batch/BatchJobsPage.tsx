@@ -13,6 +13,7 @@ import { ipcBridge } from '@/common';
 import type { BatchJob } from '@/common/types/agent/batch';
 import { useLayoutContext } from '@renderer/hooks/context/LayoutContext';
 import SettingsPageHeader from '@/renderer/pages/settings/components/SettingsPageHeader';
+import { useAutomationsTabs } from '@/renderer/pages/cron/useAutomationsTabs';
 import BatchCreateDrawer from './BatchCreateDrawer';
 import BatchJobDetail, { BatchStatusTag } from './BatchJobDetail';
 import { batchErrorKey } from './batchModel';
@@ -27,6 +28,7 @@ const LIST_LIMIT = 100;
  */
 const BatchJobsPage: React.FC = () => {
   const { t } = useTranslation();
+  const automationsTabs = useAutomationsTabs('batch');
   const [searchParams, setSearchParams] = useSearchParams();
   const selectedId = searchParams.get('job');
   const isMobile = useLayoutContext()?.isMobile ?? false;
@@ -82,6 +84,7 @@ const BatchJobsPage: React.FC = () => {
         <SettingsPageHeader
           title={t('conversation.batchJobs.title')}
           description={t('conversation.batchJobs.description')}
+          {...automationsTabs}
           actions={
             <Button type='primary' onClick={() => setCreating(true)} data-testid='batch-new'>
               {t('conversation.batchJobs.newJob')}

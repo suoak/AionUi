@@ -69,7 +69,7 @@
     "groups": {
       "navigation": "Navigation",
       "sessions": "Sitzungen",
-      "workItems": "Arbeitselemente",
+      "workItems": "Aufgaben",
       "agents": "Agenten",
       "settings": "Einstellungen",
       "files": "Dateien",
@@ -265,10 +265,10 @@
   },
   "primaryNav": {
     "sessions": "Sitzungen",
-    "workItems": "Arbeitselemente",
+    "tasks": "Aufgaben",
     "agents": "Agenten",
     "skills": "Skills",
-    "batch": "Batch"
+    "automations": "Automatisierungen"
   },
   "extensionPanels": {
     "groupTitle": "Plugin-Bereiche",
@@ -287,5 +287,11 @@
       "idle": "Inaktiv"
     },
     "contextUsage": "Kontext zu {{percent}} % belegt"
+  },
+  "automations": {
+    "tabs": {
+      "scheduled": "Geplant",
+      "batch": "Stapel"
+    }
   }
 }

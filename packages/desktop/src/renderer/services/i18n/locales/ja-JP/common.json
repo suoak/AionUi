@@ -70,7 +70,7 @@
     "groups": {
       "navigation": "ナビゲーション",
       "sessions": "セッション",
-      "workItems": "作業項目",
+      "workItems": "タスク",
       "agents": "エージェント",
       "settings": "設定",
       "files": "ファイル",
@@ -265,10 +265,10 @@
   },
   "primaryNav": {
     "sessions": "セッション",
-    "workItems": "作業項目",
+    "tasks": "タスク",
     "agents": "エージェント",
     "skills": "スキル",
-    "batch": "バッチ"
+    "automations": "オートメーション"
   },
   "extensionPanels": {
     "groupTitle": "プラグインパネル",
@@ -287,5 +287,11 @@
       "idle": "待機中"
     },
     "contextUsage": "コンテキスト使用率 {{percent}}%"
+  },
+  "automations": {
+    "tabs": {
+      "scheduled": "スケジュール",
+      "batch": "バッチ"
+    }
   }
 }

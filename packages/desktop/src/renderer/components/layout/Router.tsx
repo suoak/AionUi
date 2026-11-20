@@ -120,11 +120,11 @@ const PanelRoute: React.FC<{ layout: React.ReactElement }> = ({ layout }) => {
           />
           <Route path='/settings/model' element={withRouteFallback(ModeSettings)} />
           <Route path='/assistants' element={withRouteFallback(AssistantSettings)} />
-          <Route path='/agent-center' element={withRouteFallback(AgentCenterListPage)} />
+          <Route path='/agents' element={withRouteFallback(AgentCenterListPage)} />
           <Route path='/skill-evolution' element={withRouteFallback(SkillEvolutionListPage)} />
           <Route path='/skill-evolution/new' element={withRouteFallback(SkillEvolutionCreatePage)} />
           <Route
-            path='/agent-center/new'
+            path='/agents/new'
             element={
               <Suspense fallback={<AppLoader />}>
                 <AgentCenterWizardPage mode='create' />
@@ -132,12 +132,12 @@ const PanelRoute: React.FC<{ layout: React.ReactElement }> = ({ layout }) => {
             }
           />
 
-          <Route path='/agent-center/squads' element={withRouteFallback(SquadListPage)} />
+          <Route path='/agents/squads' element={withRouteFallback(SquadListPage)} />
           <Route path='/agent-center/skill-evolution' element={<SkillEvolutionRedirect />} />
           <Route path='/agent-center/skill-evolution/new' element={<SkillEvolutionRedirect create />} />
-          <Route path='/agent-center/:id' element={withRouteFallback(AgentCenterDetailPage)} />
+          <Route path='/agents/:id' element={withRouteFallback(AgentCenterDetailPage)} />
           <Route
-            path='/agent-center/:id/edit'
+            path='/agents/:id/edit'
             element={
               <Suspense fallback={<AppLoader />}>
                 <AgentCenterWizardPage mode='edit' />
@@ -192,7 +192,7 @@ const PanelRoute: React.FC<{ layout: React.ReactElement }> = ({ layout }) => {
           <Route path='/scheduled/:job_id' element={withRouteFallback(TaskDetailPage)} />
           <Route path='/tasks' element={withRouteFallback(TasksBoardPage)} />
           <Route path='/batch' element={withRouteFallback(BatchJobsPage)} />
-          {/* IA-2: canonical five-entry aliases → existing pages */}
+          {/* Legacy / short paths → canonical 3.0 routes (/agents, /tasks, /automations …) */}
           {renderIaRouteAliases()}
         </Route>
         <Route path='*' element={<Navigate to={status === 'authenticated' ? '/guid' : '/login'} replace />} />

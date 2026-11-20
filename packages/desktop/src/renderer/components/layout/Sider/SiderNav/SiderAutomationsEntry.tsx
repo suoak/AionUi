@@ -7,11 +7,11 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Tooltip } from '@arco-design/web-react';
-import { ListCheckbox } from '@icon-park/react';
+import { Lightning } from '@icon-park/react';
 import classNames from 'classnames';
 import type { SiderTooltipProps } from '@renderer/utils/ui/siderTooltip';
 
-interface SiderBatchEntryProps {
+interface SiderAutomationsEntryProps {
   isMobile: boolean;
   isActive: boolean;
   collapsed: boolean;
@@ -19,7 +19,7 @@ interface SiderBatchEntryProps {
   onClick: () => void;
 }
 
-const SiderBatchEntry: React.FC<SiderBatchEntryProps> = ({
+const SiderAutomationsEntry: React.FC<SiderAutomationsEntryProps> = ({
   isMobile,
   isActive,
   collapsed,
@@ -30,16 +30,16 @@ const SiderBatchEntry: React.FC<SiderBatchEntryProps> = ({
 
   if (collapsed) {
     return (
-      <Tooltip {...siderTooltipProps} content={t('common.primaryNav.batch')} position='right'>
+      <Tooltip {...siderTooltipProps} content={t('common.primaryNav.automations')} position='right'>
         <div
           className={classNames(
             'w-full h-34px flex items-center justify-center cursor-pointer transition-colors rd-8px text-t-primary',
             isActive ? 'bg-fill-3' : 'hover:bg-fill-3 active:bg-fill-4'
           )}
           onClick={onClick}
-          data-testid='sider-batch-entry'
+          data-testid='sider-automations-entry'
         >
-          <ListCheckbox
+          <Lightning
             theme='outline'
             size='20'
             fill='currentColor'
@@ -52,7 +52,7 @@ const SiderBatchEntry: React.FC<SiderBatchEntryProps> = ({
   }
 
   return (
-    <Tooltip {...siderTooltipProps} content={t('common.primaryNav.batch')} position='right'>
+    <Tooltip {...siderTooltipProps} content={t('common.primaryNav.automations')} position='right'>
       <div
         className={classNames(
           'box-border group h-34px w-full flex items-center justify-start gap-8px ps-10px pe-8px rd-0.5rem cursor-pointer shrink-0 transition-all text-t-primary',
@@ -60,10 +60,10 @@ const SiderBatchEntry: React.FC<SiderBatchEntryProps> = ({
           isActive ? 'bg-fill-3' : 'hover:bg-fill-3 active:bg-fill-4'
         )}
         onClick={onClick}
-        data-testid='sider-batch-entry'
+        data-testid='sider-automations-entry'
       >
         <span className='size-22px flex items-center justify-center shrink-0 text-t-primary'>
-          <ListCheckbox
+          <Lightning
             theme='outline'
             size='16'
             fill='currentColor'
@@ -72,11 +72,11 @@ const SiderBatchEntry: React.FC<SiderBatchEntryProps> = ({
           />
         </span>
         <span className='collapsed-hidden text-t-primary text-14px font-[500] leading-24px'>
-          {t('common.primaryNav.batch')}
+          {t('common.primaryNav.automations')}
         </span>
       </div>
     </Tooltip>
   );
 };
 
-export default SiderBatchEntry;
+export default SiderAutomationsEntry;

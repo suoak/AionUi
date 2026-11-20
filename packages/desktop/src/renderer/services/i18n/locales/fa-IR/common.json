@@ -70,7 +70,7 @@
     "groups": {
       "navigation": "ناوبری",
       "sessions": "جلسه‌ها",
-      "workItems": "موارد کاری",
+      "workItems": "کارها",
       "agents": "عامل‌ها",
       "settings": "تنظیمات",
       "files": "پرونده‌ها",
@@ -273,10 +273,10 @@
   },
   "primaryNav": {
     "sessions": "جلسه‌ها",
-    "workItems": "موارد کاری",
+    "tasks": "کارها",
     "agents": "عامل‌ها",
     "skills": "مهارت‌ها",
-    "batch": "دسته‌ای"
+    "automations": "خودکارسازی"
   },
   "designSystem": {
     "status": {
@@ -287,5 +287,11 @@
       "idle": "بیکار"
     },
     "contextUsage": "{{percent}}٪ از زمینه استفاده شده"
+  },
+  "automations": {
+    "tabs": {
+      "scheduled": "زمان‌بندی‌شده",
+      "batch": "دسته‌ای"
+    }
   }
 }

@@ -54,10 +54,10 @@ export type PaletteCommand = {
 /** Static navigation commands for Cmd/Ctrl+K (files and plugin commands load dynamically; no shell). */
 const PRIMARY_NAV_TITLES: Record<(typeof PRIMARY_NAV_ENTRIES)[number]['key'], string> = {
   sessions: 'Sessions',
-  workItems: 'Work items',
+  tasks: 'Tasks',
   agents: 'Agents',
   skills: 'Skills',
-  batch: 'Batch',
+  automations: 'Automations',
 };
 
 const PRIMARY_NAV_PALETTE_COMMANDS: readonly PaletteCommand[] = PRIMARY_NAV_ENTRIES.map((entry) => ({
@@ -78,17 +78,24 @@ export const STATIC_PALETTE_COMMANDS: readonly PaletteCommand[] = [
   },
   ...PRIMARY_NAV_PALETTE_COMMANDS,
   {
-    id: 'nav.agent-center',
-    title: 'Agent Center',
-    group: 'agents',
-    path: '/agent-center',
-    keywords: ['assistant', '智能体', 'agents'],
+    id: 'nav.automations.scheduled',
+    title: 'Scheduled tasks',
+    group: 'navigation',
+    path: '/scheduled',
+    keywords: ['automations', 'cron', 'schedule', '定时'],
+  },
+  {
+    id: 'nav.automations.batch',
+    title: 'Batch jobs',
+    group: 'navigation',
+    path: '/batch',
+    keywords: ['automations', 'bulk', 'batch', '批量'],
   },
   {
     id: 'nav.agent-center.new',
     title: 'Create agent',
     group: 'agents',
-    path: '/agent-center/new',
+    path: '/agents/new',
     keywords: ['new agent', 'wizard'],
   },
   {

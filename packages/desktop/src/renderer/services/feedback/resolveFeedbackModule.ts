@@ -28,6 +28,8 @@ const ROUTE_MODULE_MAP: ReadonlyArray<readonly [prefix: string, tag: FeedbackMod
   ['/scheduled', 'scheduled-task'],
   ['/assistants', 'assistant-preset'],
   ['/skill-evolution', 'skills-plugin'],
+  ['/agents', 'assistant-preset'],
+  // Legacy /agent-center/* paths redirect to /agents or /skill-evolution; keep them mapped.
   ['/agent-center', 'assistant-preset'],
   ['/settings/agent', 'agent-detection'],
   ['/settings/model', 'model-auth'],

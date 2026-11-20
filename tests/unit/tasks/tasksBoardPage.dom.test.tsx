@@ -526,7 +526,7 @@ describe('TasksBoardPage', () => {
     const button = screen.getByTestId('tasks-board-open-scheduled');
     expect(button.textContent).toBe('conversation.taskBoard.openScheduled');
     fireEvent.click(button);
-    expect(mocks.navigate).toHaveBeenCalledWith('/work-items/scheduled');
+    expect(mocks.navigate).toHaveBeenCalledWith('/scheduled');
   });
 
   it('renders the empty-column hint in every empty column (IA-3)', async () => {

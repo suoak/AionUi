@@ -177,8 +177,8 @@ test.describe('M1.5 packaged release gate', () => {
     );
     expect((await httpGet<TaskSession>(page, `/api/task-sessions/${goal.id}`)).status).toBe('completed');
 
-    await openRoute(page, '/agent-center');
-    await openRoute(page, '/agent-center/new');
+    await openRoute(page, '/agents');
+    await openRoute(page, '/agents/new');
     await openRoute(page, '/skill-evolution');
 
     await page.evaluate(

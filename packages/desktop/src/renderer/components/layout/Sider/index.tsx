@@ -10,13 +10,13 @@ import { useThemeContext } from '@renderer/hooks/context/ThemeContext';
 import {
   SiderToolbar,
   SiderSearchEntry,
-  SiderAgentCenterEntry,
+  SiderAgentsEntry,
   SiderSkillEvolutionEntry,
   SiderAssistantEntry,
   SiderUsageEntry,
   SiderInboxEntry,
   SiderTasksBoardEntry,
-  SiderBatchEntry,
+  SiderAutomationsEntry,
 } from './SiderNav';
 import SiderFooter from './SiderFooter';
 import TeamSiderSection from './TeamSiderSection';
@@ -101,7 +101,7 @@ const Sider: React.FC<SiderProps> = ({ onSessionClick, collapsed = false }) => {
     blurActiveElement();
     closePreview();
     setIsBatchMode(false);
-    Promise.resolve(navigate('/work-items')).catch((error) => {
+    Promise.resolve(navigate('/tasks')).catch((error) => {
       console.error('Navigation failed:', error);
     });
     if (onSessionClick) {
@@ -109,12 +109,12 @@ const Sider: React.FC<SiderProps> = ({ onSessionClick, collapsed = false }) => {
     }
   };
 
-  const handleBatchClick = () => {
+  const handleAutomationsClick = () => {
     cleanupSiderTooltips();
     blurActiveElement();
     closePreview();
     setIsBatchMode(false);
-    Promise.resolve(navigate('/batch')).catch((error) => {
+    Promise.resolve(navigate('/automations')).catch((error) => {
       console.error('Navigation failed:', error);
     });
     if (onSessionClick) {
@@ -192,7 +192,7 @@ const Sider: React.FC<SiderProps> = ({ onSessionClick, collapsed = false }) => {
     }
   };
 
-  const handleAgentCenterClick = () => {
+  const handleAgentsClick = () => {
     cleanupSiderTooltips();
     blurActiveElement();
     closePreview();
@@ -322,30 +322,22 @@ const Sider: React.FC<SiderProps> = ({ onSessionClick, collapsed = false }) => {
                 onSessionClick={onSessionClick}
               />
             )}
-            {/* M9 E16 IA-1: five primary slots — workItems, agents, skills, batch
-                (sessions remain toolbar + history). Secondary: assistants, usage, inbox.
-                Scheduled lives under Work items (IA-3). */}
+            {/* 3.0 IA: five primary entries — sessions (toolbar + history), tasks, agents,
+                skills, automations (scheduled + batch). Secondary: assistants (until the
+                agents merge), usage, inbox, plugin panels. */}
             <SiderTasksBoardEntry
               isMobile={isMobile}
-              isActive={isPrimaryNavActive(primaryNavEntryByKey('workItems'), pathname)}
+              isActive={isPrimaryNavActive(primaryNavEntryByKey('tasks'), pathname)}
               collapsed={collapsed}
               siderTooltipProps={siderTooltipProps}
               onClick={handleTasksBoardClick}
             />
-            {/* M9 E16 IA-3: Scheduled collapsed under Work items (board header + /work-items/scheduled). */}
-            <SiderAgentCenterEntry
+            <SiderAgentsEntry
               isMobile={isMobile}
               isActive={isPrimaryNavActive(primaryNavEntryByKey('agents'), pathname)}
               collapsed={collapsed}
               siderTooltipProps={siderTooltipProps}
-              onClick={handleAgentCenterClick}
-            />
-            <SiderAssistantEntry
-              isMobile={isMobile}
-              isActive={pathname.startsWith('/assistants')}
-              collapsed={collapsed}
-              siderTooltipProps={siderTooltipProps}
-              onClick={handleAssistantClick}
+              onClick={handleAgentsClick}
             />
             <SiderSkillEvolutionEntry
               isMobile={isMobile}
@@ -354,12 +346,19 @@ const Sider: React.FC<SiderProps> = ({ onSessionClick, collapsed = false }) => {
               siderTooltipProps={siderTooltipProps}
               onClick={handleSkillEvolutionClick}
             />
-            <SiderBatchEntry
+            <SiderAutomationsEntry
               isMobile={isMobile}
-              isActive={isPrimaryNavActive(primaryNavEntryByKey('batch'), pathname)}
+              isActive={isPrimaryNavActive(primaryNavEntryByKey('automations'), pathname)}
               collapsed={collapsed}
               siderTooltipProps={siderTooltipProps}
-              onClick={handleBatchClick}
+              onClick={handleAutomationsClick}
+            />
+            <SiderAssistantEntry
+              isMobile={isMobile}
+              isActive={pathname.startsWith('/assistants')}
+              collapsed={collapsed}
+              siderTooltipProps={siderTooltipProps}
+              onClick={handleAssistantClick}
             />
             <SiderUsageEntry
               isMobile={isMobile}

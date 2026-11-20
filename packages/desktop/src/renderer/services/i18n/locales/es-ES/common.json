@@ -69,7 +69,7 @@
     "groups": {
       "navigation": "Navegación",
       "sessions": "Sesiones",
-      "workItems": "Elementos de trabajo",
+      "workItems": "Tareas",
       "agents": "Agentes",
       "settings": "Ajustes",
       "files": "Archivos",
@@ -265,10 +265,10 @@
   },
   "primaryNav": {
     "sessions": "Sesiones",
-    "workItems": "Elementos de trabajo",
+    "tasks": "Tareas",
     "agents": "Agentes",
     "skills": "Habilidades",
-    "batch": "Lote"
+    "automations": "Automatizaciones"
   },
   "extensionPanels": {
     "groupTitle": "Paneles de complementos",
@@ -287,5 +287,11 @@
       "idle": "Inactivo"
     },
     "contextUsage": "Contexto usado al {{percent}} %"
+  },
+  "automations": {
+    "tabs": {
+      "scheduled": "Programadas",
+      "batch": "Lotes"
+    }
   }
 }

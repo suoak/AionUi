@@ -70,7 +70,7 @@
     "groups": {
       "navigation": "Gezinme",
       "sessions": "Oturumlar",
-      "workItems": "İş öğeleri",
+      "workItems": "Görevler",
       "agents": "Ajanlar",
       "settings": "Ayarlar",
       "files": "Dosyalar",
@@ -273,10 +273,10 @@
   },
   "primaryNav": {
     "sessions": "Oturumlar",
-    "workItems": "İş öğeleri",
+    "tasks": "Görevler",
     "agents": "Ajanlar",
     "skills": "Beceriler",
-    "batch": "Toplu"
+    "automations": "Otomasyonlar"
   },
   "designSystem": {
     "status": {
@@ -287,5 +287,11 @@
       "idle": "Boşta"
     },
     "contextUsage": "Bağlam %{{percent}} dolu"
+  },
+  "automations": {
+    "tabs": {
+      "scheduled": "Zamanlanmış",
+      "batch": "Toplu"
+    }
   }
 }

@@ -186,7 +186,7 @@ describe('CommandPalette dynamic groups (E11 PR2)', () => {
     fireEvent.click(screen.getByTestId('command-palette-item-workItem.task.t1'));
     expect(mocks.navigate).toHaveBeenLastCalledWith('/tasks?task=t1');
     fireEvent.click(screen.getByTestId('command-palette-item-agent.a1'));
-    expect(mocks.navigate).toHaveBeenLastCalledWith('/agent-center/a1');
+    expect(mocks.navigate).toHaveBeenLastCalledWith('/agents/a1');
   });
 
   it('stays usable when a source fails or returns empty', async () => {

@@ -70,7 +70,7 @@
     "groups": {
       "navigation": "導覽",
       "sessions": "會話",
-      "workItems": "工作項",
+      "workItems": "任務",
       "files": "檔案",
       "agents": "智慧體",
       "commands": "命令",
@@ -274,10 +274,10 @@
   },
   "primaryNav": {
     "sessions": "會話",
-    "workItems": "工作項",
+    "tasks": "任務",
     "agents": "智慧體",
     "skills": "技能",
-    "batch": "批次"
+    "automations": "自動化"
   },
   "extensionReasonCodes": {
     "supportCode": "錯誤代碼：{{code}}",
@@ -379,5 +379,11 @@
       "idle": "閒置"
     },
     "contextUsage": "上下文已用 {{percent}}%"
+  },
+  "automations": {
+    "tabs": {
+      "scheduled": "排程",
+      "batch": "批次"
+    }
   }
 }

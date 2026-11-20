@@ -786,7 +786,7 @@ const GuidPage: React.FC = () => {
                   <button
                     type='button'
                     className='text-12px text-primary-6 bg-transparent border-0 cursor-pointer p-0'
-                    onClick={() => navigate(`/agent-center/${navState.selectedAssistantId}`)}
+                    onClick={() => navigate(`/agents/${navState.selectedAssistantId}`)}
                   >
                     打开智能体详情
                   </button>

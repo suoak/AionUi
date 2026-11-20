@@ -70,7 +70,7 @@
     "groups": {
       "navigation": "Навігація",
       "sessions": "Сеанси",
-      "workItems": "Робочі елементи",
+      "workItems": "Завдання",
       "agents": "Агенти",
       "settings": "Налаштування",
       "files": "Файли",
@@ -276,10 +276,10 @@
   },
   "primaryNav": {
     "sessions": "Сеанси",
-    "workItems": "Робочі елементи",
+    "tasks": "Завдання",
     "agents": "Агенти",
     "skills": "Навички",
-    "batch": "Пакети"
+    "automations": "Автоматизація"
   },
   "designSystem": {
     "status": {
@@ -290,5 +290,11 @@
       "idle": "Очікування"
     },
     "contextUsage": "Контекст заповнено на {{percent}}%"
+  },
+  "automations": {
+    "tabs": {
+      "scheduled": "За розкладом",
+      "batch": "Пакети"
+    }
   }
 }

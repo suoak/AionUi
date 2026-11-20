@@ -27,7 +27,7 @@ describe('SiderTasksBoardEntry', () => {
         onClick={onClick}
       />
     );
-    expect(screen.getByText('common.primaryNav.workItems')).toBeTruthy();
+    expect(screen.getByText('common.primaryNav.tasks')).toBeTruthy();
     fireEvent.click(screen.getByTestId('sider-tasks-board-entry'));
     expect(onClick).toHaveBeenCalledTimes(1);
   });
@@ -37,7 +37,7 @@ describe('SiderTasksBoardEntry', () => {
     render(<SiderTasksBoardEntry isMobile={false} isActive collapsed siderTooltipProps={{}} onClick={onClick} />);
     const entry = screen.getByTestId('sider-tasks-board-entry');
     expect(entry.className).toContain('bg-fill-3');
-    expect(screen.queryByText('common.primaryNav.workItems')).toBeNull();
+    expect(screen.queryByText('common.primaryNav.tasks')).toBeNull();
     fireEvent.click(entry);
     expect(onClick).toHaveBeenCalledTimes(1);
   });

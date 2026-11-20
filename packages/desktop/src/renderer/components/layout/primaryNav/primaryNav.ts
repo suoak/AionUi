@@ -5,19 +5,20 @@
  */
 
 /**
- * M9 E16 / S11 IA — five primary information-architecture entries.
+ * CSBU WorkMate 3.0 information architecture — five primary entries.
  *
- * IA-2: canonical alias paths (`/sessions`, `/work-items`, …) with redirects
- * to existing pages. Brand: CSBU WorkMate.
+ * `sessions` (new chat + history) · `tasks` · `agents` · `skills` · `automations`.
+ * Legacy paths (`/work-items`, `/agent-center`, `/batch`, …) keep working through
+ * redirects in `routeAliases.tsx` or stay as routes highlighted under their new entry.
  */
 
-export type PrimaryNavKey = 'sessions' | 'workItems' | 'agents' | 'skills' | 'batch';
+export type PrimaryNavKey = 'sessions' | 'tasks' | 'agents' | 'skills' | 'automations';
 
 export type PrimaryNavEntry = {
   key: PrimaryNavKey;
   /** i18n key under `common.primaryNav.*` */
   labelKey: `common.primaryNav.${PrimaryNavKey}`;
-  /** Canonical deep-link path (alias); legacy routes remain active. */
+  /** Canonical deep-link path. */
   path: string;
   /** Extra path prefixes treated as "active" for this entry. */
   activePrefixes: readonly string[];
@@ -34,18 +35,18 @@ export const PRIMARY_NAV_ENTRIES: readonly PrimaryNavEntry[] = [
     keywords: ['chat', 'conversation', 'history', '会话'],
   },
   {
-    key: 'workItems',
-    labelKey: 'common.primaryNav.workItems',
-    path: '/work-items',
-    activePrefixes: ['/work-items', '/tasks', '/scheduled'],
-    keywords: ['board', 'tasks', 'scheduled', '工作项'],
+    key: 'tasks',
+    labelKey: 'common.primaryNav.tasks',
+    path: '/tasks',
+    activePrefixes: ['/tasks', '/work-items'],
+    keywords: ['board', 'work items', 'kanban', '任务', '工作项'],
   },
   {
     key: 'agents',
     labelKey: 'common.primaryNav.agents',
     path: '/agents',
-    activePrefixes: ['/agents', '/agent-center', '/assistants'],
-    keywords: ['assistant', '智能体', 'agent center'],
+    activePrefixes: ['/agents', '/agent-center'],
+    keywords: ['assistant', 'agent center', '智能体', '助手'],
   },
   {
     key: 'skills',
@@ -55,11 +56,11 @@ export const PRIMARY_NAV_ENTRIES: readonly PrimaryNavEntry[] = [
     keywords: ['skill', 'evolution', '技能'],
   },
   {
-    key: 'batch',
-    labelKey: 'common.primaryNav.batch',
-    path: '/batch',
-    activePrefixes: ['/batch'],
-    keywords: ['batch jobs', 'bulk', '批量'],
+    key: 'automations',
+    labelKey: 'common.primaryNav.automations',
+    path: '/automations',
+    activePrefixes: ['/automations', '/scheduled', '/batch'],
+    keywords: ['scheduled', 'cron', 'batch', 'bulk', '定时', '批量', '自动化'],
   },
 ] as const;
 

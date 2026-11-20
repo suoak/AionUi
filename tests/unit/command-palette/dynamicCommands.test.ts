@@ -165,7 +165,7 @@ describe('loadAgentCommands', () => {
       { scope: 'enterprise' },
     ]);
     expect(cmds.map((c) => c.id)).toEqual(['agent.a1', 'agent.a2']);
-    expect(cmds[0]).toMatchObject({ group: 'agents', path: '/agent-center/a1', title: 'Agent a1' });
+    expect(cmds[0]).toMatchObject({ group: 'agents', path: '/agents/a1', title: 'Agent a1' });
     expect(cmds[1].keywords).toContain('写作助手');
   });
 

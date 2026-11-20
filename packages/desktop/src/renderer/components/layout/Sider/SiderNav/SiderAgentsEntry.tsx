@@ -11,7 +11,7 @@ import classNames from 'classnames';
 import { useTranslation } from 'react-i18next';
 import type { SiderTooltipProps } from '@renderer/utils/ui/siderTooltip';
 
-interface SiderAgentCenterEntryProps {
+interface SiderAgentsEntryProps {
   isMobile: boolean;
   isActive: boolean;
   collapsed: boolean;
@@ -19,7 +19,7 @@ interface SiderAgentCenterEntryProps {
   onClick: () => void;
 }
 
-const SiderAgentCenterEntry: React.FC<SiderAgentCenterEntryProps> = ({
+const SiderAgentsEntry: React.FC<SiderAgentsEntryProps> = ({
   isMobile,
   isActive,
   collapsed,
@@ -38,6 +38,7 @@ const SiderAgentCenterEntry: React.FC<SiderAgentCenterEntryProps> = ({
             isActive ? 'bg-fill-3' : 'hover:bg-fill-3 active:bg-fill-4'
           )}
           onClick={onClick}
+          data-testid='sider-agents-entry'
         >
           <Robot
             theme='outline'
@@ -55,11 +56,12 @@ const SiderAgentCenterEntry: React.FC<SiderAgentCenterEntryProps> = ({
     <Tooltip {...siderTooltipProps} content={label} position='right'>
       <div
         className={classNames(
-          'box-border group h-34px w-full flex items-center justify-start gap-8px pl-10px pr-8px rd-0.5rem cursor-pointer shrink-0 transition-all text-t-primary',
+          'box-border group h-34px w-full flex items-center justify-start gap-8px ps-10px pe-8px rd-0.5rem cursor-pointer shrink-0 transition-all text-t-primary',
           isMobile && 'sider-action-btn-mobile',
           isActive ? 'bg-fill-3' : 'hover:bg-fill-3 active:bg-fill-4'
         )}
         onClick={onClick}
+        data-testid='sider-agents-entry'
       >
         <span className='size-22px flex items-center justify-center shrink-0 text-t-primary'>
           <Robot
@@ -76,4 +78,4 @@ const SiderAgentCenterEntry: React.FC<SiderAgentCenterEntryProps> = ({
   );
 };
 
-export default SiderAgentCenterEntry;
+export default SiderAgentsEntry;

@@ -69,7 +69,7 @@
     "groups": {
       "navigation": "Навигация",
       "sessions": "Сеансы",
-      "workItems": "Рабочие элементы",
+      "workItems": "Задачи",
       "agents": "Агенты",
       "settings": "Настройки",
       "files": "Файлы",
@@ -275,10 +275,10 @@
   },
   "primaryNav": {
     "sessions": "Сеансы",
-    "workItems": "Рабочие элементы",
+    "tasks": "Задачи",
     "agents": "Агенты",
     "skills": "Навыки",
-    "batch": "Пакеты"
+    "automations": "Автоматизация"
   },
   "designSystem": {
     "status": {
@@ -289,5 +289,11 @@
       "idle": "Ожидание"
     },
     "contextUsage": "Контекст заполнен на {{percent}}%"
+  },
+  "automations": {
+    "tabs": {
+      "scheduled": "По расписанию",
+      "batch": "Пакеты"
+    }
   }
 }

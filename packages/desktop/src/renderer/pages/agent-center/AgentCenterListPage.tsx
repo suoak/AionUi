@@ -153,10 +153,10 @@ const AgentCenterListPage: React.FC = () => {
           <Text type='secondary'>{t('agent.agentCenter.description')}</Text>
         </div>
         <div className='flex gap-8px'>
-          <Button onClick={() => navigate('/agent-center/squads')} data-testid='agent-center-squads'>
+          <Button onClick={() => navigate('/agents/squads')} data-testid='agent-center-squads'>
             {t('agent.agentCenter.squad.entry')}
           </Button>
-          <Button type='primary' onClick={() => navigate('/agent-center/new')}>
+          <Button type='primary' onClick={() => navigate('/agents/new')}>
             创建智能体
           </Button>
         </div>
@@ -207,11 +207,11 @@ const AgentCenterListPage: React.FC = () => {
             >
               <div
                 className='min-w-0 cursor-pointer'
-                onClick={() => navigate(`/agent-center/${id}`)}
+                onClick={() => navigate(`/agents/${id}`)}
                 role='button'
                 tabIndex={0}
                 onKeyDown={(e) => {
-                  if (e.key === 'Enter') navigate(`/agent-center/${id}`);
+                  if (e.key === 'Enter') navigate(`/agents/${id}`);
                 }}
               >
                 <div className='font-medium truncate'>{item.assistant.name}</div>
@@ -230,10 +230,10 @@ const AgentCenterListPage: React.FC = () => {
                 <Button size='small' type='primary' loading={busy} onClick={() => void handleTryRun(id)}>
                   试跑
                 </Button>
-                <Button size='small' disabled={busy} onClick={() => navigate(`/agent-center/${id}`)}>
+                <Button size='small' disabled={busy} onClick={() => navigate(`/agents/${id}`)}>
                   详情
                 </Button>
-                <Button size='small' disabled={busy} onClick={() => navigate(`/agent-center/${id}/edit`)}>
+                <Button size='small' disabled={busy} onClick={() => navigate(`/agents/${id}/edit`)}>
                   编辑
                 </Button>
                 {isDraft ? (

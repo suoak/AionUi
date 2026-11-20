@@ -26,10 +26,10 @@ const EXPECT_BUILTINS = process.env.E2E_EXPECT_BUILTIN_PACKS === '1';
 
 /** Sider labels in either shipped locale (en-US / zh-CN). */
 const PRIMARY_LABELS: Record<string, RegExp> = {
-  workItems: /^(Work items|工作项)$/,
+  tasks: /^(Tasks|任务)$/,
   agents: /^(Agents|智能体)$/,
   skills: /^(Skills|技能)$/,
-  batch: /^(Batch|批量)$/,
+  automations: /^(Automations|自动化)$/,
 };
 
 type PtySession = { id: string; available: boolean; error?: string; agentAttached: boolean };
@@ -53,7 +53,7 @@ test.describe('3.0.0 packaged acceptance', () => {
     await navigateTo(page, '#/guid');
     await waitForSettle(page);
     await expect(page.getByTestId('sider-tasks-board-entry').first()).toBeVisible({ timeout: 15_000 });
-    await expect(page.getByTestId('sider-batch-entry').first()).toBeVisible();
+    await expect(page.getByTestId('sider-automations-entry').first()).toBeVisible();
     const text = await siderText(page);
     for (const [key, label] of Object.entries(PRIMARY_LABELS)) {
       const found = await page

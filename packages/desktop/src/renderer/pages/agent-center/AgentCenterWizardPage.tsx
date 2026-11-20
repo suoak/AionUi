@@ -492,7 +492,7 @@ const AgentCenterWizardPage: React.FC<{ mode: 'create' | 'edit' }> = ({ mode }) 
       }
 
       if (!opts.stay) {
-        navigate('/agent-center');
+        navigate('/agents');
       }
       return currentId;
     } catch (error) {
@@ -573,7 +573,7 @@ const AgentCenterWizardPage: React.FC<{ mode: 'create' | 'edit' }> = ({ mode }) 
   return (
     <div className='h-full overflow-auto p-24px max-w-720px'>
       {messageContext}
-      <Button type='text' className='!px-0 mb-8px' onClick={() => navigate('/agent-center')}>
+      <Button type='text' className='!px-0 mb-8px' onClick={() => navigate('/agents')}>
         ← 返回智能体中心
       </Button>
       <Title heading={4} className='!mb-4px'>
@@ -823,7 +823,7 @@ const AgentCenterWizardPage: React.FC<{ mode: 'create' | 'edit' }> = ({ mode }) 
                 <Button size='mini' onClick={() => setStep(5)}>
                   去发布
                 </Button>
-                <Button size='mini' type='text' onClick={() => navigate(`/agent-center/${agentId}`)}>
+                <Button size='mini' type='text' onClick={() => navigate(`/agents/${agentId}`)}>
                   打开详情中心
                 </Button>
               </div>

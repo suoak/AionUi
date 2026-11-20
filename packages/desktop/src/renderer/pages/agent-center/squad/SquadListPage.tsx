@@ -60,7 +60,7 @@ const SquadListPage: React.FC = () => {
     <div className='h-full overflow-auto p-24px' data-testid='squad-list-page'>
       <div className='flex items-center justify-between mb-16px gap-12px flex-wrap'>
         <div>
-          <Button size='mini' type='text' onClick={() => navigate('/agent-center')}>
+          <Button size='mini' type='text' onClick={() => navigate('/agents')}>
             ← {t('agent.agentCenter.squad.back')}
           </Button>
           <Title heading={4} className='!mb-4px'>
