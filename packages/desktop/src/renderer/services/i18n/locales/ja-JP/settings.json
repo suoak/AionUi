@@ -1,4 +1,9 @@
 {
+  "extensionSettings": {
+    "loading": "読み込み中…",
+    "tabNotFound": "この設定タブが見つかりませんでした。削除された可能性があります。",
+    "iframeTitle": "拡張機能の設定: {{name}}"
+  },
   "imageGenSupportedTooltipOpenAI": "OpenAI 互換 Images API モデル：GPT Image、Grok Imagine、Seedream、FLUX、Stable Diffusion、Recraft、Qwen Image、Ideogram、およびその他のゲートウェイモデル",
   "imageGenCustomModelWarning": "カスタムモデルは未検証です。プロバイダーが互換性のある Images API またはチャット応答で画像を返す場合にのみ動作します。",
   "imageGenCompatibilityNote": "互換性のある Images API またはチャット応答を実装していないベンダー固有エンドポイントへの直接接続はサポートされません。",
