@@ -1547,6 +1547,50 @@
       "createdNotStarted": "Tarea creada pero no iniciada: {{reason}}",
       "createFailed": "No se pudo crear la tarea: {{reason}}",
       "fromMessage": "Convertir en tarea"
+    },
+    "detail3": {
+      "lane": "Carril",
+      "source": "Origen",
+      "plan": "Plan",
+      "branch": "Rama",
+      "pullRequest": "Pull request",
+      "back": "Volver a tareas",
+      "conversationHint": "La tarea se ejecuta en esta conversación. Ábrela para seguirla o intervenir.",
+      "tabs": {
+        "overview": "Resumen",
+        "conversation": "Conversación",
+        "review": "Revisión",
+        "activity": "Actividad"
+      },
+      "sources": {
+        "manual": "Manual",
+        "conversation": "Conversación",
+        "github": "Issue de GitHub",
+        "cron": "Automatización",
+        "agent": "Agente"
+      }
+    },
+    "review3": {
+      "adopt": "Adoptar",
+      "openPr": "Abrir PR",
+      "updatePr": "Actualizar PR",
+      "requestChanges": "Pedir cambios",
+      "sendChanges": "Enviar",
+      "changesPlaceholder": "¿Qué debe cambiar? El asistente sigue en la misma conversación y copia de trabajo.",
+      "openPrTitle": "Abrir un pull request",
+      "prBodyPlaceholder": "Descripción (opcional)",
+      "prDraft": "Abrir como borrador",
+      "prHint": "Sube solo la rama de la tarea y abre el PR con tu sesión de GitHub CLI.",
+      "prOpened": "Pull request abierto",
+      "prUpdated": "Pull request actualizado",
+      "prFailed": "No se pudo abrir el pull request: {{reason}}",
+      "changesSent": "Cambios pedidos; la tarea vuelve a estar en curso",
+      "changesFailed": "No se pudieron enviar los cambios: {{reason}}",
+      "conflictTitle": "Conflicto de fusión",
+      "conflictBody": "La adopción se detuvo por un conflicto. No se fusionó nada; resuélvelo o pide cambios.",
+      "adopted": "Adoptado en {{branch}} ({{commit}})",
+      "prLink": "Pull request:",
+      "noChanges": "Aún no hay cambios que revisar."
     }
   },
   "squadRouteOnly": {

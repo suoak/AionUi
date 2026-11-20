@@ -135,6 +135,8 @@ import type {
   TaskBoardUpdatedEvent,
   UpdateTaskBoardInput,
   StartTaskInput,
+  DeliverTaskInput,
+  IssueCommentDraft,
   StartTaskResult,
 } from '../types/agent/taskSession';
 import type {
@@ -1352,6 +1354,27 @@ export const taskSession = {
       // Undefined fields are dropped by JSON; Core rejects unknown keys.
       (params) => ({ approach: params.approach, assistant_id: params.assistant_id })
     ),
+    /** 3.0 C3 "Request changes": the note goes to the same conversation and worktree. */
+    followUp: httpPost<StartTaskResult, { id: string; text: string }>(
+      (params) => `/api/task-sessions/${encodeURIComponent(params.id)}/follow-up`,
+      (params) => ({ text: params.text })
+    ),
+    /** 3.0 C3: push the task branch and open a PR (or update the open one) over the user's gh. */
+    deliver: httpPost<TaskBoardItem, { id: string } & DeliverTaskInput>(
+      (params) => `/api/task-sessions/${encodeURIComponent(params.id)}/deliver`,
+      ({ id: _id, ...body }) => body
+    ),
+    issueComment: {
+      /** 3.0 C8: Core's draft of the Issue comment for an Issue task. */
+      draft: httpGet<IssueCommentDraft, { id: string }>(
+        (params) => `/api/task-sessions/${encodeURIComponent(params.id)}/issue-comment/draft`
+      ),
+      /** Posts exactly `body`; Core requires `confirm: true`. */
+      post: httpPost<TaskBoardItem, { id: string; body: string }>(
+        (params) => `/api/task-sessions/${encodeURIComponent(params.id)}/issue-comment`,
+        (params) => ({ body: params.body, confirm: true })
+      ),
+    },
     /** M8 E6-7: manual, read-only GitHub Issue import into the backlog. */
     importGithub: httpPost<ImportGithubIssuesResult, ImportGithubIssuesInput>('/api/task-sessions/import/github'),
     update: httpPatch<TaskBoardItem, { id: string; updates: UpdateTaskBoardInput }>(

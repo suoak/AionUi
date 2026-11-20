@@ -1552,6 +1552,50 @@
       "createdNotStarted": "Tarefa criada, mas não iniciada: {{reason}}",
       "createFailed": "Não foi possível criar a tarefa: {{reason}}",
       "fromMessage": "Transformar em tarefa"
+    },
+    "detail3": {
+      "lane": "Raia",
+      "source": "Origem",
+      "plan": "Plano",
+      "branch": "Branch",
+      "pullRequest": "Pull request",
+      "back": "Voltar às tarefas",
+      "conversationHint": "A tarefa roda nesta conversa. Abra para acompanhar ou intervir.",
+      "tabs": {
+        "overview": "Visão geral",
+        "conversation": "Conversa",
+        "review": "Revisão",
+        "activity": "Atividade"
+      },
+      "sources": {
+        "manual": "Manual",
+        "conversation": "Conversa",
+        "github": "Issue do GitHub",
+        "cron": "Automação",
+        "agent": "Agente"
+      }
+    },
+    "review3": {
+      "adopt": "Adotar",
+      "openPr": "Abrir PR",
+      "updatePr": "Atualizar PR",
+      "requestChanges": "Pedir alterações",
+      "sendChanges": "Enviar",
+      "changesPlaceholder": "O que deve mudar? O assistente continua na mesma conversa e cópia de trabalho.",
+      "openPrTitle": "Abrir um pull request",
+      "prBodyPlaceholder": "Descrição (opcional)",
+      "prDraft": "Abrir como rascunho",
+      "prHint": "Envia só o branch da tarefa e abre o PR com seu login do GitHub CLI.",
+      "prOpened": "Pull request aberto",
+      "prUpdated": "Pull request atualizado",
+      "prFailed": "Não foi possível abrir o pull request: {{reason}}",
+      "changesSent": "Alterações pedidas; a tarefa voltou para Em andamento",
+      "changesFailed": "Não foi possível enviar as alterações: {{reason}}",
+      "conflictTitle": "Conflito de merge",
+      "conflictBody": "A adoção parou em um conflito. Nada foi mesclado; resolva o conflito ou peça alterações.",
+      "adopted": "Adotado em {{branch}} ({{commit}})",
+      "prLink": "Pull request:",
+      "noChanges": "Ainda não há alterações para revisar."
     }
   },
   "squadRouteOnly": {

@@ -368,7 +368,10 @@ const TasksBoardPage: React.FC = () => {
   }, [clearTaskQuery]);
 
   return (
-    <div className='w-full h-full min-h-0 box-border bg-1 flex flex-col overflow-hidden' data-testid='tasks-board-page'>
+    <div
+      className='relative w-full h-full min-h-0 box-border bg-1 flex flex-col overflow-hidden'
+      data-testid='tasks-board-page'
+    >
       <div className={classNames('shrink-0 bg-1', isMobile ? 'px-16px pt-14px pb-10px' : 'px-40px pt-32px pb-12px')}>
         <SettingsPageHeader
           sticky={false}

@@ -1546,6 +1546,50 @@
       "createdNotStarted": "任务已创建但未开始：{{reason}}",
       "createFailed": "无法创建任务：{{reason}}",
       "fromMessage": "转为任务"
+    },
+    "detail3": {
+      "lane": "泳道",
+      "source": "来源",
+      "plan": "计划",
+      "branch": "分支",
+      "pullRequest": "拉取请求",
+      "back": "返回任务",
+      "conversationHint": "任务在这个会话里运行。打开它可以跟进或介入。",
+      "tabs": {
+        "overview": "概览",
+        "conversation": "对话",
+        "review": "评审",
+        "activity": "动态"
+      },
+      "sources": {
+        "manual": "手动",
+        "conversation": "会话",
+        "github": "GitHub Issue",
+        "cron": "自动化",
+        "agent": "智能体"
+      }
+    },
+    "review3": {
+      "adopt": "采纳",
+      "openPr": "开 PR",
+      "updatePr": "更新 PR",
+      "requestChanges": "打回修改",
+      "sendChanges": "发送",
+      "changesPlaceholder": "需要改什么？智能体会在同一会话和工作副本中继续。",
+      "openPrTitle": "开拉取请求",
+      "prBodyPlaceholder": "描述（可选）",
+      "prDraft": "作为草稿打开",
+      "prHint": "只推送任务分支，并用你的 GitHub CLI 登录开 PR。",
+      "prOpened": "已开拉取请求",
+      "prUpdated": "已更新拉取请求",
+      "prFailed": "无法开拉取请求：{{reason}}",
+      "changesSent": "已打回修改，任务回到进行中",
+      "changesFailed": "无法发送修改意见：{{reason}}",
+      "conflictTitle": "合入冲突",
+      "conflictBody": "采纳因冲突停止，没有合入任何内容；请解决冲突或打回修改。",
+      "adopted": "已采纳到 {{branch}}（{{commit}}）",
+      "prLink": "拉取请求：",
+      "noChanges": "还没有可评审的改动。"
     }
   },
   "squadRouteOnly": {

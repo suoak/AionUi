@@ -1546,6 +1546,50 @@
       "createdNotStarted": "کار ساخته شد اما شروع نشد: {{reason}}",
       "createFailed": "ساختن کار ممکن نشد: {{reason}}",
       "fromMessage": "تبدیل به کار"
+    },
+    "detail3": {
+      "lane": "خط",
+      "source": "منبع",
+      "plan": "برنامه",
+      "branch": "شاخه",
+      "pullRequest": "درخواست ادغام",
+      "back": "بازگشت به کارها",
+      "conversationHint": "کار در همین گفتگو اجرا می‌شود. برای دنبال کردن یا دخالت، آن را باز کنید.",
+      "tabs": {
+        "overview": "نمای کلی",
+        "conversation": "گفتگو",
+        "review": "بازبینی",
+        "activity": "فعالیت"
+      },
+      "sources": {
+        "manual": "دستی",
+        "conversation": "گفتگو",
+        "github": "Issue گیت‌هاب",
+        "cron": "خودکارسازی",
+        "agent": "عامل"
+      }
+    },
+    "review3": {
+      "adopt": "پذیرفتن",
+      "openPr": "باز کردن PR",
+      "updatePr": "به‌روزرسانی PR",
+      "requestChanges": "درخواست تغییر",
+      "sendChanges": "ارسال",
+      "changesPlaceholder": "چه چیزی باید تغییر کند؟ دستیار در همان گفتگو و نسخهٔ کاری ادامه می‌دهد.",
+      "openPrTitle": "باز کردن درخواست ادغام",
+      "prBodyPlaceholder": "توضیح (اختیاری)",
+      "prDraft": "باز کردن به‌صورت پیش‌نویس",
+      "prHint": "فقط شاخهٔ کار را push می‌کند و PR را با ورود GitHub CLI شما باز می‌کند.",
+      "prOpened": "درخواست ادغام باز شد",
+      "prUpdated": "درخواست ادغام به‌روز شد",
+      "prFailed": "باز کردن درخواست ادغام ممکن نشد: {{reason}}",
+      "changesSent": "درخواست تغییر ثبت شد؛ کار دوباره در حال انجام است",
+      "changesFailed": "ارسال تغییرات ممکن نشد: {{reason}}",
+      "conflictTitle": "تعارض ادغام",
+      "conflictBody": "پذیرفتن به دلیل تعارض متوقف شد. چیزی ادغام نشد؛ تعارض را حل کنید یا درخواست تغییر بدهید.",
+      "adopted": "در {{branch}} پذیرفته شد ({{commit}})",
+      "prLink": "درخواست ادغام:",
+      "noChanges": "هنوز تغییری برای بازبینی نیست."
     }
   },
   "squadRouteOnly": {
