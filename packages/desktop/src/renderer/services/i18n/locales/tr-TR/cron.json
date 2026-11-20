@@ -124,7 +124,23 @@
       "aionrsModelRequired": "CSBU WorkMate için bir model seçin",
       "aionrsNoProvider": "Kullanılabilir model yok",
       "assistantLockedExistingConversation": "Aynı konuşma görevleri özgün yürütme asistanını korumalıdır. Başka bir asistan kullanmak için yeni bir görev oluşturun.",
-      "teamTaskExecutionModeLockedReason": "Team zamanlanmış görevleri ait oldukları Team konuşmasında çalışmaya devam etmelidir, bu nedenle yürütme modu değiştirilemez."
+      "teamTaskExecutionModeLockedReason": "Team zamanlanmış görevleri ait oldukları Team konuşmasında çalışmaya devam etmelidir, bu nedenle yürütme modu değiştirilemez.",
+      "runAs": {
+        "label": "Her çalıştırmada",
+        "conversation": "Bir sohbet açar",
+        "task": "Görev olarak sıraya alır",
+        "tag": "Görev sırası",
+        "conversationHint": "Mesaj bir sohbete gönderilir ve asistan orada yanıtlar.",
+        "taskHint": "Her çalıştırma panoya bir görev ekler (başlık = ad, hedef = mesaj). Görev kurallarına uyar ve her zaman incelemede durur; Autopilot uygulanmaz."
+      },
+      "runAsTask": {
+        "start": "Hemen başlat",
+        "startHint": "Kapalı: görev Yapılacaklar’da bekler. Açık: başlar (tüm yuvalar doluysa sıraya girer).",
+        "repo": "Depo (isteğe bağlı)",
+        "repoPlaceholder": "/depo/mutlak/yolu",
+        "repoHint": "Her görev bu deponun kendi çalışma ağacında çalışır.",
+        "repoAbsolute": "Depo için mutlak bir yol girin."
+      }
     },
     "freq": {
       "manual": "Manuel",

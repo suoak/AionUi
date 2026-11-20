@@ -2943,10 +2943,14 @@ export const cron = {
       autopilot: p.updates.state?.autopilot,
       autopilot_yolo: p.updates.state?.autopilot_yolo,
       notify_channel_id: p.updates.state?.notify_channel_id,
+      run_as: p.updates.run_as,
+      task: p.updates.task,
     })
   ),
   removeJob: httpDelete<void, { job_id: string }>((p) => `/api/cron/jobs/${p.job_id}`),
-  runNow: httpPost<{ conversation_id: string }, { job_id: string }>((p) => `/api/cron/jobs/${p.job_id}/run`),
+  runNow: httpPost<{ conversation_id: string; task_session_id?: string }, { job_id: string }>(
+    (p) => `/api/cron/jobs/${p.job_id}/run`
+  ),
   saveSkill: httpPost<void, { job_id: string; content: string }>(
     (p) => `/api/cron/jobs/${p.job_id}/skill`,
     (p) => ({ content: p.content })
@@ -3026,6 +3030,9 @@ export interface ICronJob {
   target: {
     payload: { kind: 'message'; text: string };
     execution_mode?: 'existing' | 'new_conversation';
+    /** 3.0 C6: each run opens a conversation (default) or queues a task. */
+    run_as?: CronRunAs;
+    task?: ICronTaskOptions;
   };
   metadata: {
     conversation_id: string;
@@ -3052,6 +3059,18 @@ export interface ICronJob {
     /** Channel session (`/api/channel/sessions` id) receiving run summaries. */
     notify_channel_id?: string;
   };
+}
+
+/** 3.0 C6: what each occurrence of a scheduled job does. */
+export type CronRunAs = 'conversation' | 'task';
+
+/** 3.0 C6: options of a `run_as = task` job (title = job name, objective = message). */
+export interface ICronTaskOptions {
+  /** Start the task right away; otherwise it waits in the backlog. */
+  start: boolean;
+  /** Absolute path of a git repository: the task works in its own worktree. */
+  repo_path?: string;
+  base_ref?: string;
 }
 
 export interface ICronAgentConfigRead {
@@ -3099,6 +3118,8 @@ export interface ICreateCronJobParams {
   autopilot?: boolean;
   autopilot_yolo?: boolean;
   notify_channel_id?: string;
+  run_as?: CronRunAs;
+  task?: ICronTaskOptions;
 }
 
 export interface ICronJobUpdateParams {
@@ -3122,6 +3143,10 @@ export interface ICronJobUpdateParams {
     /** Empty string clears the channel. */
     notify_channel_id?: string;
   };
+  /** 3.0 C6: switch what each occurrence does. */
+  run_as?: CronRunAs;
+  /** Replace the task options (`run_as = task` only). */
+  task?: ICronTaskOptions;
 }
 
 // ---------------------------------------------------------------------------

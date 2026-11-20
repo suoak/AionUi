@@ -113,7 +113,23 @@
       "aionrsModelRequired": "Please select a model for CSBU WorkMate",
       "aionrsNoProvider": "No available models",
       "assistantLockedExistingConversation": "Ongoing conversation tasks must keep their original assistant. Create a new task to use another assistant.",
-      "teamTaskExecutionModeLockedReason": "Team scheduled tasks must keep running in the owning team conversation, so the execution mode cannot be changed."
+      "teamTaskExecutionModeLockedReason": "Team scheduled tasks must keep running in the owning team conversation, so the execution mode cannot be changed.",
+      "runAs": {
+        "label": "Each run",
+        "conversation": "Opens a conversation",
+        "task": "Queues a task",
+        "tag": "Queues tasks",
+        "conversationHint": "The message is sent to a conversation and the assistant answers there.",
+        "taskHint": "Each run adds a task to the board (title = job name, objective = message). It follows the task rules and always stops at review; Autopilot does not apply."
+      },
+      "runAsTask": {
+        "start": "Start right away",
+        "startHint": "Off: the task waits in To do. On: it starts (or queues when all run slots are busy).",
+        "repo": "Repository (optional)",
+        "repoPlaceholder": "/absolute/path/to/repo",
+        "repoHint": "Each task works in its own worktree of this repository.",
+        "repoAbsolute": "Enter an absolute path for the repository."
+      }
     },
     "freq": {
       "manual": "Manual",

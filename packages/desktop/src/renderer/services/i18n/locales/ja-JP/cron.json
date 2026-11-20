@@ -124,7 +124,23 @@
       "aionrsModelRequired": "CSBU WorkMate のモデルを選択してください",
       "aionrsNoProvider": "利用可能なモデルがありません",
       "assistantLockedExistingConversation": "同じ会話で実行するタスクは元のアシスタントを維持する必要があります。別のアシスタントを使うには新しいタスクを作成してください。",
-      "teamTaskExecutionModeLockedReason": "Team のスケジュールタスクは所属する Team 会話で継続実行する必要があるため、実行モードは変更できません。"
+      "teamTaskExecutionModeLockedReason": "Team のスケジュールタスクは所属する Team 会話で継続実行する必要があるため、実行モードは変更できません。",
+      "runAs": {
+        "label": "実行ごとに",
+        "conversation": "会話を開く",
+        "task": "タスクとして登録",
+        "tag": "タスク登録",
+        "conversationHint": "メッセージを会話に送り、アシスタントがそこで応答します。",
+        "taskHint": "実行ごとにボードへタスクを追加します（タイトル＝名前、目的＝メッセージ）。タスクのルールで動き、必ずレビューで止まります。Autopilot は適用されません。"
+      },
+      "runAsTask": {
+        "start": "すぐに開始",
+        "startHint": "オフ：タスクは「未着手」で待機。オン：すぐ開始（実行枠が埋まっていれば待機）。",
+        "repo": "リポジトリ（任意）",
+        "repoPlaceholder": "/リポジトリの絶対パス",
+        "repoHint": "各タスクはこのリポジトリの専用ワークツリーで作業します。",
+        "repoAbsolute": "リポジトリの絶対パスを入力してください。"
+      }
     },
     "freq": {
       "manual": "手動",

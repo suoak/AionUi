@@ -112,7 +112,23 @@
       "aionrsModelRequired": "CSBU WorkMate의 모델을 선택하세요",
       "aionrsNoProvider": "사용 가능한 모델 없음",
       "assistantLockedExistingConversation": "동일 대화 작업은 원래 실행 어시스턴트를 유지해야 합니다. 다른 어시스턴트를 사용하려면 새 작업을 만드세요.",
-      "teamTaskExecutionModeLockedReason": "Team 예약 작업은 소속 Team 대화에서 계속 실행되어야 하므로 실행 모드를 변경할 수 없습니다."
+      "teamTaskExecutionModeLockedReason": "Team 예약 작업은 소속 Team 대화에서 계속 실행되어야 하므로 실행 모드를 변경할 수 없습니다.",
+      "runAs": {
+        "label": "실행할 때마다",
+        "conversation": "대화 열기",
+        "task": "작업으로 대기열에 추가",
+        "tag": "작업 대기열",
+        "conversationHint": "메시지를 대화로 보내고 어시스턴트가 그곳에서 답합니다.",
+        "taskHint": "실행할 때마다 보드에 작업을 추가합니다(제목 = 이름, 목표 = 메시지). 작업 규칙을 따르며 항상 검토 단계에서 멈춥니다. Autopilot은 적용되지 않습니다."
+      },
+      "runAsTask": {
+        "start": "바로 시작",
+        "startHint": "끔: 작업이 할 일에서 대기합니다. 켬: 바로 시작합니다(실행 슬롯이 모두 차면 대기).",
+        "repo": "저장소(선택)",
+        "repoPlaceholder": "/저장소/절대/경로",
+        "repoHint": "각 작업은 이 저장소의 별도 워크트리에서 진행됩니다.",
+        "repoAbsolute": "저장소의 절대 경로를 입력하세요."
+      }
     },
     "freq": {
       "manual": "수동",

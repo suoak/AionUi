@@ -114,7 +114,23 @@
       "assistantRequired": "Please select an assistant",
       "assistantPlaceholder": "Select the assistant to execute this task",
       "assistantLockedExistingConversation": "Ongoing conversation tasks must keep their original assistant. Create a new task to use another assistant.",
-      "teamTaskExecutionModeLockedReason": "Team scheduled tasks must keep running in the owning team conversation, so the execution mode cannot be changed."
+      "teamTaskExecutionModeLockedReason": "Team scheduled tasks must keep running in the owning team conversation, so the execution mode cannot be changed.",
+      "runAs": {
+        "label": "En cada ejecución",
+        "conversation": "Abre una conversación",
+        "task": "Pone una tarea en cola",
+        "tag": "Tareas en cola",
+        "conversationHint": "El mensaje se envía a una conversación y el asistente responde allí.",
+        "taskHint": "Cada ejecución añade una tarea al tablero (título = nombre, objetivo = mensaje). Sigue las reglas de tareas y siempre se detiene en revisión; Autopilot no aplica."
+      },
+      "runAsTask": {
+        "start": "Empezar de inmediato",
+        "startHint": "Desactivado: la tarea espera en Pendientes. Activado: empieza (o espera si todos los huecos están ocupados).",
+        "repo": "Repositorio (opcional)",
+        "repoPlaceholder": "/ruta/absoluta/al/repo",
+        "repoHint": "Cada tarea trabaja en su propio worktree de este repositorio.",
+        "repoAbsolute": "Introduce una ruta absoluta para el repositorio."
+      }
     },
     "freq": {
       "manual": "Manual",
