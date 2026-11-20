@@ -43,16 +43,23 @@ const TaskBoardCard: React.FC<TaskBoardCardProps> = ({ task, onOpen, dragging = 
   const reason = needsYouReasonForItem(task);
   const plan = planProgress(task);
   const queued = typeof task.queued_at === 'number';
-  const canStart =
-    Boolean(onStart) && isTaskFlowItem(task) && laneForItem(task) === 'todo' && Boolean(task.assistant_id) && !queued;
+  const lane = laneForItem(task);
+  const canStart = Boolean(onStart) && isTaskFlowItem(task) && lane === 'todo' && Boolean(task.assistant_id) && !queued;
 
   return (
     <div
       data-testid={`task-board-card-${task.id}`}
+      data-lane={lane}
       role={clickable ? 'button' : undefined}
       tabIndex={clickable ? 0 : undefined}
       className={classNames(
-        'box-border w-full rd-8px border border-solid border-[var(--color-border-2)] bg-2 p-10px flex flex-col gap-6px',
+        'box-border w-full rd-8px border border-solid p-10px flex flex-col gap-6px',
+        // Tint only what asks for attention (amber) or is finished (pale green); the rest stays neutral.
+        lane === 'needs_you'
+          ? 'bg-[rgba(var(--warning-6),0.08)] border-[rgba(var(--warning-6),0.35)]'
+          : lane === 'done'
+            ? 'bg-[rgba(var(--success-6),0.06)] border-[var(--color-border-2)]'
+            : 'bg-2 border-[var(--color-border-2)]',
         clickable && 'cursor-pointer hover:bg-fill-2',
         dragging && 'opacity-50'
       )}

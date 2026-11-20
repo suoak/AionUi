@@ -22,7 +22,8 @@ import {
 import { compareBoardItems, type BoardItemColumns } from './boardModel';
 
 /** Lanes shown by default, in display order. */
-export const VISIBLE_LANES: readonly TaskLane[] = ['todo', 'in_progress', 'needs_you', 'done'];
+/** Lane order on the board: what needs you first (UI overhaul plan §D). */
+export const VISIBLE_LANES: readonly TaskLane[] = ['needs_you', 'in_progress', 'todo', 'done'];
 
 /** Lane and needs-you reason from the stored board status and run state. */
 export const deriveLane = (

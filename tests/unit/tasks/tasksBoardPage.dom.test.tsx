@@ -625,3 +625,24 @@ describe('3.0 task flow (Core 0.6 lanes)', () => {
     expect(screen.getByTestId('tasks-list-start-l1')).toBeTruthy();
   });
 });
+
+describe('3.0 lane order and tint', () => {
+  it('puts Needs you first, then In progress, To do, Done, and tints needs-you cards', async () => {
+    mocks.searchParams = new URLSearchParams();
+    mocks.boardGet.mockResolvedValue(
+      board(
+        item('n1', 'in_review', { lane: 'needs_you', needs_you_reason: 'review' }),
+        item('t1', 'todo', { lane: 'todo' })
+      )
+    );
+    render(<TasksBoardPage />);
+    const card = await screen.findByTestId('task-board-card-n1');
+    const order = screen
+      .getAllByTestId(/^tasks-board-lane-(?!count)/)
+      .map((el) => el.getAttribute('data-testid')!.replace('tasks-board-lane-', ''));
+    expect(order).toEqual(['needs_you', 'in_progress', 'todo', 'done']);
+    expect(card.getAttribute('data-lane')).toBe('needs_you');
+    expect(card.className).toContain('--warning-6');
+    expect(screen.getByTestId('task-board-card-t1').className).not.toContain('--warning-6');
+  });
+});
