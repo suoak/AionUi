@@ -24,12 +24,13 @@ import { Alert, Collapse, Form, InputNumber, Message, Modal, Switch } from '@arc
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import useSWR from 'swr';
-import { useSettingsViewMode } from '../../settingsViewContext';
+import { useSettingsTabNavigate, useSettingsViewMode } from '../../settingsViewContext';
 import BrowserNotificationGrant from './BrowserNotificationGrant';
 import DevSettings from './DevSettings';
 import BrowserDataSection from './BrowserDataSection';
 import SessionImportSection from './SessionImportSection';
 import RemoteHostSshSection from './RemoteHostSshSection';
+import RemoteHostMovedRow from './RemoteHostMovedRow';
 import DirInputItem from './DirInputItem';
 import PreferenceRow from './PreferenceRow';
 import VoiceInputSection from './VoiceInputSection';
@@ -57,6 +58,7 @@ const SystemModalContent: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const viewMode = useSettingsViewMode();
   const isPageMode = viewMode === 'page';
+  const navigateToTab = useSettingsTabNavigate();
   const initializingRef = useRef(true);
 
   const [startOnBoot, setStartOnBoot] = useState<IStartOnBootStatus>({
@@ -601,7 +603,12 @@ const SystemModalContent: React.FC = () => {
 
           {/* In-app browser: sign-in state and cache */}
           <BrowserDataSection />
-          <RemoteHostSshSection />
+          {/* 3.0 V7: in the settings pages Remote Host has its own tab; the modal keeps the section. */}
+          {isPageMode && navigateToTab ? (
+            <RemoteHostMovedRow onOpen={() => navigateToTab('remote-host')} />
+          ) : (
+            <RemoteHostSshSection />
+          )}
 
           <SessionImportSection />
 

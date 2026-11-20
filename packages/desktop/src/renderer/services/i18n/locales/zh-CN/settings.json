@@ -1973,7 +1973,10 @@
     "disconnect": "断开（改用本地 Host）",
     "connectConfirmTitle": "连接到远程 Host？",
     "connectConfirmContent": "CSBU WorkMate 将重新加载，并改为使用 {{url}} 上的 Host。请使用工作区账号登录。本地 Host 会在后台继续运行。",
-    "connectedBanner": "已连接到远程 Host（{{url}}）。本地 Host 仍在后台运行。"
+    "connectedBanner": "已连接到远程 Host（{{url}}）。本地 Host 仍在后台运行。",
+    "navLabel": "远程 Host",
+    "movedHint": "连接无界面 Host 的 SSH 隧道现已移至单独的设置页。",
+    "openPage": "打开远程 Host"
   },
   "sessionImport": {
     "title": "导入 Claude / Codex 会话",

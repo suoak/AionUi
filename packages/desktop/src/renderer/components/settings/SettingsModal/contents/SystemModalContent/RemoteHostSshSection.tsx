@@ -16,7 +16,15 @@ const { Text, Title } = Typography;
  * E14: start a system-OpenSSH local forward and point the desktop renderer at
  * the headless WorkMate Host on the other end. Desktop-only. No password field (D14-3).
  */
-const RemoteHostSshSection: React.FC = () => {
+type RemoteHostSshSectionProps = {
+  /**
+   * 3.0 V7: the Remote Host settings page renders its own header, so the
+   * section drops its heading and top border there.
+   */
+  standalone?: boolean;
+};
+
+const RemoteHostSshSection: React.FC<RemoteHostSshSectionProps> = ({ standalone = false }) => {
   const { t } = useTranslation();
   const isDesktop = isElectronDesktop();
   const [status, setStatus] = useState<ISshTunnelStatus>({ running: false });
@@ -48,7 +56,7 @@ const RemoteHostSshSection: React.FC = () => {
   if (!isDesktop) {
     return (
       <div className='py-12px' data-testid='remote-host-ssh-section'>
-        <Title heading={6}>{t('settings.remoteHost.title')}</Title>
+        {standalone ? null : <Title heading={6}>{t('settings.remoteHost.title')}</Title>}
         <Text type='secondary'>{t('settings.remoteHost.desktopOnly')}</Text>
       </div>
     );
@@ -124,11 +132,16 @@ const RemoteHostSshSection: React.FC = () => {
   };
 
   return (
-    <div className='py-12px border-t border-[var(--color-border-2)]' data-testid='remote-host-ssh-section'>
-      <Title heading={6}>{t('settings.remoteHost.title')}</Title>
-      <Text type='secondary' className='block mb-8px'>
-        {t('settings.remoteHost.description')}
-      </Text>
+    <div
+      className={standalone ? 'py-4px' : 'py-12px border-t border-[var(--color-border-2)]'}
+      data-testid='remote-host-ssh-section'
+    >
+      {standalone ? null : <Title heading={6}>{t('settings.remoteHost.title')}</Title>}
+      {standalone ? null : (
+        <Text type='secondary' className='block mb-8px'>
+          {t('settings.remoteHost.description')}
+        </Text>
+      )}
       <Alert type='info' content={t('settings.remoteHost.alert')} className='mb-12px' />
       {isRemote ? (
         <Alert
