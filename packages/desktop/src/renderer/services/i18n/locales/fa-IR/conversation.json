@@ -1056,7 +1056,9 @@
       "userEvidence": "توسط کاربر تأیید شد",
       "phoneApproved": "روی تلفن تأیید شد",
       "phoneRejected": "روی تلفن رد شد",
-      "phoneApprovedExecuteHint": "روی تلفن شما تأیید شد. هر وقت آماده بودید همین‌جا اجرا کنید؛ چیزی خودکار شروع نمی‌شود."
+      "phoneApprovedExecuteHint": "به‌طور خودکار در اینجا شروع می‌شود و نیازی به اجرای دستی نیست.",
+      "imApproved": "در پیام‌رسان تأیید شد",
+      "imRejected": "در پیام‌رسان رد شد"
     },
     "review": {
       "open": "Review",
@@ -1593,6 +1595,37 @@
     },
     "conversationTask": {
       "open": "باز کردن این کار"
+    },
+    "remote": {
+      "title": "تأیید از راه دور",
+      "summary": {
+        "plan": "تأیید برنامه",
+        "goal": "تأیید هدف",
+        "adopt": "پذیرش با {{strategy}} در {{target}}"
+      },
+      "where": {
+        "desktop": "این دسکتاپ",
+        "phone": "تلفن شما",
+        "im": "پیام‌رسان"
+      },
+      "state": {
+        "waiting": "در انتظار تلفن یا پیام‌رسان · {{minutes}} دقیقه دیگر منقضی می‌شود ({{time}})",
+        "approvedRan": "در {{where}} تأیید و اجرا شد",
+        "approvedRunning": "در {{where}} تأیید شد · در حال شروع در اینجا",
+        "approvedFailed": "در {{where}} تأیید شد، اما اجرا نشد",
+        "approvedDesktop": "در این دسکتاپ تأیید شد",
+        "rejected": "در {{where}} رد شد",
+        "expired": "در {{time}} منقضی شد · اینجا تأیید کنید",
+        "invalidated": "دیگر معتبر نیست"
+      },
+      "reason": {
+        "superseded": "نسخهٔ جدیدتری جایگزین آن شد.",
+        "cancelled": "لغو شد.",
+        "expired": "پیش از پاسخ منقضی شد.",
+        "diff_changed": "تغییرات پس از ارسال جابه‌جا شد، بنابراین باطل شد.",
+        "task_ended": "کار پایان یافت."
+      },
+      "commit": "کامیت {{ref}}"
     }
   },
   "squadRouteOnly": {

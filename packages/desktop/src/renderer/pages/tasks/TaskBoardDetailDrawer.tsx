@@ -22,6 +22,8 @@ import { canStartSquadForItem } from './workItemWorktreeModel';
 import TaskReviewTab from './TaskReviewTab';
 import { laneForItem, needsYouReasonForItem, planProgress } from './laneModel';
 import { parseDelivery, type TaskDetailTab } from './taskDetailModel';
+import RemoteApprovalCard from './RemoteApprovalCard';
+import { useRemoteApprovalRequests } from './useRemoteApprovalRequests';
 
 const PRIORITY_KEYS = ['none', 'low', 'medium', 'high', 'urgent'] as const;
 
@@ -86,6 +88,7 @@ const TaskBoardDetailDrawer: React.FC<TaskBoardDetailDrawerProps> = ({
   const taskId = task?.id ?? null;
   const [session, setSession] = useState<TaskSession | null>(null);
   const [tab, setTab] = useState<TaskDetailTab>(() => initialTab(task));
+  const { requests: remoteRequests } = useRemoteApprovalRequests(taskId);
 
   useEffect(() => {
     setTab(initialTab(task));
@@ -236,6 +239,7 @@ const TaskBoardDetailDrawer: React.FC<TaskBoardDetailDrawerProps> = ({
 
   const overview = (
     <div className='flex flex-col gap-16px'>
+      <RemoteApprovalCard requests={remoteRequests} />
       {interactive && moveTargets.length > 0 ? (
         <section className='flex flex-col gap-6px'>
           <div className='text-13px font-medium text-t-primary'>{t('conversation.taskBoard.move.title')}</div>

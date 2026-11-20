@@ -261,7 +261,9 @@
       "autopilot": "Autopilot"
     },
     "phoneApproved": "روی تلفن تأیید شد",
-    "phoneRejected": "روی تلفن رد شد"
+    "phoneRejected": "روی تلفن رد شد",
+    "imApproved": "در پیام‌رسان تأیید شد",
+    "imRejected": "در پیام‌رسان رد شد"
   },
   "extensionPanels": {
     "groupTitle": "پنل‌های افزونه",

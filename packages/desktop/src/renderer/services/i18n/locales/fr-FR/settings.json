@@ -1712,7 +1712,7 @@
     "title": "Appareils mobiles",
     "description": "Associez votre téléphone pour recevoir les demandes d'approbation et approuver ou refuser des plans et des objectifs loin de votre bureau.",
     "count": "{{count}}/{{max}} appareils",
-    "approvalNote": "Approuver sur un téléphone enregistre seulement la décision. Un plan approuvé s'exécute toujours ici, sur l'ordinateur.",
+    "approvalNote": "Une approbation sur le téléphone ou dans un compte de messagerie lié exécute aussitôt ici le plan ou l'adoption approuvés. Chaque demande est liée à ce que vous avez vu, ne sert qu'une fois et expire.",
     "limitReached": "Vous avez associé le maximum de {{max}} appareils. Révoquez-en un avant d'en associer un autre.",
     "empty": "Aucun appareil associé pour l'instant",
     "unnamed": "Appareil sans nom",
@@ -1785,6 +1785,19 @@
       "revoke": "Impossible de révoquer l'appareil",
       "push": "Impossible d'enregistrer le paramètre de notification",
       "reject": "Impossible de refuser la demande d'association"
+    },
+    "remote": {
+      "title": "Approbation à distance",
+      "description": "Les téléphones et comptes de messagerie liés peuvent approuver plans, objectifs et adoptions ; l’approbation s’exécute ici aussitôt.",
+      "ttl": "Une demande reste valable",
+      "minutes": "min",
+      "save": "Enregistrer",
+      "approvers": "Comptes de messagerie autorisés à approuver",
+      "noApprovers": "Aucun pour l'instant. Seuls les téléphones peuvent approuver.",
+      "remove": "Retirer",
+      "pick": "Choisir un compte de messagerie associé",
+      "add": "Ajouter",
+      "failed": "Impossible d'enregistrer la modification."
     }
   },
   "governance": {

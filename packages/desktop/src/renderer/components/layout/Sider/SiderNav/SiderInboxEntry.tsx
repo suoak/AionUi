@@ -49,7 +49,14 @@ const itemStatusKey = (item: IInboxItem): { key: string; phone: boolean } => {
     const phone = getPhoneDecision(item.approval_id);
     if (phone) {
       return {
-        key: phone.status === 'approved' ? 'common.inbox.phoneApproved' : 'common.inbox.phoneRejected',
+        key:
+          phone.via === 'im'
+            ? phone.status === 'approved'
+              ? 'common.inbox.imApproved'
+              : 'common.inbox.imRejected'
+            : phone.status === 'approved'
+              ? 'common.inbox.phoneApproved'
+              : 'common.inbox.phoneRejected',
         phone: true,
       };
     }

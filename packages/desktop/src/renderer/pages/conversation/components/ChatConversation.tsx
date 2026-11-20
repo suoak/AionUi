@@ -66,6 +66,8 @@ import SingleChatEmptyState from './SingleChatEmptyState';
 import TaskReviewPanel from './TaskReviewPanel';
 import ConversationTaskPill from './ConversationTaskPill';
 import NewTaskDialog from '@/renderer/pages/tasks/NewTaskDialog';
+import { remoteRunOwnsApproval } from '@/renderer/pages/tasks/remoteApprovalModel';
+import { useRemoteApprovalRequests } from '@/renderer/pages/tasks/useRemoteApprovalRequests';
 import { useActiveLease } from '../hooks/useActiveLease';
 import WorktreeStatusBadge from '../fanout/WorktreeStatusBadge';
 // import SkillRuleGenerator from './components/SkillRuleGenerator'; // Temporarily hidden
@@ -125,7 +127,7 @@ const TaskSessionControl: React.FC<{ conversation: TChatConversation }> = ({ con
   };
 
   // E9-3: a decision made on a paired phone (or elsewhere) refreshes the card
-  // in place. Execution stays a manual desktop action.
+  // in place. Since C9 a remote approval also starts the run.
   useTaskApprovalChanged(taskSession?.id, () => {
     void refreshContract();
   });
@@ -133,11 +135,19 @@ const TaskSessionControl: React.FC<{ conversation: TChatConversation }> = ({ con
   const phoneDecision = phoneDecisionForLatestApproval(contractData?.approvals);
   const phoneDecisionLabel = phoneDecision
     ? t(
-        phoneDecision.status === 'approved'
-          ? 'conversation.taskSession.contract.phoneApproved'
-          : 'conversation.taskSession.contract.phoneRejected'
+        phoneDecision.via === 'im'
+          ? phoneDecision.status === 'approved'
+            ? 'conversation.taskSession.contract.imApproved'
+            : 'conversation.taskSession.contract.imRejected'
+          : phoneDecision.status === 'approved'
+            ? 'conversation.taskSession.contract.phoneApproved'
+            : 'conversation.taskSession.contract.phoneRejected'
       )
     : null;
+  // 3.0 U9: a plan approved on a phone or in IM runs at once (Core C9). Offer
+  // a manual Execute only if that remote run could not start.
+  const { requests: remoteRequests } = useRemoteApprovalRequests(taskSession?.id);
+  const remoteRunPending = remoteRunOwnsApproval(remoteRequests, approvedPlanApproval?.id);
   const phoneApprovedAwaitingExecute =
     phoneDecision?.status === 'approved' && phoneDecision.approval_id === approvedPlanApproval?.id;
 
@@ -300,7 +310,7 @@ const TaskSessionControl: React.FC<{ conversation: TChatConversation }> = ({ con
               type={phoneDecision?.status === 'approved' ? 'success' : 'warning'}
               data-testid='task-session-phone-decision-notice'
               content={
-                phoneApprovedAwaitingExecute
+                phoneApprovedAwaitingExecute && remoteRunPending
                   ? `${phoneDecisionLabel} · ${t('conversation.taskSession.contract.phoneApprovedExecuteHint')}`
                   : phoneDecisionLabel
               }
@@ -381,9 +391,15 @@ const TaskSessionControl: React.FC<{ conversation: TChatConversation }> = ({ con
                 {new Date(approvedPlan.created_at).toLocaleString()}
               </Typography.Text>
               <Typography.Paragraph className='mt-8px'>{approvedPlan.content}</Typography.Paragraph>
-              <Button type='primary' loading={saving} onClick={() => void executePlan()}>
-                {t('conversation.taskSession.contract.execute')}
-              </Button>
+              {remoteRunPending ? (
+                <Typography.Text type='secondary' className='block' data-testid='task-session-remote-run-pending'>
+                  {t('conversation.taskSession.contract.phoneApprovedExecuteHint')}
+                </Typography.Text>
+              ) : (
+                <Button type='primary' loading={saving} onClick={() => void executePlan()}>
+                  {t('conversation.taskSession.contract.execute')}
+                </Button>
+              )}
             </div>
           ) : null}
           {contractData?.criteria

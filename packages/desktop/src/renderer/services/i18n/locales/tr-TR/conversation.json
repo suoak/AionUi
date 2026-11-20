@@ -1058,7 +1058,9 @@
       "userEvidence": "Kullanıcı tarafından onaylandı",
       "phoneApproved": "Telefonda onaylandı",
       "phoneRejected": "Telefonda reddedildi",
-      "phoneApprovedExecuteHint": "Telefonunuzda onaylandı. Hazır olduğunuzda burada çalıştırın; hiçbir şey otomatik başlamaz."
+      "phoneApprovedExecuteHint": "Burada otomatik olarak başlar; çalıştırmanız gerekmez.",
+      "imApproved": "Mesajlaşmada onaylandı",
+      "imRejected": "Mesajlaşmada reddedildi"
     },
     "review": {
       "open": "Review",
@@ -1595,6 +1597,37 @@
     },
     "conversationTask": {
       "open": "Bu görevi aç"
+    },
+    "remote": {
+      "title": "Uzaktan onay",
+      "summary": {
+        "plan": "Planı onayla",
+        "goal": "Hedefi onayla",
+        "adopt": "{{strategy}} ile {{target}} dalına al"
+      },
+      "where": {
+        "desktop": "bu masaüstü",
+        "phone": "telefonunuz",
+        "im": "mesajlaşma"
+      },
+      "state": {
+        "waiting": "Telefon veya mesajlaşma onayı bekleniyor · {{minutes}} dk sonra sona erer ({{time}})",
+        "approvedRan": "{{where}} üzerinden onaylandı ve başlatıldı",
+        "approvedRunning": "{{where}} üzerinden onaylandı · burada başlatılıyor",
+        "approvedFailed": "{{where}} üzerinden onaylandı ancak başlatılamadı",
+        "approvedDesktop": "Bu masaüstünde onaylandı",
+        "rejected": "{{where}} üzerinden reddedildi",
+        "expired": "{{time}} itibarıyla süresi doldu · burada onaylayın",
+        "invalidated": "Artık geçerli değil"
+      },
+      "reason": {
+        "superseded": "Daha yeni bir sürüm yerini aldı.",
+        "cancelled": "İptal edildi.",
+        "expired": "Kimse yanıtlamadan süresi doldu.",
+        "diff_changed": "Gönderildikten sonra değişiklikler değişti, bu yüzden geçersiz sayıldı.",
+        "task_ended": "Görev sona erdi."
+      },
+      "commit": "Commit {{ref}}"
     }
   },
   "squadRouteOnly": {

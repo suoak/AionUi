@@ -1057,7 +1057,9 @@
       "userEvidence": "Confirmado por el usuario",
       "phoneApproved": "Aprobado en el teléfono",
       "phoneRejected": "Rechazado en el teléfono",
-      "phoneApprovedExecuteHint": "Se aprobó en tu teléfono. Ejecútalo aquí cuando quieras; nada se inicia automáticamente."
+      "phoneApprovedExecuteHint": "Se inicia aquí automáticamente; no hace falta ejecutarlo.",
+      "imApproved": "Aprobado por mensajería",
+      "imRejected": "Rechazado por mensajería"
     },
     "review": {
       "open": "Review",
@@ -1594,6 +1596,37 @@
     },
     "conversationTask": {
       "open": "Abrir esta tarea"
+    },
+    "remote": {
+      "title": "Aprobación remota",
+      "summary": {
+        "plan": "Aprobar el plan",
+        "goal": "Aprobar el objetivo",
+        "adopt": "Adoptar con {{strategy}} en {{target}}"
+      },
+      "where": {
+        "desktop": "este escritorio",
+        "phone": "tu teléfono",
+        "im": "mensajería"
+      },
+      "state": {
+        "waiting": "Esperando al teléfono o la mensajería · caduca en {{minutes}} min ({{time}})",
+        "approvedRan": "Aprobado en {{where}} e iniciado",
+        "approvedRunning": "Aprobado en {{where}} · iniciando aquí",
+        "approvedFailed": "Aprobado en {{where}}, pero no se inició",
+        "approvedDesktop": "Aprobado en este escritorio",
+        "rejected": "Rechazado en {{where}}",
+        "expired": "Caducó a las {{time}} · apruébalo aquí",
+        "invalidated": "Ya no es válido"
+      },
+      "reason": {
+        "superseded": "Una versión más reciente la reemplazó.",
+        "cancelled": "Se canceló.",
+        "expired": "Caducó antes de que nadie respondiera.",
+        "diff_changed": "Los cambios se movieron después del envío, así que se anuló.",
+        "task_ended": "La tarea terminó."
+      },
+      "commit": "Commit {{ref}}"
     }
   },
   "squadRouteOnly": {

@@ -59,6 +59,15 @@ describe('taskApprovalStore', () => {
     expect(phoneDecisionFromEvent(event({ status: 'superseded' }) as never)).toBeNull();
   });
 
+  it('records IM decisions too, marked as IM (3.0 U9)', () => {
+    expect(phoneDecisionFromEvent(event() as never)).toMatchObject({ via: 'device' });
+    expect(phoneDecisionFromEvent(event({ decided_via: 'im', device_id: null }) as never)).toMatchObject({
+      approval_id: 'ap-1',
+      status: 'approved',
+      via: 'im',
+    });
+  });
+
   it('attaches one WS listener and remembers phone decisions', () => {
     ensureTaskApprovalListener();
     ensureTaskApprovalListener();

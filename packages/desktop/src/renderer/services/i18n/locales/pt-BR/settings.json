@@ -1715,7 +1715,7 @@
     "title": "Dispositivos móveis",
     "description": "Pareie seu celular para receber solicitações de aprovação e aprovar ou rejeitar planos e metas longe da sua mesa.",
     "count": "{{count}}/{{max}} dispositivos",
-    "approvalNote": "Aprovar no celular apenas registra a decisão. Um plano aprovado continua sendo executado aqui no desktop.",
+    "approvalNote": "Aprovar no celular ou em uma conta de mensageiro vinculada executa aqui na hora o plano ou a adoção aprovados. Cada pedido fica preso ao que você viu, vale uma vez e expira.",
     "limitReached": "Você pareou o máximo de {{max}} dispositivos. Revogue um antes de parear outro.",
     "empty": "Nenhum dispositivo pareado ainda",
     "unnamed": "Dispositivo sem nome",
@@ -1788,6 +1788,19 @@
       "revoke": "Não foi possível revogar o dispositivo",
       "push": "Não foi possível salvar a configuração de notificação",
       "reject": "Não foi possível rejeitar a solicitação de pareamento"
+    },
+    "remote": {
+      "title": "Aprovação remota",
+      "description": "Celulares e contas de mensageiro vinculadas podem aprovar planos, metas e adoções; a aprovação roda aqui na hora.",
+      "ttl": "Um pedido vale por",
+      "minutes": "min",
+      "save": "Salvar",
+      "approvers": "Contas de mensageiro que podem aprovar",
+      "noApprovers": "Nenhuma ainda. Só celulares podem aprovar.",
+      "remove": "Remover",
+      "pick": "Escolha uma conta de mensageiro pareada",
+      "add": "Adicionar",
+      "failed": "Não foi possível salvar a alteração."
     }
   },
   "governance": {

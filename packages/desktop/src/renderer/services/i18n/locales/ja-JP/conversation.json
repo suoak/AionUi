@@ -1056,7 +1056,9 @@
       "userEvidence": "ユーザーが確認しました",
       "phoneApproved": "スマートフォンで承認済み",
       "phoneRejected": "スマートフォンで却下済み",
-      "phoneApprovedExecuteHint": "スマートフォンで承認されました。準備ができたらここで実行してください。自動では開始しません。"
+      "phoneApprovedExecuteHint": "ここで自動的に開始されます。手動で実行する必要はありません。",
+      "imApproved": "IM で承認済み",
+      "imRejected": "IM で却下"
     },
     "review": {
       "open": "Review",
@@ -1593,6 +1595,37 @@
     },
     "conversationTask": {
       "open": "このタスクを開く"
+    },
+    "remote": {
+      "title": "リモート承認",
+      "summary": {
+        "plan": "計画を承認",
+        "goal": "目標を承認",
+        "adopt": "{{strategy}} で {{target}} に採用"
+      },
+      "where": {
+        "desktop": "このデスクトップ",
+        "phone": "スマートフォン",
+        "im": "IM"
+      },
+      "state": {
+        "waiting": "スマートフォンまたは IM の承認待ち · あと {{minutes}} 分で期限切れ（{{time}}）",
+        "approvedRan": "{{where}}で承認され、実行されました",
+        "approvedRunning": "{{where}}で承認 · ここで開始しています",
+        "approvedFailed": "{{where}}で承認されましたが、開始できませんでした",
+        "approvedDesktop": "このデスクトップで承認済み",
+        "rejected": "{{where}}で却下されました",
+        "expired": "{{time}} に期限切れ · ここで承認してください",
+        "invalidated": "無効になりました"
+      },
+      "reason": {
+        "superseded": "新しい版に置き換えられました。",
+        "cancelled": "キャンセルされました。",
+        "expired": "応答がないまま期限切れになりました。",
+        "diff_changed": "送信後に変更内容が変わったため無効になりました。",
+        "task_ended": "タスクが終了しました。"
+      },
+      "commit": "コミット {{ref}}"
     }
   },
   "squadRouteOnly": {

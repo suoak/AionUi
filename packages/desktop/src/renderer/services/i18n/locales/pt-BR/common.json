@@ -261,7 +261,9 @@
       "autopilot": "Autopilot"
     },
     "phoneApproved": "Aprovado no celular",
-    "phoneRejected": "Rejeitado no celular"
+    "phoneRejected": "Rejeitado no celular",
+    "imApproved": "Aprovado pelo mensageiro",
+    "imRejected": "Recusado pelo mensageiro"
   },
   "extensionPanels": {
     "groupTitle": "Painéis de plugins",
