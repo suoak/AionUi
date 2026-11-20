@@ -96,6 +96,9 @@ test.describe('System Preferences', () => {
   // ──────────────────────────────────────────────────────────────────────────
 
   test('TC-PREF-03: should toggle notification switch via collapse header', async ({ page }) => {
+    // 3.0 V7: notifications have their own settings page.
+    await goToSettings(page, 'notifications');
+    await waitForSettle(page);
     await takeScreenshot(page, 'system-preferences/tc-pref-03/01-initial.png');
 
     const collapseHeader = page.locator('.arco-collapse-item-header');

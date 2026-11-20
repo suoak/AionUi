@@ -7,11 +7,31 @@
 import { isMacOS } from '@renderer/utils/platform';
 import React from 'react';
 
-/** `Mod` is ⌘ on macOS and Ctrl elsewhere. */
-export type KeyName = 'Mod' | 'Shift' | 'Alt' | 'Enter' | 'Esc' | string;
+/** `Mod` is ⌘ on macOS and Ctrl elsewhere; `Ctrl` is Control on every platform. */
+export type KeyName = 'Mod' | 'Ctrl' | 'Shift' | 'Alt' | 'Enter' | 'Esc' | 'Tab' | 'ArrowUp' | 'ArrowDown' | string;
 
-const MAC_SYMBOLS: Record<string, string> = { Mod: '⌘', Shift: '⇧', Alt: '⌥', Enter: '↵', Esc: 'esc' };
-const OTHER_NAMES: Record<string, string> = { Mod: 'Ctrl', Shift: 'Shift', Alt: 'Alt', Enter: 'Enter', Esc: 'Esc' };
+const MAC_SYMBOLS: Record<string, string> = {
+  Mod: '⌘',
+  Ctrl: '⌃',
+  Shift: '⇧',
+  Alt: '⌥',
+  Enter: '↵',
+  Esc: 'esc',
+  Tab: '⇥',
+  ArrowUp: '↑',
+  ArrowDown: '↓',
+};
+const OTHER_NAMES: Record<string, string> = {
+  Mod: 'Ctrl',
+  Ctrl: 'Ctrl',
+  Shift: 'Shift',
+  Alt: 'Alt',
+  Enter: 'Enter',
+  Esc: 'Esc',
+  Tab: 'Tab',
+  ArrowUp: '↑',
+  ArrowDown: '↓',
+};
 
 /** Render a shortcut as display text: `⌘K` on macOS, `Ctrl+K` elsewhere. */
 export function formatKeys(keys: KeyName[], mac: boolean = isMacOS()): string {

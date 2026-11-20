@@ -134,6 +134,9 @@ test.describe('System Settings Persistence', () => {
 
   // Known issue: same configService cache consistency problem as TC-PERSIST-02.
   test.skip('TC-PERSIST-04: notification toggle persists after reload', async ({ page }) => {
+    // 3.0 V7: notifications have their own settings page.
+    await goToSettings(page, 'notifications');
+    await waitForSettle(page);
     const collapseHeader = page.locator('.arco-collapse-item-header');
     await expect(collapseHeader).toBeVisible();
     const notifSwitch = collapseHeader.locator(ARCO_SWITCH);

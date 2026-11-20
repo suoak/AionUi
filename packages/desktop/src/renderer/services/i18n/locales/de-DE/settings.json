@@ -2034,5 +2034,41 @@
       "moderate": "Mittleres Risiko",
       "dangerous": "Hohes Risiko"
     }
+  },
+  "notificationsPage": {
+    "navLabel": "Benachrichtigungen",
+    "title": "Benachrichtigungen",
+    "description": "Legen Sie fest, wann CSBU WorkMate Sie benachrichtigt, z. B. wenn eine geplante Aufgabe fertig ist.",
+    "movedHint": "Benachrichtigungen haben jetzt eine eigene Einstellungsseite.",
+    "openPage": "Benachrichtigungen öffnen"
+  },
+  "shortcutsPage": {
+    "navLabel": "Tastenkürzel",
+    "title": "Tastenkürzel",
+    "description": "Tastenkürzel, die CSBU WorkMate derzeit unterstützt, passend zur Tastatur dieses Computers.",
+    "readOnlyNote": "Tastenkürzel lassen sich noch nicht ändern.",
+    "desktopOnly": "Nur Desktop-App",
+    "or": "oder",
+    "sections": {
+      "general": "Allgemein",
+      "conversations": "Unterhaltungen",
+      "composer": "Eingabefeld",
+      "preview": "Dateivorschau"
+    },
+    "actions": {
+      "commandPalette": "Befehlspalette öffnen",
+      "toggleSidebar": "Seitenleiste ein- oder ausblenden",
+      "toggleWorkspace": "Arbeitsbereich ein- oder ausblenden",
+      "newConversation": "Neue Unterhaltung",
+      "nextConversation": "Nächste Unterhaltung",
+      "previousConversation": "Vorherige Unterhaltung",
+      "send": "Nachricht senden",
+      "newLine": "Neue Zeile",
+      "saveToDraft": "Zum Entwurfsfach hinzufügen",
+      "history": "Gesendete Nachrichten durchblättern",
+      "leaveHistory": "Nachrichtenverlauf verlassen",
+      "saveFile": "Datei speichern",
+      "closeTab": "Vorschau-Tab schließen"
+    }
   }
 }

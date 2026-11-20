@@ -2036,5 +2036,41 @@
       "moderate": "中リスク",
       "dangerous": "高リスク"
     }
+  },
+  "notificationsPage": {
+    "navLabel": "通知",
+    "title": "通知",
+    "description": "CSBU WorkMate が通知するタイミングを選びます（例: 定期タスクの完了時）。",
+    "movedHint": "通知は専用の設定ページに移動しました。",
+    "openPage": "通知を開く"
+  },
+  "shortcutsPage": {
+    "navLabel": "キーボードショートカット",
+    "title": "キーボードショートカット",
+    "description": "CSBU WorkMate が現在対応しているショートカットです（このコンピューターのキーボード表記）。",
+    "readOnlyNote": "ショートカットはまだ変更できません。",
+    "desktopOnly": "デスクトップアプリのみ",
+    "or": "または",
+    "sections": {
+      "general": "一般",
+      "conversations": "会話",
+      "composer": "メッセージ入力欄",
+      "preview": "ファイルプレビュー"
+    },
+    "actions": {
+      "commandPalette": "コマンドパレットを開く",
+      "toggleSidebar": "サイドバーの表示/非表示",
+      "toggleWorkspace": "ワークスペースパネルの表示/非表示",
+      "newConversation": "新しい会話",
+      "nextConversation": "次の会話",
+      "previousConversation": "前の会話",
+      "send": "メッセージを送信",
+      "newLine": "改行",
+      "saveToDraft": "下書きボックスに追加",
+      "history": "送信済みメッセージをたどる",
+      "leaveHistory": "メッセージ履歴を終了",
+      "saveFile": "ファイルを保存",
+      "closeTab": "プレビュータブを閉じる"
+    }
   }
 }

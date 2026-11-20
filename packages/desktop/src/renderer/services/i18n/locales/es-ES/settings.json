@@ -2034,5 +2034,41 @@
       "moderate": "Riesgo medio",
       "dangerous": "Riesgo alto"
     }
+  },
+  "notificationsPage": {
+    "navLabel": "Notificaciones",
+    "title": "Notificaciones",
+    "description": "Elige cuándo te avisa CSBU WorkMate, por ejemplo cuando termina una tarea programada.",
+    "movedHint": "Las notificaciones ahora tienen su propia página de ajustes.",
+    "openPage": "Abrir notificaciones"
+  },
+  "shortcutsPage": {
+    "navLabel": "Atajos de teclado",
+    "title": "Atajos de teclado",
+    "description": "Atajos que CSBU WorkMate admite hoy, mostrados para el teclado de este equipo.",
+    "readOnlyNote": "Los atajos aún no se pueden cambiar.",
+    "desktopOnly": "Solo app de escritorio",
+    "or": "o",
+    "sections": {
+      "general": "General",
+      "conversations": "Conversaciones",
+      "composer": "Cuadro de mensaje",
+      "preview": "Vista previa de archivos"
+    },
+    "actions": {
+      "commandPalette": "Abrir la paleta de comandos",
+      "toggleSidebar": "Mostrar u ocultar la barra lateral",
+      "toggleWorkspace": "Mostrar u ocultar el panel de espacio de trabajo",
+      "newConversation": "Nueva conversación",
+      "nextConversation": "Conversación siguiente",
+      "previousConversation": "Conversación anterior",
+      "send": "Enviar mensaje",
+      "newLine": "Nueva línea",
+      "saveToDraft": "Añadir al buzón de borradores",
+      "history": "Recorrer los mensajes enviados",
+      "leaveHistory": "Salir del historial de mensajes",
+      "saveFile": "Guardar el archivo",
+      "closeTab": "Cerrar la pestaña de vista previa"
+    }
   }
 }
