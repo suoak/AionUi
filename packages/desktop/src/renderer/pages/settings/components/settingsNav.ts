@@ -28,7 +28,7 @@ export type SettingsGroup = {
 export const SETTINGS_GROUPS: readonly SettingsGroup[] = [
   { id: 'general', labelKey: 'settings.groups.general', tabs: ['appearance', 'system', 'pet'] },
   { id: 'runtime', labelKey: 'settings.groups.runtime', tabs: ['model', 'agent', 'tools', 'skills'] },
-  { id: 'workspace', labelKey: 'settings.groups.workspace', tabs: ['webui', 'devices', 'local-kb'] },
+  { id: 'workspace', labelKey: 'settings.groups.workspace', tabs: ['webui', 'remote-host', 'devices', 'local-kb'] },
   { id: 'extensions', labelKey: 'settings.groups.extensions', tabs: ['extensions'] },
   { id: 'team', labelKey: 'settings.groups.team', tabs: ['governance', 'usage', 'archived'] },
   { id: 'about', labelKey: 'settings.groups.about', tabs: ['about'] },
@@ -49,13 +49,14 @@ export const settingsGroupOfTab = (tabId: string): SettingsGroupId | undefined =
  */
 export const SETTINGS_TAB_KEYWORDS: Readonly<Record<string, readonly string[]>> = {
   appearance: ['theme', 'dark', 'light', 'font', 'zoom', 'css', 'dusk', 'ember'],
-  system: ['language', 'startup', 'proxy', 'update', 'tray', 'remote', 'host', 'log'],
+  system: ['language', 'startup', 'proxy', 'update', 'tray', 'log'],
   pet: ['desktop pet'],
   model: ['provider', 'api key', 'llm', 'openai', 'anthropic', 'gemini'],
   agent: ['acp', 'cli', 'claude', 'codex', 'preflight', 'runtime'],
   tools: ['mcp', 'server', 'tool'],
   skills: ['skill', 'hub'],
   webui: ['web', 'browser', 'port', 'remote access', 'im', 'channel', 'telegram', 'lark', 'slack'],
+  'remote-host': ['remote', 'host', 'ssh', 'tunnel', 'headless', 'server'],
   devices: ['phone', 'pair', 'mobile', 'approval'],
   'local-kb': ['knowledge', 'kb', 'documents', 'index'],
   extensions: ['extension', 'plugin', 'addon', 'installed', 'permissions', 'enable', 'disable'],

@@ -120,6 +120,13 @@ export const STATIC_PALETTE_COMMANDS: readonly PaletteCommand[] = [
     keywords: ['local-kb', 'knowledge', 'kb', 'documents'],
   },
   {
+    id: 'nav.settings.remoteHost',
+    title: 'Remote Host (SSH)',
+    group: 'settings',
+    path: '/settings/remote-host',
+    keywords: ['remote', 'host', 'ssh', 'tunnel', 'headless'],
+  },
+  {
     id: 'nav.settings.extensions',
     title: 'Installed extensions',
     group: 'settings',

@@ -23,6 +23,7 @@ import {
   LinkCloud,
   Puzzle,
   Robot,
+  Server,
   System,
   Toolkit,
 } from '@icon-park/react';
@@ -81,6 +82,12 @@ export function getBuiltinSettingsNavItems(isDesktop: boolean, t: TranslateFn): 
       label: t('settings.webui'),
       icon: isDesktop ? <Earth theme='outline' size='16' /> : <Communication theme='outline' size='16' />,
       path: 'webui',
+    },
+    'remote-host': {
+      id: 'remote-host',
+      label: t('settings.remoteHost.navLabel'),
+      icon: <Server theme='outline' size='16' />,
+      path: 'remote-host',
     },
     devices: {
       id: 'devices',

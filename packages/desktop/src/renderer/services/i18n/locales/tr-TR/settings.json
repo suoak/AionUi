@@ -1967,7 +1967,10 @@
     "disconnect": "Disconnect (use local Host)",
     "connectConfirmTitle": "Connect to remote Host?",
     "connectConfirmContent": "CSBU WorkMate will reload and talk to the Host at {{url}}. You will sign in with your workspace account. The local Host stays running in the background.",
-    "connectedBanner": "Connected to the remote Host at {{url}}. The local Host is still running in the background."
+    "connectedBanner": "Connected to the remote Host at {{url}}. The local Host is still running in the background.",
+    "navLabel": "Uzak Host",
+    "movedHint": "Arayüzsüz bir Host'a SSH tünelleri artık kendi ayar sayfasında.",
+    "openPage": "Uzak Host'u aç"
   },
   "sessionImport": {
     "title": "Import Claude / Codex sessions",

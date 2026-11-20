@@ -36,6 +36,7 @@ const GovernanceSettings = React.lazy(() => import('@renderer/pages/settings/Gov
 const PetSettings = React.lazy(() => import('@renderer/pages/settings/PetSettings'));
 const ArchivedSettings = React.lazy(() => import('@renderer/pages/settings/ArchivedSettings'));
 const ExtensionSettingsPage = React.lazy(() => import('@renderer/pages/settings/ExtensionSettingsPage'));
+const RemoteHostSettings = React.lazy(() => import('@renderer/pages/settings/RemoteHostSettings'));
 const ExtensionsSettings = React.lazy(() => import('@renderer/pages/settings/ExtensionsSettings'));
 const LoginPage = React.lazy(() => import('@renderer/pages/login'));
 const ComponentsShowcase = React.lazy(() => import('@renderer/pages/TestShowcase'));
@@ -169,6 +170,7 @@ const PanelRoute: React.FC<{ layout: React.ReactElement }> = ({ layout }) => {
           <Route path='/settings/appearance' element={withRouteFallback(AppearanceSettings)} />
           <Route path='/settings/display' element={<Navigate to='/settings/appearance' replace />} />
           <Route path='/settings/webui' element={withRouteFallback(WebuiSettings)} />
+          <Route path='/settings/remote-host' element={withRouteFallback(RemoteHostSettings)} />
           <Route path='/settings/devices' element={withRouteFallback(DevicesSettings)} />
           <Route path='/settings/local-kb' element={withRouteFallback(LocalKbSettings)} />
           <Route path='/settings/governance' element={withRouteFallback(GovernanceSettings)} />

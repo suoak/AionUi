@@ -1969,7 +1969,10 @@
     "disconnect": "Disconnect (use local Host)",
     "connectConfirmTitle": "Connect to remote Host?",
     "connectConfirmContent": "CSBU WorkMate will reload and talk to the Host at {{url}}. You will sign in with your workspace account. The local Host stays running in the background.",
-    "connectedBanner": "Connected to the remote Host at {{url}}. The local Host is still running in the background."
+    "connectedBanner": "Connected to the remote Host at {{url}}. The local Host is still running in the background.",
+    "navLabel": "원격 Host",
+    "movedHint": "헤드리스 Host로의 SSH 터널은 이제 별도 설정 페이지에 있습니다.",
+    "openPage": "원격 Host 열기"
   },
   "sessionImport": {
     "title": "Import Claude / Codex sessions",

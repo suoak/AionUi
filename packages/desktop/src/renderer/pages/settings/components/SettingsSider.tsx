@@ -18,6 +18,7 @@ import {
   LinkCloud,
   Puzzle,
   Search,
+  Server,
   Speed,
   System,
   Toolkit,
@@ -44,6 +45,7 @@ export const BUILTIN_TAB_IDS = [
   'tools',
   'skills',
   'webui',
+  'remote-host',
   'devices',
   'local-kb',
   'extensions',
@@ -117,6 +119,12 @@ const SettingsSider: React.FC<{ collapsed?: boolean; tooltipEnabled?: boolean }>
         label: t('settings.webui'),
         icon: isDesktop ? <Earth /> : <Communication />,
         path: 'webui',
+      },
+      'remote-host': {
+        id: 'remote-host',
+        label: t('settings.remoteHost.navLabel'),
+        icon: <Server />,
+        path: 'remote-host',
       },
       devices: { id: 'devices', label: t('settings.devices.navLabel'), icon: <Iphone />, path: 'devices' },
       'local-kb': {
