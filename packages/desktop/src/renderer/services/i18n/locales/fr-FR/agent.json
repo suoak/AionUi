@@ -360,7 +360,157 @@
     }
   },
   "skillEvolution": {
-    "title": "Évolution des compétences"
+    "title": "Évolution des compétences",
+    "status": {
+      "draft": "Brouillon",
+      "pending_review": "En attente de revue",
+      "approved": "Approuvé",
+      "rejected": "Refusé",
+      "applied": "Appliqué",
+      "rolled_back": "Annulé"
+    },
+    "kind": {
+      "pattern": "Modèle",
+      "skill_impact": "Note d’impact",
+      "rejected_note": "Trace de refus",
+      "index": "Index",
+      "general": "Général"
+    },
+    "visibility": {
+      "private": "Privé",
+      "team": "Équipe",
+      "owner_editors": "Propriétaires/éditeurs uniquement",
+      "all": "Toutes visibilités"
+    },
+    "gateMode": {
+      "human_only": "Revue humaine uniquement (par défaut)",
+      "heuristic_assist": "Soumission assistée par heuristique",
+      "auto_apply_on_pass": "Appliquer automatiquement si le score est élevé (risqué ; jamais pour les skills avec scripts)"
+    },
+    "gate": {
+      "score": "Contrôle {{score}}",
+      "approve": "approbation suggérée",
+      "reject": "refus suggéré",
+      "review": "revue nécessaire"
+    },
+    "errors": {
+      "load": "Chargement impossible (nécessite un Core avec l’API Skill Evolution)",
+      "loadDetail": "Impossible de charger la proposition",
+      "saveSettings": "Impossible d’enregistrer les paramètres",
+      "action": "Échec de l’action",
+      "copy": "Échec de la copie"
+    },
+    "toast": {
+      "settingsSaved": "Paramètres de contrôle enregistrés",
+      "submitted": "Soumis pour revue",
+      "approved": "Approuvé ; applicable à {{path}}",
+      "rejected": "Refusé ; consigné dans la bibliothèque d’expériences",
+      "appliedTo": "Écrit et appliqué : {{parts}}.",
+      "appliedMarked": "Marqué comme appliqué.",
+      "nextStep": "Ensuite :",
+      "viewAgent": "Voir l’agent",
+      "tryRun": "Essayer",
+      "publishPin": "Publier le pin",
+      "bindHint": "Associez le skill à un agent pour l’essayer ou le publier",
+      "workspacePath": "Espace de travail : {{path}}",
+      "pinned": "Épinglé : {{ref}}",
+      "evolved": "Distillé à nouveau",
+      "rolledBack": "Pointeur du skill annulé (bibliothèque conservée)",
+      "copied": "SKILL.md copié dans le presse-papiers"
+    },
+    "page": {
+      "title": "Évolution des skills",
+      "description": "Distiller des propositions SKILL.md à partir de l’expérience des conversations → contrôle heuristique (configurable) → revue humaine → écriture dans le Skills Hub / épinglage. La bibliothèque d’expériences ne sert qu’à l’évolution des skills et n’est jamais injectée dans les conversations courantes ; la base de connaissances reste séparée.",
+      "experienceCount": "{{count}} articles d’expérience",
+      "filteredByAgent": "Filtré par agent : {{id}}…",
+      "clearFilter": "Effacer le filtre",
+      "openAgent": "Ouvrir le détail de l’agent",
+      "distill": "Distiller un skill depuis une conversation"
+    },
+    "tabs": {
+      "experience": "Expérience",
+      "experienceCount": "Expérience ({{count}})",
+      "settings": "Paramètres de contrôle",
+      "all": "Toutes les propositions"
+    },
+    "settings": {
+      "intro": "Par défaut : revue humaine uniquement. Les scores heuristiques sont indicatifs ; l’application automatique doit être activée explicitement, écrit quand même skill_impact après un score élevé et s’annule en un clic. Les skills avec scripts exigent toujours une revue humaine et ne sont jamais appliqués automatiquement, quel que soit le mode. La bibliothèque d’expériences n’est jamais injectée dans les conversations courantes.",
+      "loading": "Chargement…",
+      "gateMode": "Mode de contrôle",
+      "autoApplyWarning": "Attention : l’application automatique saute l’approbation/l’écriture manuelle si le score est élevé (sauf pour les skills avec scripts, toujours revus par un humain). Vérifiez que la politique de votre organisation l’autorise et gardez l’habitude d’annuler.",
+      "assistThreshold": "Seuil de soumission assistée (heuristic_assist)",
+      "autoThreshold": "Seuil d’application automatique (auto_apply_on_pass)",
+      "defaultVisibility": "Visibilité par défaut des nouvelles expériences",
+      "crossModel": "Notes de migration entre modèles (légères)"
+    },
+    "experience": {
+      "intro": "La bibliothèque d’expériences ne sert qu’à l’évolution des skills et n’est jamais injectée dans les conversations courantes.",
+      "empty": "Aucun article d’expérience pour l’instant. Ils apparaissent après la distillation ou le refus d’une proposition.",
+      "conversation": "conversation {{id}}…",
+      "pickHint": "Sélectionnez un article d’expérience à gauche pour voir son texte et ses liens.",
+      "body": "Contenu",
+      "sources": "Conversations sources : {{ids}}",
+      "tags": "Étiquettes : {{tags}}"
+    },
+    "proposals": {
+      "empty": "Aucune proposition pour l’instant. Commencez par distiller un skill depuis une conversation.",
+      "untitledSkill": "Skill sans nom",
+      "evolveAgain": "Distiller à nouveau",
+      "submit": "Soumettre pour revue",
+      "approve": "Approuver",
+      "reject": "Refuser",
+      "writeHub": "Écrire dans le Skills Hub",
+      "rollback": "Annuler",
+      "pickHint": "Sélectionnez une proposition à gauche pour voir le brouillon et la revoir.",
+      "signals": "Signaux du contrôle heuristique",
+      "signalWeight": "(poids {{weight}})",
+      "mode": "Mode : {{mode}}",
+      "summary": "Résumé de l’expérience",
+      "emptyValue": "(vide)",
+      "linkedExperience": "Expérience liée : {{ids}}",
+      "draft": "Brouillon SKILL.md",
+      "comment": "Commentaire de revue (facultatif)",
+      "commentPlaceholder": "Facultatif lors de l’approbation, du refus ou de l’annulation",
+      "exportPreview": "Aperçu de l’export",
+      "copySkill": "Copier SKILL.md"
+    },
+    "create": {
+      "back": "← Retour à l’évolution des skills",
+      "intro": "Choisissez une trajectoire dans une conversation récente → « Distiller » lance Maintainer/Proposer → modifiez le brouillon et soumettez-le pour revue. La bibliothèque d’expériences ne sert qu’à l’évolution des skills et n’est jamais injectée dans les conversations courantes.",
+      "pickConversation": "Conversation *",
+      "pickPlaceholder": "Choisir parmi les conversations récentes",
+      "pasteHint": "Vous pouvez aussi coller un ID de conversation",
+      "pastePlaceholder": "ou collez un conversation id",
+      "overview": "Aperçu de la trajectoire",
+      "lastModel": "Dernière distillation avec : {{model}}",
+      "evolve": "Distiller",
+      "evolveHint": "Nécessite un modèle configuré ; vous obtenez ensuite une proposition modifiable",
+      "titleLabel": "Titre *",
+      "titlePlaceholder": "p. ex. Mise en forme du rapport hebdomadaire",
+      "assistantLabel": "ID de l’agent cible (facultatif ; épinglable après approbation)",
+      "visibilityLabel": "Visibilité de l’expérience",
+      "visibilityPrivate": "Privé (moi uniquement)",
+      "visibilityTeam": "Équipe (lisible par les membres)",
+      "teamId": "ID d’équipe *",
+      "teamIdPlaceholder": "team id (obligatoire pour la visibilité équipe)",
+      "skillKey": "Clé de skill suggérée",
+      "summaryLabel": "Résumé de l’expérience",
+      "summaryPlaceholder": "Qu’est-ce qui a fonctionné dans cette conversation ? Quelle était la cause des échecs ?",
+      "draftLabel": "Brouillon SKILL.md (laisser vide pour un modèle)",
+      "draftPlaceholder": "Laissez vide : le serveur génère un modèle, que Distiller remplit",
+      "submitNow": "Soumettre pour revue dès la création",
+      "create": "Créer une proposition manuellement",
+      "cancel": "Annuler",
+      "untitled": "Sans titre",
+      "needConversation": "Choisissez d’abord une conversation",
+      "evolved": "Distillé ; {{count}} articles d’expérience écrits",
+      "evolvedModel": "Modèle : {{model}}",
+      "evolveFailed": "Échec de la distillation (vérifiez qu’un modèle est configuré et que le Core a l’API de phase 2)",
+      "needTitle": "Saisissez un titre",
+      "createdSubmitted": "Proposition créée et soumise pour revue",
+      "draftSaved": "Brouillon de proposition enregistré",
+      "createFailed": "Création impossible (vérifiez la propriété de la conversation et la version du Core)"
+    }
   },
   "runtimeRestart": {
     "tooltip": "Reconnecter l'agent",

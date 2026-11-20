@@ -360,7 +360,157 @@
     }
   },
   "skillEvolution": {
-    "title": "技能进化"
+    "title": "技能进化",
+    "status": {
+      "draft": "草稿",
+      "pending_review": "待审核",
+      "approved": "已通过",
+      "rejected": "已拒绝",
+      "applied": "已应用",
+      "rolled_back": "已回滚"
+    },
+    "kind": {
+      "pattern": "模式",
+      "skill_impact": "影响笔记",
+      "rejected_note": "拒绝记录",
+      "index": "索引",
+      "general": "通用"
+    },
+    "visibility": {
+      "private": "私有",
+      "team": "团队",
+      "owner_editors": "仅所有者/编辑",
+      "all": "全部可见性"
+    },
+    "gateMode": {
+      "human_only": "仅人工审核（默认）",
+      "heuristic_assist": "启发式辅助提交",
+      "auto_apply_on_pass": "高分自动应用（危险，含脚本技能除外）"
+    },
+    "gate": {
+      "score": "门控 {{score}}",
+      "approve": "建议通过",
+      "reject": "建议拒绝",
+      "review": "需复核"
+    },
+    "errors": {
+      "load": "加载失败（技能进化为独立模块，需 Core 含技能进化 API）",
+      "loadDetail": "加载提案详情失败",
+      "saveSettings": "保存设置失败",
+      "action": "操作失败",
+      "copy": "复制失败"
+    },
+    "toast": {
+      "settingsSaved": "门控设置已保存",
+      "submitted": "已提交审核",
+      "approved": "已通过，可应用到 {{path}}",
+      "rejected": "已拒绝，经验库已记录",
+      "appliedTo": "已写入并应用：{{parts}}。",
+      "appliedMarked": "已标记应用。",
+      "nextStep": "下一步：",
+      "viewAgent": "查看智能体",
+      "tryRun": "试跑",
+      "publishPin": "发布 pin",
+      "bindHint": "可在智能体中心绑定技能后试跑 / 发布",
+      "workspacePath": "工作区: {{path}}",
+      "pinned": "已 pin: {{ref}}",
+      "evolved": "已重新智能提炼",
+      "rolledBack": "已回滚技能指针（经验库保留）",
+      "copied": "SKILL.md 已复制到剪贴板"
+    },
+    "page": {
+      "title": "技能进化",
+      "description": "从会话经验提炼 SKILL.md 提案 → 启发式门控（可配置）→ 人工审核 → 写入 Skills Hub / pin。经验库仅用于技能进化，不会注入日常对话；知识库产品保持独立。",
+      "experienceCount": "经验库 {{count}} 篇",
+      "filteredByAgent": "已按智能体筛选：{{id}}…",
+      "clearFilter": "清除筛选",
+      "openAgent": "打开智能体详情",
+      "distill": "从会话提炼技能"
+    },
+    "tabs": {
+      "experience": "经验库",
+      "experienceCount": "经验库 ({{count}})",
+      "settings": "门控设置",
+      "all": "全部提案"
+    },
+    "settings": {
+      "intro": "默认「仅人工审核」。启发式分数仅作建议；「自动应用」需显式开启，高分通过后仍写 skill_impact，并可一键回滚。含脚本的技能一律人工审核，任何模式下都不会自动应用。经验库永不注入日常对话。",
+      "loading": "加载中…",
+      "gateMode": "门控模式",
+      "autoApplyWarning": "警告：自动应用会在高分时跳过人工点击通过/写入（含脚本的技能除外，始终需人工审核）。请确认企业策略允许，并保留回滚习惯。",
+      "assistThreshold": "辅助提交阈值（heuristic_assist）",
+      "autoThreshold": "自动应用阈值（auto_apply_on_pass）",
+      "defaultVisibility": "新建经验默认可见性",
+      "crossModel": "跨模型迁移提示（轻量）"
+    },
+    "experience": {
+      "intro": "经验库仅用于技能进化，不会注入日常对话。",
+      "empty": "暂无经验文章。智能提炼或拒绝提案后会出现。",
+      "conversation": "会话 {{id}}…",
+      "pickHint": "选择左侧经验文章查看正文与关联。",
+      "body": "正文",
+      "sources": "来源会话：{{ids}}",
+      "tags": "标签：{{tags}}"
+    },
+    "proposals": {
+      "empty": "暂无提案。可从会话提炼技能开始。",
+      "untitledSkill": "未命名 skill",
+      "evolveAgain": "再次智能提炼",
+      "submit": "提交审核",
+      "approve": "通过",
+      "reject": "拒绝",
+      "writeHub": "写入 Skills Hub",
+      "rollback": "回滚",
+      "pickHint": "选择左侧提案查看草案与审核。",
+      "signals": "启发式门控信号",
+      "signalWeight": "（权重 {{weight}}）",
+      "mode": "模式：{{mode}}",
+      "summary": "经验摘要",
+      "emptyValue": "（空）",
+      "linkedExperience": "关联经验库：{{ids}}",
+      "draft": "SKILL.md 草案",
+      "comment": "审核意见（可选）",
+      "commentPlaceholder": "通过/拒绝/回滚时可填写",
+      "exportPreview": "导出预览",
+      "copySkill": "复制 SKILL.md"
+    },
+    "create": {
+      "back": "← 返回技能进化",
+      "intro": "从最近会话选择轨迹 →「智能提炼」调用 Maintainer/Proposer → 编辑草案后提交审核。经验库仅用于技能进化，不会注入日常对话。",
+      "pickConversation": "选择会话 *",
+      "pickPlaceholder": "从最近会话中选择",
+      "pasteHint": "也可手动粘贴会话 ID",
+      "pastePlaceholder": "或粘贴 conversation id",
+      "overview": "轨迹概览",
+      "lastModel": "上次提炼模型：{{model}}",
+      "evolve": "智能提炼",
+      "evolveHint": "需已配置可用模型；成功后进入可编辑提案",
+      "titleLabel": "标题 *",
+      "titlePlaceholder": "例如：周报排版技能",
+      "assistantLabel": "目标智能体 ID（可选，通过后可 pin）",
+      "visibilityLabel": "经验可见性",
+      "visibilityPrivate": "私有（仅自己）",
+      "visibilityTeam": "团队（成员可读）",
+      "teamId": "团队 ID *",
+      "teamIdPlaceholder": "team id（visibility=team 时必填）",
+      "skillKey": "建议 skill key",
+      "summaryLabel": "经验摘要",
+      "summaryPlaceholder": "这次会话里哪些策略有效？失败根因是什么？",
+      "draftLabel": "SKILL.md 草案（可空=自动生成模板）",
+      "draftPlaceholder": "留空则由服务端生成 stub 模板；智能提炼会填充",
+      "submitNow": "手工创建后直接提交审核",
+      "create": "手工创建提案",
+      "cancel": "取消",
+      "untitled": "未命名",
+      "needConversation": "请先选择会话",
+      "evolved": "智能提炼完成，经验库已写入 {{count}} 篇",
+      "evolvedModel": "模型：{{model}}",
+      "evolveFailed": "智能提炼失败（请确认已配置模型且 Core 含 Phase 2 API）",
+      "needTitle": "请填写标题",
+      "createdSubmitted": "提案已创建并提交审核",
+      "draftSaved": "提案草稿已保存",
+      "createFailed": "创建失败（请确认会话归属与 Core 版本）"
+    }
   },
   "runtimeRestart": {
     "tooltip": "重连代理",

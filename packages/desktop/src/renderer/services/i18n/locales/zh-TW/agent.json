@@ -360,7 +360,157 @@
     }
   },
   "skillEvolution": {
-    "title": "技能進化"
+    "title": "技能進化",
+    "status": {
+      "draft": "草稿",
+      "pending_review": "待審核",
+      "approved": "已通過",
+      "rejected": "已拒絕",
+      "applied": "已套用",
+      "rolled_back": "已復原"
+    },
+    "kind": {
+      "pattern": "模式",
+      "skill_impact": "影響筆記",
+      "rejected_note": "拒絕紀錄",
+      "index": "索引",
+      "general": "通用"
+    },
+    "visibility": {
+      "private": "私人",
+      "team": "團隊",
+      "owner_editors": "僅擁有者/編輯",
+      "all": "全部可見性"
+    },
+    "gateMode": {
+      "human_only": "僅人工審核（預設）",
+      "heuristic_assist": "啟發式輔助提交",
+      "auto_apply_on_pass": "高分自動套用（危險，含腳本技能除外）"
+    },
+    "gate": {
+      "score": "門控 {{score}}",
+      "approve": "建議通過",
+      "reject": "建議拒絕",
+      "review": "需複核"
+    },
+    "errors": {
+      "load": "載入失敗（技能進化為獨立模組，需 Core 含技能進化 API）",
+      "loadDetail": "載入提案詳情失敗",
+      "saveSettings": "儲存設定失敗",
+      "action": "操作失敗",
+      "copy": "複製失敗"
+    },
+    "toast": {
+      "settingsSaved": "門控設定已儲存",
+      "submitted": "已提交審核",
+      "approved": "已通過，可套用到 {{path}}",
+      "rejected": "已拒絕，經驗庫已記錄",
+      "appliedTo": "已寫入並套用：{{parts}}。",
+      "appliedMarked": "已標記套用。",
+      "nextStep": "下一步：",
+      "viewAgent": "查看智慧體",
+      "tryRun": "試跑",
+      "publishPin": "發布 pin",
+      "bindHint": "可在智慧體中心綁定技能後試跑 / 發布",
+      "workspacePath": "工作區: {{path}}",
+      "pinned": "已 pin: {{ref}}",
+      "evolved": "已重新智慧提煉",
+      "rolledBack": "已復原技能指標（經驗庫保留）",
+      "copied": "SKILL.md 已複製到剪貼簿"
+    },
+    "page": {
+      "title": "技能進化",
+      "description": "從會話經驗提煉 SKILL.md 提案 → 啟發式門控（可設定）→ 人工審核 → 寫入 Skills Hub / pin。經驗庫僅用於技能進化，不會注入日常對話；知識庫產品保持獨立。",
+      "experienceCount": "經驗庫 {{count}} 篇",
+      "filteredByAgent": "已依智慧體篩選：{{id}}…",
+      "clearFilter": "清除篩選",
+      "openAgent": "開啟智慧體詳情",
+      "distill": "從會話提煉技能"
+    },
+    "tabs": {
+      "experience": "經驗庫",
+      "experienceCount": "經驗庫 ({{count}})",
+      "settings": "門控設定",
+      "all": "全部提案"
+    },
+    "settings": {
+      "intro": "預設「僅人工審核」。啟發式分數僅作建議；「自動套用」需明確開啟，高分通過後仍寫入 skill_impact，並可一鍵復原。含腳本的技能一律人工審核，任何模式下都不會自動套用。經驗庫永不注入日常對話。",
+      "loading": "載入中…",
+      "gateMode": "門控模式",
+      "autoApplyWarning": "警告：自動套用會在高分時略過人工點擊通過/寫入（含腳本的技能除外，始終需人工審核）。請確認企業政策允許，並保留復原習慣。",
+      "assistThreshold": "輔助提交門檻（heuristic_assist）",
+      "autoThreshold": "自動套用門檻（auto_apply_on_pass）",
+      "defaultVisibility": "新建經驗預設可見性",
+      "crossModel": "跨模型遷移提示（輕量）"
+    },
+    "experience": {
+      "intro": "經驗庫僅用於技能進化，不會注入日常對話。",
+      "empty": "暫無經驗文章。智慧提煉或拒絕提案後會出現。",
+      "conversation": "會話 {{id}}…",
+      "pickHint": "選擇左側經驗文章查看內文與關聯。",
+      "body": "內文",
+      "sources": "來源會話：{{ids}}",
+      "tags": "標籤：{{tags}}"
+    },
+    "proposals": {
+      "empty": "暫無提案。可從會話提煉技能開始。",
+      "untitledSkill": "未命名 skill",
+      "evolveAgain": "再次智慧提煉",
+      "submit": "提交審核",
+      "approve": "通過",
+      "reject": "拒絕",
+      "writeHub": "寫入 Skills Hub",
+      "rollback": "復原",
+      "pickHint": "選擇左側提案查看草案與審核。",
+      "signals": "啟發式門控訊號",
+      "signalWeight": "（權重 {{weight}}）",
+      "mode": "模式：{{mode}}",
+      "summary": "經驗摘要",
+      "emptyValue": "（空）",
+      "linkedExperience": "關聯經驗庫：{{ids}}",
+      "draft": "SKILL.md 草案",
+      "comment": "審核意見（選填）",
+      "commentPlaceholder": "通過/拒絕/復原時可填寫",
+      "exportPreview": "匯出預覽",
+      "copySkill": "複製 SKILL.md"
+    },
+    "create": {
+      "back": "← 返回技能進化",
+      "intro": "從最近會話選擇軌跡 →「智慧提煉」呼叫 Maintainer/Proposer → 編輯草案後提交審核。經驗庫僅用於技能進化，不會注入日常對話。",
+      "pickConversation": "選擇會話 *",
+      "pickPlaceholder": "從最近會話中選擇",
+      "pasteHint": "也可手動貼上會話 ID",
+      "pastePlaceholder": "或貼上 conversation id",
+      "overview": "軌跡概覽",
+      "lastModel": "上次提煉模型：{{model}}",
+      "evolve": "智慧提煉",
+      "evolveHint": "需已設定可用模型；成功後進入可編輯提案",
+      "titleLabel": "標題 *",
+      "titlePlaceholder": "例如：週報排版技能",
+      "assistantLabel": "目標智慧體 ID（選填，通過後可 pin）",
+      "visibilityLabel": "經驗可見性",
+      "visibilityPrivate": "私人（僅自己）",
+      "visibilityTeam": "團隊（成員可讀）",
+      "teamId": "團隊 ID *",
+      "teamIdPlaceholder": "team id（visibility=team 時必填）",
+      "skillKey": "建議 skill key",
+      "summaryLabel": "經驗摘要",
+      "summaryPlaceholder": "這次會話裡哪些策略有效？失敗根因是什麼？",
+      "draftLabel": "SKILL.md 草案（可空=自動產生範本）",
+      "draftPlaceholder": "留空則由伺服器產生 stub 範本；智慧提煉會填入",
+      "submitNow": "手動建立後直接提交審核",
+      "create": "手動建立提案",
+      "cancel": "取消",
+      "untitled": "未命名",
+      "needConversation": "請先選擇會話",
+      "evolved": "智慧提煉完成，經驗庫已寫入 {{count}} 篇",
+      "evolvedModel": "模型：{{model}}",
+      "evolveFailed": "智慧提煉失敗（請確認已設定模型且 Core 含 Phase 2 API）",
+      "needTitle": "請填寫標題",
+      "createdSubmitted": "提案已建立並提交審核",
+      "draftSaved": "提案草稿已儲存",
+      "createFailed": "建立失敗（請確認會話歸屬與 Core 版本）"
+    }
   },
   "runtimeRestart": {
     "tooltip": "重新連接代理",

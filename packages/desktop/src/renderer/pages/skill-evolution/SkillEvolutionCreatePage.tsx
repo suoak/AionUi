@@ -3,12 +3,14 @@ import { ipcBridge } from '@/common';
 import type { TChatConversation } from '@/common/config/storage';
 import type { ExperienceVisibility, SkillEvolutionTrajectoryOverview } from '@/common/types/agent/skillEvolutionTypes';
 import React, { useEffect, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 
 const { Title, Text } = Typography;
 const TextArea = Input.TextArea;
 
 const SkillEvolutionCreatePage: React.FC = () => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const prefilledConversationId = searchParams.get('conversation_id') ?? '';
@@ -78,14 +80,14 @@ const SkillEvolutionCreatePage: React.FC = () => {
         })
       : conversations;
     return filtered.map((c) => ({
-      label: `${c.name || '未命名'} (${c.id.slice(0, 8)}…)`,
+      label: `${c.name || t('agent.skillEvolution.create.untitled')} (${c.id.slice(0, 8)}…)`,
       value: c.id,
     }));
-  }, [conversations, assistantId]);
+  }, [conversations, assistantId, t]);
 
   const handleEvolve = async () => {
     if (!conversationId.trim()) {
-      message.error('请先选择会话');
+      message.error(t('agent.skillEvolution.create.needConversation'));
       return;
     }
     setEvolving(true);
@@ -106,17 +108,22 @@ const SkillEvolutionCreatePage: React.FC = () => {
       setOverview(res.trajectory_overview);
       setModelUsed(res.model_used ?? null);
       message.success(
-        `智能提炼完成${res.model_used ? `（模型 ${res.model_used}）` : ''}，经验库已写入 ${res.experience_articles.length} 篇${res.gate_note ? `；${res.gate_note}` : ''}`
+        [
+          t('agent.skillEvolution.create.evolved', { count: res.experience_articles.length }),
+          res.model_used ? t('agent.skillEvolution.create.evolvedModel', { model: res.model_used }) : null,
+          res.gate_note,
+        ]
+          .filter(Boolean)
+          .join(' · ')
       );
       navigate(assistantId ? `/skill-evolution?assistant_id=${encodeURIComponent(assistantId)}` : '/skill-evolution', {
         state: { highlightId: res.proposal.id },
       });
     } catch (error) {
       console.error(error);
-      const msg = error instanceof Error ? error.message : '智能提炼失败';
-      message.error(
-        msg.includes('模型') || msg.includes('model') ? msg : '智能提炼失败（请确认已配置模型且 Core 含 Phase 2 API）'
-      );
+      const msg = error instanceof Error ? error.message : '';
+      // Core's own model errors are shown as they are; anything else gets the hint.
+      message.error(/model|\u6a21\u578b/i.test(msg) ? msg : t('agent.skillEvolution.create.evolveFailed'));
     } finally {
       setEvolving(false);
     }
@@ -124,7 +131,7 @@ const SkillEvolutionCreatePage: React.FC = () => {
 
   const handleCreate = async () => {
     if (!title.trim()) {
-      message.error('请填写标题');
+      message.error(t('agent.skillEvolution.create.needTitle'));
       return;
     }
     setBusy(true);
@@ -142,11 +149,13 @@ const SkillEvolutionCreatePage: React.FC = () => {
         team_id: visibility === 'team' ? teamId.trim() || undefined : undefined,
         action: 'create',
       });
-      message.success(submitNow ? '提案已创建并提交审核' : '提案草稿已保存');
+      message.success(
+        submitNow ? t('agent.skillEvolution.create.createdSubmitted') : t('agent.skillEvolution.create.draftSaved')
+      );
       navigate('/skill-evolution', { state: { highlightId: created.id } });
     } catch (error) {
       console.error(error);
-      message.error('创建失败（请确认会话归属与 Core 版本）');
+      message.error(t('agent.skillEvolution.create.createFailed'));
     } finally {
       setBusy(false);
     }
@@ -156,44 +165,43 @@ const SkillEvolutionCreatePage: React.FC = () => {
     <div className='h-full overflow-auto p-24px max-w-880px'>
       {messageContext}
       <Button type='text' className='!px-0 mb-8px' onClick={() => navigate('/skill-evolution')}>
-        ← 返回技能进化
+        {t('agent.skillEvolution.create.back')}
       </Button>
       <Title heading={4} className='!mb-4px'>
-        从会话提炼技能
+        {t('agent.skillEvolution.page.distill')}
       </Title>
       <Text type='secondary' className='block mb-16px'>
-        从最近会话选择轨迹 →「智能提炼」调用 Maintainer/Proposer →
-        编辑草案后提交审核。经验库仅用于技能进化，不会注入日常对话。
+        {t('agent.skillEvolution.create.intro')}
       </Text>
 
       <div className='flex flex-col gap-12px'>
         <div>
-          <Text className='text-12px'>选择会话 *</Text>
+          <Text className='text-12px'>{t('agent.skillEvolution.create.pickConversation')}</Text>
           <Select
             className='mt-4px w-full'
             allowClear
             showSearch
-            placeholder='从最近会话中选择'
+            placeholder={t('agent.skillEvolution.create.pickPlaceholder')}
             options={conversationOptions}
             value={conversationId || undefined}
             onChange={(v) => setConversationId((v as string) ?? '')}
           />
           {!conversationOptions.length ? (
             <Text type='secondary' className='text-12px mt-4px block'>
-              也可手动粘贴会话 ID
+              {t('agent.skillEvolution.create.pasteHint')}
             </Text>
           ) : null}
           <Input
             className='mt-8px'
             value={conversationId}
             onChange={setConversationId}
-            placeholder='或粘贴 conversation id'
+            placeholder={t('agent.skillEvolution.create.pastePlaceholder')}
           />
         </div>
 
         {overview ? (
           <div className='rounded-8px border border-[var(--color-border-2)] p-12px bg-[var(--color-fill-1)]'>
-            <Text className='text-12px font-medium'>轨迹概览</Text>
+            <Text className='text-12px font-medium'>{t('agent.skillEvolution.create.overview')}</Text>
             <Text type='secondary' className='text-12px block mt-4px'>
               {overview.conversation_name ? `${overview.conversation_name} · ` : ''}
               turns {overview.turns} · steps {overview.steps} · tools {overview.tools} · errors {overview.errors}
@@ -201,7 +209,7 @@ const SkillEvolutionCreatePage: React.FC = () => {
             </Text>
             {modelUsed ? (
               <Text type='secondary' className='text-12px block mt-4px'>
-                上次提炼模型：{modelUsed}
+                {t('agent.skillEvolution.create.lastModel', { model: modelUsed })}
               </Text>
             ) : null}
           </div>
@@ -214,79 +222,84 @@ const SkillEvolutionCreatePage: React.FC = () => {
             disabled={!conversationId.trim()}
             onClick={() => void handleEvolve()}
           >
-            智能提炼
+            {t('agent.skillEvolution.create.evolve')}
           </Button>
           <Text type='secondary' className='text-12px self-center'>
-            需已配置可用模型；成功后进入可编辑提案
+            {t('agent.skillEvolution.create.evolveHint')}
           </Text>
         </div>
 
         <div>
-          <Text className='text-12px'>标题 *</Text>
-          <Input className='mt-4px' value={title} onChange={setTitle} placeholder='例如：周报排版技能' />
+          <Text className='text-12px'>{t('agent.skillEvolution.create.titleLabel')}</Text>
+          <Input
+            className='mt-4px'
+            value={title}
+            onChange={setTitle}
+            placeholder={t('agent.skillEvolution.create.titlePlaceholder')}
+          />
         </div>
         <div>
-          <Text className='text-12px'>目标智能体 ID（可选，通过后可 pin）</Text>
+          <Text className='text-12px'>{t('agent.skillEvolution.create.assistantLabel')}</Text>
           <Input className='mt-4px' value={assistantId} onChange={setAssistantId} placeholder='assistant id' />
         </div>
         <div>
-          <Text className='text-12px'>经验可见性</Text>
+          <Text className='text-12px'>{t('agent.skillEvolution.create.visibilityLabel')}</Text>
           <Select
             className='mt-4px w-full'
             value={visibility}
             onChange={(v) => setVisibility(v as ExperienceVisibility)}
             options={[
-              { value: 'private', label: '私有（仅自己）' },
-              { value: 'team', label: '团队（成员可读）' },
-              { value: 'owner_editors', label: '仅所有者/编辑' },
+              { value: 'private', label: t('agent.skillEvolution.create.visibilityPrivate') },
+              { value: 'team', label: t('agent.skillEvolution.create.visibilityTeam') },
+              { value: 'owner_editors', label: t('agent.skillEvolution.visibility.owner_editors') },
             ]}
           />
         </div>
         {visibility === 'team' ? (
           <div>
-            <Text className='text-12px'>团队 ID *</Text>
+            <Text className='text-12px'>{t('agent.skillEvolution.create.teamId')}</Text>
             <Input
               className='mt-4px'
               value={teamId}
               onChange={setTeamId}
-              placeholder='team id（visibility=team 时必填）'
+              placeholder={t('agent.skillEvolution.create.teamIdPlaceholder')}
             />
           </div>
         ) : null}
         <div>
-          <Text className='text-12px'>建议 skill key</Text>
+          <Text className='text-12px'>{t('agent.skillEvolution.create.skillKey')}</Text>
           <Input className='mt-4px' value={skillKey} onChange={setSkillKey} placeholder='workmate-weekly-report' />
         </div>
         <div>
-          <Text className='text-12px'>经验摘要</Text>
+          <Text className='text-12px'>{t('agent.skillEvolution.create.summaryLabel')}</Text>
           <TextArea
             className='mt-4px'
             value={summary}
             onChange={setSummary}
-            placeholder='这次会话里哪些策略有效？失败根因是什么？'
+            placeholder={t('agent.skillEvolution.create.summaryPlaceholder')}
             autoSize={{ minRows: 4, maxRows: 10 }}
           />
         </div>
         <div>
-          <Text className='text-12px'>SKILL.md 草案（可空=自动生成模板）</Text>
+          <Text className='text-12px'>{t('agent.skillEvolution.create.draftLabel')}</Text>
           <TextArea
             className='mt-4px font-mono text-12px'
             value={draftMd}
             onChange={setDraftMd}
-            placeholder='留空则由服务端生成 stub 模板；智能提炼会填充'
+            placeholder={t('agent.skillEvolution.create.draftPlaceholder')}
             autoSize={{ minRows: 6, maxRows: 16 }}
           />
         </div>
         <label className='flex items-center gap-8px text-13px'>
           <input type='checkbox' checked={submitNow} onChange={(e) => setSubmitNow(e.target.checked)} />
-          手工创建后直接提交审核
+          {t('agent.skillEvolution.create.submitNow')}
         </label>
         <div className='flex gap-8px'>
           <Button type='outline' loading={busy} onClick={() => void handleCreate()}>
-            手工创建提案
+            {t('agent.skillEvolution.create.create')}
           </Button>
           <Button disabled={busy || evolving} onClick={() => navigate('/skill-evolution')}>
-            取消
+            {t('agent.skillEvolution.create.cancel')}
           </Button>
         </div>
       </div>
