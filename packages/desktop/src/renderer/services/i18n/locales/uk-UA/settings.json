@@ -1434,7 +1434,6 @@
   "imageInput": "Візуальне введення",
   "platformRuiqingApiDescription": "Сервіс моделей Ruiqing (на базі New API)",
   "assistantSelectDefaultModel": "Виберіть модель",
-  "addAssistant": "Додати асистента",
   "bugReportModuleSystemSettingsDescription": "For issues with system permissions, launch at startup, notifications, storage paths, or platform integration.",
   "assistantEffectiveImmediately": "Зміни застосовуються одразу",
   "speechToTextModelPlaceholder": "Виберіть або введіть назву моделі",

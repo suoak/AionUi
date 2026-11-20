@@ -1424,7 +1424,6 @@
   "imageInput": "视觉输入",
   "platformRuiqingApiDescription": "锐擎模型服务（基于 New API）",
   "assistantSelectDefaultModel": "选择模型",
-  "addAssistant": "添加助手",
   "bugReportModuleSystemSettingsDescription": "适用于系统权限、开机启动、通知、存储路径或平台集成相关问题。",
   "assistantEffectiveImmediately": "改动立即生效",
   "speechToTextModelPlaceholder": "选择或输入模型名称",
