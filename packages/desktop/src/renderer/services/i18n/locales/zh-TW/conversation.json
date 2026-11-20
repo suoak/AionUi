@@ -1525,6 +1525,27 @@
       "planProgressStep": "{{done}}/{{total}} · {{step}}",
       "needsYouCount_one": "{{count}} 個任務需要你",
       "needsYouCount_other": "{{count}} 個任務需要你"
+    },
+    "newTask": {
+      "open": "新增任務",
+      "title": "新增任務",
+      "prompt": "要做什麼？",
+      "promptPlaceholder": "描述這個任務。按 ⌘/Ctrl+Enter 建立。",
+      "taskTitle": "標題",
+      "titlePlaceholder": "可不填，預設取第一行",
+      "assistant": "智慧體",
+      "assistantPlaceholder": "選擇智慧體",
+      "startNow": "立即開始",
+      "startHint": "有空閒執行名額時，任務會在獨立工作副本中立即開始；否則在待辦中排隊。",
+      "planFirstHint": "智慧體先寫計畫，經你核准後才會變更任何內容。",
+      "create": "建立",
+      "createAndStart": "建立並開始",
+      "created": "任務已建立在待辦中",
+      "started": "任務已開始",
+      "startUnsupported": "任務已建立。目前的 Core 版本還無法從這裡開始任務。",
+      "createdNotStarted": "任務已建立但未開始：{{reason}}",
+      "createFailed": "無法建立任務：{{reason}}",
+      "fromMessage": "轉為任務"
     }
   },
   "squadRouteOnly": {

@@ -1525,6 +1525,27 @@
       "planProgressStep": "{{done}}/{{total}} · {{step}}",
       "needsYouCount_one": "{{count}} tâche vous attend",
       "needsYouCount_other": "{{count}} tâches vous attendent"
+    },
+    "newTask": {
+      "open": "Nouvelle tâche",
+      "title": "Nouvelle tâche",
+      "prompt": "Que faut-il faire ?",
+      "promptPlaceholder": "Décrivez la tâche. Appuyez sur ⌘/Ctrl+Entrée pour la créer.",
+      "taskTitle": "Titre",
+      "titlePlaceholder": "Facultatif ; repris de la première ligne",
+      "assistant": "Assistant",
+      "assistantPlaceholder": "Choisir un assistant",
+      "startNow": "Démarrer tout de suite",
+      "startHint": "La tâche démarre dans sa propre copie de travail dès qu’un créneau d’exécution est libre ; sinon elle attend dans À faire.",
+      "planFirstHint": "L’assistant rédige d’abord un plan et ne modifie rien tant que vous ne l’avez pas approuvé.",
+      "create": "Créer",
+      "createAndStart": "Créer et démarrer",
+      "created": "Tâche créée dans À faire",
+      "started": "Tâche démarrée",
+      "startUnsupported": "Tâche créée. Cette version de Core ne peut pas encore démarrer de tâches d’ici.",
+      "createdNotStarted": "Tâche créée mais non démarrée : {{reason}}",
+      "createFailed": "Impossible de créer la tâche : {{reason}}",
+      "fromMessage": "En faire une tâche"
     }
   },
   "squadRouteOnly": {

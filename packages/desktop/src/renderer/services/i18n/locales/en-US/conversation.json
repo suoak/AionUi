@@ -1525,6 +1525,27 @@
       "planProgressStep": "{{done}}/{{total}} · {{step}}",
       "needsYouCount_one": "{{count}} task needs you",
       "needsYouCount_other": "{{count}} tasks need you"
+    },
+    "newTask": {
+      "open": "New task",
+      "title": "New task",
+      "prompt": "What should be done?",
+      "promptPlaceholder": "Describe the task. Press ⌘/Ctrl+Enter to create it.",
+      "taskTitle": "Title",
+      "titlePlaceholder": "Optional; taken from the first line",
+      "assistant": "Assistant",
+      "assistantPlaceholder": "Pick an assistant",
+      "startNow": "Start immediately",
+      "startHint": "The task starts in its own worktree as soon as a run slot is free; otherwise it waits in To do.",
+      "planFirstHint": "The assistant writes a plan first and waits for your approval before changing anything.",
+      "create": "Create",
+      "createAndStart": "Create and start",
+      "created": "Task created in To do",
+      "started": "Task started",
+      "startUnsupported": "Task created. This Core version can't start tasks from here yet.",
+      "createdNotStarted": "Task created but not started: {{reason}}",
+      "createFailed": "Couldn't create the task: {{reason}}",
+      "fromMessage": "Make a task"
     }
   },
   "squadRouteOnly": {

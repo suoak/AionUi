@@ -1525,6 +1525,27 @@
       "planProgressStep": "{{done}}/{{total}} · {{step}}",
       "needsYouCount_one": "{{count}} کار به شما نیاز دارد",
       "needsYouCount_other": "{{count}} کار به شما نیاز دارد"
+    },
+    "newTask": {
+      "open": "کار تازه",
+      "title": "کار تازه",
+      "prompt": "چه کاری باید انجام شود؟",
+      "promptPlaceholder": "کار را شرح دهید. برای ساختن ⌘/Ctrl+Enter را بزنید.",
+      "taskTitle": "عنوان",
+      "titlePlaceholder": "اختیاری؛ از خط اول گرفته می‌شود",
+      "assistant": "دستیار",
+      "assistantPlaceholder": "یک دستیار انتخاب کنید",
+      "startNow": "شروع فوری",
+      "startHint": "اگر جایگاه اجرای آزادی باشد، کار در نسخهٔ کاری جداگانهٔ خودش بی‌درنگ شروع می‌شود؛ وگرنه در «برای انجام» منتظر می‌ماند.",
+      "planFirstHint": "دستیار اول یک برنامه می‌نویسد و تا تأیید شما چیزی را تغییر نمی‌دهد.",
+      "create": "ساختن",
+      "createAndStart": "ساختن و شروع",
+      "created": "کار در «برای انجام» ساخته شد",
+      "started": "کار شروع شد",
+      "startUnsupported": "کار ساخته شد. این نسخهٔ Core هنوز نمی‌تواند از اینجا کار را شروع کند.",
+      "createdNotStarted": "کار ساخته شد اما شروع نشد: {{reason}}",
+      "createFailed": "ساختن کار ممکن نشد: {{reason}}",
+      "fromMessage": "تبدیل به کار"
     }
   },
   "squadRouteOnly": {

@@ -1545,6 +1545,27 @@
       "needsYouCount_few": "{{count}} задачи ждут вас",
       "needsYouCount_many": "{{count}} задач ждут вас",
       "needsYouCount_other": "{{count}} задач ждут вас"
+    },
+    "newTask": {
+      "open": "Новая задача",
+      "title": "Новая задача",
+      "prompt": "Что нужно сделать?",
+      "promptPlaceholder": "Опишите задачу. Нажмите ⌘/Ctrl+Enter, чтобы создать.",
+      "taskTitle": "Название",
+      "titlePlaceholder": "Необязательно; берётся из первой строки",
+      "assistant": "Ассистент",
+      "assistantPlaceholder": "Выберите ассистента",
+      "startNow": "Начать сразу",
+      "startHint": "Задача сразу начнётся в отдельной рабочей копии, если есть свободный слот; иначе будет ждать в «К выполнению».",
+      "planFirstHint": "Ассистент сначала напишет план и ничего не изменит, пока вы его не одобрите.",
+      "create": "Создать",
+      "createAndStart": "Создать и начать",
+      "created": "Задача создана в «К выполнению»",
+      "started": "Задача начата",
+      "startUnsupported": "Задача создана. Эта версия Core пока не умеет запускать задачи отсюда.",
+      "createdNotStarted": "Задача создана, но не начата: {{reason}}",
+      "createFailed": "Не удалось создать задачу: {{reason}}",
+      "fromMessage": "Сделать задачей"
     }
   },
   "squadRouteOnly": {

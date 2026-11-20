@@ -30,6 +30,8 @@ import { stripSkillSuggest, hasSkillSuggest } from '@renderer/utils/chat/skillSu
 import { isForkEnabled } from '@/common/chat/forkConversation';
 import { useForkConversation } from '@/renderer/hooks/chat/useForkConversation';
 import ForkBranchIcon from '@renderer/components/base/ForkBranchIcon';
+import NewTaskDialog from '@renderer/pages/tasks/NewTaskDialog';
+import { ListCheckbox } from '@icon-park/react';
 
 /**
  * Format a timestamp for message display.
@@ -136,6 +138,7 @@ const MessageText: React.FC<{
 
   const { t } = useTranslation();
   const [showCopyAlert, setShowCopyAlert] = useState(false);
+  const [makeTaskOpen, setMakeTaskOpen] = useState(false);
   const isUserMessage = message.position === 'right';
   // Delivered-but-not-yet-consumed marker for messages sent mid-turn to a
   // supporting backend (claude/codex). The message already reached the
@@ -241,6 +244,22 @@ const MessageText: React.FC<{
         data-testid='message-fork-button'
       >
         <ForkBranchIcon size={16} fill={iconColors.secondary} />
+      </div>
+    </Tooltip>
+  ) : null;
+
+  // 3.0 U2: turn this message into a task (prompt prefilled, linked back via source_ref).
+  const makeTaskButton = conversationContext ? (
+    <Tooltip content={t('conversation.taskBoard.newTask.fromMessage')}>
+      <div
+        className='p-4px rd-4px cursor-pointer hover:bg-3 transition-colors opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto focus-within:opacity-100 focus-within:pointer-events-auto'
+        onClick={() => setMakeTaskOpen(true)}
+        style={{ lineHeight: 0 }}
+        data-testid='message-make-task-button'
+        role='button'
+        aria-label={t('conversation.taskBoard.newTask.fromMessage')}
+      >
+        <ListCheckbox theme='outline' size='16' fill={iconColors.secondary} />
       </div>
     </Tooltip>
   ) : null;
@@ -391,6 +410,7 @@ const MessageText: React.FC<{
           >
             {copyButton}
             {forkButton}
+            {makeTaskButton}
             {message.created_at && (
               <span className='text-12px text-t-secondary opacity-0 group-hover:opacity-100 transition-opacity select-none'>
                 {formatMessageTime(message.created_at)}
@@ -399,6 +419,17 @@ const MessageText: React.FC<{
           </div>
         )}
       </div>
+      {makeTaskOpen && (
+        <NewTaskDialog
+          visible={makeTaskOpen}
+          prefill={{
+            prompt: turnTexts?.length ? buildTurnClipboardText(turnTexts) : renderedText,
+            sourceRef: message.msg_id ?? message.id,
+            conversationId: conversationContext?.conversation_id,
+          }}
+          onClose={() => setMakeTaskOpen(false)}
+        />
+      )}
       {showCopyAlert && (
         <Alert
           type='success'

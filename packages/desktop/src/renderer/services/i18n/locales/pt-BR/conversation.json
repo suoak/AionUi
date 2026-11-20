@@ -1531,6 +1531,27 @@
       "planProgressStep": "{{done}}/{{total}} · {{step}}",
       "needsYouCount_one": "{{count}} tarefa precisa de você",
       "needsYouCount_other": "{{count}} tarefas precisam de você"
+    },
+    "newTask": {
+      "open": "Nova tarefa",
+      "title": "Nova tarefa",
+      "prompt": "O que precisa ser feito?",
+      "promptPlaceholder": "Descreva a tarefa. Pressione ⌘/Ctrl+Enter para criar.",
+      "taskTitle": "Título",
+      "titlePlaceholder": "Opcional; vem da primeira linha",
+      "assistant": "Assistente",
+      "assistantPlaceholder": "Escolha um assistente",
+      "startNow": "Iniciar agora",
+      "startHint": "A tarefa começa na própria cópia de trabalho assim que houver um espaço de execução livre; senão, aguarda em A fazer.",
+      "planFirstHint": "O assistente escreve um plano primeiro e não altera nada até você aprovar.",
+      "create": "Criar",
+      "createAndStart": "Criar e iniciar",
+      "created": "Tarefa criada em A fazer",
+      "started": "Tarefa iniciada",
+      "startUnsupported": "Tarefa criada. Esta versão do Core ainda não inicia tarefas por aqui.",
+      "createdNotStarted": "Tarefa criada, mas não iniciada: {{reason}}",
+      "createFailed": "Não foi possível criar a tarefa: {{reason}}",
+      "fromMessage": "Transformar em tarefa"
     }
   },
   "squadRouteOnly": {

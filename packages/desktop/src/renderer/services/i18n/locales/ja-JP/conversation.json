@@ -1525,6 +1525,27 @@
       "planProgressStep": "{{done}}/{{total}} · {{step}}",
       "needsYouCount_one": "{{count}} 件のタスクが対応待ちです",
       "needsYouCount_other": "{{count}} 件のタスクが対応待ちです"
+    },
+    "newTask": {
+      "open": "新しいタスク",
+      "title": "新しいタスク",
+      "prompt": "何をしますか？",
+      "promptPlaceholder": "タスクの内容を書いてください。⌘/Ctrl+Enter で作成します。",
+      "taskTitle": "タイトル",
+      "titlePlaceholder": "省略可。1 行目から作成されます",
+      "assistant": "アシスタント",
+      "assistantPlaceholder": "アシスタントを選択",
+      "startNow": "すぐに開始",
+      "startHint": "実行枠が空いていれば専用の作業コピーですぐに開始し、空いていなければ「未着手」で待機します。",
+      "planFirstHint": "アシスタントはまず計画を作成し、あなたが承認するまで何も変更しません。",
+      "create": "作成",
+      "createAndStart": "作成して開始",
+      "created": "タスクを「未着手」に作成しました",
+      "started": "タスクを開始しました",
+      "startUnsupported": "タスクを作成しました。この Core バージョンではここからタスクを開始できません。",
+      "createdNotStarted": "タスクは作成されましたが、開始できませんでした：{{reason}}",
+      "createFailed": "タスクを作成できませんでした：{{reason}}",
+      "fromMessage": "タスクにする"
     }
   },
   "squadRouteOnly": {

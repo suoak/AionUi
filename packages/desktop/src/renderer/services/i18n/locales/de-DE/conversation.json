@@ -1526,6 +1526,27 @@
       "planProgressStep": "{{done}}/{{total}} · {{step}}",
       "needsYouCount_one": "{{count}} Aufgabe braucht dich",
       "needsYouCount_other": "{{count}} Aufgaben brauchen dich"
+    },
+    "newTask": {
+      "open": "Neue Aufgabe",
+      "title": "Neue Aufgabe",
+      "prompt": "Was soll erledigt werden?",
+      "promptPlaceholder": "Beschreibe die Aufgabe. Mit ⌘/Strg+Enter erstellen.",
+      "taskTitle": "Titel",
+      "titlePlaceholder": "Optional; wird aus der ersten Zeile übernommen",
+      "assistant": "Assistent",
+      "assistantPlaceholder": "Assistent auswählen",
+      "startNow": "Sofort starten",
+      "startHint": "Die Aufgabe startet in einer eigenen Arbeitskopie, sobald ein Ausführungsplatz frei ist; sonst wartet sie unter „Zu erledigen“.",
+      "planFirstHint": "Der Assistent schreibt zuerst einen Plan und ändert nichts, bis du ihn freigibst.",
+      "create": "Erstellen",
+      "createAndStart": "Erstellen und starten",
+      "created": "Aufgabe unter „Zu erledigen“ erstellt",
+      "started": "Aufgabe gestartet",
+      "startUnsupported": "Aufgabe erstellt. Diese Core-Version kann Aufgaben hier noch nicht starten.",
+      "createdNotStarted": "Aufgabe erstellt, aber nicht gestartet: {{reason}}",
+      "createFailed": "Aufgabe konnte nicht erstellt werden: {{reason}}",
+      "fromMessage": "Als Aufgabe anlegen"
     }
   },
   "squadRouteOnly": {
