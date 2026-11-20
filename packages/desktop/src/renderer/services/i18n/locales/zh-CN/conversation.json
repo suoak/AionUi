@@ -1590,6 +1590,9 @@
       "adopted": "已采纳到 {{branch}}（{{commit}}）",
       "prLink": "拉取请求：",
       "noChanges": "还没有可评审的改动。"
+    },
+    "conversationTask": {
+      "open": "打开此任务"
     }
   },
   "squadRouteOnly": {

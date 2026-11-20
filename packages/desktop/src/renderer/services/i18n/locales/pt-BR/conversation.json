@@ -1596,6 +1596,9 @@
       "adopted": "Adotado em {{branch}} ({{commit}})",
       "prLink": "Pull request:",
       "noChanges": "Ainda não há alterações para revisar."
+    },
+    "conversationTask": {
+      "open": "Abrir esta tarefa"
     }
   },
   "squadRouteOnly": {
