@@ -360,7 +360,157 @@
     }
   },
   "skillEvolution": {
-    "title": "スキル進化"
+    "title": "スキル進化",
+    "status": {
+      "draft": "下書き",
+      "pending_review": "レビュー待ち",
+      "approved": "承認済み",
+      "rejected": "却下",
+      "applied": "適用済み",
+      "rolled_back": "ロールバック済み"
+    },
+    "kind": {
+      "pattern": "パターン",
+      "skill_impact": "影響メモ",
+      "rejected_note": "却下記録",
+      "index": "インデックス",
+      "general": "一般"
+    },
+    "visibility": {
+      "private": "非公開",
+      "team": "チーム",
+      "owner_editors": "所有者/編集者のみ",
+      "all": "すべての公開範囲"
+    },
+    "gateMode": {
+      "human_only": "人によるレビューのみ（既定）",
+      "heuristic_assist": "ヒューリスティック補助で提出",
+      "auto_apply_on_pass": "高スコアで自動適用（危険。スクリプトを含むスキルは除く）"
+    },
+    "gate": {
+      "score": "ゲート {{score}}",
+      "approve": "承認を推奨",
+      "reject": "却下を推奨",
+      "review": "要確認"
+    },
+    "errors": {
+      "load": "読み込めませんでした（Skill Evolution API を含む Core が必要です）",
+      "loadDetail": "提案を読み込めませんでした",
+      "saveSettings": "設定を保存できませんでした",
+      "action": "操作に失敗しました",
+      "copy": "コピーに失敗しました"
+    },
+    "toast": {
+      "settingsSaved": "ゲート設定を保存しました",
+      "submitted": "レビューに提出しました",
+      "approved": "承認しました。{{path}} に適用できます",
+      "rejected": "却下しました。経験ライブラリに記録しました",
+      "appliedTo": "書き込んで適用しました：{{parts}}。",
+      "appliedMarked": "適用済みにしました。",
+      "nextStep": "次へ：",
+      "viewAgent": "エージェントを表示",
+      "tryRun": "試しに実行",
+      "publishPin": "ピンを公開",
+      "bindHint": "エージェントにスキルを紐づけると試行・公開できます",
+      "workspacePath": "ワークスペース: {{path}}",
+      "pinned": "ピン留め: {{ref}}",
+      "evolved": "再抽出しました",
+      "rolledBack": "スキルのポインターを戻しました（経験ライブラリは保持）",
+      "copied": "SKILL.md をクリップボードにコピーしました"
+    },
+    "page": {
+      "title": "スキル進化",
+      "description": "会話の経験から SKILL.md の提案を抽出 → ヒューリスティックゲート（設定可）→ 人によるレビュー → Skills Hub への書き込み / ピン。経験ライブラリはスキル進化専用で、日常の会話には注入されません。ナレッジベースとは別です。",
+      "experienceCount": "経験記事 {{count}} 件",
+      "filteredByAgent": "エージェントで絞り込み中：{{id}}…",
+      "clearFilter": "絞り込みを解除",
+      "openAgent": "エージェントの詳細を開く",
+      "distill": "会話からスキルを抽出"
+    },
+    "tabs": {
+      "experience": "経験ライブラリ",
+      "experienceCount": "経験ライブラリ ({{count}})",
+      "settings": "ゲート設定",
+      "all": "すべての提案"
+    },
+    "settings": {
+      "intro": "既定は「人によるレビューのみ」。ヒューリスティックスコアは参考値です。「自動適用」は明示的に有効化が必要で、高スコア通過後も skill_impact を書き込み、ワンクリックで戻せます。スクリプトを含むスキルは常に人がレビューし、どのモードでも自動適用されません。経験ライブラリが日常の会話に注入されることはありません。",
+      "loading": "読み込み中…",
+      "gateMode": "ゲートモード",
+      "autoApplyWarning": "警告：自動適用では高スコア時に人による承認/書き込みを省略します（スクリプトを含むスキルは除き、常に人のレビューが必要です）。組織のポリシーで許可されていることを確認し、ロールバックを習慣にしてください。",
+      "assistThreshold": "補助提出のしきい値（heuristic_assist）",
+      "autoThreshold": "自動適用のしきい値（auto_apply_on_pass）",
+      "defaultVisibility": "新しい経験の既定の公開範囲",
+      "crossModel": "モデル間移行のヒント（簡易）"
+    },
+    "experience": {
+      "intro": "経験ライブラリはスキル進化専用で、日常の会話には注入されません。",
+      "empty": "経験記事はまだありません。提案を抽出または却下すると表示されます。",
+      "conversation": "会話 {{id}}…",
+      "pickHint": "左の経験記事を選ぶと本文と関連が表示されます。",
+      "body": "本文",
+      "sources": "元の会話：{{ids}}",
+      "tags": "タグ：{{tags}}"
+    },
+    "proposals": {
+      "empty": "提案はまだありません。会話からスキルを抽出して始めましょう。",
+      "untitledSkill": "名前のないスキル",
+      "evolveAgain": "再抽出",
+      "submit": "レビューに提出",
+      "approve": "承認",
+      "reject": "却下",
+      "writeHub": "Skills Hub に書き込む",
+      "rollback": "ロールバック",
+      "pickHint": "左の提案を選ぶと草案とレビューが表示されます。",
+      "signals": "ヒューリスティックゲートのシグナル",
+      "signalWeight": "（重み {{weight}}）",
+      "mode": "モード：{{mode}}",
+      "summary": "経験の要約",
+      "emptyValue": "（空）",
+      "linkedExperience": "関連する経験：{{ids}}",
+      "draft": "SKILL.md 草案",
+      "comment": "レビューコメント（任意）",
+      "commentPlaceholder": "承認・却下・ロールバック時に入力できます",
+      "exportPreview": "エクスポートのプレビュー",
+      "copySkill": "SKILL.md をコピー"
+    },
+    "create": {
+      "back": "← スキル進化に戻る",
+      "intro": "最近の会話から軌跡を選択 →「抽出」で Maintainer/Proposer を実行 → 草案を編集してレビューに提出。経験ライブラリはスキル進化専用で、日常の会話には注入されません。",
+      "pickConversation": "会話を選択 *",
+      "pickPlaceholder": "最近の会話から選択",
+      "pasteHint": "会話 ID を貼り付けることもできます",
+      "pastePlaceholder": "または conversation id を貼り付け",
+      "overview": "軌跡の概要",
+      "lastModel": "前回の抽出モデル：{{model}}",
+      "evolve": "抽出",
+      "evolveHint": "利用可能なモデルの設定が必要です。成功すると編集可能な提案になります",
+      "titleLabel": "タイトル *",
+      "titlePlaceholder": "例：週報の書式設定",
+      "assistantLabel": "対象エージェント ID（任意、承認後にピン留め可）",
+      "visibilityLabel": "経験の公開範囲",
+      "visibilityPrivate": "非公開（自分のみ）",
+      "visibilityTeam": "チーム（メンバーが閲覧可）",
+      "teamId": "チーム ID *",
+      "teamIdPlaceholder": "team id（チーム公開時は必須）",
+      "skillKey": "推奨 skill key",
+      "summaryLabel": "経験の要約",
+      "summaryPlaceholder": "この会話で何がうまくいきましたか？失敗の根本原因は？",
+      "draftLabel": "SKILL.md 草案（空欄ならテンプレートを生成）",
+      "draftPlaceholder": "空欄ならサーバーがひな形を生成し、抽出で埋まります",
+      "submitNow": "作成後すぐにレビューへ提出",
+      "create": "手動で提案を作成",
+      "cancel": "キャンセル",
+      "untitled": "無題",
+      "needConversation": "先に会話を選択してください",
+      "evolved": "抽出が完了し、経験記事を {{count}} 件書き込みました",
+      "evolvedModel": "モデル：{{model}}",
+      "evolveFailed": "抽出に失敗しました（モデルが設定され、Core に Phase 2 API があることを確認してください）",
+      "needTitle": "タイトルを入力してください",
+      "createdSubmitted": "提案を作成してレビューに提出しました",
+      "draftSaved": "提案の下書きを保存しました",
+      "createFailed": "作成できませんでした（会話の所有者と Core のバージョンを確認してください）"
+    }
   },
   "runtimeRestart": {
     "tooltip": "エージェントに再接続",
