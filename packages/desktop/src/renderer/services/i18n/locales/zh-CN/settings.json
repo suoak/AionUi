@@ -305,7 +305,6 @@
   "assistantReorderHintShort": "拖拽排序",
   "fontSizeChat": "聊天字号",
   "mcpAuthRequired": "需要身份验证",
-  "groupApp": "应用",
   "assistantGroupCreated": "自定义助手",
   "assistantNoDefaultMcpsSelected": "未选择默认 MCP",
   "addModel": "添加模型",
@@ -561,7 +560,6 @@
   "retry": "重试",
   "skillFolderPath": "技能文件夹路径",
   "baseUrlResetToDefault": "重置为默认",
-  "groupAiCore": "AI 核心",
   "channels.selectFirst": "选择一个渠道并完成凭据配置。",
   "assistantMainAgent": "Agent",
   "imageInputSupported": "当前配置已启用",
@@ -1442,7 +1440,6 @@
     "searchPlaceholder": "搜索设置",
     "searchEmpty": "没有匹配的设置"
   },
-  "groupAbout": "其他",
   "promptPreview": "预览",
   "webui.copyPasswordTooltip": "点击复制密码",
   "assistantDefaultPermissionLabel": "权限",
@@ -2039,5 +2036,46 @@
       "moderate": "中风险",
       "dangerous": "高风险"
     }
+  },
+  "notificationsPage": {
+    "navLabel": "通知",
+    "title": "通知",
+    "description": "选择 CSBU WorkMate 何时通知你，例如定时任务完成时。",
+    "movedHint": "通知设置已移至单独的设置页。",
+    "openPage": "打开通知"
+  },
+  "shortcutsPage": {
+    "navLabel": "键盘快捷键",
+    "title": "键盘快捷键",
+    "description": "CSBU WorkMate 当前支持的快捷键，按本机键盘显示。",
+    "readOnlyNote": "快捷键暂不支持自定义。",
+    "desktopOnly": "仅桌面端",
+    "or": "或",
+    "sections": {
+      "general": "通用",
+      "conversations": "会话",
+      "composer": "输入框",
+      "preview": "文件预览"
+    },
+    "actions": {
+      "commandPalette": "打开命令面板",
+      "toggleSidebar": "显示或隐藏侧边栏",
+      "toggleWorkspace": "显示或隐藏工作区面板",
+      "newConversation": "新建会话",
+      "nextConversation": "下一个会话",
+      "previousConversation": "上一个会话",
+      "send": "发送消息",
+      "newLine": "换行",
+      "saveToDraft": "存到草稿箱",
+      "history": "浏览已发送的消息",
+      "leaveHistory": "退出消息历史",
+      "saveFile": "保存文件",
+      "closeTab": "关闭预览标签页"
+    }
+  },
+  "pageIntro": {
+    "appearance": "主题、颜色、字号和缩放。",
+    "system": "语言、启动、文件夹、超时及其他全局偏好设置。",
+    "pet": "一个会对智能体动态做出反应的桌面伙伴。"
   }
 }

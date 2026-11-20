@@ -307,7 +307,6 @@
   "assistantReorderHintShort": "Перетащите для сортировки",
   "fontSizeChat": "Размер текста в чате",
   "mcpAuthRequired": "Требуется аутентификация",
-  "groupApp": "Приложение",
   "assistantGroupCreated": "Пользовательские ассистенты",
   "assistantNoDefaultMcpsSelected": "MCP по умолчанию не выбран",
   "addModel": "Добавить модель",
@@ -564,7 +563,6 @@
   "skillFolderPath": "Путь к папке навыков",
   "baseUrlResetToDefault": "Сбросить по умолчанию",
   "channels.selectFirst": "Выберите канал и настройте учётные данные.",
-  "groupAiCore": "Ядро ИИ",
   "assistantMainAgent": "Агент",
   "imageInputSupported": "Включено в настройках",
   "assistantGoChat": "Чат",
@@ -1452,7 +1450,6 @@
     "searchPlaceholder": "Поиск настроек",
     "searchEmpty": "Нет подходящих настроек"
   },
-  "groupAbout": "О программе",
   "promptPreview": "Предпросмотр",
   "webui.copyPasswordTooltip": "Нажмите для копирования пароля",
   "assistantDefaultPermissionLabel": "Разрешение",
@@ -2053,5 +2050,46 @@
       "moderate": "Средний риск",
       "dangerous": "Высокий риск"
     }
+  },
+  "notificationsPage": {
+    "navLabel": "Уведомления",
+    "title": "Уведомления",
+    "description": "Выберите, когда CSBU WorkMate будет вас уведомлять, например по завершении запланированной задачи.",
+    "movedHint": "Уведомления теперь на отдельной странице настроек.",
+    "openPage": "Открыть уведомления"
+  },
+  "shortcutsPage": {
+    "navLabel": "Сочетания клавиш",
+    "title": "Сочетания клавиш",
+    "description": "Сочетания клавиш, которые сейчас поддерживает CSBU WorkMate, для клавиатуры этого компьютера.",
+    "readOnlyNote": "Сочетания клавиш пока нельзя изменить.",
+    "desktopOnly": "Только в настольном приложении",
+    "or": "или",
+    "sections": {
+      "general": "Общие",
+      "conversations": "Беседы",
+      "composer": "Поле ввода",
+      "preview": "Предпросмотр файла"
+    },
+    "actions": {
+      "commandPalette": "Открыть палитру команд",
+      "toggleSidebar": "Показать или скрыть боковую панель",
+      "toggleWorkspace": "Показать или скрыть панель рабочей области",
+      "newConversation": "Новая беседа",
+      "nextConversation": "Следующая беседа",
+      "previousConversation": "Предыдущая беседа",
+      "send": "Отправить сообщение",
+      "newLine": "Новая строка",
+      "saveToDraft": "Добавить в черновики",
+      "history": "Листать отправленные сообщения",
+      "leaveHistory": "Выйти из истории сообщений",
+      "saveFile": "Сохранить файл",
+      "closeTab": "Закрыть вкладку предпросмотра"
+    }
+  },
+  "pageIntro": {
+    "appearance": "Тема, цвета, размер шрифта и масштаб.",
+    "system": "Язык, запуск, папки, тайм-ауты и другие общие настройки приложения.",
+    "pet": "Компаньон на рабочем столе, который реагирует на действия ваших агентов."
   }
 }

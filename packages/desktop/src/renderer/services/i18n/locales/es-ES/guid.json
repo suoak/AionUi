@@ -13,5 +13,12 @@
     "understand": "Familiarízate con este proyecto y explícame con palabras sencillas qué hace y por dónde empezar",
     "cleanup": "Encuentra archivos duplicados e inútiles en esta carpeta y lístalos para que los confirme",
     "create": "Créame una página personal bonita y ábrela cuando esté lista"
+  },
+  "agentPreview": {
+    "title": "Vista previa de prueba del agente",
+    "published": "Estás viendo la configuración publicada.",
+    "draft": "Estás viendo el borrador actual. Después de la prueba puedes volver a mejorar las instrucciones o convertirlo en una habilidad.",
+    "backToImprove": "Volver a mejorar",
+    "openAgent": "Abrir detalles del agente"
   }
 }

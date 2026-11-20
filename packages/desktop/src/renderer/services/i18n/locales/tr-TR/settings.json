@@ -305,7 +305,6 @@
   "assistantReorderHintShort": "Sıralamak için sürükleyin",
   "fontSizeChat": "Sohbet metin boyutu",
   "mcpAuthRequired": "Kimlik doğrulama gerekli",
-  "groupApp": "Uygulama",
   "assistantGroupCreated": "Özel Asistanlar",
   "assistantNoDefaultMcpsSelected": "Varsayılan MCP seçilmedi",
   "addModel": "Model Ekle",
@@ -561,7 +560,6 @@
   "retry": "Retry",
   "skillFolderPath": "Yetenek Klasör Yolu",
   "baseUrlResetToDefault": "Varsayılana sıfırla",
-  "groupAiCore": "AI Çekirdek",
   "channels.selectFirst": "Bir kanal seçin ve kimlik bilgilerini yapılandırın.",
   "assistantMainAgent": "Agent",
   "imageInputSupported": "Yapılandırmayla etkin",
@@ -1442,7 +1440,6 @@
     "searchPlaceholder": "Ayarlarda ara",
     "searchEmpty": "Eşleşen ayar yok"
   },
-  "groupAbout": "Diğer",
   "promptPreview": "Önizleme",
   "webui.copyPasswordTooltip": "Şifreyi kopyalamak için tıklayın",
   "assistantDefaultPermissionLabel": "İzin",
@@ -2039,5 +2036,46 @@
       "moderate": "Orta risk",
       "dangerous": "Yüksek risk"
     }
+  },
+  "notificationsPage": {
+    "navLabel": "Bildirimler",
+    "title": "Bildirimler",
+    "description": "CSBU WorkMate'in sizi ne zaman bilgilendireceğini seçin; örneğin zamanlanmış bir görev bittiğinde.",
+    "movedHint": "Bildirimler artık kendi ayar sayfasında.",
+    "openPage": "Bildirimleri aç"
+  },
+  "shortcutsPage": {
+    "navLabel": "Klavye kısayolları",
+    "title": "Klavye kısayolları",
+    "description": "CSBU WorkMate'in bugün desteklediği kısayollar, bu bilgisayarın klavyesine göre gösterilir.",
+    "readOnlyNote": "Kısayollar henüz değiştirilemez.",
+    "desktopOnly": "Yalnızca masaüstü uygulaması",
+    "or": "veya",
+    "sections": {
+      "general": "Genel",
+      "conversations": "Sohbetler",
+      "composer": "Mesaj kutusu",
+      "preview": "Dosya önizleme"
+    },
+    "actions": {
+      "commandPalette": "Komut paletini aç",
+      "toggleSidebar": "Kenar çubuğunu göster veya gizle",
+      "toggleWorkspace": "Çalışma alanı panelini göster veya gizle",
+      "newConversation": "Yeni sohbet",
+      "nextConversation": "Sonraki sohbet",
+      "previousConversation": "Önceki sohbet",
+      "send": "Mesajı gönder",
+      "newLine": "Yeni satır",
+      "saveToDraft": "Taslak kutusuna ekle",
+      "history": "Gönderilen mesajlarda gezin",
+      "leaveHistory": "Mesaj geçmişinden çık",
+      "saveFile": "Dosyayı kaydet",
+      "closeTab": "Önizleme sekmesini kapat"
+    }
+  },
+  "pageIntro": {
+    "appearance": "Tema, renkler, yazı boyutu ve yakınlaştırma.",
+    "system": "Dil, başlangıç, klasörler, zaman aşımları ve diğer genel tercihler.",
+    "pet": "Ajanlarınızın yaptıklarına tepki veren bir masaüstü arkadaşı."
   }
 }

@@ -307,7 +307,6 @@
   "assistantReorderHintShort": "拖曳排序",
   "fontSizeChat": "聊天字級",
   "mcpAuthRequired": "需要身份驗證",
-  "groupApp": "應用",
   "assistantGroupCreated": "自訂助手",
   "assistantNoDefaultMcpsSelected": "未選擇預設 MCP",
   "addModel": "新增模型",
@@ -563,7 +562,6 @@
   "retry": "重試",
   "skillFolderPath": "技能資料夾路徑",
   "baseUrlResetToDefault": "重設為預設",
-  "groupAiCore": "AI 核心",
   "channels.selectFirst": "選擇一個渠道並完成憑證配置。",
   "assistantMainAgent": "Agent",
   "imageInputSupported": "目前設定已啟用",
@@ -1444,7 +1442,6 @@
     "searchPlaceholder": "搜尋設定",
     "searchEmpty": "沒有符合的設定"
   },
-  "groupAbout": "其他",
   "promptPreview": "預覽",
   "webui.copyPasswordTooltip": "點擊複製密碼",
   "assistantDefaultPermissionLabel": "權限",
@@ -2041,5 +2038,46 @@
       "moderate": "中風險",
       "dangerous": "高風險"
     }
+  },
+  "notificationsPage": {
+    "navLabel": "通知",
+    "title": "通知",
+    "description": "選擇 CSBU WorkMate 何時通知你，例如排程任務完成時。",
+    "movedHint": "通知設定已移至獨立的設定頁。",
+    "openPage": "開啟通知"
+  },
+  "shortcutsPage": {
+    "navLabel": "鍵盤快速鍵",
+    "title": "鍵盤快速鍵",
+    "description": "CSBU WorkMate 目前支援的快速鍵，依本機鍵盤顯示。",
+    "readOnlyNote": "快速鍵暫不支援自訂。",
+    "desktopOnly": "僅桌面版",
+    "or": "或",
+    "sections": {
+      "general": "一般",
+      "conversations": "對話",
+      "composer": "輸入框",
+      "preview": "檔案預覽"
+    },
+    "actions": {
+      "commandPalette": "開啟命令面板",
+      "toggleSidebar": "顯示或隱藏側邊欄",
+      "toggleWorkspace": "顯示或隱藏工作區面板",
+      "newConversation": "新增對話",
+      "nextConversation": "下一個對話",
+      "previousConversation": "上一個對話",
+      "send": "傳送訊息",
+      "newLine": "換行",
+      "saveToDraft": "存到草稿箱",
+      "history": "瀏覽已傳送的訊息",
+      "leaveHistory": "離開訊息紀錄",
+      "saveFile": "儲存檔案",
+      "closeTab": "關閉預覽分頁"
+    }
+  },
+  "pageIntro": {
+    "appearance": "主題、色彩、字級和縮放。",
+    "system": "語言、啟動、資料夾、逾時及其他全域偏好設定。",
+    "pet": "一個會對智慧體動態做出反應的桌面夥伴。"
   }
 }

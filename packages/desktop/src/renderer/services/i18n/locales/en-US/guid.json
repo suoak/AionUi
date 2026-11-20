@@ -13,5 +13,12 @@
     "specifyWorkspace": "Select project folder",
     "searchPlaceholder": "Search projects…",
     "noProject": "No Project"
+  },
+  "agentPreview": {
+    "title": "Agent trial preview",
+    "published": "You're previewing the published configuration.",
+    "draft": "You're previewing the current draft. After the trial you can go back to improve the instructions or turn it into a skill.",
+    "backToImprove": "Back to improve",
+    "openAgent": "Open agent details"
   }
 }

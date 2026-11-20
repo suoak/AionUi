@@ -26,7 +26,11 @@ export type SettingsGroup = {
 };
 
 export const SETTINGS_GROUPS: readonly SettingsGroup[] = [
-  { id: 'general', labelKey: 'settings.groups.general', tabs: ['appearance', 'system', 'pet'] },
+  {
+    id: 'general',
+    labelKey: 'settings.groups.general',
+    tabs: ['appearance', 'system', 'notifications', 'shortcuts', 'pet'],
+  },
   { id: 'runtime', labelKey: 'settings.groups.runtime', tabs: ['model', 'agent', 'tools', 'skills'] },
   { id: 'workspace', labelKey: 'settings.groups.workspace', tabs: ['webui', 'remote-host', 'devices', 'local-kb'] },
   { id: 'extensions', labelKey: 'settings.groups.extensions', tabs: ['extensions'] },
@@ -50,6 +54,8 @@ export const settingsGroupOfTab = (tabId: string): SettingsGroupId | undefined =
 export const SETTINGS_TAB_KEYWORDS: Readonly<Record<string, readonly string[]>> = {
   appearance: ['theme', 'dark', 'light', 'font', 'zoom', 'css', 'dusk', 'ember'],
   system: ['language', 'startup', 'proxy', 'update', 'tray', 'log'],
+  notifications: ['notification', 'alert', 'scheduled', 'cron', 'browser permission'],
+  shortcuts: ['keyboard', 'shortcut', 'hotkey', 'keybinding', 'keys'],
   pet: ['desktop pet'],
   model: ['provider', 'api key', 'llm', 'openai', 'anthropic', 'gemini'],
   agent: ['acp', 'cli', 'claude', 'codex', 'preflight', 'runtime'],

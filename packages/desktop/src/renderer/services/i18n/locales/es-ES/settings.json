@@ -305,7 +305,6 @@
   "assistantReorderHintShort": "Arrastra para reordenar",
   "fontSizeChat": "Tamaño de texto del chat",
   "mcpAuthRequired": "Autenticación requerida",
-  "groupApp": "Aplicación",
   "assistantGroupCreated": "Asistentes personalizados",
   "assistantNoDefaultMcpsSelected": "No hay MCP predeterminado seleccionado",
   "addModel": "Agregar modelo",
@@ -561,7 +560,6 @@
   "retry": "Reintentar",
   "skillFolderPath": "Ruta de la carpeta de habilidades",
   "baseUrlResetToDefault": "Restablecer al valor predeterminado",
-  "groupAiCore": "Núcleo de IA",
   "channels.selectFirst": "Selecciona un canal y configura las credenciales.",
   "assistantMainAgent": "Agente principal",
   "imageInputSupported": "Activado por la configuración",
@@ -1442,7 +1440,6 @@
     "searchPlaceholder": "Buscar en ajustes",
     "searchEmpty": "Ningún ajuste coincide"
   },
-  "groupAbout": "Otros",
   "promptPreview": "Vista previa",
   "webui.copyPasswordTooltip": "Haz clic para copiar la contraseña",
   "assistantDefaultPermissionLabel": "Permiso",
@@ -2039,5 +2036,46 @@
       "moderate": "Riesgo medio",
       "dangerous": "Riesgo alto"
     }
+  },
+  "notificationsPage": {
+    "navLabel": "Notificaciones",
+    "title": "Notificaciones",
+    "description": "Elige cuándo te avisa CSBU WorkMate, por ejemplo cuando termina una tarea programada.",
+    "movedHint": "Las notificaciones ahora tienen su propia página de ajustes.",
+    "openPage": "Abrir notificaciones"
+  },
+  "shortcutsPage": {
+    "navLabel": "Atajos de teclado",
+    "title": "Atajos de teclado",
+    "description": "Atajos que CSBU WorkMate admite hoy, mostrados para el teclado de este equipo.",
+    "readOnlyNote": "Los atajos aún no se pueden cambiar.",
+    "desktopOnly": "Solo app de escritorio",
+    "or": "o",
+    "sections": {
+      "general": "General",
+      "conversations": "Conversaciones",
+      "composer": "Cuadro de mensaje",
+      "preview": "Vista previa de archivos"
+    },
+    "actions": {
+      "commandPalette": "Abrir la paleta de comandos",
+      "toggleSidebar": "Mostrar u ocultar la barra lateral",
+      "toggleWorkspace": "Mostrar u ocultar el panel de espacio de trabajo",
+      "newConversation": "Nueva conversación",
+      "nextConversation": "Conversación siguiente",
+      "previousConversation": "Conversación anterior",
+      "send": "Enviar mensaje",
+      "newLine": "Nueva línea",
+      "saveToDraft": "Añadir al buzón de borradores",
+      "history": "Recorrer los mensajes enviados",
+      "leaveHistory": "Salir del historial de mensajes",
+      "saveFile": "Guardar el archivo",
+      "closeTab": "Cerrar la pestaña de vista previa"
+    }
+  },
+  "pageIntro": {
+    "appearance": "Tema, colores, tamaño de letra y zoom.",
+    "system": "Idioma, inicio, carpetas, tiempos de espera y otras preferencias generales.",
+    "pet": "Un compañero de escritorio que reacciona a lo que hacen tus agentes."
   }
 }

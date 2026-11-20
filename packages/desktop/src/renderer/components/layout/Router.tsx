@@ -36,10 +36,14 @@ const GovernanceSettings = React.lazy(() => import('@renderer/pages/settings/Gov
 const PetSettings = React.lazy(() => import('@renderer/pages/settings/PetSettings'));
 const ArchivedSettings = React.lazy(() => import('@renderer/pages/settings/ArchivedSettings'));
 const ExtensionSettingsPage = React.lazy(() => import('@renderer/pages/settings/ExtensionSettingsPage'));
+const NotificationsSettings = React.lazy(() => import('@renderer/pages/settings/NotificationsSettings'));
+const ShortcutsSettings = React.lazy(() => import('@renderer/pages/settings/ShortcutsSettings'));
 const RemoteHostSettings = React.lazy(() => import('@renderer/pages/settings/RemoteHostSettings'));
 const ExtensionsSettings = React.lazy(() => import('@renderer/pages/settings/ExtensionsSettings'));
 const LoginPage = React.lazy(() => import('@renderer/pages/login'));
-const ComponentsShowcase = React.lazy(() => import('@renderer/pages/TestShowcase'));
+const ComponentsShowcase = React.lazy(() => import('@renderer/pages/dev/ComponentsShowcase'));
+/** 3.0 V10: the component showcase is routed in development builds only. */
+const SHOW_DEV_SHOWCASE = process.env.NODE_ENV !== 'production';
 const ScheduledTasksPage = React.lazy(() => import('@renderer/pages/cron/ScheduledTasksPage'));
 const TaskDetailPage = React.lazy(() => import('@renderer/pages/cron/ScheduledTasksPage/TaskDetailPage'));
 const TasksBoardPage = React.lazy(() => import('@renderer/pages/tasks/TasksBoardPage'));
@@ -187,11 +191,13 @@ const PanelRoute: React.FC<{ layout: React.ReactElement }> = ({ layout }) => {
           <Route path='/settings/usage' element={withRouteFallback(UsageSettings)} />
           <Route path='/settings/archived' element={withRouteFallback(ArchivedSettings)} />
           <Route path='/settings/system' element={withRouteFallback(SystemSettings)} />
+          <Route path='/settings/notifications' element={withRouteFallback(NotificationsSettings)} />
+          <Route path='/settings/shortcuts' element={withRouteFallback(ShortcutsSettings)} />
           <Route path='/settings/about' element={withRouteFallback(SystemSettings)} />
           <Route path='/settings/extensions' element={withRouteFallback(ExtensionsSettings)} />
           <Route path='/settings/ext/:tabId' element={withRouteFallback(ExtensionSettingsPage)} />
           <Route path='/settings' element={<Navigate to='/settings/agent' replace />} />
-          <Route path='/test/components' element={withRouteFallback(ComponentsShowcase)} />
+          {SHOW_DEV_SHOWCASE ? <Route path='/test/components' element={withRouteFallback(ComponentsShowcase)} /> : null}
           <Route path='/scheduled' element={withRouteFallback(ScheduledTasksPage)} />
           <Route path='/scheduled/:job_id' element={withRouteFallback(TaskDetailPage)} />
           <Route path='/tasks' element={withRouteFallback(TasksBoardPage)} />

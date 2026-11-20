@@ -307,7 +307,6 @@
   "assistantReorderHintShort": "Перетягніть для сортування",
   "fontSizeChat": "Розмір тексту чату",
   "mcpAuthRequired": "Потрібна автентифікація",
-  "groupApp": "Програма",
   "assistantGroupCreated": "Користувацькі асистенти",
   "assistantNoDefaultMcpsSelected": "MCP за замовчуванням не вибрано",
   "addModel": "Додати модель",
@@ -563,7 +562,6 @@
   "retry": "Retry",
   "skillFolderPath": "Шлях до папки з навичками",
   "baseUrlResetToDefault": "Скинути до типового",
-  "groupAiCore": "Ядро ШІ",
   "channels.selectFirst": "Виберіть канал та налаштуйте облікові дані.",
   "assistantMainAgent": "Agent",
   "imageInputSupported": "Увімкнено в налаштуваннях",
@@ -1452,7 +1450,6 @@
     "searchPlaceholder": "Пошук налаштувань",
     "searchEmpty": "Немає відповідних налаштувань"
   },
-  "groupAbout": "Інше",
   "promptPreview": "Попередній перегляд",
   "webui.copyPasswordTooltip": "Натисніть для копіювання пароля",
   "assistantDefaultPermissionLabel": "Дозвіл",
@@ -2053,5 +2050,46 @@
       "moderate": "Середній ризик",
       "dangerous": "Високий ризик"
     }
+  },
+  "notificationsPage": {
+    "navLabel": "Сповіщення",
+    "title": "Сповіщення",
+    "description": "Виберіть, коли CSBU WorkMate сповіщатиме вас, наприклад після завершення запланованого завдання.",
+    "movedHint": "Сповіщення тепер мають окрему сторінку налаштувань.",
+    "openPage": "Відкрити сповіщення"
+  },
+  "shortcutsPage": {
+    "navLabel": "Комбінації клавіш",
+    "title": "Комбінації клавіш",
+    "description": "Комбінації клавіш, які зараз підтримує CSBU WorkMate, для клавіатури цього комп'ютера.",
+    "readOnlyNote": "Комбінації клавіш поки не можна змінити.",
+    "desktopOnly": "Лише в настільному застосунку",
+    "or": "або",
+    "sections": {
+      "general": "Загальні",
+      "conversations": "Розмови",
+      "composer": "Поле введення",
+      "preview": "Попередній перегляд файлу"
+    },
+    "actions": {
+      "commandPalette": "Відкрити палітру команд",
+      "toggleSidebar": "Показати або приховати бічну панель",
+      "toggleWorkspace": "Показати або приховати панель робочої області",
+      "newConversation": "Нова розмова",
+      "nextConversation": "Наступна розмова",
+      "previousConversation": "Попередня розмова",
+      "send": "Надіслати повідомлення",
+      "newLine": "Новий рядок",
+      "saveToDraft": "Додати до чернеток",
+      "history": "Гортати надіслані повідомлення",
+      "leaveHistory": "Вийти з історії повідомлень",
+      "saveFile": "Зберегти файл",
+      "closeTab": "Закрити вкладку попереднього перегляду"
+    }
+  },
+  "pageIntro": {
+    "appearance": "Тема, кольори, розмір шрифту й масштаб.",
+    "system": "Мова, запуск, теки, тайм-аути та інші загальні налаштування застосунку.",
+    "pet": "Компаньйон на робочому столі, що реагує на дії ваших агентів."
   }
 }

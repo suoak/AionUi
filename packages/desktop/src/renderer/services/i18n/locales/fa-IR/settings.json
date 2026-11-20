@@ -305,7 +305,6 @@
   "assistantReorderHintShort": "برای تغییر ترتیب بکشید",
   "fontSizeChat": "اندازه متن چت",
   "mcpAuthRequired": "احراز هویت لازم است",
-  "groupApp": "برنامه",
   "assistantGroupCreated": "دستیارهای سفارشی",
   "assistantNoDefaultMcpsSelected": "MCP پیش‌فرضی انتخاب نشده است",
   "addModel": "افزودن مدل",
@@ -561,7 +560,6 @@
   "retry": "تلاش مجدد",
   "skillFolderPath": "مسیر پوشه مهارت",
   "baseUrlResetToDefault": "بازنشانی به پیش‌فرض",
-  "groupAiCore": "هسته هوش مصنوعی",
   "channels.selectFirst": "یک کانال انتخاب کنید و اعتبارنامه‌ها را پیکربندی کنید.",
   "assistantMainAgent": "ایجنت اصلی",
   "imageInputSupported": "فعال‌شده در پیکربندی",
@@ -1442,7 +1440,6 @@
     "searchPlaceholder": "جستجوی تنظیمات",
     "searchEmpty": "هیچ تنظیمی مطابقت ندارد"
   },
-  "groupAbout": "سایر",
   "promptPreview": "پیش‌نمایش",
   "webui.copyPasswordTooltip": "برای کپی رمز عبور کلیک کنید",
   "assistantDefaultPermissionLabel": "مجوز",
@@ -2039,5 +2036,46 @@
       "moderate": "ریسک متوسط",
       "dangerous": "ریسک زیاد"
     }
+  },
+  "notificationsPage": {
+    "navLabel": "اعلان‌ها",
+    "title": "اعلان‌ها",
+    "description": "انتخاب کنید CSBU WorkMate چه زمانی به شما اطلاع دهد، مثلاً وقتی یک کار زمان‌بندی‌شده تمام می‌شود.",
+    "movedHint": "اعلان‌ها اکنون صفحهٔ تنظیمات جداگانه دارند.",
+    "openPage": "باز کردن اعلان‌ها"
+  },
+  "shortcutsPage": {
+    "navLabel": "میان‌برهای صفحه‌کلید",
+    "title": "میان‌برهای صفحه‌کلید",
+    "description": "میان‌برهایی که CSBU WorkMate در حال حاضر پشتیبانی می‌کند، مطابق صفحه‌کلید این رایانه.",
+    "readOnlyNote": "هنوز امکان تغییر میان‌برها وجود ندارد.",
+    "desktopOnly": "فقط برنامهٔ دسکتاپ",
+    "or": "یا",
+    "sections": {
+      "general": "عمومی",
+      "conversations": "گفتگوها",
+      "composer": "کادر پیام",
+      "preview": "پیش‌نمایش فایل"
+    },
+    "actions": {
+      "commandPalette": "باز کردن پالت فرمان",
+      "toggleSidebar": "نمایش یا پنهان کردن نوار کناری",
+      "toggleWorkspace": "نمایش یا پنهان کردن پنل فضای کار",
+      "newConversation": "گفتگوی جدید",
+      "nextConversation": "گفتگوی بعدی",
+      "previousConversation": "گفتگوی قبلی",
+      "send": "ارسال پیام",
+      "newLine": "خط جدید",
+      "saveToDraft": "افزودن به جعبه پیش‌نویس",
+      "history": "مرور پیام‌های ارسال‌شده",
+      "leaveHistory": "خروج از تاریخچهٔ پیام",
+      "saveFile": "ذخیرهٔ فایل",
+      "closeTab": "بستن زبانهٔ پیش‌نمایش"
+    }
+  },
+  "pageIntro": {
+    "appearance": "پوسته، رنگ‌ها، اندازهٔ قلم و بزرگ‌نمایی.",
+    "system": "زبان، راه‌اندازی، پوشه‌ها، مهلت‌ها و دیگر ترجیحات کلی برنامه.",
+    "pet": "همراهی روی دسکتاپ که به کارهای عامل‌های شما واکنش نشان می‌دهد."
   }
 }

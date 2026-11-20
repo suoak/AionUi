@@ -305,7 +305,6 @@
   "assistantReorderHintShort": "Drag to reorder",
   "fontSizeChat": "Chat text size",
   "mcpAuthRequired": "Authentication required",
-  "groupApp": "Application",
   "assistantGroupCreated": "Custom Assistants",
   "assistantNoDefaultMcpsSelected": "No default MCP selected",
   "addModel": "Add Model",
@@ -561,7 +560,6 @@
   "retry": "Retry",
   "skillFolderPath": "Skill Folder Path",
   "baseUrlResetToDefault": "Reset to default",
-  "groupAiCore": "AI Core",
   "channels.selectFirst": "Select a channel and configure credentials.",
   "assistantMainAgent": "Agent",
   "imageInputSupported": "Enabled by configuration",
@@ -1442,7 +1440,6 @@
     "searchPlaceholder": "Search settings",
     "searchEmpty": "No settings match"
   },
-  "groupAbout": "Other",
   "promptPreview": "Preview",
   "webui.copyPasswordTooltip": "Click to copy password",
   "assistantDefaultPermissionLabel": "Permission",
@@ -2039,5 +2036,46 @@
       "moderate": "Medium risk",
       "dangerous": "High risk"
     }
+  },
+  "notificationsPage": {
+    "navLabel": "Notifications",
+    "title": "Notifications",
+    "description": "Choose when CSBU WorkMate notifies you, for example when a scheduled task finishes.",
+    "movedHint": "Notifications now have their own settings page.",
+    "openPage": "Open Notifications"
+  },
+  "shortcutsPage": {
+    "navLabel": "Keyboard shortcuts",
+    "title": "Keyboard shortcuts",
+    "description": "Shortcuts CSBU WorkMate handles today, shown for this computer's keyboard.",
+    "readOnlyNote": "Shortcuts can't be changed yet.",
+    "desktopOnly": "Desktop app only",
+    "or": "or",
+    "sections": {
+      "general": "General",
+      "conversations": "Conversations",
+      "composer": "Message box",
+      "preview": "File preview"
+    },
+    "actions": {
+      "commandPalette": "Open the command palette",
+      "toggleSidebar": "Show or hide the sidebar",
+      "toggleWorkspace": "Show or hide the workspace panel",
+      "newConversation": "New conversation",
+      "nextConversation": "Next conversation",
+      "previousConversation": "Previous conversation",
+      "send": "Send message",
+      "newLine": "New line",
+      "saveToDraft": "Save to Draft box",
+      "history": "Browse your sent messages",
+      "leaveHistory": "Leave message history",
+      "saveFile": "Save the file",
+      "closeTab": "Close the preview tab"
+    }
+  },
+  "pageIntro": {
+    "appearance": "Theme, colors, font size and zoom.",
+    "system": "Language, startup, folders, timeouts and other app-wide preferences.",
+    "pet": "A desktop companion that reacts to what your agents are doing."
   }
 }

@@ -197,7 +197,8 @@
     "archiveProject": "歸檔專案",
     "archiveProjectTitle": "歸檔專案",
     "archiveProjectConfirm": "確定歸檔專案「{{name}}」嗎？專案下的 {{count}} 個對話也會一起歸檔。歸檔後可在設定的歸檔頁恢復或刪除。",
-    "archiving": "歸檔中..."
+    "archiving": "歸檔中...",
+    "evolveSkill": "提煉為技能"
   },
   "noAgentsAvailable": "沒有可用的 Agent",
   "agentError": {

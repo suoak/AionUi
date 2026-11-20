@@ -305,7 +305,6 @@
   "assistantReorderHintShort": "Zum Umsortieren ziehen",
   "fontSizeChat": "Chat-Textgröße",
   "mcpAuthRequired": "Authentifizierung erforderlich",
-  "groupApp": "Anwendung",
   "assistantGroupCreated": "Benutzerdefinierte Assistenten",
   "assistantNoDefaultMcpsSelected": "Kein Standard-MCP ausgewählt",
   "addModel": "Modell hinzufügen",
@@ -561,7 +560,6 @@
   "retry": "Erneut versuchen",
   "skillFolderPath": "Skill-Ordnerpfad",
   "baseUrlResetToDefault": "Auf Standard zurücksetzen",
-  "groupAiCore": "KI-Kern",
   "channels.selectFirst": "Kanal auswählen und Anmeldedaten konfigurieren.",
   "assistantMainAgent": "Agent",
   "imageInputSupported": "Durch Konfiguration aktiviert",
@@ -1442,7 +1440,6 @@
     "searchPlaceholder": "Einstellungen durchsuchen",
     "searchEmpty": "Keine passenden Einstellungen"
   },
-  "groupAbout": "Sonstiges",
   "promptPreview": "Vorschau",
   "webui.copyPasswordTooltip": "Zum Kopieren des Passworts klicken",
   "assistantDefaultPermissionLabel": "Berechtigung",
@@ -2039,5 +2036,46 @@
       "moderate": "Mittleres Risiko",
       "dangerous": "Hohes Risiko"
     }
+  },
+  "notificationsPage": {
+    "navLabel": "Benachrichtigungen",
+    "title": "Benachrichtigungen",
+    "description": "Legen Sie fest, wann CSBU WorkMate Sie benachrichtigt, z. B. wenn eine geplante Aufgabe fertig ist.",
+    "movedHint": "Benachrichtigungen haben jetzt eine eigene Einstellungsseite.",
+    "openPage": "Benachrichtigungen öffnen"
+  },
+  "shortcutsPage": {
+    "navLabel": "Tastenkürzel",
+    "title": "Tastenkürzel",
+    "description": "Tastenkürzel, die CSBU WorkMate derzeit unterstützt, passend zur Tastatur dieses Computers.",
+    "readOnlyNote": "Tastenkürzel lassen sich noch nicht ändern.",
+    "desktopOnly": "Nur Desktop-App",
+    "or": "oder",
+    "sections": {
+      "general": "Allgemein",
+      "conversations": "Unterhaltungen",
+      "composer": "Eingabefeld",
+      "preview": "Dateivorschau"
+    },
+    "actions": {
+      "commandPalette": "Befehlspalette öffnen",
+      "toggleSidebar": "Seitenleiste ein- oder ausblenden",
+      "toggleWorkspace": "Arbeitsbereich ein- oder ausblenden",
+      "newConversation": "Neue Unterhaltung",
+      "nextConversation": "Nächste Unterhaltung",
+      "previousConversation": "Vorherige Unterhaltung",
+      "send": "Nachricht senden",
+      "newLine": "Neue Zeile",
+      "saveToDraft": "Zum Entwurfsfach hinzufügen",
+      "history": "Gesendete Nachrichten durchblättern",
+      "leaveHistory": "Nachrichtenverlauf verlassen",
+      "saveFile": "Datei speichern",
+      "closeTab": "Vorschau-Tab schließen"
+    }
+  },
+  "pageIntro": {
+    "appearance": "Design, Farben, Schriftgröße und Zoom.",
+    "system": "Sprache, Start, Ordner, Zeitlimits und weitere app-weite Einstellungen.",
+    "pet": "Ein Desktop-Begleiter, der auf die Aktivität Ihrer Agenten reagiert."
   }
 }
