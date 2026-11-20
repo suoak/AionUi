@@ -300,7 +300,6 @@
   "assistantReorderHintShort": "Faites glisser pour réorganiser",
   "fontSizeChat": "Taille du texte du chat",
   "mcpAuthRequired": "Authentification requise",
-  "groupApp": "Application",
   "assistantGroupCreated": "Assistants personnalisés",
   "assistantNoDefaultMcpsSelected": "Aucun MCP par défaut sélectionné",
   "addModel": "Ajouter un modèle",
@@ -556,7 +555,6 @@
   "retry": "Réessayer",
   "skillFolderPath": "Chemin du dossier de compétences",
   "baseUrlResetToDefault": "Réinitialiser aux valeurs par défaut",
-  "groupAiCore": "Noyau IA",
   "channels.selectFirst": "Sélectionnez un canal et configurez les identifiants.",
   "assistantMainAgent": "Agent principal",
   "imageInputSupported": "Activé par la configuration",
@@ -1437,7 +1435,6 @@
     "searchPlaceholder": "Rechercher dans les paramètres",
     "searchEmpty": "Aucun paramètre ne correspond"
   },
-  "groupAbout": "Autres",
   "promptPreview": "Aperçu",
   "webui.copyPasswordTooltip": "Cliquer pour copier le mot de passe",
   "assistantDefaultPermissionLabel": "Autorisation",

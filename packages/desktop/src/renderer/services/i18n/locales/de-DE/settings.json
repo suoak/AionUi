@@ -300,7 +300,6 @@
   "assistantReorderHintShort": "Zum Umsortieren ziehen",
   "fontSizeChat": "Chat-Textgröße",
   "mcpAuthRequired": "Authentifizierung erforderlich",
-  "groupApp": "Anwendung",
   "assistantGroupCreated": "Benutzerdefinierte Assistenten",
   "assistantNoDefaultMcpsSelected": "Kein Standard-MCP ausgewählt",
   "addModel": "Modell hinzufügen",
@@ -556,7 +555,6 @@
   "retry": "Erneut versuchen",
   "skillFolderPath": "Skill-Ordnerpfad",
   "baseUrlResetToDefault": "Auf Standard zurücksetzen",
-  "groupAiCore": "KI-Kern",
   "channels.selectFirst": "Kanal auswählen und Anmeldedaten konfigurieren.",
   "assistantMainAgent": "Agent",
   "imageInputSupported": "Durch Konfiguration aktiviert",
@@ -1437,7 +1435,6 @@
     "searchPlaceholder": "Einstellungen durchsuchen",
     "searchEmpty": "Keine passenden Einstellungen"
   },
-  "groupAbout": "Sonstiges",
   "promptPreview": "Vorschau",
   "webui.copyPasswordTooltip": "Zum Kopieren des Passworts klicken",
   "assistantDefaultPermissionLabel": "Berechtigung",

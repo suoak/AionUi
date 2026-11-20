@@ -302,7 +302,6 @@
   "assistantReorderHintShort": "Перетащите для сортировки",
   "fontSizeChat": "Размер текста в чате",
   "mcpAuthRequired": "Требуется аутентификация",
-  "groupApp": "Приложение",
   "assistantGroupCreated": "Пользовательские ассистенты",
   "assistantNoDefaultMcpsSelected": "MCP по умолчанию не выбран",
   "addModel": "Добавить модель",
@@ -559,7 +558,6 @@
   "skillFolderPath": "Путь к папке навыков",
   "baseUrlResetToDefault": "Сбросить по умолчанию",
   "channels.selectFirst": "Выберите канал и настройте учётные данные.",
-  "groupAiCore": "Ядро ИИ",
   "assistantMainAgent": "Агент",
   "imageInputSupported": "Включено в настройках",
   "assistantGoChat": "Чат",
@@ -1447,7 +1445,6 @@
     "searchPlaceholder": "Поиск настроек",
     "searchEmpty": "Нет подходящих настроек"
   },
-  "groupAbout": "О программе",
   "promptPreview": "Предпросмотр",
   "webui.copyPasswordTooltip": "Нажмите для копирования пароля",
   "assistantDefaultPermissionLabel": "Разрешение",

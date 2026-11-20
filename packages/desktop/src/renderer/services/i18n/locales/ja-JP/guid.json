@@ -13,5 +13,12 @@
     "specifyWorkspace": "プロジェクトフォルダを選択",
     "searchPlaceholder": "プロジェクトを検索…",
     "noProject": "プロジェクトなし"
+  },
+  "agentPreview": {
+    "title": "エージェントの試用プレビュー",
+    "published": "公開済みの設定をプレビューしています。",
+    "draft": "現在の下書きをプレビューしています。試用後に指示を改善したり、スキルに抽出したりできます。",
+    "backToImprove": "戻って改善",
+    "openAgent": "エージェントの詳細を開く"
   }
 }

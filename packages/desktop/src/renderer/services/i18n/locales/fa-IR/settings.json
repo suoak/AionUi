@@ -300,7 +300,6 @@
   "assistantReorderHintShort": "برای تغییر ترتیب بکشید",
   "fontSizeChat": "اندازه متن چت",
   "mcpAuthRequired": "احراز هویت لازم است",
-  "groupApp": "برنامه",
   "assistantGroupCreated": "دستیارهای سفارشی",
   "assistantNoDefaultMcpsSelected": "MCP پیش‌فرضی انتخاب نشده است",
   "addModel": "افزودن مدل",
@@ -556,7 +555,6 @@
   "retry": "تلاش مجدد",
   "skillFolderPath": "مسیر پوشه مهارت",
   "baseUrlResetToDefault": "بازنشانی به پیش‌فرض",
-  "groupAiCore": "هسته هوش مصنوعی",
   "channels.selectFirst": "یک کانال انتخاب کنید و اعتبارنامه‌ها را پیکربندی کنید.",
   "assistantMainAgent": "ایجنت اصلی",
   "imageInputSupported": "فعال‌شده در پیکربندی",
@@ -1437,7 +1435,6 @@
     "searchPlaceholder": "جستجوی تنظیمات",
     "searchEmpty": "هیچ تنظیمی مطابقت ندارد"
   },
-  "groupAbout": "سایر",
   "promptPreview": "پیش‌نمایش",
   "webui.copyPasswordTooltip": "برای کپی رمز عبور کلیک کنید",
   "assistantDefaultPermissionLabel": "مجوز",

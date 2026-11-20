@@ -305,7 +305,6 @@
   "assistantReorderHintShort": "Drag to reorder",
   "fontSizeChat": "Chat text size",
   "mcpAuthRequired": "Authentication required",
-  "groupApp": "Application",
   "assistantGroupCreated": "Custom Assistants",
   "assistantNoDefaultMcpsSelected": "No default MCP selected",
   "addModel": "Add Model",
@@ -561,7 +560,6 @@
   "retry": "Retry",
   "skillFolderPath": "Skill Folder Path",
   "baseUrlResetToDefault": "Reset to default",
-  "groupAiCore": "AI Core",
   "channels.selectFirst": "Select a channel and configure credentials.",
   "assistantMainAgent": "Agent",
   "imageInputSupported": "Enabled by configuration",
@@ -1442,7 +1440,6 @@
     "searchPlaceholder": "Search settings",
     "searchEmpty": "No settings match"
   },
-  "groupAbout": "Other",
   "promptPreview": "Preview",
   "webui.copyPasswordTooltip": "Click to copy password",
   "assistantDefaultPermissionLabel": "Permission",

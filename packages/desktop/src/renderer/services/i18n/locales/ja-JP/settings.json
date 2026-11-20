@@ -302,7 +302,6 @@
   "assistantReorderHintShort": "ドラッグして並べ替え",
   "fontSizeChat": "チャットの文字サイズ",
   "mcpAuthRequired": "認証が必要です",
-  "groupApp": "アプリケーション",
   "assistantGroupCreated": "カスタムアシスタント",
   "assistantNoDefaultMcpsSelected": "デフォルト MCP が選択されていません",
   "addModel": "モデルを追加",
@@ -558,7 +557,6 @@
   "retry": "Retry",
   "skillFolderPath": "スキルフォルダパス",
   "baseUrlResetToDefault": "デフォルトに戻す",
-  "groupAiCore": "AI コア",
   "channels.selectFirst": "チャンネルを選択して認証情報を設定します。",
   "assistantMainAgent": "Agent",
   "imageInputSupported": "設定で有効",
@@ -1439,7 +1437,6 @@
     "searchPlaceholder": "設定を検索",
     "searchEmpty": "一致する設定はありません"
   },
-  "groupAbout": "その他",
   "promptPreview": "プレビュー",
   "webui.copyPasswordTooltip": "クリックでパスワードをコピー",
   "assistantDefaultPermissionLabel": "権限",

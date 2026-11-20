@@ -300,7 +300,6 @@
   "assistantReorderHintShort": "Arraste para reordenar",
   "fontSizeChat": "Tamanho do texto do chat",
   "mcpAuthRequired": "Autenticação obrigatória",
-  "groupApp": "Aplicativo",
   "assistantGroupCreated": "Assistentes personalizados",
   "assistantNoDefaultMcpsSelected": "Nenhum MCP padrão selecionado",
   "addModel": "Adicionar Modelo",
@@ -556,7 +555,6 @@
   "retry": "Tentar novamente",
   "skillFolderPath": "Caminho da Pasta da Habilidade",
   "baseUrlResetToDefault": "Redefinir para o padrão",
-  "groupAiCore": "Core da IA",
   "channels.selectFirst": "Selecione um canal e configure as credenciais.",
   "assistantMainAgent": "Agent",
   "imageInputSupported": "Ativado pela configuração",
@@ -1440,7 +1438,6 @@
     "searchPlaceholder": "Pesquisar configurações",
     "searchEmpty": "Nenhuma configuração corresponde"
   },
-  "groupAbout": "Outros",
   "promptPreview": "Visualizar",
   "webui.copyPasswordTooltip": "Clique para copiar a senha",
   "assistantDefaultPermissionLabel": "Permissão",

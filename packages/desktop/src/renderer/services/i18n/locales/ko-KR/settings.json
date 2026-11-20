@@ -302,7 +302,6 @@
   "assistantReorderHintShort": "드래그하여 순서 변경",
   "fontSizeChat": "채팅 텍스트 크기",
   "mcpAuthRequired": "인증 필요",
-  "groupApp": "애플리케이션",
   "assistantGroupCreated": "사용자 지정 어시스턴트",
   "assistantNoDefaultMcpsSelected": "기본 MCP가 선택되지 않았습니다",
   "addModel": "모델 추가",
@@ -558,7 +557,6 @@
   "retry": "Retry",
   "skillFolderPath": "스킬 폴더 경로",
   "baseUrlResetToDefault": "기본값으로 재설정",
-  "groupAiCore": "AI 코어",
   "channels.selectFirst": "채널을 선택하고 인증 정보를 설정하세요.",
   "assistantMainAgent": "Agent",
   "imageInputSupported": "설정에서 활성화됨",
@@ -1439,7 +1437,6 @@
     "searchPlaceholder": "설정 검색",
     "searchEmpty": "일치하는 설정이 없습니다"
   },
-  "groupAbout": "기타",
   "promptPreview": "미리보기",
   "webui.copyPasswordTooltip": "클릭하여 비밀번호 복사",
   "assistantDefaultPermissionLabel": "권한",
