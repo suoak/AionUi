@@ -9,7 +9,7 @@ import type { Theme } from '@/common/theme/types';
 import { ipcBridge } from '@/common';
 import { uuid } from '@/common/utils';
 import { useThemeContext } from '@renderer/hooks/context/ThemeContext.tsx';
-import { Button, Message, Modal } from '@arco-design/web-react';
+import { Button, Collapse, Message, Modal } from '@arco-design/web-react';
 import { EditTwo, CheckOne } from '@icon-park/react';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -17,7 +17,16 @@ import CssThemeModal from './CssThemeModal.tsx';
 import { BUILTIN_THEMES, DEFAULT_THEME_ID } from './presets.ts';
 import { BACKGROUND_BLOCK_START, injectBackgroundCssBlock } from './backgroundUtils.ts';
 import { resolveExtensionAssetUrl } from '@renderer/utils/platform.ts';
-import { LIGHT_THEME_ID, SYSTEM_THEME_ID } from '@/common/theme/constants';
+import {
+  CLASSIC_DARK_THEME_ID,
+  CLASSIC_LIGHT_THEME_ID,
+  CLASSIC_SYSTEM_THEME_ID,
+  DARK_THEME_ID,
+  LIGHT_THEME_ID,
+  SYSTEM_SENTINEL_THEME_IDS,
+  SYSTEM_THEME_ID,
+} from '@/common/theme/constants';
+import { DECORATIVE_THEME_IDS } from '@renderer/theme/builtinThemes';
 
 interface ThemePreviewPalette {
   appBg: string;
@@ -211,15 +220,23 @@ const ThemeLayoutPreview: React.FC<{ palette: ThemePreviewPalette }> = ({ palett
   );
 };
 
-/** Diagonal split preview for the "Follow System" card: light top-left, dark bottom-right. */
-const SystemThemePreview: React.FC = () => (
+/** Diagonal split preview for a "Follow System" card: light top-left, dark bottom-right. */
+const SystemThemePreview: React.FC<{ light: ThemePreviewPalette; dark: ThemePreviewPalette }> = ({ light, dark }) => (
   <div className='absolute inset-0 pointer-events-none'>
-    <ThemeLayoutPreview palette={fallbackThemePreviewPaletteByMode.light} />
+    <ThemeLayoutPreview palette={light} />
     <div className='absolute inset-0' style={{ clipPath: 'polygon(100% 0, 100% 100%, 0 100%)' }}>
-      <ThemeLayoutPreview palette={fallbackThemePreviewPaletteByMode.dark} />
+      <ThemeLayoutPreview palette={dark} />
     </div>
   </div>
 );
+
+/** i18n keys for built-in theme names; other themes show their own `name`. */
+const BUILTIN_THEME_NAME_KEYS: Record<string, string> = {
+  [LIGHT_THEME_ID]: 'settings.cssTheme.builtinNames.ember',
+  [DARK_THEME_ID]: 'settings.cssTheme.builtinNames.dusk',
+  [CLASSIC_LIGHT_THEME_ID]: 'settings.cssTheme.builtinNames.classicLight',
+  [CLASSIC_DARK_THEME_ID]: 'settings.cssTheme.builtinNames.classicDark',
+};
 
 const ensureBackgroundCss = <T extends { id?: string; cover?: string; css?: string; builtin?: boolean }>(
   theme: T
@@ -256,22 +273,45 @@ const CssThemeSettings: React.FC = () => {
     return map;
   }, [themes, currentTheme]);
 
-  // Virtual "Follow System" card, third in the gallery (after Light and Dark).
-  // Not part of BUILTIN_THEMES — it must never enter resolution/dedup/persistence.
-  const displayThemes = useMemo(() => {
-    if (themes.length === 0) return themes;
-    const systemCard: Theme = {
-      id: SYSTEM_THEME_ID,
-      name: t('settings.cssTheme.followSystem'),
+  // Virtual "Follow System" cards: one after Ember / Dusk, one after the classic pair.
+  // Not part of BUILTIN_THEMES — they must never enter resolution/dedup/persistence.
+  // Decorative presets are split out into the collapsed "More themes" group.
+  const { primaryThemes, decorativeThemes } = useMemo(() => {
+    if (themes.length === 0) return { primaryThemes: themes, decorativeThemes: [] as Theme[] };
+    const sentinel = (id: string, name: string): Theme => ({
+      id,
+      name,
       appearance: 'light',
       builtin: true,
       created_at: 0,
       updated_at: 0,
+    });
+    const primary: Theme[] = [];
+    const decorative: Theme[] = [];
+    for (const theme of themes) {
+      (DECORATIVE_THEME_IDS.has(theme.id) ? decorative : primary).push(theme);
+    }
+    const insertAfter = (afterId: string, card: Theme) => {
+      const index = primary.findIndex((theme) => theme.id === afterId);
+      primary.splice(index === -1 ? primary.length : index + 1, 0, card);
     };
-    const arr = [...themes];
-    arr.splice(Math.min(2, arr.length), 0, systemCard);
-    return arr;
+    insertAfter(DARK_THEME_ID, sentinel(SYSTEM_THEME_ID, t('settings.cssTheme.followSystem')));
+    insertAfter(CLASSIC_DARK_THEME_ID, sentinel(CLASSIC_SYSTEM_THEME_ID, t('settings.cssTheme.classicFollowSystem')));
+    return { primaryThemes: primary, decorativeThemes: decorative };
   }, [themes, t]);
+
+  const themeDisplayName = useCallback(
+    (theme: Theme) => (BUILTIN_THEME_NAME_KEYS[theme.id] ? t(BUILTIN_THEME_NAME_KEYS[theme.id]) : theme.name),
+    [t]
+  );
+
+  const paletteFor = useCallback(
+    (id: string, mode: 'light' | 'dark') => {
+      const css = themes.find((theme) => theme.id === id)?.css;
+      return css ? extractThemePreviewPalette(css, mode) : fallbackThemePreviewPaletteByMode[mode];
+    },
+    [themes]
+  );
 
   // 加载主题列表 / Load theme list
   useEffect(() => {
@@ -326,12 +366,12 @@ const CssThemeSettings: React.FC = () => {
     async (theme: Theme) => {
       try {
         await selectTheme(theme.id);
-        Message.success(t('settings.cssTheme.applied', { name: theme.name }));
+        Message.success(t('settings.cssTheme.applied', { name: themeDisplayName(theme) }));
       } catch {
         Message.error(t('settings.cssTheme.applyFailed'));
       }
     },
-    [selectTheme, t]
+    [selectTheme, t, themeDisplayName]
   );
 
   /**
@@ -435,6 +475,63 @@ const CssThemeSettings: React.FC = () => {
     [themes, activeThemeId, selectTheme, t]
   );
 
+  const renderThemeCard = (theme: Theme) => {
+    const previewPalette =
+      themePreviewPalettes.get(theme.id) ||
+      fallbackThemePreviewPaletteByMode[currentTheme === 'dark' ? 'dark' : 'light'];
+    const cardStyle = theme.cover
+      ? {
+          backgroundImage: `url(${theme.cover})`,
+          backgroundSize: '100% 100%',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat',
+          backgroundColor: previewPalette.appBg,
+        }
+      : { backgroundColor: previewPalette.appBg };
+    return (
+      <div
+        key={theme.id}
+        data-testid={`theme-card-${theme.id}`}
+        data-active={activeThemeId === theme.id}
+        className={`relative cursor-pointer rounded-12px overflow-hidden border-2 transition-all duration-200 h-112px w-200px flex-shrink-0 ${activeThemeId === theme.id ? 'border-[var(--color-primary)]' : 'border-transparent hover:border-border-2'}`}
+        style={cardStyle}
+        onClick={() => handleSelectTheme(theme)}
+        onMouseEnter={() => setHoveredThemeId(theme.id)}
+        onMouseLeave={() => setHoveredThemeId(null)}
+      >
+        {SYSTEM_SENTINEL_THEME_IDS.has(theme.id) ? (
+          <SystemThemePreview
+            light={paletteFor(theme.id === SYSTEM_THEME_ID ? LIGHT_THEME_ID : CLASSIC_LIGHT_THEME_ID, 'light')}
+            dark={paletteFor(theme.id === SYSTEM_THEME_ID ? DARK_THEME_ID : CLASSIC_DARK_THEME_ID, 'dark')}
+          />
+        ) : (
+          !theme.cover && <ThemeLayoutPreview palette={previewPalette} />
+        )}
+
+        {/* 底部渐变遮罩与名称、编辑按钮 / Bottom gradient overlay with name and edit button */}
+        <div className='absolute bottom-0 start-0 end-0 h-1/3 bg-gradient-to-t from-black/60 to-transparent flex items-end justify-between p-8px'>
+          <span className='text-13px text-white truncate flex-1'>{themeDisplayName(theme)}</span>
+          {/* 编辑按钮（仅用户主题） / Edit button (user themes only) */}
+          {hoveredThemeId === theme.id && !theme.builtin && (
+            <div
+              className='p-4px rounded-6px bg-white/20 cursor-pointer hover:bg-white/40 transition-colors ms-8px'
+              onClick={(e) => handleEditTheme(theme, e)}
+            >
+              <EditTwo theme='outline' size='16' fill='#fff' />
+            </div>
+          )}
+        </div>
+
+        {/* 选中标记 / Selected indicator */}
+        {activeThemeId === theme.id && (
+          <div className='absolute top-8px end-8px'>
+            <CheckOne theme='filled' size='20' fill='var(--color-primary)' />
+          </div>
+        )}
+      </div>
+    );
+  };
+
   return (
     <div className='space-y-12px'>
       {/* 标题栏 / Header */}
@@ -446,65 +543,21 @@ const CssThemeSettings: React.FC = () => {
       </div>
 
       {/* 主题卡片列表 / Theme card list.
-          Fixed-width cards that wrap: a full row packs several cards, while a
-          short list (e.g. just Light/Dark/Follow System) stays at its natural
-          size and leaves the trailing space empty instead of stretching each
-          card across the whole row. */}
-      <div className='flex flex-wrap gap-12px'>
-        {displayThemes.map((theme) => {
-          const previewPalette =
-            themePreviewPalettes.get(theme.id) ||
-            fallbackThemePreviewPaletteByMode[currentTheme === 'dark' ? 'dark' : 'light'];
-          const cardStyle = theme.cover
-            ? {
-                backgroundImage: `url(${theme.cover})`,
-                backgroundSize: '100% 100%',
-                backgroundPosition: 'center',
-                backgroundRepeat: 'no-repeat',
-                backgroundColor: previewPalette.appBg,
-              }
-            : { backgroundColor: previewPalette.appBg };
-          return (
-            <div
-              key={theme.id}
-              data-testid={`theme-card-${theme.id}`}
-              data-active={activeThemeId === theme.id}
-              className={`relative cursor-pointer rounded-12px overflow-hidden border-2 transition-all duration-200 h-112px w-200px flex-shrink-0 ${activeThemeId === theme.id ? 'border-[var(--color-primary)]' : 'border-transparent hover:border-border-2'}`}
-              style={cardStyle}
-              onClick={() => handleSelectTheme(theme)}
-              onMouseEnter={() => setHoveredThemeId(theme.id)}
-              onMouseLeave={() => setHoveredThemeId(null)}
-            >
-              {theme.id === SYSTEM_THEME_ID ? (
-                <SystemThemePreview />
-              ) : (
-                !theme.cover && <ThemeLayoutPreview palette={previewPalette} />
-              )}
+          Fixed-width cards that wrap. Ember / Dusk / classic and user themes come
+          first; decorative presets sit in a collapsed "More themes" group. */}
+      <div className='flex flex-wrap gap-12px'>{primaryThemes.map(renderThemeCard)}</div>
 
-              {/* 底部渐变遮罩与名称、编辑按钮 / Bottom gradient overlay with name and edit button */}
-              <div className='absolute bottom-0 start-0 end-0 h-1/3 bg-gradient-to-t from-black/60 to-transparent flex items-end justify-between p-8px'>
-                <span className='text-13px text-white truncate flex-1'>{theme.name}</span>
-                {/* 编辑按钮（仅用户主题） / Edit button (user themes only) */}
-                {hoveredThemeId === theme.id && !theme.builtin && (
-                  <div
-                    className='p-4px rounded-6px bg-white/20 cursor-pointer hover:bg-white/40 transition-colors ms-8px'
-                    onClick={(e) => handleEditTheme(theme, e)}
-                  >
-                    <EditTwo theme='outline' size='16' fill='#fff' />
-                  </div>
-                )}
-              </div>
-
-              {/* 选中标记 / Selected indicator */}
-              {activeThemeId === theme.id && (
-                <div className='absolute top-8px end-8px'>
-                  <CheckOne theme='filled' size='20' fill='var(--color-primary)' />
-                </div>
-              )}
-            </div>
-          );
-        })}
-      </div>
+      {decorativeThemes.length > 0 && (
+        <Collapse
+          bordered={false}
+          defaultActiveKey={DECORATIVE_THEME_IDS.has(activeThemeId) ? ['more'] : []}
+          data-testid='theme-more-themes'
+        >
+          <Collapse.Item name='more' header={t('settings.cssTheme.moreThemes')}>
+            <div className='flex flex-wrap gap-12px'>{decorativeThemes.map(renderThemeCard)}</div>
+          </Collapse.Item>
+        </Collapse>
+      )}
 
       {/* 主题编辑弹窗 / Theme edit modal */}
       <CssThemeModal

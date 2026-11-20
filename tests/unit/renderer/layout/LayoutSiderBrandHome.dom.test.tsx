@@ -62,6 +62,7 @@ vi.mock('@/renderer/components/settings/UpdateNotificationCard', () => ({
 vi.mock('@renderer/hooks/system/useDeepLink', () => ({ useDeepLink: () => {} }));
 vi.mock('@renderer/hooks/system/notification/useNotificationClick', () => ({ useNotificationClick: () => {} }));
 vi.mock('@renderer/hooks/system/notification/useBrowserNotification', () => ({ useBrowserNotification: () => {} }));
+vi.mock('@renderer/theme/useThemeRefreshNotice', () => ({ useThemeRefreshNotice: () => {} }));
 vi.mock('@renderer/hooks/file/useDirectorySelection', () => ({
   useDirectorySelection: () => ({ contextHolder: null }),
 }));

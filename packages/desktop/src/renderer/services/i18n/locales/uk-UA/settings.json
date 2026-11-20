@@ -365,7 +365,21 @@
     "addToPreset": "Додати тему",
     "name": "Назва",
     "applyFailed": "Не вдалося застосувати тему",
-    "applied": "Застосовано тему: {{name}}"
+    "applied": "Застосовано тему: {{name}}",
+    "builtinNames": {
+      "ember": "Ember · Світла",
+      "dusk": "Dusk · Темна",
+      "classicLight": "Класична світла",
+      "classicDark": "Класична темна"
+    },
+    "classicFollowSystem": "Класична · Як у системі",
+    "moreThemes": "Інші теми",
+    "refreshNotice": {
+      "title": "Новий вигляд: Dusk & Ember",
+      "content": "У CSBU WorkMate 3.0 за замовчуванням використовуються теми Ember (світла) і Dusk (темна). Змінити можна будь-коли в розділі «Налаштування › Вигляд».",
+      "keep": "Залишити новий вигляд",
+      "restoreClassic": "Повернути класичний вигляд"
+    }
   },
   "customModelSupportNote": "Примітка: Наразі лише CSBU WorkMate підтримує власні моделі.",
   "webui.allowRemote": "Дозволити віддалений доступ",

@@ -365,7 +365,21 @@
     "addToPreset": "테마 추가",
     "name": "이름",
     "applyFailed": "테마 적용 실패",
-    "applied": "적용된 테마: {{name}}"
+    "applied": "적용된 테마: {{name}}",
+    "builtinNames": {
+      "ember": "Ember · 라이트",
+      "dusk": "Dusk · 다크",
+      "classicLight": "클래식 라이트",
+      "classicDark": "클래식 다크"
+    },
+    "classicFollowSystem": "클래식 · 시스템 설정 따르기",
+    "moreThemes": "더 많은 테마",
+    "refreshNotice": {
+      "title": "새로운 디자인: Dusk & Ember",
+      "content": "CSBU WorkMate 3.0은 Ember(라이트)와 Dusk(다크) 테마를 기본으로 사용합니다. 설정 › 모양에서 언제든지 바꿀 수 있습니다.",
+      "keep": "새 디자인 유지",
+      "restoreClassic": "클래식 디자인으로 복원"
+    }
   },
   "customModelSupportNote": "참고: 현재 CSBU WorkMate만 사용자 지정 모델을 지원합니다.",
   "webui.allowRemote": "원격 접근 허용",

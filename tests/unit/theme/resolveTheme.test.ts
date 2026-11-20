@@ -1,6 +1,19 @@
 import { describe, it, expect } from 'vitest';
-import { resolveActiveTheme } from '@/common/theme/resolveTheme';
-import { LIGHT_THEME_ID, DARK_THEME_ID, SYSTEM_THEME_ID } from '@/common/theme/constants';
+import {
+  appearanceToggleTargetId,
+  classicThemeIdFor,
+  isClassicThemeId,
+  resolveActiveTheme,
+  resolveThemeId,
+} from '@/common/theme/resolveTheme';
+import {
+  LIGHT_THEME_ID,
+  DARK_THEME_ID,
+  SYSTEM_THEME_ID,
+  CLASSIC_LIGHT_THEME_ID,
+  CLASSIC_DARK_THEME_ID,
+  CLASSIC_SYSTEM_THEME_ID,
+} from '@/common/theme/constants';
 import type { Theme } from '@/common/theme/types';
 
 const mk = (id: string, appearance: 'light' | 'dark' = 'light'): Theme => ({
@@ -63,5 +76,35 @@ describe('resolveActiveTheme', () => {
   });
   it('falls back to Light when system resolves to a missing Dark theme', () => {
     expect(resolveActiveTheme(SYSTEM_THEME_ID, [light, userTheme], true).id).toBe(LIGHT_THEME_ID);
+  });
+});
+
+describe('classic themes (3.0 opt-out)', () => {
+  const classicLight = mk(CLASSIC_LIGHT_THEME_ID);
+  const classicDark = mk(CLASSIC_DARK_THEME_ID, 'dark');
+  const all = [light, dark, classicLight, classicDark];
+
+  it('resolves the classic follow-system sentinel by OS appearance', () => {
+    expect(resolveActiveTheme(CLASSIC_SYSTEM_THEME_ID, all, true).id).toBe(CLASSIC_DARK_THEME_ID);
+    expect(resolveActiveTheme(CLASSIC_SYSTEM_THEME_ID, all, false).id).toBe(CLASSIC_LIGHT_THEME_ID);
+    expect(resolveThemeId(CLASSIC_SYSTEM_THEME_ID)).toBe(CLASSIC_LIGHT_THEME_ID);
+  });
+
+  it('maps Ember / Dusk / Follow System to their classic equivalents', () => {
+    expect(classicThemeIdFor(LIGHT_THEME_ID)).toBe(CLASSIC_LIGHT_THEME_ID);
+    expect(classicThemeIdFor(DARK_THEME_ID)).toBe(CLASSIC_DARK_THEME_ID);
+    expect(classicThemeIdFor(SYSTEM_THEME_ID)).toBe(CLASSIC_SYSTEM_THEME_ID);
+    expect(classicThemeIdFor('hello-kitty')).toBeNull();
+    expect(classicThemeIdFor(CLASSIC_DARK_THEME_ID)).toBeNull();
+  });
+
+  it('keeps the quick light/dark toggle inside the chosen family', () => {
+    expect(appearanceToggleTargetId(LIGHT_THEME_ID, 'dark')).toBe(DARK_THEME_ID);
+    expect(appearanceToggleTargetId(null, 'light')).toBe(LIGHT_THEME_ID);
+    expect(appearanceToggleTargetId('u1', 'dark')).toBe(DARK_THEME_ID);
+    expect(appearanceToggleTargetId(CLASSIC_LIGHT_THEME_ID, 'dark')).toBe(CLASSIC_DARK_THEME_ID);
+    expect(appearanceToggleTargetId(CLASSIC_SYSTEM_THEME_ID, 'light')).toBe(CLASSIC_LIGHT_THEME_ID);
+    expect(isClassicThemeId(CLASSIC_SYSTEM_THEME_ID)).toBe(true);
+    expect(isClassicThemeId(SYSTEM_THEME_ID)).toBe(false);
   });
 });

@@ -370,7 +370,21 @@
     "addToPreset": "新增主題",
     "name": "名稱",
     "applyFailed": "套用主題失敗",
-    "applied": "已套用主題：{{name}}"
+    "applied": "已套用主題：{{name}}",
+    "builtinNames": {
+      "ember": "Ember · 淺色",
+      "dusk": "Dusk · 深色",
+      "classicLight": "經典淺色",
+      "classicDark": "經典深色"
+    },
+    "classicFollowSystem": "經典 · 跟隨系統",
+    "moreThemes": "更多主題",
+    "refreshNotice": {
+      "title": "全新外觀：Dusk & Ember",
+      "content": "CSBU WorkMate 3.0 預設使用 Ember（淺色）與 Dusk（深色）主題。隨時可以在 設定 › 外觀 中切換。",
+      "keep": "保留新外觀",
+      "restoreClassic": "恢復經典外觀"
+    }
   },
   "customModelSupportNote": "說明：目前僅 CSBU WorkMate 支援使用自訂模型。",
   "webui.allowRemote": "允許遠端存取",
