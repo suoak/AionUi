@@ -279,5 +279,15 @@
     "agents": "Агенты",
     "skills": "Навыки",
     "batch": "Пакеты"
+  },
+  "designSystem": {
+    "status": {
+      "working": "Выполняется",
+      "needsYou": "Нужно ваше действие",
+      "done": "Готово",
+      "failed": "Ошибка",
+      "idle": "Ожидание"
+    },
+    "contextUsage": "Контекст заполнен на {{percent}}%"
   }
 }

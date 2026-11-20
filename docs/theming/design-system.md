@@ -102,24 +102,26 @@ usage. Code: the user's monospace setting.
 
 ## 4. Iconography / 图标
 
-Keep `@icon-park/react`: outline theme, 16 px in chrome (20 px in empty states), stroke width
-1.5, colour `currentColor`. Do not mix icon families. A thin `WmIcon` wrapper (V2) fixes these
+Keep `@icon-park/react`: outline theme, 16 px in chrome (20 px in empty states), `strokeWidth` 3
+(IconPark units, the existing house style), colour `currentColor`. Do not mix icon families. A thin `WmIcon` wrapper (V2) fixes these
 defaults.
 
 ## 5. Run-state glyphs / 状态图形
 
-| State      | Glyph                      | Colour                  |
-| ---------- | -------------------------- | ----------------------- |
-| `working`  | 12 px spinning ring        | `--wm-status-working`   |
-| `needsYou` | filled dot with soft pulse | `--wm-status-needs-you` |
-| `done`     | check                      | `--wm-status-done`      |
-| `failed`   | cross                      | `--wm-status-failed`    |
-| `idle`     | hollow dot                 | `--wm-status-idle`      |
+| State      | Glyph                               | Colour                  |
+| ---------- | ----------------------------------- | ----------------------- |
+| `working`  | 12 px spinning ring                 | `--wm-status-working`   |
+| `needsYou` | question mark in a ring, soft pulse | `--wm-status-needs-you` |
+| `done`     | check                               | `--wm-status-done`      |
+| `failed`   | cross                               | `--wm-status-failed`    |
+| `idle`     | hollow dot                          | `--wm-status-idle`      |
 
 Under reduced motion the spinner becomes a static three-quarter ring and the pulse is removed.
 Colour is never the only signal: every glyph has a distinct shape and an accessible label.
 
 ## 6. Base components (V2) / 基础组件
+
+Import from `@renderer/components/design`.
 
 | Component     | Purpose                                                                         |
 | ------------- | ------------------------------------------------------------------------------- |

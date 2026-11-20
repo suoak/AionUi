@@ -277,5 +277,15 @@
     "agents": "Ajanlar",
     "skills": "Beceriler",
     "batch": "Toplu"
+  },
+  "designSystem": {
+    "status": {
+      "working": "Çalışıyor",
+      "needsYou": "Sizi bekliyor",
+      "done": "Tamamlandı",
+      "failed": "Başarısız",
+      "idle": "Boşta"
+    },
+    "contextUsage": "Bağlam %{{percent}} dolu"
   }
 }

@@ -277,5 +277,15 @@
     "unavailable": "Este panel no está disponible. CSBU WorkMate solo puede alojar un recurso de extensión verificado.",
     "closeTab": "Cerrar panel",
     "empty": "No hay ningún panel de complemento abierto"
+  },
+  "designSystem": {
+    "status": {
+      "working": "En curso",
+      "needsYou": "Te necesita",
+      "done": "Hecho",
+      "failed": "Fallido",
+      "idle": "Inactivo"
+    },
+    "contextUsage": "Contexto usado al {{percent}} %"
   }
 }
