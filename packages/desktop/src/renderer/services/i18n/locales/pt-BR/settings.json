@@ -1,4 +1,9 @@
 {
+  "extensionSettings": {
+    "loading": "Carregando…",
+    "tabNotFound": "Não foi possível encontrar esta aba de configurações. Ela pode ter sido removida.",
+    "iframeTitle": "Configurações da extensão: {{name}}"
+  },
   "imageGenSupportedTooltipOpenAI": "Modelos via Images API compatível com OpenAI: GPT Image, Grok Imagine, Seedream, FLUX, Stable Diffusion, Recraft, Qwen Image, Ideogram e outros modelos de gateway",
   "imageGenCustomModelWarning": "Modelos personalizados não foram verificados. Eles só funcionam se o provedor retornar imagens por uma Images API ou resposta de chat compatível.",
   "imageGenCompatibilityNote": "Endpoints nativos do provedor sem uma Images API ou resposta de chat compatível não têm suporte para conexão direta.",

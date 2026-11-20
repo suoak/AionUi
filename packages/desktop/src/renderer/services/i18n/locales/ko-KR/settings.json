@@ -1,4 +1,9 @@
 {
+  "extensionSettings": {
+    "loading": "불러오는 중…",
+    "tabNotFound": "이 설정 탭을 찾을 수 없습니다. 삭제되었을 수 있습니다.",
+    "iframeTitle": "확장 프로그램 설정: {{name}}"
+  },
   "imageGenSupportedTooltipOpenAI": "OpenAI 호환 Images API 모델: GPT Image, Grok Imagine, Seedream, FLUX, Stable Diffusion, Recraft, Qwen Image, Ideogram 및 기타 게이트웨이 모델",
   "imageGenCustomModelWarning": "사용자 지정 모델은 검증되지 않았습니다. 공급자가 호환되는 Images API 또는 채팅 응답으로 이미지를 반환하는 경우에만 작동합니다.",
   "imageGenCompatibilityNote": "호환 Images API 또는 채팅 응답을 구현하지 않은 공급자 네이티브 엔드포인트는 직접 연결을 지원하지 않습니다.",
