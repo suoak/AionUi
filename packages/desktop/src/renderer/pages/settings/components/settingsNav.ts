@@ -21,7 +21,7 @@ export type SettingsGroup = {
   id: SettingsGroupId;
   /** i18n key under `settings.groups.*` */
   labelKey: `settings.groups.${SettingsGroupId}`;
-  /** Builtin tab ids in display order. `extensions` is filled by extension tabs. */
+  /** Builtin tab ids in display order. Unanchored extension tabs join `extensions`. */
   tabs: readonly string[];
 };
 
@@ -29,7 +29,7 @@ export const SETTINGS_GROUPS: readonly SettingsGroup[] = [
   { id: 'general', labelKey: 'settings.groups.general', tabs: ['appearance', 'system', 'pet'] },
   { id: 'runtime', labelKey: 'settings.groups.runtime', tabs: ['model', 'agent', 'tools', 'skills'] },
   { id: 'workspace', labelKey: 'settings.groups.workspace', tabs: ['webui', 'devices', 'local-kb'] },
-  { id: 'extensions', labelKey: 'settings.groups.extensions', tabs: [] },
+  { id: 'extensions', labelKey: 'settings.groups.extensions', tabs: ['extensions'] },
   { id: 'team', labelKey: 'settings.groups.team', tabs: ['governance', 'usage', 'archived'] },
   { id: 'about', labelKey: 'settings.groups.about', tabs: ['about'] },
 ];
@@ -58,6 +58,7 @@ export const SETTINGS_TAB_KEYWORDS: Readonly<Record<string, readonly string[]>> 
   webui: ['web', 'browser', 'port', 'remote access', 'im', 'channel', 'telegram', 'lark', 'slack'],
   devices: ['phone', 'pair', 'mobile', 'approval'],
   'local-kb': ['knowledge', 'kb', 'documents', 'index'],
+  extensions: ['extension', 'plugin', 'addon', 'installed', 'permissions', 'enable', 'disable'],
   governance: ['policy', 'audit', 'yolo', 'permission', 'admin'],
   usage: ['tokens', 'cost', 'quota', 'spend'],
   archived: ['archive', 'history'],

@@ -1985,5 +1985,53 @@
     "noTurns": "No model-visible turns found in that session file",
     "importedName": "[Imported] {{id}}",
     "success": "Imported {{count}} turns → {{title}}"
+  },
+  "extensionsPage": {
+    "navLabel": "インストール済み拡張機能",
+    "title": "インストール済み拡張機能",
+    "description": "CSBU WorkMate が読み込んだ拡張機能です。オフにすると、その設定タブ・コマンド・パネルが非表示になります。",
+    "searchPlaceholder": "拡張機能を絞り込む",
+    "loading": "拡張機能を読み込み中…",
+    "loadFailed": "拡張機能を読み込めませんでした。",
+    "retry": "再試行",
+    "empty": "拡張機能はインストールされていません。",
+    "noMatch": "一致する拡張機能はありません。",
+    "version": "v{{version}}",
+    "source": {
+      "local": "ローカルフォルダー",
+      "appdata": "アプリデータフォルダー",
+      "env": "環境変数のパス",
+      "other": "ソース: {{source}}"
+    },
+    "toggleLabel": "{{name}} のオン/オフ",
+    "enableFailed": "{{name}} をオンにできませんでした。",
+    "disableFailed": "{{name}} をオフにできませんでした。",
+    "enabledToast": "{{name}} をオンにしました。",
+    "disabledToast": "{{name}} をオフにしました。",
+    "contributions": {
+      "settingsTabs": "設定タブ: {{count}}",
+      "commands": "コマンド: {{count}}",
+      "panels": "パネル: {{count}}",
+      "views": "作業パネルビュー: {{count}}",
+      "separator": " · ",
+      "none": "表示される提供項目はありません。",
+      "hiddenWhileOff": "オフ: タブ・コマンド・パネルは非表示です。"
+    },
+    "permissions": {
+      "show": "権限",
+      "hide": "権限を隠す",
+      "loadFailed": "権限を読み込めませんでした。",
+      "none": "要求された権限はありません。",
+      "level": {
+        "none": "なし",
+        "limited": "制限付き",
+        "full": "フル"
+      }
+    },
+    "risk": {
+      "safe": "低リスク",
+      "moderate": "中リスク",
+      "dangerous": "高リスク"
+    }
   }
 }

@@ -94,6 +94,12 @@ export function getBuiltinSettingsNavItems(isDesktop: boolean, t: TranslateFn): 
       icon: <BookOne theme='outline' size='16' />,
       path: 'local-kb',
     },
+    extensions: {
+      id: 'extensions',
+      label: t('settings.extensionsPage.navLabel'),
+      icon: <Puzzle theme='outline' size='16' />,
+      path: 'extensions',
+    },
     governance: {
       id: 'governance',
       label: t('settings.governance.navLabel'),

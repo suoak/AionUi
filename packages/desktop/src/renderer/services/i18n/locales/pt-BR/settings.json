@@ -1986,5 +1986,53 @@
     "noTurns": "No model-visible turns found in that session file",
     "importedName": "[Imported] {{id}}",
     "success": "Imported {{count}} turns → {{title}}"
+  },
+  "extensionsPage": {
+    "navLabel": "Extensões instaladas",
+    "title": "Extensões instaladas",
+    "description": "Extensões carregadas pelo CSBU WorkMate. Desativar uma oculta suas abas de configurações, comandos e painéis.",
+    "searchPlaceholder": "Filtrar extensões",
+    "loading": "Carregando extensões…",
+    "loadFailed": "Não foi possível carregar as extensões.",
+    "retry": "Tentar novamente",
+    "empty": "Nenhuma extensão instalada.",
+    "noMatch": "Nenhuma extensão corresponde.",
+    "version": "v{{version}}",
+    "source": {
+      "local": "Pasta local",
+      "appdata": "Pasta de dados do app",
+      "env": "Caminho de ambiente",
+      "other": "Origem: {{source}}"
+    },
+    "toggleLabel": "Ativar ou desativar {{name}}",
+    "enableFailed": "Não foi possível ativar {{name}}.",
+    "disableFailed": "Não foi possível desativar {{name}}.",
+    "enabledToast": "{{name}} está ativada.",
+    "disabledToast": "{{name}} está desativada.",
+    "contributions": {
+      "settingsTabs": "Abas de configurações: {{count}}",
+      "commands": "Comandos: {{count}}",
+      "panels": "Painéis: {{count}}",
+      "views": "Visualizações do painel de trabalho: {{count}}",
+      "separator": " · ",
+      "none": "Nenhuma contribuição visível.",
+      "hiddenWhileOff": "Desativada: abas, comandos e painéis estão ocultos."
+    },
+    "permissions": {
+      "show": "Permissões",
+      "hide": "Ocultar permissões",
+      "loadFailed": "Não foi possível carregar as permissões.",
+      "none": "Nenhuma permissão solicitada.",
+      "level": {
+        "none": "Nenhum",
+        "limited": "Limitado",
+        "full": "Total"
+      }
+    },
+    "risk": {
+      "safe": "Risco baixo",
+      "moderate": "Risco médio",
+      "dangerous": "Risco alto"
+    }
   }
 }

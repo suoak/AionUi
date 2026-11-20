@@ -119,6 +119,13 @@ export const STATIC_PALETTE_COMMANDS: readonly PaletteCommand[] = [
     path: '/settings/local-kb',
     keywords: ['local-kb', 'knowledge', 'kb', 'documents'],
   },
+  {
+    id: 'nav.settings.extensions',
+    title: 'Installed extensions',
+    group: 'settings',
+    path: '/settings/extensions',
+    keywords: ['extension', 'plugin', 'addon', 'permissions'],
+  },
 ] as const;
 
 export function normalizePaletteQuery(query: string): string {

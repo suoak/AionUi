@@ -1983,5 +1983,53 @@
     "noTurns": "No model-visible turns found in that session file",
     "importedName": "[Imported] {{id}}",
     "success": "Imported {{count}} turns → {{title}}"
+  },
+  "extensionsPage": {
+    "navLabel": "Extensiones instaladas",
+    "title": "Extensiones instaladas",
+    "description": "Extensiones cargadas por CSBU WorkMate. Al desactivar una, se ocultan sus pestañas de ajustes, comandos y paneles.",
+    "searchPlaceholder": "Filtrar extensiones",
+    "loading": "Cargando extensiones…",
+    "loadFailed": "No se pudieron cargar las extensiones.",
+    "retry": "Reintentar",
+    "empty": "No hay extensiones instaladas.",
+    "noMatch": "Ninguna extensión coincide.",
+    "version": "v{{version}}",
+    "source": {
+      "local": "Carpeta local",
+      "appdata": "Carpeta de datos de la app",
+      "env": "Ruta de entorno",
+      "other": "Origen: {{source}}"
+    },
+    "toggleLabel": "Activar o desactivar {{name}}",
+    "enableFailed": "No se pudo activar {{name}}.",
+    "disableFailed": "No se pudo desactivar {{name}}.",
+    "enabledToast": "{{name}} está activada.",
+    "disabledToast": "{{name}} está desactivada.",
+    "contributions": {
+      "settingsTabs": "Pestañas de ajustes: {{count}}",
+      "commands": "Comandos: {{count}}",
+      "panels": "Paneles: {{count}}",
+      "views": "Vistas del panel de trabajo: {{count}}",
+      "separator": " · ",
+      "none": "Sin contribuciones visibles.",
+      "hiddenWhileOff": "Desactivada: sus pestañas, comandos y paneles están ocultos."
+    },
+    "permissions": {
+      "show": "Permisos",
+      "hide": "Ocultar permisos",
+      "loadFailed": "No se pudieron cargar los permisos.",
+      "none": "No solicita permisos.",
+      "level": {
+        "none": "Ninguno",
+        "limited": "Limitado",
+        "full": "Completo"
+      }
+    },
+    "risk": {
+      "safe": "Riesgo bajo",
+      "moderate": "Riesgo medio",
+      "dangerous": "Riesgo alto"
+    }
   }
 }
