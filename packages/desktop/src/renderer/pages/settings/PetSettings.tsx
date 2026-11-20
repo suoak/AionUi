@@ -10,6 +10,7 @@ import { useTranslation } from 'react-i18next';
 import { systemSettings } from '@/common/adapter/ipcBridge';
 import { configService } from '@/common/config/configService';
 import { isElectronDesktop } from '@/renderer/utils/platform';
+import SettingsPageHeader from './components/SettingsPageHeader';
 import SettingsPageWrapper from './components/SettingsPageWrapper';
 import PreferenceRow from '@/renderer/components/settings/SettingsModal/contents/SystemModalContent/PreferenceRow';
 import WorkMateScrollArea from '@/renderer/components/base/WorkMateScrollArea';
@@ -93,13 +94,20 @@ const PetSettings: React.FC = () => {
   if (!isDesktop) {
     return (
       <SettingsPageWrapper>
-        <WorkMateScrollArea className='flex-1 min-h-0 pb-16px' disableOverflow={isPageMode}>
-          <div className='space-y-16px'>
-            <div className='px-[12px] md:px-[32px] py-16px bg-2 rd-16px'>
-              <p className='m-0 text-13px text-t-secondary'>{t('pet.desktopOnly')}</p>
+        <div className='flex flex-col gap-16px'>
+          <SettingsPageHeader
+            title={t('pet.desktopPet')}
+            description={t('settings.pageIntro.pet')}
+            data-testid='settings-page-header-pet'
+          />
+          <WorkMateScrollArea className='flex-1 min-h-0 pb-16px' disableOverflow={isPageMode}>
+            <div className='space-y-16px'>
+              <div className='px-[12px] md:px-[32px] py-16px bg-2 rd-16px'>
+                <p className='m-0 text-13px text-t-secondary'>{t('pet.desktopOnly')}</p>
+              </div>
             </div>
-          </div>
-        </WorkMateScrollArea>
+          </WorkMateScrollArea>
+        </div>
       </SettingsPageWrapper>
     );
   }
@@ -144,19 +152,26 @@ const PetSettings: React.FC = () => {
 
   return (
     <SettingsPageWrapper>
-      <WorkMateScrollArea className='flex-1 min-h-0 pb-16px' disableOverflow={isPageMode}>
-        <div className='space-y-16px'>
-          <div className='px-[12px] md:px-[32px] py-16px bg-2 rd-16px space-y-12px'>
-            <div className='w-full flex flex-col divide-y divide-border-2'>
-              {preferenceItems.map((item) => (
-                <PreferenceRow key={item.key} label={item.label} description={item.description}>
-                  {item.component}
-                </PreferenceRow>
-              ))}
+      <div className='flex flex-col gap-16px'>
+        <SettingsPageHeader
+          title={t('pet.desktopPet')}
+          description={t('settings.pageIntro.pet')}
+          data-testid='settings-page-header-pet'
+        />
+        <WorkMateScrollArea className='flex-1 min-h-0 pb-16px' disableOverflow={isPageMode}>
+          <div className='space-y-16px'>
+            <div className='px-[12px] md:px-[32px] py-16px bg-2 rd-16px space-y-12px'>
+              <div className='w-full flex flex-col divide-y divide-border-2'>
+                {preferenceItems.map((item) => (
+                  <PreferenceRow key={item.key} label={item.label} description={item.description}>
+                    {item.component}
+                  </PreferenceRow>
+                ))}
+              </div>
             </div>
           </div>
-        </div>
-      </WorkMateScrollArea>
+        </WorkMateScrollArea>
+      </div>
     </SettingsPageWrapper>
   );
 };

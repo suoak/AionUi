@@ -2070,5 +2070,10 @@
       "saveFile": "Enregistrer le fichier",
       "closeTab": "Fermer l'onglet d'aperçu"
     }
+  },
+  "pageIntro": {
+    "appearance": "Thème, couleurs, taille de police et zoom.",
+    "system": "Langue, démarrage, dossiers, délais et autres préférences générales.",
+    "pet": "Un compagnon de bureau qui réagit à l'activité de vos agents."
   }
 }

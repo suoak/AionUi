@@ -2070,5 +2070,10 @@
       "saveFile": "Datei speichern",
       "closeTab": "Vorschau-Tab schließen"
     }
+  },
+  "pageIntro": {
+    "appearance": "Design, Farben, Schriftgröße und Zoom.",
+    "system": "Sprache, Start, Ordner, Zeitlimits und weitere app-weite Einstellungen.",
+    "pet": "Ein Desktop-Begleiter, der auf die Aktivität Ihrer Agenten reagiert."
   }
 }
