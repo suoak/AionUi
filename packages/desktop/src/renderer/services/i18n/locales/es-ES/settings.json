@@ -2070,5 +2070,10 @@
       "saveFile": "Guardar el archivo",
       "closeTab": "Cerrar la pestaña de vista previa"
     }
+  },
+  "pageIntro": {
+    "appearance": "Tema, colores, tamaño de letra y zoom.",
+    "system": "Idioma, inicio, carpetas, tiempos de espera y otras preferencias generales.",
+    "pet": "Un compañero de escritorio que reacciona a lo que hacen tus agentes."
   }
 }

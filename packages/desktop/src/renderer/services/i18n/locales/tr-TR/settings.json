@@ -2070,5 +2070,10 @@
       "saveFile": "Dosyayı kaydet",
       "closeTab": "Önizleme sekmesini kapat"
     }
+  },
+  "pageIntro": {
+    "appearance": "Tema, renkler, yazı boyutu ve yakınlaştırma.",
+    "system": "Dil, başlangıç, klasörler, zaman aşımları ve diğer genel tercihler.",
+    "pet": "Ajanlarınızın yaptıklarına tepki veren bir masaüstü arkadaşı."
   }
 }
