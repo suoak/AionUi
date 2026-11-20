@@ -300,7 +300,6 @@
   "assistantReorderHintShort": "Sıralamak için sürükleyin",
   "fontSizeChat": "Sohbet metin boyutu",
   "mcpAuthRequired": "Kimlik doğrulama gerekli",
-  "groupApp": "Uygulama",
   "assistantGroupCreated": "Özel Asistanlar",
   "assistantNoDefaultMcpsSelected": "Varsayılan MCP seçilmedi",
   "addModel": "Model Ekle",
@@ -556,7 +555,6 @@
   "retry": "Retry",
   "skillFolderPath": "Yetenek Klasör Yolu",
   "baseUrlResetToDefault": "Varsayılana sıfırla",
-  "groupAiCore": "AI Çekirdek",
   "channels.selectFirst": "Bir kanal seçin ve kimlik bilgilerini yapılandırın.",
   "assistantMainAgent": "Agent",
   "imageInputSupported": "Yapılandırmayla etkin",
@@ -1437,7 +1435,6 @@
     "searchPlaceholder": "Ayarlarda ara",
     "searchEmpty": "Eşleşen ayar yok"
   },
-  "groupAbout": "Diğer",
   "promptPreview": "Önizleme",
   "webui.copyPasswordTooltip": "Şifreyi kopyalamak için tıklayın",
   "assistantDefaultPermissionLabel": "İzin",

@@ -305,7 +305,6 @@
   "assistantReorderHintShort": "拖拽排序",
   "fontSizeChat": "聊天字号",
   "mcpAuthRequired": "需要身份验证",
-  "groupApp": "应用",
   "assistantGroupCreated": "自定义助手",
   "assistantNoDefaultMcpsSelected": "未选择默认 MCP",
   "addModel": "添加模型",
@@ -561,7 +560,6 @@
   "retry": "重试",
   "skillFolderPath": "技能文件夹路径",
   "baseUrlResetToDefault": "重置为默认",
-  "groupAiCore": "AI 核心",
   "channels.selectFirst": "选择一个渠道并完成凭据配置。",
   "assistantMainAgent": "Agent",
   "imageInputSupported": "当前配置已启用",
@@ -1443,7 +1441,6 @@
     "searchPlaceholder": "搜索设置",
     "searchEmpty": "没有匹配的设置"
   },
-  "groupAbout": "其他",
   "promptPreview": "预览",
   "webui.copyPasswordTooltip": "点击复制密码",
   "assistantDefaultPermissionLabel": "权限",

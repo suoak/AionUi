@@ -31,5 +31,12 @@
     "statusTesting": "Latenz wird gemessen...",
     "statusUnreachable": "Nicht erreichbar",
     "statusAvailable": "Verfügbar"
+  },
+  "agentPreview": {
+    "title": "Testvorschau des Agenten",
+    "published": "Sie sehen eine Vorschau der veröffentlichten Konfiguration.",
+    "draft": "Sie sehen eine Vorschau des aktuellen Entwurfs. Danach können Sie die Anweisungen verbessern oder daraus einen Skill machen.",
+    "backToImprove": "Zurück zum Verbessern",
+    "openAgent": "Agentendetails öffnen"
   }
 }
