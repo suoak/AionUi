@@ -360,7 +360,157 @@
     }
   },
   "skillEvolution": {
-    "title": "Beceri Evrimi"
+    "title": "Beceri Evrimi",
+    "status": {
+      "draft": "Taslak",
+      "pending_review": "İnceleme bekliyor",
+      "approved": "Onaylandı",
+      "rejected": "Reddedildi",
+      "applied": "Uygulandı",
+      "rolled_back": "Geri alındı"
+    },
+    "kind": {
+      "pattern": "Kalıp",
+      "skill_impact": "Etki notu",
+      "rejected_note": "Ret kaydı",
+      "index": "Dizin",
+      "general": "Genel"
+    },
+    "visibility": {
+      "private": "Özel",
+      "team": "Ekip",
+      "owner_editors": "Yalnızca sahipler/editörler",
+      "all": "Tüm görünürlükler"
+    },
+    "gateMode": {
+      "human_only": "Yalnızca insan incelemesi (varsayılan)",
+      "heuristic_assist": "Sezgisel destekli gönderim",
+      "auto_apply_on_pass": "Yüksek puanda otomatik uygula (riskli; betik içeren becerilerde asla)"
+    },
+    "gate": {
+      "score": "Kontrol {{score}}",
+      "approve": "onay öneriliyor",
+      "reject": "ret öneriliyor",
+      "review": "inceleme gerekli"
+    },
+    "errors": {
+      "load": "Yüklenemedi (Skill Evolution API’li bir Core gerekir)",
+      "loadDetail": "Öneri yüklenemedi",
+      "saveSettings": "Ayarlar kaydedilemedi",
+      "action": "İşlem başarısız",
+      "copy": "Kopyalanamadı"
+    },
+    "toast": {
+      "settingsSaved": "Kontrol ayarları kaydedildi",
+      "submitted": "İncelemeye gönderildi",
+      "approved": "Onaylandı; {{path}} yoluna uygulanabilir",
+      "rejected": "Reddedildi; deneyim kitaplığına kaydedildi",
+      "appliedTo": "Yazıldı ve uygulandı: {{parts}}.",
+      "appliedMarked": "Uygulandı olarak işaretlendi.",
+      "nextStep": "Sonraki:",
+      "viewAgent": "Ajanı görüntüle",
+      "tryRun": "Deneme çalıştırması",
+      "publishPin": "Sabitlemeyi yayınla",
+      "bindHint": "Denemek veya yayınlamak için beceriyi bir ajana bağlayın",
+      "workspacePath": "Çalışma alanı: {{path}}",
+      "pinned": "Sabitlendi: {{ref}}",
+      "evolved": "Yeniden damıtıldı",
+      "rolledBack": "Beceri işaretçisi geri alındı (deneyim kitaplığı korundu)",
+      "copied": "SKILL.md panoya kopyalandı"
+    },
+    "page": {
+      "title": "Beceri gelişimi",
+      "description": "Konuşma deneyiminden SKILL.md önerileri damıtın → sezgisel kontrol (yapılandırılabilir) → insan incelemesi → Skills Hub’a yazma / sabitleme. Deneyim kitaplığı yalnızca beceri gelişimi için kullanılır, günlük sohbetlere asla eklenmez; bilgi tabanı ayrı kalır.",
+      "experienceCount": "{{count}} deneyim makalesi",
+      "filteredByAgent": "Ajana göre filtrelendi: {{id}}…",
+      "clearFilter": "Filtreyi temizle",
+      "openAgent": "Ajan ayrıntılarını aç",
+      "distill": "Konuşmadan beceri damıt"
+    },
+    "tabs": {
+      "experience": "Deneyim",
+      "experienceCount": "Deneyim ({{count}})",
+      "settings": "Kontrol ayarları",
+      "all": "Tüm öneriler"
+    },
+    "settings": {
+      "intro": "Varsayılan: yalnızca insan incelemesi. Sezgisel puanlar yalnızca öneridir; otomatik uygulama açıkça etkinleştirilmelidir, yüksek puandan sonra yine de skill_impact yazar ve tek tıkla geri alınabilir. Betik içeren beceriler her zaman insan incelemesi gerektirir ve hiçbir modda otomatik uygulanmaz. Deneyim kitaplığı günlük sohbetlere asla eklenmez.",
+      "loading": "Yükleniyor…",
+      "gateMode": "Kontrol modu",
+      "autoApplyWarning": "Uyarı: otomatik uygulama yüksek puanda manuel onay/yazma adımını atlar (betik içeren beceriler hariç; bunlar her zaman insan incelemesi gerektirir). Kuruluş politikanızın buna izin verdiğinden emin olun ve geri alma alışkanlığını sürdürün.",
+      "assistThreshold": "Destekli gönderim eşiği (heuristic_assist)",
+      "autoThreshold": "Otomatik uygulama eşiği (auto_apply_on_pass)",
+      "defaultVisibility": "Yeni deneyimin varsayılan görünürlüğü",
+      "crossModel": "Modeller arası geçiş notları (kısa)"
+    },
+    "experience": {
+      "intro": "Deneyim kitaplığı yalnızca beceri gelişimi için kullanılır ve günlük sohbetlere asla eklenmez.",
+      "empty": "Henüz deneyim makalesi yok. Bir öneriyi damıttıktan veya reddettikten sonra görünür.",
+      "conversation": "konuşma {{id}}…",
+      "pickHint": "Metnini ve bağlantılarını görmek için soldan bir deneyim makalesi seçin.",
+      "body": "Metin",
+      "sources": "Kaynak konuşmalar: {{ids}}",
+      "tags": "Etiketler: {{tags}}"
+    },
+    "proposals": {
+      "empty": "Henüz öneri yok. Bir konuşmadan beceri damıtarak başlayın.",
+      "untitledSkill": "Adsız beceri",
+      "evolveAgain": "Yeniden damıt",
+      "submit": "İncelemeye gönder",
+      "approve": "Onayla",
+      "reject": "Reddet",
+      "writeHub": "Skills Hub’a yaz",
+      "rollback": "Geri al",
+      "pickHint": "Taslağı görmek ve incelemek için soldan bir öneri seçin.",
+      "signals": "Sezgisel kontrol sinyalleri",
+      "signalWeight": "(ağırlık {{weight}})",
+      "mode": "Mod: {{mode}}",
+      "summary": "Deneyim özeti",
+      "emptyValue": "(boş)",
+      "linkedExperience": "Bağlı deneyim: {{ids}}",
+      "draft": "SKILL.md taslağı",
+      "comment": "İnceleme yorumu (isteğe bağlı)",
+      "commentPlaceholder": "Onaylarken, reddederken veya geri alırken isteğe bağlı",
+      "exportPreview": "Dışa aktarma önizlemesi",
+      "copySkill": "SKILL.md’yi kopyala"
+    },
+    "create": {
+      "back": "← Beceri gelişimine dön",
+      "intro": "Son bir konuşmadan bir yol seçin → “Damıt” Maintainer/Proposer’ı çalıştırır → taslağı düzenleyip incelemeye gönderin. Deneyim kitaplığı yalnızca beceri gelişimi için kullanılır ve günlük sohbetlere asla eklenmez.",
+      "pickConversation": "Konuşma *",
+      "pickPlaceholder": "Son konuşmalardan seçin",
+      "pasteHint": "Bir konuşma kimliği de yapıştırabilirsiniz",
+      "pastePlaceholder": "veya bir conversation id yapıştırın",
+      "overview": "Yol özeti",
+      "lastModel": "Son damıtma modeli: {{model}}",
+      "evolve": "Damıt",
+      "evolveHint": "Çalışan bir model gerekir; ardından düzenlenebilir bir öneri alırsınız",
+      "titleLabel": "Başlık *",
+      "titlePlaceholder": "örn. Haftalık rapor biçimlendirme",
+      "assistantLabel": "Hedef ajan kimliği (isteğe bağlı; onaydan sonra sabitlenebilir)",
+      "visibilityLabel": "Deneyim görünürlüğü",
+      "visibilityPrivate": "Özel (yalnızca ben)",
+      "visibilityTeam": "Ekip (üyeler okuyabilir)",
+      "teamId": "Ekip kimliği *",
+      "teamIdPlaceholder": "team id (ekip görünürlüğü için gerekli)",
+      "skillKey": "Önerilen beceri anahtarı",
+      "summaryLabel": "Deneyim özeti",
+      "summaryPlaceholder": "Bu konuşmada ne işe yaradı? Hataların temel nedeni neydi?",
+      "draftLabel": "SKILL.md taslağı (şablon için boş bırakın)",
+      "draftPlaceholder": "Boş bırakırsanız sunucu bir şablon oluşturur; Damıt doldurur",
+      "submitNow": "Oluşturduktan hemen sonra incelemeye gönder",
+      "create": "Öneriyi elle oluştur",
+      "cancel": "İptal",
+      "untitled": "Adsız",
+      "needConversation": "Önce bir konuşma seçin",
+      "evolved": "Damıtıldı; {{count}} deneyim makalesi yazıldı",
+      "evolvedModel": "Model: {{model}}",
+      "evolveFailed": "Damıtma başarısız (bir modelin yapılandırıldığından ve Core’da Faz 2 API’si olduğundan emin olun)",
+      "needTitle": "Bir başlık girin",
+      "createdSubmitted": "Öneri oluşturuldu ve incelemeye gönderildi",
+      "draftSaved": "Öneri taslağı kaydedildi",
+      "createFailed": "Oluşturulamadı (konuşma sahipliğini ve Core sürümünü kontrol edin)"
+    }
   },
   "runtimeRestart": {
     "tooltip": "Aracıyı yeniden bağla",

@@ -360,7 +360,157 @@
     }
   },
   "skillEvolution": {
-    "title": "Evolução de habilidades"
+    "title": "Evolução de habilidades",
+    "status": {
+      "draft": "Rascunho",
+      "pending_review": "Aguardando revisão",
+      "approved": "Aprovado",
+      "rejected": "Rejeitado",
+      "applied": "Aplicado",
+      "rolled_back": "Revertido"
+    },
+    "kind": {
+      "pattern": "Padrão",
+      "skill_impact": "Nota de impacto",
+      "rejected_note": "Registro de rejeição",
+      "index": "Índice",
+      "general": "Geral"
+    },
+    "visibility": {
+      "private": "Privado",
+      "team": "Equipe",
+      "owner_editors": "Somente proprietários/editores",
+      "all": "Todas as visibilidades"
+    },
+    "gateMode": {
+      "human_only": "Somente revisão humana (padrão)",
+      "heuristic_assist": "Envio assistido por heurística",
+      "auto_apply_on_pass": "Aplicar automaticamente com pontuação alta (arriscado; nunca em skills com scripts)"
+    },
+    "gate": {
+      "score": "Controle {{score}}",
+      "approve": "sugere aprovar",
+      "reject": "sugere rejeitar",
+      "review": "requer revisão"
+    },
+    "errors": {
+      "load": "Não foi possível carregar (requer um Core com a API de Skill Evolution)",
+      "loadDetail": "Não foi possível carregar a proposta",
+      "saveSettings": "Não foi possível salvar as configurações",
+      "action": "A ação falhou",
+      "copy": "Falha ao copiar"
+    },
+    "toast": {
+      "settingsSaved": "Configurações de controle salvas",
+      "submitted": "Enviado para revisão",
+      "approved": "Aprovado; pode ser aplicado em {{path}}",
+      "rejected": "Rejeitado; registrado na biblioteca de experiências",
+      "appliedTo": "Gravado e aplicado: {{parts}}.",
+      "appliedMarked": "Marcado como aplicado.",
+      "nextStep": "Próximo:",
+      "viewAgent": "Ver agente",
+      "tryRun": "Testar",
+      "publishPin": "Publicar pin",
+      "bindHint": "Vincule a skill a um agente para testar ou publicar",
+      "workspacePath": "Espaço de trabalho: {{path}}",
+      "pinned": "Fixado: {{ref}}",
+      "evolved": "Destilado novamente",
+      "rolledBack": "Ponteiro da skill revertido (biblioteca mantida)",
+      "copied": "SKILL.md copiado para a área de transferência"
+    },
+    "page": {
+      "title": "Evolução de skills",
+      "description": "Destile propostas SKILL.md da experiência em conversas → controle heurístico (configurável) → revisão humana → gravação no Skills Hub / pin. A biblioteca de experiências é usada só para a evolução de skills e nunca é injetada nas conversas do dia a dia; a base de conhecimento continua separada.",
+      "experienceCount": "{{count}} artigos de experiência",
+      "filteredByAgent": "Filtrado por agente: {{id}}…",
+      "clearFilter": "Limpar filtro",
+      "openAgent": "Abrir detalhes do agente",
+      "distill": "Destilar uma skill de uma conversa"
+    },
+    "tabs": {
+      "experience": "Experiência",
+      "experienceCount": "Experiência ({{count}})",
+      "settings": "Configurações do controle",
+      "all": "Todas as propostas"
+    },
+    "settings": {
+      "intro": "Padrão: somente revisão humana. As pontuações heurísticas são apenas sugestões; a aplicação automática precisa ser ativada explicitamente, ainda grava skill_impact após uma pontuação alta e pode ser revertida com um clique. Skills com scripts sempre exigem revisão humana e nunca são aplicadas automaticamente em nenhum modo. A biblioteca de experiências nunca é injetada nas conversas do dia a dia.",
+      "loading": "Carregando…",
+      "gateMode": "Modo de controle",
+      "autoApplyWarning": "Aviso: a aplicação automática pula a aprovação/gravação manual com pontuação alta (exceto skills com scripts, que sempre exigem revisão humana). Confirme que a política da sua organização permite e mantenha o hábito de reverter.",
+      "assistThreshold": "Limite de envio assistido (heuristic_assist)",
+      "autoThreshold": "Limite de aplicação automática (auto_apply_on_pass)",
+      "defaultVisibility": "Visibilidade padrão de novas experiências",
+      "crossModel": "Notas de migração entre modelos (breves)"
+    },
+    "experience": {
+      "intro": "A biblioteca de experiências é usada só para a evolução de skills e nunca é injetada nas conversas do dia a dia.",
+      "empty": "Ainda não há artigos de experiência. Eles aparecem depois que você destila ou rejeita uma proposta.",
+      "conversation": "conversa {{id}}…",
+      "pickHint": "Selecione um artigo de experiência à esquerda para ver o texto e os vínculos.",
+      "body": "Conteúdo",
+      "sources": "Conversas de origem: {{ids}}",
+      "tags": "Tags: {{tags}}"
+    },
+    "proposals": {
+      "empty": "Ainda não há propostas. Comece destilando uma skill de uma conversa.",
+      "untitledSkill": "Skill sem nome",
+      "evolveAgain": "Destilar novamente",
+      "submit": "Enviar para revisão",
+      "approve": "Aprovar",
+      "reject": "Rejeitar",
+      "writeHub": "Gravar no Skills Hub",
+      "rollback": "Reverter",
+      "pickHint": "Selecione uma proposta à esquerda para ver o rascunho e revisá-la.",
+      "signals": "Sinais do controle heurístico",
+      "signalWeight": "(peso {{weight}})",
+      "mode": "Modo: {{mode}}",
+      "summary": "Resumo da experiência",
+      "emptyValue": "(vazio)",
+      "linkedExperience": "Experiência vinculada: {{ids}}",
+      "draft": "Rascunho do SKILL.md",
+      "comment": "Comentário de revisão (opcional)",
+      "commentPlaceholder": "Opcional ao aprovar, rejeitar ou reverter",
+      "exportPreview": "Prévia da exportação",
+      "copySkill": "Copiar SKILL.md"
+    },
+    "create": {
+      "back": "← Voltar para Evolução de skills",
+      "intro": "Escolha uma trajetória de uma conversa recente → “Destilar” executa o Maintainer/Proposer → edite o rascunho e envie para revisão. A biblioteca de experiências é usada só para a evolução de skills e nunca é injetada nas conversas do dia a dia.",
+      "pickConversation": "Conversa *",
+      "pickPlaceholder": "Escolha entre conversas recentes",
+      "pasteHint": "Você também pode colar um ID de conversa",
+      "pastePlaceholder": "ou cole um conversation id",
+      "overview": "Visão geral da trajetória",
+      "lastModel": "Último destilado com: {{model}}",
+      "evolve": "Destilar",
+      "evolveHint": "Requer um modelo configurado; depois você recebe uma proposta editável",
+      "titleLabel": "Título *",
+      "titlePlaceholder": "ex.: Formatação do relatório semanal",
+      "assistantLabel": "ID do agente de destino (opcional; pode ser fixado após aprovação)",
+      "visibilityLabel": "Visibilidade da experiência",
+      "visibilityPrivate": "Privado (só eu)",
+      "visibilityTeam": "Equipe (membros podem ler)",
+      "teamId": "ID da equipe *",
+      "teamIdPlaceholder": "team id (obrigatório para visibilidade de equipe)",
+      "skillKey": "Chave de skill sugerida",
+      "summaryLabel": "Resumo da experiência",
+      "summaryPlaceholder": "O que funcionou nesta conversa? Qual foi a causa raiz das falhas?",
+      "draftLabel": "Rascunho do SKILL.md (deixe vazio para um modelo)",
+      "draftPlaceholder": "Deixe vazio e o servidor gera um modelo; Destilar o preenche",
+      "submitNow": "Enviar para revisão logo após criar",
+      "create": "Criar proposta manualmente",
+      "cancel": "Cancelar",
+      "untitled": "Sem título",
+      "needConversation": "Escolha uma conversa primeiro",
+      "evolved": "Destilado; {{count}} artigos de experiência gravados",
+      "evolvedModel": "Modelo: {{model}}",
+      "evolveFailed": "Falha ao destilar (verifique se há um modelo configurado e se o Core tem a API da fase 2)",
+      "needTitle": "Informe um título",
+      "createdSubmitted": "Proposta criada e enviada para revisão",
+      "draftSaved": "Rascunho da proposta salvo",
+      "createFailed": "Não foi possível criar (verifique a propriedade da conversa e a versão do Core)"
+    }
   },
   "runtimeRestart": {
     "tooltip": "Reconectar agente",

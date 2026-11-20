@@ -360,7 +360,157 @@
     }
   },
   "skillEvolution": {
-    "title": "스킬 진화"
+    "title": "스킬 진화",
+    "status": {
+      "draft": "초안",
+      "pending_review": "검토 대기",
+      "approved": "승인됨",
+      "rejected": "거부됨",
+      "applied": "적용됨",
+      "rolled_back": "롤백됨"
+    },
+    "kind": {
+      "pattern": "패턴",
+      "skill_impact": "영향 노트",
+      "rejected_note": "거부 기록",
+      "index": "색인",
+      "general": "일반"
+    },
+    "visibility": {
+      "private": "비공개",
+      "team": "팀",
+      "owner_editors": "소유자/편집자만",
+      "all": "모든 공개 범위"
+    },
+    "gateMode": {
+      "human_only": "사람 검토만(기본값)",
+      "heuristic_assist": "휴리스틱 보조 제출",
+      "auto_apply_on_pass": "고득점 시 자동 적용(위험, 스크립트 포함 스킬 제외)"
+    },
+    "gate": {
+      "score": "게이트 {{score}}",
+      "approve": "승인 권장",
+      "reject": "거부 권장",
+      "review": "검토 필요"
+    },
+    "errors": {
+      "load": "불러오지 못했습니다(Skill Evolution API가 있는 Core가 필요합니다)",
+      "loadDetail": "제안을 불러오지 못했습니다",
+      "saveSettings": "설정을 저장하지 못했습니다",
+      "action": "작업에 실패했습니다",
+      "copy": "복사하지 못했습니다"
+    },
+    "toast": {
+      "settingsSaved": "게이트 설정을 저장했습니다",
+      "submitted": "검토를 위해 제출했습니다",
+      "approved": "승인했습니다. {{path}}에 적용할 수 있습니다",
+      "rejected": "거부했습니다. 경험 라이브러리에 기록했습니다",
+      "appliedTo": "작성 후 적용했습니다: {{parts}}.",
+      "appliedMarked": "적용됨으로 표시했습니다.",
+      "nextStep": "다음:",
+      "viewAgent": "에이전트 보기",
+      "tryRun": "시험 실행",
+      "publishPin": "핀 게시",
+      "bindHint": "에이전트에 스킬을 연결하면 시험 실행/게시할 수 있습니다",
+      "workspacePath": "워크스페이스: {{path}}",
+      "pinned": "고정됨: {{ref}}",
+      "evolved": "다시 추출했습니다",
+      "rolledBack": "스킬 포인터를 롤백했습니다(경험 라이브러리 유지)",
+      "copied": "SKILL.md를 클립보드에 복사했습니다"
+    },
+    "page": {
+      "title": "스킬 진화",
+      "description": "대화 경험에서 SKILL.md 제안 추출 → 휴리스틱 게이트(설정 가능) → 사람 검토 → Skills Hub 작성 / 고정. 경험 라이브러리는 스킬 진화에만 쓰이며 일상 대화에 주입되지 않습니다. 지식 베이스와는 별개입니다.",
+      "experienceCount": "경험 문서 {{count}}개",
+      "filteredByAgent": "에이전트로 필터링됨: {{id}}…",
+      "clearFilter": "필터 지우기",
+      "openAgent": "에이전트 상세 열기",
+      "distill": "대화에서 스킬 추출"
+    },
+    "tabs": {
+      "experience": "경험 라이브러리",
+      "experienceCount": "경험 라이브러리 ({{count}})",
+      "settings": "게이트 설정",
+      "all": "모든 제안"
+    },
+    "settings": {
+      "intro": "기본값은 \"사람 검토만\"입니다. 휴리스틱 점수는 참고용이며, \"자동 적용\"은 명시적으로 켜야 하고 고득점 통과 후에도 skill_impact를 기록하며 한 번에 롤백할 수 있습니다. 스크립트가 포함된 스킬은 항상 사람이 검토하며 어떤 모드에서도 자동 적용되지 않습니다. 경험 라이브러리는 일상 대화에 주입되지 않습니다.",
+      "loading": "불러오는 중…",
+      "gateMode": "게이트 모드",
+      "autoApplyWarning": "경고: 자동 적용은 고득점 시 사람의 승인/작성 단계를 건너뜁니다(스크립트 포함 스킬 제외, 항상 사람 검토 필요). 조직 정책이 허용하는지 확인하고 롤백 습관을 유지하세요.",
+      "assistThreshold": "보조 제출 임계값(heuristic_assist)",
+      "autoThreshold": "자동 적용 임계값(auto_apply_on_pass)",
+      "defaultVisibility": "새 경험의 기본 공개 범위",
+      "crossModel": "모델 간 이전 참고(간단)"
+    },
+    "experience": {
+      "intro": "경험 라이브러리는 스킬 진화에만 쓰이며 일상 대화에 주입되지 않습니다.",
+      "empty": "아직 경험 문서가 없습니다. 제안을 추출하거나 거부하면 나타납니다.",
+      "conversation": "대화 {{id}}…",
+      "pickHint": "왼쪽에서 경험 문서를 선택하면 본문과 연결 항목을 볼 수 있습니다.",
+      "body": "본문",
+      "sources": "출처 대화: {{ids}}",
+      "tags": "태그: {{tags}}"
+    },
+    "proposals": {
+      "empty": "아직 제안이 없습니다. 대화에서 스킬을 추출해 시작하세요.",
+      "untitledSkill": "이름 없는 스킬",
+      "evolveAgain": "다시 추출",
+      "submit": "검토 제출",
+      "approve": "승인",
+      "reject": "거부",
+      "writeHub": "Skills Hub에 작성",
+      "rollback": "롤백",
+      "pickHint": "왼쪽에서 제안을 선택하면 초안과 검토를 볼 수 있습니다.",
+      "signals": "휴리스틱 게이트 신호",
+      "signalWeight": "(가중치 {{weight}})",
+      "mode": "모드: {{mode}}",
+      "summary": "경험 요약",
+      "emptyValue": "(비어 있음)",
+      "linkedExperience": "연결된 경험: {{ids}}",
+      "draft": "SKILL.md 초안",
+      "comment": "검토 의견(선택)",
+      "commentPlaceholder": "승인/거부/롤백 시 입력할 수 있습니다",
+      "exportPreview": "내보내기 미리보기",
+      "copySkill": "SKILL.md 복사"
+    },
+    "create": {
+      "back": "← 스킬 진화로 돌아가기",
+      "intro": "최근 대화에서 궤적 선택 → \"추출\"이 Maintainer/Proposer 실행 → 초안 편집 후 검토 제출. 경험 라이브러리는 스킬 진화에만 쓰이며 일상 대화에 주입되지 않습니다.",
+      "pickConversation": "대화 선택 *",
+      "pickPlaceholder": "최근 대화에서 선택",
+      "pasteHint": "대화 ID를 붙여넣을 수도 있습니다",
+      "pastePlaceholder": "또는 conversation id 붙여넣기",
+      "overview": "궤적 개요",
+      "lastModel": "마지막 추출 모델: {{model}}",
+      "evolve": "추출",
+      "evolveHint": "사용 가능한 모델이 필요합니다. 성공하면 편집 가능한 제안이 됩니다",
+      "titleLabel": "제목 *",
+      "titlePlaceholder": "예: 주간 보고서 서식",
+      "assistantLabel": "대상 에이전트 ID(선택, 승인 후 고정 가능)",
+      "visibilityLabel": "경험 공개 범위",
+      "visibilityPrivate": "비공개(나만)",
+      "visibilityTeam": "팀(구성원 읽기 가능)",
+      "teamId": "팀 ID *",
+      "teamIdPlaceholder": "team id(팀 공개 시 필수)",
+      "skillKey": "제안 skill key",
+      "summaryLabel": "경험 요약",
+      "summaryPlaceholder": "이 대화에서 무엇이 효과적이었나요? 실패의 근본 원인은 무엇이었나요?",
+      "draftLabel": "SKILL.md 초안(비우면 템플릿 생성)",
+      "draftPlaceholder": "비워 두면 서버가 기본 템플릿을 만들고, 추출이 채워 줍니다",
+      "submitNow": "생성 후 바로 검토 제출",
+      "create": "수동으로 제안 만들기",
+      "cancel": "취소",
+      "untitled": "제목 없음",
+      "needConversation": "먼저 대화를 선택하세요",
+      "evolved": "추출 완료, 경험 문서 {{count}}개 작성",
+      "evolvedModel": "모델: {{model}}",
+      "evolveFailed": "추출에 실패했습니다(모델 설정 및 Core의 Phase 2 API를 확인하세요)",
+      "needTitle": "제목을 입력하세요",
+      "createdSubmitted": "제안을 만들고 검토를 위해 제출했습니다",
+      "draftSaved": "제안 초안을 저장했습니다",
+      "createFailed": "만들지 못했습니다(대화 소유자와 Core 버전을 확인하세요)"
+    }
   },
   "runtimeRestart": {
     "tooltip": "에이전트 다시 연결",

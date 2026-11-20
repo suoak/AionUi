@@ -360,7 +360,157 @@
     }
   },
   "skillEvolution": {
-    "title": "Skill Evolution"
+    "title": "Skill Evolution",
+    "status": {
+      "draft": "Draft",
+      "pending_review": "Pending review",
+      "approved": "Approved",
+      "rejected": "Rejected",
+      "applied": "Applied",
+      "rolled_back": "Rolled back"
+    },
+    "kind": {
+      "pattern": "Pattern",
+      "skill_impact": "Impact note",
+      "rejected_note": "Rejection record",
+      "index": "Index",
+      "general": "General"
+    },
+    "visibility": {
+      "private": "Private",
+      "team": "Team",
+      "owner_editors": "Owners/editors only",
+      "all": "All visibility"
+    },
+    "gateMode": {
+      "human_only": "Human review only (default)",
+      "heuristic_assist": "Heuristic-assisted submit",
+      "auto_apply_on_pass": "Auto-apply on high score (risky; never for skills with scripts)"
+    },
+    "gate": {
+      "score": "Gate {{score}}",
+      "approve": "suggests approving",
+      "reject": "suggests rejecting",
+      "review": "needs review"
+    },
+    "errors": {
+      "load": "Could not load Skill Evolution (it needs a Core with the Skill Evolution API)",
+      "loadDetail": "Could not load the proposal",
+      "saveSettings": "Could not save the settings",
+      "action": "Action failed",
+      "copy": "Copy failed"
+    },
+    "toast": {
+      "settingsSaved": "Gate settings saved",
+      "submitted": "Submitted for review",
+      "approved": "Approved; it can be applied to {{path}}",
+      "rejected": "Rejected; recorded in the experience library",
+      "appliedTo": "Written and applied: {{parts}}.",
+      "appliedMarked": "Marked as applied.",
+      "nextStep": "Next:",
+      "viewAgent": "View agent",
+      "tryRun": "Try a run",
+      "publishPin": "Publish pin",
+      "bindHint": "Bind the skill to an agent to try or publish it",
+      "workspacePath": "Workspace: {{path}}",
+      "pinned": "Pinned: {{ref}}",
+      "evolved": "Distilled again",
+      "rolledBack": "Skill pointer rolled back (experience library kept)",
+      "copied": "SKILL.md copied to the clipboard"
+    },
+    "page": {
+      "title": "Skill Evolution",
+      "description": "Distill SKILL.md proposals from conversation experience → heuristic gate (configurable) → human review → write to Skills Hub / pin. The experience library is used only for Skill Evolution and is never injected into everyday chats; the knowledge base stays separate.",
+      "experienceCount": "{{count}} experience articles",
+      "filteredByAgent": "Filtered by agent: {{id}}…",
+      "clearFilter": "Clear filter",
+      "openAgent": "Open agent details",
+      "distill": "Distill a skill from a conversation"
+    },
+    "tabs": {
+      "experience": "Experience",
+      "experienceCount": "Experience ({{count}})",
+      "settings": "Gate settings",
+      "all": "All proposals"
+    },
+    "settings": {
+      "intro": "Default: human review only. Heuristic scores are advisory; auto-apply must be turned on explicitly, still writes skill_impact after a high-score pass, and can be rolled back in one click. Skills with scripts always need human review and are never auto-applied in any mode. The experience library is never injected into everyday chats.",
+      "loading": "Loading…",
+      "gateMode": "Gate mode",
+      "autoApplyWarning": "Warning: auto-apply skips the manual approve/write step on a high score (skills with scripts excepted; they always need human review). Make sure your organization’s policy allows it, and keep rolling back as a habit.",
+      "assistThreshold": "Assisted-submit threshold (heuristic_assist)",
+      "autoThreshold": "Auto-apply threshold (auto_apply_on_pass)",
+      "defaultVisibility": "Default visibility for new experience",
+      "crossModel": "Cross-model migration notes (lightweight)"
+    },
+    "experience": {
+      "intro": "The experience library is used only for Skill Evolution and is never injected into everyday chats.",
+      "empty": "No experience articles yet. They appear after you distill or reject a proposal.",
+      "conversation": "conversation {{id}}…",
+      "pickHint": "Select an experience article on the left to see its text and links.",
+      "body": "Body",
+      "sources": "Source conversations: {{ids}}",
+      "tags": "Tags: {{tags}}"
+    },
+    "proposals": {
+      "empty": "No proposals yet. Start by distilling a skill from a conversation.",
+      "untitledSkill": "Unnamed skill",
+      "evolveAgain": "Distill again",
+      "submit": "Submit for review",
+      "approve": "Approve",
+      "reject": "Reject",
+      "writeHub": "Write to Skills Hub",
+      "rollback": "Roll back",
+      "pickHint": "Select a proposal on the left to see its draft and review it.",
+      "signals": "Heuristic gate signals",
+      "signalWeight": "(weight {{weight}})",
+      "mode": "Mode: {{mode}}",
+      "summary": "Experience summary",
+      "emptyValue": "(empty)",
+      "linkedExperience": "Linked experience: {{ids}}",
+      "draft": "SKILL.md draft",
+      "comment": "Review comment (optional)",
+      "commentPlaceholder": "Optional when approving, rejecting or rolling back",
+      "exportPreview": "Export preview",
+      "copySkill": "Copy SKILL.md"
+    },
+    "create": {
+      "back": "← Back to Skill Evolution",
+      "intro": "Pick a trajectory from a recent conversation → \"Distill\" runs the Maintainer/Proposer → edit the draft and submit it for review. The experience library is used only for Skill Evolution and is never injected into everyday chats.",
+      "pickConversation": "Conversation *",
+      "pickPlaceholder": "Choose from recent conversations",
+      "pasteHint": "You can also paste a conversation ID",
+      "pastePlaceholder": "or paste a conversation id",
+      "overview": "Trajectory overview",
+      "lastModel": "Last distilled with: {{model}}",
+      "evolve": "Distill",
+      "evolveHint": "Needs a working model; afterwards you get an editable proposal",
+      "titleLabel": "Title *",
+      "titlePlaceholder": "e.g. Weekly report formatting",
+      "assistantLabel": "Target agent ID (optional; can be pinned after approval)",
+      "visibilityLabel": "Experience visibility",
+      "visibilityPrivate": "Private (only me)",
+      "visibilityTeam": "Team (members can read)",
+      "teamId": "Team ID *",
+      "teamIdPlaceholder": "team id (required for team visibility)",
+      "skillKey": "Suggested skill key",
+      "summaryLabel": "Experience summary",
+      "summaryPlaceholder": "What worked in this conversation? What was the root cause of any failure?",
+      "draftLabel": "SKILL.md draft (leave empty for a generated template)",
+      "draftPlaceholder": "Leave empty and the server generates a stub template; Distill fills it in",
+      "submitNow": "Submit for review right after creating",
+      "create": "Create proposal manually",
+      "cancel": "Cancel",
+      "untitled": "Untitled",
+      "needConversation": "Choose a conversation first",
+      "evolved": "Distilled; {{count}} experience articles written",
+      "evolvedModel": "Model: {{model}}",
+      "evolveFailed": "Distill failed (make sure a model is configured and Core has the Phase 2 API)",
+      "needTitle": "Enter a title",
+      "createdSubmitted": "Proposal created and submitted for review",
+      "draftSaved": "Proposal draft saved",
+      "createFailed": "Could not create it (check that you own the conversation and the Core version)"
+    }
   },
   "runtimeRestart": {
     "tooltip": "Reconnect agent",
