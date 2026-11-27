@@ -1388,11 +1388,7 @@
       "urgent": "Терміновий"
     },
     "assignee": {
-      "title": "Виконавець",
       "none": "Не призначено",
-      "idPlaceholder": "ID виконавця",
-      "save": "Призначити",
-      "unassign": "Зняти призначення",
       "kind": {
         "user": "Користувач",
         "agent": "Агент",
@@ -1646,6 +1642,15 @@
         "task_ended": "Завдання завершено."
       },
       "commit": "Коміт {{ref}}"
+    },
+    "advanced": {
+      "title": "Додатково",
+      "squad": "Передати Squad",
+      "squadHint": "Squad запускає кількох агентів над цим завданням в одному спільному worktree.",
+      "squadPlaceholder": "Виберіть шаблон Squad",
+      "assign": "Передати",
+      "unassign": "Забрати",
+      "noSquads": "Шаблонів Squad поки немає. Створіть його в розділі Агенти › Додатково › Squads."
     }
   },
   "squadRouteOnly": {

@@ -1370,11 +1370,7 @@
       "urgent": "Urgent"
     },
     "assignee": {
-      "title": "Assignee",
       "none": "Unassigned",
-      "idPlaceholder": "Assignee ID",
-      "save": "Assign",
-      "unassign": "Unassign",
       "kind": {
         "user": "User",
         "agent": "Agent",
@@ -1626,6 +1622,15 @@
         "task_ended": "The task ended."
       },
       "commit": "Commit {{ref}}"
+    },
+    "advanced": {
+      "title": "Advanced",
+      "squad": "Hand off to a Squad",
+      "squadHint": "A Squad runs several agents on this task in one shared worktree.",
+      "squadPlaceholder": "Choose a Squad template",
+      "assign": "Hand off",
+      "unassign": "Take back",
+      "noSquads": "No Squad templates yet. Create one under Agents › Advanced › Squads."
     }
   },
   "squadRouteOnly": {

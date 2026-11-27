@@ -12,7 +12,8 @@ import classNames from 'classnames';
 import { ipcBridge } from '@/common';
 import type { TaskBoardItem, TaskBoardStatus, TaskSession } from '@/common/types/agent/taskSession';
 import type { WorktreeInfo } from '@/common/types/worktree';
-import TaskBoardAssigneeEditor from './TaskBoardAssigneeEditor';
+import TaskDetailAdvanced from './TaskDetailAdvanced';
+import TaskSquadPicker from './TaskSquadPicker';
 import TaskBoardSquadStart from './TaskBoardSquadStart';
 import TaskBoardTimeline from './TaskBoardTimeline';
 import TaskBoardWorktreePanel from './TaskBoardWorktreePanel';
@@ -292,14 +293,16 @@ const TaskBoardDetailDrawer: React.FC<TaskBoardDetailDrawerProps> = ({
       {task.assignee?.kind === 'squad' && task.assignee.id ? (
         <SquadRunPanel templateId={task.assignee.id} onOpenConversation={onOpenConversation} />
       ) : null}
-      {interactive && canStartSquadForItem(task) ? (
-        <TaskBoardSquadStart item={task} hasWorktree={Boolean(worktree)} onStarted={() => onSquadStarted?.()} />
-      ) : null}
       {worktree ? (
         <TaskBoardWorktreePanel worktree={worktree} boardStatus={task.board_status} refreshKey={refreshKey} />
       ) : null}
       {interactive ? (
-        <TaskBoardAssigneeEditor item={task} onUpdated={(item) => onItemUpdated?.(item)} onStale={() => onStale?.()} />
+        <TaskDetailAdvanced taskId={task.id} defaultOpen={task.assignee?.kind === 'squad'}>
+          <TaskSquadPicker item={task} onUpdated={(item) => onItemUpdated?.(item)} onStale={() => onStale?.()} />
+          {canStartSquadForItem(task) ? (
+            <TaskBoardSquadStart item={task} hasWorktree={Boolean(worktree)} onStarted={() => onSquadStarted?.()} />
+          ) : null}
+        </TaskDetailAdvanced>
       ) : null}
     </div>
   );

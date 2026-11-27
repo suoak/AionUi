@@ -386,7 +386,8 @@
         "enterprise": "سازمان"
       },
       "skills_one": "{{count}} مهارت",
-      "skills_other": "{{count}} مهارت"
+      "skills_other": "{{count}} مهارت",
+      "advanced": "پیشرفته"
     },
     "preflight": {
       "level": {

@@ -1376,11 +1376,7 @@
       "urgent": "Urgente"
     },
     "assignee": {
-      "title": "Responsável",
       "none": "Não atribuído",
-      "idPlaceholder": "ID do responsável",
-      "save": "Atribuir",
-      "unassign": "Remover atribuição",
       "kind": {
         "user": "Usuário",
         "agent": "Agente",
@@ -1632,6 +1628,15 @@
         "task_ended": "A tarefa terminou."
       },
       "commit": "Commit {{ref}}"
+    },
+    "advanced": {
+      "title": "Avançado",
+      "squad": "Passar para uma Squad",
+      "squadHint": "Uma Squad coloca vários agentes nesta tarefa em uma worktree compartilhada.",
+      "squadPlaceholder": "Escolha um modelo de Squad",
+      "assign": "Passar",
+      "unassign": "Retomar",
+      "noSquads": "Ainda não há modelos de Squad. Crie um em Agentes › Avançado › Squads."
     }
   },
   "squadRouteOnly": {

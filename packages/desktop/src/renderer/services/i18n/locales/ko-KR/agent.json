@@ -386,7 +386,8 @@
         "enterprise": "기업"
       },
       "skills_one": "스킬 {{count}}개",
-      "skills_other": "스킬 {{count}}개"
+      "skills_other": "스킬 {{count}}개",
+      "advanced": "고급"
     },
     "preflight": {
       "level": {

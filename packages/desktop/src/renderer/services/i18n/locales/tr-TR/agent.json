@@ -386,7 +386,8 @@
         "enterprise": "Kurum"
       },
       "skills_one": "{{count}} beceri",
-      "skills_other": "{{count}} beceri"
+      "skills_other": "{{count}} beceri",
+      "advanced": "Gelişmiş"
     },
     "preflight": {
       "level": {
