@@ -97,5 +97,21 @@
   "requestDetails": "Détails de la demande :",
   "delivery": {
     "pending": "Non lu"
+  },
+  "atAssistant": {
+    "group": "Assistants",
+    "filesGroup": "Fichiers"
+  },
+  "delegation": {
+    "title": "Délégations",
+    "open": "Ouvrir",
+    "status": {
+      "starting": "Démarrage",
+      "running": "En cours",
+      "completed": "Terminée",
+      "failed": "Échec"
+    },
+    "more_one": "+{{count}} autre",
+    "more_other": "+{{count}} autres"
   }
 }

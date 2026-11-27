@@ -97,5 +97,21 @@
   "requestDetails": "Anfragedetails:",
   "delivery": {
     "pending": "Ungelesen"
+  },
+  "atAssistant": {
+    "group": "Assistenten",
+    "filesGroup": "Dateien"
+  },
+  "delegation": {
+    "title": "Delegierungen",
+    "open": "Öffnen",
+    "status": {
+      "starting": "Startet",
+      "running": "Läuft",
+      "completed": "Fertig",
+      "failed": "Fehlgeschlagen"
+    },
+    "more_one": "+{{count}} weitere",
+    "more_other": "+{{count}} weitere"
   }
 }

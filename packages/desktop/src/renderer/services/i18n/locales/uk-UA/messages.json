@@ -103,5 +103,23 @@
   "requestDetails": "Деталі запиту:",
   "delivery": {
     "pending": "Непрочитано"
+  },
+  "atAssistant": {
+    "group": "Асистенти",
+    "filesGroup": "Файли"
+  },
+  "delegation": {
+    "title": "Доручення",
+    "open": "Відкрити",
+    "status": {
+      "starting": "Запуск",
+      "running": "Виконується",
+      "completed": "Готово",
+      "failed": "Помилка"
+    },
+    "more_one": "ще {{count}}",
+    "more_other": "ще {{count}}",
+    "more_few": "ще {{count}}",
+    "more_many": "ще {{count}}"
   }
 }

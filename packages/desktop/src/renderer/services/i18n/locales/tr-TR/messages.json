@@ -97,5 +97,21 @@
   "requestDetails": "İstek ayrıntıları:",
   "delivery": {
     "pending": "Okunmadı"
+  },
+  "atAssistant": {
+    "group": "Asistanlar",
+    "filesGroup": "Dosyalar"
+  },
+  "delegation": {
+    "title": "Devirler",
+    "open": "Aç",
+    "status": {
+      "starting": "Başlıyor",
+      "running": "Çalışıyor",
+      "completed": "Bitti",
+      "failed": "Başarısız"
+    },
+    "more_one": "+{{count}} daha",
+    "more_other": "+{{count}} daha"
   }
 }
