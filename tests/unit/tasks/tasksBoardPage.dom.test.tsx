@@ -248,8 +248,11 @@ describe('TasksBoardPage', () => {
     expect(mocks.boardGet).toHaveBeenCalledWith({});
     expect(mocks.list).not.toHaveBeenCalled();
 
-    fireEvent.click(screen.getByRole('switch'));
-    expect(within(column('cancelled')).getByTestId('task-board-card-x')).toBeTruthy();
+    fireEvent.click(screen.getByTestId('tasks-board-more'));
+    fireEvent.click(await screen.findByText('conversation.taskBoard.showCancelled'));
+    expect(
+      within(await screen.findByTestId('tasks-board-lane-cancelled')).getByTestId('task-board-card-x')
+    ).toBeTruthy();
   });
 
   it('falls back to the read-only task-session list on cores without the board API', async () => {
@@ -535,9 +538,11 @@ describe('TasksBoardPage', () => {
     render(<TasksBoardPage />);
     await screen.findByTestId('task-board-card-s1');
 
-    const button = screen.getByTestId('tasks-board-open-scheduled');
-    expect(button.textContent).toBe('conversation.taskBoard.openScheduled');
-    fireEvent.click(button);
+    // 3.0 V12: Scheduled sits in the New task ▾ menu next to GitHub import.
+    const [, menuTrigger] = within(screen.getByTestId('tasks-board-new-task')).getAllByRole('button');
+    fireEvent.mouseEnter(menuTrigger);
+    fireEvent.click(menuTrigger);
+    fireEvent.click(await screen.findByText('conversation.taskBoard.openScheduled'));
     expect(mocks.navigate).toHaveBeenCalledWith('/scheduled');
   });
 
@@ -653,7 +658,7 @@ describe('3.0 new task entry', () => {
     mocks.searchParams = new URLSearchParams();
     mocks.boardGet.mockResolvedValue(board(item('a', 'todo')));
     const { unmount } = render(<TasksBoardPage />);
-    fireEvent.click(await screen.findByTestId('tasks-board-new-task'));
+    fireEvent.click(within(await screen.findByTestId('tasks-board-new-task')).getAllByRole('button')[0]);
     expect(await screen.findByTestId('new-task-form')).toBeTruthy();
     unmount();
 
@@ -703,5 +708,30 @@ describe('3.0 task detail page (U3)', () => {
     expect(page.querySelector('.arco-tabs-header-title-active')?.textContent).toBe(
       'conversation.taskBoard.detail3.tabs.overview'
     );
+  });
+});
+
+describe('3.0 V12 tasks header', () => {
+  it('shows one primary action and no manual Refresh button', async () => {
+    mocks.searchParams = new URLSearchParams();
+    mocks.boardGet.mockResolvedValue(board(item('h', 'todo')));
+    render(<TasksBoardPage />);
+    await screen.findByTestId('task-board-card-h');
+    expect(screen.queryByText('conversation.taskBoard.refresh')).toBeNull();
+    const primaries = [...screen.getByTestId('tasks-board-page').querySelectorAll('.arco-btn-primary')];
+    // The split button (New task + its ▾) is the only primary control.
+    expect(primaries.length).toBeGreaterThan(0);
+    expect(primaries.every((el) => screen.getByTestId('tasks-board-new-task').contains(el))).toBe(true);
+  });
+
+  it('refetches quietly when the window becomes visible again', async () => {
+    mocks.searchParams = new URLSearchParams();
+    mocks.boardGet.mockResolvedValue(board(item('v', 'todo')));
+    render(<TasksBoardPage />);
+    await screen.findByTestId('task-board-card-v');
+    const calls = mocks.boardGet.mock.calls.length;
+    document.dispatchEvent(new Event('visibilitychange'));
+    await waitFor(() => expect(mocks.boardGet.mock.calls.length).toBe(calls + 1));
+    expect(screen.getByTestId('task-board-card-v')).toBeTruthy();
   });
 });

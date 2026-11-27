@@ -1319,7 +1319,7 @@
     "ambientMcpTip": "此後端可能載入本機設定的 MCP 伺服器，實際載入情況未知。"
   },
   "taskBoard": {
-    "title": "工作項看板",
+    "title": "任務",
     "description": "依流程狀態檢視任務工作階段",
     "refresh": "重新整理",
     "loadFailed": "任務清單載入失敗",
@@ -1627,7 +1627,8 @@
         "task_ended": "任務已結束。"
       },
       "commit": "提交 {{ref}}"
-    }
+    },
+    "moreActions": "更多操作"
   },
   "squadRouteOnly": {
     "title": "Squad Leader 只能派工",

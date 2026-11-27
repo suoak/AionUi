@@ -51,7 +51,6 @@ vi.mock('@renderer/components/layout/Sider/SiderNav', () => ({
   },
   SiderAgentsEntry: entry('sider-agents'),
   SiderSkillEvolutionEntry: entry('sider-skills'),
-  SiderAssistantEntry: entry('sider-assistants'),
   SiderUsageEntry: entry('sider-usage'),
   SiderInboxEntry: entry('sider-inbox'),
   SiderTasksBoardEntry: entry('sider-tasks'),
@@ -85,11 +84,16 @@ describe('Sider 3.0 IA navigation (U1)', () => {
 
   it('orders the primary entries before secondary ones', () => {
     render(<Sider />);
-    const order = ['sider-tasks', 'sider-agents', 'sider-skills', 'sider-automations', 'sider-assistants'];
+    const order = ['sider-tasks', 'sider-agents', 'sider-skills', 'sider-automations'];
     const nodes = order.map((id) => screen.getByTestId(id));
     for (let i = 1; i < nodes.length; i++) {
       expect(nodes[i - 1].compareDocumentPosition(nodes[i]) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
     }
+  });
+
+  it('has no separate Assistants row (3.0 V12; reachable from the command palette)', () => {
+    render(<Sider />);
+    expect(screen.queryByTestId('sider-assistants')).toBeNull();
   });
 
   it('moves usage and inbox out of the desktop sider (status bar + titlebar bell)', () => {

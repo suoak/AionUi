@@ -1319,7 +1319,7 @@
     "ambientMcpTip": "This backend may load MCP servers configured on this machine; what it actually loaded is unknown."
   },
   "taskBoard": {
-    "title": "Work board",
+    "title": "Tasks",
     "description": "Task sessions by workflow stage",
     "refresh": "Refresh",
     "loadFailed": "Failed to load tasks",
@@ -1627,7 +1627,8 @@
         "task_ended": "The task ended."
       },
       "commit": "Commit {{ref}}"
-    }
+    },
+    "moreActions": "More actions"
   },
   "squadRouteOnly": {
     "title": "Squad Leader can only route work",

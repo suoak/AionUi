@@ -1319,7 +1319,7 @@
     "ambientMcpTip": "Dieses Backend kann auf diesem Rechner konfigurierte MCP-Server laden; was tatsächlich geladen wurde, ist unbekannt."
   },
   "taskBoard": {
-    "title": "Arbeitsboard",
+    "title": "Aufgaben",
     "description": "Aufgabensitzungen nach Workflow-Phase",
     "refresh": "Aktualisieren",
     "loadFailed": "Aufgaben konnten nicht geladen werden",
@@ -1627,7 +1627,8 @@
         "task_ended": "Die Aufgabe ist beendet."
       },
       "commit": "Commit {{ref}}"
-    }
+    },
+    "moreActions": "Weitere Aktionen"
   },
   "squadRouteOnly": {
     "title": "Squad Leader darf nur Arbeit verteilen",

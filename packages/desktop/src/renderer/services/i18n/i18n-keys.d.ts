@@ -1890,6 +1890,7 @@ export type I18nKey =
   | 'conversation.taskBoard.mode.agent'
   | 'conversation.taskBoard.mode.goal'
   | 'conversation.taskBoard.mode.plan'
+  | 'conversation.taskBoard.moreActions'
   | 'conversation.taskBoard.move.placeholder'
   | 'conversation.taskBoard.move.title'
   | 'conversation.taskBoard.needsYou.failed'

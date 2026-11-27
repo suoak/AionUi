@@ -1319,7 +1319,7 @@
     "ambientMcpTip": "Ce backend peut charger des serveurs MCP configurés sur cette machine ; ce qui a réellement été chargé est inconnu."
   },
   "taskBoard": {
-    "title": "Tableau de travail",
+    "title": "Tâches",
     "description": "Sessions de tâches par étape du flux",
     "refresh": "Actualiser",
     "loadFailed": "Échec du chargement des tâches",
@@ -1627,7 +1627,8 @@
         "task_ended": "La tâche est terminée."
       },
       "commit": "Commit {{ref}}"
-    }
+    },
+    "moreActions": "Plus d’actions"
   },
   "squadRouteOnly": {
     "title": "Le Squad Leader ne peut que répartir le travail",

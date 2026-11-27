@@ -106,6 +106,15 @@ export const STATIC_PALETTE_COMMANDS: readonly PaletteCommand[] = [
     keywords: ['new agent', 'wizard'],
   },
   {
+    // 3.0 V12: the sider no longer has an Assistants row; presets stay one search away.
+    id: 'nav.assistants',
+    title: 'Assistants',
+    titleKey: 'settings.assistants',
+    group: 'agents',
+    path: '/assistants',
+    keywords: ['assistant', 'preset', '助手'],
+  },
+  {
     id: 'nav.settings',
     title: 'Settings',
     titleKey: 'common.commandPalette.commands.settings',

@@ -1319,7 +1319,7 @@
     "ambientMcpTip": "该后端可能加载本机配置的 MCP 服务器，实际加载情况未知。"
   },
   "taskBoard": {
-    "title": "工作项看板",
+    "title": "任务",
     "description": "按流程状态查看任务会话",
     "refresh": "刷新",
     "loadFailed": "任务列表加载失败",
@@ -1627,7 +1627,8 @@
         "task_ended": "任务已结束。"
       },
       "commit": "提交 {{ref}}"
-    }
+    },
+    "moreActions": "更多操作"
   },
   "squadRouteOnly": {
     "title": "Squad Leader 只能派活",

@@ -1319,7 +1319,7 @@
     "ambientMcpTip": "이 백엔드는 이 컴퓨터에 설정된 MCP 서버를 불러올 수 있으며, 실제 로드 여부는 알 수 없습니다."
   },
   "taskBoard": {
-    "title": "작업 보드",
+    "title": "작업",
     "description": "워크플로 단계별 작업 세션",
     "refresh": "새로 고침",
     "loadFailed": "작업 목록을 불러오지 못했습니다",
@@ -1627,7 +1627,8 @@
         "task_ended": "작업이 종료되었습니다."
       },
       "commit": "커밋 {{ref}}"
-    }
+    },
+    "moreActions": "추가 작업"
   },
   "squadRouteOnly": {
     "title": "Squad Leader는 작업 배분만 할 수 있습니다",

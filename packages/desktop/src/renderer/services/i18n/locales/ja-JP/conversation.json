@@ -1319,7 +1319,7 @@
     "ambientMcpTip": "このバックエンドはこのマシンで設定された MCP サーバーを読み込む可能性があります。実際の読み込み状況は不明です。"
   },
   "taskBoard": {
-    "title": "作業ボード",
+    "title": "タスク",
     "description": "タスクセッションをワークフロー段階ごとに表示",
     "refresh": "更新",
     "loadFailed": "タスクの読み込みに失敗しました",
@@ -1627,7 +1627,8 @@
         "task_ended": "タスクが終了しました。"
       },
       "commit": "コミット {{ref}}"
-    }
+    },
+    "moreActions": "その他の操作"
   },
   "squadRouteOnly": {
     "title": "Squad Leader は作業の割り振りのみ可能です",

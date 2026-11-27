@@ -56,9 +56,13 @@ const SettingsPageHeader: React.FC<SettingsPageHeaderProps> = ({
       data-testid={dataTestId}
       className={classNames('bg-1', sticky && 'sticky top-0 z-10 -mt-14px pt-14px md:-mt-32px md:pt-32px')}
     >
-      <div className='flex items-center justify-between gap-12px sm:gap-16px'>
-        <h1 className='m-0 min-w-0 flex-1 text-20px font-semibold leading-28px text-t-primary'>{title}</h1>
-        {actions ? <div className='shrink-0 flex flex-wrap items-center justify-end gap-8px'>{actions}</div> : null}
+      {/* The title keeps at least 200px: when the actions don't fit beside it they
+          wrap onto their own line instead of squeezing the title (3.0 V12). */}
+      <div className='flex flex-wrap items-center justify-between gap-x-16px gap-y-8px'>
+        <h1 className='m-0 min-w-0 flex-[1_1_200px] text-20px font-semibold leading-28px text-t-primary break-words'>
+          {title}
+        </h1>
+        {actions ? <div className='max-w-full flex flex-wrap items-center justify-end gap-8px'>{actions}</div> : null}
       </div>
       {description ? <p className='m-0 mt-8px text-13px leading-relaxed text-t-secondary'>{description}</p> : null}
 

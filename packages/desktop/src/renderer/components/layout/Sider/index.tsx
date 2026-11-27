@@ -12,7 +12,6 @@ import {
   SiderSearchEntry,
   SiderAgentsEntry,
   SiderSkillEvolutionEntry,
-  SiderAssistantEntry,
   SiderUsageEntry,
   SiderInboxEntry,
   SiderTasksBoardEntry,
@@ -231,19 +230,6 @@ const Sider: React.FC<SiderProps> = ({ onSessionClick, collapsed = false }) => {
     }
   };
 
-  const handleAssistantClick = () => {
-    cleanupSiderTooltips();
-    blurActiveElement();
-    closePreview();
-    setIsBatchMode(false);
-    Promise.resolve(navigate('/assistants')).catch((error) => {
-      console.error('Navigation failed:', error);
-    });
-    if (onSessionClick) {
-      onSessionClick();
-    }
-  };
-
   const handleQuickThemeToggle = () => {
     void setTheme(theme === 'dark' ? 'light' : 'dark');
   };
@@ -366,13 +352,6 @@ const Sider: React.FC<SiderProps> = ({ onSessionClick, collapsed = false }) => {
               collapsed={collapsed}
               siderTooltipProps={siderTooltipProps}
               onClick={handleAutomationsClick}
-            />
-            <SiderAssistantEntry
-              isMobile={isMobile}
-              isActive={pathname.startsWith('/assistants')}
-              collapsed={collapsed}
-              siderTooltipProps={siderTooltipProps}
-              onClick={handleAssistantClick}
             />
             {/* 3.0 shell: on desktop usage lives in the status bar and the inbox in the
                 titlebar bell; mobile has neither, so it keeps both rows here. */}

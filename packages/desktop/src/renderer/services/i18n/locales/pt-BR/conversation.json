@@ -1319,7 +1319,7 @@
     "ambientMcpTip": "Este backend pode carregar servidores MCP configurados nesta máquina; o que foi realmente carregado é desconhecido."
   },
   "taskBoard": {
-    "title": "Quadro de trabalho",
+    "title": "Tarefas",
     "description": "Sessões de tarefa por etapa do fluxo",
     "refresh": "Atualizar",
     "loadFailed": "Falha ao carregar tarefas",
@@ -1627,7 +1627,8 @@
         "task_ended": "A tarefa terminou."
       },
       "commit": "Commit {{ref}}"
-    }
+    },
+    "moreActions": "Mais ações"
   },
   "squadRouteOnly": {
     "title": "O Squad Leader só pode distribuir trabalho",

@@ -1319,7 +1319,7 @@
     "ambientMcpTip": "Bu arka uç bu makinede yapılandırılmış MCP sunucularını yükleyebilir; gerçekte neyin yüklendiği bilinmiyor."
   },
   "taskBoard": {
-    "title": "İş panosu",
+    "title": "Görevler",
     "description": "Görev oturumları iş akışı aşamasına göre",
     "refresh": "Yenile",
     "loadFailed": "Görevler yüklenemedi",
@@ -1627,7 +1627,8 @@
         "task_ended": "Görev sona erdi."
       },
       "commit": "Commit {{ref}}"
-    }
+    },
+    "moreActions": "Diğer işlemler"
   },
   "squadRouteOnly": {
     "title": "Squad Leader yalnızca iş dağıtabilir",

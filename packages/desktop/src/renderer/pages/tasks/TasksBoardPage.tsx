@@ -8,7 +8,7 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import classNames from 'classnames';
-import { Alert, Button, Empty, Message, Radio, Spin, Switch } from '@arco-design/web-react';
+import { Alert, Button, Dropdown, Empty, Menu, Message, Radio, Spin } from '@arco-design/web-react';
 import {
   DndContext,
   PointerSensor,
@@ -29,7 +29,9 @@ import TaskBoardCard from './TaskBoardCard';
 import TaskBoardDetailDrawer from './TaskBoardDetailDrawer';
 import GithubIssueImportModal from './GithubIssueImportModal';
 import NewTaskDialog from './NewTaskDialog';
-import { Plus } from '@icon-park/react';
+import { Check, More } from '@icon-park/react';
+import SplitButton from '@/renderer/components/design/SplitButton';
+import WmIcon from '@/renderer/components/design/WmIcon';
 import TaskListView from './TaskListView';
 import { VISIBLE_LANES, laneDropAction, laneForItem, lanesFromColumns } from './laneModel';
 import { useWorkItemWorktrees } from './useWorkItemWorktrees';
@@ -52,6 +54,8 @@ type LoadState = 'loading' | 'ready' | 'failed';
 type DataSource = 'board' | 'legacy';
 
 const EMPTY_COLUMNS = columnsFromTaskSessions([]);
+/** Quiet backstop refetch while the page is visible (realtime pushes do the rest). */
+export const AUTO_REFRESH_MS = 60_000;
 
 const DraggableCard: React.FC<{
   item: TaskBoardItem;
@@ -195,6 +199,20 @@ const TasksBoardPage: React.FC = () => {
       { replace: true }
     );
   }, [importRequested, interactive, setSearchParams]);
+
+  // 3.0 V12: no Refresh button. Pushes keep the board current; as a backstop,
+  // refetch quietly when the window comes back and once a minute while visible.
+  useEffect(() => {
+    const refreshIfVisible = () => {
+      if (document.visibilityState === 'visible') load(true);
+    };
+    const timer = setInterval(refreshIfVisible, AUTO_REFRESH_MS);
+    document.addEventListener('visibilitychange', refreshIfVisible);
+    return () => {
+      clearInterval(timer);
+      document.removeEventListener('visibilitychange', refreshIfVisible);
+    };
+  }, [load]);
 
   useEffect(() => {
     const timers = pendingFallbacks.current;
@@ -378,7 +396,7 @@ const TasksBoardPage: React.FC = () => {
           title={t('conversation.taskBoard.title')}
           description={t('conversation.taskBoard.description')}
           actions={
-            <div className='flex items-center gap-12px'>
+            <div className='flex items-center gap-8px flex-wrap justify-end'>
               <Radio.Group
                 type='button'
                 size='small'
@@ -389,42 +407,61 @@ const TasksBoardPage: React.FC = () => {
                 <Radio value='board'>{t('conversation.taskBoard.flow.viewBoard')}</Radio>
                 <Radio value='list'>{t('conversation.taskBoard.flow.viewList')}</Radio>
               </Radio.Group>
-              <label className='flex items-center gap-6px text-13px text-t-secondary cursor-pointer'>
-                <Switch
-                  size='small'
-                  checked={showCancelled}
-                  onChange={setShowCancelled}
-                  data-testid='tasks-board-show-cancelled'
-                />
-                {t('conversation.taskBoard.showCancelled')}
-              </label>
-              {interactive ? (
-                <Button size='small' data-testid='tasks-board-github-import' onClick={() => setImportOpen(true)}>
-                  {t('conversation.taskBoard.githubImport.open')}
-                </Button>
-              ) : null}
-              <Button
-                size='small'
-                type='outline'
-                data-testid='tasks-board-open-scheduled'
-                onClick={() => navigate('/scheduled')}
+              <Dropdown
+                trigger='click'
+                position='br'
+                droplist={
+                  <Menu onClickMenuItem={() => setShowCancelled((on) => !on)}>
+                    <Menu.Item key='show-cancelled' data-testid='tasks-board-show-cancelled'>
+                      <span className='inline-flex items-center gap-8px'>
+                        <span className='inline-flex w-14px justify-center' aria-hidden='true'>
+                          {showCancelled ? <Check theme='outline' size='14' /> : null}
+                        </span>
+                        <span role='menuitemcheckbox' aria-checked={showCancelled}>
+                          {t('conversation.taskBoard.showCancelled')}
+                        </span>
+                      </span>
+                    </Menu.Item>
+                  </Menu>
+                }
               >
-                {t('conversation.taskBoard.openScheduled', { defaultValue: 'Scheduled' })}
-              </Button>
-              <Button size='small' onClick={() => load()} loading={loadState === 'loading'}>
-                {t('conversation.taskBoard.refresh')}
-              </Button>
+                <Button
+                  size='small'
+                  aria-label={t('conversation.taskBoard.moreActions')}
+                  data-testid='tasks-board-more'
+                  icon={<WmIcon icon={More} size={14} />}
+                />
+              </Dropdown>
               {interactive ? (
+                <span data-testid='tasks-board-new-task'>
+                  <SplitButton
+                    size='small'
+                    label={t('conversation.taskBoard.newTask.open')}
+                    onClick={() => setNewTaskOpen(true)}
+                    menuLabel={t('conversation.taskBoard.moreActions')}
+                    options={[
+                      { key: 'github', label: t('conversation.taskBoard.githubImport.open') },
+                      {
+                        key: 'scheduled',
+                        label: t('conversation.taskBoard.openScheduled', { defaultValue: 'Scheduled' }),
+                      },
+                    ]}
+                    onSelect={(key) => {
+                      if (key === 'github') setImportOpen(true);
+                      else if (key === 'scheduled') navigate('/scheduled');
+                    }}
+                  />
+                </span>
+              ) : (
                 <Button
                   size='small'
                   type='primary'
-                  icon={<Plus theme='outline' size='14' />}
-                  data-testid='tasks-board-new-task'
-                  onClick={() => setNewTaskOpen(true)}
+                  data-testid='tasks-board-open-scheduled'
+                  onClick={() => navigate('/scheduled')}
                 >
-                  {t('conversation.taskBoard.newTask.open')}
+                  {t('conversation.taskBoard.openScheduled', { defaultValue: 'Scheduled' })}
                 </Button>
-              ) : null}
+              )}
             </div>
           }
         />
