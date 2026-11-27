@@ -1591,6 +1591,9 @@
       "adopted": "已採納到 {{branch}}（{{commit}}）",
       "prLink": "拉取請求：",
       "noChanges": "還沒有可審查的變更。"
+    },
+    "conversationTask": {
+      "open": "開啟此任務"
     }
   },
   "squadRouteOnly": {

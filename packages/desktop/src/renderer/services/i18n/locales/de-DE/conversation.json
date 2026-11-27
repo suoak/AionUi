@@ -1591,6 +1591,9 @@
       "adopted": "In {{branch}} übernommen ({{commit}})",
       "prLink": "Pull-Request:",
       "noChanges": "Noch keine Änderungen zum Prüfen."
+    },
+    "conversationTask": {
+      "open": "Diese Aufgabe öffnen"
     }
   },
   "squadRouteOnly": {

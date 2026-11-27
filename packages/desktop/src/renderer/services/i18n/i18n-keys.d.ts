@@ -1765,6 +1765,7 @@ export type I18nKey =
   | 'conversation.taskBoard.columns.in_progress'
   | 'conversation.taskBoard.columns.in_review'
   | 'conversation.taskBoard.columns.todo'
+  | 'conversation.taskBoard.conversationTask.open'
   | 'conversation.taskBoard.description'
   | 'conversation.taskBoard.detail.acceptanceCriteria'
   | 'conversation.taskBoard.detail.agent'

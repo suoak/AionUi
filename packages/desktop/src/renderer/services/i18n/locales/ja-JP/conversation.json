@@ -1591,6 +1591,9 @@
       "adopted": "{{branch}} に採用しました（{{commit}}）",
       "prLink": "プルリクエスト：",
       "noChanges": "レビューする変更はまだありません。"
+    },
+    "conversationTask": {
+      "open": "このタスクを開く"
     }
   },
   "squadRouteOnly": {

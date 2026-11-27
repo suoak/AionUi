@@ -1591,6 +1591,9 @@
       "adopted": "{{branch}}에 채택했습니다({{commit}})",
       "prLink": "풀 리퀘스트:",
       "noChanges": "아직 검토할 변경 사항이 없습니다."
+    },
+    "conversationTask": {
+      "open": "이 작업 열기"
     }
   },
   "squadRouteOnly": {

@@ -1591,6 +1591,9 @@
       "adopted": "{{branch}} dalına benimsendi ({{commit}})",
       "prLink": "Çekme isteği:",
       "noChanges": "Henüz incelenecek değişiklik yok."
+    },
+    "conversationTask": {
+      "open": "Bu görevi aç"
     }
   },
   "squadRouteOnly": {

@@ -1591,6 +1591,9 @@
       "adopted": "در {{branch}} پذیرفته شد ({{commit}})",
       "prLink": "درخواست ادغام:",
       "noChanges": "هنوز تغییری برای بازبینی نیست."
+    },
+    "conversationTask": {
+      "open": "باز کردن این کار"
     }
   },
   "squadRouteOnly": {

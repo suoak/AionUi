@@ -1611,6 +1611,9 @@
       "adopted": "Прийнято в {{branch}} ({{commit}})",
       "prLink": "Пул-реквест:",
       "noChanges": "Поки немає змін для перевірки."
+    },
+    "conversationTask": {
+      "open": "Відкрити це завдання"
     }
   },
   "squadRouteOnly": {
