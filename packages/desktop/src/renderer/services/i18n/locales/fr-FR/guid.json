@@ -13,5 +13,12 @@
     "specifyWorkspace": "Sélectionnez le dossier du projet",
     "searchPlaceholder": "Rechercher des projets…",
     "noProject": "Aucun projet"
+  },
+  "agentPreview": {
+    "title": "Aperçu d'essai de l'agent",
+    "published": "Vous prévisualisez la configuration publiée.",
+    "draft": "Vous prévisualisez le brouillon actuel. Après l'essai, vous pouvez revenir améliorer les instructions ou en faire une compétence.",
+    "backToImprove": "Revenir pour améliorer",
+    "openAgent": "Ouvrir les détails de l'agent"
   }
 }

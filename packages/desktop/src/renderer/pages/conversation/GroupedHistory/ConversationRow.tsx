@@ -349,7 +349,7 @@ const ConversationRow: React.FC<ConversationRowProps> = (props) => {
                     <Menu.Item key='evolveSkill'>
                       <div className='flex items-center gap-8px'>
                         <Robot theme='outline' size='14' />
-                        <span>提炼为技能</span>
+                        <span>{t('conversation.history.evolveSkill')}</span>
                       </div>
                     </Menu.Item>
                     {onExport && (
