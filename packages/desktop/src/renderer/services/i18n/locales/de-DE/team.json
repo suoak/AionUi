@@ -59,7 +59,7 @@
     "searchPlaceholder": "Search",
     "noSearchResults": "No results found",
     "selectedMembers": "Selected members",
-    "teamLeader": "Team Leader",
+    "teamLeader": "Teamleitung",
     "currentLeader": "Current Leader",
     "setAsLeader": "Set as Leader",
     "teammate": "Teammate",
@@ -71,7 +71,7 @@
     "allAssistantsWithCount": "All assistants ({{count}})",
     "selectedMembersWithCount": "Selected members {{count}} · ⚑ = Leader",
     "selectedMembersTitleWithCount": "Selected members {{count}}",
-    "leaderLegend": "= Leader",
+    "leaderLegend": "= Leitung",
     "membersHelper": "Choose team members and assign one Leader. The same assistant can be selected multiple times.",
     "memberHint": "No suitable assistant as a member? After creation, let the Leader create temporary team members in chat."
   },

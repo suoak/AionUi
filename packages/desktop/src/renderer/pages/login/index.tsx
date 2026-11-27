@@ -1,7 +1,8 @@
 import loginLogo from '@renderer/assets/logos/brand/app.png';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { changeLanguage } from '@/renderer/services/i18n';
+import { changeLanguage, normalizeLanguageCode } from '@/renderer/services/i18n';
+import { configService } from '@/common/config/configService';
 import { useNavigate } from 'react-router-dom';
 import AppLoader from '@renderer/components/layout/AppLoader';
 import { useAuth } from '../../hooks/context/AuthContext';
@@ -123,8 +124,14 @@ const LoginPage: React.FC = () => {
     []
   );
 
+  // A language picked here can't be saved yet: the settings endpoint needs a
+  // session. Remember the pick and save it right after sign-in, so the app
+  // doesn't fall back to the previously saved language on the next load.
+  const pickedLanguageRef = useRef<string | null>(null);
+
   const handleLanguageChange = useCallback((event: React.ChangeEvent<HTMLSelectElement>) => {
     const nextLanguage = event.target.value;
+    pickedLanguageRef.current = nextLanguage;
     changeLanguage(nextLanguage).catch((error: Error) => {
       console.error('Failed to change language:', error);
     });
@@ -146,6 +153,13 @@ const LoginPage: React.FC = () => {
       const result = await login({ username: trimmedUsername, password, remember: rememberMe });
 
       if (result.success) {
+        if (pickedLanguageRef.current) {
+          void configService
+            .set('language', normalizeLanguageCode(pickedLanguageRef.current))
+            .catch((error: unknown) => {
+              console.warn('[login] could not save the chosen language', error);
+            });
+        }
         if (rememberMe) {
           localStorage.setItem(REMEMBER_ME_KEY, 'true');
           localStorage.setItem(REMEMBERED_USERNAME_KEY, obfuscate(trimmedUsername));

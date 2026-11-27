@@ -63,7 +63,7 @@
   "more": "Daha Fazla",
   "refresh": "Yenile",
   "commandPalette": {
-    "placeholder": "Oturumlar, iş öğeleri, dosyalar, ajanlar, komutlar ara…",
+    "placeholder": "Sohbet, görev, dosya, ajan, komut ara…",
     "empty": "Eşleşen komut yok",
     "loading": "Yükleniyor…",
     "untitled": "Adsız",
@@ -81,7 +81,20 @@
       "scheduledPaused": "Zamanlanmış · duraklatıldı",
       "agent": "Ajan"
     },
-    "actionFailed": "Komut çalıştırılamadı"
+    "actionFailed": "Komut çalıştırılamadı",
+    "commands": {
+      "newChat": "Yeni sohbet",
+      "scheduledTasks": "Zamanlanmış görevler",
+      "batchJobs": "Toplu işler",
+      "createAgent": "Ajan oluştur",
+      "settings": "Ayarlar",
+      "governance": "Yönetişim",
+      "localKb": "Yerel bilgi bankası",
+      "notifications": "Bildirimler",
+      "shortcuts": "Klavye kısayolları",
+      "remoteHost": "Uzak ana bilgisayar (SSH)",
+      "extensions": "Yüklü uzantılar"
+    }
   },
   "readOnly": "Salt okunur",
   "tray.showWindow": "CSBU WorkMate'yi Göster",

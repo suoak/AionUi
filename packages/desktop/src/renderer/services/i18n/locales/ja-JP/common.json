@@ -63,7 +63,7 @@
   "more": "その他",
   "refresh": "更新",
   "commandPalette": {
-    "placeholder": "セッション、作業項目、ファイル、エージェント、コマンドを検索…",
+    "placeholder": "会話、タスク、ファイル、エージェント、コマンドを検索…",
     "empty": "一致するコマンドはありません",
     "loading": "読み込み中…",
     "untitled": "無題",
@@ -81,7 +81,20 @@
       "scheduledPaused": "スケジュール · 一時停止中",
       "agent": "エージェント"
     },
-    "actionFailed": "コマンドを実行できませんでした"
+    "actionFailed": "コマンドを実行できませんでした",
+    "commands": {
+      "newChat": "新しい会話",
+      "scheduledTasks": "スケジュールタスク",
+      "batchJobs": "バッチジョブ",
+      "createAgent": "エージェントを作成",
+      "settings": "設定",
+      "governance": "ガバナンス",
+      "localKb": "ローカルナレッジベース",
+      "notifications": "通知",
+      "shortcuts": "キーボードショートカット",
+      "remoteHost": "リモートホスト（SSH）",
+      "extensions": "インストール済み拡張機能"
+    }
   },
   "readOnly": "読み取り専用",
   "tray.showWindow": "CSBU WorkMate を表示",

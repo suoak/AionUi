@@ -63,7 +63,7 @@
   "more": "بیشتر",
   "refresh": "بازخوانی",
   "commandPalette": {
-    "placeholder": "جستجوی نشست‌ها، آیتم‌ها، پرونده‌ها، عامل‌ها، دستورها…",
+    "placeholder": "جستجوی گفتگوها، کارها، پرونده‌ها، عامل‌ها، دستورها…",
     "empty": "فرمان منطبقی وجود ندارد",
     "loading": "در حال بارگذاری…",
     "untitled": "بدون عنوان",
@@ -81,7 +81,20 @@
       "scheduledPaused": "زمان‌بندی‌شده · متوقف",
       "agent": "عامل"
     },
-    "actionFailed": "اجرای این دستور ممکن نشد"
+    "actionFailed": "اجرای این دستور ممکن نشد",
+    "commands": {
+      "newChat": "گفتگوی جدید",
+      "scheduledTasks": "کارهای زمان‌بندی‌شده",
+      "batchJobs": "کارهای دسته‌ای",
+      "createAgent": "ساخت عامل",
+      "settings": "تنظیمات",
+      "governance": "حاکمیت",
+      "localKb": "پایگاه دانش محلی",
+      "notifications": "اعلان‌ها",
+      "shortcuts": "میان‌برهای صفحه‌کلید",
+      "remoteHost": "میزبان راه‌دور (SSH)",
+      "extensions": "افزونه‌های نصب‌شده"
+    }
   },
   "readOnly": "فقط خواندنی",
   "tray.showWindow": "نمایش CSBU WorkMate",

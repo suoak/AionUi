@@ -1471,7 +1471,7 @@
   "hardwareAccelerationAutoDisabledTitle": "Aceleração de hardware desativada",
   "modelSettingsApplyToSelected": "Estas configurações se aplicam a todos os modelos selecionados e podem ser alteradas individualmente depois.",
   "assistant.enableBot": "Habilitar Bot",
-  "agents": "Agents",
+  "agents": "Agentes",
   "webui.featureChannelsDesc": "Conecte o Telegram, Lark, DingTalk e WeChat para interagir com o CSBU WorkMate em apps de mensagens.",
   "game3dAssistantName": "3D Game",
   "modelProvider": "Provedor do Modelo",

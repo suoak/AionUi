@@ -119,7 +119,7 @@
   },
   "dropdown": {
     "presetAssistants": "Встановлені асистенти",
-    "cliAgents": "CLI Агенти"
+    "cliAgents": "CLI-агенти"
   },
   "notFound": "Розмову не знайдено або її видалено",
   "history": {
@@ -507,7 +507,7 @@
     "addToQueueShortcut": "⌘ + Enter / Ctrl + Enter",
     "midturnBlocked": "Втручання не підтримується, поки цей агент відповідає. Використайте «Додати до чернеток».",
     "enterShortcut": "Enter",
-    "actionMode": "Choose send action",
+    "actionMode": "Виберіть спосіб надсилання",
     "midturnBlockedSendHint": "This agent is still working, so the message can’t be sent directly. Save it to Draft box and send it later.",
     "addToQueueBusyHint": "Save to Draft box and send it later."
   },
