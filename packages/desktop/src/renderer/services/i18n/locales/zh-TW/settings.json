@@ -307,7 +307,6 @@
   "assistantReorderHintShort": "拖曳排序",
   "fontSizeChat": "聊天字級",
   "mcpAuthRequired": "需要身份驗證",
-  "groupApp": "應用",
   "assistantGroupCreated": "自訂助手",
   "assistantNoDefaultMcpsSelected": "未選擇預設 MCP",
   "addModel": "新增模型",
@@ -563,7 +562,6 @@
   "retry": "重試",
   "skillFolderPath": "技能資料夾路徑",
   "baseUrlResetToDefault": "重設為預設",
-  "groupAiCore": "AI 核心",
   "channels.selectFirst": "選擇一個渠道並完成憑證配置。",
   "assistantMainAgent": "Agent",
   "imageInputSupported": "目前設定已啟用",
@@ -1444,7 +1442,6 @@
     "searchPlaceholder": "搜尋設定",
     "searchEmpty": "沒有符合的設定"
   },
-  "groupAbout": "其他",
   "promptPreview": "預覽",
   "webui.copyPasswordTooltip": "點擊複製密碼",
   "assistantDefaultPermissionLabel": "權限",

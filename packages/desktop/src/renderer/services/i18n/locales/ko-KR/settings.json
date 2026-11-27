@@ -1,4 +1,9 @@
 {
+  "extensionSettings": {
+    "loading": "불러오는 중…",
+    "tabNotFound": "이 설정 탭을 찾을 수 없습니다. 삭제되었을 수 있습니다.",
+    "iframeTitle": "확장 프로그램 설정: {{name}}"
+  },
   "imageGenSupportedTooltipOpenAI": "OpenAI 호환 Images API 모델: GPT Image, Grok Imagine, Seedream, FLUX, Stable Diffusion, Recraft, Qwen Image, Ideogram 및 기타 게이트웨이 모델",
   "imageGenCustomModelWarning": "사용자 지정 모델은 검증되지 않았습니다. 공급자가 호환되는 Images API 또는 채팅 응답으로 이미지를 반환하는 경우에만 작동합니다.",
   "imageGenCompatibilityNote": "호환 Images API 또는 채팅 응답을 구현하지 않은 공급자 네이티브 엔드포인트는 직접 연결을 지원하지 않습니다.",
@@ -302,7 +307,6 @@
   "assistantReorderHintShort": "드래그하여 순서 변경",
   "fontSizeChat": "채팅 텍스트 크기",
   "mcpAuthRequired": "인증 필요",
-  "groupApp": "애플리케이션",
   "assistantGroupCreated": "사용자 지정 어시스턴트",
   "assistantNoDefaultMcpsSelected": "기본 MCP가 선택되지 않았습니다",
   "addModel": "모델 추가",
@@ -558,7 +562,6 @@
   "retry": "Retry",
   "skillFolderPath": "스킬 폴더 경로",
   "baseUrlResetToDefault": "기본값으로 재설정",
-  "groupAiCore": "AI 코어",
   "channels.selectFirst": "채널을 선택하고 인증 정보를 설정하세요.",
   "assistantMainAgent": "Agent",
   "imageInputSupported": "설정에서 활성화됨",
@@ -1439,7 +1442,6 @@
     "searchPlaceholder": "설정 검색",
     "searchEmpty": "일치하는 설정이 없습니다"
   },
-  "groupAbout": "기타",
   "promptPreview": "미리보기",
   "webui.copyPasswordTooltip": "클릭하여 비밀번호 복사",
   "assistantDefaultPermissionLabel": "권한",
