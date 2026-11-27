@@ -357,6 +357,53 @@
       "createHint": "No agents yet. Click “Create agent” to configure and try a run.",
       "permissionHint": "No agents are available for your role.",
       "permissionHintDetail": "An owner or admin must grant you run permission for published agents. You can still create private agents under “Mine” if allowed."
+    },
+    "list": {
+      "create": "Yeni ajan",
+      "tabs": {
+        "mine": "Benim",
+        "team": "Ekiple paylaşılan"
+      },
+      "loading": "Yükleniyor…",
+      "retry": "Yeniden dene",
+      "loadFailed": "Ajanlar yüklenemedi",
+      "tryRun": "Dene",
+      "tryRunFailed": "Deneme çalıştırması hazırlanamadı",
+      "edit": "Düzenle",
+      "publish": "Yayınla",
+      "publishedToast": "v{{version}} yayınlandı",
+      "publishFailed": "Yayınlanamadı",
+      "unpublished": "Yayınlanmadı",
+      "lastUsed": "Son kullanım {{time}}",
+      "status": {
+        "draft": "Taslak",
+        "published": "Yayında",
+        "archived": "Arşivlendi"
+      },
+      "visibility": {
+        "private": "Yalnızca ben",
+        "team": "Ekip",
+        "enterprise": "Kurum"
+      },
+      "skills_one": "{{count}} beceri",
+      "skills_other": "{{count}} beceri"
+    },
+    "preflight": {
+      "level": {
+        "pass": "Hazır",
+        "warn": "Kontrol et",
+        "fail": "Hazır değil"
+      },
+      "fix": "Düzelt",
+      "check": {
+        "enabled": "Etkin",
+        "installed": "Kurulu",
+        "runtime": "Çalışma ortamı",
+        "connection": "Bağlantı",
+        "auth": "Oturum",
+        "provider": "Model sağlayıcı",
+        "version": "Sürüm"
+      }
     }
   },
   "skillEvolution": {
