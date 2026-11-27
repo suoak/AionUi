@@ -13,7 +13,7 @@ import { ipcBridge } from '@/common';
 import type { ICronJob } from '@/common/adapter/ipcBridge';
 import type { TChatConversation } from '@/common/config/storage';
 import { useConversationAssistants } from '@renderer/pages/conversation/hooks/useConversationAssistants';
-import CronStatusTag from './CronStatusTag';
+import CronStatusTag, { CronRunAsTag } from './CronStatusTag';
 import CreateTaskDialog from './CreateTaskDialog';
 import { getJobAgentMeta } from './jobAgentMeta';
 import ThemedLogo from '@/renderer/components/agent/ThemedLogo';
@@ -125,6 +125,11 @@ const TaskDetailPage: React.FC = () => {
     try {
       const result = await ipcBridge.cron.runNow.invoke({ job_id: job.id });
       Message.success(t('cron.runNowSuccess'));
+      // 3.0 U6: a job that queues tasks opens the task it just created.
+      if (result?.task_session_id) {
+        void navigate(`/tasks?task=${encodeURIComponent(result.task_session_id)}`);
+        return;
+      }
       if (result?.conversation_id) {
         const conversationKey = `conversation/${result.conversation_id}`;
         const deadline = Date.now() + 15_000;
@@ -315,12 +320,18 @@ const TaskDetailPage: React.FC = () => {
   }
 
   const descriptionPreview = job.description?.trim() || '';
-  const currentExecutionModeLabel = isNewConversationMode
-    ? t('cron.page.form.newConversation')
-    : t('cron.page.form.existingConversation');
-  const executionModeExplanation = isNewConversationMode
-    ? t('cron.detail.executionModeDescriptionNew')
-    : t('cron.detail.executionModeDescriptionExisting');
+  const currentExecutionModeLabel =
+    job.target.run_as === 'task'
+      ? t('cron.page.form.runAs.task')
+      : isNewConversationMode
+        ? t('cron.page.form.newConversation')
+        : t('cron.page.form.existingConversation');
+  const queuesTask = job.target.run_as === 'task';
+  const executionModeExplanation = queuesTask
+    ? t('cron.page.form.runAs.taskHint')
+    : isNewConversationMode
+      ? t('cron.detail.executionModeDescriptionNew')
+      : t('cron.detail.executionModeDescriptionExisting');
   const latestExecutionError = job.state.last_status === 'error' ? job.state.last_error?.trim() || '' : '';
   const statusTag = <CronStatusTag job={job} />;
 
@@ -393,6 +404,7 @@ const TaskDetailPage: React.FC = () => {
             ) : (
               statusTag
             )}
+            <CronRunAsTag job={job} />
             {job.state.next_run_at_ms && (
               <span className='text-14px text-t-secondary'>
                 {t('cron.nextRun')} {formatNextRun(job.state.next_run_at_ms, locale)}

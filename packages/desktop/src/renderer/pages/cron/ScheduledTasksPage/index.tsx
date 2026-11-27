@@ -15,7 +15,7 @@ import { formatSchedule, formatNextRun } from '@renderer/pages/cron/cronUtils';
 import { systemSettings, type ICronJob } from '@/common/adapter/ipcBridge';
 import { configService } from '@/common/config/configService';
 import { useConversationAssistants } from '@renderer/pages/conversation/hooks/useConversationAssistants';
-import CronStatusTag from './CronStatusTag';
+import CronStatusTag, { CronRunAsTag } from './CronStatusTag';
 import CreateTaskDialog from './CreateTaskDialog';
 import { getJobAgentMeta } from './jobAgentMeta';
 import { useAgentLogos } from '@renderer/utils/model/agentLogo';
@@ -264,6 +264,7 @@ const ScheduledTasksPage: React.FC = () => {
                     </div>
 
                     <div className='flex shrink-0 items-center gap-6px' onClick={(event) => event.stopPropagation()}>
+                      <CronRunAsTag job={job} />
                       {!isManualOnly && <CronStatusTag job={job} />}
                       {hasError && (
                         <Tooltip content={errorHint}>

@@ -111,7 +111,23 @@
       "teamTaskExecutionModeLockedReason": "Geplante Team-Aufgaben müssen im zugehörigen Team-Gespräch weiterlaufen, deshalb kann der Ausführungsmodus nicht geändert werden.",
       "assistant": "Assistant",
       "assistantRequired": "Please select an assistant",
-      "assistantPlaceholder": "Select the assistant to execute this task"
+      "assistantPlaceholder": "Select the assistant to execute this task",
+      "runAs": {
+        "label": "Bei jedem Lauf",
+        "conversation": "Öffnet eine Unterhaltung",
+        "task": "Reiht eine Aufgabe ein",
+        "tag": "Reiht Aufgaben ein",
+        "conversationHint": "Die Nachricht geht an eine Unterhaltung, der Assistent antwortet dort.",
+        "taskHint": "Jeder Lauf legt eine Aufgabe auf dem Board an (Titel = Name, Ziel = Nachricht). Sie folgt den Aufgabenregeln und hält immer bei der Prüfung; Autopilot gilt nicht."
+      },
+      "runAsTask": {
+        "start": "Sofort starten",
+        "startHint": "Aus: Die Aufgabe wartet unter „Zu erledigen“. An: Sie startet (oder wartet, wenn alle Plätze belegt sind).",
+        "repo": "Repository (optional)",
+        "repoPlaceholder": "/absoluter/pfad/zum/repo",
+        "repoHint": "Jede Aufgabe arbeitet in einem eigenen Worktree dieses Repositorys.",
+        "repoAbsolute": "Geben Sie einen absoluten Pfad zum Repository ein."
+      }
     },
     "freq": {
       "manual": "Manuell",

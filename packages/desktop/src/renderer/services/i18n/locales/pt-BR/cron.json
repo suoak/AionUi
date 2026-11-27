@@ -111,7 +111,23 @@
       "aionrsModelRequired": "Por favor, selecione um modelo para a CSBU WorkMate",
       "aionrsNoProvider": "Nenhum modelo disponível",
       "assistantLockedExistingConversation": "Tarefas de conversa em andamento devem manter o assistente original. Crie uma nova tarefa para usar outro assistente.",
-      "teamTaskExecutionModeLockedReason": "Tarefas agendadas de Team devem continuar executando na conversa de Team proprietária, por isso o modo de execução não pode ser alterado."
+      "teamTaskExecutionModeLockedReason": "Tarefas agendadas de Team devem continuar executando na conversa de Team proprietária, por isso o modo de execução não pode ser alterado.",
+      "runAs": {
+        "label": "A cada execução",
+        "conversation": "Abre uma conversa",
+        "task": "Enfileira uma tarefa",
+        "tag": "Enfileira tarefas",
+        "conversationHint": "A mensagem vai para uma conversa e o assistente responde lá.",
+        "taskHint": "Cada execução adiciona uma tarefa ao quadro (título = nome, objetivo = mensagem). Segue as regras de tarefas e sempre para na revisão; o Autopilot não se aplica."
+      },
+      "runAsTask": {
+        "start": "Começar na hora",
+        "startHint": "Desligado: a tarefa espera em A fazer. Ligado: ela começa (ou aguarda se todos os slots estiverem ocupados).",
+        "repo": "Repositório (opcional)",
+        "repoPlaceholder": "/caminho/absoluto/do/repo",
+        "repoHint": "Cada tarefa trabalha em sua própria worktree deste repositório.",
+        "repoAbsolute": "Informe um caminho absoluto para o repositório."
+      }
     },
     "freq": {
       "manual": "Manual",
