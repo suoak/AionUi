@@ -117,7 +117,7 @@
   },
   "dropdown": {
     "presetAssistants": "预设助手",
-    "cliAgents": "CLI Agents"
+    "cliAgents": "命令行智能体"
   },
   "notFound": "会话不存在或已被删除",
   "history": {
@@ -497,7 +497,7 @@
     "addToQueueShortcut": "⌘ + Enter / Ctrl + Enter",
     "midturnBlocked": "当前 Agent 正在处理，暂时不能直接发送。可以先存到草稿箱，稍后发送。",
     "enterShortcut": "Enter",
-    "actionMode": "Choose send action",
+    "actionMode": "选择发送方式",
     "midturnBlockedSendHint": "当前 Agent 正在处理，暂时不能直接发送。可以先存到草稿箱，稍后发送。",
     "addToQueueBusyHint": "先存到草稿箱，稍后发送。"
   },

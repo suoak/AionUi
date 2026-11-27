@@ -27,7 +27,7 @@
   "openInBuiltinBrowser": "内置浏览器打开",
   "openInSystemBrowser": "系统浏览器打开",
   "copySuccess": "已复制",
-  "copyFailed": "Copy failed",
+  "copyFailed": "复制失败",
   "download": "下载",
   "close": "关闭",
   "retry": "重试",
@@ -63,7 +63,7 @@
   "more": "更多",
   "refresh": "刷新",
   "commandPalette": {
-    "placeholder": "搜索会话、工作项、文件、智能体、命令…",
+    "placeholder": "搜索会话、任务、文件、智能体、命令…",
     "empty": "没有匹配的命令",
     "loading": "加载中…",
     "untitled": "未命名",
@@ -81,7 +81,20 @@
       "scheduledPaused": "定时任务 · 已暂停",
       "agent": "智能体"
     },
-    "actionFailed": "无法执行该命令"
+    "actionFailed": "无法执行该命令",
+    "commands": {
+      "newChat": "新会话",
+      "scheduledTasks": "定时任务",
+      "batchJobs": "批量任务",
+      "createAgent": "创建智能体",
+      "settings": "设置",
+      "governance": "治理",
+      "localKb": "本地知识库",
+      "notifications": "通知",
+      "shortcuts": "键盘快捷键",
+      "remoteHost": "远程 Host（SSH）",
+      "extensions": "已安装扩展"
+    }
   },
   "readOnly": "只读",
   "tray.showWindow": "显示 CSBU WorkMate",

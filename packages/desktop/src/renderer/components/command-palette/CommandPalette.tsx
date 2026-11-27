@@ -38,7 +38,7 @@ export type CommandPaletteProps = {
 const GROUP_LABEL_DEFAULTS: Record<CommandGroup, string> = {
   navigation: 'Navigation',
   sessions: 'Sessions',
-  workItems: 'Work items',
+  workItems: 'Tasks',
   files: 'Files',
   agents: 'Agents',
   commands: 'Commands',
@@ -64,9 +64,20 @@ const CommandPalette: React.FC<CommandPaletteProps> = ({
     workspace: conversation?.workspace,
   });
 
+  // Static rows carry an i18n key: show the localized title, and keep the English
+  // title searchable so typing either language finds the row.
+  const localizedCommands = useMemo(
+    () =>
+      commands.map((cmd) => {
+        if (!cmd.titleKey) return cmd;
+        const title = t(cmd.titleKey, { defaultValue: cmd.title });
+        return title === cmd.title ? cmd : { ...cmd, title, keywords: [...(cmd.keywords ?? []), cmd.title] };
+      }),
+    [commands, t]
+  );
   const allCommands = useMemo(
-    () => (dynamic ? [...commands, ...dynamicCommands] : [...commands]),
-    [commands, dynamicCommands, dynamic]
+    () => (dynamic ? [...localizedCommands, ...dynamicCommands] : [...localizedCommands]),
+    [localizedCommands, dynamicCommands, dynamic]
   );
   const sections = useMemo(() => buildPaletteSections(allCommands, query), [allCommands, query]);
   const flat = useMemo(() => sections.flatMap((s) => s.commands), [sections]);
@@ -211,9 +222,12 @@ const CommandPalette: React.FC<CommandPaletteProps> = ({
                   <div className='font-medium text-13px truncate'>
                     {cmd.title || t('common.commandPalette.untitled', { defaultValue: 'Untitled' })}
                   </div>
-                  <Text type='secondary' className='text-12px truncate'>
-                    {subtitle || cmd.path || groupLabel(cmd.group)}
-                  </Text>
+                  {/* Secondary line only when it says something; never a raw route. */}
+                  {subtitle && (
+                    <Text type='secondary' className='text-12px truncate'>
+                      {subtitle}
+                    </Text>
+                  )}
                 </button>
               );
             })}

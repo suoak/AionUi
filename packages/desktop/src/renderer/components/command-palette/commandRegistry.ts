@@ -35,6 +35,8 @@ export type PaletteCommandAction = 'open-file' | 'invoke-command';
 export type PaletteCommand = {
   id: string;
   title: string;
+  /** i18n key for the title; `title` stays the English fallback and stays searchable. */
+  titleKey?: string;
   group: CommandGroup;
   /** react-router path; optional when `action` is provided. */
   path?: string;
@@ -63,6 +65,7 @@ const PRIMARY_NAV_TITLES: Record<(typeof PRIMARY_NAV_ENTRIES)[number]['key'], st
 const PRIMARY_NAV_PALETTE_COMMANDS: readonly PaletteCommand[] = PRIMARY_NAV_ENTRIES.map((entry) => ({
   id: `nav.primary.${entry.key}`,
   title: PRIMARY_NAV_TITLES[entry.key],
+  titleKey: `common.primaryNav.${entry.key}`,
   group: 'navigation' as const,
   path: entry.path,
   keywords: [...entry.keywords, 'primary', entry.key],
@@ -72,6 +75,7 @@ export const STATIC_PALETTE_COMMANDS: readonly PaletteCommand[] = [
   {
     id: 'nav.new-chat',
     title: 'New chat',
+    titleKey: 'common.commandPalette.commands.newChat',
     group: 'navigation',
     path: '/guid',
     keywords: ['home', 'compose', 'guid'],
@@ -80,6 +84,7 @@ export const STATIC_PALETTE_COMMANDS: readonly PaletteCommand[] = [
   {
     id: 'nav.automations.scheduled',
     title: 'Scheduled tasks',
+    titleKey: 'common.commandPalette.commands.scheduledTasks',
     group: 'navigation',
     path: '/scheduled',
     keywords: ['automations', 'cron', 'schedule', '定时'],
@@ -87,6 +92,7 @@ export const STATIC_PALETTE_COMMANDS: readonly PaletteCommand[] = [
   {
     id: 'nav.automations.batch',
     title: 'Batch jobs',
+    titleKey: 'common.commandPalette.commands.batchJobs',
     group: 'navigation',
     path: '/batch',
     keywords: ['automations', 'bulk', 'batch', '批量'],
@@ -94,6 +100,7 @@ export const STATIC_PALETTE_COMMANDS: readonly PaletteCommand[] = [
   {
     id: 'nav.agent-center.new',
     title: 'Create agent',
+    titleKey: 'common.commandPalette.commands.createAgent',
     group: 'agents',
     path: '/agents/new',
     keywords: ['new agent', 'wizard'],
@@ -101,6 +108,7 @@ export const STATIC_PALETTE_COMMANDS: readonly PaletteCommand[] = [
   {
     id: 'nav.settings',
     title: 'Settings',
+    titleKey: 'common.commandPalette.commands.settings',
     group: 'settings',
     path: '/settings',
     keywords: ['preferences', 'config'],
@@ -108,6 +116,7 @@ export const STATIC_PALETTE_COMMANDS: readonly PaletteCommand[] = [
   {
     id: 'nav.settings.governance',
     title: 'Governance',
+    titleKey: 'common.commandPalette.commands.governance',
     group: 'settings',
     path: '/settings/governance',
     keywords: ['rbac', 'roles', 'permissions'],
@@ -115,6 +124,7 @@ export const STATIC_PALETTE_COMMANDS: readonly PaletteCommand[] = [
   {
     id: 'nav.settings.localKb',
     title: 'Local knowledge base',
+    titleKey: 'common.commandPalette.commands.localKb',
     group: 'settings',
     path: '/settings/local-kb',
     keywords: ['local-kb', 'knowledge', 'kb', 'documents'],
@@ -122,6 +132,7 @@ export const STATIC_PALETTE_COMMANDS: readonly PaletteCommand[] = [
   {
     id: 'nav.settings.notifications',
     title: 'Notifications',
+    titleKey: 'common.commandPalette.commands.notifications',
     group: 'settings',
     path: '/settings/notifications',
     keywords: ['notification', 'alert', 'cron'],
@@ -129,6 +140,7 @@ export const STATIC_PALETTE_COMMANDS: readonly PaletteCommand[] = [
   {
     id: 'nav.settings.shortcuts',
     title: 'Keyboard shortcuts',
+    titleKey: 'common.commandPalette.commands.shortcuts',
     group: 'settings',
     path: '/settings/shortcuts',
     keywords: ['keyboard', 'shortcut', 'hotkey', 'keys'],
@@ -136,6 +148,7 @@ export const STATIC_PALETTE_COMMANDS: readonly PaletteCommand[] = [
   {
     id: 'nav.settings.remoteHost',
     title: 'Remote Host (SSH)',
+    titleKey: 'common.commandPalette.commands.remoteHost',
     group: 'settings',
     path: '/settings/remote-host',
     keywords: ['remote', 'host', 'ssh', 'tunnel', 'headless'],
@@ -143,6 +156,7 @@ export const STATIC_PALETTE_COMMANDS: readonly PaletteCommand[] = [
   {
     id: 'nav.settings.extensions',
     title: 'Installed extensions',
+    titleKey: 'common.commandPalette.commands.extensions',
     group: 'settings',
     path: '/settings/extensions',
     keywords: ['extension', 'plugin', 'addon', 'permissions'],

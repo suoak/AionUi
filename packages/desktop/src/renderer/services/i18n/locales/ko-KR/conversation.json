@@ -117,7 +117,7 @@
   },
   "dropdown": {
     "presetAssistants": "프리셋 어시스턴트",
-    "cliAgents": "CLI Agents"
+    "cliAgents": "CLI 에이전트"
   },
   "notFound": "대화를 찾을 수 없거나 삭제되었습니다",
   "history": {
@@ -497,7 +497,7 @@
     "addToQueueShortcut": "⌘ + Enter / Ctrl + Enter",
     "midturnBlocked": "이 에이전트가 응답하는 동안에는 끼어들기를 지원하지 않습니다. Draft box에 추가를 사용하세요.",
     "enterShortcut": "Enter",
-    "actionMode": "Choose send action",
+    "actionMode": "보내기 방식 선택",
     "midturnBlockedSendHint": "This agent is still working, so the message can’t be sent directly. Save it to Draft box and send it later.",
     "addToQueueBusyHint": "Save to Draft box and send it later."
   },

@@ -63,7 +63,7 @@
   "more": "More",
   "refresh": "Refresh",
   "commandPalette": {
-    "placeholder": "Search sessions, work items, files, agents, commands…",
+    "placeholder": "Search conversations, tasks, files, agents, commands…",
     "empty": "No matching commands",
     "loading": "Loading…",
     "untitled": "Untitled",
@@ -81,7 +81,20 @@
       "scheduledPaused": "Scheduled · paused",
       "agent": "Agent"
     },
-    "actionFailed": "Could not run that command"
+    "actionFailed": "Could not run that command",
+    "commands": {
+      "newChat": "New conversation",
+      "scheduledTasks": "Scheduled tasks",
+      "batchJobs": "Batch jobs",
+      "createAgent": "Create agent",
+      "settings": "Settings",
+      "governance": "Governance",
+      "localKb": "Local knowledge base",
+      "notifications": "Notifications",
+      "shortcuts": "Keyboard shortcuts",
+      "remoteHost": "Remote Host (SSH)",
+      "extensions": "Installed extensions"
+    }
   },
   "readOnly": "Read only",
   "tray.showWindow": "Show CSBU WorkMate",
