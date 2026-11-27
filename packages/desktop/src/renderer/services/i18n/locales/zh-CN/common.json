@@ -261,7 +261,9 @@
       "autopilot": "Autopilot"
     },
     "phoneApproved": "已在手机上批准",
-    "phoneRejected": "已在手机上拒绝"
+    "phoneRejected": "已在手机上拒绝",
+    "imApproved": "已在 IM 批准",
+    "imRejected": "已在 IM 拒绝"
   },
   "primaryNav": {
     "sessions": "会话",

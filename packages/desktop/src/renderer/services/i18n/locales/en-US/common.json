@@ -261,7 +261,9 @@
       "autopilot": "Autopilot"
     },
     "phoneApproved": "Approved on phone",
-    "phoneRejected": "Rejected on phone"
+    "phoneRejected": "Rejected on phone",
+    "imApproved": "Approved in IM",
+    "imRejected": "Rejected in IM"
   },
   "primaryNav": {
     "sessions": "Sessions",

@@ -263,7 +263,9 @@
       "autopilot": "Autopilot"
     },
     "phoneApproved": "Схвалено на телефоні",
-    "phoneRejected": "Відхилено на телефоні"
+    "phoneRejected": "Відхилено на телефоні",
+    "imApproved": "Схвалено в месенджері",
+    "imRejected": "Відхилено в месенджері"
   },
   "extensionPanels": {
     "groupTitle": "Панелі плагінів",

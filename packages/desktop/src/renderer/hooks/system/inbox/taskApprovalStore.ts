@@ -24,6 +24,8 @@ export type PhoneApprovalDecision = {
   task_session_id: string;
   status: 'approved' | 'rejected';
   device_id?: string | null;
+  /** 3.0 U9: answered on a paired phone or by a bound IM identity. */
+  via: 'device' | 'im';
 };
 
 type Listener = (event: ITaskApprovalChangedEvent) => void;
@@ -44,13 +46,14 @@ export function phoneDecisionFromEvent(
   event: ITaskApprovalChangedEvent | undefined | null
 ): PhoneApprovalDecision | null {
   if (!event?.approval_id || !event.task_session_id) return null;
-  if (event.decided_via !== 'device') return null;
+  if (event.decided_via !== 'device' && event.decided_via !== 'im') return null;
   if (event.status !== 'approved' && event.status !== 'rejected') return null;
   return {
     approval_id: event.approval_id,
     task_session_id: event.task_session_id,
     status: event.status,
     device_id: event.device_id ?? null,
+    via: event.decided_via,
   };
 }
 

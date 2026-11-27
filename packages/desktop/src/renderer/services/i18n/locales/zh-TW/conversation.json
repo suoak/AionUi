@@ -1057,7 +1057,9 @@
       "userEvidence": "使用者已確認",
       "phoneApproved": "已在手機上核准",
       "phoneRejected": "已在手機上拒絕",
-      "phoneApprovedExecuteHint": "已在手機上核准。準備好後請在此處手動執行，不會自動開始。"
+      "phoneApprovedExecuteHint": "會在本機自動開始執行，無需手動執行。",
+      "imApproved": "已在 IM 核准",
+      "imRejected": "已在 IM 拒絕"
     },
     "review": {
       "open": "Review",
@@ -1594,6 +1596,37 @@
     },
     "conversationTask": {
       "open": "開啟此任務"
+    },
+    "remote": {
+      "title": "遠端核准",
+      "summary": {
+        "plan": "核准計畫",
+        "goal": "核准目標",
+        "adopt": "以 {{strategy}} 採納到 {{target}}"
+      },
+      "where": {
+        "desktop": "本機",
+        "phone": "手機",
+        "im": "IM"
+      },
+      "state": {
+        "waiting": "等待手機或 IM 核准 · {{minutes}} 分鐘後過期（{{time}}）",
+        "approvedRan": "已在{{where}}核准並已執行",
+        "approvedRunning": "已在{{where}}核准 · 正在本機啟動",
+        "approvedFailed": "已在{{where}}核准，但未能執行",
+        "approvedDesktop": "已在本機核准",
+        "rejected": "已在{{where}}拒絕",
+        "expired": "已於 {{time}} 過期 · 請在本機核准",
+        "invalidated": "已失效"
+      },
+      "reason": {
+        "superseded": "已被更新的版本取代。",
+        "cancelled": "已取消。",
+        "expired": "在有人回覆前已過期。",
+        "diff_changed": "傳送後變更有異動，已作廢。",
+        "task_ended": "任務已結束。"
+      },
+      "commit": "提交 {{ref}}"
     }
   },
   "squadRouteOnly": {

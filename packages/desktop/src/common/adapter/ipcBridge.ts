@@ -158,6 +158,13 @@ import type {
   FanoutCompare,
   FanoutGroup,
 } from '../types/fanout';
+import type {
+  ApprovalRequest,
+  ApprovalRequestChangedEvent,
+  ApprovalRequestKind,
+  RemoteApprovalSettings,
+  RemoteApprover,
+} from '@/common/types/remoteApproval';
 import type { Delegation } from '../types/delegation';
 import {
   normalizeAgentCenterDetail,
@@ -4339,6 +4346,36 @@ export interface IContextBreakdown {
  * aioncore ≥ 0.6). Picking an assistant in the `@` menu is the only grant;
  * older cores answer 404 and the UI hides delegation.
  */
+/** 3.0 U9: remote approve-to-execute (Core C9). */
+export const remoteApproval = {
+  listForTask: httpGet<ApprovalRequest[], { task_session_id: string }>(
+    (p) => `/api/task-sessions/${encodeURIComponent(p.task_session_id)}/approval-requests`,
+    { silentStatuses: [404] }
+  ),
+  issue: httpPost<
+    ApprovalRequest,
+    { task_session_id: string; kind: ApprovalRequestKind; strategy?: string; target_branch?: string }
+  >(
+    (p) => `/api/task-sessions/${encodeURIComponent(p.task_session_id)}/approval-requests`,
+    (p) => ({ kind: p.kind, strategy: p.strategy, target_branch: p.target_branch })
+  ),
+  settings: {
+    get: httpGet<RemoteApprovalSettings, void>('/api/remote-approval/settings', { silentStatuses: [404] }),
+    set: httpPut<RemoteApprovalSettings, RemoteApprovalSettings>('/api/remote-approval/settings'),
+  },
+  approvers: {
+    list: httpGet<RemoteApprover[], void>('/api/remote-approval/approvers', { silentStatuses: [404] }),
+    add: httpPost<RemoteApprover, { platform_type: string; platform_user_id: string }>(
+      '/api/remote-approval/approvers'
+    ),
+    remove: httpDelete<void, { platform_type: string; platform_user_id: string }>(
+      (p) =>
+        `/api/remote-approval/approvers/${encodeURIComponent(p.platform_type)}/${encodeURIComponent(p.platform_user_id)}`
+    ),
+  },
+  changed: wsEmitter<ApprovalRequestChangedEvent>('approval.request.changed'),
+};
+
 export const delegation = {
   grant: httpPost<void, { conversation_id: string; assistant_ids: string[] }>(
     (p) => `/api/conversations/${encodeURIComponent(p.conversation_id)}/delegation-grants`,

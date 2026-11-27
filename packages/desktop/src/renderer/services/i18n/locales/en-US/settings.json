@@ -1714,7 +1714,7 @@
     "title": "Mobile devices",
     "description": "Pair your phone to receive approval requests and approve or reject plans and goals away from your desk.",
     "count": "{{count}}/{{max}} devices",
-    "approvalNote": "Approving on a phone only records the decision. Running an approved plan still happens here on the desktop.",
+    "approvalNote": "Approving on a phone or in a bound IM account runs the approved plan or adopt here right away. Each request is bound to exactly what you saw, works once and expires.",
     "limitReached": "You've paired the maximum of {{max}} devices. Revoke one before pairing another.",
     "empty": "No paired devices yet",
     "unnamed": "Unnamed device",
@@ -1787,6 +1787,19 @@
       "revoke": "Couldn't revoke the device",
       "push": "Couldn't save the push setting",
       "reject": "Couldn't reject the pairing request"
+    },
+    "remote": {
+      "title": "Remote approval",
+      "description": "Phones and bound IM accounts can approve plans, goals and adopts; the approval runs here at once.",
+      "ttl": "A request stays valid for",
+      "minutes": "min",
+      "save": "Save",
+      "approvers": "IM accounts that can approve",
+      "noApprovers": "None yet. Only phones can approve.",
+      "remove": "Remove",
+      "pick": "Choose a paired IM account",
+      "add": "Add",
+      "failed": "Could not save the change."
     }
   },
   "governance": {

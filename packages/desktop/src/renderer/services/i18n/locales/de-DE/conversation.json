@@ -1057,7 +1057,9 @@
       "userEvidence": "Vom Benutzer bestätigt",
       "phoneApproved": "Auf dem Smartphone genehmigt",
       "phoneRejected": "Auf dem Smartphone abgelehnt",
-      "phoneApprovedExecuteHint": "Auf Ihrem Smartphone genehmigt. Führen Sie es hier aus, wenn Sie bereit sind; nichts startet automatisch."
+      "phoneApprovedExecuteHint": "Es startet hier automatisch; Sie müssen es nicht ausführen.",
+      "imApproved": "Per IM freigegeben",
+      "imRejected": "Per IM abgelehnt"
     },
     "review": {
       "open": "Review",
@@ -1594,6 +1596,37 @@
     },
     "conversationTask": {
       "open": "Diese Aufgabe öffnen"
+    },
+    "remote": {
+      "title": "Fernfreigabe",
+      "summary": {
+        "plan": "Plan freigeben",
+        "goal": "Ziel freigeben",
+        "adopt": "Mit {{strategy}} in {{target}} übernehmen"
+      },
+      "where": {
+        "desktop": "diesem Desktop",
+        "phone": "dem Smartphone",
+        "im": "IM"
+      },
+      "state": {
+        "waiting": "Wartet auf Smartphone oder IM · läuft in {{minutes}} Min. ab ({{time}})",
+        "approvedRan": "Auf {{where}} freigegeben und gestartet",
+        "approvedRunning": "Auf {{where}} freigegeben · startet hier",
+        "approvedFailed": "Auf {{where}} freigegeben, aber nicht gestartet",
+        "approvedDesktop": "Auf diesem Desktop freigegeben",
+        "rejected": "Auf {{where}} abgelehnt",
+        "expired": "Um {{time}} abgelaufen · bitte hier freigeben",
+        "invalidated": "Nicht mehr gültig"
+      },
+      "reason": {
+        "superseded": "Eine neuere Version hat sie ersetzt.",
+        "cancelled": "Sie wurde abgebrochen.",
+        "expired": "Sie lief ab, bevor jemand antwortete.",
+        "diff_changed": "Die Änderungen haben sich danach geändert, daher ungültig.",
+        "task_ended": "Die Aufgabe ist beendet."
+      },
+      "commit": "Commit {{ref}}"
     }
   },
   "squadRouteOnly": {
