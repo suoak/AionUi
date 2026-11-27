@@ -197,7 +197,8 @@
     "archiveProject": "Archive project",
     "archiveProjectTitle": "Archive project",
     "archiveProjectConfirm": "Archive project \"{{name}}\"? Its {{count}} conversation(s) will be archived too. You can restore or delete them from Archived in Settings.",
-    "archiving": "Archiving..."
+    "archiving": "Archiving...",
+    "evolveSkill": "Beceriye dönüştür"
   },
   "agentError": {
     "fallbackTitle": "Ajan yanıt veremedi",
@@ -685,8 +686,6 @@
     "search.empty": "Arama sonucu boş",
     "addFile": "Dosya Ekle",
     "dragOverlayHint": "İpucu: seçili klasöre içe aktarmak için herhangi bir yere bırakın.",
-    "collapse": "Projeyi Daralt",
-    "expand": "Projeyi Genişlet",
     "pasteConfirm_paste": "Yapıştır",
     "openWorkspace": "Proje klasörünü aç",
     "dragOverlayTitle": "İçe aktarmak için bırakın",

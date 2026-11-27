@@ -1,4 +1,9 @@
 {
+  "extensionSettings": {
+    "loading": "Загрузка…",
+    "tabNotFound": "Эта вкладка настроек не найдена. Возможно, она была удалена.",
+    "iframeTitle": "Настройки расширения: {{name}}"
+  },
   "imageGenSupportedTooltipOpenAI": "Модели через OpenAI-совместимый Images API: GPT Image, Grok Imagine, Seedream, FLUX, Stable Diffusion, Recraft, Qwen Image, Ideogram и другие модели шлюзов",
   "imageGenCustomModelWarning": "Пользовательские модели не проверены. Они работают только в том случае, если провайдер возвращает изображения через совместимый Images API или ответ чата.",
   "imageGenCompatibilityNote": "Прямое подключение к нативным endpoint провайдера без совместимого Images API или ответа чата не поддерживается.",
@@ -302,7 +307,6 @@
   "assistantReorderHintShort": "Перетащите для сортировки",
   "fontSizeChat": "Размер текста в чате",
   "mcpAuthRequired": "Требуется аутентификация",
-  "groupApp": "Приложение",
   "assistantGroupCreated": "Пользовательские ассистенты",
   "assistantNoDefaultMcpsSelected": "MCP по умолчанию не выбран",
   "addModel": "Добавить модель",
@@ -559,7 +563,6 @@
   "skillFolderPath": "Путь к папке навыков",
   "baseUrlResetToDefault": "Сбросить по умолчанию",
   "channels.selectFirst": "Выберите канал и настройте учётные данные.",
-  "groupAiCore": "Ядро ИИ",
   "assistantMainAgent": "Агент",
   "imageInputSupported": "Включено в настройках",
   "assistantGoChat": "Чат",
@@ -1447,7 +1450,6 @@
     "searchPlaceholder": "Поиск настроек",
     "searchEmpty": "Нет подходящих настроек"
   },
-  "groupAbout": "О программе",
   "promptPreview": "Предпросмотр",
   "webui.copyPasswordTooltip": "Нажмите для копирования пароля",
   "assistantDefaultPermissionLabel": "Разрешение",

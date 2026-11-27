@@ -14,8 +14,6 @@
     "error": "Error",
     "unread": "Nueva ejecución",
     "unconfigured": "Sin tarea programada",
-    "unconfiguredHint": "Aún no hay tareas programadas. ¡Crea una con tu agente!",
-    "createNow": "Crear ahora",
     "defaultPrompt": "Todos los días a las 10am, busca las últimas noticias de IA, resume y genera un informe de insights. (Usa la habilidad /cron para crear una tarea programada en CSBU WorkMate.)"
   },
   "actions": {
@@ -79,8 +77,6 @@
       "name": "Nombre",
       "nameRequired": "El nombre es obligatorio",
       "namePlaceholder": "Ingresa el nombre de la tarea",
-      "description": "Descripción",
-      "descriptionPlaceholder": "Breve descripción de la tarea",
       "prompt": "Prompt",
       "promptRequired": "El prompt es obligatorio",
       "promptPlaceholder": "Instrucciones para que el agente ejecute",
@@ -92,7 +88,6 @@
       "scheduleDesc": "Descripción de la programación",
       "scheduleDescRequired": "La descripción de la programación es obligatoria",
       "scheduleDescPlaceholder": "Ej., Todos los lunes a las 9:00 AM",
-      "descriptionRequired": "La descripción es obligatoria",
       "agent": "Agente",
       "agentRequired": "Por favor selecciona un agente",
       "agentPlaceholder": "Selecciona el agente para ejecutar esta tarea",

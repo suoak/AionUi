@@ -1,4 +1,9 @@
 {
+  "extensionSettings": {
+    "loading": "Завантаження…",
+    "tabNotFound": "Цю вкладку налаштувань не знайдено. Можливо, її видалено.",
+    "iframeTitle": "Налаштування розширення: {{name}}"
+  },
   "imageGenSupportedTooltipOpenAI": "Моделі через OpenAI-сумісний Images API: GPT Image, Grok Imagine, Seedream, FLUX, Stable Diffusion, Recraft, Qwen Image, Ideogram та інші моделі шлюзів",
   "imageGenCustomModelWarning": "Власні моделі не перевірені. Вони працюють лише тоді, коли провайдер повертає зображення через сумісний Images API або відповідь чату.",
   "imageGenCompatibilityNote": "Пряме підключення до нативних endpoint провайдера без сумісного Images API або відповіді чату не підтримується.",
@@ -302,7 +307,6 @@
   "assistantReorderHintShort": "Перетягніть для сортування",
   "fontSizeChat": "Розмір тексту чату",
   "mcpAuthRequired": "Потрібна автентифікація",
-  "groupApp": "Програма",
   "assistantGroupCreated": "Користувацькі асистенти",
   "assistantNoDefaultMcpsSelected": "MCP за замовчуванням не вибрано",
   "addModel": "Додати модель",
@@ -558,7 +562,6 @@
   "retry": "Retry",
   "skillFolderPath": "Шлях до папки з навичками",
   "baseUrlResetToDefault": "Скинути до типового",
-  "groupAiCore": "Ядро ШІ",
   "channels.selectFirst": "Виберіть канал та налаштуйте облікові дані.",
   "assistantMainAgent": "Agent",
   "imageInputSupported": "Увімкнено в налаштуваннях",
@@ -1429,7 +1432,6 @@
   "imageInput": "Візуальне введення",
   "platformRuiqingApiDescription": "Сервіс моделей Ruiqing (на базі New API)",
   "assistantSelectDefaultModel": "Виберіть модель",
-  "addAssistant": "Додати асистента",
   "bugReportModuleSystemSettingsDescription": "For issues with system permissions, launch at startup, notifications, storage paths, or platform integration.",
   "assistantEffectiveImmediately": "Зміни застосовуються одразу",
   "speechToTextModelPlaceholder": "Виберіть або введіть назву моделі",
@@ -1448,7 +1450,6 @@
     "searchPlaceholder": "Пошук налаштувань",
     "searchEmpty": "Немає відповідних налаштувань"
   },
-  "groupAbout": "Інше",
   "promptPreview": "Попередній перегляд",
   "webui.copyPasswordTooltip": "Натисніть для копіювання пароля",
   "assistantDefaultPermissionLabel": "Дозвіл",
