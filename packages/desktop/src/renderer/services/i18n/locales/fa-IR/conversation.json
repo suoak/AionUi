@@ -1498,7 +1498,35 @@
       }
     },
     "openScheduled": "زمان‌بندی‌شده",
-    "emptyColumnHint": "هنوز هیچ مورد کاری اینجا نیست. یک کار بسازید یا بخش زمان‌بندی‌شده را باز کنید."
+    "emptyColumnHint": "هنوز هیچ مورد کاری اینجا نیست. یک کار بسازید یا بخش زمان‌بندی‌شده را باز کنید.",
+    "lanes": {
+      "todo": "برای انجام",
+      "in_progress": "در حال انجام",
+      "needs_you": "نیازمند شما",
+      "done": "انجام شد",
+      "cancelled": "لغو شد"
+    },
+    "needsYou": {
+      "plan_approval": "برنامه در انتظار تأیید",
+      "tool_permission": "مجوز ابزار",
+      "review": "آمادهٔ بازبینی",
+      "failed": "ناموفق",
+      "merge_conflict": "تعارض ادغام",
+      "input": "در انتظار ورودی"
+    },
+    "flow": {
+      "viewBoard": "بورد",
+      "viewList": "فهرست",
+      "start": "شروع",
+      "startFailed": "کار شروع نشد.",
+      "queued": "همهٔ جایگاه‌های اجرا پر است؛ کار در صف قرار گرفت و با آزاد شدن یک جایگاه شروع می‌شود.",
+      "queuedBadge": "در صف",
+      "planFirst": "اول برنامه",
+      "planProgress": "{{done}}/{{total}}",
+      "planProgressStep": "{{done}}/{{total}} · {{step}}",
+      "needsYouCount_one": "{{count}} کار به شما نیاز دارد",
+      "needsYouCount_other": "{{count}} کار به شما نیاز دارد"
+    }
   },
   "squadRouteOnly": {
     "title": "Squad Leader فقط می‌تواند کار را تقسیم کند",

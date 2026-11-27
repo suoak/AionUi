@@ -1498,7 +1498,35 @@
       }
     },
     "openScheduled": "Planifiées",
-    "emptyColumnHint": "Aucun élément de travail ici pour l’instant. Créez une tâche ou ouvrez Planifiées."
+    "emptyColumnHint": "Aucun élément de travail ici pour l’instant. Créez une tâche ou ouvrez Planifiées.",
+    "lanes": {
+      "todo": "À faire",
+      "in_progress": "En cours",
+      "needs_you": "Vous attend",
+      "done": "Terminé",
+      "cancelled": "Annulé"
+    },
+    "needsYou": {
+      "plan_approval": "Plan à approuver",
+      "tool_permission": "Autorisation d’outil",
+      "review": "Prête pour la revue",
+      "failed": "Échec",
+      "merge_conflict": "Conflit de fusion",
+      "input": "En attente d’une saisie"
+    },
+    "flow": {
+      "viewBoard": "Tableau",
+      "viewList": "Liste",
+      "start": "Démarrer",
+      "startFailed": "Impossible de démarrer la tâche.",
+      "queued": "Tous les créneaux d’exécution sont occupés ; la tâche est en file d’attente et démarrera dès qu’un créneau se libère.",
+      "queuedBadge": "En file d’attente",
+      "planFirst": "Planifier d’abord",
+      "planProgress": "{{done}}/{{total}}",
+      "planProgressStep": "{{done}}/{{total}} · {{step}}",
+      "needsYouCount_one": "{{count}} tâche vous attend",
+      "needsYouCount_other": "{{count}} tâches vous attendent"
+    }
   },
   "squadRouteOnly": {
     "title": "Le Squad Leader ne peut que répartir le travail",

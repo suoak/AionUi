@@ -1498,7 +1498,35 @@
       }
     },
     "openScheduled": "Programadas",
-    "emptyColumnHint": "Todavía no hay elementos de trabajo aquí. Crea una tarea o abre Programadas."
+    "emptyColumnHint": "Todavía no hay elementos de trabajo aquí. Crea una tarea o abre Programadas.",
+    "lanes": {
+      "todo": "Por hacer",
+      "in_progress": "En curso",
+      "needs_you": "Te necesita",
+      "done": "Hecho",
+      "cancelled": "Cancelado"
+    },
+    "needsYou": {
+      "plan_approval": "Plan por aprobar",
+      "tool_permission": "Permiso de herramienta",
+      "review": "Lista para revisar",
+      "failed": "Fallida",
+      "merge_conflict": "Conflicto de fusión",
+      "input": "Esperando entrada"
+    },
+    "flow": {
+      "viewBoard": "Tablero",
+      "viewList": "Lista",
+      "start": "Iniciar",
+      "startFailed": "No se pudo iniciar la tarea.",
+      "queued": "Todos los espacios de ejecución están ocupados; la tarea está en cola y empezará cuando quede uno libre.",
+      "queuedBadge": "En cola",
+      "planFirst": "Planificar primero",
+      "planProgress": "{{done}}/{{total}}",
+      "planProgressStep": "{{done}}/{{total}} · {{step}}",
+      "needsYouCount_one": "{{count}} tarea te necesita",
+      "needsYouCount_other": "{{count}} tareas te necesitan"
+    }
   },
   "squadRouteOnly": {
     "title": "El Squad Leader solo puede repartir trabajo",

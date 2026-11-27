@@ -1498,7 +1498,35 @@
       }
     },
     "openScheduled": "Zamanlanmış",
-    "emptyColumnHint": "Burada henüz iş öğesi yok. Bir görev oluşturun veya Zamanlanmış’ı açın."
+    "emptyColumnHint": "Burada henüz iş öğesi yok. Bir görev oluşturun veya Zamanlanmış’ı açın.",
+    "lanes": {
+      "todo": "Yapılacak",
+      "in_progress": "Devam ediyor",
+      "needs_you": "Sizi bekliyor",
+      "done": "Tamamlandı",
+      "cancelled": "İptal edildi"
+    },
+    "needsYou": {
+      "plan_approval": "Onay bekleyen plan",
+      "tool_permission": "Araç izni",
+      "review": "İncelemeye hazır",
+      "failed": "Başarısız",
+      "merge_conflict": "Birleştirme çakışması",
+      "input": "Girdi bekleniyor"
+    },
+    "flow": {
+      "viewBoard": "Pano",
+      "viewList": "Liste",
+      "start": "Başlat",
+      "startFailed": "Görev başlatılamadı.",
+      "queued": "Tüm çalışma yuvaları dolu; görev sıraya alındı ve bir yuva boşalınca başlayacak.",
+      "queuedBadge": "Sırada",
+      "planFirst": "Önce plan",
+      "planProgress": "{{done}}/{{total}}",
+      "planProgressStep": "{{done}}/{{total}} · {{step}}",
+      "needsYouCount_one": "{{count}} görev sizi bekliyor",
+      "needsYouCount_other": "{{count}} görev sizi bekliyor"
+    }
   },
   "squadRouteOnly": {
     "title": "Squad Leader yalnızca iş dağıtabilir",

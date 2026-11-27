@@ -1498,7 +1498,35 @@
       }
     },
     "openScheduled": "排程任務",
-    "emptyColumnHint": "此欄暫無工作項。可新增任務或開啟排程任務。"
+    "emptyColumnHint": "此欄暫無工作項。可新增任務或開啟排程任務。",
+    "lanes": {
+      "todo": "待辦",
+      "in_progress": "進行中",
+      "needs_you": "需要你",
+      "done": "已完成",
+      "cancelled": "已取消"
+    },
+    "needsYou": {
+      "plan_approval": "計畫待核准",
+      "tool_permission": "工具權限",
+      "review": "待審查",
+      "failed": "失敗",
+      "merge_conflict": "合併衝突",
+      "input": "等待輸入"
+    },
+    "flow": {
+      "viewBoard": "看板",
+      "viewList": "清單",
+      "start": "開始",
+      "startFailed": "任務無法開始。",
+      "queued": "執行名額已滿，任務已排隊，有空位時自動開始。",
+      "queuedBadge": "排隊中",
+      "planFirst": "先計畫",
+      "planProgress": "{{done}}/{{total}}",
+      "planProgressStep": "{{done}}/{{total}} · {{step}}",
+      "needsYouCount_one": "{{count}} 個任務需要你",
+      "needsYouCount_other": "{{count}} 個任務需要你"
+    }
   },
   "squadRouteOnly": {
     "title": "Squad Leader 只能派工",

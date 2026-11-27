@@ -1498,7 +1498,35 @@
       }
     },
     "openScheduled": "定时任务",
-    "emptyColumnHint": "此列暂无工作项。可新建任务或打开定时任务。"
+    "emptyColumnHint": "此列暂无工作项。可新建任务或打开定时任务。",
+    "lanes": {
+      "todo": "待办",
+      "in_progress": "进行中",
+      "needs_you": "需要你",
+      "done": "已完成",
+      "cancelled": "已取消"
+    },
+    "needsYou": {
+      "plan_approval": "计划待批准",
+      "tool_permission": "工具权限",
+      "review": "待评审",
+      "failed": "失败",
+      "merge_conflict": "合入冲突",
+      "input": "等待输入"
+    },
+    "flow": {
+      "viewBoard": "看板",
+      "viewList": "列表",
+      "start": "开始",
+      "startFailed": "任务无法开始。",
+      "queued": "运行名额已满，任务已排队，有空位时自动开始。",
+      "queuedBadge": "排队中",
+      "planFirst": "先计划",
+      "planProgress": "{{done}}/{{total}}",
+      "planProgressStep": "{{done}}/{{total}} · {{step}}",
+      "needsYouCount_one": "{{count}} 个任务需要你",
+      "needsYouCount_other": "{{count}} 个任务需要你"
+    }
   },
   "squadRouteOnly": {
     "title": "Squad Leader 只能派活",

@@ -1498,7 +1498,35 @@
       }
     },
     "openScheduled": "Geplant",
-    "emptyColumnHint": "Hier gibt es noch keine Arbeitselemente. Erstellen Sie eine Aufgabe oder öffnen Sie „Geplant“."
+    "emptyColumnHint": "Hier gibt es noch keine Arbeitselemente. Erstellen Sie eine Aufgabe oder öffnen Sie „Geplant“.",
+    "lanes": {
+      "todo": "Zu erledigen",
+      "in_progress": "In Arbeit",
+      "needs_you": "Braucht dich",
+      "done": "Erledigt",
+      "cancelled": "Abgebrochen"
+    },
+    "needsYou": {
+      "plan_approval": "Plan wartet auf Freigabe",
+      "tool_permission": "Tool-Berechtigung",
+      "review": "Bereit zur Prüfung",
+      "failed": "Fehlgeschlagen",
+      "merge_conflict": "Merge-Konflikt",
+      "input": "Wartet auf Eingabe"
+    },
+    "flow": {
+      "viewBoard": "Board",
+      "viewList": "Liste",
+      "start": "Starten",
+      "startFailed": "Die Aufgabe konnte nicht gestartet werden.",
+      "queued": "Alle Ausführungsplätze sind belegt; die Aufgabe ist eingereiht und startet, sobald einer frei wird.",
+      "queuedBadge": "In Warteschlange",
+      "planFirst": "Erst planen",
+      "planProgress": "{{done}}/{{total}}",
+      "planProgressStep": "{{done}}/{{total}} · {{step}}",
+      "needsYouCount_one": "{{count}} Aufgabe braucht dich",
+      "needsYouCount_other": "{{count}} Aufgaben brauchen dich"
+    }
   },
   "squadRouteOnly": {
     "title": "Squad Leader darf nur Arbeit verteilen",

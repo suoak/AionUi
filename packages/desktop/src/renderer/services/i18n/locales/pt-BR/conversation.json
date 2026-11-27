@@ -1498,7 +1498,35 @@
       }
     },
     "openScheduled": "Agendadas",
-    "emptyColumnHint": "Ainda não há itens de trabalho aqui. Crie uma tarefa ou abra Agendadas."
+    "emptyColumnHint": "Ainda não há itens de trabalho aqui. Crie uma tarefa ou abra Agendadas.",
+    "lanes": {
+      "todo": "A fazer",
+      "in_progress": "Em andamento",
+      "needs_you": "Precisa de você",
+      "done": "Concluído",
+      "cancelled": "Cancelado"
+    },
+    "needsYou": {
+      "plan_approval": "Plano para aprovar",
+      "tool_permission": "Permissão de ferramenta",
+      "review": "Pronta para revisão",
+      "failed": "Falhou",
+      "merge_conflict": "Conflito de merge",
+      "input": "Aguardando entrada"
+    },
+    "flow": {
+      "viewBoard": "Quadro",
+      "viewList": "Lista",
+      "start": "Iniciar",
+      "startFailed": "Não foi possível iniciar a tarefa.",
+      "queued": "Todos os espaços de execução estão ocupados; a tarefa entrou na fila e começa quando um ficar livre.",
+      "queuedBadge": "Na fila",
+      "planFirst": "Planejar primeiro",
+      "planProgress": "{{done}}/{{total}}",
+      "planProgressStep": "{{done}}/{{total}} · {{step}}",
+      "needsYouCount_one": "{{count}} tarefa precisa de você",
+      "needsYouCount_other": "{{count}} tarefas precisam de você"
+    }
   },
   "squadRouteOnly": {
     "title": "O Squad Leader só pode distribuir trabalho",

@@ -14,6 +14,7 @@ import type {
 const mocks = vi.hoisted(() => ({
   boardGet: vi.fn(),
   boardUpdate: vi.fn(),
+  boardStart: vi.fn(),
   review: vi.fn(),
   commentsList: vi.fn(),
   commentsCreate: vi.fn(),
@@ -55,6 +56,7 @@ vi.mock('@/common', () => ({
       board: {
         get: { invoke: mocks.boardGet },
         update: { invoke: mocks.boardUpdate },
+        start: { invoke: mocks.boardStart },
         review: { invoke: mocks.review },
         comments: {
           list: { invoke: mocks.commentsList },
@@ -167,7 +169,16 @@ const conflict = (reason: string) =>
     body: { error: 'rejected', code: 'board_transition_rejected', details: { from: 'backlog', to: 'todo', reason } },
   });
 
-const column = (status: TaskBoardStatus) => screen.getByTestId(`tasks-board-column-${status}`);
+// 3.0 U2: board columns are shown as lanes (backlog+todo → To do, in_review → Needs you).
+const LANE_OF: Record<TaskBoardStatus, string> = {
+  backlog: 'todo',
+  todo: 'todo',
+  in_progress: 'in_progress',
+  in_review: 'needs_you',
+  done: 'done',
+  cancelled: 'cancelled',
+};
+const column = (status: TaskBoardStatus) => screen.getByTestId(`tasks-board-lane-${LANE_OF[status]}`);
 
 const chooseMoveTarget = async (status: TaskBoardStatus) => {
   const select = screen.getByTestId('task-board-detail-move');
@@ -218,7 +229,7 @@ describe('TasksBoardPage', () => {
     );
     render(<TasksBoardPage />);
 
-    const todo = await screen.findByTestId('tasks-board-column-todo');
+    const todo = await screen.findByTestId('tasks-board-lane-todo');
     expect(
       within(todo)
         .getAllByTestId(/^task-board-card-b/)
@@ -232,7 +243,7 @@ describe('TasksBoardPage', () => {
       'conversation.taskBoard.priority.urgent'
     );
     expect(screen.queryByTestId('tasks-board-legacy-notice')).toBeNull();
-    expect(screen.queryByTestId('tasks-board-column-cancelled')).toBeNull();
+    expect(screen.queryByTestId('tasks-board-lane-cancelled')).toBeNull();
     expect(mocks.boardGet).toHaveBeenCalledWith({});
     expect(mocks.list).not.toHaveBeenCalled();
 
@@ -529,12 +540,12 @@ describe('TasksBoardPage', () => {
     expect(mocks.navigate).toHaveBeenCalledWith('/scheduled');
   });
 
-  it('renders the empty-column hint in every empty column (IA-3)', async () => {
+  it('renders the empty-column hint in every empty lane (IA-3)', async () => {
     mocks.boardGet.mockResolvedValue(board(item('only', 'todo')));
     render(<TasksBoardPage />);
     await screen.findByTestId('task-board-card-only');
 
-    for (const status of ['backlog', 'in_progress', 'in_review', 'done'] as TaskBoardStatus[]) {
+    for (const status of ['in_progress', 'in_review', 'done'] as TaskBoardStatus[]) {
       expect(within(column(status)).getByText('conversation.taskBoard.emptyColumnHint')).toBeTruthy();
     }
     expect(within(column('todo')).queryByText('conversation.taskBoard.emptyColumnHint')).toBeNull();
@@ -562,4 +573,76 @@ it('opens the GitHub import from ?import=github and strips the param (V3 New ▾
   expect(options).toEqual({ replace: true });
   expect(update(new URLSearchParams('import=github&x=1')).toString()).toBe('x=1');
   expect(await screen.findByTestId('github-import-repo')).toBeTruthy();
+});
+
+describe('3.0 task flow (Core 0.6 lanes)', () => {
+  it('shows the needs-you reason and plan progress from Core, and starts a To-do task', async () => {
+    mocks.searchParams = new URLSearchParams();
+    const todo = item('f1', 'todo', { lane: 'todo', assistant_id: 'a1', title: 'Fix login' });
+    const blocked = item('f2', 'in_progress', {
+      lane: 'needs_you',
+      needs_you_reason: 'merge_conflict',
+      latest_plan: { done: 3, total: 7, current: 'Write tests' },
+    });
+    mocks.boardGet.mockResolvedValue(board(todo, blocked));
+    mocks.boardStart.mockResolvedValue({
+      state: 'started',
+      item: { ...todo, board_status: 'in_progress', status: 'running', lane: 'in_progress', updated_at: 99 },
+    });
+    render(<TasksBoardPage />);
+
+    const card = await screen.findByTestId('task-board-card-f2');
+    expect(within(column('in_review')).getByTestId('task-board-card-f2')).toBeTruthy();
+    expect(within(card).getByTestId('task-board-card-needs-you').textContent).toBe(
+      'conversation.taskBoard.needsYou.merge_conflict'
+    );
+    expect(within(card).getByTestId('task-board-card-plan')).toBeTruthy();
+    expect(within(card).queryByTestId('task-board-card-start')).toBeNull();
+
+    fireEvent.click(within(screen.getByTestId('task-board-card-f1')).getByTestId('task-board-card-start'));
+    await waitFor(() => expect(mocks.boardStart).toHaveBeenCalledWith({ id: 'f1' }));
+    await waitFor(() => expect(within(column('in_progress')).getByTestId('task-board-card-f1')).toBeTruthy());
+    expect(screen.queryByTestId('task-board-detail')).toBeNull();
+  });
+
+  it('offers no Start button on older cores (no lane field)', async () => {
+    mocks.searchParams = new URLSearchParams();
+    mocks.boardGet.mockResolvedValue(board(item('o1', 'todo', { assistant_id: 'a1' })));
+    render(<TasksBoardPage />);
+    const card = await screen.findByTestId('task-board-card-o1');
+    expect(within(card).queryByTestId('task-board-card-start')).toBeNull();
+  });
+
+  it('renders the list view from ?view=list grouped by lane', async () => {
+    mocks.searchParams = new URLSearchParams('view=list');
+    mocks.boardGet.mockResolvedValue(
+      board(item('l1', 'todo', { lane: 'todo', assistant_id: 'a1' }), item('l2', 'in_review', { lane: 'needs_you' }))
+    );
+    render(<TasksBoardPage />);
+    await screen.findByTestId('tasks-list-view');
+    expect(within(screen.getByTestId('tasks-list-lane-todo')).getByTestId('tasks-list-row-l1')).toBeTruthy();
+    expect(within(screen.getByTestId('tasks-list-lane-needs_you')).getByTestId('tasks-list-row-l2')).toBeTruthy();
+    expect(screen.getByTestId('tasks-list-start-l1')).toBeTruthy();
+  });
+});
+
+describe('3.0 lane order and tint', () => {
+  it('puts Needs you first, then In progress, To do, Done, and tints needs-you cards', async () => {
+    mocks.searchParams = new URLSearchParams();
+    mocks.boardGet.mockResolvedValue(
+      board(
+        item('n1', 'in_review', { lane: 'needs_you', needs_you_reason: 'review' }),
+        item('t1', 'todo', { lane: 'todo' })
+      )
+    );
+    render(<TasksBoardPage />);
+    const card = await screen.findByTestId('task-board-card-n1');
+    const order = screen
+      .getAllByTestId(/^tasks-board-lane-(?!count)/)
+      .map((el) => el.getAttribute('data-testid')!.replace('tasks-board-lane-', ''));
+    expect(order).toEqual(['needs_you', 'in_progress', 'todo', 'done']);
+    expect(card.getAttribute('data-lane')).toBe('needs_you');
+    expect(card.className).toContain('--warning-6');
+    expect(screen.getByTestId('task-board-card-t1').className).not.toContain('--warning-6');
+  });
 });

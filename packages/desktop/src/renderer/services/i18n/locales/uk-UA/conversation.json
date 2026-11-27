@@ -1516,7 +1516,37 @@
       }
     },
     "openScheduled": "Заплановані",
-    "emptyColumnHint": "Тут ще немає робочих елементів. Створіть завдання або відкрийте «Заплановані»."
+    "emptyColumnHint": "Тут ще немає робочих елементів. Створіть завдання або відкрийте «Заплановані».",
+    "lanes": {
+      "todo": "До виконання",
+      "in_progress": "У роботі",
+      "needs_you": "Потрібні ви",
+      "done": "Готово",
+      "cancelled": "Скасовано"
+    },
+    "needsYou": {
+      "plan_approval": "План чекає схвалення",
+      "tool_permission": "Дозвіл інструмента",
+      "review": "Готово до перевірки",
+      "failed": "Помилка",
+      "merge_conflict": "Конфлікт злиття",
+      "input": "Чекає введення"
+    },
+    "flow": {
+      "viewBoard": "Дошка",
+      "viewList": "Список",
+      "start": "Почати",
+      "startFailed": "Не вдалося почати завдання.",
+      "queued": "Усі слоти запуску зайняті; завдання поставлено в чергу, і воно почнеться, щойно слот звільниться.",
+      "queuedBadge": "У черзі",
+      "planFirst": "Спершу план",
+      "planProgress": "{{done}}/{{total}}",
+      "planProgressStep": "{{done}}/{{total}} · {{step}}",
+      "needsYouCount_one": "{{count}} завдання чекає на вас",
+      "needsYouCount_few": "{{count}} завдання чекають на вас",
+      "needsYouCount_many": "{{count}} завдань чекають на вас",
+      "needsYouCount_other": "{{count}} завдань чекають на вас"
+    }
   },
   "squadRouteOnly": {
     "title": "Squad Leader може лише розподіляти роботу",

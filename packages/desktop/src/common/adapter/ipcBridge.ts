@@ -134,6 +134,8 @@ import type {
   TaskCommentEvent,
   TaskBoardUpdatedEvent,
   UpdateTaskBoardInput,
+  StartTaskInput,
+  StartTaskResult,
 } from '../types/agent/taskSession';
 import type {
   CreateWorktreeInput,
@@ -1341,6 +1343,15 @@ export const taskSession = {
       const qs = query.toString();
       return qs ? `/api/task-sessions/board?${qs}` : '/api/task-sessions/board';
     }),
+    /**
+     * 3.0 C2 (aioncore ≥ 0.6): start a task — governance check, then a run slot
+     * or the queue. Idempotent; older cores answer 404/405.
+     */
+    start: httpPost<StartTaskResult, { id: string } & StartTaskInput>(
+      (params) => `/api/task-sessions/${encodeURIComponent(params.id)}/start`,
+      // Undefined fields are dropped by JSON; Core rejects unknown keys.
+      (params) => ({ approach: params.approach, assistant_id: params.assistant_id })
+    ),
     /** M8 E6-7: manual, read-only GitHub Issue import into the backlog. */
     importGithub: httpPost<ImportGithubIssuesResult, ImportGithubIssuesInput>('/api/task-sessions/import/github'),
     update: httpPatch<TaskBoardItem, { id: string; updates: UpdateTaskBoardInput }>(

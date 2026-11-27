@@ -1498,7 +1498,35 @@
       }
     },
     "openScheduled": "スケジュール",
-    "emptyColumnHint": "まだ作業項目はありません。タスクを作成するか、スケジュールを開いてください。"
+    "emptyColumnHint": "まだ作業項目はありません。タスクを作成するか、スケジュールを開いてください。",
+    "lanes": {
+      "todo": "未着手",
+      "in_progress": "進行中",
+      "needs_you": "要対応",
+      "done": "完了",
+      "cancelled": "キャンセル"
+    },
+    "needsYou": {
+      "plan_approval": "計画の承認待ち",
+      "tool_permission": "ツールの許可",
+      "review": "レビュー待ち",
+      "failed": "失敗",
+      "merge_conflict": "マージの競合",
+      "input": "入力待ち"
+    },
+    "flow": {
+      "viewBoard": "ボード",
+      "viewList": "リスト",
+      "start": "開始",
+      "startFailed": "タスクを開始できませんでした。",
+      "queued": "実行枠がすべて使用中のため、タスクはキューに入りました。空きができると開始します。",
+      "queuedBadge": "待機中",
+      "planFirst": "先に計画",
+      "planProgress": "{{done}}/{{total}}",
+      "planProgressStep": "{{done}}/{{total}} · {{step}}",
+      "needsYouCount_one": "{{count}} 件のタスクが対応待ちです",
+      "needsYouCount_other": "{{count}} 件のタスクが対応待ちです"
+    }
   },
   "squadRouteOnly": {
     "title": "Squad Leader は作業の割り振りのみ可能です",
