@@ -9,6 +9,10 @@ import { cleanup, fireEvent, render, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import SiderTasksBoardEntry from '@/renderer/components/layout/Sider/SiderNav/SiderTasksBoardEntry';
 
+// The needs-you badge has its own test (tests/unit/tasks/siderTasksNeedsYou); here it
+// must not open a real board fetch / WebSocket that logs after the file tears down.
+vi.mock('@/renderer/pages/tasks/useNeedsYouCount', () => ({ useNeedsYouCount: () => 0 }));
+
 vi.mock('react-i18next', () => ({
   useTranslation: () => ({ t: (key: string) => key }),
 }));
