@@ -24,6 +24,7 @@ import { CheckOne, Communication, Copy, Earth, EditTwo, Refresh } from '@icon-pa
 import React, { Suspense, useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { formatTime } from '@/renderer/services/i18n/format';
+import SettingsPageHeader from '@/renderer/pages/settings/components/SettingsPageHeader';
 import { useSettingsViewMode } from '../settingsViewContext';
 
 /**
@@ -560,7 +561,15 @@ const WebuiModalContent: React.FC = () => {
       <div className='flex flex-col h-full w-full'>
         <WorkMateScrollArea className='flex-1 min-h-0 pb-16px' disableOverflow={isPageMode}>
           <div className='space-y-16px'>
-            <h2 className='text-20px font-500 text-t-primary m-0'>{t('settings.channels', 'Channels')}</h2>
+            {isPageMode ? (
+              <SettingsPageHeader
+                title={t('settings.channels', 'Channels')}
+                sticky={false}
+                data-testid='settings-page-header-webui'
+              />
+            ) : (
+              <h2 className='text-20px font-500 text-t-primary m-0'>{t('settings.channels', 'Channels')}</h2>
+            )}
             <Suspense fallback={<div className='text-13px text-t-secondary'>{t('common.loading')}</div>}>
               <ChannelModalContentLazy />
             </Suspense>
@@ -573,12 +582,13 @@ const WebuiModalContent: React.FC = () => {
   const webuiPanel = (
     <WorkMateScrollArea className='flex-1 min-h-0 pb-16px' disableOverflow={isPageMode}>
       <div className='space-y-12px px-[12px] md:px-[28px]'>
-        {/* 标题 / Title */}
-        <h2 className='text-20px font-500 text-t-primary m-0'>WebUI</h2>
+        {/* Title and description; in page mode the shared page header above the tabs shows them (3.0 V7). */}
+        {!isPageMode && <h2 className='text-20px font-500 text-t-primary m-0'>WebUI</h2>}
 
-        {/* 描述说明 / Description */}
         <div className='space-y-6px'>
-          <p className='m-0 text-13px text-t-secondary leading-relaxed'>{t('settings.webui.description')}</p>
+          {!isPageMode && (
+            <p className='m-0 text-13px text-t-secondary leading-relaxed'>{t('settings.webui.description')}</p>
+          )}
           <div className='flex flex-wrap gap-x-12px gap-y-6px'>
             {[
               t('settings.webui.enable', { defaultValue: 'Enable WebUI' }),
@@ -802,11 +812,18 @@ const WebuiModalContent: React.FC = () => {
 
   return (
     <div className='flex flex-col h-full w-full'>
+      {isPageMode ? (
+        <SettingsPageHeader
+          title={t('settings.webui')}
+          description={t('settings.webui.description')}
+          data-testid='settings-page-header-webui'
+        />
+      ) : null}
       <Tabs
         activeTab={activeTab}
         onChange={(key) => setActiveTab((key as 'webui' | 'channels') || 'webui')}
         type='line'
-        className='mb-12px settings-remote-tabs'
+        className={`mb-12px settings-remote-tabs${isPageMode ? ' mt-16px' : ''}`}
       >
         <Tabs.TabPane
           key='webui'

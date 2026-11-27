@@ -1,4 +1,9 @@
 {
+  "extensionSettings": {
+    "loading": "Carregando…",
+    "tabNotFound": "Não foi possível encontrar esta aba de configurações. Ela pode ter sido removida.",
+    "iframeTitle": "Configurações da extensão: {{name}}"
+  },
   "imageGenSupportedTooltipOpenAI": "Modelos via Images API compatível com OpenAI: GPT Image, Grok Imagine, Seedream, FLUX, Stable Diffusion, Recraft, Qwen Image, Ideogram e outros modelos de gateway",
   "imageGenCustomModelWarning": "Modelos personalizados não foram verificados. Eles só funcionam se o provedor retornar imagens por uma Images API ou resposta de chat compatível.",
   "imageGenCompatibilityNote": "Endpoints nativos do provedor sem uma Images API ou resposta de chat compatível não têm suporte para conexão direta.",
@@ -300,7 +305,6 @@
   "assistantReorderHintShort": "Arraste para reordenar",
   "fontSizeChat": "Tamanho do texto do chat",
   "mcpAuthRequired": "Autenticação obrigatória",
-  "groupApp": "Aplicativo",
   "assistantGroupCreated": "Assistentes personalizados",
   "assistantNoDefaultMcpsSelected": "Nenhum MCP padrão selecionado",
   "addModel": "Adicionar Modelo",
@@ -556,7 +560,6 @@
   "retry": "Tentar novamente",
   "skillFolderPath": "Caminho da Pasta da Habilidade",
   "baseUrlResetToDefault": "Redefinir para o padrão",
-  "groupAiCore": "Core da IA",
   "channels.selectFirst": "Selecione um canal e configure as credenciais.",
   "assistantMainAgent": "Agent",
   "imageInputSupported": "Ativado pela configuração",
@@ -783,9 +786,6 @@
   "pleaseEnterApiKey": "Por favor, insira a Chave de API",
   "mcpError": "Erro",
   "assistantBackToList": "Todos os assistentes",
-  "cdP": {
-    "title": "CDP (Chrome DevTools Protocol)"
-  },
   "startOnBootUpdateFailed": "Falha ao atualizar a configuração de inicialização com o sistema",
   "fullUrl": "URL Completa",
   "assistant.tokenRequired": "Por favor, insira um token do bot",
@@ -1440,7 +1440,6 @@
     "searchPlaceholder": "Pesquisar configurações",
     "searchEmpty": "Nenhuma configuração corresponde"
   },
-  "groupAbout": "Outros",
   "promptPreview": "Visualizar",
   "webui.copyPasswordTooltip": "Clique para copiar a senha",
   "assistantDefaultPermissionLabel": "Permissão",

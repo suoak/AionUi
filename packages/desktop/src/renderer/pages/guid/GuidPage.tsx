@@ -766,11 +766,11 @@ const GuidPage: React.FC = () => {
               data-testid='agent-center-try-banner'
             >
               <div className='min-w-0'>
-                <div className='text-13px font-medium text-t-primary'>智能体试跑预览</div>
+                <div className='text-13px font-medium text-t-primary'>{t('guid.agentPreview.title')}</div>
                 <div className='text-12px text-t-secondary'>
                   {navState.agentCenterPreviewMode === 'published'
-                    ? '正在预览已发布配置（类似 ChatGPT Preview）。'
-                    : '正在预览当前草稿配置。试跑后可返回改进指令或提炼技能。'}
+                    ? t('guid.agentPreview.published')
+                    : t('guid.agentPreview.draft')}
                 </div>
               </div>
               <div className='flex gap-8px shrink-0'>
@@ -780,7 +780,7 @@ const GuidPage: React.FC = () => {
                     className='text-12px text-primary-6 bg-transparent border-0 cursor-pointer p-0'
                     onClick={() => navigate(navState.agentCenterReturnTo as string)}
                   >
-                    返回改进
+                    {t('guid.agentPreview.backToImprove')}
                   </button>
                 ) : navState.selectedAssistantId ? (
                   <button
@@ -788,7 +788,7 @@ const GuidPage: React.FC = () => {
                     className='text-12px text-primary-6 bg-transparent border-0 cursor-pointer p-0'
                     onClick={() => navigate(`/agents/${navState.selectedAssistantId}`)}
                   >
-                    打开智能体详情
+                    {t('guid.agentPreview.openAgent')}
                   </button>
                 ) : null}
               </div>
