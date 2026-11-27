@@ -74,7 +74,7 @@ const InboxBell: React.FC<InboxBellProps> = ({ iconSize, strokeWidth }) => {
             {unread > 0 && (
               <span
                 data-testid='titlebar-inbox-unread'
-                className='absolute top-2px end-0 min-w-14px h-14px px-3px box-border rd-7px bg-wm-status-needs-you text-wm-on-accent text-10px leading-14px text-center font-600'
+                className='absolute top-2px end-0 min-w-14px h-14px px-3px box-border rd-7px bg-wm-status-needs-you text-wm-on-accent text-11px leading-14px text-center font-600'
               >
                 {formatUnread(unread)}
               </span>

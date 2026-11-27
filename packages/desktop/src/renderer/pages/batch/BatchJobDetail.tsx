@@ -205,7 +205,7 @@ const BatchJobDetail: React.FC<Props> = ({ jobId, onJobChanged }) => {
       <div className='flex items-start justify-between gap-12px flex-wrap'>
         <div className='min-w-0'>
           <div className='flex items-center gap-8px'>
-            <h2 className='m-0 text-18px font-semibold text-t-primary truncate' data-testid='batch-detail-title'>
+            <h2 className='m-0 text-20px font-semibold text-t-primary truncate' data-testid='batch-detail-title'>
               {job.title}
             </h2>
             <BatchStatusTag status={job.status} testId='batch-detail-status' />

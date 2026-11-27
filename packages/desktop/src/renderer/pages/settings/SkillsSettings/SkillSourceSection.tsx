@@ -122,7 +122,7 @@ const SkillSourceSection: React.FC<{ skillId: string }> = ({ skillId }) => {
   if (!data && !error) return null;
 
   return (
-    <section data-testid='skill-detail-source' className='rounded-16px border border-border-2 bg-base px-20px py-18px'>
+    <section data-testid='skill-detail-source' className='rounded-14px border border-border-2 bg-base px-20px py-18px'>
       <div className='mb-14px flex items-center justify-between gap-12px'>
         <h2 className='m-0 text-14px font-600 text-t-primary'>{t('settings.skillsHub.sourceSection.title')}</h2>
         <div className='flex items-center gap-8px'>

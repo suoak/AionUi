@@ -228,7 +228,7 @@ const QueueItemCard: React.FC<QueueItemCardProps> = ({
               disabled={dragDisabled}
               data-drag-handle={dragDisabled ? 'disabled' : 'enabled'}
               data-floating-handle='visible'
-              className={`absolute inline-flex h-16px w-12px items-center justify-center border-none bg-transparent p-0 outline-none transition-[opacity,color] duration-160 ease-out ${
+              className={`absolute inline-flex h-16px w-12px items-center justify-center border-none bg-transparent p-0 outline-none transition-[opacity,color] duration-180 ease-out ${
                 dragDisabled
                   ? 'cursor-default opacity-0'
                   : isDragging
@@ -267,7 +267,7 @@ const QueueItemCard: React.FC<QueueItemCardProps> = ({
           </Typography.Ellipsis>
           {fileCountLabel ? (
             <span
-              className='inline-flex items-center rd-999px px-5px py-1px text-9px leading-none shrink-0'
+              className='inline-flex items-center rd-999px px-5px py-1px text-11px leading-none shrink-0'
               style={{
                 color: 'var(--color-text-3)',
                 background: 'color-mix(in srgb, var(--color-fill-2) 72%, transparent)',
@@ -277,7 +277,7 @@ const QueueItemCard: React.FC<QueueItemCardProps> = ({
             </span>
           ) : null}
           {item.status ? (
-            <span className='shrink-0 text-9px text-t-secondary' title={item.error_code}>
+            <span className='shrink-0 text-11px text-t-secondary' title={item.error_code}>
               {t(QUEUE_STATUS_KEYS[item.status], { defaultValue: item.status })}
             </span>
           ) : null}
@@ -549,7 +549,7 @@ const CommandQueuePanel: React.FC<CommandQueuePanelProps> = ({
               </span>
             )}
             <span
-              className='inline-flex items-center justify-center rd-999px px-6px h-16px text-10px leading-none font-600'
+              className='inline-flex items-center justify-center rd-999px px-6px h-16px text-11px leading-none font-600'
               style={{ background: 'var(--color-fill-3)', color: 'var(--color-text-2)' }}
             >
               {items.length + visibleRecentItems.length}
@@ -601,7 +601,7 @@ const CommandQueuePanel: React.FC<CommandQueuePanelProps> = ({
         {items.length > 0 ? (
           <div className='flex flex-col'>
             {visibleRecentItems.length > 0 ? (
-              <div className='px-12px pb-2px text-10px font-600 text-t-tertiary'>
+              <div className='px-12px pb-2px text-11px font-600 text-t-tertiary'>
                 {t('conversation.commandQueue.pendingSection', { defaultValue: 'Pending' })}
               </div>
             ) : null}
@@ -661,7 +661,7 @@ const CommandQueuePanel: React.FC<CommandQueuePanelProps> = ({
         ) : null}
         {visibleRecentItems.length > 0 ? (
           <div data-testid='command-queue-recent' className='flex flex-col'>
-            <div className='px-12px pb-2px text-10px font-600 text-t-tertiary'>
+            <div className='px-12px pb-2px text-11px font-600 text-t-tertiary'>
               {t('conversation.commandQueue.recentSection', { defaultValue: 'Recent' })}
             </div>
             <div className='p-6px flex flex-col gap-4px' data-command-queue-recent-list='true'>

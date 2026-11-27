@@ -115,14 +115,14 @@ const QuickActionButtons: React.FC<QuickActionButtonsProps> = ({
       <div className='flex justify-center items-center gap-24px'>
         {FEEDBACK_REPORTING_ENABLED && (
           <div
-            className='group inline-flex items-center justify-center h-36px min-w-36px max-w-36px px-0 rd-999px bg-fill-0 cursor-pointer overflow-hidden whitespace-nowrap hover:max-w-170px hover:px-14px hover:justify-start hover:gap-8px transition-[max-width,padding,border-radius,box-shadow] duration-420 ease-in-out'
+            className='group inline-flex items-center justify-center h-36px min-w-36px max-w-36px px-0 rd-999px bg-fill-0 cursor-pointer overflow-hidden whitespace-nowrap hover:max-w-170px hover:px-14px hover:justify-start hover:gap-8px transition-[max-width,padding,border-radius,box-shadow] duration-240 ease-in-out'
             style={quickActionStyle(hoveredQuickAction === 'bugReport')}
             onMouseEnter={() => setHoveredQuickAction('bugReport')}
             onMouseLeave={() => setHoveredQuickAction(null)}
             onClick={onOpenBugReport}
           >
             <svg
-              className='flex-shrink-0 text-[var(--color-text-3)] group-hover:text-[#2C7FFF] transition-colors duration-300'
+              className='flex-shrink-0 text-[var(--color-text-3)] group-hover:text-[#2C7FFF] transition-colors duration-240'
               width='20'
               height='20'
               viewBox='0 0 20 20'
@@ -137,13 +137,13 @@ const QuickActionButtons: React.FC<QuickActionButtonsProps> = ({
                 strokeLinejoin='round'
               />
             </svg>
-            <span className='opacity-0 max-w-0 overflow-hidden text-14px text-[var(--color-text-2)] group-hover:opacity-100 group-hover:max-w-128px transition-all duration-360 ease-in-out'>
+            <span className='opacity-0 max-w-0 overflow-hidden text-14px text-[var(--color-text-2)] group-hover:opacity-100 group-hover:max-w-128px transition-all duration-240 ease-in-out'>
               {t('conversation.welcome.quickActionFeedback')}
             </span>
           </div>
         )}
         <div
-          className='group inline-flex items-center justify-center h-36px min-w-36px max-w-36px px-0 rd-999px bg-fill-0 cursor-pointer overflow-hidden whitespace-nowrap hover:max-w-200px hover:px-14px hover:justify-start hover:gap-8px transition-[max-width,padding,border-radius,box-shadow] duration-420 ease-in-out'
+          className='group inline-flex items-center justify-center h-36px min-w-36px max-w-36px px-0 rd-999px bg-fill-0 cursor-pointer overflow-hidden whitespace-nowrap hover:max-w-200px hover:px-14px hover:justify-start hover:gap-8px transition-[max-width,padding,border-radius,box-shadow] duration-240 ease-in-out'
           style={quickActionStyle(hoveredQuickAction === 'webui')}
           onMouseEnter={() => setHoveredQuickAction('webui')}
           onMouseLeave={() => setHoveredQuickAction(null)}
@@ -155,12 +155,12 @@ const QuickActionButtons: React.FC<QuickActionButtonsProps> = ({
                 theme='outline'
                 size={20}
                 fill='currentColor'
-                className='block transition-colors duration-360'
+                className='block transition-colors duration-240'
                 style={{ color: webuiIconColor }}
               />
             </div>
           </div>
-          <span className='opacity-0 max-w-0 overflow-hidden text-14px text-[var(--color-text-2)] group-hover:opacity-100 group-hover:max-w-160px transition-all duration-360 ease-in-out'>
+          <span className='opacity-0 max-w-0 overflow-hidden text-14px text-[var(--color-text-2)] group-hover:opacity-100 group-hover:max-w-160px transition-all duration-240 ease-in-out'>
             {t('settings.webui', { defaultValue: 'WebUI' })} · {webuiStatusLabel}
           </span>
         </div>

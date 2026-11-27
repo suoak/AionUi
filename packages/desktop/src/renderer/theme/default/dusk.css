@@ -112,6 +112,19 @@ body,
   --sider-border: #36265d;
   --sider-accent: #33225c;
   --sider-accent-fg: #f3edff;
+  /* Composer (home and chat) */
+  --wm-surface-input: #2c1f4d;
+  --wm-input-border: #4a3480;
+  --wm-input-border-focus: #8461b0;
+  --wm-input-focus-shadow: 0px 2px 20px rgba(195, 139, 255, 0.22);
+  --wm-send-bg: #c38bff;
+  --wm-send-fg: #1b1430;
+  /* Tooltips, popovers and popconfirms follow the theme surfaces */
+  --aion-overlay-bg: var(--wm-surface-raised);
+  --aion-overlay-text: var(--wm-text-primary);
+  --aion-overlay-border: var(--wm-border-default);
+  --color-menu-light-bg: var(--wm-surface-raised);
+  --color-menu-dark-bg: var(--wm-surface-raised);
 }
 
 /* Arco primary / link scales (RGB triplets) live on <body>; dark ramp runs dark → light. */

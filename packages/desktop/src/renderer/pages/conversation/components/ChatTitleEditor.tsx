@@ -116,7 +116,7 @@ const ChatTitleEditor: React.FC<ChatTitleEditorProps> = ({
         >
           <span
             className={classNames(
-              'block min-w-0 overflow-hidden text-ellipsis whitespace-nowrap text-16px font-bold transition-colors duration-150',
+              'block min-w-0 overflow-hidden text-ellipsis whitespace-nowrap text-16px font-bold transition-colors duration-120',
               isTitleBlank ? 'text-t-tertiary' : 'text-t-primary',
               canRenameTitle &&
                 'group-hover:text-[rgb(var(--primary-6))] group-focus-within:text-[rgb(var(--primary-6))]'

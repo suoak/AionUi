@@ -227,7 +227,7 @@ const WorkspaceOpenButton: React.FC<WorkspaceOpenButtonProps> = ({ workspacePath
           className='workspace-open-button__dropdown-btn ps-2px pe-4px'
           style={{ marginInlineStart: '-4px' }}
         >
-          <Down size={12} className={`transition-transform duration-200 ${dropdownOpen ? 'rotate-180' : ''}`} />
+          <Down size={12} className={`transition-transform duration-180 ${dropdownOpen ? 'rotate-180' : ''}`} />
         </Button>
       </Dropdown>
     </div>

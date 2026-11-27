@@ -57,7 +57,7 @@ const SlideRail: React.FC<Props> = ({
                 )}
                 {(unresolvedCounts?.[slide.id] ?? 0) > 0 && (
                   <span
-                    className='inline-flex items-center justify-center min-w-16px h-16px px-4px rd-8px bg-primary text-11px text-white'
+                    className='inline-flex items-center justify-center min-w-16px h-16px px-4px rd-8px bg-primary text-11px text-wm-on-accent'
                     data-testid={`slide-review-count-${slide.id}`}
                   >
                     {unresolvedCounts?.[slide.id]}

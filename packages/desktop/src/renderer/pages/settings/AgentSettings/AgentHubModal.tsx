@@ -18,7 +18,7 @@ export const AgentHubModal: React.FC<AgentHubModalProps> = ({ visible, onCancel 
   const { t } = useTranslation();
   const logos = useAgentLogos();
   const { agents, loading, error, install, retryInstall, update } = useHubAgents();
-  const actionButtonClassName = '!min-w-80px !rounded-9px !px-10px';
+  const actionButtonClassName = '!min-w-80px !rounded-10px !px-10px';
   const notifyHubFailure = (msg: string | undefined) => {
     if (msg) Message.error({ content: <ExtensionReasonMessage raw={msg} /> });
   };

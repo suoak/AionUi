@@ -183,7 +183,7 @@ const OfficialOnlineSkills: React.FC<OfficialOnlineSkillsProps> = ({ onInstalled
               >
                 <div className='flex min-w-0 items-start justify-between gap-12px'>
                   <div className='min-w-0'>
-                    <h3 className='m-0 truncate text-15px font-600 text-t-primary'>{skill.display_name}</h3>
+                    <h3 className='m-0 truncate text-14px font-600 text-t-primary'>{skill.display_name}</h3>
                     <p className='m-0 mt-6px line-clamp-2 text-13px leading-relaxed text-t-secondary'>
                       {skill.summary}
                     </p>

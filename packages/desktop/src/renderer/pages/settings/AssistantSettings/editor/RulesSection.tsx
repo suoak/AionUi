@@ -41,7 +41,7 @@ const RulesSection: React.FC<RulesSectionProps> = ({
       extra={
         <div className='flex items-center gap-6px'>
           {isReadOnly ? (
-            <span className='rounded-8px bg-fill-1 px-8px py-3px text-10px font-500 text-t-tertiary'>
+            <span className='rounded-8px bg-fill-1 px-8px py-3px text-11px font-500 text-t-tertiary'>
               {readOnlyLabel}
             </span>
           ) : null}

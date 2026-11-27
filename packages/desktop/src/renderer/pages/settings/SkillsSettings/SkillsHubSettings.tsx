@@ -610,11 +610,11 @@ const SkillsHubSettings: React.FC<SkillsHubSettingsProps> = ({ withWrapper = tru
   const importHistoryContent = (
     <div data-testid='skill-import-history-page' className='flex flex-col h-full w-full'>
       <div className='space-y-16px pb-24px'>
-        <div className='px-[16px] md:px-[32px] py-20px bg-base rd-16px md:rd-24px shadow-sm border border-b-base'>
+        <div className='px-[16px] md:px-[32px] py-20px bg-base rd-14px shadow-sm border border-b-base'>
           <div className='flex flex-col sm:flex-row sm:items-start justify-between gap-12px'>
             <div>
               <div className='flex items-center gap-10px'>
-                <span className='text-16px md:text-18px text-t-primary font-bold tracking-tight'>
+                <span className='text-16px text-t-primary font-bold tracking-tight'>
                   {t('settings.skillsHub.importHistoryTitle', { defaultValue: 'Import history' })}
                 </span>
               </div>
@@ -634,7 +634,7 @@ const SkillsHubSettings: React.FC<SkillsHubSettingsProps> = ({ withWrapper = tru
           </div>
         </div>
 
-        <div className='px-[16px] md:px-[32px] py-16px bg-base rd-16px md:rd-24px shadow-sm border border-b-base'>
+        <div className='px-[16px] md:px-[32px] py-16px bg-base rd-14px shadow-sm border border-b-base'>
           {importHistoryGroups.length === 0 ? (
             <div className='border border-dashed border-border-1 bg-fill-1 rd-10px px-12px py-14px text-12px text-t-tertiary'>
               {t('settings.skillsHub.importHistoryEmpty', { defaultValue: 'No import records yet.' })}
@@ -705,7 +705,7 @@ const SkillsHubSettings: React.FC<SkillsHubSettingsProps> = ({ withWrapper = tru
           skillRefs.current[skill.name] = el;
         }}
         onClick={() => openSkillDetail(skill.name)}
-        className={`flex flex-col sm:flex-row gap-16px p-16px bg-base border hover:border-border-1 hover:bg-fill-1 rd-12px transition-all duration-200 cursor-pointer ${highlightedSkill === skill.name ? 'border-primary-5 bg-primary-1' : 'border-transparent'}`}
+        className={`flex flex-col sm:flex-row gap-16px p-16px bg-base border hover:border-border-1 hover:bg-fill-1 rd-12px transition-all duration-180 cursor-pointer ${highlightedSkill === skill.name ? 'border-primary-5 bg-primary-1' : 'border-transparent'}`}
       >
         <div className='shrink-0 flex items-start sm:mt-2px'>
           {isBuiltinLark ? (
@@ -736,7 +736,7 @@ const SkillsHubSettings: React.FC<SkillsHubSettingsProps> = ({ withWrapper = tru
               {isBuiltinLark ? t('settings.skillsHub.larkSetup.assistantName') : skill.name}
             </h3>
             {isBuiltinLark ? (
-              <span className='rounded-4px bg-[rgba(var(--success-6),0.08)] px-6px py-2px text-10px font-500 text-success-6'>
+              <span className='rounded-4px bg-[rgba(var(--success-6),0.08)] px-6px py-2px text-11px font-500 text-success-6'>
                 {t('settings.skillsHub.larkSetup.quickSetupBadge')}
               </span>
             ) : null}
@@ -786,7 +786,7 @@ const SkillsHubSettings: React.FC<SkillsHubSettingsProps> = ({ withWrapper = tru
         ) : null}
         <span className={`text-12px px-10px py-2px rd-[100px] font-medium ${countClass}`}>{count}</span>
       </div>
-      <div className='flex flex-col gap-8px rounded-12px border border-border-2 bg-2 p-8px md:rounded-16px md:p-10px'>
+      <div className='flex flex-col gap-8px rounded-12px border border-border-2 bg-2 p-8px md:rounded-14px md:p-10px'>
         {skills.length > 0 ? (
           skills.map((skill) => renderReadonlySkillCard(skill, variant))
         ) : (
@@ -889,7 +889,7 @@ const SkillsHubSettings: React.FC<SkillsHubSettingsProps> = ({ withWrapper = tru
         </div>
       )}
       {mySkills.length > 0 ? (
-        <div className='flex flex-col gap-8px rounded-12px border border-border-2 bg-2 p-8px md:rounded-16px md:p-10px'>
+        <div className='flex flex-col gap-8px rounded-12px border border-border-2 bg-2 p-8px md:rounded-14px md:p-10px'>
           {filteredSkills.length === 0 && (
             <div className='text-center text-t-secondary text-13px py-32px bg-fill-1 rd-12px border border-border-2 border-dashed'>
               {t('settings.skillsHub.noSearchResults', { defaultValue: 'No matching skills.' })}
@@ -903,7 +903,7 @@ const SkillsHubSettings: React.FC<SkillsHubSettingsProps> = ({ withWrapper = tru
                 skillRefs.current[skill.name] = el;
               }}
               onClick={batchMode ? () => toggleSkillSelected(skill.name) : () => openSkillDetail(skill.name)}
-              className={`group flex flex-col sm:flex-row gap-16px p-14px border rd-12px transition-all duration-200 cursor-pointer ${highlightedSkill === skill.name ? 'border-primary-5 bg-primary-1' : selectedSkillNames.has(skill.name) && batchMode ? 'border-transparent bg-[rgba(var(--primary-6),0.06)]' : 'border-transparent bg-base hover:border-border-2'}`}
+              className={`group flex flex-col sm:flex-row gap-16px p-14px border rd-12px transition-all duration-180 cursor-pointer ${highlightedSkill === skill.name ? 'border-primary-5 bg-primary-1' : selectedSkillNames.has(skill.name) && batchMode ? 'border-transparent bg-[rgba(var(--primary-6),0.06)]' : 'border-transparent bg-base hover:border-border-2'}`}
             >
               {batchMode && (
                 <div className='shrink-0 flex items-center sm:self-center'>
@@ -927,7 +927,7 @@ const SkillsHubSettings: React.FC<SkillsHubSettingsProps> = ({ withWrapper = tru
                 <div className='flex min-w-0 flex-wrap items-center gap-6px'>
                   <h3 className='text-14px font-semibold text-t-primary/90 truncate m-0'>{skill.name}</h3>
                   {skill.registry_origin ? (
-                    <span className='rounded-4px bg-primary-1 px-6px py-2px text-10px font-500 text-primary-6'>
+                    <span className='rounded-4px bg-primary-1 px-6px py-2px text-11px font-500 text-primary-6'>
                       {t('settings.skillsHub.officialOnline.sourceLabel')} · v{skill.registry_origin.installed_version}
                     </span>
                   ) : null}
@@ -1002,7 +1002,7 @@ const SkillsHubSettings: React.FC<SkillsHubSettingsProps> = ({ withWrapper = tru
           })}
         </p>
         {officialSkills.length > 0 ? (
-          <div className='flex flex-col gap-8px rounded-12px border border-border-2 bg-2 p-8px md:rounded-16px md:p-10px'>
+          <div className='flex flex-col gap-8px rounded-12px border border-border-2 bg-2 p-8px md:rounded-14px md:p-10px'>
             {filteredOfficialSkills.length === 0 && (
               <div className='text-center text-t-secondary text-13px py-32px bg-fill-1 rd-12px border border-border-2 border-dashed'>
                 {t('settings.skillsHub.noSearchResults', { defaultValue: 'No matching skills.' })}

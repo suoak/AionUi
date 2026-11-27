@@ -22,13 +22,13 @@ export const SectionCard: React.FC<SectionCardProps> = ({
   return (
     <section
       data-testid={testId}
-      className='rounded-12px border border-border-2 bg-2 px-[12px] py-[16px] md:rounded-16px md:px-[24px] md:py-[20px]'
+      className='rounded-12px border border-border-2 bg-2 px-[12px] py-[16px] md:rounded-14px md:px-[24px] md:py-[20px]'
     >
       <div className='mb-12px flex items-center gap-8px'>
         <div className='text-14px font-500 text-t-primary'>{title}</div>
         {legend ? (
           <span
-            className={`rounded-6px px-8px py-2px text-10px font-500 ${
+            className={`rounded-6px px-8px py-2px text-11px font-500 ${
               legend.tone === 'now'
                 ? 'border border-success-8 bg-success-8 text-white font-600'
                 : 'border border-warning-8 bg-warning-8 text-white font-600'
@@ -38,7 +38,7 @@ export const SectionCard: React.FC<SectionCardProps> = ({
           </span>
         ) : null}
         {readOnly && readOnlyLabel ? (
-          <span className='ms-auto rounded-8px bg-fill-1 px-8px py-3px text-10px font-500 text-t-tertiary'>
+          <span className='ms-auto rounded-8px bg-fill-1 px-8px py-3px text-11px font-500 text-t-tertiary'>
             {readOnlyLabel}
           </span>
         ) : null}
