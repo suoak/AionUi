@@ -165,6 +165,7 @@ import type {
   RemoteApprovalSettings,
   RemoteApprover,
 } from '@/common/types/remoteApproval';
+import type { AgentPreflight } from '@/common/types/agent/agentPreflight';
 import type { Delegation } from '../types/delegation';
 import {
   normalizeAgentCenterDetail,
@@ -4346,6 +4347,11 @@ export interface IContextBreakdown {
  * aioncore ≥ 0.6). Picking an assistant in the `@` menu is the only grant;
  * older cores answer 404 and the UI hides delegation.
  */
+/** 3.0 U4: runtime agent readiness (Core C5). */
+export const agentPreflight = {
+  list: httpGet<AgentPreflight[], void>('/api/agents/preflight', { silentStatuses: [404] }),
+};
+
 /** 3.0 U9: remote approve-to-execute (Core C9). */
 export const remoteApproval = {
   listForTask: httpGet<ApprovalRequest[], { task_session_id: string }>(

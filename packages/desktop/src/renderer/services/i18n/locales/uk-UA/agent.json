@@ -357,6 +357,55 @@
       "createHint": "No agents yet. Click “Create agent” to configure and try a run.",
       "permissionHint": "No agents are available for your role.",
       "permissionHintDetail": "An owner or admin must grant you run permission for published agents. You can still create private agents under “Mine” if allowed."
+    },
+    "list": {
+      "create": "Новий агент",
+      "tabs": {
+        "mine": "Мої",
+        "team": "Спільні з командою"
+      },
+      "loading": "Завантаження…",
+      "retry": "Повторити",
+      "loadFailed": "Не вдалося завантажити агентів",
+      "tryRun": "Спробувати",
+      "tryRunFailed": "Не вдалося підготувати пробний запуск",
+      "edit": "Редагувати",
+      "publish": "Опублікувати",
+      "publishedToast": "Опубліковано v{{version}}",
+      "publishFailed": "Не вдалося опублікувати",
+      "unpublished": "Не опубліковано",
+      "lastUsed": "Використано {{time}}",
+      "status": {
+        "draft": "Чернетка",
+        "published": "Опубліковано",
+        "archived": "В архіві"
+      },
+      "visibility": {
+        "private": "Лише я",
+        "team": "Команда",
+        "enterprise": "Організація"
+      },
+      "skills_one": "{{count}} навичка",
+      "skills_few": "{{count}} навички",
+      "skills_many": "{{count}} навичок",
+      "skills_other": "{{count}} навички"
+    },
+    "preflight": {
+      "level": {
+        "pass": "Готовий",
+        "warn": "Перевірте",
+        "fail": "Не готовий"
+      },
+      "fix": "Виправити",
+      "check": {
+        "enabled": "Увімкнено",
+        "installed": "Встановлено",
+        "runtime": "Середовище",
+        "connection": "З’єднання",
+        "auth": "Вхід",
+        "provider": "Постачальник моделей",
+        "version": "Версія"
+      }
     }
   },
   "skillEvolution": {

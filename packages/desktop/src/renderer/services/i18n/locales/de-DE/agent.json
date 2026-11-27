@@ -357,6 +357,53 @@
       "createHint": "No agents yet. Click “Create agent” to configure and try a run.",
       "permissionHint": "No agents are available for your role.",
       "permissionHintDetail": "An owner or admin must grant you run permission for published agents. You can still create private agents under “Mine” if allowed."
+    },
+    "list": {
+      "create": "Neuer Agent",
+      "tabs": {
+        "mine": "Meine",
+        "team": "Mit dem Team geteilt"
+      },
+      "loading": "Wird geladen…",
+      "retry": "Erneut versuchen",
+      "loadFailed": "Agenten konnten nicht geladen werden",
+      "tryRun": "Ausprobieren",
+      "tryRunFailed": "Testlauf konnte nicht vorbereitet werden",
+      "edit": "Bearbeiten",
+      "publish": "Veröffentlichen",
+      "publishedToast": "v{{version}} veröffentlicht",
+      "publishFailed": "Veröffentlichen fehlgeschlagen",
+      "unpublished": "Nicht veröffentlicht",
+      "lastUsed": "Zuletzt verwendet {{time}}",
+      "status": {
+        "draft": "Entwurf",
+        "published": "Veröffentlicht",
+        "archived": "Archiviert"
+      },
+      "visibility": {
+        "private": "Nur ich",
+        "team": "Team",
+        "enterprise": "Unternehmen"
+      },
+      "skills_one": "{{count}} Skill",
+      "skills_other": "{{count}} Skills"
+    },
+    "preflight": {
+      "level": {
+        "pass": "Bereit",
+        "warn": "Prüfen",
+        "fail": "Nicht bereit"
+      },
+      "fix": "Beheben",
+      "check": {
+        "enabled": "Aktiviert",
+        "installed": "Installiert",
+        "runtime": "Laufzeit",
+        "connection": "Verbindung",
+        "auth": "Anmeldung",
+        "provider": "Modellanbieter",
+        "version": "Version"
+      }
     }
   },
   "skillEvolution": {
