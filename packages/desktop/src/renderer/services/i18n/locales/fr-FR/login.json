@@ -13,8 +13,6 @@
   "showPassword": "Afficher le mot de passe",
   "hidePassword": "Masquer le mot de passe",
   "languageToggle": "Changer de langue",
-  "footerPrimary": "Transformez votre IA en ligne de commande",
-  "footerSecondary": "Moderne et efficace",
   "errors": {
     "empty": "Veuillez entrer un nom d'utilisateur et un mot de passe",
     "invalidCredentials": "Nom d'utilisateur ou mot de passe invalide",

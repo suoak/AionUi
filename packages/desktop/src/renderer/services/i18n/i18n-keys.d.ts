@@ -2559,8 +2559,6 @@ export type I18nKey =
   | 'login.errors.serverError'
   | 'login.errors.tooManyAttempts'
   | 'login.errors.unknown'
-  | 'login.footerPrimary'
-  | 'login.footerSecondary'
   | 'login.hidePassword'
   | 'login.languageToggle'
   | 'login.pageTitle'

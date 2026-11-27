@@ -13,8 +13,6 @@
   "showPassword": "Mostrar contraseña",
   "hidePassword": "Ocultar contraseña",
   "languageToggle": "Cambiar idioma",
-  "footerPrimary": "Transforma tu IA de línea de comandos",
-  "footerSecondary": "Moderno y eficiente",
   "errors": {
     "empty": "Ingresa usuario y contraseña",
     "invalidCredentials": "Usuario o contraseña inválidos",

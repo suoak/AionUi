@@ -1,4 +1,4 @@
-import loginLogo from '@renderer/assets/logos/brand/app.png';
+import BrandMark from '@renderer/components/brand/BrandMark';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { changeLanguage, normalizeLanguageCode } from '@/renderer/services/i18n';
@@ -221,16 +221,11 @@ const LoginPage: React.FC = () => {
 
   return (
     <div className='login-page'>
-      {/* <div className='login-page__background' aria-hidden='true'>
-        <div className='login-page__background-circle login-page__background-circle--lg' />
-        <div className='login-page__background-circle login-page__background-circle--md' />
-        <div className='login-page__background-circle login-page__background-circle--sm' />
-      </div> */}
-
       <div className='login-page__card'>
         <label className='login-page__lang-select-wrapper' htmlFor='lang-select'>
           <select
             id='lang-select'
+            aria-label={t('login.languageToggle')}
             className='login-page__lang-select'
             value={i18n.language}
             onChange={handleLanguageChange}
@@ -245,7 +240,7 @@ const LoginPage: React.FC = () => {
 
         <div className='login-page__header'>
           <div className='login-page__logo'>
-            <img src={loginLogo} alt={t('login.brand')} />
+            <BrandMark size={48} />
           </div>
           <h1 className='login-page__title'>{t('login.brand')}</h1>
           <p className='login-page__subtitle'>{t('login.subtitle')}</p>
@@ -371,14 +366,6 @@ const LoginPage: React.FC = () => {
             {message?.text}
           </div>
         </form>
-
-        <div className='login-page__footer'>
-          <div className='login-page__footer-content'>
-            <span>{t('login.footerPrimary')}</span>
-            <span className='login-page__footer-divider'>•</span>
-            <span>{t('login.footerSecondary')}</span>
-          </div>
-        </div>
       </div>
     </div>
   );

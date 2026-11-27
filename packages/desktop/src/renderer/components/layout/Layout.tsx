@@ -42,7 +42,7 @@ import { useThemeRefreshNotice } from '@renderer/theme/useThemeRefreshNotice';
 import { cleanupSiderTooltips } from '@renderer/utils/ui/siderTooltip';
 import { useConversationShortcuts } from '@renderer/hooks/ui/useConversationShortcuts';
 import { isElectronDesktop } from '@renderer/utils/platform';
-import appLogo from '@renderer/assets/logos/brand/app.png';
+import BrandMark from '@renderer/components/brand/BrandMark';
 import '@renderer/styles/layout.css';
 
 const SidebarIcon: React.FC<{ size?: number; strokeWidth?: number }> = ({ size = 18, strokeWidth = 4 }) => (
@@ -420,7 +420,7 @@ const Layout: React.FC<{
                   })}
                   onClick={onClick}
                 >
-                  <img className='size-full block' src={appLogo} alt='' aria-hidden='true' />
+                  <BrandMark size={collapsed ? 24 : 32} className='block' />
                 </div>
                 {isSettingsRoute ? (
                   <Tooltip content={t('common.back', { defaultValue: 'Back to Chat' })} position='bottom'>

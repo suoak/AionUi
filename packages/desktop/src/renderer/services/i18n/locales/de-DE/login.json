@@ -13,8 +13,6 @@
   "showPassword": "Passwort anzeigen",
   "hidePassword": "Passwort ausblenden",
   "languageToggle": "Sprache ändern",
-  "footerPrimary": "Verwandle deine Kommandozeilen-KI",
-  "footerSecondary": "Modern & Effizient",
   "errors": {
     "empty": "Bitte Benutzername und Passwort eingeben",
     "invalidCredentials": "Ungültiger Benutzername oder Passwort",
