@@ -55,9 +55,9 @@ const TeamViewToggle: React.FC<Props> = ({ value, onChange }) => {
               aria-label={opt.label}
               title={opt.label}
               onClick={() => onChange(opt.mode)}
-              className={`flex items-center justify-center h-26px w-30px rounded-6px border-none cursor-pointer transition-colors duration-150 ${
+              className={`flex items-center justify-center h-26px w-30px rounded-6px border-none cursor-pointer transition-colors duration-120 ${
                 selected
-                  ? 'bg-[color:var(--brand)] text-white shadow-[0_1px_3px_rgba(0,0,0,0.12)]'
+                  ? 'bg-[color:var(--brand)] text-wm-on-accent shadow-[0_1px_3px_rgba(0,0,0,0.12)]'
                   : 'bg-transparent text-[color:var(--color-text-3)] hover:text-[color:var(--color-text-1)] hover:bg-[color:var(--bg-3)]'
               }`}
             >

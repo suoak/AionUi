@@ -37,7 +37,7 @@ const UploadProgressBar: React.FC<{ source?: UploadSource }> = ({ source }) => {
       </div>
       <div className='h-3px rd-2px bg-fill-3 overflow-hidden'>
         <div
-          className='h-full rd-2px bg-primary-6 transition-width duration-200 ease'
+          className='h-full rd-2px bg-primary-6 transition-width duration-180 ease'
           style={{ width: `${overallPercent}%` }}
         />
       </div>

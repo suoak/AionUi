@@ -154,7 +154,7 @@ const DevSettings: React.FC = () => {
   return (
     <div className='space-y-12px'>
       {/* DevTools toggle */}
-      <div className='px-[12px] md:px-[32px] py-16px bg-2 rd-16px'>
+      <div className='px-[12px] md:px-[32px] py-16px bg-2 rd-14px'>
         <PreferenceRow label={t('settings.devTools')}>
           <Button
             size='small'
@@ -168,7 +168,7 @@ const DevSettings: React.FC = () => {
       </div>
 
       {/* CDP section */}
-      <div className='px-[12px] md:px-[32px] py-16px bg-2 rd-16px space-y-12px'>
+      <div className='px-[12px] md:px-[32px] py-16px bg-2 rd-14px space-y-12px'>
         <div className='text-14px font-medium text-t-primary mb-8px'>{t('settings.cdp.title')}</div>
         <div className='space-y-12px'>
           {/* CDP remote debugging toggle */}
@@ -219,7 +219,7 @@ const DevSettings: React.FC = () => {
                         </Tooltip>
                         <Down
                           size='14'
-                          className={`text-t-tertiary shrink-0 transition-transform duration-200 ${expandedMcpKeys.includes('chrome-devtools') ? 'rotate-180' : ''}`}
+                          className={`text-t-tertiary shrink-0 transition-transform duration-180 ${expandedMcpKeys.includes('chrome-devtools') ? 'rotate-180' : ''}`}
                         />
                       </div>
                     }
@@ -263,7 +263,7 @@ const DevSettings: React.FC = () => {
                         </Tooltip>
                         <Down
                           size='14'
-                          className={`text-t-tertiary shrink-0 transition-transform duration-200 ${expandedMcpKeys.includes('playwright') ? 'rotate-180' : ''}`}
+                          className={`text-t-tertiary shrink-0 transition-transform duration-180 ${expandedMcpKeys.includes('playwright') ? 'rotate-180' : ''}`}
                         />
                       </div>
                     }

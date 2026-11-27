@@ -69,13 +69,13 @@ const AppearanceModalContent: React.FC = () => {
       <WorkMateScrollArea className='flex-1 min-h-0 pb-16px' disableOverflow={isPageMode}>
         <div className='space-y-16px'>
           {/* 主题画廊 / Theme Gallery */}
-          <div className='px-16px md:px-24px lg:px-28px py-14px md:py-16px bg-2 rd-16px'>
+          <div className='px-16px md:px-24px lg:px-28px py-14px md:py-16px bg-2 rd-14px'>
             <div className='text-14px text-t-primary leading-22px mb-12px'>{t('settings.theme')}</div>
             <CssThemeSettings />
           </div>
 
           {/* 字体（字族 + 字号）/ Fonts (family + size) */}
-          <div className='px-16px md:px-24px lg:px-28px py-14px md:py-16px bg-2 rd-16px'>
+          <div className='px-16px md:px-24px lg:px-28px py-14px md:py-16px bg-2 rd-14px'>
             <div className='text-14px text-t-primary leading-22px mb-12px'>{t('settings.fonts')}</div>
             <div className='w-full flex flex-col divide-y divide-border-2'>
               {FONT_SIZE_KEYS.map((key) => (
@@ -102,7 +102,7 @@ const AppearanceModalContent: React.FC = () => {
           </div>
 
           {/* 缩放控制 / Scale Control */}
-          <div className='px-16px md:px-24px lg:px-28px py-14px md:py-16px bg-2 rd-16px'>
+          <div className='px-16px md:px-24px lg:px-28px py-14px md:py-16px bg-2 rd-14px'>
             <div className='w-full flex flex-col divide-y divide-border-2'>
               <PreferenceRow label={t('settings.scale')}>
                 <ScaleControl />

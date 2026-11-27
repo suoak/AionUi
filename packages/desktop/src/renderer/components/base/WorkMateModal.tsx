@@ -112,9 +112,9 @@ export interface WorkMateModalProps extends Omit<ModalProps, 'title' | 'footer'>
 // ==================== 样式常量 / Style Constants ====================
 
 const HEADER_BASE_CLASS = 'flex items-center justify-between pb-20px';
-const TITLE_BASE_CLASS = 'text-18px font-500 text-t-primary m-0';
+const TITLE_BASE_CLASS = 'text-16px font-600 text-t-primary m-0';
 const CLOSE_BUTTON_CLASS =
-  'w-32px h-32px flex items-center justify-center rd-8px transition-colors duration-200 cursor-pointer border-0 bg-transparent p-0 hover:bg-2 focus:outline-none';
+  'w-32px h-32px flex items-center justify-center rd-8px transition-colors duration-180 cursor-pointer border-0 bg-transparent p-0 hover:bg-2 focus:outline-none';
 const FOOTER_BASE_CLASS = 'flex-shrink-0 bg-transparent';
 /** 任务型弹窗 footer 的统一分隔线 + 内边距（内容↔按钮区）。 */
 const FOOTER_DIVIDER_CLASS = 'flex-shrink-0 border-t border-solid border-[var(--bg-3)] px-24px py-16px';
@@ -123,14 +123,14 @@ const FOOTER_DIVIDER_CLASS = 'flex-shrink-0 border-t border-solid border-[var(--
 /** 标题区：上 20 / 左右 24 / 下 16，底部一条贯穿全宽的分隔线。 */
 const STD_HEADER_CLASS =
   'csbu-workmate-modal-std-header flex items-start justify-between gap-16px px-24px pt-20px pb-16px';
-const STD_TITLE_CLASS = 'text-18px font-600 leading-26px text-t-primary m-0';
+const STD_TITLE_CLASS = 'text-16px font-600 leading-24px text-t-primary m-0';
 const STD_SUBTITLE_CLASS = 'text-13px leading-20px text-t-secondary m-0 mt-4px';
 /** 内容区布局：撑满剩余高度、超出滚动（不含内边距）。 */
 const STD_BODY_LAYOUT_CLASS = 'csbu-workmate-modal-std-body min-h-0 flex-1 overflow-y-auto';
 /** 内容区标准内边距：上下 20 / 左右 24。整栏通铺（如团队双栏）时可通过 contentStyle.padding 关闭。 */
 const STD_BODY_PADDING_CLASS = 'px-24px py-20px';
 const STD_CLOSE_BTN_CLASS =
-  'shrink-0 w-32px h-32px flex items-center justify-center rd-8px transition-colors duration-200 cursor-pointer border-0 bg-transparent p-0 text-t-secondary hover:bg-fill-2 focus:outline-none';
+  'shrink-0 w-32px h-32px flex items-center justify-center rd-8px transition-colors duration-180 cursor-pointer border-0 bg-transparent p-0 text-t-secondary hover:bg-fill-2 focus:outline-none';
 
 /**
  * 自定义模态框组件 / Custom modal component

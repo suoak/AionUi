@@ -165,7 +165,7 @@ const TeamSiderSection: React.FC<TeamSiderSectionProps> = ({
                     )}
                     {(teamBadgeCounts.get(team.id) ?? 0) > 0 && (
                       <span
-                        className='absolute top-4px end-4px w-18px h-18px rounded-full text-10px font-bold flex items-center justify-center leading-none bg-danger-6 text-white'
+                        className='absolute top-4px end-4px w-18px h-18px rounded-full text-11px font-bold flex items-center justify-center leading-none bg-danger-6 text-white'
                         style={{ lineHeight: 1 }}
                       >
                         {(teamBadgeCounts.get(team.id) ?? 0) > 99 ? '99+' : teamBadgeCounts.get(team.id)}
@@ -191,7 +191,7 @@ const TeamSiderSection: React.FC<TeamSiderSectionProps> = ({
               <Right
                 theme='outline'
                 size={12}
-                className={classNames('transition-transform duration-150', { 'rotate-90': expanded })}
+                className={classNames('transition-transform duration-120', { 'rotate-90': expanded })}
               />
             </span>
             {/* [E2E SYNC] data-testid="team-create-btn" 是 E2E 测试的入口 selector，不得删除或重命名。
@@ -275,7 +275,7 @@ const TeamSiderSection: React.FC<TeamSiderSectionProps> = ({
                   />
                   {teamBadge > 0 && (
                     <span
-                      className='absolute end-11px top-1/2 -translate-y-1/2 w-18px h-18px rounded-full text-10px font-bold flex items-center justify-center pointer-events-none z-10 group-hover:hidden bg-danger-6 text-white'
+                      className='absolute end-11px top-1/2 -translate-y-1/2 w-18px h-18px rounded-full text-11px font-bold flex items-center justify-center pointer-events-none z-10 group-hover:hidden bg-danger-6 text-white'
                       style={{ lineHeight: 1 }}
                     >
                       {teamBadge > 99 ? '99+' : teamBadge}

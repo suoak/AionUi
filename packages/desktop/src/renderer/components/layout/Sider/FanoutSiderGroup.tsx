@@ -108,7 +108,7 @@ const FanoutSiderGroup: React.FC<FanoutSiderGroupProps> = ({
           <Right
             theme='outline'
             size={12}
-            className={classNames('transition-transform duration-150', { 'rotate-90': expanded })}
+            className={classNames('transition-transform duration-120', { 'rotate-90': expanded })}
           />
         </span>
       </div>

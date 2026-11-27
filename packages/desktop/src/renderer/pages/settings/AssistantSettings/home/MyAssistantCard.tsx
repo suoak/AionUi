@@ -120,7 +120,7 @@ const MyAssistantCard: React.FC<MyAssistantCardProps> = ({
               type='text'
               size='small'
               data-testid={`btn-chat-${assistant.id}`}
-              className='!inline-flex !h-28px !items-center !justify-center !rounded-9px !bg-fill-2 !px-12px !leading-none !text-t-secondary !opacity-0 transition-all hover:!bg-primary-6 hover:!text-white group-hover:!opacity-100'
+              className='!inline-flex !h-28px !items-center !justify-center !rounded-10px !bg-fill-2 !px-12px !leading-none !text-t-secondary !opacity-0 transition-all hover:!bg-primary-6 hover:!text-wm-on-accent group-hover:!opacity-100'
               onClick={() => onStartChat(assistant)}
             >
               {t('settings.assistantGoChat', { defaultValue: 'Chat' })}
@@ -132,7 +132,7 @@ const MyAssistantCard: React.FC<MyAssistantCardProps> = ({
               size='small'
               icon={<MoreOne theme='outline' size='16' fill='currentColor' />}
               aria-label={t('common.more', { defaultValue: 'More' })}
-              className='!flex !h-32px !w-36px !items-center !justify-center !rounded-9px !p-0 !text-t-tertiary hover:!bg-fill-2 hover:!text-t-primary'
+              className='!flex !h-32px !w-36px !items-center !justify-center !rounded-10px !p-0 !text-t-tertiary hover:!bg-fill-2 hover:!text-t-primary'
               data-testid={`btn-assistant-more-${assistant.id}`}
             />
           </Dropdown>

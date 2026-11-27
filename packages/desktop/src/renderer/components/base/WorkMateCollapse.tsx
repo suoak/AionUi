@@ -67,7 +67,7 @@ const normalizeKeys = (keys?: string | string[]): string[] => {
  * 默认展开/收起图标 / Default expand/collapse icon
  */
 const DefaultIcon: React.FC<{ active: boolean }> = ({ active }) => (
-  <span className={classNames('text-xs text-t-secondary transition-transform duration-200', active && 'rotate-180')}>
+  <span className={classNames('text-xs text-t-secondary transition-transform duration-180', active && 'rotate-180')}>
     ▼
   </span>
 );
@@ -163,7 +163,7 @@ const WorkMateCollapseComponent: React.FC<WorkMateCollapseProps> & { Item: typeo
   }, []);
 
   return (
-    <div className={classNames('rounded-16px  flex flex-col gap-12px bg-2 py-18px px-[12px] md:px-[32px]', className)}>
+    <div className={classNames('rounded-14px  flex flex-col gap-12px bg-2 py-18px px-[12px] md:px-[32px]', className)}>
       {items.map((child) => {
         const {
           name,
@@ -202,12 +202,12 @@ const WorkMateCollapseComponent: React.FC<WorkMateCollapseProps> & { Item: typeo
               {expandIconPosition === 'right' && <span className='flex items-center'>{iconNode}</span>}
             </div>
             {/* 面板内容（使用 grid 实现平滑动画）/ Panel content (using grid for smooth animation) */}
-            <div className='transition-all duration-300 ease-in-out'>
+            <div className='transition-all duration-240 ease-in-out'>
               {isActive && (
                 <div
                   className={classNames(
                     'grid overflow-hidden',
-                    mounted && 'transition-all duration-300 ease-in-out',
+                    mounted && 'transition-all duration-240 ease-in-out',
                     contentClassName
                   )}
                   style={{ gridTemplateRows: '1fr', ...contentStyle }}

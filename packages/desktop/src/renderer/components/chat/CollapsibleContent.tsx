@@ -183,7 +183,7 @@ export const CollapsibleContent: React.FC<CollapsibleContentProps> = ({
       {/* 内容区域 Content area */}
       <div
         ref={contentRef}
-        className={classNames('transition-all duration-300', contentClassName)}
+        className={classNames('transition-all duration-240', contentClassName)}
         style={contentStyle}
       >
         {children}

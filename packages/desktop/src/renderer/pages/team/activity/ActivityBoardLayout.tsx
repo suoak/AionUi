@@ -77,7 +77,7 @@ const BoardColumn: React.FC<{
               icon={lane.icon}
               conversation_id={lane.conversationId}
               logoClassName='w-16px h-16px object-cover rounded-full'
-              avatarClassName='w-16px h-16px rounded-full flex items-center justify-center text-10px leading-none bg-fill-2 shrink-0'
+              avatarClassName='w-16px h-16px rounded-full flex items-center justify-center text-11px leading-none bg-fill-2 shrink-0'
               nameClassName='truncate text-12px font-medium text-[color:var(--color-text-1)]'
             />
           </div>

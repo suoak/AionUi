@@ -127,7 +127,7 @@ const BtwOverlay: React.FC<BtwOverlayProps> = ({
     <div className={styles.portalRoot}>
       <div className={styles.backdrop} onClick={onDismiss} />
       <div className={styles.panelWrap}>
-        <div className={`rd-16px p-16px ${styles.overlay}`} style={overlayStyle}>
+        <div className={`rd-14px p-16px ${styles.overlay}`} style={overlayStyle}>
           <div className='flex flex-col gap-12px'>
             <div className='flex flex-col gap-4px'>
               <div className='text-12px text-t-secondary uppercase tracking-[0.08em]'>

@@ -115,7 +115,7 @@ const BrowserDataSection: React.FC = () => {
   }, [t]);
 
   return (
-    <div className='px-[12px] md:px-[32px] py-16px bg-2 rd-16px'>
+    <div className='px-[12px] md:px-[32px] py-16px bg-2 rd-14px'>
       <div className='text-14px font-medium text-t-primary mb-8px'>{t('settings.browserData.title')}</div>
 
       <PreferenceRow

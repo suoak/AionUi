@@ -388,7 +388,7 @@ const ConversationSearchPopover: React.FC<ConversationSearchPopoverProps> = ({
                 key={`${item.message_id}-${item.message_created_at}`}
                 type='button'
                 className={classNames(
-                  'conversation-search-modal__result w-full text-start cursor-pointer transition-all duration-150',
+                  'conversation-search-modal__result w-full text-start cursor-pointer transition-all duration-120',
                   'focus:outline-none'
                 )}
                 onClick={() => {
@@ -399,7 +399,7 @@ const ConversationSearchPopover: React.FC<ConversationSearchPopoverProps> = ({
                   <div className='min-w-0 flex-1'>
                     <div className='conversation-search-modal__result-title-row'>
                       <ConversationAgentMark conversation={item.conversation} />
-                      <div className='conversation-search-modal__result-title text-15px font-600 text-t-primary truncate'>
+                      <div className='conversation-search-modal__result-title text-14px font-600 text-t-primary truncate'>
                         {item.conversation.name || t('conversation.historySearch.untitled')}
                       </div>
                     </div>

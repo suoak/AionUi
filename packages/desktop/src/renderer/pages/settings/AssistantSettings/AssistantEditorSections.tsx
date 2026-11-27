@@ -344,7 +344,7 @@ const AssistantEditorSections: React.FC<AssistantEditorSectionsProps> = ({ edito
     <div className='flex flex-col gap-16px pb-24px'>
       {isBuiltin && activeAssistant ? (
         <div
-          className='rounded-12px border border-border-2 bg-fill-1 px-14px py-12px text-13px leading-20px text-t-secondary md:rounded-16px'
+          className='rounded-12px border border-border-2 bg-fill-1 px-14px py-12px text-13px leading-20px text-t-secondary md:rounded-14px'
           data-testid='assistant-builtin-readonly-banner'
         >
           <div className='flex items-start gap-8px'>
@@ -381,7 +381,7 @@ const AssistantEditorSections: React.FC<AssistantEditorSectionsProps> = ({ edito
       ) : null}
       {isGenerated ? (
         <div
-          className='rounded-12px border border-border-2 bg-fill-1 px-14px py-12px text-13px leading-20px text-t-secondary md:rounded-16px'
+          className='rounded-12px border border-border-2 bg-fill-1 px-14px py-12px text-13px leading-20px text-t-secondary md:rounded-14px'
           data-testid='assistant-cli-readonly-banner'
         >
           <div className='flex items-start gap-8px'>
@@ -431,14 +431,14 @@ const AssistantEditorSections: React.FC<AssistantEditorSectionsProps> = ({ edito
       />
 
       <div
-        className='rounded-12px border border-border-2 bg-2 px-[12px] py-[16px] md:rounded-16px md:px-[24px] md:py-[20px]'
+        className='rounded-12px border border-border-2 bg-2 px-[12px] py-[16px] md:rounded-14px md:px-[24px] md:py-[20px]'
         data-testid='assistant-card-engine'
       >
         <div className='mb-12px flex items-center gap-8px'>
           <div className='text-14px font-500 text-t-primary'>
             {t('settings.assistantEngineSection', { defaultValue: 'Engine' })}
           </div>
-          <span className='rounded-6px border border-warning-8 bg-warning-8 px-8px py-2px text-10px font-600 text-white'>
+          <span className='rounded-6px border border-warning-8 bg-warning-8 px-8px py-2px text-11px font-600 text-white'>
             {t('settings.assistantOnlyNewConversation', { defaultValue: 'New conversations only' })}
           </span>
         </div>

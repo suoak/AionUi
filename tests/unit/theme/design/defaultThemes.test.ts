@@ -119,3 +119,25 @@ describe('built-in theme list', () => {
     for (const id of PRIMARY_BUILTIN_THEME_IDS) expect(DECORATIVE_THEME_IDS.has(id)).toBe(false);
   });
 });
+
+describe.each(Object.entries(themes))('%s composer and overlay tokens (3.0 V11)', (_name, vars) => {
+  it('the send button icon passes AA on its fill', () => {
+    expect(contrastRatio(vars['--wm-send-fg'], vars['--wm-send-bg'])).toBeGreaterThanOrEqual(WM_CONTRAST_MIN.text);
+  });
+
+  it('the focused composer border is visible against the composer surface', () => {
+    expect(contrastRatio(vars['--wm-input-border-focus'], vars['--wm-surface-input'])).toBeGreaterThanOrEqual(3);
+  });
+
+  it('primary text stays readable inside the composer', () => {
+    expect(contrastRatio(vars['--wm-text-primary'], vars['--wm-surface-input'])).toBeGreaterThanOrEqual(
+      WM_CONTRAST_MIN.text
+    );
+  });
+
+  it('tooltips, popovers and menus use the theme surfaces', () => {
+    expect(vars['--aion-overlay-bg']).toBe('var(--wm-surface-raised)');
+    expect(vars['--aion-overlay-text']).toBe('var(--wm-text-primary)');
+    expect(vars['--color-menu-light-bg']).toBe('var(--wm-surface-raised)');
+  });
+});

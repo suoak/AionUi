@@ -32,7 +32,7 @@ const renderGroupHeader = (title: string, count: number, barClass: string) => (
     <span className={`h-13px w-3px rounded-2px ${barClass}`} />
     <span className='text-12px font-600 text-t-secondary'>{title}</span>
     {count > 0 ? (
-      <span className='rounded-999px bg-fill-2 px-6px py-1px text-10px font-500 text-t-quaternary'>{count}</span>
+      <span className='rounded-999px bg-fill-2 px-6px py-1px text-11px font-500 text-t-quaternary'>{count}</span>
     ) : null}
   </div>
 );

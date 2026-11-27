@@ -44,7 +44,7 @@ const UsageSummaryCard: React.FC<{ label: string; value: string; hint?: string }
     className='rounded-12px border border-solid border-transparent bg-base px-16px py-14px'
   >
     <div className='text-12px text-t-tertiary'>{label}</div>
-    <div className='mt-6px text-22px font-600 leading-none text-t-primary'>{value}</div>
+    <div className='mt-6px text-20px font-600 leading-none text-t-primary'>{value}</div>
     {hint ? <div className='mt-8px text-12px text-t-quaternary'>{hint}</div> : null}
   </div>
 );

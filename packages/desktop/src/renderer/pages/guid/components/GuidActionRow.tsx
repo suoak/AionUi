@@ -699,10 +699,11 @@ const GuidActionRow: React.FC<GuidActionRowProps> = ({
           disabled={isButtonDisabled}
           className='send-button-custom'
           style={{
-            backgroundColor: isButtonDisabled ? undefined : '#000000',
-            borderColor: isButtonDisabled ? undefined : '#000000',
+            backgroundColor: isButtonDisabled ? undefined : 'var(--wm-send-bg, #000000)',
+            borderColor: isButtonDisabled ? undefined : 'var(--wm-send-bg, #000000)',
+            color: 'var(--wm-send-fg, #ffffff)',
           }}
-          icon={<ArrowUp theme='filled' size='14' fill='white' strokeWidth={5} />}
+          icon={<ArrowUp theme='filled' size='14' fill='currentColor' strokeWidth={5} />}
           onClick={onSend}
           data-testid='guid-send-btn'
         />

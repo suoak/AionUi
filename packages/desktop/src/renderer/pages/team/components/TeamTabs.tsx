@@ -120,7 +120,7 @@ const TeamTabView: React.FC<TeamTabViewProps> = ({
       data-testid={`team-tab-${slot_id}`}
       data-team-tab-role={isLeader ? 'leader' : 'teammate'}
       data-active={isActive ? 'true' : 'false'}
-      className='relative flex items-center gap-6px ps-6px pe-10px h-34px max-w-220px cursor-pointer rounded-999px border border-solid transition-colors duration-150 shrink-0 bg-[color:var(--bg-2)]'
+      className='relative flex items-center gap-6px ps-6px pe-10px h-34px max-w-220px cursor-pointer rounded-999px border border-solid transition-colors duration-120 shrink-0 bg-[color:var(--bg-2)]'
       style={{
         ['--mc' as string]: color,
         borderColor: isActive ? color : 'transparent',
@@ -154,7 +154,7 @@ const TeamTabView: React.FC<TeamTabViewProps> = ({
       {editing ? (
         <input
           ref={inputRef}
-          className='text-15px flex-1 min-w-0 bg-transparent border-none outline-none text-[color:var(--color-text-1)] p-0'
+          className='text-14px flex-1 min-w-0 bg-transparent border-none outline-none text-[color:var(--color-text-1)] p-0'
           value={editValue}
           onChange={(e) => setEditValue(e.target.value)}
           onBlur={commitRename}
@@ -211,7 +211,7 @@ const TeamTabView: React.FC<TeamTabViewProps> = ({
       {showHoverActions && onRename && (
         <span
           data-testid={`team-tab-edit-${slot_id}`}
-          className='shrink-0 flex items-center justify-center w-20px h-20px rounded-6px text-[color:var(--text-secondary)] hover:bg-[color:var(--bg-3)] hover:text-[color:var(--text-primary)] transition-colors duration-150'
+          className='shrink-0 flex items-center justify-center w-20px h-20px rounded-6px text-[color:var(--text-secondary)] hover:bg-[color:var(--bg-3)] hover:text-[color:var(--text-primary)] transition-colors duration-120'
           onClick={startEditing}
         >
           <Edit theme='outline' size='13' fill='currentColor' />
@@ -220,7 +220,7 @@ const TeamTabView: React.FC<TeamTabViewProps> = ({
       {showHoverActions && !isLeader && onRemove && (
         <span
           data-testid={`team-tab-remove-${slot_id}`}
-          className='shrink-0 flex items-center justify-center w-20px h-20px rounded-6px text-[color:var(--text-secondary)] hover:bg-[color:var(--bg-3)] hover:text-[color:var(--color-danger-6)] transition-colors duration-150'
+          className='shrink-0 flex items-center justify-center w-20px h-20px rounded-6px text-[color:var(--text-secondary)] hover:bg-[color:var(--bg-3)] hover:text-[color:var(--color-danger-6)] transition-colors duration-120'
           onClick={(e) => {
             e.stopPropagation();
             onRemove(slot_id);
@@ -404,7 +404,7 @@ const TeamTabs: React.FC<TeamTabsProps> = ({ onTabClick, pendingCounts, warmingU
                   height: 32,
                   lineHeight: 'normal',
                 }}
-                className={`flex items-center gap-6px px-10px rounded-8px text-13px font-500 whitespace-nowrap transition-colors duration-150 ${
+                className={`flex items-center gap-6px px-10px rounded-8px text-13px font-500 whitespace-nowrap transition-colors duration-120 ${
                   memberOpsDisabled
                     ? 'text-[color:var(--text-disabled)] cursor-not-allowed'
                     : 'text-[color:var(--text-secondary)] hover:text-[color:var(--brand)] hover:bg-[color:var(--bg-2)] cursor-pointer'
