@@ -13,5 +13,12 @@
     "specifyWorkspace": "选择项目文件夹",
     "searchPlaceholder": "搜索项目…",
     "noProject": "不使用项目"
+  },
+  "agentPreview": {
+    "title": "智能体试跑预览",
+    "published": "正在预览已发布配置。",
+    "draft": "正在预览当前草稿配置。试跑后可返回改进指令或提炼技能。",
+    "backToImprove": "返回改进",
+    "openAgent": "打开智能体详情"
   }
 }

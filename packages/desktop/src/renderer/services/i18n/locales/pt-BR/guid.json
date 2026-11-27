@@ -13,5 +13,12 @@
     "specifyWorkspace": "Selecionar pasta do projeto",
     "searchPlaceholder": "Procurar projetos…",
     "noProject": "Nenhum Projeto"
+  },
+  "agentPreview": {
+    "title": "Pré-visualização de teste do agente",
+    "published": "Você está visualizando a configuração publicada.",
+    "draft": "Você está visualizando o rascunho atual. Depois do teste, pode voltar para melhorar as instruções ou transformá-lo em uma habilidade.",
+    "backToImprove": "Voltar para melhorar",
+    "openAgent": "Abrir detalhes do agente"
   }
 }
