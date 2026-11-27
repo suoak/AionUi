@@ -42,7 +42,6 @@ const ALLOWLIST: Record<string, { max: number; reason: string }> = {
   // Deferred to U4 (Agent Center rewrite); caps keep the debt from growing.
   'pages/agent-center/AgentCenterWizardPage.tsx': { max: 83, reason: 'U4' },
   'pages/agent-center/AgentCenterDetailPage.tsx': { max: 27, reason: 'U4' },
-  'pages/agent-center/AgentCenterListPage.tsx': { max: 22, reason: 'U4' },
   'pages/agent-center/CapabilityDefaultsFields.tsx': { max: 12, reason: 'U4' },
   'pages/agent-center/ConversationStartersFields.tsx': { max: 10, reason: 'U4' },
   'pages/agent-center/mcpPolicyCopy.ts': { max: 4, reason: 'U4' },
