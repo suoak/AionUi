@@ -194,10 +194,10 @@ const EditModeModal = ModalHOC<{ data?: IProvider; onChange(data: IProvider): vo
               hidden={isBedrock}
               label={
                 <span className='inline-flex items-center gap-4px'>
-                  {t('settings.apiEndpoint', 'API 请求地址')}
+                  {t('settings.apiEndpoint')}
                   {isFullUrl && (
                     <Tag size='small' color='arcoblue'>
-                      {t('settings.fullUrl', '完整URL')}
+                      {t('settings.fullUrl')}
                     </Tag>
                   )}
                 </span>
