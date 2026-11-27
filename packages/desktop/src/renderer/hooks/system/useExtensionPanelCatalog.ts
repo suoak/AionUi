@@ -22,6 +22,8 @@ const EMPTY_CATALOG: ExtensionPanelCatalog = { panels: [], views: [] };
 // many surfaces (sider, workspace host, tests) can subscribe without flooding Core.
 let cachedCatalog: ExtensionPanelCatalog | null = null;
 let inflight: Promise<ExtensionPanelCatalog> | null = null;
+// True when the last fetch could not reach Core (e.g. WebUI before sign-in).
+let lastFetchFailed = false;
 const subscribers = new Set<(catalog: ExtensionPanelCatalog) => void>();
 let stateChangedUnsubscribe: (() => void) | null = null;
 
@@ -38,12 +40,14 @@ function asList<T>(value: T[] | null | undefined): T[] {
 
 function fetchCatalog(): Promise<ExtensionPanelCatalog> {
   if (inflight) return inflight;
+  let failed = false;
   inflight = Promise.all([
     extensionsIpc.getPanels
       .invoke()
       .then(asList)
       .catch((err) => {
         console.error('[useExtensionPanelCatalog] Failed to load panels:', err);
+        failed = true;
         return cachedCatalog?.panels ?? [];
       }),
     extensionsIpc.getWorkPanelViews
@@ -51,11 +55,13 @@ function fetchCatalog(): Promise<ExtensionPanelCatalog> {
       .then(asList)
       .catch((err) => {
         console.error('[useExtensionPanelCatalog] Failed to load work-panel views:', err);
+        failed = true;
         return cachedCatalog?.views ?? [];
       }),
   ])
     .then(([panels, views]) => {
       const catalog = { panels, views };
+      lastFetchFailed = failed;
       notifySubscribers(catalog);
       return catalog;
     })
@@ -76,11 +82,22 @@ function ensureStateListener(): void {
 export function resetExtensionPanelCatalogForTest(): void {
   cachedCatalog = null;
   inflight = null;
+  lastFetchFailed = false;
   subscribers.clear();
   if (stateChangedUnsubscribe) {
     stateChangedUnsubscribe();
     stateChangedUnsubscribe = null;
   }
+}
+
+/**
+ * Fetch again if the last attempt failed. The WebUI mounts the panel catalog
+ * before sign-in, when Core refuses the request; call this once signed in so
+ * plugin panels appear without a reload.
+ */
+export function refreshExtensionPanelCatalogIfFailed(): Promise<ExtensionPanelCatalog> | null {
+  if (!lastFetchFailed) return null;
+  return fetchCatalog();
 }
 
 /**

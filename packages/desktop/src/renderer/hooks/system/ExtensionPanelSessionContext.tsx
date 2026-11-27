@@ -4,13 +4,14 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, { createContext, useCallback, useContext, useMemo, useState } from 'react';
+import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import type { IExtensionPanel, IExtensionWorkPanelView } from '@/common/adapter/ipcBridge';
 import { partitionPanelCatalog, sessionWorkspaceTabs, type ExtensionPanelEntry } from './extensionPanelCatalog';
 
 /** Reserved tab id for the project Files explorer in the session workspace column. */
 export const SESSION_WORKSPACE_FILES_TAB_ID = 'workmate-files';
-import { useExtensionPanelCatalog } from './useExtensionPanelCatalog';
+import { useAuthStatusSafe } from '@/renderer/hooks/context/AuthContext';
+import { refreshExtensionPanelCatalogIfFailed, useExtensionPanelCatalog } from './useExtensionPanelCatalog';
 
 export type ExtensionPanelSessionValue = {
   panels: IExtensionPanel[];
@@ -41,6 +42,10 @@ const ExtensionPanelSessionContext = createContext<ExtensionPanelSessionValue>(E
 
 export const ExtensionPanelSessionProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
   const { panels, views } = useExtensionPanelCatalog();
+  const authStatus = useAuthStatusSafe();
+  useEffect(() => {
+    if (authStatus === 'authenticated') void refreshExtensionPanelCatalogIfFailed();
+  }, [authStatus]);
   const [openSidebarId, setOpenSidebarId] = useState<string | null>(null);
   const [activeWorkspaceTabId, setActiveWorkspaceTabIdState] = useState<string | null>(null);
 

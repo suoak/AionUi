@@ -312,6 +312,11 @@ export const AuthProvider: React.FC<React.PropsWithChildren> = ({ children }) =>
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 
+/** Auth status, or null outside an AuthProvider (isolated renders and tests). */
+export function useAuthStatusSafe(): AuthStatus | null {
+  return useContext(AuthContext)?.status ?? null;
+}
+
 export function useAuth(): AuthContextValue {
   const context = useContext(AuthContext);
   if (!context) {
