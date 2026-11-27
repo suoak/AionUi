@@ -159,6 +159,20 @@ const LoginPage: React.FC = () => {
             .catch((error: unknown) => {
               console.warn('[login] could not save the chosen language', error);
             });
+        } else {
+          // The saved language can only be read once signed in; apply it so a
+          // new browser does not stay on its own locale.
+          void configService
+            .initialize()
+            .then(() => {
+              const saved = configService.get('language');
+              if (saved && normalizeLanguageCode(saved) !== normalizeLanguageCode(i18n.language)) {
+                return changeLanguage(saved);
+              }
+            })
+            .catch((error: unknown) => {
+              console.warn('[login] could not load the saved language', error);
+            });
         }
         if (rememberMe) {
           localStorage.setItem(REMEMBER_ME_KEY, 'true');
@@ -198,7 +212,7 @@ const LoginPage: React.FC = () => {
 
       setLoading(false);
     },
-    [login, navigate, password, rememberMe, showMessage, t, username]
+    [i18n.language, login, navigate, password, rememberMe, showMessage, t, username]
   );
 
   if (status === 'checking') {
