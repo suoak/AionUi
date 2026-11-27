@@ -1526,6 +1526,27 @@
       "planProgressStep": "{{done}}/{{total}} · {{step}}",
       "needsYouCount_one": "확인이 필요한 작업 {{count}}개",
       "needsYouCount_other": "확인이 필요한 작업 {{count}}개"
+    },
+    "newTask": {
+      "open": "새 작업",
+      "title": "새 작업",
+      "prompt": "무엇을 할까요?",
+      "promptPlaceholder": "작업 내용을 적어 주세요. ⌘/Ctrl+Enter로 만듭니다.",
+      "taskTitle": "제목",
+      "titlePlaceholder": "선택 사항, 첫 줄에서 가져옵니다",
+      "assistant": "어시스턴트",
+      "assistantPlaceholder": "어시스턴트 선택",
+      "startNow": "바로 시작",
+      "startHint": "실행 슬롯이 비어 있으면 별도 작업 사본에서 바로 시작하고, 아니면 할 일에서 대기합니다.",
+      "planFirstHint": "어시스턴트가 먼저 계획을 세우고, 승인하기 전에는 아무것도 변경하지 않습니다.",
+      "create": "만들기",
+      "createAndStart": "만들고 시작",
+      "created": "할 일에 작업을 만들었습니다",
+      "started": "작업을 시작했습니다",
+      "startUnsupported": "작업을 만들었습니다. 이 Core 버전에서는 아직 여기서 작업을 시작할 수 없습니다.",
+      "createdNotStarted": "작업을 만들었지만 시작하지 못했습니다: {{reason}}",
+      "createFailed": "작업을 만들 수 없습니다: {{reason}}",
+      "fromMessage": "작업으로 만들기"
     }
   },
   "squadRouteOnly": {

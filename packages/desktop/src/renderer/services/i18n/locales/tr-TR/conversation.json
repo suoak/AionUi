@@ -1526,6 +1526,27 @@
       "planProgressStep": "{{done}}/{{total}} · {{step}}",
       "needsYouCount_one": "{{count}} görev sizi bekliyor",
       "needsYouCount_other": "{{count}} görev sizi bekliyor"
+    },
+    "newTask": {
+      "open": "Yeni görev",
+      "title": "Yeni görev",
+      "prompt": "Ne yapılmalı?",
+      "promptPlaceholder": "Görevi açıklayın. Oluşturmak için ⌘/Ctrl+Enter'a basın.",
+      "taskTitle": "Başlık",
+      "titlePlaceholder": "İsteğe bağlı; ilk satırdan alınır",
+      "assistant": "Asistan",
+      "assistantPlaceholder": "Bir asistan seçin",
+      "startNow": "Hemen başlat",
+      "startHint": "Bir çalışma yuvası boşsa görev kendi çalışma kopyasında hemen başlar; değilse Yapılacak listesinde bekler.",
+      "planFirstHint": "Asistan önce bir plan yazar ve siz onaylayana kadar hiçbir şeyi değiştirmez.",
+      "create": "Oluştur",
+      "createAndStart": "Oluştur ve başlat",
+      "created": "Görev Yapılacak listesinde oluşturuldu",
+      "started": "Görev başlatıldı",
+      "startUnsupported": "Görev oluşturuldu. Bu Core sürümü buradan henüz görev başlatamıyor.",
+      "createdNotStarted": "Görev oluşturuldu ama başlatılamadı: {{reason}}",
+      "createFailed": "Görev oluşturulamadı: {{reason}}",
+      "fromMessage": "Görev yap"
     }
   },
   "squadRouteOnly": {

@@ -50,6 +50,7 @@ const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 vi.mock('@/common', () => ({
   ipcBridge: {
+    assistants: { list: { invoke: () => Promise.resolve([]) } },
     taskSession: {
       list: { invoke: mocks.list },
       get: { invoke: mocks.get },
@@ -644,5 +645,31 @@ describe('3.0 lane order and tint', () => {
     expect(card.getAttribute('data-lane')).toBe('needs_you');
     expect(card.className).toContain('--warning-6');
     expect(screen.getByTestId('task-board-card-t1').className).not.toContain('--warning-6');
+  });
+});
+
+describe('3.0 new task entry', () => {
+  it('opens the New task dialog from the header and from ?new=1', async () => {
+    mocks.searchParams = new URLSearchParams();
+    mocks.boardGet.mockResolvedValue(board(item('a', 'todo')));
+    const { unmount } = render(<TasksBoardPage />);
+    fireEvent.click(await screen.findByTestId('tasks-board-new-task'));
+    expect(await screen.findByTestId('new-task-form')).toBeTruthy();
+    unmount();
+
+    mocks.searchParams = new URLSearchParams('new=1');
+    render(<TasksBoardPage />);
+    expect(await screen.findByTestId('new-task-form')).toBeTruthy();
+  });
+
+  it('hides New task on the read-only legacy board', async () => {
+    mocks.searchParams = new URLSearchParams();
+    mocks.boardGet.mockRejectedValue(
+      new BackendHttpError({ method: 'GET', path: '/api/task-sessions/board', status: 404, body: 'not found' })
+    );
+    mocks.list.mockResolvedValue([]);
+    render(<TasksBoardPage />);
+    await waitFor(() => expect(mocks.list).toHaveBeenCalled());
+    expect(screen.queryByTestId('tasks-board-new-task')).toBeNull();
   });
 });

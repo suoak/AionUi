@@ -28,6 +28,8 @@ import SettingsPageHeader from '@/renderer/pages/settings/components/SettingsPag
 import TaskBoardCard from './TaskBoardCard';
 import TaskBoardDetailDrawer from './TaskBoardDetailDrawer';
 import GithubIssueImportModal from './GithubIssueImportModal';
+import NewTaskDialog from './NewTaskDialog';
+import { Plus } from '@icon-park/react';
 import TaskListView from './TaskListView';
 import { VISIBLE_LANES, laneDropAction, laneForItem, lanesFromColumns } from './laneModel';
 import { useWorkItemWorktrees } from './useWorkItemWorktrees';
@@ -124,6 +126,7 @@ const TasksBoardPage: React.FC = () => {
   const view = searchParams.get('view') === 'list' ? 'list' : 'board';
   const [refreshKey, setRefreshKey] = useState(0);
   const [importOpen, setImportOpen] = useState(false);
+  const [newTaskOpen, setNewTaskOpen] = useState(searchParams.get('new') === '1');
   const loadSeq = useRef(0);
   // The pointer-up that ends a drag also clicks the card; ignore that click.
   const lastDragEndAt = useRef(0);
@@ -408,6 +411,17 @@ const TasksBoardPage: React.FC = () => {
               <Button size='small' onClick={() => load()} loading={loadState === 'loading'}>
                 {t('conversation.taskBoard.refresh')}
               </Button>
+              {interactive ? (
+                <Button
+                  size='small'
+                  type='primary'
+                  icon={<Plus theme='outline' size='14' />}
+                  data-testid='tasks-board-new-task'
+                  onClick={() => setNewTaskOpen(true)}
+                >
+                  {t('conversation.taskBoard.newTask.open')}
+                </Button>
+              ) : null}
             </div>
           }
         />
@@ -506,6 +520,7 @@ const TasksBoardPage: React.FC = () => {
         onSquadStarted={() => setRefreshKey((k) => k + 1)}
       />
       <GithubIssueImportModal visible={importOpen} onClose={() => setImportOpen(false)} onImported={() => load(true)} />
+      <NewTaskDialog visible={newTaskOpen} onClose={() => setNewTaskOpen(false)} onCreated={() => load(true)} />
     </div>
   );
 };

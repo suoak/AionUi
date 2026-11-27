@@ -149,6 +149,13 @@ vi.mock('@arco-design/web-react', () => ({
 
 vi.mock('@icon-park/react', () => ({
   Copy: () => <span data-testid='copy-icon' />,
+  ListCheckbox: () => <span data-testid='make-task-icon' />,
+}));
+
+vi.mock('@/renderer/pages/tasks/NewTaskDialog', () => ({
+  default: ({ prefill }: { prefill?: { prompt?: string; sourceRef?: string } }) => (
+    <div data-testid='new-task-dialog-stub' data-prompt={prefill?.prompt} data-source-ref={prefill?.sourceRef} />
+  ),
 }));
 
 vi.mock('@/renderer/pages/conversation/Messages/components/ReviewBatchCard', () => ({
@@ -850,5 +857,35 @@ describe('MessageText fork entry point', () => {
       expect(forkMocks.navigate).toHaveBeenCalledWith('/conversation/conv-forked');
       expect(forkMocks.ensureRuntime).toHaveBeenCalledWith({ conversation_id: 'conv-forked' });
     });
+  });
+});
+
+describe('MessageText make-a-task entry point (3.0 U2)', () => {
+  const msg: IMessageText = {
+    id: 'msg-task-1',
+    msg_id: 'msg-task-1',
+    conversation_id: 'conv-task',
+    type: 'text',
+    position: 'right',
+    createdAt: Date.now(),
+    content: { content: 'Draft the quarterly deck' },
+  };
+
+  it('opens the new-task dialog prefilled with the message and linked back to it', () => {
+    render(
+      <ConversationProvider value={{ conversation_id: 'conv-task', workspace: '/workspace/demo', type: 'acp' }}>
+        <MessageText message={msg} />
+      </ConversationProvider>
+    );
+    expect(screen.queryByTestId('new-task-dialog-stub')).toBeNull();
+    fireEvent.click(screen.getByTestId('message-make-task-button'));
+    const dialog = screen.getByTestId('new-task-dialog-stub');
+    expect(dialog.getAttribute('data-prompt')).toBe('Draft the quarterly deck');
+    expect(dialog.getAttribute('data-source-ref')).toBe('msg-task-1');
+  });
+
+  it('has no make-a-task entry outside a conversation', () => {
+    render(<MessageText message={msg} />);
+    expect(screen.queryByTestId('message-make-task-button')).toBeNull();
   });
 });
