@@ -62,13 +62,24 @@ const PRIMARY_NAV_TITLES: Record<(typeof PRIMARY_NAV_ENTRIES)[number]['key'], st
   automations: 'Automations',
 };
 
-const PRIMARY_NAV_PALETTE_COMMANDS: readonly PaletteCommand[] = PRIMARY_NAV_ENTRIES.map((entry) => ({
+/**
+ * 3.0 V16: `sessions` lands on the same page as "New chat", so the palette lists it once
+ * (its keywords move onto New chat). Automations lands on Scheduled, so it carries those keywords too.
+ */
+const PRIMARY_NAV_PALETTE_COMMANDS: readonly PaletteCommand[] = PRIMARY_NAV_ENTRIES.filter(
+  (entry) => entry.key !== 'sessions'
+).map((entry) => ({
   id: `nav.primary.${entry.key}`,
   title: PRIMARY_NAV_TITLES[entry.key],
   titleKey: `common.primaryNav.${entry.key}`,
   group: 'navigation' as const,
   path: entry.path,
-  keywords: [...entry.keywords, 'primary', entry.key],
+  keywords: [
+    ...entry.keywords,
+    'primary',
+    entry.key,
+    ...(entry.key === 'automations' ? ['scheduled tasks', 'schedule'] : []),
+  ],
 }));
 
 export const STATIC_PALETTE_COMMANDS: readonly PaletteCommand[] = [
@@ -78,17 +89,9 @@ export const STATIC_PALETTE_COMMANDS: readonly PaletteCommand[] = [
     titleKey: 'common.commandPalette.commands.newChat',
     group: 'navigation',
     path: '/guid',
-    keywords: ['home', 'compose', 'guid'],
+    keywords: ['home', 'compose', 'guid', 'sessions', 'chat', 'conversation', 'history'],
   },
   ...PRIMARY_NAV_PALETTE_COMMANDS,
-  {
-    id: 'nav.automations.scheduled',
-    title: 'Scheduled tasks',
-    titleKey: 'common.commandPalette.commands.scheduledTasks',
-    group: 'navigation',
-    path: '/scheduled',
-    keywords: ['automations', 'cron', 'schedule', '定时'],
-  },
   {
     id: 'nav.automations.batch',
     title: 'Batch jobs',

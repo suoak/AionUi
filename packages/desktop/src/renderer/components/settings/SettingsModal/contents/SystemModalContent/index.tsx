@@ -24,14 +24,12 @@ import { Alert, Form, InputNumber, Message, Modal, Switch } from '@arco-design/w
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import useSWR from 'swr';
-import { useSettingsTabNavigate, useSettingsViewMode } from '../../settingsViewContext';
+import { useSettingsViewMode } from '../../settingsViewContext';
 import NotificationSettingsSection from './NotificationSettingsSection';
-import SettingsMovedRow from './SettingsMovedRow';
 import DevSettings from './DevSettings';
 import BrowserDataSection from './BrowserDataSection';
 import SessionImportSection from './SessionImportSection';
 import RemoteHostSshSection from './RemoteHostSshSection';
-import RemoteHostMovedRow from './RemoteHostMovedRow';
 import DirInputItem from './DirInputItem';
 import PreferenceRow from './PreferenceRow';
 import VoiceInputSection from './VoiceInputSection';
@@ -59,7 +57,6 @@ const SystemModalContent: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const viewMode = useSettingsViewMode();
   const isPageMode = viewMode === 'page';
-  const navigateToTab = useSettingsTabNavigate();
   const initializingRef = useRef(true);
 
   const [startOnBoot, setStartOnBoot] = useState<IStartOnBootStatus>({
@@ -518,18 +515,8 @@ const SystemModalContent: React.FC = () => {
                 </PreferenceRow>
               ))}
             </div>
-            {/* Notifications: 3.0 V7 gives them their own settings page; the modal keeps them here. */}
-            {isPageMode && navigateToTab ? (
-              <SettingsMovedRow
-                title={t('settings.notification')}
-                hint={t('settings.notificationsPage.movedHint')}
-                openLabel={t('settings.notificationsPage.openPage')}
-                onOpen={() => navigateToTab('notifications')}
-                data-testid='notifications-moved'
-              />
-            ) : (
-              <NotificationSettingsSection />
-            )}
+            {/* Notifications and Remote Host have their own settings tabs; only the modal keeps them inline (3.0 V16). */}
+            {isPageMode ? null : <NotificationSettingsSection />}
             <Form form={form} layout='vertical' className='!mt-32px space-y-16px' onValuesChange={handleValuesChange}>
               <DirInputItem label={t('settings.workDir')} field='workDir' />
               <DirInputItem label={t('settings.logDir')} field='logDir' />
@@ -553,12 +540,7 @@ const SystemModalContent: React.FC = () => {
 
           {/* In-app browser: sign-in state and cache */}
           <BrowserDataSection />
-          {/* 3.0 V7: in the settings pages Remote Host has its own tab; the modal keeps the section. */}
-          {isPageMode && navigateToTab ? (
-            <RemoteHostMovedRow onOpen={() => navigateToTab('remote-host')} />
-          ) : (
-            <RemoteHostSshSection />
-          )}
+          {isPageMode ? null : <RemoteHostSshSection />}
 
           <SessionImportSection />
 

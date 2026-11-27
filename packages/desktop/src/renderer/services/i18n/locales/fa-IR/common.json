@@ -84,7 +84,6 @@
     "actionFailed": "اجرای این دستور ممکن نشد",
     "commands": {
       "newChat": "گفتگوی جدید",
-      "scheduledTasks": "کارهای زمان‌بندی‌شده",
       "batchJobs": "کارهای دسته‌ای",
       "createAgent": "ساخت عامل",
       "settings": "تنظیمات",

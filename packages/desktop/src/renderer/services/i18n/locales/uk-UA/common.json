@@ -84,7 +84,6 @@
     "actionFailed": "Не вдалося виконати команду",
     "commands": {
       "newChat": "Нова розмова",
-      "scheduledTasks": "Заплановані завдання",
       "batchJobs": "Пакетні завдання",
       "createAgent": "Створити агента",
       "settings": "Налаштування",

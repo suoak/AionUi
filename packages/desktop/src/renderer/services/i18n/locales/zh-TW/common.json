@@ -84,7 +84,6 @@
     "actionFailed": "無法執行該命令",
     "commands": {
       "newChat": "新對話",
-      "scheduledTasks": "排程任務",
       "batchJobs": "批次任務",
       "createAgent": "建立智慧體",
       "settings": "設定",

@@ -6,7 +6,7 @@
 
 import type { ReactNode } from 'react';
 
-export type ChannelStatus = 'active' | 'coming_soon';
+export type ChannelStatus = 'active';
 
 export interface ChannelConfig {
   id: string;

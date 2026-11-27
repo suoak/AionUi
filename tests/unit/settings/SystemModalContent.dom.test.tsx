@@ -389,26 +389,23 @@ describe('SystemModalContent directory settings', () => {
       expect(clientBusinessSettingsMocks.setClientBusinessSetting).toHaveBeenCalledWith('acp.agentIdleTimeout', 7);
     });
   });
-  it('3.0 V7: in page mode shows a pointer to the Remote Host page instead of the SSH form', async () => {
-    const navigateToTab = vi.fn();
+  it('3.0 V16: in page mode System leaves Notifications and Remote Host to their own tabs', async () => {
     render(
       <SWRConfig value={{ provider: () => new Map(), dedupingInterval: 0 }}>
         <ConfigProvider>
           <SettingsViewModeProvider value='page'>
-            <SettingsTabNavigateProvider value={navigateToTab}>
+            <SettingsTabNavigateProvider value={vi.fn()}>
               <SystemModalContent />
             </SettingsTabNavigateProvider>
           </SettingsViewModeProvider>
         </ConfigProvider>
       </SWRConfig>
     );
-    const moved = await screen.findByTestId('remote-host-moved');
+    expect((await screen.findAllByRole('spinbutton')).length).toBeGreaterThan(0);
     expect(screen.queryByTestId('remote-host-ssh-section')).toBeNull();
-    fireEvent.click(within(moved).getByTestId('remote-host-moved-open'));
-    expect(navigateToTab).toHaveBeenCalledWith('remote-host');
+    expect(screen.queryByTestId('remote-host-moved')).toBeNull();
     expect(screen.queryByTestId('notification-settings-section')).toBeNull();
-    fireEvent.click(screen.getByTestId('notifications-moved-open'));
-    expect(navigateToTab).toHaveBeenCalledWith('notifications');
+    expect(screen.queryByTestId('notifications-moved')).toBeNull();
   });
 
   it('3.0 V7: the settings modal keeps the Remote Host SSH section', async () => {

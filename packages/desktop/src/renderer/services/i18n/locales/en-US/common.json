@@ -84,7 +84,6 @@
     "actionFailed": "Could not run that command",
     "commands": {
       "newChat": "New conversation",
-      "scheduledTasks": "Scheduled tasks",
       "batchJobs": "Batch jobs",
       "createAgent": "Create agent",
       "settings": "Settings",

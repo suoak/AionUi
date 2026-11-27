@@ -84,7 +84,6 @@
     "actionFailed": "Komut çalıştırılamadı",
     "commands": {
       "newChat": "Yeni sohbet",
-      "scheduledTasks": "Zamanlanmış görevler",
       "batchJobs": "Toplu işler",
       "createAgent": "Ajan oluştur",
       "settings": "Ayarlar",

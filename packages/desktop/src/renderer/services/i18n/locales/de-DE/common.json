@@ -83,7 +83,6 @@
     "actionFailed": "Befehl konnte nicht ausgeführt werden",
     "commands": {
       "newChat": "Neue Unterhaltung",
-      "scheduledTasks": "Geplante Aufgaben",
       "batchJobs": "Stapelaufträge",
       "createAgent": "Agent erstellen",
       "settings": "Einstellungen",

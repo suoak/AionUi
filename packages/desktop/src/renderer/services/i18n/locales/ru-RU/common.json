@@ -83,7 +83,6 @@
     "actionFailed": "Не удалось выполнить команду",
     "commands": {
       "newChat": "Новый диалог",
-      "scheduledTasks": "Запланированные задачи",
       "batchJobs": "Пакетные задания",
       "createAgent": "Создать агента",
       "settings": "Настройки",

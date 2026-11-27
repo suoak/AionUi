@@ -84,7 +84,6 @@
     "actionFailed": "Não foi possível executar o comando",
     "commands": {
       "newChat": "Nova conversa",
-      "scheduledTasks": "Tarefas agendadas",
       "batchJobs": "Trabalhos em lote",
       "createAgent": "Criar agente",
       "settings": "Configurações",

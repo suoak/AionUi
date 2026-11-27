@@ -84,7 +84,6 @@
     "actionFailed": "명령을 실행할 수 없습니다",
     "commands": {
       "newChat": "새 대화",
-      "scheduledTasks": "예약 작업",
       "batchJobs": "일괄 작업",
       "createAgent": "에이전트 만들기",
       "settings": "설정",

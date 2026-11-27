@@ -84,7 +84,6 @@
     "actionFailed": "Impossible d’exécuter cette commande",
     "commands": {
       "newChat": "Nouvelle conversation",
-      "scheduledTasks": "Tâches planifiées",
       "batchJobs": "Traitements par lots",
       "createAgent": "Créer un agent",
       "settings": "Paramètres",

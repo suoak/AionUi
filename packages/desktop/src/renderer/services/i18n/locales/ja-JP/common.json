@@ -84,7 +84,6 @@
     "actionFailed": "コマンドを実行できませんでした",
     "commands": {
       "newChat": "新しい会話",
-      "scheduledTasks": "スケジュールタスク",
       "batchJobs": "バッチジョブ",
       "createAgent": "エージェントを作成",
       "settings": "設定",

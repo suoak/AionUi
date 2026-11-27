@@ -78,20 +78,11 @@ test.describe('Extension: Channel Plugins', () => {
     expect(toggled).toBeTruthy();
   });
 
-  test('coming-soon channels have disabled switches', async ({ page }) => {
+  test('channel list has no placeholder rows', async ({ page }) => {
     await goToChannelsTab(page);
 
     const body = await page.locator('body').textContent();
-    const comingSoon = ['Slack', 'Discord'];
-    const hasComingSoon = comingSoon.some((label) => body?.includes(label));
-
-    if (hasComingSoon) {
-      const disabledSwitches = page.locator('.arco-switch.arco-switch-disabled, .arco-switch[aria-disabled="true"]');
-      const disabledCount = await disabledSwitches.count();
-      const hasComingSoonBadge = body?.includes('Coming Soon') || body?.includes('即将上线');
-
-      expect(disabledCount > 0 || hasComingSoonBadge).toBeTruthy();
-    }
+    expect(body?.includes('Coming Soon') || body?.includes('即将上线')).toBeFalsy();
   });
 
   test('screenshot: channels with extensions', async ({ page }) => {

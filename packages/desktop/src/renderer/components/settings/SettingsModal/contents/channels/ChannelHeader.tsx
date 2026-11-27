@@ -9,12 +9,10 @@ import ChannelDiscordLogo from '@/renderer/assets/channel-logos/discord.svg';
 import ChannelLarkLogo from '@/renderer/assets/channel-logos/lark.svg';
 import ChannelSlackLogo from '@/renderer/assets/channel-logos/slack.svg';
 import ChannelTelegramLogo from '@/renderer/assets/channel-logos/telegram.svg';
-import ChannelWecomLogo from '@/renderer/assets/channel-logos/wecom.svg';
 import ChannelWeixinLogo from '@/renderer/assets/channel-logos/weixin.svg';
 import { resolveExtensionAssetUrl } from '@/renderer/utils/platform';
-import { Switch, Tag } from '@arco-design/web-react';
+import { Switch } from '@arco-design/web-react';
 import React from 'react';
-import { useTranslation } from 'react-i18next';
 import type { ChannelConfig } from './types';
 
 interface ChannelHeaderProps {
@@ -23,7 +21,6 @@ interface ChannelHeaderProps {
 }
 
 const ChannelHeader: React.FC<ChannelHeaderProps> = ({ channel, onToggleEnabled }) => {
-  const { t } = useTranslation();
   const channelLogoMap: Record<string, { src: string; alt: string }> = {
     telegram: { src: ChannelTelegramLogo, alt: 'Telegram' },
     lark: { src: ChannelLarkLogo, alt: 'Lark' },
@@ -31,24 +28,18 @@ const ChannelHeader: React.FC<ChannelHeaderProps> = ({ channel, onToggleEnabled 
     slack: { src: ChannelSlackLogo, alt: 'Slack' },
     discord: { src: ChannelDiscordLogo, alt: 'Discord' },
     weixin: { src: ChannelWeixinLogo, alt: 'WeChat' },
-    wecom: { src: ChannelWecomLogo, alt: 'WeCom' },
   };
   const builtinLogo = channelLogoMap[channel.id];
   // Extension channels may provide a custom icon via ChannelConfig
   const logoSrc = builtinLogo?.src || resolveExtensionAssetUrl(channel.icon);
   const logoAlt = builtinLogo?.alt || channel.title;
-  const isDisabled = channel.status === 'coming_soon' || channel.disabled;
+  const isDisabled = Boolean(channel.disabled);
 
   return (
     <div className='flex items-center justify-between group' data-channel-header={channel.id}>
       <div className='flex items-center gap-8px flex-1 min-w-0'>
         {logoSrc && <img src={logoSrc} alt={logoAlt} className='w-14px h-14px object-contain shrink-0' />}
         <span className='text-14px text-t-primary'>{channel.title}</span>
-        {channel.status === 'coming_soon' && (
-          <Tag size='small' color='gray'>
-            {t('settings.channels.comingSoon', 'Coming Soon')}
-          </Tag>
-        )}
       </div>
       <div className='flex items-center gap-2' onClick={(e) => e.stopPropagation()}>
         <Switch
