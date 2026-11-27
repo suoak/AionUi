@@ -130,6 +130,28 @@ body {
   color: var(--color-text-1);
 }
 
+/* Motion (3.0 V15): controls share the hover duration and easing, so the
+   reduced-motion setting in base.css switches Arco's transitions off as well.
+   Buttons get a small press response; nothing moves on its own. */
+.arco-btn,
+.arco-input-inner-wrapper,
+.arco-input,
+.arco-textarea,
+.arco-select-view,
+.arco-tabs-header-title,
+.arco-switch,
+.arco-checkbox-mask,
+.arco-radio-mask,
+.arco-dropdown-menu-item,
+.arco-menu-item {
+  transition-duration: var(--wm-duration-hover);
+  transition-timing-function: var(--wm-ease);
+}
+
+.arco-btn:not(.arco-btn-disabled):not(.arco-btn-loading):active {
+  transform: translateY(0.5px);
+}
+
 html body .arco-tooltip-content,
 html body .arco-popover-content,
 html body .arco-popconfirm-content {

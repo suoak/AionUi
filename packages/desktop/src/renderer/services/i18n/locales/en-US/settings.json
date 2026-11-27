@@ -2077,5 +2077,9 @@
     "appearance": "Theme, colors, font size and zoom.",
     "system": "Language, startup, folders, timeouts and other app-wide preferences.",
     "pet": "A desktop companion that reacts to what your agents are doing."
-  }
+  },
+  "chatWidth": "Chat width",
+  "chatWidthStandard": "Standard",
+  "chatWidthWide": "Wide",
+  "chatWidthFull": "Full"
 }

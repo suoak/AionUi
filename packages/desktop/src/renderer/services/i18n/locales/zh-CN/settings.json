@@ -2077,5 +2077,9 @@
     "appearance": "主题、颜色、字号和缩放。",
     "system": "语言、启动、文件夹、超时及其他全局偏好设置。",
     "pet": "一个会对智能体动态做出反应的桌面伙伴。"
-  }
+  },
+  "chatWidth": "聊天宽度",
+  "chatWidthStandard": "标准",
+  "chatWidthWide": "宽",
+  "chatWidthFull": "全宽"
 }

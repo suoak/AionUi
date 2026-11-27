@@ -2079,5 +2079,9 @@
     "appearance": "テーマ、色、フォントサイズ、ズーム。",
     "system": "言語、起動、フォルダー、タイムアウトなどアプリ全体の設定。",
     "pet": "エージェントの動きに反応するデスクトップの相棒です。"
-  }
+  },
+  "chatWidth": "チャットの幅",
+  "chatWidthStandard": "標準",
+  "chatWidthWide": "広め",
+  "chatWidthFull": "全幅"
 }

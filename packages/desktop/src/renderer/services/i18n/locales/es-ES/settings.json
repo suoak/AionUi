@@ -2077,5 +2077,9 @@
     "appearance": "Tema, colores, tamaño de letra y zoom.",
     "system": "Idioma, inicio, carpetas, tiempos de espera y otras preferencias generales.",
     "pet": "Un compañero de escritorio que reacciona a lo que hacen tus agentes."
-  }
+  },
+  "chatWidth": "Ancho del chat",
+  "chatWidthStandard": "Estándar",
+  "chatWidthWide": "Ancho",
+  "chatWidthFull": "Completo"
 }

@@ -2079,5 +2079,9 @@
     "appearance": "主題、色彩、字級和縮放。",
     "system": "語言、啟動、資料夾、逾時及其他全域偏好設定。",
     "pet": "一個會對智慧體動態做出反應的桌面夥伴。"
-  }
+  },
+  "chatWidth": "聊天寬度",
+  "chatWidthStandard": "標準",
+  "chatWidthWide": "寬",
+  "chatWidthFull": "全寬"
 }

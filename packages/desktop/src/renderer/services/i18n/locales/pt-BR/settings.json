@@ -2077,5 +2077,9 @@
     "appearance": "Tema, cores, tamanho da fonte e zoom.",
     "system": "Idioma, inicialização, pastas, tempos limite e outras preferências gerais.",
     "pet": "Um companheiro de área de trabalho que reage ao que seus agentes fazem."
-  }
+  },
+  "chatWidth": "Largura do chat",
+  "chatWidthStandard": "Padrão",
+  "chatWidthWide": "Larga",
+  "chatWidthFull": "Total"
 }

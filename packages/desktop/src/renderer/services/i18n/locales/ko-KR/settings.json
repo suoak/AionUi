@@ -2079,5 +2079,9 @@
     "appearance": "테마, 색상, 글꼴 크기, 확대/축소.",
     "system": "언어, 시작, 폴더, 시간 제한 등 앱 전체 환경설정.",
     "pet": "에이전트의 활동에 반응하는 데스크톱 동반자입니다."
-  }
+  },
+  "chatWidth": "채팅 너비",
+  "chatWidthStandard": "표준",
+  "chatWidthWide": "넓게",
+  "chatWidthFull": "전체"
 }

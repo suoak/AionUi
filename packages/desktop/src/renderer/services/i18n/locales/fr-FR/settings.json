@@ -2077,5 +2077,9 @@
     "appearance": "Thème, couleurs, taille de police et zoom.",
     "system": "Langue, démarrage, dossiers, délais et autres préférences générales.",
     "pet": "Un compagnon de bureau qui réagit à l'activité de vos agents."
-  }
+  },
+  "chatWidth": "Largeur du chat",
+  "chatWidthStandard": "Standard",
+  "chatWidthWide": "Large",
+  "chatWidthFull": "Pleine largeur"
 }

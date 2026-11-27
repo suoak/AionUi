@@ -13,7 +13,8 @@
 @container (min-width: 720px) {
   .chat-surface-fluid {
     width: calc(100% - clamp(80px, 10cqw, 240px));
-    max-width: none;
+    /* Reading width from Appearance > Chat width (3.0 V15); 760px by default. */
+    max-width: var(--wm-chat-max-width, 760px);
     margin-inline-start: auto;
     margin-inline-end: auto;
   }

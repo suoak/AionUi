@@ -11,6 +11,8 @@ import CssThemeSettings from '@renderer/pages/settings/AppearanceSettings/CssThe
 import WorkMateScrollArea from '@/renderer/components/base/WorkMateScrollArea';
 import { FONT_SIZE_KEYS, FONT_SIZE_SPECS, FONT_SIZE_STEP, type FontSizeKey } from '@/common/config/fontSizes';
 import { useThemeContext } from '@renderer/hooks/context/ThemeContext';
+import { CHAT_WIDTHS, type ChatWidth } from '@/common/config/chatWidth';
+import { useChatWidth } from '@renderer/hooks/ui/useChatWidth';
 import { useSettingsViewMode } from '../../settingsViewContext';
 import FontSizeStepper from './FontSizeStepper';
 import FontFamilySelect from './FontFamilySelect';
@@ -57,11 +59,55 @@ const PreferenceRow: React.FC<{
  *   regions without a family inherit the global one
  * - 缩放比例控制 / Zoom scale control
  */
+const CHAT_WIDTH_LABEL_KEY: Record<ChatWidth, string> = {
+  standard: 'settings.chatWidthStandard',
+  wide: 'settings.chatWidthWide',
+  full: 'settings.chatWidthFull',
+};
+
+/** Segmented control for the conversation reading width. */
+const ChatWidthControl: React.FC<{ value: ChatWidth; onChange: (width: ChatWidth) => void }> = ({
+  value,
+  onChange,
+}) => {
+  const { t } = useTranslation();
+  return (
+    <div
+      role='radiogroup'
+      aria-label={t('settings.chatWidth')}
+      className='inline-flex items-center gap-2px p-2px rd-8px bg-fill-2'
+      data-testid='chat-width-control'
+    >
+      {CHAT_WIDTHS.map((width) => {
+        const selected = width === value;
+        return (
+          <button
+            key={width}
+            type='button'
+            role='radio'
+            aria-checked={selected}
+            data-value={width}
+            onClick={() => onChange(width)}
+            className={`h-28px px-12px rd-6px border-none cursor-pointer text-13px transition-colors duration-120 ${
+              selected
+                ? 'bg-base text-t-primary font-500 shadow-sm'
+                : 'bg-transparent text-t-secondary hover:text-t-primary'
+            }`}
+          >
+            {t(CHAT_WIDTH_LABEL_KEY[width])}
+          </button>
+        );
+      })}
+    </div>
+  );
+};
+
 const AppearanceModalContent: React.FC = () => {
   const { t } = useTranslation();
   const viewMode = useSettingsViewMode();
   const isPageMode = viewMode === 'page';
   const { fontSizes, setFontSize, fontFamilies, setFontFamily, fontWeights, setFontWeight } = useThemeContext();
+  const { chatWidth, setChatWidth } = useChatWidth();
 
   return (
     <div className='flex flex-col h-full w-full'>
@@ -104,6 +150,9 @@ const AppearanceModalContent: React.FC = () => {
           {/* 缩放控制 / Scale Control */}
           <div className='px-16px md:px-24px lg:px-28px py-14px md:py-16px bg-2 rd-14px'>
             <div className='w-full flex flex-col divide-y divide-border-2'>
+              <PreferenceRow label={t('settings.chatWidth')}>
+                <ChatWidthControl value={chatWidth} onChange={(width) => void setChatWidth(width)} />
+              </PreferenceRow>
               <PreferenceRow label={t('settings.scale')}>
                 <ScaleControl />
               </PreferenceRow>

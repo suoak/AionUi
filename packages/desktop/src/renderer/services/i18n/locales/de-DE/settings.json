@@ -2077,5 +2077,9 @@
     "appearance": "Design, Farben, Schriftgröße und Zoom.",
     "system": "Sprache, Start, Ordner, Zeitlimits und weitere app-weite Einstellungen.",
     "pet": "Ein Desktop-Begleiter, der auf die Aktivität Ihrer Agenten reagiert."
-  }
+  },
+  "chatWidth": "Chatbreite",
+  "chatWidthStandard": "Standard",
+  "chatWidthWide": "Breit",
+  "chatWidthFull": "Volle Breite"
 }
