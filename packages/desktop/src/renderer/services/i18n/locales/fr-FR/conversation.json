@@ -197,7 +197,8 @@
     "archiveProject": "Archive project",
     "archiveProjectTitle": "Archive project",
     "archiveProjectConfirm": "Archive project \"{{name}}\"? Its {{count}} conversation(s) will be archived too. You can restore or delete them from Archived in Settings.",
-    "archiving": "Archiving..."
+    "archiving": "Archiving...",
+    "evolveSkill": "Transformer en compétence"
   },
   "noAgentsAvailable": "Aucun agent disponible",
   "agentError": {

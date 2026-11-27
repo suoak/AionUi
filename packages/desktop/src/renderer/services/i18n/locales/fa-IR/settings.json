@@ -1,4 +1,9 @@
 {
+  "extensionSettings": {
+    "loading": "در حال بارگذاری…",
+    "tabNotFound": "این زبانهٔ تنظیمات پیدا نشد. ممکن است حذف شده باشد.",
+    "iframeTitle": "تنظیمات افزونه: {{name}}"
+  },
   "imageGenSupportedTooltipOpenAI": "مدل‌های Images API سازگار با OpenAI: GPT Image، Grok Imagine، Seedream، FLUX، Stable Diffusion، Recraft، Qwen Image، Ideogram و سایر مدل‌های درگاه",
   "imageGenCustomModelWarning": "مدل‌های سفارشی تأیید نشده‌اند. آن‌ها فقط زمانی کار می‌کنند که ارائه‌دهنده تصاویر را از طریق Images API یا پاسخ چت سازگار برگرداند.",
   "imageGenCompatibilityNote": "اتصال مستقیم به نقاط پایانی بومی ارائه‌دهنده که Images API یا پاسخ چت سازگار ندارند، پشتیبانی نمی‌شود.",
@@ -300,7 +305,6 @@
   "assistantReorderHintShort": "برای تغییر ترتیب بکشید",
   "fontSizeChat": "اندازه متن چت",
   "mcpAuthRequired": "احراز هویت لازم است",
-  "groupApp": "برنامه",
   "assistantGroupCreated": "دستیارهای سفارشی",
   "assistantNoDefaultMcpsSelected": "MCP پیش‌فرضی انتخاب نشده است",
   "addModel": "افزودن مدل",
@@ -556,7 +560,6 @@
   "retry": "تلاش مجدد",
   "skillFolderPath": "مسیر پوشه مهارت",
   "baseUrlResetToDefault": "بازنشانی به پیش‌فرض",
-  "groupAiCore": "هسته هوش مصنوعی",
   "channels.selectFirst": "یک کانال انتخاب کنید و اعتبارنامه‌ها را پیکربندی کنید.",
   "assistantMainAgent": "ایجنت اصلی",
   "imageInputSupported": "فعال‌شده در پیکربندی",
@@ -1437,7 +1440,6 @@
     "searchPlaceholder": "جستجوی تنظیمات",
     "searchEmpty": "هیچ تنظیمی مطابقت ندارد"
   },
-  "groupAbout": "سایر",
   "promptPreview": "پیش‌نمایش",
   "webui.copyPasswordTooltip": "برای کپی رمز عبور کلیک کنید",
   "assistantDefaultPermissionLabel": "مجوز",

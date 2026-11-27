@@ -1,4 +1,9 @@
 {
+  "extensionSettings": {
+    "loading": "Wird geladen…",
+    "tabNotFound": "Dieser Einstellungs-Tab wurde nicht gefunden. Möglicherweise wurde er entfernt.",
+    "iframeTitle": "Erweiterungseinstellungen: {{name}}"
+  },
   "imageGenSupportedTooltipOpenAI": "Modelle über eine OpenAI-kompatible Images API: GPT Image, Grok Imagine, Seedream, FLUX, Stable Diffusion, Recraft, Qwen Image, Ideogram und weitere Gateway-Modelle",
   "imageGenCustomModelWarning": "Benutzerdefinierte Modelle sind nicht verifiziert. Sie funktionieren nur, wenn der Anbieter Bilder über eine kompatible Images API oder Chat-Antwort zurückgibt.",
   "imageGenCompatibilityNote": "Herstellerspezifische Endpunkte ohne kompatible Images API oder Chat-Antwort werden nicht direkt unterstützt.",
@@ -300,7 +305,6 @@
   "assistantReorderHintShort": "Zum Umsortieren ziehen",
   "fontSizeChat": "Chat-Textgröße",
   "mcpAuthRequired": "Authentifizierung erforderlich",
-  "groupApp": "Anwendung",
   "assistantGroupCreated": "Benutzerdefinierte Assistenten",
   "assistantNoDefaultMcpsSelected": "Kein Standard-MCP ausgewählt",
   "addModel": "Modell hinzufügen",
@@ -556,7 +560,6 @@
   "retry": "Erneut versuchen",
   "skillFolderPath": "Skill-Ordnerpfad",
   "baseUrlResetToDefault": "Auf Standard zurücksetzen",
-  "groupAiCore": "KI-Kern",
   "channels.selectFirst": "Kanal auswählen und Anmeldedaten konfigurieren.",
   "assistantMainAgent": "Agent",
   "imageInputSupported": "Durch Konfiguration aktiviert",
@@ -1437,7 +1440,6 @@
     "searchPlaceholder": "Einstellungen durchsuchen",
     "searchEmpty": "Keine passenden Einstellungen"
   },
-  "groupAbout": "Sonstiges",
   "promptPreview": "Vorschau",
   "webui.copyPasswordTooltip": "Zum Kopieren des Passworts klicken",
   "assistantDefaultPermissionLabel": "Berechtigung",

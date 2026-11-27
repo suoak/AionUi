@@ -13,5 +13,12 @@
     "specifyWorkspace": "Proje klasörü seç",
     "searchPlaceholder": "Proje ara…",
     "noProject": "Proje Yok"
+  },
+  "agentPreview": {
+    "title": "Ajan deneme önizlemesi",
+    "published": "Yayımlanmış yapılandırmayı önizliyorsunuz.",
+    "draft": "Geçerli taslağı önizliyorsunuz. Denemeden sonra talimatları iyileştirmek için geri dönebilir veya bunu bir beceriye dönüştürebilirsiniz.",
+    "backToImprove": "İyileştirmeye dön",
+    "openAgent": "Ajan ayrıntılarını aç"
   }
 }

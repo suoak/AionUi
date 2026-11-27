@@ -237,7 +237,7 @@ class PasteServiceClass {
               if (error instanceof Error && error.message === 'FILE_TOO_LARGE') {
                 throw error;
               }
-              console.error('创建临时文件失败:', error);
+              console.error('Failed to create temp file:', error);
             }
           } else {
             // 不支持的文件类型，跳过但不报错（让后续过滤处理）
@@ -289,7 +289,7 @@ class PasteServiceClass {
               if (error instanceof Error && error.message === 'FILE_TOO_LARGE') {
                 throw error;
               }
-              console.error('上传粘贴文件失败:', error);
+              console.error('Failed to upload pasted file:', error);
             }
           } else {
             // 不支持的文件类型
@@ -339,7 +339,7 @@ class PasteServiceClass {
               if (error instanceof Error && error.message === 'FILE_TOO_LARGE') {
                 throw error;
               }
-              console.error('创建临时文件失败:', error);
+              console.error('Failed to create temp file:', error);
             }
           } else {
             console.warn(`Unsupported file type: ${file.name}, extension: ${fileExt}`);

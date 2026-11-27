@@ -13,5 +13,12 @@
     "specifyWorkspace": "選擇專案資料夾",
     "searchPlaceholder": "搜尋專案…",
     "noProject": "不使用專案"
+  },
+  "agentPreview": {
+    "title": "智慧體試跑預覽",
+    "published": "正在預覽已發布的設定。",
+    "draft": "正在預覽目前的草稿設定。試跑後可返回改進指令或提煉技能。",
+    "backToImprove": "返回改進",
+    "openAgent": "開啟智慧體詳情"
   }
 }
