@@ -9,6 +9,16 @@ const usePresetAssistantInfoMock = vi.fn();
 const acpChatMock = vi.fn(() => <div data-testid='mock-acp-chat'>acp chat</div>);
 const acpModelSelectorMock = vi.fn(() => <div data-testid='mock-acp-model-selector'>model selector</div>);
 
+// Theme and font hooks read config at module load; a real (failing) fetch logs
+// after this file tears down on slow runners (vitest EnvironmentTeardownError).
+vi.mock('@/common/config/configService', () => ({
+  configService: {
+    get: vi.fn(() => undefined),
+    set: vi.fn(async () => undefined),
+    whenReady: vi.fn(async () => undefined),
+  },
+}));
+
 vi.mock('@/renderer/pages/conversation/Messages/MessageList', () => ({
   default: ({ className }: { className?: string }) => <div className={className}>message history</div>,
 }));
