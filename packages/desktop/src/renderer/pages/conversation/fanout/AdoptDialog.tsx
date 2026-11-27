@@ -19,6 +19,8 @@ type AdoptDialogProps = {
   slot: string | null;
   onClose: () => void;
   onAdopted: (group: FanoutGroup) => void;
+  /** 3.0 D4: a task's Adopt defaults to squash; fan-out keeps branch-only. */
+  defaultStrategy?: FanoutAdoptStrategy;
 };
 
 /**
@@ -26,14 +28,14 @@ type AdoptDialogProps = {
  * it into the source repository's checked-out branch. Core never runs the
  * repository's git hooks while it does this, and the dialog says so.
  */
-const AdoptDialog: React.FC<AdoptDialogProps> = ({ visible, group, slot, onClose, onAdopted }) => {
+const AdoptDialog: React.FC<AdoptDialogProps> = ({ visible, group, slot, onClose, onAdopted, defaultStrategy }) => {
   const { t } = useTranslation();
   const [form, setForm] = useState<AdoptFormState>(DEFAULT_ADOPT_FORM);
   const [busy, setBusy] = useState(false);
 
   useEffect(() => {
-    if (visible) setForm(DEFAULT_ADOPT_FORM);
-  }, [visible, slot]);
+    if (visible) setForm(defaultStrategy ? { ...DEFAULT_ADOPT_FORM, strategy: defaultStrategy } : DEFAULT_ADOPT_FORM);
+  }, [visible, slot, defaultStrategy]);
 
   const update = (patch: Partial<AdoptFormState>) => setForm((prev) => ({ ...prev, ...patch }));
   const merges = form.strategy !== 'branch_only';

@@ -673,3 +673,35 @@ describe('3.0 new task entry', () => {
     expect(screen.queryByTestId('tasks-board-new-task')).toBeNull();
   });
 });
+
+describe('3.0 task detail page (U3)', () => {
+  it('opens full-width on the Review tab for a task awaiting review, and Back returns to the board', async () => {
+    mocks.searchParams = new URLSearchParams();
+    mocks.boardGet.mockResolvedValue(
+      board(item('r1', 'in_review', { lane: 'needs_you', needs_you_reason: 'review', title: 'Review me' }))
+    );
+    render(<TasksBoardPage />);
+    fireEvent.click(await screen.findByTestId('task-board-card-r1'));
+    const page = await screen.findByTestId('task-detail-page');
+    expect(within(page).getByTestId('task-detail-title').textContent).toBe('Review me');
+    expect(page.querySelector('.arco-tabs-header-title-active')?.textContent).toBe(
+      'conversation.taskBoard.detail3.tabs.review'
+    );
+    expect(within(page).getByTestId('task-detail-lane').textContent).toContain(
+      'conversation.taskBoard.lanes.needs_you'
+    );
+    fireEvent.click(within(page).getByTestId('task-detail-back'));
+    await waitFor(() => expect(screen.queryByTestId('task-detail-page')).toBeNull());
+  });
+
+  it('opens a plain task on Overview', async () => {
+    mocks.searchParams = new URLSearchParams();
+    mocks.boardGet.mockResolvedValue(board(item('p1', 'todo', { lane: 'todo' })));
+    render(<TasksBoardPage />);
+    fireEvent.click(await screen.findByTestId('task-board-card-p1'));
+    const page = await screen.findByTestId('task-detail-page');
+    expect(page.querySelector('.arco-tabs-header-title-active')?.textContent).toBe(
+      'conversation.taskBoard.detail3.tabs.overview'
+    );
+  });
+});

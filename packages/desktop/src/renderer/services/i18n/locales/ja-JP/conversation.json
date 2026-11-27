@@ -1547,6 +1547,50 @@
       "createdNotStarted": "タスクは作成されましたが、開始できませんでした：{{reason}}",
       "createFailed": "タスクを作成できませんでした：{{reason}}",
       "fromMessage": "タスクにする"
+    },
+    "detail3": {
+      "lane": "レーン",
+      "source": "ソース",
+      "plan": "計画",
+      "branch": "ブランチ",
+      "pullRequest": "プルリクエスト",
+      "back": "タスクに戻る",
+      "conversationHint": "タスクはこの会話で実行されます。開くと進行を確認したり介入したりできます。",
+      "tabs": {
+        "overview": "概要",
+        "conversation": "会話",
+        "review": "レビュー",
+        "activity": "アクティビティ"
+      },
+      "sources": {
+        "manual": "手動",
+        "conversation": "会話",
+        "github": "GitHub Issue",
+        "cron": "自動化",
+        "agent": "エージェント"
+      }
+    },
+    "review3": {
+      "adopt": "採用",
+      "openPr": "PR を作成",
+      "updatePr": "PR を更新",
+      "requestChanges": "修正を依頼",
+      "sendChanges": "送信",
+      "changesPlaceholder": "何を変えますか？アシスタントは同じ会話と作業コピーで続けます。",
+      "openPrTitle": "プルリクエストを作成",
+      "prBodyPlaceholder": "説明（任意）",
+      "prDraft": "ドラフトとして作成",
+      "prHint": "タスクのブランチだけをプッシュし、GitHub CLI のログインで PR を作成します。",
+      "prOpened": "プルリクエストを作成しました",
+      "prUpdated": "プルリクエストを更新しました",
+      "prFailed": "プルリクエストを作成できませんでした：{{reason}}",
+      "changesSent": "修正を依頼しました。タスクは進行中に戻りました",
+      "changesFailed": "修正依頼を送れませんでした：{{reason}}",
+      "conflictTitle": "マージの競合",
+      "conflictBody": "競合のため採用を中止しました。何もマージされていません。競合を解決するか修正を依頼してください。",
+      "adopted": "{{branch}} に採用しました（{{commit}}）",
+      "prLink": "プルリクエスト：",
+      "noChanges": "レビューする変更はまだありません。"
     }
   },
   "squadRouteOnly": {

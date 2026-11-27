@@ -84,6 +84,33 @@ export type StartTaskInput = {
 
 export type StartTaskResult = { state: TaskStartState; item: TaskBoardItem };
 
+/** 3.0 C3 `POST /api/task-sessions/{id}/deliver`: open a PR, or push to the open one. */
+export type DeliverTaskInput = {
+  kind: 'pr' | 'update_pr';
+  title?: string;
+  body?: string;
+  draft?: boolean;
+};
+
+/** 3.0 C8: the Issue comment Core drafted for an Issue task (never posted without confirm). */
+export type IssueCommentDraft = { repo: string; number: number; body: string; posted_url?: string };
+
+/** Parsed `TaskBoardItem.delivery` (Core writes it; every part is optional). */
+export type TaskDeliveryInfo = {
+  pull_request?: { url: string; number?: number; branch?: string; at?: number; updated_at?: number };
+  adopt?: {
+    status: 'adopted' | 'conflict' | (string & {});
+    group_id?: string;
+    strategy?: string;
+    branch?: string;
+    target_branch?: string | null;
+    result_commit?: string | null;
+    message?: string;
+    at?: number;
+  };
+  issue_comment?: { url: string; repo?: string; number?: number; at?: number };
+};
+
 /** `GET /api/task-sessions/board`: always all six columns, in display order. */
 export type TaskBoardResponse = {
   columns: { board_status: TaskBoardStatus; items: TaskBoardItem[] }[];

@@ -1547,6 +1547,50 @@
       "createdNotStarted": "Görev oluşturuldu ama başlatılamadı: {{reason}}",
       "createFailed": "Görev oluşturulamadı: {{reason}}",
       "fromMessage": "Görev yap"
+    },
+    "detail3": {
+      "lane": "Kulvar",
+      "source": "Kaynak",
+      "plan": "Plan",
+      "branch": "Dal",
+      "pullRequest": "Çekme isteği",
+      "back": "Görevlere dön",
+      "conversationHint": "Görev bu sohbette çalışır. İzlemek veya müdahale etmek için açın.",
+      "tabs": {
+        "overview": "Genel bakış",
+        "conversation": "Sohbet",
+        "review": "İnceleme",
+        "activity": "Etkinlik"
+      },
+      "sources": {
+        "manual": "Elle",
+        "conversation": "Sohbet",
+        "github": "GitHub Issue",
+        "cron": "Otomasyon",
+        "agent": "Ajan"
+      }
+    },
+    "review3": {
+      "adopt": "Benimse",
+      "openPr": "PR aç",
+      "updatePr": "PR'ı güncelle",
+      "requestChanges": "Değişiklik iste",
+      "sendChanges": "Gönder",
+      "changesPlaceholder": "Ne değişmeli? Asistan aynı sohbette ve çalışma kopyasında devam eder.",
+      "openPrTitle": "Çekme isteği aç",
+      "prBodyPlaceholder": "Açıklama (isteğe bağlı)",
+      "prDraft": "Taslak olarak aç",
+      "prHint": "Yalnızca görev dalını gönderir ve PR'ı GitHub CLI oturumunuzla açar.",
+      "prOpened": "Çekme isteği açıldı",
+      "prUpdated": "Çekme isteği güncellendi",
+      "prFailed": "Çekme isteği açılamadı: {{reason}}",
+      "changesSent": "Değişiklik istendi; görev yeniden devam ediyor",
+      "changesFailed": "Değişiklikler gönderilemedi: {{reason}}",
+      "conflictTitle": "Birleştirme çakışması",
+      "conflictBody": "Benimseme bir çakışmada durdu. Hiçbir şey birleştirilmedi; çakışmayı çözün veya değişiklik isteyin.",
+      "adopted": "{{branch}} dalına benimsendi ({{commit}})",
+      "prLink": "Çekme isteği:",
+      "noChanges": "Henüz incelenecek değişiklik yok."
     }
   },
   "squadRouteOnly": {

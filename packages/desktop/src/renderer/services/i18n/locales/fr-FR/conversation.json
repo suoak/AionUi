@@ -1547,6 +1547,50 @@
       "createdNotStarted": "Tâche créée mais non démarrée : {{reason}}",
       "createFailed": "Impossible de créer la tâche : {{reason}}",
       "fromMessage": "En faire une tâche"
+    },
+    "detail3": {
+      "lane": "Couloir",
+      "source": "Source",
+      "plan": "Plan",
+      "branch": "Branche",
+      "pullRequest": "Pull request",
+      "back": "Retour aux tâches",
+      "conversationHint": "La tâche s’exécute dans cette conversation. Ouvrez-la pour suivre ou intervenir.",
+      "tabs": {
+        "overview": "Aperçu",
+        "conversation": "Conversation",
+        "review": "Revue",
+        "activity": "Activité"
+      },
+      "sources": {
+        "manual": "Manuelle",
+        "conversation": "Conversation",
+        "github": "Issue GitHub",
+        "cron": "Automatisation",
+        "agent": "Agent"
+      }
+    },
+    "review3": {
+      "adopt": "Adopter",
+      "openPr": "Ouvrir une PR",
+      "updatePr": "Mettre à jour la PR",
+      "requestChanges": "Demander des modifications",
+      "sendChanges": "Envoyer",
+      "changesPlaceholder": "Que faut-il changer ? L’assistant continue dans la même conversation et la même copie de travail.",
+      "openPrTitle": "Ouvrir une pull request",
+      "prBodyPlaceholder": "Description (facultatif)",
+      "prDraft": "Ouvrir en brouillon",
+      "prHint": "Pousse uniquement la branche de la tâche et ouvre la PR avec votre connexion GitHub CLI.",
+      "prOpened": "Pull request ouverte",
+      "prUpdated": "Pull request mise à jour",
+      "prFailed": "Impossible d’ouvrir la pull request : {{reason}}",
+      "changesSent": "Modifications demandées ; la tâche est de nouveau en cours",
+      "changesFailed": "Impossible d’envoyer les modifications : {{reason}}",
+      "conflictTitle": "Conflit de fusion",
+      "conflictBody": "L’adoption s’est arrêtée sur un conflit. Rien n’a été fusionné ; résolvez-le ou demandez des modifications.",
+      "adopted": "Adoptée dans {{branch}} ({{commit}})",
+      "prLink": "Pull request :",
+      "noChanges": "Aucune modification à relire pour l’instant."
     }
   },
   "squadRouteOnly": {

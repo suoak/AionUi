@@ -1547,6 +1547,50 @@
       "createdNotStarted": "Task created but not started: {{reason}}",
       "createFailed": "Couldn't create the task: {{reason}}",
       "fromMessage": "Make a task"
+    },
+    "detail3": {
+      "lane": "Lane",
+      "source": "Source",
+      "plan": "Plan",
+      "branch": "Branch",
+      "pullRequest": "Pull request",
+      "back": "Back to tasks",
+      "conversationHint": "The task runs in this conversation. Open it to follow along or step in.",
+      "tabs": {
+        "overview": "Overview",
+        "conversation": "Conversation",
+        "review": "Review",
+        "activity": "Activity"
+      },
+      "sources": {
+        "manual": "Manual",
+        "conversation": "Conversation",
+        "github": "GitHub Issue",
+        "cron": "Automation",
+        "agent": "Agent"
+      }
+    },
+    "review3": {
+      "adopt": "Adopt",
+      "openPr": "Open PR",
+      "updatePr": "Update PR",
+      "requestChanges": "Request changes",
+      "sendChanges": "Send",
+      "changesPlaceholder": "What should change? The assistant continues in the same conversation and worktree.",
+      "openPrTitle": "Open a pull request",
+      "prBodyPlaceholder": "Description (optional)",
+      "prDraft": "Open as draft",
+      "prHint": "Pushes only the task branch and opens the PR with your GitHub CLI login.",
+      "prOpened": "Pull request opened",
+      "prUpdated": "Pull request updated",
+      "prFailed": "Couldn't open the pull request: {{reason}}",
+      "changesSent": "Changes requested; the task is back in progress",
+      "changesFailed": "Couldn't send the changes: {{reason}}",
+      "conflictTitle": "Merge conflict",
+      "conflictBody": "Adopting stopped on a conflict. Nothing was merged; resolve it or request changes.",
+      "adopted": "Adopted into {{branch}} ({{commit}})",
+      "prLink": "Pull request:",
+      "noChanges": "No changes to review yet."
     }
   },
   "squadRouteOnly": {

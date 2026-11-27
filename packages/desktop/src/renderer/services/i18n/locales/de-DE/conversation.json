@@ -1547,6 +1547,50 @@
       "createdNotStarted": "Aufgabe erstellt, aber nicht gestartet: {{reason}}",
       "createFailed": "Aufgabe konnte nicht erstellt werden: {{reason}}",
       "fromMessage": "Als Aufgabe anlegen"
+    },
+    "detail3": {
+      "lane": "Spur",
+      "source": "Quelle",
+      "plan": "Plan",
+      "branch": "Branch",
+      "pullRequest": "Pull-Request",
+      "back": "Zurück zu den Aufgaben",
+      "conversationHint": "Die Aufgabe läuft in dieser Unterhaltung. Öffne sie, um mitzulesen oder einzugreifen.",
+      "tabs": {
+        "overview": "Überblick",
+        "conversation": "Unterhaltung",
+        "review": "Prüfung",
+        "activity": "Aktivität"
+      },
+      "sources": {
+        "manual": "Manuell",
+        "conversation": "Unterhaltung",
+        "github": "GitHub-Issue",
+        "cron": "Automatisierung",
+        "agent": "Agent"
+      }
+    },
+    "review3": {
+      "adopt": "Übernehmen",
+      "openPr": "PR öffnen",
+      "updatePr": "PR aktualisieren",
+      "requestChanges": "Änderungen anfordern",
+      "sendChanges": "Senden",
+      "changesPlaceholder": "Was soll sich ändern? Der Assistent macht in derselben Unterhaltung und Arbeitskopie weiter.",
+      "openPrTitle": "Pull-Request öffnen",
+      "prBodyPlaceholder": "Beschreibung (optional)",
+      "prDraft": "Als Entwurf öffnen",
+      "prHint": "Pusht nur den Aufgaben-Branch und öffnet den PR mit deiner GitHub-CLI-Anmeldung.",
+      "prOpened": "Pull-Request geöffnet",
+      "prUpdated": "Pull-Request aktualisiert",
+      "prFailed": "Pull-Request konnte nicht geöffnet werden: {{reason}}",
+      "changesSent": "Änderungen angefordert; die Aufgabe läuft wieder",
+      "changesFailed": "Änderungen konnten nicht gesendet werden: {{reason}}",
+      "conflictTitle": "Merge-Konflikt",
+      "conflictBody": "Die Übernahme wurde wegen eines Konflikts gestoppt. Nichts wurde gemergt; löse den Konflikt oder fordere Änderungen an.",
+      "adopted": "In {{branch}} übernommen ({{commit}})",
+      "prLink": "Pull-Request:",
+      "noChanges": "Noch keine Änderungen zum Prüfen."
     }
   },
   "squadRouteOnly": {

@@ -1547,6 +1547,50 @@
       "createdNotStarted": "任務已建立但未開始：{{reason}}",
       "createFailed": "無法建立任務：{{reason}}",
       "fromMessage": "轉為任務"
+    },
+    "detail3": {
+      "lane": "泳道",
+      "source": "來源",
+      "plan": "計畫",
+      "branch": "分支",
+      "pullRequest": "拉取請求",
+      "back": "返回任務",
+      "conversationHint": "任務在這個對話中執行。開啟它可以追蹤或介入。",
+      "tabs": {
+        "overview": "概覽",
+        "conversation": "對話",
+        "review": "審查",
+        "activity": "動態"
+      },
+      "sources": {
+        "manual": "手動",
+        "conversation": "對話",
+        "github": "GitHub Issue",
+        "cron": "自動化",
+        "agent": "智慧體"
+      }
+    },
+    "review3": {
+      "adopt": "採納",
+      "openPr": "開 PR",
+      "updatePr": "更新 PR",
+      "requestChanges": "退回修改",
+      "sendChanges": "傳送",
+      "changesPlaceholder": "需要改什麼？智慧體會在同一對話和工作副本中繼續。",
+      "openPrTitle": "開拉取請求",
+      "prBodyPlaceholder": "描述（選填）",
+      "prDraft": "以草稿開啟",
+      "prHint": "只推送任務分支，並以你的 GitHub CLI 登入開 PR。",
+      "prOpened": "已開拉取請求",
+      "prUpdated": "已更新拉取請求",
+      "prFailed": "無法開拉取請求：{{reason}}",
+      "changesSent": "已退回修改，任務回到進行中",
+      "changesFailed": "無法傳送修改意見：{{reason}}",
+      "conflictTitle": "合併衝突",
+      "conflictBody": "採納因衝突而停止，沒有合併任何內容；請解決衝突或退回修改。",
+      "adopted": "已採納到 {{branch}}（{{commit}}）",
+      "prLink": "拉取請求：",
+      "noChanges": "還沒有可審查的變更。"
     }
   },
   "squadRouteOnly": {
