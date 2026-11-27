@@ -1,4 +1,9 @@
 {
+  "extensionSettings": {
+    "loading": "Yükleniyor…",
+    "tabNotFound": "Bu ayar sekmesi bulunamadı. Kaldırılmış olabilir.",
+    "iframeTitle": "Uzantı ayarları: {{name}}"
+  },
   "imageGenSupportedTooltipOpenAI": "OpenAI uyumlu Images API modelleri: GPT Image, Grok Imagine, Seedream, FLUX, Stable Diffusion, Recraft, Qwen Image, Ideogram ve diğer ağ geçidi modelleri",
   "imageGenCustomModelWarning": "Özel modeller doğrulanmamıştır. Yalnızca sağlayıcı görüntüleri uyumlu bir Images API veya sohbet yanıtıyla döndürürse çalışırlar.",
   "imageGenCompatibilityNote": "Uyumlu bir Images API veya sohbet yanıtı sunmayan sağlayıcıya özgü uç noktalara doğrudan bağlantı desteklenmez.",
@@ -300,7 +305,6 @@
   "assistantReorderHintShort": "Sıralamak için sürükleyin",
   "fontSizeChat": "Sohbet metin boyutu",
   "mcpAuthRequired": "Kimlik doğrulama gerekli",
-  "groupApp": "Uygulama",
   "assistantGroupCreated": "Özel Asistanlar",
   "assistantNoDefaultMcpsSelected": "Varsayılan MCP seçilmedi",
   "addModel": "Model Ekle",
@@ -556,7 +560,6 @@
   "retry": "Retry",
   "skillFolderPath": "Yetenek Klasör Yolu",
   "baseUrlResetToDefault": "Varsayılana sıfırla",
-  "groupAiCore": "AI Çekirdek",
   "channels.selectFirst": "Bir kanal seçin ve kimlik bilgilerini yapılandırın.",
   "assistantMainAgent": "Agent",
   "imageInputSupported": "Yapılandırmayla etkin",
@@ -1437,7 +1440,6 @@
     "searchPlaceholder": "Ayarlarda ara",
     "searchEmpty": "Eşleşen ayar yok"
   },
-  "groupAbout": "Diğer",
   "promptPreview": "Önizleme",
   "webui.copyPasswordTooltip": "Şifreyi kopyalamak için tıklayın",
   "assistantDefaultPermissionLabel": "İzin",

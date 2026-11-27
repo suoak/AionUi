@@ -473,7 +473,7 @@ const AddPlatformModal = ModalHOC<{
             hidden={isBedrock}
             label={
               <span className='inline-flex items-center gap-4px'>
-                {t('settings.apiEndpoint', 'API 请求地址')}
+                {t('settings.apiEndpoint')}
                 {selectedPlatform?.base_url && !isFullUrl && (
                   <button
                     type='button'
@@ -517,11 +517,9 @@ const AddPlatformModal = ModalHOC<{
           {(isCustom || isNewApi) && !isBedrock && (
             <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 4, marginBottom: 12 }}>
               <Switch size='small' checked={isFullUrl} onChange={setIsFullUrl} />
-              <span className='text-12px text-t-secondary'>{t('settings.fullUrlMode', '完整 URL')}</span>
+              <span className='text-12px text-t-secondary'>{t('settings.fullUrlMode')}</span>
               <span className='text-11px text-t-tertiary'>
-                {isFullUrl
-                  ? t('settings.fullUrlHint', '直接使用此地址，不拼接路径')
-                  : t('settings.baseUrlHint', '系统会自动拼接请求路径')}
+                {isFullUrl ? t('settings.fullUrlHint') : t('settings.baseUrlHint')}
               </span>
             </div>
           )}

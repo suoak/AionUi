@@ -1,4 +1,9 @@
 {
+  "extensionSettings": {
+    "loading": "Cargando…",
+    "tabNotFound": "No se encontró esta pestaña de ajustes. Puede que se haya eliminado.",
+    "iframeTitle": "Ajustes de la extensión: {{name}}"
+  },
   "imageGenSupportedTooltipOpenAI": "Modelos mediante una Images API compatible con OpenAI: GPT Image, Grok Imagine, Seedream, FLUX, Stable Diffusion, Recraft, Qwen Image, Ideogram y otros modelos de pasarela",
   "imageGenCustomModelWarning": "Los modelos personalizados no están verificados. Solo funcionan si el proveedor devuelve imágenes mediante una Images API o una respuesta de chat compatibles.",
   "imageGenCompatibilityNote": "Los endpoints nativos del proveedor sin una Images API o respuesta de chat compatible no admiten conexión directa.",
@@ -300,7 +305,6 @@
   "assistantReorderHintShort": "Arrastra para reordenar",
   "fontSizeChat": "Tamaño de texto del chat",
   "mcpAuthRequired": "Autenticación requerida",
-  "groupApp": "Aplicación",
   "assistantGroupCreated": "Asistentes personalizados",
   "assistantNoDefaultMcpsSelected": "No hay MCP predeterminado seleccionado",
   "addModel": "Agregar modelo",
@@ -556,7 +560,6 @@
   "retry": "Reintentar",
   "skillFolderPath": "Ruta de la carpeta de habilidades",
   "baseUrlResetToDefault": "Restablecer al valor predeterminado",
-  "groupAiCore": "Núcleo de IA",
   "channels.selectFirst": "Selecciona un canal y configura las credenciales.",
   "assistantMainAgent": "Agente principal",
   "imageInputSupported": "Activado por la configuración",
@@ -1437,7 +1440,6 @@
     "searchPlaceholder": "Buscar en ajustes",
     "searchEmpty": "Ningún ajuste coincide"
   },
-  "groupAbout": "Otros",
   "promptPreview": "Vista previa",
   "webui.copyPasswordTooltip": "Haz clic para copiar la contraseña",
   "assistantDefaultPermissionLabel": "Permiso",

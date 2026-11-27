@@ -197,7 +197,8 @@
     "archiveProject": "Archive project",
     "archiveProjectTitle": "Archive project",
     "archiveProjectConfirm": "Archive project \"{{name}}\"? Its {{count}} conversation(s) will be archived too. You can restore or delete them from Archived in Settings.",
-    "archiving": "Archiving..."
+    "archiving": "Archiving...",
+    "evolveSkill": "Convertir en habilidad"
   },
   "noAgentsAvailable": "Sin agentes disponibles",
   "agentError": {
@@ -663,7 +664,6 @@
     "confirmationLoadError": "Error al cargar el diálogo de confirmación",
     "apiErrorSwitched": "Error de API, cambiado automáticamente a {{cli}} CLI",
     "quotaExceededNoFallback": "Cuota del modelo alcanzada. Por favor cambia a otro modelo disponible.",
-    "switchedToAgent": "Cambiado a {{agent}}",
     "sendMessageTo": "Enviar mensaje a {{model}}",
     "apiErrorSwitchFailed": "Error al crear la conversación alternativa.",
     "tryAnotherAgent": "Prueba otro agente:"
