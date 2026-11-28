@@ -12,6 +12,7 @@ import type {
 } from '@/common/types/agent/taskSession';
 
 const mocks = vi.hoisted(() => ({
+  squadsList: vi.fn(),
   boardGet: vi.fn(),
   boardUpdate: vi.fn(),
   boardStart: vi.fn(),
@@ -51,6 +52,7 @@ const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 vi.mock('@/common', () => ({
   ipcBridge: {
     assistants: { list: { invoke: () => Promise.resolve([]) } },
+    squads: { list: { invoke: mocks.squadsList } },
     taskSession: {
       list: { invoke: mocks.list },
       get: { invoke: mocks.get },
@@ -428,24 +430,27 @@ describe('TasksBoardPage', () => {
     await waitFor(() => expect(mocks.review).toHaveBeenCalledWith({ id: 'v', decision: 'approve' }));
   });
 
-  it('assigns and unassigns', async () => {
-    mocks.boardGet.mockResolvedValue(board(item('t', 'todo', { assignee: { kind: 'user', id: 'u1' } })));
-    mocks.boardUpdate.mockResolvedValue(item('t', 'todo', { assignee: { kind: 'user', id: 'u2' }, updated_at: 2 }));
+  it('hands a task to a Squad under Advanced (3.0 U8)', async () => {
+    mocks.squadsList.mockResolvedValue([{ id: 'sq1', name: 'Release Squad' }]);
+    mocks.boardGet.mockResolvedValue(board(item('t', 'todo')));
+    mocks.boardUpdate.mockResolvedValue(item('t', 'todo', { updated_at: 2 }));
     render(<TasksBoardPage />);
 
     fireEvent.click(await screen.findByTestId('task-board-card-t'));
-    await screen.findByTestId('task-board-assignee');
-    fireEvent.change(screen.getByTestId('task-board-assignee-id'), { target: { value: 'u2' } });
+    // No free-form assignee editor any more; the Squad hand-off sits under Advanced.
+    expect(screen.queryByTestId('task-board-assignee-id')).toBeNull();
+    expect(screen.queryByTestId('task-squad-picker')).toBeNull();
+    fireEvent.click(await screen.findByTestId('task-detail-advanced-toggle'));
+    const select = await screen.findByTestId('task-board-assignee-squad');
+    fireEvent.click(select.querySelector('.arco-select-view') ?? select);
+    const options = await screen.findAllByText('Release Squad');
+    fireEvent.click(options.find((n) => n.closest('.arco-select-option')) ?? options[options.length - 1]);
     fireEvent.click(screen.getByTestId('task-board-assignee-save'));
     await waitFor(() =>
       expect(mocks.boardUpdate).toHaveBeenCalledWith({
         id: 't',
-        updates: { assignee: { kind: 'user', id: 'u2' }, expected_updated_at: 1 },
+        updates: { assignee: { kind: 'squad', id: 'sq1' }, expected_updated_at: 1 },
       })
-    );
-    fireEvent.click(screen.getByTestId('task-board-assignee-clear'));
-    await waitFor(() =>
-      expect(mocks.boardUpdate).toHaveBeenCalledWith({ id: 't', updates: { assignee: null, expected_updated_at: 2 } })
     );
   });
 

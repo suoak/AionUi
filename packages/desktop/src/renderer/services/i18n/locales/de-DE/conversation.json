@@ -1371,11 +1371,7 @@
       "urgent": "Dringend"
     },
     "assignee": {
-      "title": "Zuständig",
       "none": "Nicht zugewiesen",
-      "idPlaceholder": "Zuständigen-ID",
-      "save": "Zuweisen",
-      "unassign": "Zuweisung aufheben",
       "kind": {
         "user": "Benutzer",
         "agent": "Agent",
@@ -1627,6 +1623,15 @@
         "task_ended": "Die Aufgabe ist beendet."
       },
       "commit": "Commit {{ref}}"
+    },
+    "advanced": {
+      "title": "Erweitert",
+      "squad": "An eine Squad übergeben",
+      "squadHint": "Eine Squad lässt mehrere Agenten in einem gemeinsamen Worktree an dieser Aufgabe arbeiten.",
+      "squadPlaceholder": "Squad-Vorlage wählen",
+      "assign": "Übergeben",
+      "unassign": "Zurücknehmen",
+      "noSquads": "Noch keine Squad-Vorlagen. Erstellen Sie eine unter Agenten › Erweitert › Squads."
     }
   },
   "squadRouteOnly": {

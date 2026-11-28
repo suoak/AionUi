@@ -388,7 +388,8 @@
       "skills_one": "{{count}} навык",
       "skills_few": "{{count}} навыка",
       "skills_many": "{{count}} навыков",
-      "skills_other": "{{count}} навыка"
+      "skills_other": "{{count}} навыка",
+      "advanced": "Дополнительно"
     },
     "preflight": {
       "level": {

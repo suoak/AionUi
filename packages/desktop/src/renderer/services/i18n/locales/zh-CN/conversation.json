@@ -1371,11 +1371,7 @@
       "urgent": "紧急"
     },
     "assignee": {
-      "title": "负责人",
       "none": "未指派",
-      "idPlaceholder": "负责人 ID",
-      "save": "指派",
-      "unassign": "取消指派",
       "kind": {
         "user": "用户",
         "agent": "智能体",
@@ -1627,6 +1623,15 @@
         "task_ended": "任务已结束。"
       },
       "commit": "提交 {{ref}}"
+    },
+    "advanced": {
+      "title": "高级",
+      "squad": "交给 Squad",
+      "squadHint": "Squad 会让多个智能体在同一个工作树里协作完成此任务。",
+      "squadPlaceholder": "选择 Squad 模板",
+      "assign": "交给 Squad",
+      "unassign": "收回",
+      "noSquads": "还没有 Squad 模板。可在 智能体 › 高级 › Squad 中创建。"
     }
   },
   "squadRouteOnly": {

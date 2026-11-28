@@ -388,7 +388,8 @@
       "skills_one": "{{count}} навичка",
       "skills_few": "{{count}} навички",
       "skills_many": "{{count}} навичок",
-      "skills_other": "{{count}} навички"
+      "skills_other": "{{count}} навички",
+      "advanced": "Додатково"
     },
     "preflight": {
       "level": {

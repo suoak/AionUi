@@ -1371,11 +1371,7 @@
       "urgent": "Acil"
     },
     "assignee": {
-      "title": "Atanan",
       "none": "Atanmadı",
-      "idPlaceholder": "Atanan kimliği",
-      "save": "Ata",
-      "unassign": "Atamayı kaldır",
       "kind": {
         "user": "Kullanıcı",
         "agent": "Ajan",
@@ -1627,6 +1623,15 @@
         "task_ended": "Görev sona erdi."
       },
       "commit": "Commit {{ref}}"
+    },
+    "advanced": {
+      "title": "Gelişmiş",
+      "squad": "Bir Squad’a devret",
+      "squadHint": "Bir Squad, bu görevde birden çok ajanı tek bir ortak çalışma ağacında çalıştırır.",
+      "squadPlaceholder": "Bir Squad şablonu seçin",
+      "assign": "Devret",
+      "unassign": "Geri al",
+      "noSquads": "Henüz Squad şablonu yok. Ajanlar › Gelişmiş › Squads altında oluşturun."
     }
   },
   "squadRouteOnly": {

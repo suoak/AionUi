@@ -441,8 +441,8 @@ const openAssignAndStart = async () => {
     expect(screen.getByTestId('task-board-detail-objective').textContent).toBe('Login page with SSO')
   );
 
-  // Assign: kind=squad → pick the template from GET /api/squads → save.
-  await chooseOption('task-board-assignee-kind', 'conversation.taskBoard.assignee.kind.squad');
+  // 3.0 U8: Advanced → pick the Squad template from GET /api/squads → hand off.
+  fireEvent.click(screen.getByTestId('task-detail-advanced-toggle'));
   await waitFor(() => expect(screen.getByTestId('task-board-assignee-squad')).toBeTruthy());
   await chooseOption('task-board-assignee-squad', 'Release Squad');
   const beforeAssign = commentCount('w1');

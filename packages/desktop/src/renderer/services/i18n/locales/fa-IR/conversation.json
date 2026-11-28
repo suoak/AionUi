@@ -1371,11 +1371,7 @@
       "urgent": "فوری"
     },
     "assignee": {
-      "title": "مسئول",
       "none": "تعیین‌نشده",
-      "idPlaceholder": "شناسه مسئول",
-      "save": "تعیین",
-      "unassign": "حذف تعیین",
       "kind": {
         "user": "کاربر",
         "agent": "عامل",
@@ -1627,6 +1623,15 @@
         "task_ended": "کار پایان یافت."
       },
       "commit": "کامیت {{ref}}"
+    },
+    "advanced": {
+      "title": "پیشرفته",
+      "squad": "سپردن به یک Squad",
+      "squadHint": "یک Squad چند عامل را در یک worktree مشترک روی این کار به کار می‌گیرد.",
+      "squadPlaceholder": "یک قالب Squad انتخاب کنید",
+      "assign": "سپردن",
+      "unassign": "پس گرفتن",
+      "noSquads": "هنوز قالب Squad وجود ندارد. از عامل‌ها › پیشرفته › Squads یکی بسازید."
     }
   },
   "squadRouteOnly": {

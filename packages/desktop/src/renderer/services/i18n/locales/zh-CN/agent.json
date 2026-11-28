@@ -386,7 +386,8 @@
         "enterprise": "企业"
       },
       "skills_one": "{{count}} 个技能",
-      "skills_other": "{{count}} 个技能"
+      "skills_other": "{{count}} 个技能",
+      "advanced": "高级"
     },
     "preflight": {
       "level": {

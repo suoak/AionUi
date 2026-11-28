@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Button, Message, Modal, Tabs, Typography } from '@arco-design/web-react';
+import { Button, Dropdown, Menu, Message, Modal, Tabs, Typography } from '@arco-design/web-react';
 import { ipcBridge } from '@/common';
 import type { AgentCenterListItem } from '@/common/types/agent/agentCenterTypes';
 import { assistantRuntimeKey } from '@/common/types/agent/assistantTypes';
@@ -162,9 +162,20 @@ const AgentCenterListPage: React.FC = () => {
           <Text type='secondary'>{t('agent.agentCenter.description')}</Text>
         </div>
         <div className='flex gap-8px'>
-          <Button onClick={() => navigate('/agents/squads')} data-testid='agent-center-squads'>
-            {t('agent.agentCenter.squad.entry')}
-          </Button>
+          {/* 3.0 U8: Squads are an advanced tool now. */}
+          <Dropdown
+            trigger='click'
+            position='br'
+            droplist={
+              <Menu onClickMenuItem={(key) => key === 'squads' && navigate('/agents/squads')}>
+                <Menu.Item key='squads' data-testid='agent-center-squads'>
+                  {t('agent.agentCenter.squad.entry')}
+                </Menu.Item>
+              </Menu>
+            }
+          >
+            <Button data-testid='agent-center-advanced'>{t('agent.agentCenter.list.advanced')}</Button>
+          </Dropdown>
           <Button type='primary' onClick={() => navigate('/agents/new')} data-testid='agent-center-create'>
             {t('agent.agentCenter.list.create')}
           </Button>

@@ -386,7 +386,8 @@
         "enterprise": "Unternehmen"
       },
       "skills_one": "{{count}} Skill",
-      "skills_other": "{{count}} Skills"
+      "skills_other": "{{count}} Skills",
+      "advanced": "Erweitert"
     },
     "preflight": {
       "level": {
