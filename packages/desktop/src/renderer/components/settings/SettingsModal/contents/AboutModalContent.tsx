@@ -45,7 +45,7 @@ const AboutModalContent: React.FC = () => {
         <div className='flex flex-col max-w-500px mx-auto'>
           {/* App Info Section */}
           <div className='flex flex-col items-center pb-24px'>
-            <Typography.Title heading={3} className='text-24px font-bold text-t-primary mb-8px'>
+            <Typography.Title heading={3} className='text-20px font-bold text-t-primary mb-8px'>
               CSBU WorkMate
             </Typography.Title>
             <Typography.Text className='text-14px text-t-secondary mb-4px text-center'>

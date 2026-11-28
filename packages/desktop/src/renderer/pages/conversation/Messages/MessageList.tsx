@@ -183,7 +183,7 @@ const MessageListSkeleton: React.FC<{ rowWidthClass: string }> = ({ rowWidthClas
             })}
           >
             <div
-              className='flex-none min-w-0 rd-16px p-14px'
+              className='flex-none min-w-0 rd-14px p-14px'
               style={{
                 width: row.bubbleWidth,
                 maxWidth: '100%',

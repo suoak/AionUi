@@ -57,7 +57,7 @@ const TeammateMessageAvatar: React.FC<Props> = ({ senderName, senderConversation
   }
 
   return (
-    <div className='w-20px h-20px rounded-full bg-fill-3 flex items-center justify-center text-10px text-t-secondary font-medium'>
+    <div className='w-20px h-20px rounded-full bg-fill-3 flex items-center justify-center text-11px text-t-secondary font-medium'>
       <Robot theme='outline' size={12} />
     </div>
   );

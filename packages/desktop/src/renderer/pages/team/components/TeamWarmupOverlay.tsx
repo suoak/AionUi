@@ -107,7 +107,7 @@ const TeamWarmupOverlay: React.FC<Props> = ({ phase, assistants, runtimeStatus, 
                 key={a.slot_id}
                 data-testid={`team-warmup-avatar-${a.slot_id}`}
                 data-status={status ?? 'idle'}
-                className={`relative inline-flex rounded-full transition-all duration-300 ${isPending ? 'team-warmup-breathe' : ''}`}
+                className={`relative inline-flex rounded-full transition-all duration-240 ${isPending ? 'team-warmup-breathe' : ''}`}
                 style={{ opacity, boxShadow }}
               >
                 <TeamAgentIdentity
@@ -135,7 +135,7 @@ const TeamWarmupOverlay: React.FC<Props> = ({ phase, assistants, runtimeStatus, 
 
         {isFailure ? (
           <>
-            <div className='text-15px font-600 text-t-primary text-center'>
+            <div className='text-16px font-600 text-t-primary text-center'>
               {isMulti
                 ? t('team.warmup.multiFailedTitle', {
                     defaultValue: '{{count}} members failed to start',
@@ -213,7 +213,7 @@ const TeamWarmupOverlay: React.FC<Props> = ({ phase, assistants, runtimeStatus, 
           </>
         ) : (
           <>
-            <div className='text-15px font-600 text-t-primary'>
+            <div className='text-16px font-600 text-t-primary'>
               {t('team.warmup.title', { defaultValue: 'Waking up the team…' })}
             </div>
             <div className='text-12px text-t-tertiary'>

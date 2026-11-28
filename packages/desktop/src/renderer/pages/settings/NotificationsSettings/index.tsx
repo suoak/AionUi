@@ -20,7 +20,7 @@ export const NotificationsSettingsContent: React.FC = () => {
         title={t('settings.notificationsPage.title')}
         description={t('settings.notificationsPage.description')}
       />
-      <div className='px-[12px] md:px-[32px] py-16px bg-2 rd-16px'>
+      <div className='px-[12px] md:px-[32px] py-16px bg-2 rd-14px'>
         <NotificationSettingsSection />
       </div>
     </div>

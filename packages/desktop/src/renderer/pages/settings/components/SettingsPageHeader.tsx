@@ -57,7 +57,7 @@ const SettingsPageHeader: React.FC<SettingsPageHeaderProps> = ({
       className={classNames('bg-1', sticky && 'sticky top-0 z-10 -mt-14px pt-14px md:-mt-32px md:pt-32px')}
     >
       <div className='flex items-center justify-between gap-12px sm:gap-16px'>
-        <h1 className='m-0 min-w-0 flex-1 text-22px md:text-24px font-bold leading-[1.2] text-t-primary'>{title}</h1>
+        <h1 className='m-0 min-w-0 flex-1 text-20px font-semibold leading-28px text-t-primary'>{title}</h1>
         {actions ? <div className='shrink-0 flex flex-wrap items-center justify-end gap-8px'>{actions}</div> : null}
       </div>
       {description ? <p className='m-0 mt-8px text-13px leading-relaxed text-t-secondary'>{description}</p> : null}
@@ -83,7 +83,7 @@ const SettingsPageHeader: React.FC<SettingsPageHeaderProps> = ({
                 {typeof tab.count === 'number' ? (
                   <span
                     className={classNames(
-                      'ms-6px inline-flex h-16px min-w-16px items-center justify-center rounded-999px px-5px text-10px font-500 leading-none',
+                      'ms-6px inline-flex h-16px min-w-16px items-center justify-center rounded-999px px-5px text-11px font-500 leading-none',
                       isActive ? 'bg-primary-1 text-primary-6' : 'bg-fill-2 text-t-quaternary'
                     )}
                   >

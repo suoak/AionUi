@@ -66,7 +66,7 @@ const SectionCard: React.FC<{
   children: React.ReactNode;
   'data-testid'?: string;
 }> = ({ title, extra, children, 'data-testid': dataTestId }) => (
-  <section data-testid={dataTestId} className='rounded-16px border border-border-2 bg-base px-20px py-18px'>
+  <section data-testid={dataTestId} className='rounded-14px border border-border-2 bg-base px-20px py-18px'>
     <div className='mb-14px flex items-center justify-between gap-12px'>
       <h2 className='m-0 text-14px font-600 text-t-primary'>{title}</h2>
       {extra}

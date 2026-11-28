@@ -73,7 +73,7 @@ const WorkspaceGroupedHistory: React.FC<WorkspaceGroupedHistoryProps> = ({
             <Right
               theme='outline'
               size={12}
-              className={classNames('transition-transform duration-150', { 'rotate-90': !isCollapsed })}
+              className={classNames('transition-transform duration-120', { 'rotate-90': !isCollapsed })}
             />
           </span>
           {trailing && (
@@ -331,7 +331,7 @@ const WorkspaceGroupedHistory: React.FC<WorkspaceGroupedHistoryProps> = ({
           <div className='flex justify-end gap-12px pt-16px'>
             <button
               type='button'
-              className='px-24px py-8px rounded-20px text-14px font-medium transition-all'
+              className='px-24px py-8px rounded-14px text-14px font-medium transition-all'
               style={{
                 border: '1px solid var(--color-border-2)',
                 backgroundColor: 'var(--color-fill-2)',
@@ -352,7 +352,7 @@ const WorkspaceGroupedHistory: React.FC<WorkspaceGroupedHistoryProps> = ({
             </button>
             <button
               type='button'
-              className='px-24px py-8px rounded-20px text-14px font-medium transition-all'
+              className='px-24px py-8px rounded-14px text-14px font-medium transition-all'
               style={{
                 border: '1px solid rgb(var(--primary-6))',
                 backgroundColor: 'transparent',

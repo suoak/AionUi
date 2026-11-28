@@ -122,7 +122,7 @@ const ProtocolDetectionStatus: React.FC<ProtocolDetectionStatusProps> = ({
               }}
             >
               <span
-                className='text-10px font-medium'
+                className='text-11px font-medium'
                 style={{
                   color: iconConfig.color,
                 }}
@@ -172,7 +172,7 @@ const ProtocolDetectionStatus: React.FC<ProtocolDetectionStatusProps> = ({
     return (
       <div className='flex items-center gap-6px text-12px text-warning py-4px'>
         <div className='flex items-center justify-center w-16px h-16px rounded-4px bg-warning/10 shrink-0'>
-          <span className='text-10px font-medium'>!</span>
+          <span className='text-11px font-medium'>!</span>
         </div>
         <span className='truncate'>{suggestion ? getSuggestionMessage(suggestion, t) : result.error}</span>
       </div>

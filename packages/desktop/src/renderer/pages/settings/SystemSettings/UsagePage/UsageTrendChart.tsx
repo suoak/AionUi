@@ -58,7 +58,7 @@ const UsageTrendChart: React.FC<UsageTrendChartProps> = ({ points, emptyLabel, i
                   <div className='min-h-2px w-full flex-1 bg-primary-3' />
                 </div>
               </div>
-              <div className='truncate text-10px text-t-quaternary'>
+              <div className='truncate text-11px text-t-quaternary'>
                 {index % labelStep === 0 || index === points.length - 1 ? point.date.slice(5) : '\u00a0'}
               </div>
             </div>

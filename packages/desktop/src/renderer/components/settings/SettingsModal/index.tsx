@@ -369,7 +369,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ visible, onCancel, defaul
           <div
             key={item.key}
             className={classNames(
-              'flex items-center px-14px py-10px rd-8px cursor-pointer transition-all duration-150 select-none',
+              'flex items-center px-14px py-10px rd-8px cursor-pointer transition-all duration-120 select-none',
               {
                 'bg-aou-2 text-t-primary': activeTab === item.key,
                 'text-t-secondary hover:bg-fill-1': activeTab !== item.key,

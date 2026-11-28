@@ -53,9 +53,9 @@ const FeedbackButton: React.FC<FeedbackButtonProps> = ({ module, feedbackTags, f
       onClick={handleClick}
       className={classNames(
         'inline-flex items-center gap-3px cursor-pointer select-none b-none',
-        'px-8px py-4px rd-16px',
+        'px-8px py-4px rd-14px',
         'bg-transparent hover:bg-fill-2 text-t-primary',
-        'text-13px leading-18px transition-colors duration-150',
+        'text-13px leading-18px transition-colors duration-120',
         className
       )}
     >

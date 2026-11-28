@@ -33,13 +33,13 @@
 .guidInputInner {
   background: var(--bg-base, #fff);
   border: 1px solid var(--color-border-3);
-  border-radius: 24px;
+  border-radius: 14px;
   box-sizing: border-box;
 }
 
 :global([data-theme='dark']) .guidInputInner {
-  background: #262626;
-  border-color: #3a3a3a;
+  background: var(--wm-surface-input, #262626);
+  border-color: var(--wm-input-border, #3a3a3a);
 }
 
 .actionRow {
@@ -566,7 +566,7 @@
 }
 
 :global([data-theme='dark']) .assistantCard {
-  background: #262626;
+  background: var(--wm-surface-input, #262626);
 }
 
 :global([data-theme='dark']) .assistantCard:hover {

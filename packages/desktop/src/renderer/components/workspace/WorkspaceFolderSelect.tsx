@@ -198,7 +198,7 @@ const WorkspaceFolderSelect: React.FC<WorkspaceFolderSelectProps> = ({
         >
           {recentWorkspaces.length > 0 && (
             <>
-              <div className='px-10px pb-4px pt-6px text-10px font-500 uppercase tracking-[0.08em] text-t-tertiary'>
+              <div className='px-10px pb-4px pt-6px text-11px font-500 uppercase tracking-[0.08em] text-t-tertiary'>
                 {recentLabel}
               </div>
               {recentWorkspaces.map((path) => {

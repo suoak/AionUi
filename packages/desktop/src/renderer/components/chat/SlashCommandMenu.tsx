@@ -124,7 +124,7 @@ const SlashCommandMenu: React.FC<SlashCommandMenuProps> = ({
               {item.badge && (
                 <span
                   className={classNames(
-                    'text-10px rounded-999px px-6px py-1px shrink-0',
+                    'text-11px rounded-999px px-6px py-1px shrink-0',
                     index === activeIndex
                       ? 'text-t-primary bg-[var(--color-bg-1)]'
                       : 'text-t-secondary bg-[var(--color-bg-1)]'

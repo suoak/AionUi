@@ -156,7 +156,7 @@ const PairDevicePanel: React.FC<PairDevicePanelProps> = ({ atLimit, onPaired, po
     <div className='rd-12px border border-solid border-[var(--color-border-2)] p-16px' data-testid='device-pair-panel'>
       <div className='flex items-center justify-between gap-12px'>
         <div className='min-w-0'>
-          <div className='text-15px font-[500] text-t-primary'>{t('settings.devices.pair.title')}</div>
+          <div className='text-16px font-[500] text-t-primary'>{t('settings.devices.pair.title')}</div>
           <div className='text-12px text-t-secondary mt-2px'>{t('settings.devices.pair.description')}</div>
         </div>
         {!open ? (

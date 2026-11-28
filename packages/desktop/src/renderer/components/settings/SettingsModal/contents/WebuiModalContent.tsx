@@ -596,7 +596,7 @@ const WebuiModalContent: React.FC = () => {
               t('settings.webui.allowRemote', { defaultValue: 'Allow Remote Access' }),
             ].map((stepLabel, idx) => (
               <div key={stepLabel} className='inline-flex items-center gap-6px'>
-                <span className='inline-flex items-center justify-center w-16px h-16px rd-50% text-10px font-600 bg-[rgba(var(--primary-6),0.12)] text-[rgb(var(--primary-6))]'>
+                <span className='inline-flex items-center justify-center w-16px h-16px rd-50% text-11px font-600 bg-[rgba(var(--primary-6),0.12)] text-[rgb(var(--primary-6))]'>
                   {idx + 1}
                 </span>
                 <CheckOne theme='outline' size='12' className='text-[rgb(var(--primary-6))]' />
@@ -622,7 +622,7 @@ const WebuiModalContent: React.FC = () => {
         */}
 
         {/* WebUI 服务卡片 / WebUI Service Card */}
-        <div className='px-[12px] md:px-[28px] py-14px bg-2 rd-16px'>
+        <div className='px-[12px] md:px-[28px] py-14px bg-2 rd-14px'>
           {/* WebUI 引导提示 / WebUI hint */}
           <div className='mb-8px rd-10px border border-line bg-fill-1 px-10px py-8px flex items-start gap-6px'>
             <Earth theme='outline' size='16' className='mt-1px text-[rgb(var(--primary-6))]' />
@@ -693,7 +693,7 @@ const WebuiModalContent: React.FC = () => {
         </div>
 
         {/* 登录信息卡片 / Login Info Card */}
-        <div className='px-[12px] md:px-[28px] py-14px bg-2 rd-16px'>
+        <div className='px-[12px] md:px-[28px] py-14px bg-2 rd-14px'>
           <div className='text-14px font-500 mb-8px text-t-primary'>{t('settings.webui.loginInfo')}</div>
 
           {/* 账号 / Account */}

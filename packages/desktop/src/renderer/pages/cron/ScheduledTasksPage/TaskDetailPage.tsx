@@ -305,7 +305,7 @@ const TaskDetailPage: React.FC = () => {
           <Button
             type='text'
             size='small'
-            className='w-fit !px-0 !text-14px md:!text-15px !text-t-secondary hover:!text-t-primary'
+            className='w-fit !px-0 !text-14px !text-t-secondary hover:!text-t-primary'
             icon={<Left theme='outline' size={16} className='line-height-0 shrink-0' />}
             onClick={() => navigate('/scheduled')}
           >
@@ -341,7 +341,7 @@ const TaskDetailPage: React.FC = () => {
         <Button
           type='text'
           size='small'
-          className='w-fit !px-0 !text-14px md:!text-15px !text-t-secondary hover:!text-t-primary'
+          className='w-fit !px-0 !text-14px !text-t-secondary hover:!text-t-primary'
           icon={<Left theme='outline' size={16} className='line-height-0 shrink-0' />}
           onClick={() => navigate('/scheduled')}
         >
@@ -351,7 +351,7 @@ const TaskDetailPage: React.FC = () => {
         <div className='flex flex-col gap-20px pb-8px'>
           <div className='flex flex-col gap-12px'>
             <div className='flex flex-wrap items-start justify-between gap-14px'>
-              <h1 className='m-0 min-w-0 flex-1 break-words text-30px font-bold leading-38px text-t-primary md:text-34px md:leading-42px'>
+              <h1 className='m-0 min-w-0 flex-1 break-words text-28px font-bold leading-36px text-t-primary'>
                 {job.name}
               </h1>
               <div className='flex shrink-0 items-center gap-8px'>
@@ -383,7 +383,7 @@ const TaskDetailPage: React.FC = () => {
               </div>
             </div>
             {descriptionPreview && (
-              <p data-testid='task-detail-summary' className='m-0 w-full text-15px leading-24px text-t-secondary'>
+              <p data-testid='task-detail-summary' className='m-0 w-full text-14px leading-22px text-t-secondary'>
                 {descriptionPreview}
               </p>
             )}

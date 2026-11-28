@@ -127,7 +127,7 @@ const OfficialOnlineSkillDetail: React.FC = () => {
             <div className='flex flex-col gap-14px rounded-12px border border-border-2 bg-2 p-18px sm:flex-row sm:items-start sm:justify-between'>
               <div className='min-w-0'>
                 <div className='flex flex-wrap items-center gap-8px'>
-                  <h1 className='m-0 text-24px font-700 text-t-primary'>{skill.display_name}</h1>
+                  <h1 className='m-0 text-20px font-700 text-t-primary'>{skill.display_name}</h1>
                   {skill.install_status === 'update_available' ? (
                     <Tag color='orange'>{t('settings.skillsHub.officialOnline.updateAvailable')}</Tag>
                   ) : skill.install_status === 'installed' ? (

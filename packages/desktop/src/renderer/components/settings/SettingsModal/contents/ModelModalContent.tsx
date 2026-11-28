@@ -372,7 +372,7 @@ const ModelModalContent: React.FC = () => {
       className={
         isPageMode
           ? 'flex flex-col gap-16px'
-          : 'flex flex-col bg-2 rd-16px px-16px md:px-24px lg:px-28px py-16px md:py-18px'
+          : 'flex flex-col bg-2 rd-14px px-16px md:px-24px lg:px-28px py-16px md:py-18px'
       }
     >
       {messageContext}
