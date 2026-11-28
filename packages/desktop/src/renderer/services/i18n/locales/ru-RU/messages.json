@@ -101,5 +101,23 @@
   "requestDetails": "Детали запроса:",
   "delivery": {
     "pending": "Непрочитано"
+  },
+  "atAssistant": {
+    "group": "Ассистенты",
+    "filesGroup": "Файлы"
+  },
+  "delegation": {
+    "title": "Поручения",
+    "open": "Открыть",
+    "status": {
+      "starting": "Запуск",
+      "running": "Выполняется",
+      "completed": "Готово",
+      "failed": "Ошибка"
+    },
+    "more_one": "ещё {{count}}",
+    "more_other": "ещё {{count}}",
+    "more_few": "ещё {{count}}",
+    "more_many": "ещё {{count}}"
   }
 }

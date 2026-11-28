@@ -274,7 +274,9 @@
       "autopilot": "Autopilot"
     },
     "phoneApproved": "スマートフォンで承認済み",
-    "phoneRejected": "スマートフォンで却下済み"
+    "phoneRejected": "スマートフォンで却下済み",
+    "imApproved": "IM で承認済み",
+    "imRejected": "IM で却下"
   },
   "primaryNav": {
     "sessions": "セッション",

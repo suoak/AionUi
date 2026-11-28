@@ -328,6 +328,67 @@ describe('CreateTaskDialog', () => {
     expect(updates.metadata).not.toHaveProperty('agent_config');
   });
 
+  it('queues a task on each run instead of opening a conversation (3.0 U6)', async () => {
+    const user = userEvent.setup();
+
+    render(<CreateTaskDialog visible onClose={() => {}} editJob={job()} />);
+
+    await user.click(await screen.findByText('cron.page.form.runAs.task'));
+    expect(await screen.findByTestId('cron-task-options')).toBeInTheDocument();
+    // Execution mode, queue protection and Autopilot do not apply to a task.
+    expect(screen.queryByText('cron.page.form.executionMode')).toBeNull();
+    expect(screen.queryByText('cron.page.form.queue')).toBeNull();
+    await user.click(screen.getByTestId('cron-task-start'));
+    await user.type(screen.getByTestId('cron-task-repo'), '/work/repo');
+    await user.click(screen.getByTestId('modal-ok'));
+
+    await waitFor(() => expect(ipcBridge.cron.updateJob.invoke).toHaveBeenCalledTimes(1));
+    const [{ updates }] = vi.mocked(ipcBridge.cron.updateJob.invoke).mock.calls[0];
+    expect(updates.run_as).toBe('task');
+    expect(updates.task).toEqual({ start: true, repo_path: '/work/repo' });
+    expect(updates.target?.execution_mode).toBe('new_conversation');
+    expect(updates.state?.queue_enabled).toBe(false);
+    expect(updates.state).not.toHaveProperty('autopilot');
+  });
+
+  it('refuses a relative repository path for a task job (3.0 U6)', async () => {
+    const user = userEvent.setup();
+
+    render(<CreateTaskDialog visible onClose={() => {}} editJob={job()} />);
+
+    await user.click(await screen.findByText('cron.page.form.runAs.task'));
+    await user.type(await screen.findByTestId('cron-task-repo'), 'repo');
+    await user.click(screen.getByTestId('modal-ok'));
+
+    await new Promise((resolve) => setTimeout(resolve, 50));
+    expect(ipcBridge.cron.updateJob.invoke).not.toHaveBeenCalled();
+  });
+
+  it('switches a task job back to conversations explicitly and sends nothing new otherwise (3.0 U6)', async () => {
+    const user = userEvent.setup();
+    const taskJob = {
+      ...job(),
+      target: { ...job().target, run_as: 'task', task: { start: false } },
+    } as ICronJob;
+
+    render(<CreateTaskDialog visible onClose={() => {}} editJob={taskJob} />);
+
+    expect(await screen.findByTestId('cron-task-options')).toBeInTheDocument();
+    await user.click(screen.getByText('cron.page.form.runAs.conversation'));
+    await user.click(screen.getByTestId('modal-ok'));
+
+    await waitFor(() => expect(ipcBridge.cron.updateJob.invoke).toHaveBeenCalledTimes(1));
+    const [{ updates }] = vi.mocked(ipcBridge.cron.updateJob.invoke).mock.calls[0];
+    expect(updates.run_as).toBe('conversation');
+    expect(updates).not.toHaveProperty('task');
+  });
+
+  it('keeps an existing-conversation job on conversations (3.0 U6)', async () => {
+    render(<CreateTaskDialog visible onClose={() => {}} editJob={ongoingConversationJob()} />);
+    const taskRadio = (await screen.findByText('cron.page.form.runAs.task')).closest('label');
+    expect(taskRadio?.className).toContain('disabled');
+  });
+
   it('locks execution mode while resolving team ownership', async () => {
     let resolveConversation: (value: TChatConversation) => void = () => {};
     vi.mocked(ipcBridge.conversation.get.invoke).mockReturnValue(
@@ -499,7 +560,10 @@ function teamOwnedJob(): ICronJob {
 }
 
 function executionModeInputs(): HTMLInputElement[] {
-  return Array.from(document.querySelectorAll<HTMLInputElement>('.arco-radio input[type="radio"]'));
+  // 3.0 U6 adds the run-as radios; count only the execution mode ones.
+  return Array.from(document.querySelectorAll<HTMLInputElement>('.arco-radio input[type="radio"]')).filter(
+    (input) => input.value === 'new_conversation' || input.value === 'existing'
+  );
 }
 
 function assistants(): Assistant[] {

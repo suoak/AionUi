@@ -158,6 +158,15 @@ import type {
   FanoutCompare,
   FanoutGroup,
 } from '../types/fanout';
+import type {
+  ApprovalRequest,
+  ApprovalRequestChangedEvent,
+  ApprovalRequestKind,
+  RemoteApprovalSettings,
+  RemoteApprover,
+} from '@/common/types/remoteApproval';
+import type { AgentPreflight } from '@/common/types/agent/agentPreflight';
+import type { Delegation } from '../types/delegation';
 import {
   normalizeAgentCenterDetail,
   normalizeAgentCenterListItem,
@@ -2934,10 +2943,14 @@ export const cron = {
       autopilot: p.updates.state?.autopilot,
       autopilot_yolo: p.updates.state?.autopilot_yolo,
       notify_channel_id: p.updates.state?.notify_channel_id,
+      run_as: p.updates.run_as,
+      task: p.updates.task,
     })
   ),
   removeJob: httpDelete<void, { job_id: string }>((p) => `/api/cron/jobs/${p.job_id}`),
-  runNow: httpPost<{ conversation_id: string }, { job_id: string }>((p) => `/api/cron/jobs/${p.job_id}/run`),
+  runNow: httpPost<{ conversation_id: string; task_session_id?: string }, { job_id: string }>(
+    (p) => `/api/cron/jobs/${p.job_id}/run`
+  ),
   saveSkill: httpPost<void, { job_id: string; content: string }>(
     (p) => `/api/cron/jobs/${p.job_id}/skill`,
     (p) => ({ content: p.content })
@@ -3017,6 +3030,9 @@ export interface ICronJob {
   target: {
     payload: { kind: 'message'; text: string };
     execution_mode?: 'existing' | 'new_conversation';
+    /** 3.0 C6: each run opens a conversation (default) or queues a task. */
+    run_as?: CronRunAs;
+    task?: ICronTaskOptions;
   };
   metadata: {
     conversation_id: string;
@@ -3043,6 +3059,18 @@ export interface ICronJob {
     /** Channel session (`/api/channel/sessions` id) receiving run summaries. */
     notify_channel_id?: string;
   };
+}
+
+/** 3.0 C6: what each occurrence of a scheduled job does. */
+export type CronRunAs = 'conversation' | 'task';
+
+/** 3.0 C6: options of a `run_as = task` job (title = job name, objective = message). */
+export interface ICronTaskOptions {
+  /** Start the task right away; otherwise it waits in the backlog. */
+  start: boolean;
+  /** Absolute path of a git repository: the task works in its own worktree. */
+  repo_path?: string;
+  base_ref?: string;
 }
 
 export interface ICronAgentConfigRead {
@@ -3090,6 +3118,8 @@ export interface ICreateCronJobParams {
   autopilot?: boolean;
   autopilot_yolo?: boolean;
   notify_channel_id?: string;
+  run_as?: CronRunAs;
+  task?: ICronTaskOptions;
 }
 
 export interface ICronJobUpdateParams {
@@ -3113,6 +3143,10 @@ export interface ICronJobUpdateParams {
     /** Empty string clears the channel. */
     notify_channel_id?: string;
   };
+  /** 3.0 C6: switch what each occurrence does. */
+  run_as?: CronRunAs;
+  /** Replace the task options (`run_as = task` only). */
+  task?: ICronTaskOptions;
 }
 
 // ---------------------------------------------------------------------------
@@ -4332,3 +4366,54 @@ export interface IContextBreakdown {
   source: ContextSegmentSource;
   segments: IContextBreakdownSegment[];
 }
+
+/**
+ * 3.0 C7 `@assistant` delegation (`/api/conversations/{id}/delegation*`,
+ * aioncore ≥ 0.6). Picking an assistant in the `@` menu is the only grant;
+ * older cores answer 404 and the UI hides delegation.
+ */
+/** 3.0 U4: runtime agent readiness (Core C5). */
+export const agentPreflight = {
+  list: httpGet<AgentPreflight[], void>('/api/agents/preflight', { silentStatuses: [404] }),
+};
+
+/** 3.0 U9: remote approve-to-execute (Core C9). */
+export const remoteApproval = {
+  listForTask: httpGet<ApprovalRequest[], { task_session_id: string }>(
+    (p) => `/api/task-sessions/${encodeURIComponent(p.task_session_id)}/approval-requests`,
+    { silentStatuses: [404] }
+  ),
+  issue: httpPost<
+    ApprovalRequest,
+    { task_session_id: string; kind: ApprovalRequestKind; strategy?: string; target_branch?: string }
+  >(
+    (p) => `/api/task-sessions/${encodeURIComponent(p.task_session_id)}/approval-requests`,
+    (p) => ({ kind: p.kind, strategy: p.strategy, target_branch: p.target_branch })
+  ),
+  settings: {
+    get: httpGet<RemoteApprovalSettings, void>('/api/remote-approval/settings', { silentStatuses: [404] }),
+    set: httpPut<RemoteApprovalSettings, RemoteApprovalSettings>('/api/remote-approval/settings'),
+  },
+  approvers: {
+    list: httpGet<RemoteApprover[], void>('/api/remote-approval/approvers', { silentStatuses: [404] }),
+    add: httpPost<RemoteApprover, { platform_type: string; platform_user_id: string }>(
+      '/api/remote-approval/approvers'
+    ),
+    remove: httpDelete<void, { platform_type: string; platform_user_id: string }>(
+      (p) =>
+        `/api/remote-approval/approvers/${encodeURIComponent(p.platform_type)}/${encodeURIComponent(p.platform_user_id)}`
+    ),
+  },
+  changed: wsEmitter<ApprovalRequestChangedEvent>('approval.request.changed'),
+};
+
+export const delegation = {
+  grant: httpPost<void, { conversation_id: string; assistant_ids: string[] }>(
+    (p) => `/api/conversations/${encodeURIComponent(p.conversation_id)}/delegation-grants`,
+    (p) => ({ assistant_ids: p.assistant_ids })
+  ),
+  list: httpGet<Delegation[], { conversation_id: string }>(
+    (p) => `/api/conversations/${encodeURIComponent(p.conversation_id)}/delegations`,
+    { silentStatuses: [404] }
+  ),
+};

@@ -39,7 +39,7 @@ import CapabilityTogglePicker from './CapabilityTogglePicker';
 import ConversationStartersFields from './ConversationStartersFields';
 import AgentWorkflowDefinitionFields from './AgentWorkflowDefinitionFields';
 import AgentWorkflowTemplatePicker from './AgentWorkflowTemplatePicker';
-import { INHERIT_MCP_COPY } from './mcpPolicyCopy';
+import { INHERIT_MCP_COPY_KEYS } from './mcpPolicyCopy';
 
 const { Title, Text } = Typography;
 
@@ -49,12 +49,6 @@ const { Title, Text } = Typography;
  * KnowHub / knowledge_scopes intentionally omitted from the primary flow.
  */
 const STEP_KEYS = ['basic', 'instructions', 'capabilities', 'workflow', 'preview', 'publish'] as const;
-
-const visibilityLabel: Record<AgentVisibility, string> = {
-  private: '仅自己（私有）',
-  team: '团队共享',
-  enterprise: '企业',
-};
 
 type SkillOption = {
   name: string;
@@ -67,6 +61,11 @@ const AgentCenterWizardPage: React.FC<{ mode: 'create' | 'edit' }> = ({ mode }) 
   const location = useLocation();
   const { t, i18n } = useTranslation();
   const localeKey = i18n.language;
+  const visibilityLabel: Record<AgentVisibility, string> = {
+    private: t('agent.agentCenter.wizard.visibility.private'),
+    team: t('agent.agentCenter.list.visibility.team'),
+    enterprise: t('agent.agentCenter.list.visibility.enterprise'),
+  };
   const stepTitles = useMemo(() => STEP_KEYS.map((key) => t(`agent.agentCenter.builder.steps.${key}`)), [t]);
   const [message, messageContext] = Message.useMessage({ maxCount: 5 });
   const messageRef = useRef(message);
@@ -288,7 +287,7 @@ const AgentCenterWizardPage: React.FC<{ mode: 'create' | 'edit' }> = ({ mode }) 
         setWorkflowNodes(detail.meta.workflow.nodes);
       } catch (error) {
         console.error(error);
-        messageRef.current.error(formatAgentCenterError(error, '加载智能体失败'));
+        messageRef.current.error(formatAgentCenterError(error, t('agent.agentCenter.wizard.loadFailed')));
       }
     })();
   }, [mode, id]);
@@ -323,7 +322,7 @@ const AgentCenterWizardPage: React.FC<{ mode: 'create' | 'edit' }> = ({ mode }) 
     const known = new Set(skillToggleItems.map((i) => i.id));
     const orphans = selectedSkillKeys
       .filter((key) => !known.has(key))
-      .map((key) => ({ id: key, name: key, description: '（当前环境未安装）' }));
+      .map((key) => ({ id: key, name: key, description: t('agent.agentCenter.wizard.notInstalled') }));
     return [...orphans, ...skillToggleItems];
   }, [skillToggleItems, selectedSkillKeys]);
 
@@ -331,7 +330,7 @@ const AgentCenterWizardPage: React.FC<{ mode: 'create' | 'edit' }> = ({ mode }) 
     const known = new Set(mcpToggleItems.map((i) => i.id));
     const orphans = selectedMcpIds
       .filter((mcpId) => !known.has(mcpId))
-      .map((mcpId) => ({ id: mcpId, name: mcpId, description: '（当前环境未找到）' }));
+      .map((mcpId) => ({ id: mcpId, name: mcpId, description: t('agent.agentCenter.wizard.notFoundInEnv') }));
     return [...orphans, ...mcpToggleItems];
   }, [mcpToggleItems, selectedMcpIds]);
 
@@ -399,7 +398,7 @@ const AgentCenterWizardPage: React.FC<{ mode: 'create' | 'edit' }> = ({ mode }) 
 
   const persist = async (opts: { publish: boolean; stay?: boolean }): Promise<string | null> => {
     if (!name.trim()) {
-      messageRef.current.warning('请填写名称');
+      messageRef.current.warning(t('agent.agentCenter.wizard.nameRequired'));
       setStep(0);
       return null;
     }
@@ -409,17 +408,17 @@ const AgentCenterWizardPage: React.FC<{ mode: 'create' | 'edit' }> = ({ mode }) 
       return null;
     }
     if (defaultModelMode === 'fixed' && !defaultModelValue.trim()) {
-      messageRef.current.warning('固定默认模型时请选择一个模型');
+      messageRef.current.warning(t('agent.agentCenter.wizard.fixedModelRequired'));
       setStep(2);
       return null;
     }
     if (defaultPermissionMode === 'fixed' && !defaultPermissionValue.trim()) {
-      messageRef.current.warning('固定默认权限时请选择权限模式');
+      messageRef.current.warning(t('agent.agentCenter.wizard.fixedPermissionRequired'));
       setStep(2);
       return null;
     }
     if (defaultThoughtLevelMode === 'fixed' && !defaultThoughtLevelValue.trim()) {
-      messageRef.current.warning('固定默认思考强度时请选择一个选项');
+      messageRef.current.warning(t('agent.agentCenter.wizard.fixedThoughtRequired'));
       setStep(2);
       return null;
     }
@@ -486,9 +485,9 @@ const AgentCenterWizardPage: React.FC<{ mode: 'create' | 'edit' }> = ({ mode }) 
         });
         setStatus(published.meta.status);
         setVersion(published.meta.version);
-        messageRef.current.success(`已发布 v${published.meta.version}`);
+        messageRef.current.success(t('agent.agentCenter.list.publishedToast', { version: published.meta.version }));
       } else if (!opts.stay) {
-        messageRef.current.success('已保存草稿');
+        messageRef.current.success(t('agent.agentCenter.wizard.draftSaved'));
       }
 
       if (!opts.stay) {
@@ -497,7 +496,12 @@ const AgentCenterWizardPage: React.FC<{ mode: 'create' | 'edit' }> = ({ mode }) 
       return currentId;
     } catch (error) {
       console.error(error);
-      messageRef.current.error(formatAgentCenterError(error, opts.publish ? '发布失败' : '保存失败'));
+      messageRef.current.error(
+        formatAgentCenterError(
+          error,
+          opts.publish ? t('agent.agentCenter.list.publishFailed') : t('agent.agentCenter.wizard.saveFailed')
+        )
+      );
       return null;
     } finally {
       setSaving(false);
@@ -511,8 +515,10 @@ const AgentCenterWizardPage: React.FC<{ mode: 'create' | 'edit' }> = ({ mode }) 
       if (!currentId) return;
       const plan = await ipcBridge.agentCenter.run.invoke({ id: currentId });
       const previewHint =
-        plan.preview_mode === 'published' ? `已发布 v${plan.revision || version}` : '草稿试跑（当前配置）';
-      messageRef.current.success(`正在打开对话 · ${previewHint}`);
+        plan.preview_mode === 'published'
+          ? t('agent.agentCenter.wizard.previewPublished', { revision: plan.revision || version })
+          : t('agent.agentCenter.wizard.previewDraft');
+      messageRef.current.success(t('agent.agentCenter.wizard.openingPreview', { hint: previewHint }));
       navigate('/guid', {
         state: {
           selectedAssistantId: plan.assistant_id,
@@ -524,7 +530,7 @@ const AgentCenterWizardPage: React.FC<{ mode: 'create' | 'edit' }> = ({ mode }) 
       });
     } catch (error) {
       console.error(error);
-      messageRef.current.error(formatAgentCenterError(error, '试跑失败，请先检查配置'));
+      messageRef.current.error(formatAgentCenterError(error, t('agent.agentCenter.wizard.tryRunFailed')));
     } finally {
       setTrying(false);
     }
@@ -532,7 +538,7 @@ const AgentCenterWizardPage: React.FC<{ mode: 'create' | 'edit' }> = ({ mode }) 
 
   const engineLabel = useMemo(() => {
     const selected = availableBackends.find((b) => b.id === engineAgentId);
-    return selected?.name || engineAgentId || '默认引擎';
+    return selected?.name || engineAgentId || t('agent.agentCenter.wizard.defaultEngine');
   }, [availableBackends, engineAgentId]);
 
   const publishReadiness = useMemo(
@@ -574,13 +580,13 @@ const AgentCenterWizardPage: React.FC<{ mode: 'create' | 'edit' }> = ({ mode }) 
     <div className='h-full overflow-auto p-24px max-w-720px'>
       {messageContext}
       <Button type='text' className='!px-0 mb-8px' onClick={() => navigate('/agents')}>
-        ← 返回智能体中心
+        ← {t('agent.agentCenter.wizard.back')}
       </Button>
       <Title heading={4} className='!mb-4px'>
-        {mode === 'create' ? '创建智能体' : '编辑智能体'}
+        {mode === 'create' ? t('agent.agentCenter.wizard.createTitle') : t('agent.agentCenter.wizard.editTitle')}
       </Title>
       <Text type='secondary' className='mb-16px block'>
-        创建 → 写指令 → 选能力 → 试跑 → 发布共享。复用现有助手与会话运行时，不捆绑知识库产品。
+        {t('agent.agentCenter.wizard.intro')}
       </Text>
 
       <WorkMateSteps current={step} className='mb-8px' size='small'>
@@ -594,23 +600,25 @@ const AgentCenterWizardPage: React.FC<{ mode: 'create' | 'edit' }> = ({ mode }) 
           total: STEP_KEYS.length,
           title: stepTitles[step],
         })}
-        {status === 'published' ? ` · 已发布 v${version}` : ' · 草稿'}
+        {status === 'published'
+          ? t('agent.agentCenter.wizard.publishedSuffix', { version })
+          : t('agent.agentCenter.wizard.draftSuffix')}
       </Text>
 
       {step === 0 && (
         <div className='flex flex-col gap-12px'>
           {mode === 'create' ? <AgentWorkflowTemplatePicker onSelect={handleTemplateSelect} /> : null}
-          <Text type='secondary'>先起个名字和简介，方便自己和团队辨认（类似自定义 GPT 的名称卡）。</Text>
+          <Text type='secondary'>{t('agent.agentCenter.wizard.basicHint')}</Text>
           <label>
-            <Text>名称</Text>
-            <Input value={name} onChange={setName} placeholder='例如：投研助手' />
+            <Text>{t('agent.agentCenter.wizard.name')}</Text>
+            <Input value={name} onChange={setName} placeholder={t('agent.agentCenter.wizard.namePlaceholder')} />
           </label>
           <label>
-            <Text>简介</Text>
+            <Text>{t('agent.agentCenter.wizard.summary')}</Text>
             <Input.TextArea
               value={description}
               onChange={setDescription}
-              placeholder='一句话说明它擅长什么'
+              placeholder={t('agent.agentCenter.wizard.summaryPlaceholder')}
               autoSize={{ minRows: 2, maxRows: 4 }}
             />
           </label>
@@ -619,11 +627,11 @@ const AgentCenterWizardPage: React.FC<{ mode: 'create' | 'edit' }> = ({ mode }) 
 
       {step === 1 && (
         <div className='flex flex-col gap-16px'>
-          <Text type='secondary'>用自然语言写清角色、语气与边界（对应 ChatGPT 的 Instructions / Personality）。</Text>
+          <Text type='secondary'>{t('agent.agentCenter.wizard.instructionsHint')}</Text>
           <Input.TextArea
             value={instructions}
             onChange={setInstructions}
-            placeholder={'你是…\n请用简洁、专业的中文回答。\n当信息不足时先提问再行动。'}
+            placeholder={t('agent.agentCenter.wizard.instructionsPlaceholder')}
             autoSize={{ minRows: 8, maxRows: 18 }}
           />
           <ConversationStartersFields items={recommendedPrompts} onChange={setRecommendedPrompts} />
@@ -633,11 +641,11 @@ const AgentCenterWizardPage: React.FC<{ mode: 'create' | 'edit' }> = ({ mode }) 
       {step === 2 && (
         <div className='flex flex-col gap-16px'>
           <div className='flex flex-col gap-8px'>
-            <Text bold>后端 Agent / 模型引擎</Text>
-            <Text type='secondary'>选择已有后端 Agent（与设置页「助手」引擎选择器同源），不新建第二套运行时。</Text>
+            <Text bold>{t('agent.agentCenter.wizard.engineLabel')}</Text>
+            <Text type='secondary'>{t('agent.agentCenter.wizard.engineHint')}</Text>
             <Select
               allowClear
-              placeholder='留空则使用默认 Agent'
+              placeholder={t('agent.agentCenter.wizard.enginePlaceholder')}
               value={engineAgentId || undefined}
               onChange={(v) => setEngineAgentId((v as string) || '')}
               onVisibleChange={(visible) => {
@@ -650,7 +658,7 @@ const AgentCenterWizardPage: React.FC<{ mode: 'create' | 'edit' }> = ({ mode }) 
                       <WorkMateInlineSearchInput
                         value={agentQuery}
                         onChange={setAgentQuery}
-                        placeholder='搜索 Agent'
+                        placeholder={t('agent.agentCenter.wizard.engineSearch')}
                         data-testid='agent-center-engine-search'
                       />
                     </div>
@@ -661,7 +669,9 @@ const AgentCenterWizardPage: React.FC<{ mode: 'create' | 'edit' }> = ({ mode }) 
                 )
               }
               notFoundContent={
-                <div className='px-12px py-10px text-12px text-t-tertiary text-center'>无匹配的 Agent</div>
+                <div className='px-12px py-10px text-12px text-t-tertiary text-center'>
+                  {t('agent.agentCenter.wizard.engineEmpty')}
+                </div>
               }
               renderFormat={(_option, value) => {
                 const selected = availableBackends.find((item) => item.id === value);
@@ -697,37 +707,41 @@ const AgentCenterWizardPage: React.FC<{ mode: 'create' | 'edit' }> = ({ mode }) 
           />
           <div className='flex flex-col gap-8px'>
             <Text bold>Skills</Text>
-            <Text type='secondary'>从 Skills Hub（已安装）多选；展示名称。发布时默认 pin 版本。</Text>
+            <Text type='secondary'>{t('agent.agentCenter.wizard.skillsHint')}</Text>
             <CapabilityTogglePicker
               items={skillToggleItemsWithOrphans}
               value={selectedSkillKeys}
               onChange={setSelectedSkillKeys}
-              searchPlaceholder='搜索 Skills…'
-              emptyText={skillOptions.length === 0 ? '暂无已安装 Skill，请先到 Skills Hub 安装' : '无匹配的 Skill'}
+              searchPlaceholder={t('agent.agentCenter.wizard.skillsSearch')}
+              emptyText={
+                skillOptions.length === 0
+                  ? t('agent.agentCenter.wizard.skillsEmptyNone')
+                  : t('agent.agentCenter.wizard.skillsEmptyMatch')
+              }
               testId='agent-center-skills-picker'
             />
           </div>
           <div className='flex flex-col gap-8px'>
-            <Text bold>MCP（可选）</Text>
-            <Text type='secondary'>从已配置的 MCP 服务器多选。白名单留空 = 不挂载任何 MCP。</Text>
+            <Text bold>{t('agent.agentCenter.wizard.mcpLabel')}</Text>
+            <Text type='secondary'>{t('agent.agentCenter.wizard.mcpHint')}</Text>
             <Select value={mcpPolicy} onChange={(v) => setMcpPolicy(v as AgentMcpPolicy)}>
-              <Select.Option value='allowlist'>白名单（空 = 不挂载）</Select.Option>
-              <Select.Option value='inherit_user_enabled'>{INHERIT_MCP_COPY.option}</Select.Option>
+              <Select.Option value='allowlist'>{t('agent.agentCenter.wizard.mcpAllowlistOption')}</Select.Option>
+              <Select.Option value='inherit_user_enabled'>{t(INHERIT_MCP_COPY_KEYS.option)}</Select.Option>
             </Select>
             {mcpPolicy === 'allowlist' && (
               <CapabilityTogglePicker
                 items={mcpToggleItemsWithOrphans}
                 value={selectedMcpIds}
                 onChange={setSelectedMcpIds}
-                searchPlaceholder='搜索 MCP 服务器…'
+                searchPlaceholder={t('agent.agentCenter.wizard.mcpSearch')}
                 emptyText={
                   mcpCatalogFailed
-                    ? 'MCP 服务器列表加载失败，已勾选的服务器会保留；请稍后重新打开此页'
+                    ? t('agent.agentCenter.wizard.mcpLoadFailed')
                     : mcpOptions.length === 0
-                      ? '暂无 MCP 服务器，可在设置 → 工具中添加'
-                      : '无匹配的 MCP'
+                      ? t('agent.agentCenter.wizard.mcpEmptyNone')
+                      : t('agent.agentCenter.wizard.mcpEmptyMatch')
                 }
-                footerHint='未勾选任何服务器时，此智能体运行时不会挂载 MCP。'
+                footerHint={t('agent.agentCenter.wizard.mcpFooterHint')}
                 testId='agent-center-mcp-picker'
               />
             )}
@@ -755,26 +769,35 @@ const AgentCenterWizardPage: React.FC<{ mode: 'create' | 'edit' }> = ({ mode }) 
 
       {step === 4 && (
         <div className='flex flex-col gap-12px'>
-          <Text type='secondary'>
-            一键试跑会先保存当前草稿，再打开会话预览（类似 GPT 编辑器里的 Preview）。可随时回来改指令再试。
-          </Text>
+          <Text type='secondary'>{t('agent.agentCenter.wizard.previewHint')}</Text>
           <div className='rounded-8px border border-[var(--color-border-2)] p-16px flex flex-col gap-6px'>
-            <Text bold>{name || '（未命名）'}</Text>
+            <Text bold>{name || t('agent.agentCenter.wizard.unnamed')}</Text>
             <Text type='secondary' className='text-12px'>
-              {status === 'published' ? `已发布 v${version}` : '草稿'}
-              {` · 引擎 ${engineLabel}`}
-              {' · 模型 '}
-              {defaultModelMode === 'fixed' && defaultModelValue ? defaultModelValue : '自动'}
-              {' · 权限 '}
-              {defaultPermissionMode === 'fixed' && defaultPermissionValue ? defaultPermissionValue : '自动'}
+              {status === 'published'
+                ? t('agent.agentCenter.wizard.publishedVersion', { version })
+                : t('agent.agentCenter.list.status.draft')}
+              {t('agent.agentCenter.wizard.engineLine', { engine: engineLabel })}
+              {t('agent.agentCenter.wizard.modelPrefix')}
+              {defaultModelMode === 'fixed' && defaultModelValue
+                ? defaultModelValue
+                : t('agent.agentCenter.wizard.auto')}
+              {t('agent.agentCenter.wizard.permissionPrefix')}
+              {defaultPermissionMode === 'fixed' && defaultPermissionValue
+                ? defaultPermissionValue
+                : t('agent.agentCenter.wizard.auto')}
               {thoughtLevelOption
-                ? ` · 思考 ${
-                    defaultThoughtLevelMode === 'fixed' && defaultThoughtLevelValue ? defaultThoughtLevelValue : '自动'
-                  }`
+                ? t('agent.agentCenter.wizard.thoughtLine', {
+                    value:
+                      defaultThoughtLevelMode === 'fixed' && defaultThoughtLevelValue
+                        ? defaultThoughtLevelValue
+                        : t('agent.agentCenter.wizard.auto'),
+                  })
                 : ''}
               {' · Skills '}
               {skillRefs.length} · MCP{' '}
-              {mcpPolicy === 'allowlist' ? `${selectedMcpIds.length} 项白名单` : INHERIT_MCP_COPY.short}
+              {mcpPolicy === 'allowlist'
+                ? t('agent.agentCenter.wizard.allowlistCount', { count: selectedMcpIds.length })
+                : t(INHERIT_MCP_COPY_KEYS.short)}
             </Text>
             {description ? <Text className='text-13px'>{description}</Text> : null}
             {instructions.trim() ? (
@@ -783,13 +806,13 @@ const AgentCenterWizardPage: React.FC<{ mode: 'create' | 'edit' }> = ({ mode }) 
               </Text>
             ) : (
               <Text type='secondary' className='text-12px'>
-                （尚未填写指令）
+                {t('agent.agentCenter.wizard.noInstructions')}
               </Text>
             )}
             {recommendedPrompts.length > 0 ? (
               <div className='mt-8px flex flex-col gap-4px'>
                 <Text bold className='text-12px'>
-                  对话开场白（{recommendedPrompts.length}）
+                  {t('agent.agentCenter.wizard.startersCount', { count: recommendedPrompts.length })}
                 </Text>
                 <ul className='m-0 pl-18px text-12px text-t-secondary'>
                   {recommendedPrompts.map((prompt, index) => (
@@ -801,30 +824,30 @@ const AgentCenterWizardPage: React.FC<{ mode: 'create' | 'edit' }> = ({ mode }) 
               </div>
             ) : (
               <Text type='secondary' className='text-12px mt-4px'>
-                （未配置对话开场白；试跑欢迎页将使用默认提示）
+                {t('agent.agentCenter.wizard.noStarters')}
               </Text>
             )}
           </div>
           <Button type='primary' loading={trying || saving} onClick={() => void handleTryRun()}>
-            试跑对话
+            {t('agent.agentCenter.wizard.tryConversation')}
           </Button>
           {agentId ? (
             <div className='rounded-8px bg-[var(--color-fill-1)] p-12px flex flex-col gap-8px mt-4px'>
               <Text bold className='text-12px'>
-                试跑后改进
+                {t('agent.agentCenter.wizard.afterTry')}
               </Text>
               <Text type='secondary' className='text-12px'>
                 {t('agent.agentCenter.tryRunImprovementDescription')}
               </Text>
               <div className='flex flex-wrap gap-8px'>
                 <Button size='mini' onClick={() => setStep(1)}>
-                  根据试跑改进指令
+                  {t('agent.agentCenter.wizard.improveInstructions')}
                 </Button>
                 <Button size='mini' onClick={() => setStep(5)}>
-                  去发布
+                  {t('agent.agentCenter.wizard.goPublish')}
                 </Button>
                 <Button size='mini' type='text' onClick={() => navigate(`/agents/${agentId}`)}>
-                  打开详情中心
+                  {t('agent.agentCenter.wizard.openDetail')}
                 </Button>
               </div>
             </div>
@@ -834,16 +857,14 @@ const AgentCenterWizardPage: React.FC<{ mode: 'create' | 'edit' }> = ({ mode }) 
 
       {step === 5 && (
         <div className='flex flex-col gap-12px'>
-          <Text type='secondary'>
-            发布会生成不可变版本快照；共享范围类似 GPT 的「仅自己 / 邀请他人」，企业市场暂未开放。
-          </Text>
+          <Text type='secondary'>{t('agent.agentCenter.wizard.publishHint')}</Text>
           <label>
-            <Text>共享范围</Text>
+            <Text>{t('agent.agentCenter.wizard.visibilityLabel')}</Text>
             <Select value={visibility} onChange={(v) => setVisibility(v as AgentVisibility)}>
-              <Select.Option value='private'>仅自己（私有）</Select.Option>
-              <Select.Option value='team'>团队共享</Select.Option>
+              <Select.Option value='private'>{t('agent.agentCenter.wizard.visibility.private')}</Select.Option>
+              <Select.Option value='team'>{t('agent.agentCenter.list.visibility.team')}</Select.Option>
               <Select.Option value='enterprise' disabled>
-                企业市场（即将推出）
+                {t('agent.agentCenter.wizard.visibility.enterpriseSoon')}
               </Select.Option>
             </Select>
           </label>
@@ -865,38 +886,44 @@ const AgentCenterWizardPage: React.FC<{ mode: 'create' | 'edit' }> = ({ mode }) 
             </div>
           </div>
           <label>
-            <Text>版本说明（可选）</Text>
+            <Text>{t('agent.agentCenter.wizard.changelog')}</Text>
             <Input.TextArea
               value={changelog}
               onChange={setChangelog}
-              placeholder='本次发布改了什么…'
+              placeholder={t('agent.agentCenter.wizard.changelogPlaceholder')}
               autoSize={{ minRows: 2, maxRows: 4 }}
             />
           </label>
           <div className='rounded-8px border border-[var(--color-border-2)] p-12px sticky bottom-0 bg-[var(--color-bg-2)]'>
             <Text bold className='text-12px block mb-6px'>
-              发布摘要（将写入不可变版本）
+              {t('agent.agentCenter.wizard.publishSummary')}
             </Text>
             <Text type='secondary' className='text-12px block'>
-              {name || '（未命名）'} · {visibilityLabel[visibility]}
-              {version > 0 ? ` · 当前 v${version} → 即将 v${version + 1}` : ' · 首次发布为 v1'}
+              {name || t('agent.agentCenter.wizard.unnamed')} · {visibilityLabel[visibility]}
+              {version > 0
+                ? t('agent.agentCenter.wizard.versionBump', { current: version, next: version + 1 })
+                : t('agent.agentCenter.wizard.firstPublish')}
             </Text>
             <Text type='secondary' className='text-12px block mt-4px'>
-              将 pin Skills：{skillRefs.length ? skillRefs.map((s) => s.skill_key).join('、') : '（无）'}
+              {t('agent.agentCenter.wizard.pinSkills', {
+                list: skillRefs.length
+                  ? skillRefs.map((sk) => sk.skill_key).join(t('agent.agentCenter.wizard.listSep'))
+                  : t('agent.agentCenter.wizard.none'),
+              })}
             </Text>
             <Text type='secondary' className='text-12px block'>
               MCP：
               {mcpPolicy === 'allowlist'
                 ? selectedMcpIds.length
-                  ? `白名单 ${selectedMcpIds.length} 项`
-                  : '白名单为空 = 不挂载'
-                : INHERIT_MCP_COPY.option}
-              {' · 引擎 '}
+                  ? t('agent.agentCenter.wizard.allowlistItems', { count: selectedMcpIds.length })
+                  : t('agent.agentCenter.wizard.allowlistEmptyMeans')
+                : t(INHERIT_MCP_COPY_KEYS.option)}
+              {t('agent.agentCenter.wizard.enginePrefix')}
               {engineLabel}
             </Text>
             {changelog.trim() ? (
               <Text type='secondary' className='text-12px block mt-4px'>
-                版本说明：{changelog.trim()}
+                {t('agent.agentCenter.wizard.changelogLine', { text: changelog.trim() })}
               </Text>
             ) : null}
           </div>
@@ -905,27 +932,29 @@ const AgentCenterWizardPage: React.FC<{ mode: 'create' | 'edit' }> = ({ mode }) 
 
       <div className='flex justify-between mt-24px'>
         <Button disabled={step === 0 || saving || trying} onClick={() => setStep((s) => Math.max(0, s - 1))}>
-          上一步
+          {t('agent.agentCenter.wizard.previous')}
         </Button>
         <div className='flex gap-8px'>
           {step < STEP_KEYS.length - 1 ? (
             <>
               {step === 4 && (
                 <Button loading={saving} onClick={() => void persist({ publish: false })}>
-                  保存草稿并返回
+                  {t('agent.agentCenter.wizard.saveDraftAndBack')}
                 </Button>
               )}
               <Button type='primary' onClick={() => setStep((s) => Math.min(STEP_KEYS.length - 1, s + 1))}>
-                下一步
+                {t('agent.agentCenter.wizard.next')}
               </Button>
             </>
           ) : (
             <>
               <Button loading={saving} onClick={() => void persist({ publish: false })}>
-                保存草稿
+                {t('agent.agentCenter.wizard.saveDraft')}
               </Button>
               <Button type='primary' loading={saving} onClick={() => void persist({ publish: true })}>
-                发布{version > 0 ? `为 v${version + 1}` : ''}
+                {version > 0
+                  ? t('agent.agentCenter.wizard.publishAs', { version: version + 1 })
+                  : t('agent.agentCenter.list.publish')}
               </Button>
             </>
           )}

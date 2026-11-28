@@ -274,7 +274,9 @@
       "autopilot": "Autopilot"
     },
     "phoneApproved": "Telefonda onaylandı",
-    "phoneRejected": "Telefonda reddedildi"
+    "phoneRejected": "Telefonda reddedildi",
+    "imApproved": "Mesajlaşmada onaylandı",
+    "imRejected": "Mesajlaşmada reddedildi"
   },
   "extensionPanels": {
     "groupTitle": "Eklenti panelleri",

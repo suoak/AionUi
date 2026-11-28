@@ -113,7 +113,23 @@
       "aionrsModelRequired": "请为 CSBU WorkMate 选择模型",
       "aionrsNoProvider": "暂无可用模型",
       "assistantLockedExistingConversation": "持续会话任务必须保留原执行助手。如需更换助手，请新建任务。",
-      "teamTaskExecutionModeLockedReason": "Team 定时任务必须在所属 Team 会话中持续执行，因此不能修改执行模式。"
+      "teamTaskExecutionModeLockedReason": "Team 定时任务必须在所属 Team 会话中持续执行，因此不能修改执行模式。",
+      "runAs": {
+        "label": "每次运行",
+        "conversation": "开一个会话",
+        "task": "排队为任务",
+        "tag": "排队为任务",
+        "conversationHint": "消息会发到一个会话，由助手在会话里完成。",
+        "taskHint": "每次运行会在任务看板新增一个任务（标题为名称，目标为消息），按任务规则运行，并始终停在评审；不适用 Autopilot。"
+      },
+      "runAsTask": {
+        "start": "立即开始",
+        "startHint": "关闭：任务留在待办。开启：立即开始（运行位已满时排队）。",
+        "repo": "代码仓库（可选）",
+        "repoPlaceholder": "/仓库的绝对路径",
+        "repoHint": "每个任务在该仓库的独立工作树中进行。",
+        "repoAbsolute": "请输入仓库的绝对路径。"
+      }
     },
     "freq": {
       "manual": "手动触发",

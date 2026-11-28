@@ -10,7 +10,6 @@ import type {
   AcceptanceCriterionStatus,
   PlanningIsolationLevel,
   TaskArtifactKind,
-  TaskSessionMode,
 } from '@/common/types/agent/taskSession';
 import { canStartAutomaticPlanning } from '@/common/types/agent/taskSession';
 import { uuid } from '@/common/utils';
@@ -40,7 +39,7 @@ import {
   Tooltip,
   Typography,
 } from '@arco-design/web-react';
-import { History } from '@icon-park/react';
+import { History, ListCheckbox } from '@icon-park/react';
 import React, { useCallback, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
@@ -65,6 +64,10 @@ import { resolveConversationBackend } from '../utils/conversationAssistantIdenti
 import LegacyReadOnlyConversation from '../platforms/legacy/LegacyReadOnlyConversation';
 import SingleChatEmptyState from './SingleChatEmptyState';
 import TaskReviewPanel from './TaskReviewPanel';
+import ConversationTaskPill from './ConversationTaskPill';
+import NewTaskDialog from '@/renderer/pages/tasks/NewTaskDialog';
+import { remoteRunOwnsApproval } from '@/renderer/pages/tasks/remoteApprovalModel';
+import { useRemoteApprovalRequests } from '@/renderer/pages/tasks/useRemoteApprovalRequests';
 import { useActiveLease } from '../hooks/useActiveLease';
 import WorktreeStatusBadge from '../fanout/WorktreeStatusBadge';
 // import SkillRuleGenerator from './components/SkillRuleGenerator'; // Temporarily hidden
@@ -78,14 +81,12 @@ const configErrorMessageKey = (error: unknown) => {
   return 'agent.config.failed';
 };
 
-const TaskSessionControl: React.FC<{ conversation: TChatConversation; agentType: string }> = ({
-  conversation,
-  agentType,
-}) => {
+const TaskSessionControl: React.FC<{ conversation: TChatConversation }> = ({ conversation }) => {
   const { t } = useTranslation();
   const [saving, setSaving] = useState(false);
   const [contractVisible, setContractVisible] = useState(false);
   const [reviewVisible, setReviewVisible] = useState(false);
+  const [makeTaskOpen, setMakeTaskOpen] = useState(false);
   const [artifactKind, setArtifactKind] = useState<TaskArtifactKind>('plan');
   const [artifactContent, setArtifactContent] = useState('');
   const [criteriaText, setCriteriaText] = useState('');
@@ -126,7 +127,7 @@ const TaskSessionControl: React.FC<{ conversation: TChatConversation; agentType:
   };
 
   // E9-3: a decision made on a paired phone (or elsewhere) refreshes the card
-  // in place. Execution stays a manual desktop action.
+  // in place. Since C9 a remote approval also starts the run.
   useTaskApprovalChanged(taskSession?.id, () => {
     void refreshContract();
   });
@@ -134,11 +135,19 @@ const TaskSessionControl: React.FC<{ conversation: TChatConversation; agentType:
   const phoneDecision = phoneDecisionForLatestApproval(contractData?.approvals);
   const phoneDecisionLabel = phoneDecision
     ? t(
-        phoneDecision.status === 'approved'
-          ? 'conversation.taskSession.contract.phoneApproved'
-          : 'conversation.taskSession.contract.phoneRejected'
+        phoneDecision.via === 'im'
+          ? phoneDecision.status === 'approved'
+            ? 'conversation.taskSession.contract.imApproved'
+            : 'conversation.taskSession.contract.imRejected'
+          : phoneDecision.status === 'approved'
+            ? 'conversation.taskSession.contract.phoneApproved'
+            : 'conversation.taskSession.contract.phoneRejected'
       )
     : null;
+  // 3.0 U9: a plan approved on a phone or in IM runs at once (Core C9). Offer
+  // a manual Execute only if that remote run could not start.
+  const { requests: remoteRequests } = useRemoteApprovalRequests(taskSession?.id);
+  const remoteRunPending = remoteRunOwnsApproval(remoteRequests, approvedPlanApproval?.id);
   const phoneApprovedAwaitingExecute =
     phoneDecision?.status === 'approved' && phoneDecision.approval_id === approvedPlanApproval?.id;
 
@@ -226,51 +235,30 @@ const TaskSessionControl: React.FC<{ conversation: TChatConversation; agentType:
       });
     });
 
-  const handleModeChange = async (nextMode: TaskSessionMode) => {
-    if (saving || (taskSession && nextMode === mode)) return;
-    setSaving(true);
-    try {
-      if (taskSession) {
-        await ipcBridge.taskSession.update.invoke({ id: taskSession.id, updates: { mode: nextMode } });
-      } else {
-        await ipcBridge.taskSession.create.invoke({
-          title: conversation.name,
-          project_id: conversation.project_id,
-          conversation_id: conversation.id,
-          mode: nextMode,
-          objective: '',
-          acceptance_criteria: [],
-          status: 'ready',
-          agent_type: agentType,
-        });
-      }
-      setArtifactKind('plan');
-      await mutate();
-    } catch (error) {
-      console.error('[TaskSession] Failed to persist task mode:', error);
-      Message.error(t('conversation.taskSession.saveError'));
-    } finally {
-      setSaving(false);
-    }
-  };
-
   return (
     <div className='flex items-center gap-6px shrink-0' data-testid='task-session-control'>
-      <Radio.Group
-        type='button'
-        size='mini'
-        value={mode}
-        disabled={saving}
-        onChange={(value) => void handleModeChange(value as TaskSessionMode)}
-      >
-        <Radio value='agent'>{t('conversation.taskSession.mode.agent')}</Radio>
-        <Radio value='plan'>{t('conversation.taskSession.mode.plan')}</Radio>
-        <Radio value='goal'>{t('conversation.taskSession.mode.goal')}</Radio>
-      </Radio.Group>
+      {/* 3.0 U5: no Execute/Plan/Goal switch any more. A conversation either
+          runs for a task (pill → task detail) or can be turned into one. */}
       {taskSession ? (
-        <Tag size='small' bordered>
-          {t(`conversation.taskSession.status.${taskSession.status}`)}
-        </Tag>
+        <ConversationTaskPill task={taskSession} />
+      ) : (
+        <Button
+          size='mini'
+          type='outline'
+          data-testid='conversation-make-task'
+          icon={<ListCheckbox theme='outline' size='12' />}
+          onClick={() => setMakeTaskOpen(true)}
+        >
+          {t('conversation.taskBoard.newTask.fromMessage')}
+        </Button>
+      )}
+      {makeTaskOpen ? (
+        <NewTaskDialog
+          visible={makeTaskOpen}
+          prefill={{ title: conversation.name, projectId: conversation.project_id ?? undefined }}
+          onClose={() => setMakeTaskOpen(false)}
+          onCreated={() => void mutate()}
+        />
       ) : null}
       {mode === 'plan' && planningIsolation ? (
         <Tag size='small' bordered>
@@ -322,7 +310,7 @@ const TaskSessionControl: React.FC<{ conversation: TChatConversation; agentType:
               type={phoneDecision?.status === 'approved' ? 'success' : 'warning'}
               data-testid='task-session-phone-decision-notice'
               content={
-                phoneApprovedAwaitingExecute
+                phoneApprovedAwaitingExecute && remoteRunPending
                   ? `${phoneDecisionLabel} · ${t('conversation.taskSession.contract.phoneApprovedExecuteHint')}`
                   : phoneDecisionLabel
               }
@@ -403,9 +391,15 @@ const TaskSessionControl: React.FC<{ conversation: TChatConversation; agentType:
                 {new Date(approvedPlan.created_at).toLocaleString()}
               </Typography.Text>
               <Typography.Paragraph className='mt-8px'>{approvedPlan.content}</Typography.Paragraph>
-              <Button type='primary' loading={saving} onClick={() => void executePlan()}>
-                {t('conversation.taskSession.contract.execute')}
-              </Button>
+              {remoteRunPending ? (
+                <Typography.Text type='secondary' className='block' data-testid='task-session-remote-run-pending'>
+                  {t('conversation.taskSession.contract.phoneApprovedExecuteHint')}
+                </Typography.Text>
+              ) : (
+                <Button type='primary' loading={saving} onClick={() => void executePlan()}>
+                  {t('conversation.taskSession.contract.execute')}
+                </Button>
+              )}
             </div>
           ) : null}
           {contractData?.criteria
@@ -593,7 +587,7 @@ const AionrsConversationPanel: React.FC<{ conversation: AionrsConversation; slid
     headerExtra: (
       <div className='flex items-center gap-8px'>
         <WorktreeStatusBadge conversationId={conversation.id} extra={conversation.extra} />
-        <TaskSessionControl conversation={conversation} agentType='aionrs' />
+        <TaskSessionControl conversation={conversation} />
         <ConversationTrajectoryButton conversationId={conversation.id} />
         <ConversationToolsButton conversationId={conversation.id} />
         <CronJobManager conversation_id={conversation.id} cron_job_id={cronJobId} />
@@ -798,10 +792,7 @@ const ChatConversation: React.FC<{
       {conversation && (
         <>
           <WorktreeStatusBadge conversationId={conversation.id} extra={conversation.extra} />
-          <TaskSessionControl
-            conversation={conversation}
-            agentType={resolvedConversationBackend || conversation.type}
-          />
+          <TaskSessionControl conversation={conversation} />
           <ConversationTrajectoryButton conversationId={conversation.id} />
           <ConversationToolsButton conversationId={conversation.id} />
           <div className='shrink-0'>

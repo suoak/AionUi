@@ -1,29 +1,29 @@
-import { Button, Message, Modal, Tabs, Typography } from '@arco-design/web-react';
+/**
+ * @license
+ * Copyright 2025 AionUi (aionui.com)
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+import { Button, Dropdown, Menu, Message, Modal, Tabs, Typography } from '@arco-design/web-react';
 import { ipcBridge } from '@/common';
-import type { AgentCenterListItem, AgentVisibility } from '@/common/types/agent/agentCenterTypes';
+import type { AgentCenterListItem } from '@/common/types/agent/agentCenterTypes';
+import { assistantRuntimeKey } from '@/common/types/agent/assistantTypes';
 import type { IGovernanceMe } from '@/common/types/governance';
+import AssistantAvatar from '@/renderer/pages/settings/AssistantSettings/AssistantAvatar';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { formatAgentCenterError } from './agentCenterErrors';
 import { isEmptyDueToPermissions } from './agentCenterEmpty';
+import PreflightBadge from './PreflightBadge';
+import { useAgentPreflight } from './useAgentPreflight';
 
 const { Title, Text } = Typography;
 const TabPane = Tabs.TabPane;
 
-type Scope = 'mine' | 'team' | 'enterprise';
+type Scope = 'mine' | 'team';
 
-const statusLabel: Record<string, string> = {
-  draft: '草稿',
-  published: '已发布',
-  archived: '已归档',
-};
-
-const visibilityLabel: Record<AgentVisibility, string> = {
-  private: '仅自己',
-  team: '团队共享',
-  enterprise: '企业',
-};
+const KNOWN_STATUS = new Set(['draft', 'published', 'archived']);
 
 const AgentCenterListPage: React.FC = () => {
   const navigate = useNavigate();
@@ -39,23 +39,29 @@ const AgentCenterListPage: React.FC = () => {
   // load() deps stay stable and we do not re-fetch in a loop.
   const messageRef = useRef(message);
   messageRef.current = message;
+  const tRef = useRef(t);
+  tRef.current = t;
+  const { byAgentId: preflightByAgent } = useAgentPreflight();
+  // 3.0 U4: team sharing shows only where roles are on.
+  const teamSharing = Boolean(me?.roles_active);
+  const activeScope: Scope = teamSharing ? scope : 'mine';
 
   const load = useCallback(async () => {
     setLoading(true);
     setLoadError(null);
     try {
-      const list = await ipcBridge.agentCenter.list.invoke({ scope });
+      const list = await ipcBridge.agentCenter.list.invoke({ scope: activeScope });
       setItems(Array.isArray(list) ? list : []);
     } catch (error) {
       console.error(error);
-      const msg = formatAgentCenterError(error, '加载智能体列表失败');
+      const msg = formatAgentCenterError(error, tRef.current('agent.agentCenter.list.loadFailed'));
       setLoadError(msg);
       setItems([]);
       messageRef.current.error(msg);
     } finally {
       setLoading(false);
     }
-  }, [scope]);
+  }, [activeScope]);
 
   useEffect(() => {
     void load();
@@ -96,7 +102,7 @@ const AgentCenterListPage: React.FC = () => {
       });
     } catch (error) {
       console.error(error);
-      messageRef.current.error(formatAgentCenterError(error, '准备试跑失败'));
+      messageRef.current.error(formatAgentCenterError(error, t('agent.agentCenter.list.tryRunFailed')));
     } finally {
       setBusyId(null);
     }
@@ -109,11 +115,11 @@ const AgentCenterListPage: React.FC = () => {
         id,
         pin_skills_on_publish: true,
       });
-      messageRef.current.success(`已发布 v${published.meta.version}`);
+      messageRef.current.success(t('agent.agentCenter.list.publishedToast', { version: published.meta.version }));
       await load();
     } catch (error) {
       console.error(error);
-      messageRef.current.error(formatAgentCenterError(error, '发布失败'));
+      messageRef.current.error(formatAgentCenterError(error, t('agent.agentCenter.list.publishFailed')));
     } finally {
       setBusyId(null);
     }
@@ -142,39 +148,54 @@ const AgentCenterListPage: React.FC = () => {
     });
   };
 
+  const statusText = (status: string) =>
+    KNOWN_STATUS.has(status) ? t(`agent.agentCenter.list.status.${status}`) : status;
+
   return (
-    <div className='h-full overflow-auto p-24px'>
+    <div className='h-full overflow-auto p-24px' data-testid='agent-center-list'>
       {messageContext}
       <div className='flex items-center justify-between mb-16px gap-12px flex-wrap'>
         <div>
           <Title heading={4} className='!mb-4px'>
-            智能体中心
+            {t('agent.agentCenter.title')}
           </Title>
           <Text type='secondary'>{t('agent.agentCenter.description')}</Text>
         </div>
         <div className='flex gap-8px'>
-          <Button onClick={() => navigate('/agents/squads')} data-testid='agent-center-squads'>
-            {t('agent.agentCenter.squad.entry')}
-          </Button>
-          <Button type='primary' onClick={() => navigate('/agents/new')}>
-            创建智能体
+          {/* 3.0 U8: Squads are an advanced tool now. */}
+          <Dropdown
+            trigger='click'
+            position='br'
+            droplist={
+              <Menu onClickMenuItem={(key) => key === 'squads' && navigate('/agents/squads')}>
+                <Menu.Item key='squads' data-testid='agent-center-squads'>
+                  {t('agent.agentCenter.squad.entry')}
+                </Menu.Item>
+              </Menu>
+            }
+          >
+            <Button data-testid='agent-center-advanced'>{t('agent.agentCenter.list.advanced')}</Button>
+          </Dropdown>
+          <Button type='primary' onClick={() => navigate('/agents/new')} data-testid='agent-center-create'>
+            {t('agent.agentCenter.list.create')}
           </Button>
         </div>
       </div>
 
-      <Tabs activeTab={scope} onChange={(key) => setScope(key as Scope)}>
-        <TabPane key='mine' title='我的' />
-        <TabPane key='team' title='团队共享' />
-        <TabPane key='enterprise' title='企业市场' disabled />
-      </Tabs>
+      {teamSharing ? (
+        <Tabs activeTab={activeScope} onChange={(key) => setScope(key as Scope)}>
+          <TabPane key='mine' title={t('agent.agentCenter.list.tabs.mine')} />
+          <TabPane key='team' title={t('agent.agentCenter.list.tabs.team')} />
+        </Tabs>
+      ) : null}
 
       <div className='mt-16px flex flex-col gap-12px'>
-        {loading && <Text type='secondary'>加载中…</Text>}
+        {loading && <Text type='secondary'>{t('agent.agentCenter.list.loading')}</Text>}
         {!loading && loadError && (
           <div className='rounded-8px border border-[var(--color-danger-light-3)] bg-[var(--color-danger-light-1)] p-12px flex items-center justify-between gap-12px'>
             <Text type='error'>{loadError}</Text>
             <Button size='small' onClick={() => void load()}>
-              重试
+              {t('agent.agentCenter.list.retry')}
             </Button>
           </div>
         )}
@@ -196,63 +217,88 @@ const AgentCenterListPage: React.FC = () => {
             )}
           </div>
         )}
-        {items.map((item) => {
-          const id = item.assistant.id;
-          const isDraft = item.meta.status === 'draft';
-          const busy = busyId === id;
-          return (
-            <div
-              key={id}
-              className='rounded-8px border border-[var(--color-border-2)] p-16px flex items-center justify-between gap-12px'
-            >
-              <div
-                className='min-w-0 cursor-pointer'
-                onClick={() => navigate(`/agents/${id}`)}
-                role='button'
-                tabIndex={0}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter') navigate(`/agents/${id}`);
-                }}
-              >
-                <div className='font-medium truncate'>{item.assistant.name}</div>
-                <Text type='secondary' className='text-12px'>
-                  {visibilityLabel[item.meta.visibility]} · {statusLabel[item.meta.status] ?? item.meta.status}
-                  {item.meta.version > 0 ? ` · v${item.meta.version}` : ' · 未发布'}
-                  {item.meta.skill_refs?.length ? ` · Skills ${item.meta.skill_refs.length}` : ''}
-                </Text>
-                {item.assistant.description ? (
-                  <div className='text-13px mt-4px text-[var(--color-text-2)] line-clamp-2'>
-                    {item.assistant.description}
-                  </div>
-                ) : null}
-              </div>
-              <div className='flex gap-8px shrink-0'>
-                <Button size='small' type='primary' loading={busy} onClick={() => void handleTryRun(id)}>
-                  试跑
-                </Button>
-                <Button size='small' disabled={busy} onClick={() => navigate(`/agents/${id}`)}>
-                  详情
-                </Button>
-                <Button size='small' disabled={busy} onClick={() => navigate(`/agents/${id}/edit`)}>
-                  编辑
-                </Button>
-                {isDraft ? (
-                  <Button size='small' loading={busy} onClick={() => void handlePublish(id)}>
-                    发布
-                  </Button>
-                ) : (
-                  scope === 'mine' &&
-                  item.meta.status === 'published' && (
-                    <Button size='small' status='danger' disabled={busy} onClick={() => handleUnpublish(id)}>
-                      {t('agent.agentCenter.actions.unpublish')}
-                    </Button>
-                  )
-                )}
-              </div>
-            </div>
-          );
-        })}
       </div>
+
+      {items.length > 0 ? (
+        <div className='grid gap-12px grid-cols-[repeat(auto-fill,minmax(280px,1fr))]' data-testid='agent-center-grid'>
+          {items.map((item) => {
+            const id = item.assistant.id;
+            const isDraft = item.meta.status === 'draft';
+            const busy = busyId === id;
+            const runtime = assistantRuntimeKey(item.assistant);
+            const preflight = item.assistant.agent_id ? preflightByAgent.get(item.assistant.agent_id) : undefined;
+            const meta = [
+              t(`agent.agentCenter.list.visibility.${item.meta.visibility}`),
+              statusText(item.meta.status),
+              item.meta.version > 0 ? `v${item.meta.version}` : t('agent.agentCenter.list.unpublished'),
+            ];
+            if (item.meta.skill_refs?.length) {
+              meta.push(t('agent.agentCenter.list.skills', { count: item.meta.skill_refs.length }));
+            }
+            return (
+              <div
+                key={id}
+                data-testid='agent-center-card'
+                className='rounded-12px border border-solid border-[var(--color-border-2)] bg-1 p-16px flex flex-col gap-10px min-w-0'
+              >
+                <div
+                  className='flex items-start gap-10px min-w-0 cursor-pointer'
+                  onClick={() => navigate(`/agents/${id}`)}
+                  role='button'
+                  tabIndex={0}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') navigate(`/agents/${id}`);
+                  }}
+                >
+                  <AssistantAvatar assistant={item.assistant} size={36} />
+                  <div className='min-w-0 flex-1'>
+                    <div className='font-medium truncate'>{item.assistant.name}</div>
+                    <div className='flex items-center gap-6px flex-wrap mt-2px'>
+                      {runtime ? (
+                        <Text type='secondary' className='text-12px' data-testid='agent-center-runtime'>
+                          {runtime}
+                        </Text>
+                      ) : null}
+                      <PreflightBadge preflight={preflight} />
+                    </div>
+                  </div>
+                </div>
+                {item.assistant.description ? (
+                  <div className='text-13px text-[var(--color-text-2)] line-clamp-2'>{item.assistant.description}</div>
+                ) : null}
+                <Text type='secondary' className='text-12px'>
+                  {meta.join(' · ')}
+                  {item.assistant.last_used_at
+                    ? ` · ${t('agent.agentCenter.list.lastUsed', {
+                        time: new Date(item.assistant.last_used_at).toLocaleDateString(),
+                      })}`
+                    : ''}
+                </Text>
+                <div className='flex gap-8px flex-wrap mt-auto'>
+                  <Button size='small' type='primary' loading={busy} onClick={() => void handleTryRun(id)}>
+                    {t('agent.agentCenter.list.tryRun')}
+                  </Button>
+                  <Button size='small' disabled={busy} onClick={() => navigate(`/agents/${id}/edit`)}>
+                    {t('agent.agentCenter.list.edit')}
+                  </Button>
+                  {isDraft ? (
+                    <Button size='small' loading={busy} onClick={() => void handlePublish(id)}>
+                      {t('agent.agentCenter.list.publish')}
+                    </Button>
+                  ) : (
+                    activeScope === 'mine' &&
+                    item.meta.status === 'published' && (
+                      <Button size='small' status='danger' disabled={busy} onClick={() => handleUnpublish(id)}>
+                        {t('agent.agentCenter.actions.unpublish')}
+                      </Button>
+                    )
+                  )}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      ) : null}
     </div>
   );
 };

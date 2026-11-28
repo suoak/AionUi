@@ -1714,7 +1714,7 @@
     "title": "Mobilgeräte",
     "description": "Koppeln Sie Ihr Smartphone, um Freigabeanfragen zu erhalten und Pläne und Ziele auch unterwegs zu genehmigen oder abzulehnen.",
     "count": "{{count}}/{{max}} Geräte",
-    "approvalNote": "Eine Genehmigung auf dem Smartphone speichert nur die Entscheidung. Ein genehmigter Plan wird weiterhin hier am Desktop ausgeführt.",
+    "approvalNote": "Eine Freigabe auf dem Smartphone oder in einem verknüpften IM-Konto führt den freigegebenen Plan oder die Übernahme hier sofort aus. Jede Anfrage ist an genau das Gezeigte gebunden, gilt einmal und läuft ab.",
     "limitReached": "Sie haben das Maximum von {{max}} Geräten gekoppelt. Widerrufen Sie eines, bevor Sie ein weiteres koppeln.",
     "empty": "Noch keine gekoppelten Geräte",
     "unnamed": "Unbenanntes Gerät",
@@ -1787,6 +1787,19 @@
       "revoke": "Gerät konnte nicht widerrufen werden",
       "push": "Push-Einstellung konnte nicht gespeichert werden",
       "reject": "Kopplungsanfrage konnte nicht abgelehnt werden"
+    },
+    "remote": {
+      "title": "Fernfreigabe",
+      "description": "Smartphones und verknüpfte IM-Konten können Pläne, Ziele und Übernahmen freigeben; die Freigabe läuft hier sofort.",
+      "ttl": "Eine Anfrage gilt für",
+      "minutes": "Min.",
+      "save": "Speichern",
+      "approvers": "IM-Konten mit Freigaberecht",
+      "noApprovers": "Noch keine. Nur Smartphones können freigeben.",
+      "remove": "Entfernen",
+      "pick": "Gekoppeltes IM-Konto wählen",
+      "add": "Hinzufügen",
+      "failed": "Die Änderung konnte nicht gespeichert werden."
     }
   },
   "governance": {

@@ -274,7 +274,9 @@
       "autopilot": "Autopilot"
     },
     "phoneApproved": "휴대폰에서 승인됨",
-    "phoneRejected": "휴대폰에서 거부됨"
+    "phoneRejected": "휴대폰에서 거부됨",
+    "imApproved": "메신저에서 승인됨",
+    "imRejected": "메신저에서 거절됨"
   },
   "primaryNav": {
     "sessions": "세션",

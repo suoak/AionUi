@@ -274,7 +274,9 @@
       "autopilot": "Autopilot"
     },
     "phoneApproved": "Approuvé sur le téléphone",
-    "phoneRejected": "Refusé sur le téléphone"
+    "phoneRejected": "Refusé sur le téléphone",
+    "imApproved": "Approuvé par messagerie",
+    "imRejected": "Refusé par messagerie"
   },
   "extensionPanels": {
     "groupTitle": "Panneaux d’extensions",

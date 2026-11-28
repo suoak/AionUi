@@ -1057,7 +1057,9 @@
       "userEvidence": "用户已确认",
       "phoneApproved": "已在手机上批准",
       "phoneRejected": "已在手机上拒绝",
-      "phoneApprovedExecuteHint": "已在手机上批准。准备好后请在此处手动执行，不会自动开始。"
+      "phoneApprovedExecuteHint": "会在本机自动开始执行，无需手动运行。",
+      "imApproved": "已在 IM 批准",
+      "imRejected": "已在 IM 拒绝"
     },
     "review": {
       "open": "复核",
@@ -1369,11 +1371,7 @@
       "urgent": "紧急"
     },
     "assignee": {
-      "title": "负责人",
       "none": "未指派",
-      "idPlaceholder": "负责人 ID",
-      "save": "指派",
-      "unassign": "取消指派",
       "kind": {
         "user": "用户",
         "agent": "智能体",
@@ -1591,6 +1589,49 @@
       "adopted": "已采纳到 {{branch}}（{{commit}}）",
       "prLink": "拉取请求：",
       "noChanges": "还没有可评审的改动。"
+    },
+    "conversationTask": {
+      "open": "打开此任务"
+    },
+    "remote": {
+      "title": "远程批准",
+      "summary": {
+        "plan": "批准计划",
+        "goal": "批准目标",
+        "adopt": "以 {{strategy}} 采纳到 {{target}}"
+      },
+      "where": {
+        "desktop": "本机",
+        "phone": "手机",
+        "im": "IM"
+      },
+      "state": {
+        "waiting": "等待手机或 IM 批准 · {{minutes}} 分钟后过期（{{time}}）",
+        "approvedRan": "已在{{where}}批准并已执行",
+        "approvedRunning": "已在{{where}}批准 · 正在本机启动",
+        "approvedFailed": "已在{{where}}批准，但未能执行",
+        "approvedDesktop": "已在本机批准",
+        "rejected": "已在{{where}}拒绝",
+        "expired": "已于 {{time}} 过期 · 请在本机批准",
+        "invalidated": "已失效"
+      },
+      "reason": {
+        "superseded": "已被更新的版本取代。",
+        "cancelled": "已取消。",
+        "expired": "在有人回复前已过期。",
+        "diff_changed": "发送后改动有变化，已作废。",
+        "task_ended": "任务已结束。"
+      },
+      "commit": "提交 {{ref}}"
+    },
+    "advanced": {
+      "title": "高级",
+      "squad": "交给 Squad",
+      "squadHint": "Squad 会让多个智能体在同一个工作树里协作完成此任务。",
+      "squadPlaceholder": "选择 Squad 模板",
+      "assign": "交给 Squad",
+      "unassign": "收回",
+      "noSquads": "还没有 Squad 模板。可在 智能体 › 高级 › Squad 中创建。"
     }
   },
   "squadRouteOnly": {

@@ -274,7 +274,9 @@
       "autopilot": "Autopilot"
     },
     "phoneApproved": "已在手機上核准",
-    "phoneRejected": "已在手機上拒絕"
+    "phoneRejected": "已在手機上拒絕",
+    "imApproved": "已在 IM 核准",
+    "imRejected": "已在 IM 拒絕"
   },
   "extensionPanels": {
     "groupTitle": "外掛面板",

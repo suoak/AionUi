@@ -274,7 +274,9 @@
       "autopilot": "Autopilot"
     },
     "phoneApproved": "Auf dem Smartphone genehmigt",
-    "phoneRejected": "Auf dem Smartphone abgelehnt"
+    "phoneRejected": "Auf dem Smartphone abgelehnt",
+    "imApproved": "Per IM freigegeben",
+    "imRejected": "Per IM abgelehnt"
   },
   "primaryNav": {
     "sessions": "Sitzungen",

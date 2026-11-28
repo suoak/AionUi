@@ -111,7 +111,23 @@
       "aionrsModelRequired": "Veuillez sélectionner un modèle pour CSBU WorkMate",
       "aionrsNoProvider": "Aucun modèle disponible",
       "assistantLockedExistingConversation": "Les tâches de conversation en cours doivent conserver leur assistant d'origine. Créez une nouvelle tâche pour utiliser un autre assistant.",
-      "teamTaskExecutionModeLockedReason": "Les tâches planifiées par l'équipe doivent continuer à s'exécuter dans la conversation de l'équipe propriétaire, le mode d'exécution ne peut donc pas être modifié."
+      "teamTaskExecutionModeLockedReason": "Les tâches planifiées par l'équipe doivent continuer à s'exécuter dans la conversation de l'équipe propriétaire, le mode d'exécution ne peut donc pas être modifié.",
+      "runAs": {
+        "label": "À chaque exécution",
+        "conversation": "Ouvre une conversation",
+        "task": "Met une tâche en file",
+        "tag": "Tâches en file",
+        "conversationHint": "Le message est envoyé dans une conversation où l'assistant répond.",
+        "taskHint": "Chaque exécution ajoute une tâche au tableau (titre = nom, objectif = message). Elle suit les règles des tâches et s'arrête toujours à la revue ; Autopilot ne s'applique pas."
+      },
+      "runAsTask": {
+        "start": "Démarrer tout de suite",
+        "startHint": "Désactivé : la tâche attend dans À faire. Activé : elle démarre (ou attend si tous les créneaux sont occupés).",
+        "repo": "Dépôt (facultatif)",
+        "repoPlaceholder": "/chemin/absolu/du/depot",
+        "repoHint": "Chaque tâche travaille dans son propre worktree de ce dépôt.",
+        "repoAbsolute": "Saisissez un chemin absolu pour le dépôt."
+      }
     },
     "freq": {
       "manual": "Manuel",

@@ -56,8 +56,11 @@ export type ISetDevicePushInput = {
   push_target?: string;
 };
 
-/** Who answered a Plan/Goal approval (aioncore ≥ E9-3; absent on older cores). */
-export type TaskApprovalDecidedVia = 'device' | 'user';
+/**
+ * Who answered a Plan/Goal approval (aioncore ≥ E9-3; absent on older cores).
+ * 3.0 C9 adds `im` for a bound IM identity.
+ */
+export type TaskApprovalDecidedVia = 'device' | 'im' | 'user';
 
 /** `task.approval.changed` WS payload. */
 export type ITaskApprovalChangedEvent = {
