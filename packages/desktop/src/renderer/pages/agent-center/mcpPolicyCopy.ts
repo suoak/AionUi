@@ -8,11 +8,16 @@ import type { AgentMcpPolicy } from '@/common/types/agent/agentCenterTypes';
  * session (`last_mcp_ids`). The copy must say that instead of promising the
  * globally enabled set.
  */
-export const INHERIT_MCP_COPY = {
-  option: '沿用上次会话的 MCP 选择',
-  short: '沿用上次选择',
-  chip: 'MCP 沿用上次选择',
+export const INHERIT_MCP_COPY_KEYS = {
+  option: 'agent.agentCenter.mcp.inheritOption',
+  short: 'agent.agentCenter.mcp.inheritShort',
+  chip: 'agent.agentCenter.mcp.inheritChip',
 } as const;
 
-export const mcpPolicyChip = (policy: AgentMcpPolicy): string =>
-  policy === 'allowlist' ? 'MCP 白名单' : INHERIT_MCP_COPY.chip;
+export const MCP_ALLOWLIST_CHIP_KEY = 'agent.agentCenter.mcp.allowlistChip';
+
+export const mcpPolicyChipKey = (policy: AgentMcpPolicy): string =>
+  policy === 'allowlist' ? MCP_ALLOWLIST_CHIP_KEY : INHERIT_MCP_COPY_KEYS.chip;
+
+export const mcpPolicyChip = (policy: AgentMcpPolicy, t: (key: string) => string): string =>
+  t(mcpPolicyChipKey(policy));

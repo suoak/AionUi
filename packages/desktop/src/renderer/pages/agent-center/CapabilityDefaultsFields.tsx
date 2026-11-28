@@ -1,6 +1,7 @@
 import { Select, Tooltip } from '@arco-design/web-react';
 import { DROPDOWN_SEARCH_THRESHOLD } from '@renderer/components/agent/runtimeSelectorOptions';
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 
 const AUTO_SELECT_VALUE = '__AUTO__';
 
@@ -64,8 +65,11 @@ const CapabilityDefaultsFields: React.FC<CapabilityDefaultsFieldsProps> = ({
   thoughtLevelValue,
   setThoughtLevelValue,
   thoughtLevelOptions,
-  autoLabel = '自动（记住上次使用）',
+  autoLabel,
 }) => {
+  const { t } = useTranslation();
+  const resolvedAutoLabel = autoLabel ?? t('agent.agentCenter.defaults.autoLabel');
+
   const hasFixedThought =
     thoughtLevelMode === 'fixed' &&
     Boolean(thoughtLevelValue) &&
@@ -74,10 +78,8 @@ const CapabilityDefaultsFields: React.FC<CapabilityDefaultsFieldsProps> = ({
   return (
     <div className='flex flex-col gap-16px'>
       <div className='flex flex-col gap-8px'>
-        <span className='font-medium'>默认模型</span>
-        <span className='text-12px text-[var(--color-text-3)]'>
-          与设置 → 助手同源：aionrs 从 Providers（/api/providers）选模型；其他引擎用其可用模型列表。仅影响新会话。
-        </span>
+        <span className='font-medium'>{t('agent.agentCenter.defaults.model')}</span>
+        <span className='text-12px text-[var(--color-text-3)]'>{t('agent.agentCenter.defaults.modelHint')}</span>
         <Select
           key={`agent-center-default-model-${localeKey}`}
           value={modelMode === 'fixed' && modelValue ? modelValue : AUTO_SELECT_VALUE}
@@ -93,11 +95,11 @@ const CapabilityDefaultsFields: React.FC<CapabilityDefaultsFieldsProps> = ({
           }}
           showSearch={modelOptions.length > DROPDOWN_SEARCH_THRESHOLD}
           filterOption={filterSelectOption}
-          placeholder='选择默认模型'
-          notFoundContent='暂无可用模型，请先在设置中配置 Providers'
+          placeholder={t('agent.agentCenter.defaults.modelPlaceholder')}
+          notFoundContent={t('agent.agentCenter.defaults.modelNotFound')}
           data-testid='agent-center-default-model'
         >
-          <Select.Option value={AUTO_SELECT_VALUE}>{autoLabel}</Select.Option>
+          <Select.Option value={AUTO_SELECT_VALUE}>{resolvedAutoLabel}</Select.Option>
           {modelOptions.map((option) => (
             <Select.Option
               key={`${localeKey}-${option.key ?? option.value}`}
@@ -117,10 +119,8 @@ const CapabilityDefaultsFields: React.FC<CapabilityDefaultsFieldsProps> = ({
       </div>
 
       <div className='flex flex-col gap-8px'>
-        <span className='font-medium'>默认权限模式</span>
-        <span className='text-12px text-[var(--color-text-3)]'>
-          对应助手 Defaults 的 Permission；选项来自当前后端 Agent。
-        </span>
+        <span className='font-medium'>{t('agent.agentCenter.defaults.permission')}</span>
+        <span className='text-12px text-[var(--color-text-3)]'>{t('agent.agentCenter.defaults.permissionHint')}</span>
         <Select
           key={`agent-center-default-permission-${localeKey}-${permissionMode}`}
           value={permissionMode === 'fixed' && permissionValue ? permissionValue : AUTO_SELECT_VALUE}
@@ -134,11 +134,11 @@ const CapabilityDefaultsFields: React.FC<CapabilityDefaultsFieldsProps> = ({
             setPermissionMode('fixed');
             setPermissionValue(next);
           }}
-          placeholder='选择权限模式'
-          notFoundContent='当前引擎无可切换权限模式'
+          placeholder={t('agent.agentCenter.defaults.permissionPlaceholder')}
+          notFoundContent={t('agent.agentCenter.defaults.permissionNotFound')}
           data-testid='agent-center-default-permission'
         >
-          <Select.Option value={AUTO_SELECT_VALUE}>{autoLabel}</Select.Option>
+          <Select.Option value={AUTO_SELECT_VALUE}>{resolvedAutoLabel}</Select.Option>
           {permissionOptions.map((option) => (
             <Select.Option key={`${localeKey}-${option.value}`} value={option.value} data-label={option.label}>
               {option.description ? (
@@ -155,10 +155,8 @@ const CapabilityDefaultsFields: React.FC<CapabilityDefaultsFieldsProps> = ({
 
       {showThoughtLevel ? (
         <div className='flex flex-col gap-8px'>
-          <span className='font-medium'>默认思考强度</span>
-          <span className='text-12px text-[var(--color-text-3)]'>
-            引擎支持时显示（Thought Level / reasoning effort）。
-          </span>
+          <span className='font-medium'>{t('agent.agentCenter.defaults.thought')}</span>
+          <span className='text-12px text-[var(--color-text-3)]'>{t('agent.agentCenter.defaults.thoughtHint')}</span>
           <Select
             key={`agent-center-default-thought-${localeKey}-${thoughtLevelMode}`}
             value={hasFixedThought ? thoughtLevelValue : AUTO_SELECT_VALUE}
@@ -172,10 +170,10 @@ const CapabilityDefaultsFields: React.FC<CapabilityDefaultsFieldsProps> = ({
               setThoughtLevelMode('fixed');
               setThoughtLevelValue(next);
             }}
-            placeholder='选择思考强度'
+            placeholder={t('agent.agentCenter.defaults.thoughtPlaceholder')}
             data-testid='agent-center-default-thought-level'
           >
-            <Select.Option value={AUTO_SELECT_VALUE}>{autoLabel}</Select.Option>
+            <Select.Option value={AUTO_SELECT_VALUE}>{resolvedAutoLabel}</Select.Option>
             {thoughtLevelOptions.map((option) => (
               <Select.Option key={`${localeKey}-${option.value}`} value={option.value} data-label={option.label}>
                 {option.description ? (

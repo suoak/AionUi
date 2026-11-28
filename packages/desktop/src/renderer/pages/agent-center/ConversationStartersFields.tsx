@@ -1,5 +1,6 @@
 import { Button, Input } from '@arco-design/web-react';
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 
 /**
  * ChatGPT-style conversation starters editor for 智能体中心.
@@ -12,6 +13,7 @@ type ConversationStartersFieldsProps = {
 };
 
 const ConversationStartersFields: React.FC<ConversationStartersFieldsProps> = ({ items, onChange }) => {
+  const { t } = useTranslation();
   const [adding, setAdding] = React.useState(false);
   const [newDraft, setNewDraft] = React.useState('');
   const [editingIndex, setEditingIndex] = React.useState<number | null>(null);
@@ -50,10 +52,8 @@ const ConversationStartersFields: React.FC<ConversationStartersFieldsProps> = ({
     <div className='flex flex-col gap-8px' data-testid='agent-center-conversation-starters'>
       <div className='flex items-center justify-between gap-8px'>
         <div>
-          <div className='text-13px font-500 text-t-primary'>对话开场白</div>
-          <div className='text-12px text-t-secondary mt-2px'>
-            类似 ChatGPT 的 Conversation starters；保存后会在试跑 / 新对话欢迎页展示。
-          </div>
+          <div className='text-13px font-500 text-t-primary'>{t('agent.agentCenter.starters.title')}</div>
+          <div className='text-12px text-t-secondary mt-2px'>{t('agent.agentCenter.starters.hint')}</div>
         </div>
         <Button
           type='outline'
@@ -65,7 +65,7 @@ const ConversationStartersFields: React.FC<ConversationStartersFieldsProps> = ({
             setEditingDraft('');
           }}
         >
-          + 添加
+          {t('agent.agentCenter.starters.addWithPlus')}
         </Button>
       </div>
 
@@ -99,7 +99,7 @@ const ConversationStartersFields: React.FC<ConversationStartersFieldsProps> = ({
                           />
                           <div className='flex items-center gap-8px'>
                             <Button size='small' type='primary' className='!rounded-full' onClick={handleSaveEdit}>
-                              保存
+                              {t('agent.agentCenter.starters.save')}
                             </Button>
                             <Button
                               size='small'
@@ -110,7 +110,7 @@ const ConversationStartersFields: React.FC<ConversationStartersFieldsProps> = ({
                                 setEditingDraft('');
                               }}
                             >
-                              取消
+                              {t('agent.agentCenter.starters.cancel')}
                             </Button>
                           </div>
                         </div>
@@ -129,7 +129,7 @@ const ConversationStartersFields: React.FC<ConversationStartersFieldsProps> = ({
                                 setEditingDraft(prompt);
                               }}
                             >
-                              编辑
+                              {t('agent.agentCenter.starters.edit')}
                             </Button>
                             <Button
                               size='small'
@@ -137,7 +137,7 @@ const ConversationStartersFields: React.FC<ConversationStartersFieldsProps> = ({
                               className='!rounded-full'
                               onClick={() => handleDelete(index)}
                             >
-                              删除
+                              {t('agent.agentCenter.starters.delete')}
                             </Button>
                           </div>
                         </div>
@@ -154,12 +154,12 @@ const ConversationStartersFields: React.FC<ConversationStartersFieldsProps> = ({
               <Input
                 value={newDraft}
                 onChange={setNewDraft}
-                placeholder='例如：帮我起草一份本周工作汇报'
+                placeholder={t('agent.agentCenter.starters.placeholder')}
                 data-testid='agent-center-starter-new'
                 onPressEnter={handleAdd}
               />
               <Button size='small' type='primary' className='!rounded-full' onClick={handleAdd}>
-                添加
+                {t('agent.agentCenter.starters.add')}
               </Button>
               <Button
                 size='small'
@@ -170,7 +170,7 @@ const ConversationStartersFields: React.FC<ConversationStartersFieldsProps> = ({
                   setNewDraft('');
                 }}
               >
-                取消
+                {t('agent.agentCenter.starters.cancel')}
               </Button>
             </div>
           ) : null}

@@ -2,6 +2,7 @@ import { Checkbox, Empty, Typography } from '@arco-design/web-react';
 import { WorkMateInlineSearchInput } from '@renderer/components/base';
 import { DROPDOWN_SEARCH_THRESHOLD } from '@renderer/components/agent/runtimeSelectorOptions';
 import React, { useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 const { Text } = Typography;
 
@@ -37,6 +38,7 @@ const CapabilityTogglePicker: React.FC<CapabilityTogglePickerProps> = ({
   footerHint,
   testId,
 }) => {
+  const { t } = useTranslation();
   const [query, setQuery] = useState('');
   const selected = useMemo(() => new Set(value), [value]);
   const showSearch = items.length > DROPDOWN_SEARCH_THRESHOLD;
@@ -61,8 +63,9 @@ const CapabilityTogglePicker: React.FC<CapabilityTogglePickerProps> = ({
     <div className='flex flex-col gap-8px' data-testid={testId}>
       <div className='flex items-center justify-between gap-8px'>
         <Text type='secondary' className='text-12px'>
-          已选 {value.length}
-          {items.length > 0 ? ` / ${items.length}` : ''}
+          {items.length > 0
+            ? t('agent.agentCenter.picker.selectedOf', { selected: value.length, total: items.length })
+            : t('agent.agentCenter.picker.selected', { selected: value.length })}
         </Text>
         {value.length > 0 ? (
           <button
@@ -70,7 +73,7 @@ const CapabilityTogglePicker: React.FC<CapabilityTogglePickerProps> = ({
             className='text-12px text-primary-6 bg-transparent border-0 cursor-pointer p-0'
             onClick={() => onChange([])}
           >
-            清空选择
+            {t('agent.agentCenter.picker.clear')}
           </button>
         ) : null}
       </div>
