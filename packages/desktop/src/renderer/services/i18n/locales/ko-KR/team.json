@@ -59,7 +59,7 @@
     "chooseDifferentFolder": "다른 폴더 선택",
     "error": "팀 생성에 실패했습니다",
     "selectedMembers": "Selected members",
-    "teamLeader": "Team Leader",
+    "teamLeader": "팀 리더",
     "currentLeader": "Current Leader",
     "setAsLeader": "Set as Leader",
     "teammate": "Teammate",
@@ -71,7 +71,7 @@
     "allAssistantsWithCount": "All assistants ({{count}})",
     "selectedMembersWithCount": "Selected members {{count}} · ⚑ = Leader",
     "selectedMembersTitleWithCount": "Selected members {{count}}",
-    "leaderLegend": "= Leader",
+    "leaderLegend": "= 리더",
     "membersHelper": "Choose team members and assign one Leader. The same assistant can be selected multiple times.",
     "memberHint": "No suitable assistant as a member? After creation, let the Leader create temporary team members in chat."
   },

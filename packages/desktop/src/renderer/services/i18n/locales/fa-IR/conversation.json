@@ -117,7 +117,7 @@
   },
   "dropdown": {
     "presetAssistants": "دستیارهای پیش‌تنظیم",
-    "cliAgents": "ایجنت‌های CLI"
+    "cliAgents": "عامل‌های CLI"
   },
   "notFound": "مکالمه یافت نشد یا حذف شده است",
   "history": {
@@ -497,7 +497,7 @@
     "addToQueueShortcut": "⌘ + Enter / Ctrl + Enter",
     "midturnBlocked": "وقتی این عامل در حال پاسخ‌دهی است، مداخله پشتیبانی نمی‌شود. در عوض از «افزودن به جعبه پیش‌نویس» استفاده کنید.",
     "enterShortcut": "Enter",
-    "actionMode": "Choose send action",
+    "actionMode": "روش ارسال را انتخاب کنید",
     "midturnBlockedSendHint": "This agent is still working, so the message can’t be sent directly. Save it to Draft box and send it later.",
     "addToQueueBusyHint": "Save to Draft box and send it later."
   },

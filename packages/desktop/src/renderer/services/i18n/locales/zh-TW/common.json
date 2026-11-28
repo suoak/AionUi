@@ -63,7 +63,7 @@
   "more": "更多",
   "refresh": "重新整理",
   "commandPalette": {
-    "placeholder": "搜尋會話、工作項、檔案、智慧體、命令…",
+    "placeholder": "搜尋對話、任務、檔案、智慧體、命令…",
     "empty": "沒有符合的命令",
     "loading": "載入中…",
     "untitled": "未命名",
@@ -81,7 +81,20 @@
       "scheduledPaused": "排程任務 · 已暫停",
       "agent": "智慧體"
     },
-    "actionFailed": "無法執行該命令"
+    "actionFailed": "無法執行該命令",
+    "commands": {
+      "newChat": "新對話",
+      "scheduledTasks": "排程任務",
+      "batchJobs": "批次任務",
+      "createAgent": "建立智慧體",
+      "settings": "設定",
+      "governance": "治理",
+      "localKb": "本機知識庫",
+      "notifications": "通知",
+      "shortcuts": "鍵盤快速鍵",
+      "remoteHost": "遠端 Host（SSH）",
+      "extensions": "已安裝擴充功能"
+    }
   },
   "readOnly": "唯讀",
   "tray.showWindow": "顯示 CSBU WorkMate",

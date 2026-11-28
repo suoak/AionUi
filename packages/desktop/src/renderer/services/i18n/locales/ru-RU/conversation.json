@@ -507,7 +507,7 @@
     "addToQueueShortcut": "⌘ + Enter / Ctrl + Enter",
     "midturnBlocked": "Вставка сообщений не поддерживается, пока этот агент отвечает. Используйте «Добавить в черновики».",
     "enterShortcut": "Enter",
-    "actionMode": "Choose send action",
+    "actionMode": "Выберите способ отправки",
     "midturnBlockedSendHint": "This agent is still working, so the message can’t be sent directly. Save it to Draft box and send it later.",
     "addToQueueBusyHint": "Save to Draft box and send it later."
   },

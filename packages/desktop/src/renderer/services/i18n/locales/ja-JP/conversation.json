@@ -117,7 +117,7 @@
   },
   "dropdown": {
     "presetAssistants": "プリセットアシスタント",
-    "cliAgents": "CLI Agents"
+    "cliAgents": "CLI エージェント"
   },
   "notFound": "会話が存在しないか、削除されました",
   "history": {
@@ -497,7 +497,7 @@
     "addToQueueShortcut": "⌘ + Enter / Ctrl + Enter",
     "midturnBlocked": "このエージェントが応答中は割り込みができません。「下書きボックスに追加」をご利用ください。",
     "enterShortcut": "Enter",
-    "actionMode": "Choose send action",
+    "actionMode": "送信方法を選択",
     "midturnBlockedSendHint": "This agent is still working, so the message can’t be sent directly. Save it to Draft box and send it later.",
     "addToQueueBusyHint": "Save to Draft box and send it later."
   },

@@ -103,3 +103,14 @@ export const PRIMARY_BUILTIN_THEME_IDS: ReadonlySet<string> = new Set([
 export const DECORATIVE_THEME_IDS: ReadonlySet<string> = new Set(
   BUILTIN_THEMES.filter((t) => !PRIMARY_BUILTIN_THEME_IDS.has(t.id)).map((t) => t.id)
 );
+
+/**
+ * Extension-contributed themes that a built-in theme now ships by default. The
+ * Core built-in pack `workmate.theme-dusk-ember` still contributes "Dusk & Ember";
+ * since 3.0 the same palette is the built-in Ember / Dusk pair, so the gallery
+ * hides the pack's card (unless it is the active theme, so nobody loses a
+ * selection). Ids follow Core's `ext-<extension>-<theme>` format.
+ */
+export const SUPERSEDED_EXTENSION_THEME_IDS: ReadonlySet<string> = new Set([
+  'ext-workmate.theme-dusk-ember-dusk-ember',
+]);
