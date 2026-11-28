@@ -63,7 +63,7 @@
   "more": "Mais",
   "refresh": "Atualizar",
   "commandPalette": {
-    "placeholder": "Buscar sessões, itens, arquivos, agentes, comandos…",
+    "placeholder": "Buscar conversas, tarefas, arquivos, agentes, comandos…",
     "empty": "Nenhum comando correspondente",
     "loading": "Carregando…",
     "untitled": "Sem título",
@@ -81,7 +81,20 @@
       "scheduledPaused": "Agendada · pausada",
       "agent": "Agente"
     },
-    "actionFailed": "Não foi possível executar o comando"
+    "actionFailed": "Não foi possível executar o comando",
+    "commands": {
+      "newChat": "Nova conversa",
+      "scheduledTasks": "Tarefas agendadas",
+      "batchJobs": "Trabalhos em lote",
+      "createAgent": "Criar agente",
+      "settings": "Configurações",
+      "governance": "Governança",
+      "localKb": "Base de conhecimento local",
+      "notifications": "Notificações",
+      "shortcuts": "Atalhos de teclado",
+      "remoteHost": "Host remoto (SSH)",
+      "extensions": "Extensões instaladas"
+    }
   },
   "readOnly": "Somente leitura",
   "tray.showWindow": "Mostrar CSBU WorkMate",
@@ -261,7 +274,9 @@
       "autopilot": "Autopilot"
     },
     "phoneApproved": "Aprovado no celular",
-    "phoneRejected": "Rejeitado no celular"
+    "phoneRejected": "Rejeitado no celular",
+    "imApproved": "Aprovado pelo mensageiro",
+    "imRejected": "Recusado pelo mensageiro"
   },
   "extensionPanels": {
     "groupTitle": "Painéis de plugins",

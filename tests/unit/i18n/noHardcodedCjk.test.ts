@@ -8,8 +8,7 @@
  * 3.0 V10: no hard-coded Chinese/Japanese UI copy in renderer code (comments
  * excluded). The allowlist only holds data that must stay in its own script
  * (language names, speech prompts, search aliases, matchers for agent or
- * backend text) plus Agent Center pages, which are rewritten by U4; their
- * line counts are capped so they cannot grow.
+ * backend text) plus a few files whose CJK is data, not UI copy.
  */
 
 import fs from 'node:fs';
@@ -39,14 +38,6 @@ const ALLOWLIST: Record<string, { max: number; reason: string }> = {
   'pages/tasks/workItemWorktreeModel.ts': { max: 1, reason: 'matches agent evaluation comments' },
   'utils/model/agentLogo.ts': { max: 1, reason: 'matches Chinese model labels' },
   'theme/builtinThemes.ts': { max: 1, reason: 'third-party theme name' },
-  // Deferred to U4 (Agent Center rewrite); caps keep the debt from growing.
-  'pages/agent-center/AgentCenterWizardPage.tsx': { max: 83, reason: 'U4' },
-  'pages/agent-center/AgentCenterDetailPage.tsx': { max: 27, reason: 'U4' },
-  'pages/agent-center/AgentCenterListPage.tsx': { max: 22, reason: 'U4' },
-  'pages/agent-center/CapabilityDefaultsFields.tsx': { max: 12, reason: 'U4' },
-  'pages/agent-center/ConversationStartersFields.tsx': { max: 10, reason: 'U4' },
-  'pages/agent-center/mcpPolicyCopy.ts': { max: 4, reason: 'U4' },
-  'pages/agent-center/CapabilityTogglePicker.tsx': { max: 2, reason: 'U4' },
 };
 
 const stripComments = (source: string): string =>

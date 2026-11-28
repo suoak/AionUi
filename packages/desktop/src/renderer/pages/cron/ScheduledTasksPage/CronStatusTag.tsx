@@ -47,4 +47,15 @@ const CronStatusTag: React.FC<{ job: ICronJob }> = ({ job }) => {
   );
 };
 
+/** 3.0 U6: marks a job whose runs queue tasks instead of opening conversations. */
+export const CronRunAsTag: React.FC<{ job: ICronJob }> = ({ job }) => {
+  const { t } = useTranslation();
+  if (job.target.run_as !== 'task') return null;
+  return (
+    <Tag size='small' color='arcoblue' data-testid='cron-run-as-tag'>
+      {t('cron.page.form.runAs.tag')}
+    </Tag>
+  );
+};
+
 export default CronStatusTag;

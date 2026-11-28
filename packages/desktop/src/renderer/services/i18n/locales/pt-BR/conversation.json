@@ -497,7 +497,7 @@
     "addToQueueShortcut": "⌘ + Enter / Ctrl + Enter",
     "midturnBlocked": "Não é possível interromper enquanto este agente está respondendo. Use Adicionar à caixa de rascunhos.",
     "enterShortcut": "Enter",
-    "actionMode": "Choose send action",
+    "actionMode": "Escolher ação de envio",
     "midturnBlockedSendHint": "This agent is still working, so the message can’t be sent directly. Save it to Draft box and send it later.",
     "addToQueueBusyHint": "Save to Draft box and send it later."
   },
@@ -1057,7 +1057,9 @@
       "userEvidence": "Confirmado pelo usuário",
       "phoneApproved": "Aprovado no celular",
       "phoneRejected": "Rejeitado no celular",
-      "phoneApprovedExecuteHint": "Aprovado no seu celular. Execute aqui quando estiver pronto; nada começa automaticamente."
+      "phoneApprovedExecuteHint": "Começa aqui automaticamente; não é preciso executar.",
+      "imApproved": "Aprovado pelo mensageiro",
+      "imRejected": "Recusado pelo mensageiro"
     },
     "review": {
       "open": "Review",
@@ -1369,11 +1371,7 @@
       "urgent": "Urgente"
     },
     "assignee": {
-      "title": "Responsável",
       "none": "Não atribuído",
-      "idPlaceholder": "ID do responsável",
-      "save": "Atribuir",
-      "unassign": "Remover atribuição",
       "kind": {
         "user": "Usuário",
         "agent": "Agente",
@@ -1594,6 +1592,46 @@
     },
     "conversationTask": {
       "open": "Abrir esta tarefa"
+    },
+    "remote": {
+      "title": "Aprovação remota",
+      "summary": {
+        "plan": "Aprovar o plano",
+        "goal": "Aprovar a meta",
+        "adopt": "Adotar com {{strategy}} em {{target}}"
+      },
+      "where": {
+        "desktop": "este computador",
+        "phone": "seu celular",
+        "im": "mensageiro"
+      },
+      "state": {
+        "waiting": "Aguardando celular ou mensageiro · expira em {{minutes}} min ({{time}})",
+        "approvedRan": "Aprovado em {{where}} e iniciado",
+        "approvedRunning": "Aprovado em {{where}} · iniciando aqui",
+        "approvedFailed": "Aprovado em {{where}}, mas não iniciou",
+        "approvedDesktop": "Aprovado neste computador",
+        "rejected": "Recusado em {{where}}",
+        "expired": "Expirou às {{time}} · aprove aqui",
+        "invalidated": "Não é mais válido"
+      },
+      "reason": {
+        "superseded": "Uma versão mais recente a substituiu.",
+        "cancelled": "Foi cancelada.",
+        "expired": "Expirou antes de alguém responder.",
+        "diff_changed": "As alterações mudaram depois do envio, então foi anulada.",
+        "task_ended": "A tarefa terminou."
+      },
+      "commit": "Commit {{ref}}"
+    },
+    "advanced": {
+      "title": "Avançado",
+      "squad": "Passar para uma Squad",
+      "squadHint": "Uma Squad coloca vários agentes nesta tarefa em uma worktree compartilhada.",
+      "squadPlaceholder": "Escolha um modelo de Squad",
+      "assign": "Passar",
+      "unassign": "Retomar",
+      "noSquads": "Ainda não há modelos de Squad. Crie um em Agentes › Avançado › Squads."
     }
   },
   "squadRouteOnly": {

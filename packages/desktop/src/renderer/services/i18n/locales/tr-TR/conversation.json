@@ -117,7 +117,7 @@
   },
   "dropdown": {
     "presetAssistants": "Preset Assistants",
-    "cliAgents": "CLI Agents"
+    "cliAgents": "CLI ajanları"
   },
   "notFound": "Konuşma bulunamadı veya silinmiş",
   "history": {
@@ -486,7 +486,7 @@
     "addToQueueShortcut": "⌘ + Enter / Ctrl + Enter",
     "midturnBlocked": "Bu aracı yanıt verirken araya girmek desteklenmiyor. Bunun yerine Taslak kutusuna ekle'yi kullanın.",
     "enterShortcut": "Enter",
-    "actionMode": "Choose send action",
+    "actionMode": "Gönderme eylemini seçin",
     "midturnBlockedSendHint": "This agent is still working, so the message can’t be sent directly. Save it to Draft box and send it later.",
     "addToQueueBusyHint": "Save to Draft box and send it later."
   },
@@ -1057,7 +1057,9 @@
       "userEvidence": "Kullanıcı tarafından onaylandı",
       "phoneApproved": "Telefonda onaylandı",
       "phoneRejected": "Telefonda reddedildi",
-      "phoneApprovedExecuteHint": "Telefonunuzda onaylandı. Hazır olduğunuzda burada çalıştırın; hiçbir şey otomatik başlamaz."
+      "phoneApprovedExecuteHint": "Burada otomatik olarak başlar; çalıştırmanız gerekmez.",
+      "imApproved": "Mesajlaşmada onaylandı",
+      "imRejected": "Mesajlaşmada reddedildi"
     },
     "review": {
       "open": "Review",
@@ -1369,11 +1371,7 @@
       "urgent": "Acil"
     },
     "assignee": {
-      "title": "Atanan",
       "none": "Atanmadı",
-      "idPlaceholder": "Atanan kimliği",
-      "save": "Ata",
-      "unassign": "Atamayı kaldır",
       "kind": {
         "user": "Kullanıcı",
         "agent": "Ajan",
@@ -1594,6 +1592,46 @@
     },
     "conversationTask": {
       "open": "Bu görevi aç"
+    },
+    "remote": {
+      "title": "Uzaktan onay",
+      "summary": {
+        "plan": "Planı onayla",
+        "goal": "Hedefi onayla",
+        "adopt": "{{strategy}} ile {{target}} dalına al"
+      },
+      "where": {
+        "desktop": "bu masaüstü",
+        "phone": "telefonunuz",
+        "im": "mesajlaşma"
+      },
+      "state": {
+        "waiting": "Telefon veya mesajlaşma onayı bekleniyor · {{minutes}} dk sonra sona erer ({{time}})",
+        "approvedRan": "{{where}} üzerinden onaylandı ve başlatıldı",
+        "approvedRunning": "{{where}} üzerinden onaylandı · burada başlatılıyor",
+        "approvedFailed": "{{where}} üzerinden onaylandı ancak başlatılamadı",
+        "approvedDesktop": "Bu masaüstünde onaylandı",
+        "rejected": "{{where}} üzerinden reddedildi",
+        "expired": "{{time}} itibarıyla süresi doldu · burada onaylayın",
+        "invalidated": "Artık geçerli değil"
+      },
+      "reason": {
+        "superseded": "Daha yeni bir sürüm yerini aldı.",
+        "cancelled": "İptal edildi.",
+        "expired": "Kimse yanıtlamadan süresi doldu.",
+        "diff_changed": "Gönderildikten sonra değişiklikler değişti, bu yüzden geçersiz sayıldı.",
+        "task_ended": "Görev sona erdi."
+      },
+      "commit": "Commit {{ref}}"
+    },
+    "advanced": {
+      "title": "Gelişmiş",
+      "squad": "Bir Squad’a devret",
+      "squadHint": "Bir Squad, bu görevde birden çok ajanı tek bir ortak çalışma ağacında çalıştırır.",
+      "squadPlaceholder": "Bir Squad şablonu seçin",
+      "assign": "Devret",
+      "unassign": "Geri al",
+      "noSquads": "Henüz Squad şablonu yok. Ajanlar › Gelişmiş › Squads altında oluşturun."
     }
   },
   "squadRouteOnly": {

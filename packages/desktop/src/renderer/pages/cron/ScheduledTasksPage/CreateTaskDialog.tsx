@@ -12,7 +12,7 @@ import ThemedLogo from '@renderer/components/agent/ThemedLogo';
 import { Down, Robot } from '@icon-park/react';
 import { ipcBridge } from '@/common';
 import { resolveLocaleKey } from '@/common/utils';
-import type { ICreateCronJobParams, ICronJob, ICronJobUpdateParams } from '@/common/adapter/ipcBridge';
+import type { CronRunAs, ICreateCronJobParams, ICronJob, ICronJobUpdateParams } from '@/common/adapter/ipcBridge';
 import { useConversationAssistants } from '@renderer/pages/conversation/hooks/useConversationAssistants';
 import dayjs from 'dayjs';
 import type { TChatConversation, TProviderWithModel } from '@/common/config/storage';
@@ -39,6 +39,7 @@ import {
   isAutopilotBlockedMode,
   type AutopilotFormState,
 } from './autopilot';
+import { cronRunAsFields, isAbsoluteRepoPath, runAsFromJob } from './cronRunAs';
 
 const FormItem = Form.Item;
 const TextArea = Input.TextArea;
@@ -265,6 +266,10 @@ const CreateTaskDialog: React.FC<CreateTaskDialogProps> = ({
   const [execution_mode, setExecutionMode] = useState<ExecutionMode>('new_conversation');
   const [queueEnabled, setQueueEnabled] = useState(false);
   const [autopilot, setAutopilot] = useState<AutopilotFormState>(AUTOPILOT_OFF);
+  // 3.0 U6: each run opens a conversation or queues a task on the board.
+  const [runAs, setRunAs] = useState<CronRunAs>('conversation');
+  const [taskStart, setTaskStart] = useState(false);
+  const [taskRepo, setTaskRepo] = useState('');
   const [advancedOpen, setAdvancedOpen] = useState(false);
   const [teamOwnershipStatus, setTeamOwnershipStatus] = useState<'checking' | 'team' | 'standalone'>('standalone');
 
@@ -291,6 +296,9 @@ const CreateTaskDialog: React.FC<CreateTaskDialogProps> = ({
       setExecutionMode(editJob.target.execution_mode || 'existing');
       setQueueEnabled(editJob.state.queue_enabled);
       setAutopilot(autopilotStateFromJob(editJob));
+      setRunAs(runAsFromJob(editJob));
+      setTaskStart(editJob.target.task?.start ?? false);
+      setTaskRepo(editJob.target.task?.repo_path ?? '');
       setSelectedAssistantId(agentKey);
       setAdvancedOpen(
         Boolean(
@@ -319,6 +327,9 @@ const CreateTaskDialog: React.FC<CreateTaskDialogProps> = ({
       setExecutionMode('new_conversation');
       setQueueEnabled(false);
       setAutopilot(AUTOPILOT_OFF);
+      setRunAs('conversation');
+      setTaskStart(false);
+      setTaskRepo('');
       setAdvancedOpen(false);
       setModelId(undefined);
       setSelectedAionrsProviderId(undefined);
@@ -513,6 +524,9 @@ const CreateTaskDialog: React.FC<CreateTaskDialogProps> = ({
   const isCheckingTeamOwnership = teamOwnershipStatus === 'checking';
   const isTeamOwnedTask = teamOwnershipStatus === 'team';
   const isExecutionModeLocked = isCheckingTeamOwnership || isTeamOwnedTask;
+  // A job bound to an existing (or team) conversation keeps running there.
+  const isRunAsLocked = isExecutionModeLocked || isOriginalExistingConversationTask;
+  const queuesTask = runAs === 'task' && !isRunAsLocked;
   const canEditAgentConfig =
     !isExecutionModeLocked && !isOriginalExistingConversationTask && (!isEditMode || execution_mode !== 'existing');
 
@@ -557,7 +571,20 @@ const CreateTaskDialog: React.FC<CreateTaskDialogProps> = ({
       const scheduleDesc = scheduleInfo.description;
       const schedule = createCronSchedule(scheduleExpr, scheduleDesc);
       const assistantValue = typeof values.assistant === 'string' ? values.assistant : selectedAssistantId;
-      const resolvedExecutionMode: ExecutionMode = isTeamOwnedTask ? 'existing' : execution_mode;
+      const resolvedExecutionMode: ExecutionMode = isTeamOwnedTask
+        ? 'existing'
+        : queuesTask
+          ? 'new_conversation'
+          : execution_mode;
+      if (queuesTask && taskRepo.trim() && !isAbsoluteRepoPath(taskRepo.trim())) {
+        Message.error(t('cron.page.form.runAsTask.repoAbsolute'));
+        return;
+      }
+      const runAsFields = cronRunAsFields(
+        queuesTask ? 'task' : 'conversation',
+        { start: taskStart, repoPath: taskRepo },
+        isEditMode ? runAsFromJob(editJob) : null
+      );
 
       let agent_config: ICreateCronJobParams['agent_config'] | ICronJobUpdateParams['metadata']['agent_config'];
       if (canEditAgentConfig) {
@@ -583,7 +610,7 @@ const CreateTaskDialog: React.FC<CreateTaskDialogProps> = ({
       }
 
       const submitMode = agent_config?.mode ?? editJob?.metadata.agent_config?.mode;
-      if (autopilot.enabled && isAutopilotBlockedMode(submitMode)) {
+      if (!queuesTask && autopilot.enabled && isAutopilotBlockedMode(submitMode)) {
         Message.error(t('cron.autopilot.error.modeBlocked'));
         return;
       }
@@ -596,7 +623,8 @@ const CreateTaskDialog: React.FC<CreateTaskDialogProps> = ({
           metadata.agent_config = agent_config;
         }
 
-        const autopilotFields = autopilotUpdateFields(autopilot, editJob!);
+        // A scheduled task always stops at review: Autopilot does not apply.
+        const autopilotFields = queuesTask ? {} : autopilotUpdateFields(autopilot, editJob!);
         touchesAutopilot = Object.keys(autopilotFields).length > 0 || autopilot.enabled;
 
         // Edit mode: update existing job
@@ -610,9 +638,10 @@ const CreateTaskDialog: React.FC<CreateTaskDialogProps> = ({
           metadata,
           state: {
             max_retries: editJob!.state.max_retries,
-            queue_enabled: queueEnabled,
+            queue_enabled: queuesTask ? false : queueEnabled,
             ...autopilotFields,
           },
+          ...runAsFields,
         };
 
         await ipcBridge.cron.updateJob.invoke({
@@ -630,11 +659,12 @@ const CreateTaskDialog: React.FC<CreateTaskDialogProps> = ({
           conversation_title,
           created_by: 'user',
           execution_mode: resolvedExecutionMode,
-          queue_enabled: queueEnabled,
+          queue_enabled: queuesTask ? false : queueEnabled,
           agent_config,
-          ...autopilotCreateFields(autopilot),
+          ...(queuesTask ? {} : autopilotCreateFields(autopilot)),
+          ...runAsFields,
         };
-        touchesAutopilot = autopilot.enabled;
+        touchesAutopilot = !queuesTask && autopilot.enabled;
         await ipcBridge.cron.addJob.invoke(params);
         Message.success(t('cron.page.createSuccess'));
       }
@@ -736,34 +766,88 @@ const CreateTaskDialog: React.FC<CreateTaskDialogProps> = ({
             )}
           </FormItem>
 
-          <FormItem label={t('cron.page.form.executionMode')}>
+          <FormItem label={t('cron.page.form.runAs.label')}>
             <Radio.Group
-              value={execution_mode}
-              disabled={isExecutionModeLocked}
-              onChange={(value) => setExecutionMode(value as ExecutionMode)}
+              data-testid='cron-run-as'
+              value={queuesTask ? 'task' : 'conversation'}
+              disabled={isRunAsLocked}
+              onChange={(value) => setRunAs(value as CronRunAs)}
               className='flex flex-wrap items-center gap-20px'
             >
-              {executionModeOptions.map((option) => {
-                return (
-                  <Radio
-                    key={option.value}
-                    value={option.value}
-                    className={`m-0 min-w-0 text-14px text-t-secondary ${isExecutionModeLocked ? 'cursor-not-allowed' : 'cursor-pointer'}`}
-                  >
-                    <span className='ps-4px text-14px font-medium text-t-primary'>{option.label}</span>
-                  </Radio>
-                );
-              })}
+              <Radio value='conversation' className='m-0'>
+                <span className='ps-4px text-14px font-medium text-t-primary'>
+                  {t('cron.page.form.runAs.conversation')}
+                </span>
+              </Radio>
+              <Radio value='task' className='m-0' data-testid='cron-run-as-task'>
+                <span className='ps-4px text-14px font-medium text-t-primary'>{t('cron.page.form.runAs.task')}</span>
+              </Radio>
             </Radio.Group>
-            <div className='mt-10px rounded-12px border border-solid border-[var(--color-border-2)] bg-fill-2 px-14px py-12px'>
-              <p className='m-0 text-12px leading-18px text-t-primary'>{selectedExecutionModeOption.description}</p>
-            </div>
-            {isTeamOwnedTask && (
-              <p className='mb-0 mt-8px text-12px leading-18px text-t-secondary'>
-                {t('cron.page.form.teamTaskExecutionModeLockedReason')}
-              </p>
-            )}
+            <p className='mb-0 mt-8px text-12px leading-18px text-t-secondary'>
+              {queuesTask ? t('cron.page.form.runAs.taskHint') : t('cron.page.form.runAs.conversationHint')}
+            </p>
           </FormItem>
+
+          {queuesTask ? (
+            <div
+              className='mb-20px flex flex-col gap-12px rounded-12px border border-solid border-[var(--color-border-2)] px-14px py-12px'
+              data-testid='cron-task-options'
+            >
+              <div className='flex items-start justify-between gap-16px'>
+                <div className='min-w-0'>
+                  <p className='m-0 text-14px font-medium text-t-primary'>{t('cron.page.form.runAsTask.start')}</p>
+                  <p className='mb-0 mt-4px text-12px leading-18px text-t-secondary'>
+                    {t('cron.page.form.runAsTask.startHint')}
+                  </p>
+                </div>
+                <Switch checked={taskStart} onChange={setTaskStart} data-testid='cron-task-start' />
+              </div>
+              <div>
+                <p className='m-0 mb-6px text-14px font-medium text-t-primary'>{t('cron.page.form.runAsTask.repo')}</p>
+                <Input
+                  value={taskRepo}
+                  onChange={setTaskRepo}
+                  allowClear
+                  placeholder={t('cron.page.form.runAsTask.repoPlaceholder')}
+                  data-testid='cron-task-repo'
+                />
+                <p className='mb-0 mt-4px text-12px leading-18px text-t-secondary'>
+                  {t('cron.page.form.runAsTask.repoHint')}
+                </p>
+              </div>
+            </div>
+          ) : null}
+
+          {queuesTask ? null : (
+            <FormItem label={t('cron.page.form.executionMode')}>
+              <Radio.Group
+                value={execution_mode}
+                disabled={isExecutionModeLocked}
+                onChange={(value) => setExecutionMode(value as ExecutionMode)}
+                className='flex flex-wrap items-center gap-20px'
+              >
+                {executionModeOptions.map((option) => {
+                  return (
+                    <Radio
+                      key={option.value}
+                      value={option.value}
+                      className={`m-0 min-w-0 text-14px text-t-secondary ${isExecutionModeLocked ? 'cursor-not-allowed' : 'cursor-pointer'}`}
+                    >
+                      <span className='ps-4px text-14px font-medium text-t-primary'>{option.label}</span>
+                    </Radio>
+                  );
+                })}
+              </Radio.Group>
+              <div className='mt-10px rounded-12px border border-solid border-[var(--color-border-2)] bg-fill-2 px-14px py-12px'>
+                <p className='m-0 text-12px leading-18px text-t-primary'>{selectedExecutionModeOption.description}</p>
+              </div>
+              {isTeamOwnedTask && (
+                <p className='mb-0 mt-8px text-12px leading-18px text-t-secondary'>
+                  {t('cron.page.form.teamTaskExecutionModeLockedReason')}
+                </p>
+              )}
+            </FormItem>
+          )}
 
           <FormItem
             label={t('cron.page.form.prompt')}
@@ -773,20 +857,24 @@ const CreateTaskDialog: React.FC<CreateTaskDialogProps> = ({
             <TextArea placeholder={t('cron.page.form.promptPlaceholder')} autoSize={{ minRows: 3, maxRows: 8 }} />
           </FormItem>
 
-          <div className='mb-20px flex items-start justify-between gap-16px rounded-12px border border-solid border-[var(--color-border-2)] px-14px py-12px'>
-            <div className='min-w-0'>
-              <p className='m-0 text-14px font-medium text-t-primary'>{t('cron.page.form.queue')}</p>
-              <p className='mb-0 mt-4px text-12px leading-18px text-t-secondary'>{t('cron.page.form.queueHint')}</p>
+          {queuesTask ? null : (
+            <div className='mb-20px flex items-start justify-between gap-16px rounded-12px border border-solid border-[var(--color-border-2)] px-14px py-12px'>
+              <div className='min-w-0'>
+                <p className='m-0 text-14px font-medium text-t-primary'>{t('cron.page.form.queue')}</p>
+                <p className='mb-0 mt-4px text-12px leading-18px text-t-secondary'>{t('cron.page.form.queueHint')}</p>
+              </div>
+              <Switch checked={queueEnabled} onChange={setQueueEnabled} />
             </div>
-            <Switch checked={queueEnabled} onChange={setQueueEnabled} />
-          </div>
+          )}
 
-          <AutopilotSection
-            value={autopilot}
-            onChange={setAutopilot}
-            mode={effectiveAgentMode}
-            fullAutoAllowed={canUseFullAuto(editJob)}
-          />
+          {queuesTask ? null : (
+            <AutopilotSection
+              value={autopilot}
+              onChange={setAutopilot}
+              mode={effectiveAgentMode}
+              fullAutoAllowed={canUseFullAuto(editJob)}
+            />
+          )}
 
           {/* Frequency */}
           <FormItem label={t('cron.page.form.frequency')}>

@@ -62,7 +62,7 @@
   "more": "Mehr",
   "refresh": "Aktualisieren",
   "commandPalette": {
-    "placeholder": "Sitzungen, Arbeitselemente, Dateien, Agenten, Befehle durchsuchen…",
+    "placeholder": "Unterhaltungen, Aufgaben, Dateien, Agenten, Befehle durchsuchen…",
     "empty": "Keine passenden Befehle",
     "loading": "Wird geladen…",
     "untitled": "Ohne Titel",
@@ -80,7 +80,20 @@
       "scheduledPaused": "Geplant · pausiert",
       "agent": "Agent"
     },
-    "actionFailed": "Befehl konnte nicht ausgeführt werden"
+    "actionFailed": "Befehl konnte nicht ausgeführt werden",
+    "commands": {
+      "newChat": "Neue Unterhaltung",
+      "scheduledTasks": "Geplante Aufgaben",
+      "batchJobs": "Stapelaufträge",
+      "createAgent": "Agent erstellen",
+      "settings": "Einstellungen",
+      "governance": "Governance",
+      "localKb": "Lokale Wissensdatenbank",
+      "notifications": "Benachrichtigungen",
+      "shortcuts": "Tastenkürzel",
+      "remoteHost": "Remote-Host (SSH)",
+      "extensions": "Installierte Erweiterungen"
+    }
   },
   "readOnly": "Schreibgeschützt",
   "tray.showWindow": "CSBU WorkMate anzeigen",
@@ -261,7 +274,9 @@
       "autopilot": "Autopilot"
     },
     "phoneApproved": "Auf dem Smartphone genehmigt",
-    "phoneRejected": "Auf dem Smartphone abgelehnt"
+    "phoneRejected": "Auf dem Smartphone abgelehnt",
+    "imApproved": "Per IM freigegeben",
+    "imRejected": "Per IM abgelehnt"
   },
   "primaryNav": {
     "sessions": "Sitzungen",

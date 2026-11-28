@@ -63,7 +63,7 @@
   "more": "Більше",
   "refresh": "Оновити",
   "commandPalette": {
-    "placeholder": "Пошук сесій, завдань, файлів, агентів, команд…",
+    "placeholder": "Пошук розмов, завдань, файлів, агентів, команд…",
     "empty": "Немає відповідних команд",
     "loading": "Завантаження…",
     "untitled": "Без назви",
@@ -81,7 +81,20 @@
       "scheduledPaused": "Заплановано · призупинено",
       "agent": "Агент"
     },
-    "actionFailed": "Не вдалося виконати команду"
+    "actionFailed": "Не вдалося виконати команду",
+    "commands": {
+      "newChat": "Нова розмова",
+      "scheduledTasks": "Заплановані завдання",
+      "batchJobs": "Пакетні завдання",
+      "createAgent": "Створити агента",
+      "settings": "Налаштування",
+      "governance": "Керування доступом",
+      "localKb": "Локальна база знань",
+      "notifications": "Сповіщення",
+      "shortcuts": "Комбінації клавіш",
+      "remoteHost": "Віддалений хост (SSH)",
+      "extensions": "Встановлені розширення"
+    }
   },
   "readOnly": "Лише читання",
   "tray.showWindow": "Показати CSBU WorkMate",
@@ -263,7 +276,9 @@
       "autopilot": "Autopilot"
     },
     "phoneApproved": "Схвалено на телефоні",
-    "phoneRejected": "Відхилено на телефоні"
+    "phoneRejected": "Відхилено на телефоні",
+    "imApproved": "Схвалено в месенджері",
+    "imRejected": "Відхилено в месенджері"
   },
   "extensionPanels": {
     "groupTitle": "Панелі плагінів",

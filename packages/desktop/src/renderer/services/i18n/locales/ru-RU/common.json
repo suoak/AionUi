@@ -62,7 +62,7 @@
   "more": "Ещё",
   "refresh": "Обновить",
   "commandPalette": {
-    "placeholder": "Поиск сессий, задач, файлов, агентов, команд…",
+    "placeholder": "Поиск диалогов, задач, файлов, агентов, команд…",
     "empty": "Нет подходящих команд",
     "loading": "Загрузка…",
     "untitled": "Без названия",
@@ -80,7 +80,20 @@
       "scheduledPaused": "Запланировано · приостановлено",
       "agent": "Агент"
     },
-    "actionFailed": "Не удалось выполнить команду"
+    "actionFailed": "Не удалось выполнить команду",
+    "commands": {
+      "newChat": "Новый диалог",
+      "scheduledTasks": "Запланированные задачи",
+      "batchJobs": "Пакетные задания",
+      "createAgent": "Создать агента",
+      "settings": "Настройки",
+      "governance": "Управление доступом",
+      "localKb": "Локальная база знаний",
+      "notifications": "Уведомления",
+      "shortcuts": "Сочетания клавиш",
+      "remoteHost": "Удалённый хост (SSH)",
+      "extensions": "Установленные расширения"
+    }
   },
   "readOnly": "Только чтение",
   "tray.showWindow": "Показать CSBU WorkMate",
@@ -263,7 +276,9 @@
       "autopilot": "Autopilot"
     },
     "phoneApproved": "Одобрено на телефоне",
-    "phoneRejected": "Отклонено на телефоне"
+    "phoneRejected": "Отклонено на телефоне",
+    "imApproved": "Одобрено в мессенджере",
+    "imRejected": "Отклонено в мессенджере"
   },
   "extensionPanels": {
     "groupTitle": "Панели плагинов",

@@ -395,7 +395,7 @@
   "tools": "Araçlar",
   "assistantModels": "Mevcut Modeller",
   "webui.enableDesc": "Tarayıcı erişimine izin vermek için web servisini başlat",
-  "assistantSkillsHint": "List preferred tools/skills for the assistant.",
+  "assistantSkillsHint": "Asistanın tercih ettiği araçları/becerileri listeleyin.",
   "assistantNoPermissionModes": "Bu ana ajanda değiştirilebilir izin modu yok.",
   "speechToTextSourceDeepgram": "Deepgram (Resmî)",
   "mcpSyncError": "MCP yapılandırma senkronizasyonu hatası",
@@ -1457,7 +1457,7 @@
   "assistant.disableFailed": "Eklenti devre dışı bırakılamadı",
   "mcpInlineCommandHint": "Bu makinede {{command}} bulunmuyor. Kurup tekrar test edin.",
   "customEmptyCreate": "Sohbetle oluştur",
-  "assistantRulesHint": "Define additional rules for assistant behavior.",
+  "assistantRulesHint": "Asistan davranışı için ek kurallar tanımlayın.",
   "mcpErrorRpc": "The MCP server returned an RPC error while handling {{method}}.",
   "bugReportModuleChatDescription": "Mesaj gönderme, Agent yanıtları, bağlam işleme, komut kuyruğu veya sohbet içi davranışlarla ilgili sorunlar içindir.",
   "assistant.disconnected": "Bağlantı Kesildi",
@@ -1714,7 +1714,7 @@
     "title": "Mobil cihazlar",
     "description": "Onay isteklerini almak ve masanızdan uzaktayken planları ve hedefleri onaylamak ya da reddetmek için telefonunuzu eşleştirin.",
     "count": "{{count}}/{{max}} cihaz",
-    "approvalNote": "Telefonda onaylamak yalnızca kararı kaydeder. Onaylanan plan yine burada, masaüstünde çalıştırılır.",
+    "approvalNote": "Telefonda veya bağlı bir mesajlaşma hesabında onaylamak, onaylanan planı ya da alımı burada hemen çalıştırır. Her istek gördüğünüz içeriğe bağlıdır, bir kez kullanılır ve süresi dolar.",
     "limitReached": "En fazla {{max}} cihaz eşleştirdiniz. Yeni bir cihaz eşleştirmeden önce birini iptal edin.",
     "empty": "Henüz eşleştirilmiş cihaz yok",
     "unnamed": "Adsız cihaz",
@@ -1787,6 +1787,19 @@
       "revoke": "Cihaz iptal edilemedi",
       "push": "Bildirim ayarı kaydedilemedi",
       "reject": "Eşleştirme isteği reddedilemedi"
+    },
+    "remote": {
+      "title": "Uzaktan onay",
+      "description": "Telefonlar ve bağlı mesajlaşma hesapları planları, hedefleri ve alımları onaylayabilir; onay burada hemen çalışır.",
+      "ttl": "Bir istek geçerli kalır",
+      "minutes": "dk",
+      "save": "Kaydet",
+      "approvers": "Onaylayabilen mesajlaşma hesapları",
+      "noApprovers": "Henüz yok. Yalnızca telefonlar onaylayabilir.",
+      "remove": "Kaldır",
+      "pick": "Eşleştirilmiş bir mesajlaşma hesabı seçin",
+      "add": "Ekle",
+      "failed": "Değişiklik kaydedilemedi."
     }
   },
   "governance": {

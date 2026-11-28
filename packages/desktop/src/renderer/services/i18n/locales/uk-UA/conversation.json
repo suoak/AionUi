@@ -119,7 +119,7 @@
   },
   "dropdown": {
     "presetAssistants": "Встановлені асистенти",
-    "cliAgents": "CLI Агенти"
+    "cliAgents": "CLI-агенти"
   },
   "notFound": "Розмову не знайдено або її видалено",
   "history": {
@@ -507,7 +507,7 @@
     "addToQueueShortcut": "⌘ + Enter / Ctrl + Enter",
     "midturnBlocked": "Втручання не підтримується, поки цей агент відповідає. Використайте «Додати до чернеток».",
     "enterShortcut": "Enter",
-    "actionMode": "Choose send action",
+    "actionMode": "Виберіть спосіб надсилання",
     "midturnBlockedSendHint": "This agent is still working, so the message can’t be sent directly. Save it to Draft box and send it later.",
     "addToQueueBusyHint": "Save to Draft box and send it later."
   },
@@ -1075,7 +1075,9 @@
       "userEvidence": "Підтверджено користувачем",
       "phoneApproved": "Схвалено на телефоні",
       "phoneRejected": "Відхилено на телефоні",
-      "phoneApprovedExecuteHint": "Схвалено на вашому телефоні. Запустіть тут, коли будете готові; нічого не почнеться автоматично."
+      "phoneApprovedExecuteHint": "Запуск тут відбудеться автоматично, вручну запускати не потрібно.",
+      "imApproved": "Схвалено в месенджері",
+      "imRejected": "Відхилено в месенджері"
     },
     "review": {
       "open": "Review",
@@ -1387,11 +1389,7 @@
       "urgent": "Терміновий"
     },
     "assignee": {
-      "title": "Виконавець",
       "none": "Не призначено",
-      "idPlaceholder": "ID виконавця",
-      "save": "Призначити",
-      "unassign": "Зняти призначення",
       "kind": {
         "user": "Користувач",
         "agent": "Агент",
@@ -1614,6 +1612,46 @@
     },
     "conversationTask": {
       "open": "Відкрити це завдання"
+    },
+    "remote": {
+      "title": "Віддалене схвалення",
+      "summary": {
+        "plan": "Схвалити план",
+        "goal": "Схвалити мету",
+        "adopt": "Прийняти ({{strategy}}) у {{target}}"
+      },
+      "where": {
+        "desktop": "цьому комп’ютері",
+        "phone": "телефоні",
+        "im": "месенджері"
+      },
+      "state": {
+        "waiting": "Чекає відповіді з телефона або месенджера · спливає через {{minutes}} хв ({{time}})",
+        "approvedRan": "Схвалено в {{where}} і запущено",
+        "approvedRunning": "Схвалено в {{where}} · запускається тут",
+        "approvedFailed": "Схвалено в {{where}}, але запуск не вдався",
+        "approvedDesktop": "Схвалено на цьому комп’ютері",
+        "rejected": "Відхилено в {{where}}",
+        "expired": "Сплило о {{time}} · схваліть тут",
+        "invalidated": "Більше не чинне"
+      },
+      "reason": {
+        "superseded": "Її замінила новіша версія.",
+        "cancelled": "Скасовано.",
+        "expired": "Сплило до відповіді.",
+        "diff_changed": "Зміни зрушилися після надсилання, тому запит анульовано.",
+        "task_ended": "Завдання завершено."
+      },
+      "commit": "Коміт {{ref}}"
+    },
+    "advanced": {
+      "title": "Додатково",
+      "squad": "Передати Squad",
+      "squadHint": "Squad запускає кількох агентів над цим завданням в одному спільному worktree.",
+      "squadPlaceholder": "Виберіть шаблон Squad",
+      "assign": "Передати",
+      "unassign": "Забрати",
+      "noSquads": "Шаблонів Squad поки немає. Створіть його в розділі Агенти › Додатково › Squads."
     }
   },
   "squadRouteOnly": {

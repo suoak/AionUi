@@ -26,7 +26,7 @@ import {
   SYSTEM_SENTINEL_THEME_IDS,
   SYSTEM_THEME_ID,
 } from '@/common/theme/constants';
-import { DECORATIVE_THEME_IDS } from '@renderer/theme/builtinThemes';
+import { DECORATIVE_THEME_IDS, SUPERSEDED_EXTENSION_THEME_IDS } from '@renderer/theme/builtinThemes';
 
 interface ThemePreviewPalette {
   appBg: string;
@@ -289,6 +289,7 @@ const CssThemeSettings: React.FC = () => {
     const primary: Theme[] = [];
     const decorative: Theme[] = [];
     for (const theme of themes) {
+      if (SUPERSEDED_EXTENSION_THEME_IDS.has(theme.id) && theme.id !== activeThemeId) continue;
       (DECORATIVE_THEME_IDS.has(theme.id) ? decorative : primary).push(theme);
     }
     const insertAfter = (afterId: string, card: Theme) => {
@@ -298,7 +299,7 @@ const CssThemeSettings: React.FC = () => {
     insertAfter(DARK_THEME_ID, sentinel(SYSTEM_THEME_ID, t('settings.cssTheme.followSystem')));
     insertAfter(CLASSIC_DARK_THEME_ID, sentinel(CLASSIC_SYSTEM_THEME_ID, t('settings.cssTheme.classicFollowSystem')));
     return { primaryThemes: primary, decorativeThemes: decorative };
-  }, [themes, t]);
+  }, [themes, t, activeThemeId]);
 
   const themeDisplayName = useCallback(
     (theme: Theme) => (BUILTIN_THEME_NAME_KEYS[theme.id] ? t(BUILTIN_THEME_NAME_KEYS[theme.id]) : theme.name),

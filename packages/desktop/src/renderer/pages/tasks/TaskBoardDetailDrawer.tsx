@@ -12,7 +12,8 @@ import classNames from 'classnames';
 import { ipcBridge } from '@/common';
 import type { TaskBoardItem, TaskBoardStatus, TaskSession } from '@/common/types/agent/taskSession';
 import type { WorktreeInfo } from '@/common/types/worktree';
-import TaskBoardAssigneeEditor from './TaskBoardAssigneeEditor';
+import TaskDetailAdvanced from './TaskDetailAdvanced';
+import TaskSquadPicker from './TaskSquadPicker';
 import TaskBoardSquadStart from './TaskBoardSquadStart';
 import TaskBoardTimeline from './TaskBoardTimeline';
 import TaskBoardWorktreePanel from './TaskBoardWorktreePanel';
@@ -22,6 +23,8 @@ import { canStartSquadForItem } from './workItemWorktreeModel';
 import TaskReviewTab from './TaskReviewTab';
 import { laneForItem, needsYouReasonForItem, planProgress } from './laneModel';
 import { parseDelivery, type TaskDetailTab } from './taskDetailModel';
+import RemoteApprovalCard from './RemoteApprovalCard';
+import { useRemoteApprovalRequests } from './useRemoteApprovalRequests';
 
 const PRIORITY_KEYS = ['none', 'low', 'medium', 'high', 'urgent'] as const;
 
@@ -86,6 +89,7 @@ const TaskBoardDetailDrawer: React.FC<TaskBoardDetailDrawerProps> = ({
   const taskId = task?.id ?? null;
   const [session, setSession] = useState<TaskSession | null>(null);
   const [tab, setTab] = useState<TaskDetailTab>(() => initialTab(task));
+  const { requests: remoteRequests } = useRemoteApprovalRequests(taskId);
 
   useEffect(() => {
     setTab(initialTab(task));
@@ -236,6 +240,7 @@ const TaskBoardDetailDrawer: React.FC<TaskBoardDetailDrawerProps> = ({
 
   const overview = (
     <div className='flex flex-col gap-16px'>
+      <RemoteApprovalCard requests={remoteRequests} />
       {interactive && moveTargets.length > 0 ? (
         <section className='flex flex-col gap-6px'>
           <div className='text-13px font-medium text-t-primary'>{t('conversation.taskBoard.move.title')}</div>
@@ -288,14 +293,16 @@ const TaskBoardDetailDrawer: React.FC<TaskBoardDetailDrawerProps> = ({
       {task.assignee?.kind === 'squad' && task.assignee.id ? (
         <SquadRunPanel templateId={task.assignee.id} onOpenConversation={onOpenConversation} />
       ) : null}
-      {interactive && canStartSquadForItem(task) ? (
-        <TaskBoardSquadStart item={task} hasWorktree={Boolean(worktree)} onStarted={() => onSquadStarted?.()} />
-      ) : null}
       {worktree ? (
         <TaskBoardWorktreePanel worktree={worktree} boardStatus={task.board_status} refreshKey={refreshKey} />
       ) : null}
       {interactive ? (
-        <TaskBoardAssigneeEditor item={task} onUpdated={(item) => onItemUpdated?.(item)} onStale={() => onStale?.()} />
+        <TaskDetailAdvanced taskId={task.id} defaultOpen={task.assignee?.kind === 'squad'}>
+          <TaskSquadPicker item={task} onUpdated={(item) => onItemUpdated?.(item)} onStale={() => onStale?.()} />
+          {canStartSquadForItem(task) ? (
+            <TaskBoardSquadStart item={task} hasWorktree={Boolean(worktree)} onStarted={() => onSquadStarted?.()} />
+          ) : null}
+        </TaskDetailAdvanced>
       ) : null}
     </div>
   );

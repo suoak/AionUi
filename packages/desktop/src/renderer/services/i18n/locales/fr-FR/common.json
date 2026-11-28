@@ -63,7 +63,7 @@
   "more": "Plus",
   "refresh": "Actualiser",
   "commandPalette": {
-    "placeholder": "Rechercher sessions, éléments, fichiers, agents, commandes…",
+    "placeholder": "Rechercher conversations, tâches, fichiers, agents, commandes…",
     "empty": "Aucune commande correspondante",
     "loading": "Chargement…",
     "untitled": "Sans titre",
@@ -81,7 +81,20 @@
       "scheduledPaused": "Planifiée · en pause",
       "agent": "Agent"
     },
-    "actionFailed": "Impossible d’exécuter cette commande"
+    "actionFailed": "Impossible d’exécuter cette commande",
+    "commands": {
+      "newChat": "Nouvelle conversation",
+      "scheduledTasks": "Tâches planifiées",
+      "batchJobs": "Traitements par lots",
+      "createAgent": "Créer un agent",
+      "settings": "Paramètres",
+      "governance": "Gouvernance",
+      "localKb": "Base de connaissances locale",
+      "notifications": "Notifications",
+      "shortcuts": "Raccourcis clavier",
+      "remoteHost": "Hôte distant (SSH)",
+      "extensions": "Extensions installées"
+    }
   },
   "readOnly": "Lecture seule",
   "tray.showWindow": "Afficher CSBU WorkMate",
@@ -261,7 +274,9 @@
       "autopilot": "Autopilot"
     },
     "phoneApproved": "Approuvé sur le téléphone",
-    "phoneRejected": "Refusé sur le téléphone"
+    "phoneRejected": "Refusé sur le téléphone",
+    "imApproved": "Approuvé par messagerie",
+    "imRejected": "Refusé par messagerie"
   },
   "extensionPanels": {
     "groupTitle": "Panneaux d’extensions",

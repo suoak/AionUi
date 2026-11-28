@@ -397,7 +397,7 @@
   "tools": "ツール",
   "assistantModels": "利用可能なモデル",
   "webui.enableDesc": "ブラウザからのアクセスを許可するWebサービスを開始",
-  "assistantSkillsHint": "List preferred tools/skills for the assistant.",
+  "assistantSkillsHint": "アシスタントが優先して使うツール／スキルを挙げてください。",
   "assistantNoPermissionModes": "このメインエージェントには切り替え可能な権限モードがありません。",
   "speechToTextSourceDeepgram": "Deepgram（公式）",
   "mcpSyncError": "MCP 設定の同期に失敗しました",
@@ -1459,7 +1459,7 @@
   "assistant.disableFailed": "Failed to disable plugin",
   "mcpInlineCommandHint": "このマシンに {{command}} がありません。インストールしてから、もう一度テストしてください。",
   "customEmptyCreate": "チャットで作成",
-  "assistantRulesHint": "Define additional rules for assistant behavior.",
+  "assistantRulesHint": "アシスタントの振る舞いに追加ルールを定義します。",
   "mcpErrorRpc": "The MCP server returned an RPC error while handling {{method}}.",
   "bugReportModuleChatDescription": "メッセージ送信、Agent 応答、コンテキスト処理、コマンドキュー、会話中の動作に関する問題です。",
   "assistant.disconnected": "Disconnected",
@@ -1716,7 +1716,7 @@
     "title": "モバイルデバイス",
     "description": "スマートフォンをペアリングすると、承認リクエストを受け取り、外出先でもプランやゴールを承認・却下できます。",
     "count": "{{count}}/{{max}} 台",
-    "approvalNote": "スマートフォンでの承認は決定を記録するだけです。承認されたプランの実行は引き続きこのデスクトップで行います。",
+    "approvalNote": "スマートフォンまたは紐付けた IM アカウントで承認すると、承認した計画や採用がここですぐに実行されます。各リクエストは表示内容に固定され、1 回限りで期限があります。",
     "limitReached": "ペアリングできる上限の {{max}} 台に達しています。新しいデバイスをペアリングする前に 1 台を取り消してください。",
     "empty": "ペアリング済みのデバイスはまだありません",
     "unnamed": "名前のないデバイス",
@@ -1789,6 +1789,19 @@
       "revoke": "デバイスを取り消せませんでした",
       "push": "プッシュ設定を保存できませんでした",
       "reject": "ペアリング要求を拒否できませんでした"
+    },
+    "remote": {
+      "title": "リモート承認",
+      "description": "スマートフォンと紐付けた IM アカウントで計画・目標・採用を承認でき、承認はここですぐに実行されます。",
+      "ttl": "リクエストの有効期間",
+      "minutes": "分",
+      "save": "保存",
+      "approvers": "承認できる IM アカウント",
+      "noApprovers": "まだありません。現在はスマートフォンのみ承認できます。",
+      "remove": "削除",
+      "pick": "ペアリング済みの IM アカウントを選択",
+      "add": "追加",
+      "failed": "変更を保存できませんでした。"
     }
   },
   "governance": {

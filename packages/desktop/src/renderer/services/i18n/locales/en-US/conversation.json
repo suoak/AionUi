@@ -1057,7 +1057,9 @@
       "userEvidence": "Confirmed by the user",
       "phoneApproved": "Approved on phone",
       "phoneRejected": "Rejected on phone",
-      "phoneApprovedExecuteHint": "It was approved on your phone. Run it here when you're ready; nothing starts automatically."
+      "phoneApprovedExecuteHint": "It starts here automatically; you do not need to run it.",
+      "imApproved": "Approved in IM",
+      "imRejected": "Rejected in IM"
     },
     "review": {
       "open": "Review",
@@ -1369,11 +1371,7 @@
       "urgent": "Urgent"
     },
     "assignee": {
-      "title": "Assignee",
       "none": "Unassigned",
-      "idPlaceholder": "Assignee ID",
-      "save": "Assign",
-      "unassign": "Unassign",
       "kind": {
         "user": "User",
         "agent": "Agent",
@@ -1594,6 +1592,46 @@
     },
     "conversationTask": {
       "open": "Open this task"
+    },
+    "remote": {
+      "title": "Remote approval",
+      "summary": {
+        "plan": "Approve the plan",
+        "goal": "Approve the goal",
+        "adopt": "Adopt with {{strategy}} into {{target}}"
+      },
+      "where": {
+        "desktop": "this desktop",
+        "phone": "your phone",
+        "im": "IM"
+      },
+      "state": {
+        "waiting": "Waiting for your phone or IM · expires in {{minutes}} min ({{time}})",
+        "approvedRan": "Approved on {{where}} and started",
+        "approvedRunning": "Approved on {{where}} · starting here",
+        "approvedFailed": "Approved on {{where}}, but it did not start",
+        "approvedDesktop": "Approved on this desktop",
+        "rejected": "Rejected on {{where}}",
+        "expired": "Expired at {{time}} · approve here instead",
+        "invalidated": "No longer valid"
+      },
+      "reason": {
+        "superseded": "A newer version replaced it.",
+        "cancelled": "It was cancelled.",
+        "expired": "It expired before anyone answered.",
+        "diff_changed": "The changes moved after it was sent, so it was voided.",
+        "task_ended": "The task ended."
+      },
+      "commit": "Commit {{ref}}"
+    },
+    "advanced": {
+      "title": "Advanced",
+      "squad": "Hand off to a Squad",
+      "squadHint": "A Squad runs several agents on this task in one shared worktree.",
+      "squadPlaceholder": "Choose a Squad template",
+      "assign": "Hand off",
+      "unassign": "Take back",
+      "noSquads": "No Squad templates yet. Create one under Agents › Advanced › Squads."
     }
   },
   "squadRouteOnly": {

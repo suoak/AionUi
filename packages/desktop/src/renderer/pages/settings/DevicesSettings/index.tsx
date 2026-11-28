@@ -17,6 +17,7 @@ import SettingsPageHeader from '../components/SettingsPageHeader';
 import SettingsPageWrapper from '../components/SettingsPageWrapper';
 import DeviceList from './DeviceList';
 import PairDevicePanel from './PairDevicePanel';
+import RemoteApprovalSection from './RemoteApprovalSection';
 import { MAX_DEVICES, getDeviceErrorMessage, isAtDeviceLimit } from './devicesModel';
 
 type DevicesSettingsContentProps = {
@@ -86,6 +87,7 @@ export const DevicesSettingsContent: React.FC<DevicesSettingsContentProps> = ({ 
       ) : (
         <DeviceList devices={devices} channels={channels} onChanged={() => void loadDevices()} now={now} />
       )}
+      <RemoteApprovalSection />
       <Typography.Text type='secondary' className='text-12px'>
         {t('settings.devices.approvalNote')}
       </Typography.Text>
