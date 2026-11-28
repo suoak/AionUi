@@ -1055,7 +1055,7 @@ const SkillsHubSettings: React.FC<SkillsHubSettingsProps> = ({ withWrapper = tru
     <div className='flex flex-col gap-16px'>
       <SettingsPageHeader
         data-testid='skills-header'
-        title={t('settings.skills', { defaultValue: 'Skills' })}
+        title={t('settings.skills', { defaultValue: 'Skill library' })}
         description={t('settings.skillsHub.description', {
           defaultValue: 'Centrally manage AI skill packs — install once, use across all assistants.',
         })}

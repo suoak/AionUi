@@ -101,13 +101,13 @@ const SettingsSider: React.FC<{ collapsed?: boolean; tooltipEnabled?: boolean }>
       model: { id: 'model', label: t('settings.model'), icon: <LinkCloud />, path: 'model' },
       agent: {
         id: 'agent',
-        label: t('settings.agents', { defaultValue: 'Agents' }),
+        label: t('settings.agents', { defaultValue: 'Agent runtimes' }),
         icon: <Speed />,
         path: 'agent',
       },
       skills: {
         id: 'skills',
-        label: t('settings.skills', { defaultValue: 'Skills' }),
+        label: t('settings.skills', { defaultValue: 'Skill library' }),
         icon: <Lightning />,
         path: 'skills',
       },

@@ -57,13 +57,13 @@ export function getBuiltinSettingsNavItems(isDesktop: boolean, t: TranslateFn): 
     },
     agent: {
       id: 'agent',
-      label: t('settings.agents', { defaultValue: 'Agents' }),
+      label: t('settings.agents', { defaultValue: 'Agent runtimes' }),
       icon: <Robot theme='outline' size='16' />,
       path: 'agent',
     },
     skills: {
       id: 'skills',
-      label: t('settings.skills', { defaultValue: 'Skills' }),
+      label: t('settings.skills', { defaultValue: 'Skill library' }),
       icon: <Lightning theme='outline' size='16' />,
       path: 'skills',
     },
