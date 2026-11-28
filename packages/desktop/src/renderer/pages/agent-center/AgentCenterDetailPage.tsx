@@ -18,18 +18,6 @@ const { Title, Text } = Typography;
 const ACTIVE_WORKFLOW_REFRESH_MS = 3000;
 const IDLE_WORKFLOW_REFRESH_MS = 15000;
 
-const statusLabel: Record<string, string> = {
-  draft: '草稿',
-  published: '已发布',
-  archived: '已归档',
-};
-
-const visibilityLabel: Record<AgentVisibility, string> = {
-  private: '仅自己',
-  team: '团队共享',
-  enterprise: '企业',
-};
-
 /**
  * ChatGPT-inspired agent detail hub: instructions, capabilities, skills, and
  * lifecycle actions. Skill evolution is intentionally a separate product area.
@@ -38,6 +26,16 @@ const AgentCenterDetailPage: React.FC = () => {
   const { id = '' } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { t, i18n } = useTranslation();
+  const statusLabel: Record<string, string> = {
+    draft: t('agent.agentCenter.list.status.draft'),
+    published: t('agent.agentCenter.list.status.published'),
+    archived: t('agent.agentCenter.list.status.archived'),
+  };
+  const visibilityLabel: Record<AgentVisibility, string> = {
+    private: t('agent.agentCenter.list.visibility.private'),
+    team: t('agent.agentCenter.list.visibility.team'),
+    enterprise: t('agent.agentCenter.list.visibility.enterprise'),
+  };
   const [message, messageContext] = Message.useMessage({ maxCount: 5 });
   const messageRef = useRef(message);
   messageRef.current = message;
@@ -71,7 +69,7 @@ const AgentCenterDetailPage: React.FC = () => {
     } catch (error) {
       if (loadRequest !== loadRequestRef.current) return;
       console.error(error);
-      const msg = formatAgentCenterError(error, '加载智能体详情失败');
+      const msg = formatAgentCenterError(error, t('agent.agentCenter.detail.loadFailed'));
       setDetail(null);
       setLoadError(msg);
       messageRef.current.error(msg);
@@ -134,12 +132,13 @@ const AgentCenterDetailPage: React.FC = () => {
     out.push(statusLabel[detail.meta.status] ?? detail.meta.status);
     if (detail.meta.version > 0) out.push(`v${detail.meta.version}`);
     out.push(`Skills ${detail.meta.skill_refs.length}`);
-    out.push(mcpPolicyChip(detail.meta.mcp_policy));
+    out.push(mcpPolicyChip(detail.meta.mcp_policy, t));
     const model = detail.assistant.defaults.model;
-    if (model.mode === 'fixed' && model.value) out.push(`模型 ${model.value}`);
-    else out.push('模型 自动');
+    if (model.mode === 'fixed' && model.value)
+      out.push(t('agent.agentCenter.detail.modelFixed', { model: model.value }));
+    else out.push(t('agent.agentCenter.detail.modelAuto'));
     return out;
-  }, [detail]);
+  }, [detail, t]);
 
   const handleTryRun = async () => {
     if (!id) return;
@@ -270,11 +269,11 @@ const AgentCenterDetailPage: React.FC = () => {
         id,
         pin_skills_on_publish: true,
       });
-      messageRef.current.success(`已发布 v${published.meta.version}`);
+      messageRef.current.success(t('agent.agentCenter.list.publishedToast', { version: published.meta.version }));
       await load();
     } catch (error) {
       console.error(error);
-      messageRef.current.error(formatAgentCenterError(error, '发布失败'));
+      messageRef.current.error(formatAgentCenterError(error, t('agent.agentCenter.list.publishFailed')));
     } finally {
       setBusy(false);
     }
@@ -334,7 +333,7 @@ const AgentCenterDetailPage: React.FC = () => {
   if (!id) {
     return (
       <div className='p-24px'>
-        <Text type='secondary'>缺少智能体 ID</Text>
+        <Text type='secondary'>{t('agent.agentCenter.detail.missingId')}</Text>
       </div>
     );
   }
@@ -343,19 +342,19 @@ const AgentCenterDetailPage: React.FC = () => {
     <div className='h-full overflow-auto p-24px max-w-880px' data-testid='agent-center-detail'>
       {messageContext}
       <Button type='text' className='!px-0 mb-8px' onClick={() => navigate('/agents')}>
-        ← 返回智能体中心
+        ← {t('agent.agentCenter.wizard.back')}
       </Button>
 
-      {loading && <Text type='secondary'>加载中…</Text>}
+      {loading && <Text type='secondary'>{t('agent.agentCenter.list.loading')}</Text>}
       {!loading && loadError && (
         <div className='mb-12px flex items-center justify-between gap-12px'>
           <Text type='error'>{loadError}</Text>
           <Button size='small' onClick={() => void load()}>
-            重试
+            {t('agent.agentCenter.list.retry')}
           </Button>
         </div>
       )}
-      {!loading && !loadError && !detail && <Text type='secondary'>未找到智能体</Text>}
+      {!loading && !loadError && !detail && <Text type='secondary'>{t('agent.agentCenter.detail.notFound')}</Text>}
 
       {detail ? (
         <>
@@ -365,7 +364,7 @@ const AgentCenterDetailPage: React.FC = () => {
                 {detail.assistant.profile.name}
               </Title>
               <Text type='secondary' className='block mb-8px'>
-                {detail.assistant.profile.description || '（暂无简介）'}
+                {detail.assistant.profile.description || t('agent.agentCenter.detail.noDescription')}
               </Text>
               <div className='flex flex-wrap gap-6px'>
                 {chips.map((c) => (
@@ -377,12 +376,12 @@ const AgentCenterDetailPage: React.FC = () => {
             </div>
             <div className='flex gap-8px flex-wrap shrink-0'>
               <Button type='primary' loading={busy} onClick={() => void handleTryRun()}>
-                试跑
+                {t('agent.agentCenter.list.tryRun')}
               </Button>
               {detail.meta.status === 'published' ? (
-                <Tooltip content='在多个并行 worktree 里用同一提示运行此智能体和其他助手，再对比、采纳结果。需要先在对话页选择一个 git 仓库。'>
+                <Tooltip content={t('agent.agentCenter.detail.fanoutTooltip')}>
                   <Button loading={busy} onClick={handleFanoutTrial} data-testid='agent-center-fanout-trial'>
-                    扇出试跑
+                    {t('agent.agentCenter.detail.fanout')}
                     <Tag size='small' color='orangered' className='ml-6px'>
                       Beta
                     </Tag>
@@ -390,11 +389,13 @@ const AgentCenterDetailPage: React.FC = () => {
                 </Tooltip>
               ) : null}
               <Button loading={busy} onClick={handleEdit}>
-                编辑
+                {t('agent.agentCenter.list.edit')}
               </Button>
               {detail.meta.status === 'draft' || detail.meta.status === 'published' ? (
                 <Button loading={busy} onClick={() => void handlePublish()}>
-                  {detail.meta.status === 'draft' ? '发布' : '重新发布'}
+                  {detail.meta.status === 'draft'
+                    ? t('agent.agentCenter.list.publish')
+                    : t('agent.agentCenter.detail.republish')}
                 </Button>
               ) : null}
               {detail.meta.status === 'published' ? (
@@ -408,7 +409,7 @@ const AgentCenterDetailPage: React.FC = () => {
           <div className='grid grid-cols-1 lg:grid-cols-2 gap-16px mb-16px'>
             <div className='rounded-8px border border-[var(--color-border-2)] p-16px'>
               <Text bold className='block mb-8px'>
-                指令摘要
+                {t('agent.agentCenter.detail.instructionsHeading')}
               </Text>
               {instructions.trim() ? (
                 <pre className='m-0 whitespace-pre-wrap text-12px text-[var(--color-text-2)] max-h-220px overflow-auto'>
@@ -417,13 +418,13 @@ const AgentCenterDetailPage: React.FC = () => {
                 </pre>
               ) : (
                 <Text type='secondary' className='text-12px'>
-                  尚未填写指令。可在编辑向导「指令与个性」中完善。
+                  {t('agent.agentCenter.detail.noInstructions')}
                 </Text>
               )}
               {(detail.assistant.prompts?.recommended?.length ?? 0) > 0 ? (
                 <div className='mt-12px'>
                   <Text bold className='text-12px block mb-4px'>
-                    对话开场白
+                    {t('agent.agentCenter.starters.title')}
                   </Text>
                   <ul className='m-0 pl-18px text-12px text-t-secondary'>
                     {detail.assistant.prompts.recommended.slice(0, 5).map((p, i) => (
@@ -433,14 +434,14 @@ const AgentCenterDetailPage: React.FC = () => {
                 </div>
               ) : (
                 <Text type='secondary' className='text-12px mt-8px block'>
-                  未配置对话开场白；试跑欢迎页将使用默认提示。
+                  {t('agent.agentCenter.detail.noStarters')}
                 </Text>
               )}
             </div>
 
             <div className='rounded-8px border border-[var(--color-border-2)] p-16px'>
               <Text bold className='block mb-8px'>
-                已 pin 技能
+                {t('agent.agentCenter.detail.pinnedSkills')}
               </Text>
               {detail.meta.skill_refs.length === 0 ? (
                 <Text type='secondary' className='text-12px'>
